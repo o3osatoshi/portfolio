@@ -8,7 +8,7 @@ type User = {
 };
 
 export interface HeaderProps {
-  user?: User;
+  user?: User | undefined;
   onLogin?: () => void;
   onLogout?: () => void;
   onCreateAccount?: () => void;

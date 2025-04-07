@@ -12,7 +12,7 @@ export interface ButtonProps {
   /** Button contents */
   label: string;
   /** Optional click handler */
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
 }
 
 /** Primary UI component for user interaction */
