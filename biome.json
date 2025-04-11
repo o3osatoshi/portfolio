@@ -6,7 +6,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["src/**/*"]
+    "includes": ["src/**/*", "*.ts"]
   },
   "formatter": {
     "enabled": true,
