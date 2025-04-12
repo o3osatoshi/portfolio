@@ -1,5 +1,4 @@
-import { ModeToggle } from "@/app/_components/mode-toggle";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/app/_components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,7 +26,6 @@ export default function Page() {
               className="mr-2 data-[orientation=vertical]:h-4"
               orientation="vertical"
             />
-            <ModeToggle />
             <Separator
               className="mr-2 data-[orientation=vertical]:h-4"
               orientation="vertical"

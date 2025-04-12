@@ -1,6 +1,6 @@
 import { type LucideIcon } from "lucide-react";
 import * as React from "react";
-
+import { ModeToggle } from "@/app/_components/mode-toggle";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -13,7 +13,7 @@ export function NavSecondary({
   items,
   ...props
 }: {
-  items: {
+  items?: {
     title: string;
     url: string;
     icon: LucideIcon;
@@ -23,7 +23,12 @@ export function NavSecondary({
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild size="sm">
+              <ModeToggle />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          {items?.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
                 <a href={item.url}>
