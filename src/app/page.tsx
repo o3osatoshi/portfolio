@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/app/_components/app-sidebar";
-import Posts from "@/app/_components/posts";
+import Posts from "@/app/_components/posts/posts";
 import {
   Breadcrumb,
   BreadcrumbItem,
