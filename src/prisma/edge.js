@@ -128,7 +128,7 @@ const config = {
     },
     output: {
       value:
-        "/Users/o3osatoshi/project/o3osatoshi/experiment/src/app/generated/prisma",
+        "/Users/o3osatoshi/project/o3osatoshi/experiment/src/prisma",
       fromEnvVar: null,
     },
     config: {
@@ -164,7 +164,7 @@ const config = {
     },
   },
   inlineSchema:
-    '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = "prisma-client-js"\n  output   = "../src/app/generated/prisma"\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nmodel User {\n  id    Int     @id @default(autoincrement())\n  email String  @unique\n  name  String?\n  posts Post[]\n}\n\nmodel Post {\n  id        Int     @id @default(autoincrement())\n  title     String\n  content   String?\n  published Boolean @default(false)\n  authorId  Int\n  author    User    @relation(fields: [authorId], references: [id])\n}\n',
+    '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = "prisma-client-js"\n  output   = "../src/prisma"\n}\n\ndatasource db {\n  provider = "postgresql"\n  url      = env("DATABASE_URL")\n}\n\nmodel User {\n  id    Int     @id @default(autoincrement())\n  email String  @unique\n  name  String?\n  posts Post[]\n}\n\nmodel Post {\n  id        Int     @id @default(autoincrement())\n  title     String\n  content   String?\n  published Boolean @default(false)\n  authorId  Int\n  author    User    @relation(fields: [authorId], references: [id])\n}\n',
   inlineSchemaHash:
     "004fb44ec1b2e5c95f61e1c8df73b47a5da2fc8c0202800f526ddd23b92f7bde",
   copyEngine: true,
