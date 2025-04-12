@@ -6,7 +6,16 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["src/**/*", "*", ".storybook/*"]
+    "includes": [
+      "*",
+      "prisma/**/*",
+      ".storybook/*",
+      "src/app/**/*",
+      "src/components/**/*",
+      "src/hooks/**/*",
+      "src/lib/**/*",
+      "src/stories/**/*"
+    ]
   },
   "formatter": {
     "enabled": true,
