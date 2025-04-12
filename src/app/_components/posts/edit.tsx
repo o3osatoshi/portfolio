@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button/button";
 
 export default function Edit() {
   return (
-    <Button variant="ghost" size="icon">
+    <Button size="icon" variant="ghost">
       <Pencil />
     </Button>
   );
