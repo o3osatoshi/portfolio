@@ -1,7 +1,12 @@
+import { cache } from "react";
 import prisma from "@/lib/prisma";
 
+const getPosts = cache(async () => {
+  return prisma.post.findMany();
+});
+
 export default async function Posts() {
-  const posts = await prisma.post.findMany();
+  const posts = await getPosts();
 
   console.log("posts", posts);
 
