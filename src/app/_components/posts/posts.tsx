@@ -1,5 +1,5 @@
 import { cache } from "react";
-import Delete from "@/app/_components/posts/delete";
+import DeleteButton from "@/app/_components/posts/delete-button";
 import Edit from "@/app/_components/posts/edit";
 import {
   Card,
@@ -40,7 +40,7 @@ export default async function Posts() {
               <CardDescription>{post.author.name}</CardDescription>
               <CardAction>
                 <Edit />
-                <Delete />
+                <DeleteButton id={post.id} />
               </CardAction>
             </CardHeader>
             <CardContent>
