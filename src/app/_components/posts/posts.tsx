@@ -10,10 +10,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
+import { Post, User } from "@/prisma";
 
-const getPosts = cache(async () => {
-  return prisma.post.findMany();
-});
+const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
+  cache(async () => {
+    return prisma.post.findMany({
+      include: {
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  });
 
 export default async function Posts() {
   const posts = await getPosts();
@@ -27,7 +37,7 @@ export default async function Posts() {
           <Card key={post.id}>
             <CardHeader>
               <CardTitle>{post.title}</CardTitle>
-              <CardDescription>{post.authorId}</CardDescription>
+              <CardDescription>{post.author.name}</CardDescription>
               <CardAction>
                 <Edit />
                 <Delete />
