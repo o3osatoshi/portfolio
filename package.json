@@ -55,6 +55,7 @@
     "@vitest/browser": "^3.1.1",
     "@vitest/coverage-v8": "^3.1.1",
     "jsdom": "^26.0.0",
+    "next-auth": "5.0.0-beta.25",
     "playwright": "^1.51.1",
     "postcss": "^8.5.3",
     "prisma": "^6.6.0",

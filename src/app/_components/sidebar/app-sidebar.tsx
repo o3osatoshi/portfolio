@@ -2,9 +2,10 @@
 
 import { FlaskConical, SquareTerminal } from "lucide-react";
 import * as React from "react";
-import { NavUser } from "@/app/_components/nav-user";
 import { NavMain } from "@/app/_components/sidebar/nav-main";
 import { NavSecondary } from "@/app/_components/sidebar/nav-secondary";
+import { NavUser } from "@/app/_components/sidebar/nav-user";
+import SignIn from "@/app/_components/sidebar/sign-in";
 import {
   Sidebar,
   SidebarContent,
@@ -64,6 +65,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary className="mt-auto" items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
+        <SignIn />
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
