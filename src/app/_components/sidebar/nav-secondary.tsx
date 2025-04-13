@@ -1,6 +1,6 @@
 import { type LucideIcon } from "lucide-react";
 import * as React from "react";
-import { ModeToggle } from "@/app/_components/mode-toggle";
+import { ModeToggle } from "@/app/_components/sidebar/mode-toggle";
 import {
   SidebarGroup,
   SidebarGroupContent,
