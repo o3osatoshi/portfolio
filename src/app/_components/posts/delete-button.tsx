@@ -6,20 +6,21 @@ import { useActionState } from "react";
 import { deletePost } from "@/app/_components/posts/delete-action";
 import { Button } from "@/components/ui/button/button";
 
-export type FormStateType = {
+export type ActionState = {
   success: boolean;
 };
 
-const deleteFormAction = async (
-  _: FormStateType,
+const action = async (
+  _: ActionState,
   formData: FormData,
-): Promise<FormStateType> => {
-  const id = Number(formData.get("id"));
-  return await deletePost(id);
+): Promise<ActionState> => {
+  const id = formData.get("id");
+  if (typeof id !== "string") throw new Error("missing required params");
+  return await deletePost(Number(id));
 };
 
 export default function DeleteButton({ id }: { id: number }) {
-  const [_, formAction, isLoading] = useActionState(deleteFormAction, {
+  const [_, formAction, isLoading] = useActionState(action, {
     success: false,
   });
 
