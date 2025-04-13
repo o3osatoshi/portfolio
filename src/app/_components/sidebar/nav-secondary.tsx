@@ -13,7 +13,7 @@ export function NavSecondary({
   items,
   ...props
 }: {
-  items?: {
+  items: {
     title: string;
     url: string;
     icon: LucideIcon;
@@ -28,7 +28,7 @@ export function NavSecondary({
               <ModeToggle />
             </SidebarMenuButton>
           </SidebarMenuItem>
-          {items?.map((item) => (
+          {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
                 <a href={item.url}>

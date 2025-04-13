@@ -3,7 +3,7 @@
 import { Trash2 } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
-import { deletePost } from "@/app/_components/posts/delete-action";
+import { deletePost } from "@/app/(core)/posts/_components/delete-action";
 import { Button } from "@/components/ui/button/button";
 
 export type ActionState = {

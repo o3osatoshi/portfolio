@@ -1,7 +1,7 @@
 import { cache } from "react";
-import CreateForm from "@/app/_components/posts/create-form";
-import DeleteButton from "@/app/_components/posts/delete-button";
-import Edit from "@/app/_components/posts/edit";
+import CreateForm from "@/app/(core)/posts/_components/create-form";
+import DeleteButton from "@/app/(core)/posts/_components/delete-button";
+import Edit from "@/app/(core)/posts/_components/edit";
 import {
   Card,
   CardAction,
@@ -26,7 +26,7 @@ const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
     });
   });
 
-export default async function Posts() {
+export default async function Page() {
   const posts = await getPosts();
 
   console.log("posts", posts);
