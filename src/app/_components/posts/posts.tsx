@@ -1,4 +1,5 @@
 import { cache } from "react";
+import CreateForm from "@/app/_components/posts/create-form";
 import DeleteButton from "@/app/_components/posts/delete-button";
 import Edit from "@/app/_components/posts/edit";
 import {
@@ -32,6 +33,7 @@ export default async function Posts() {
 
   return (
     <div className="flex flex-col gap-2">
+      <CreateForm />
       {posts.map((post) => {
         return (
           <Card key={post.id}>
@@ -39,8 +41,10 @@ export default async function Posts() {
               <CardTitle>{post.title}</CardTitle>
               <CardDescription>{post.author.name}</CardDescription>
               <CardAction>
-                <Edit />
-                <DeleteButton id={post.id} />
+                <div className="flex gap-1">
+                  <Edit />
+                  <DeleteButton id={post.id} />
+                </div>
               </CardAction>
             </CardHeader>
             <CardContent>
