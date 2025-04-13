@@ -42,7 +42,7 @@ export default async function Page() {
               <CardDescription>{post.author.name}</CardDescription>
               <CardAction>
                 <div className="flex gap-1">
-                  <Edit />
+                  <Edit post={post} />
                   <DeleteButton id={post.id} />
                 </div>
               </CardAction>
