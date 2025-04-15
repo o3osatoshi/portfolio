@@ -13,7 +13,7 @@ export const createPost = async (
       title,
       content,
       published: true,
-      authorId: 1,
+      authorId: "1",
     },
   });
   redirect("/");

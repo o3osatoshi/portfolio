@@ -22,9 +22,17 @@ pnpm supabase db reset
 ### prisma
 
 ```shell
-pnpm prisma migrate deploy
+pnpm prisma migrate dev --name {name}
+```
+
+```shell
+pnpm prisma generate
 ```
 
 ```shell
 pnpm prisma db seed
+```
+
+```shell
+pnpm prisma migrate deploy
 ```
