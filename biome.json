@@ -14,7 +14,8 @@
       "src/components/**/*",
       "src/hooks/**/*",
       "src/lib/**/*",
-      "src/stories/**/*"
+      "src/stories/**/*",
+      "src/utils/**/*"
     ]
   },
   "formatter": {

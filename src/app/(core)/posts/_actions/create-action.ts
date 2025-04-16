@@ -1,25 +1,39 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { ActionState } from "@/app/(core)/posts/_components/delete-button";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { ActionResult, err } from "@/utils/action-result";
 
 export const createPost = async (
   title: string,
   content: string,
-): Promise<ActionState> => {
-  const session = await auth();
-  const userId = session?.user?.id;
-  if (!userId) throw new Error("User not authenticated");
+): Promise<ActionResult<null>> => {
+  try {
+    const session = await auth();
+    const userId = session?.user?.id;
+    if (!userId) {
+      return err("unauthorized");
+    }
 
-  await prisma.post.create({
-    data: {
-      title,
-      content,
-      published: true,
-      authorId: userId,
-    },
-  });
-  redirect("/");
+    const post = await prisma.post.create({
+      data: {
+        title,
+        content,
+        published: true,
+        authorId: userId,
+      },
+    });
+    if (post === undefined || post === null) {
+      return err("failed to create post");
+    }
+
+    redirect("/");
+  } catch (error: unknown) {
+    console.error(error);
+    if (error instanceof Error) {
+      return err(error);
+    }
+    return err("unknown error");
+  }
 };

@@ -2,25 +2,29 @@
 
 import { useActionState } from "react";
 import { createPost } from "@/app/(core)/posts/_actions/create-action";
-import { ActionState } from "@/app/(core)/posts/_components/delete-button";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input";
+import { ActionResult, err } from "@/utils/action-result";
 
 const action = async (
-  _: ActionState,
+  _: ActionResult<null> | undefined,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionResult<null>> => {
   const title = formData.get("title");
   const content = formData.get("content");
-  if (typeof title !== "string" || typeof content !== "string")
-    throw new Error("missing required params");
+  if (typeof title !== "string" || typeof content !== "string") {
+    return err("missing required params");
+  }
   return await createPost(title, content);
 };
 
 export default function CreateForm() {
-  const [_, formAction, isLoading] = useActionState(action, {
-    success: false,
-  });
+  const [_, formAction, isLoading] = useActionState<
+    ActionResult<null> | undefined,
+    FormData
+  >(action, undefined);
+
+  console.log("_", _);
 
   return (
     <form action={formAction}>
