@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { updatePost } from "@/app/(core)/posts/_actions/update-action";
+import { updatePost } from "@/app/(core)/posts/_actions/update-post";
 import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
@@ -45,7 +45,7 @@ interface Props {
   post: Post;
 }
 
-export default function Edit({ post }: Props) {
+export default function EditDialog({ post }: Props) {
   const [_, formAction, isLoading] = useActionState<
     ActionResult<never> | undefined,
     FormData

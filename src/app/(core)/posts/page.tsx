@@ -1,7 +1,7 @@
 import { cache } from "react";
 import CreateForm from "@/app/(core)/posts/_components/create-form";
 import DeleteButton from "@/app/(core)/posts/_components/delete-button";
-import Edit from "@/app/(core)/posts/_components/edit";
+import EditDialog from "@/app/(core)/posts/_components/edit-dialog";
 import {
   Card,
   CardAction,
@@ -42,7 +42,7 @@ export default async function Page() {
               <CardDescription>{post.author.name}</CardDescription>
               <CardAction>
                 <div className="flex gap-1">
-                  <Edit post={post} />
+                  <EditDialog post={post} />
                   <DeleteButton id={post.id} />
                 </div>
               </CardAction>
