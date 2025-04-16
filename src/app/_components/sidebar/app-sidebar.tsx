@@ -1,11 +1,8 @@
-"use client";
-
-import { FlaskConical, SquareTerminal } from "lucide-react";
+import { FlaskConical } from "lucide-react";
 import * as React from "react";
 import { NavMain } from "@/app/_components/sidebar/nav-main";
 import { NavSecondary } from "@/app/_components/sidebar/nav-secondary";
 import { NavUser } from "@/app/_components/sidebar/nav-user";
-import SignIn from "@/app/_components/sidebar/sign-in";
 import {
   Sidebar,
   SidebarContent,
@@ -16,31 +13,26 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Core",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "CRUD",
-          url: "/posts",
-        },
-      ],
-    },
-  ],
-  navSecondary: [],
-  projects: [],
-};
+export async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  // avoid dynamic functions in layouts — they make all routes dynamic
+  // const session = await auth();
+  //
+  // with auth()
+  // Route (app)                                 Size  First Load JS
+  // ┌ ○ /                                      139 B         101 kB
+  // ├ ○ /_not-found                            975 B         101 kB
+  // ├ ƒ /api/auth/[...nextauth]                139 B         101 kB
+  // └ ○ /posts                               3.23 kB         124 kB
+  //
+  // without auth()
+  // Route (app)                                 Size  First Load JS
+  // ┌ ƒ /                                      139 B         101 kB
+  // ├ ƒ /_not-found                            975 B         101 kB
+  // ├ ƒ /api/auth/[...nextauth]                139 B         101 kB
+  // └ ƒ /posts                               3.23 kB         124 kB
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -61,12 +53,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary className="mt-auto" items={data.navSecondary} />
+        <NavMain />
+        <NavSecondary className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <SignIn />
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
