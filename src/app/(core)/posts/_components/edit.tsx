@@ -3,10 +3,8 @@
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
-import {
-  ActionState,
-  updatePost,
-} from "@/app/(core)/posts/_actions/update-action";
+import { toast } from "sonner";
+import { updatePost } from "@/app/(core)/posts/_actions/update-action";
 import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
@@ -20,11 +18,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Post } from "@/prisma";
+import { ActionResult, err } from "@/utils/action-result";
 
 const action = async (
-  _: ActionState,
+  _: ActionResult<never> | undefined,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionResult<never>> => {
   const id = formData.get("id");
   const title = formData.get("title");
   const content = formData.get("content");
@@ -32,9 +31,14 @@ const action = async (
     typeof id !== "string" ||
     typeof title !== "string" ||
     typeof content !== "string"
-  )
-    throw new Error("missing required params");
-  return await updatePost(Number(id), title, content);
+  ) {
+    return err("Required fields are missing.");
+  }
+  const result = await updatePost(Number(id), title, content);
+  if (!result.ok) {
+    toast.error(result.error.message);
+  }
+  return result;
 };
 
 interface Props {
@@ -42,9 +46,10 @@ interface Props {
 }
 
 export default function Edit({ post }: Props) {
-  const [_, formAction, isLoading] = useActionState(action, {
-    success: false,
-  });
+  const [_, formAction, isLoading] = useActionState<
+    ActionResult<never> | undefined,
+    FormData
+  >(action, undefined);
 
   return (
     <Dialog>
