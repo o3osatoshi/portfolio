@@ -3,8 +3,10 @@
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
-import { updatePost } from "@/app/(core)/posts/_actions/update-action";
-import { ActionState } from "@/app/(core)/posts/_components/delete-button";
+import {
+  ActionState,
+  updatePost,
+} from "@/app/(core)/posts/_actions/update-action";
 import { Button } from "@/components/ui/button/button";
 import {
   Dialog,

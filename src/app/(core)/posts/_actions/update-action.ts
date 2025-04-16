@@ -1,8 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { ActionState } from "@/app/(core)/posts/_components/delete-button";
 import prisma from "@/lib/prisma";
+
+export type ActionState = {
+  success: boolean;
+};
 
 export const updatePost = async (
   id: number,
