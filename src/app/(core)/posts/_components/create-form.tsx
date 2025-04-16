@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { createPost } from "@/app/(core)/posts/_components/create-action";
+import { createPost } from "@/app/(core)/posts/_actions/create-action";
 import { ActionState } from "@/app/(core)/posts/_components/delete-button";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input";
