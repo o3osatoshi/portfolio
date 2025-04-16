@@ -12,7 +12,7 @@ export const createPost = async (
   try {
     const session = await auth();
     const userId = session?.user?.id;
-    if (!userId) {
+    if (userId === undefined) {
       return err("You must be logged in to create a post.");
     }
 
