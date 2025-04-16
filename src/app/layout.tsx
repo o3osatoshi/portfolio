@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import Providers from "@/app/_components/providers";
 import SidebarLayout from "@/app/_components/sidebar/sidebar-layout";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Providers>
           <SidebarLayout>{children}</SidebarLayout>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );
