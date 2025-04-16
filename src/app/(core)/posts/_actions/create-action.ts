@@ -8,12 +8,12 @@ import { ActionResult, err } from "@/utils/action-result";
 export const createPost = async (
   title: string,
   content: string,
-): Promise<ActionResult<null>> => {
+): Promise<ActionResult<never>> => {
   try {
     const session = await auth();
     const userId = session?.user?.id;
     if (!userId) {
-      return err("unauthorized");
+      return err("You must be logged in to create a post.");
     }
 
     const post = await prisma.post.create({
@@ -25,15 +25,15 @@ export const createPost = async (
       },
     });
     if (post === undefined || post === null) {
-      return err("failed to create post");
+      return err("Failed to create the post. Please try again later.");
     }
-
-    redirect("/");
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
       return err(error);
     }
-    return err("unknown error");
+    return err("Failed to create the post. Please try again later.");
   }
+
+  redirect("/");
 };

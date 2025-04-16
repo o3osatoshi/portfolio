@@ -1,6 +1,7 @@
 type JsonObject = Record<string, unknown>;
 
 export type AllowedData<T extends JsonObject = JsonObject> =
+  | never
   | null
   | undefined
   | T;
