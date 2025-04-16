@@ -3,26 +3,31 @@
 import { Trash2 } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
+import { toast } from "sonner";
 import { deletePost } from "@/app/(core)/posts/_actions/delete-action";
 import { Button } from "@/components/ui/button/button";
-
-export type ActionState = {
-  success: boolean;
-};
+import { ActionResult, err } from "@/utils/action-result";
 
 const action = async (
-  _: ActionState,
+  _: ActionResult<never> | undefined,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionResult<never>> => {
   const id = formData.get("id");
-  if (typeof id !== "string") throw new Error("missing required params");
-  return await deletePost(Number(id));
+  if (typeof id !== "string") {
+    return err("Required fields are missing.");
+  }
+  const result = await deletePost(Number(id));
+  if (!result.ok) {
+    toast.error(result.error.message);
+  }
+  return result;
 };
 
 export default function DeleteButton({ id }: { id: number }) {
-  const [_, formAction, isLoading] = useActionState(action, {
-    success: false,
-  });
+  const [_, formAction, isLoading] = useActionState<
+    ActionResult<never> | undefined,
+    FormData
+  >(action, undefined);
 
   return (
     <form action={formAction}>
