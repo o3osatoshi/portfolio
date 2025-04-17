@@ -31,6 +31,10 @@ const navMain = [
         title: getLabel("core-crud"),
         url: getPath("core-crud"),
       },
+      {
+        title: getLabel("core-restricted"),
+        url: getPath("core-restricted"),
+      },
     ],
   },
 ];

@@ -1,4 +1,4 @@
-type NavAlias = "core" | "core-crud";
+type NavAlias = "core" | "core-crud" | "core-restricted";
 
 interface Nav {
   alias: NavAlias;
@@ -18,6 +18,12 @@ const nav: Nav[] = [
     alias: "core-crud",
     label: "Serverside CRUD",
     path: "/core/crud",
+    hierarchy: 2,
+  },
+  {
+    alias: "core-restricted",
+    label: "Restricted Access",
+    path: "/core/restricted",
     hierarchy: 2,
   },
 ];
