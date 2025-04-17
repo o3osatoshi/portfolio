@@ -23,36 +23,39 @@ const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   });
 
 export default async function Page() {
   const posts = await getPosts();
 
-  console.log("posts", posts);
-
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-6">
       <CreateForm />
-      {posts.map((post) => {
-        return (
-          <Card key={post.id}>
-            <CardHeader>
-              <CardTitle>{post.title}</CardTitle>
-              <CardDescription>{post.author.name}</CardDescription>
-              <CardAction>
-                <div className="flex gap-1">
-                  <EditDialog post={post} />
-                  <DeleteButton id={post.id} />
-                </div>
-              </CardAction>
-            </CardHeader>
-            <CardContent>
-              <p>{post.content}</p>
-            </CardContent>
-          </Card>
-        );
-      })}
+      <div className="flex flex-col gap-2">
+        {posts.map((post) => {
+          return (
+            <Card key={post.id}>
+              <CardHeader>
+                <CardTitle>{post.title}</CardTitle>
+                <CardDescription>{post.author.name}</CardDescription>
+                <CardAction>
+                  <div className="flex gap-1">
+                    <EditDialog post={post} />
+                    <DeleteButton id={post.id} />
+                  </div>
+                </CardAction>
+              </CardHeader>
+              <CardContent>
+                <p>{post.content}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }
