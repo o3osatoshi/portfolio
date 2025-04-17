@@ -41,7 +41,15 @@ export default async function Page() {
             <Card key={post.id}>
               <CardHeader>
                 <CardTitle>{post.title}</CardTitle>
-                <CardDescription>{post.author.name}</CardDescription>
+                <CardDescription>
+                  <div className="flex gap-3">
+                    <span>{post.author.name}</span>
+                    <div className="flex gap-1.5">
+                      <span>{post.createdAt.toLocaleTimeString()}</span>
+                      <span>{post.createdAt.toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                </CardDescription>
                 <CardAction>
                   <div className="flex gap-1">
                     <EditDialog post={post} />
