@@ -32,6 +32,10 @@ const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
 export default async function Page() {
   const posts = await getPosts();
 
+  if (posts.length === 0) {
+    return "no posts yet";
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <CreateForm />

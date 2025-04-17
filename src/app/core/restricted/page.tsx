@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { redirect } from "next/navigation";
 import DeleteButton from "@/app/core/crud/_components/delete-button";
 import EditDialog from "@/app/core/crud/_components/edit-dialog";
 import {
@@ -9,27 +9,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { Post, User } from "@/prisma";
+import { getPath } from "@/utils/path";
 
-const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
-  cache(async () => {
-    return prisma.post.findMany({
-      include: {
-        author: {
-          select: {
-            name: true,
-          },
+const getPosts = async (authorId: string) => {
+  return prisma.post.findMany({
+    where: { authorId },
+    include: {
+      author: {
+        select: {
+          name: true,
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
+};
 
 export default async function Page() {
-  const posts = await getPosts();
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (userId === undefined) {
+    redirect(getPath("login"));
+  }
+
+  const posts = await getPosts(userId);
+
+  if (posts.length === 0) {
+    return "no posts yet";
+  }
 
   return (
     <div className="flex flex-col gap-6">
