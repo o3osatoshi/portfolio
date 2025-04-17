@@ -25,7 +25,10 @@ export const deletePost = async (id: number): Promise<ActionResult<never>> => {
 
     console.log("post", post);
 
+    console.log("post.authorId !== userId", post.authorId !== userId);
+
     if (post.authorId !== userId) {
+      console.log("err", err("You are not authorized to delete this post."));
       return err("You are not authorized to delete this post.");
     }
 
