@@ -16,7 +16,7 @@ const nav: Nav[] = [
   },
   {
     alias: "core-crud",
-    label: "CRUD",
+    label: "Serverside CRUD",
     path: "/core/crud",
     hierarchy: 2,
   },
