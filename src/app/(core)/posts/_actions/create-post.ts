@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -27,6 +28,8 @@ export const createPost = async (
     if (post === undefined || post === null) {
       return err("Failed to create the post. Please try again later.");
     }
+
+    revalidatePath("/posts");
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
@@ -35,5 +38,5 @@ export const createPost = async (
     return err("Failed to create the post. Please try again later.");
   }
 
-  redirect("/");
+  redirect("/posts");
 };

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -26,6 +27,8 @@ export const deletePost = async (id: number): Promise<ActionResult<never>> => {
     if (deletedPost === undefined || deletedPost === null) {
       return err("Failed to delete the post. Please try again later.");
     }
+
+    revalidatePath("/posts");
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
@@ -34,5 +37,5 @@ export const deletePost = async (id: number): Promise<ActionResult<never>> => {
     return err("Failed to delete the post. Please try again later.");
   }
 
-  redirect("/");
+  redirect("/posts");
 };

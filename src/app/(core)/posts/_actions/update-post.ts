@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -36,6 +37,8 @@ export const updatePost = async (
     if (updatedPost === undefined || updatedPost === null) {
       return err("Failed to update the post. Please try again later.");
     }
+
+    revalidatePath("/posts");
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
@@ -44,5 +47,5 @@ export const updatePost = async (
     return err("Failed to update the post. Please try again later.");
   }
 
-  redirect("/");
+  redirect("/posts");
 };
