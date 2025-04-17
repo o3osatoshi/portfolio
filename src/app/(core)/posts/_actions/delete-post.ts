@@ -8,16 +8,22 @@ import { ActionResult, err } from "@/utils/action-result";
 
 export const deletePost = async (id: number): Promise<ActionResult<never>> => {
   try {
+    console.log("id", id);
+
     const session = await auth();
     const userId = session?.user?.id;
     if (userId === undefined) {
       return err("You must be logged in to delete a post.");
     }
 
+    console.log("userId", userId);
+
     const post = await prisma.post.findUnique({ where: { id } });
     if (post === null) {
       return err("The post you are trying to delete does not exist.");
     }
+
+    console.log("post", post);
 
     if (post.authorId !== userId) {
       return err("You are not authorized to delete this post.");
@@ -27,6 +33,8 @@ export const deletePost = async (id: number): Promise<ActionResult<never>> => {
     if (deletedPost === undefined || deletedPost === null) {
       return err("Failed to delete the post. Please try again later.");
     }
+
+    console.log("deletedPost", deletedPost);
 
     revalidatePath("/posts");
   } catch (error: unknown) {
