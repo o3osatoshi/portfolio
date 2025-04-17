@@ -18,17 +18,18 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { getLabel, getPath } from "@/utils/path";
 
 const navMain = [
   {
-    title: "Core",
+    title: getLabel("core"),
     url: "#",
     icon: SquareTerminal,
     isActive: true,
     items: [
       {
-        title: "CRUD",
-        url: "/posts",
+        title: getLabel("core-crud"),
+        url: getPath("core-crud"),
       },
     ],
   },

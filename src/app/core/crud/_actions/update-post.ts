@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { ActionResult, err } from "@/utils/action-result";
+import { getPath } from "@/utils/path";
 
 export const updatePost = async (
   id: number,
@@ -38,7 +39,7 @@ export const updatePost = async (
       return err("Failed to update the post. Please try again later.");
     }
 
-    revalidatePath("/posts");
+    revalidatePath(getPath("core-crud"));
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
@@ -47,5 +48,5 @@ export const updatePost = async (
     return err("Failed to update the post. Please try again later.");
   }
 
-  redirect("/posts");
+  redirect(getPath("core-crud"));
 };
