@@ -17,7 +17,6 @@ const action = async (
     return err("Required fields are missing.");
   }
   const result = await deletePost(Number(id));
-  console.log("result", result);
   if (!result.ok) {
     toast.error(result.error.message);
   }
