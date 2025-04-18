@@ -1,10 +1,10 @@
-import { LoginForm } from "@/app/login/_components/login-form";
+import { SigninForm } from "@/app/signin/_components/signin-form";
 
 export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <LoginForm />
+        <SigninForm />
       </div>
     </div>
   );

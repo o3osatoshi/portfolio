@@ -1,4 +1,4 @@
-type NavAlias = "login" | "core" | "core-crud" | "core-restricted";
+type NavAlias = "signin" | "core" | "core-crud" | "core-restricted";
 
 interface Nav {
   alias: NavAlias;
@@ -9,9 +9,9 @@ interface Nav {
 
 const nav: Nav[] = [
   {
-    alias: "login",
-    label: "Login",
-    path: "/login",
+    alias: "signin",
+    label: "Signin",
+    path: "/signin",
     hierarchy: 1,
   },
   {

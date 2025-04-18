@@ -2,7 +2,7 @@
 
 import { AlertCircle } from "lucide-react";
 import { useActionState } from "react";
-import { createPost } from "@/app/core/crud/_actions/create-post";
+import { createPost } from "@/app/(signedin)/core/crud/_actions/create-post";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input";

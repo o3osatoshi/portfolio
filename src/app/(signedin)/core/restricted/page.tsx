@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import DeleteButton from "@/app/core/crud/_components/delete-button";
-import EditDialog from "@/app/core/crud/_components/edit-dialog";
+import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
+import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
 import {
   Card,
   CardAction,
@@ -33,7 +33,7 @@ export default async function Page() {
   const session = await auth();
   const userId = session?.user?.id;
   if (userId === undefined) {
-    redirect(getPath("login"));
+    redirect(getPath("signin"));
   }
 
   const posts = await getPosts(userId);

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ThemeToggle } from "@/app/_components/sidebar/theme-toggle";
+import { ThemeToggle } from "@/app/(signedin)/_components/sidebar/theme-toggle";
 import {
   SidebarGroup,
   SidebarGroupContent,

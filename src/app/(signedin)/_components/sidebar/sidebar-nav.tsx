@@ -1,8 +1,8 @@
 import { FlaskConical } from "lucide-react";
 import * as React from "react";
-import { NavMain } from "@/app/_components/sidebar/nav-main";
-import { NavSecondary } from "@/app/_components/sidebar/nav-secondary";
-import { NavUser } from "@/app/_components/sidebar/nav-user";
+import { NavMain } from "@/app/(signedin)/_components/sidebar/nav-main";
+import { NavSecondary } from "@/app/(signedin)/_components/sidebar/nav-secondary";
+import { NavUser } from "@/app/(signedin)/_components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-export async function AppSidebar({
+export async function SidebarNav({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   // avoid dynamic functions in layouts — they make all routes dynamic

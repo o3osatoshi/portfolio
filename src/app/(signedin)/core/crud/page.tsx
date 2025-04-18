@@ -1,7 +1,7 @@
 import { cache } from "react";
-import CreateForm from "@/app/core/crud/_components/create-form";
-import DeleteButton from "@/app/core/crud/_components/delete-button";
-import EditDialog from "@/app/core/crud/_components/edit-dialog";
+import CreateForm from "@/app/(signedin)/core/crud/_components/create-form";
+import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
+import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
 import {
   Card,
   CardAction,

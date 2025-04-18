@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { updatePost } from "@/app/core/crud/_actions/update-post";
+import { updatePost } from "@/app/(signedin)/core/crud/_actions/update-post";
 import { Button } from "@/components/ui/button/button";
 import {
   Dialog,

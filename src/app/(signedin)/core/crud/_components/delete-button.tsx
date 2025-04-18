@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { deletePost } from "@/app/core/crud/_actions/delete-post";
+import { deletePost } from "@/app/(signedin)/core/crud/_actions/delete-post";
 import { Button } from "@/components/ui/button/button";
 import { ActionResult, err } from "@/utils/action-result";
 

@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/app/_components/sidebar/app-sidebar";
+import { SidebarNav } from "@/app/(signedin)/_components/sidebar/sidebar-nav";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -13,7 +13,7 @@ interface Props {
 export default function SidebarLayout({ children }: Props) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <SidebarNav />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">

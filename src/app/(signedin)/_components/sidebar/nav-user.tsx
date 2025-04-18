@@ -66,7 +66,7 @@ export function NavUser() {
             >
               <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut />
-                Log out
+                Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
