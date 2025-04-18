@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { getPosts } from "@/app/(signedin)/core/_services/getPosts";
 import CreateForm from "@/app/(signedin)/core/crud/_components/create-form";
 import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
 import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
@@ -13,7 +14,7 @@ import {
 import prisma from "@/lib/prisma";
 import { Post, User } from "@/prisma";
 
-const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
+const _getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
   cache(async () => {
     return prisma.post.findMany({
       include: {
@@ -30,7 +31,9 @@ const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
   });
 
 export default async function Page() {
-  const posts = await getPosts();
+  const posts = await _getPosts();
+  const result = await getPosts({});
+  console.log("result", result);
 
   if (posts.length === 0) {
     return "no posts yet";
