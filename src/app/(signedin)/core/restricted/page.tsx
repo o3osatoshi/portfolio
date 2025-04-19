@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getPosts } from "@/app/(signedin)/core/_services/getPosts";
 import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
 import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
 import {
@@ -10,24 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
 import { getPath } from "@/utils/path";
-
-const getPosts = async (authorId: string) => {
-  return prisma.post.findMany({
-    where: { authorId },
-    include: {
-      author: {
-        select: {
-          name: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-};
 
 export default async function Page() {
   const session = await auth();
@@ -36,7 +20,11 @@ export default async function Page() {
     redirect(getPath("signin"));
   }
 
-  const posts = await getPosts(userId);
+  const result = await getPosts({ authorId: userId });
+  if (result.isErr()) {
+    return null;
+  }
+  const posts = result.value;
 
   if (posts.length === 0) {
     return "no posts yet";

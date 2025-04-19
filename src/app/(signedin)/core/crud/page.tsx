@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { getPosts } from "@/app/(signedin)/core/_services/getPosts";
 import CreateForm from "@/app/(signedin)/core/crud/_components/create-form";
 import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
 import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
@@ -10,29 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import prisma from "@/lib/prisma";
-import { Post, User } from "@/prisma";
-
-const _getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
-  cache(async () => {
-    return prisma.post.findMany({
-      include: {
-        author: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  });
 
 export default async function Page() {
-  const posts = await _getPosts();
-  // const result = await getPosts({});
-  // console.log("result", result);
+  const result = await getPosts();
+  if (result.isErr()) {
+    return null;
+  }
+  const posts = result.value;
 
   if (posts.length === 0) {
     return "no posts yet";
