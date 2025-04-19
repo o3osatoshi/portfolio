@@ -2,12 +2,12 @@ import { err, ok, Result, ResultAsync } from "neverthrow";
 import { z } from "zod";
 import { fetchClient } from "@/utils/fetch-client";
 
-const baseSchema = z.object({
+const zBase = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
 
-const userSchema = baseSchema.extend({
+const zUser = zBase.extend({
   id: z.string(),
   name: z.string().optional(),
   email: z.string().email(),
@@ -15,7 +15,7 @@ const userSchema = baseSchema.extend({
   image: z.string().url().optional(),
 });
 
-const postSchema = baseSchema.extend({
+const zPost = zBase.extend({
   id: z.number(),
   title: z.string(),
   content: z.string().nullable(),
@@ -23,11 +23,15 @@ const postSchema = baseSchema.extend({
   authorId: z.string(),
 });
 
-const schema = z.array(
-  postSchema.extend({
-    author: userSchema.pick({ name: true }),
-  }),
-);
+const zPostExtend = zPost.extend({
+  author: zUser.pick({ name: true }),
+});
+
+export type PostExtend = z.infer<typeof zPostExtend>;
+
+const zPosts = z.array(zPostExtend);
+
+type Posts = z.infer<typeof zPosts>;
 
 interface Props {
   authorId?: string;
@@ -35,7 +39,7 @@ interface Props {
 
 export async function getPosts({
   authorId,
-}: Props | undefined = {}): Promise<Result<z.infer<typeof schema>, Error>> {
+}: Props | undefined = {}): Promise<Result<Posts, Error>> {
   return ResultAsync.fromPromise(
     fetchClient({
       pathName: "/api/core/posts",
@@ -48,7 +52,7 @@ export async function getPosts({
       return new Error("unknown error");
     },
   ).andThen((data) => {
-    const result = schema.safeParse(data);
+    const result = zPosts.safeParse(data);
     if (!result.success) {
       console.error(result.error);
       return err(result.error);
