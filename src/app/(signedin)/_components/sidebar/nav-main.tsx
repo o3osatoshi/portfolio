@@ -18,7 +18,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { getLabel, getPath } from "@/utils/path";
+import { getLabel, getPathName } from "@/utils/path";
 
 const navMain = [
   {
@@ -29,11 +29,11 @@ const navMain = [
     items: [
       {
         title: getLabel("core-crud"),
-        url: getPath("core-crud"),
+        url: getPathName("core-crud"),
       },
       {
         title: getLabel("core-restricted"),
-        url: getPath("core-restricted"),
+        url: getPathName("core-restricted"),
       },
     ],
   },

@@ -1,53 +1,85 @@
-type NavAlias = "signin" | "core" | "core-crud" | "core-restricted";
+import { getFullPath, Search } from "@/utils/fetch-client";
 
-interface Nav {
-  alias: NavAlias;
-  label: string;
-  path: string;
-  hierarchy: number;
-}
+type WebAlias = "signin" | "core" | "core-crud" | "core-restricted";
+
+type ApiAlias = "core-posts";
+
+type Alias = WebAlias | ApiAlias;
+
+type Nav =
+  | {
+      alias: WebAlias;
+      pathName: string;
+      type: "web";
+      data: {
+        label: string;
+        hierarchy: number;
+      };
+    }
+  | {
+      alias: ApiAlias;
+      pathName: string;
+      type: "api";
+    };
 
 const nav: Nav[] = [
   {
     alias: "signin",
-    label: "Signin",
-    path: "/signin",
-    hierarchy: 1,
+    pathName: "/signin",
+    type: "web",
+    data: {
+      label: "Signin",
+      hierarchy: 1,
+    },
   },
   {
     alias: "core",
-    label: "Core",
-    path: "/core",
-    hierarchy: 1,
+    pathName: "/core",
+    type: "web",
+    data: {
+      label: "Core",
+      hierarchy: 1,
+    },
   },
   {
     alias: "core-crud",
-    label: "Serverside CRUD",
-    path: "/core/crud",
-    hierarchy: 2,
+    pathName: "/core/crud",
+    type: "web",
+    data: {
+      label: "Serverside CRUD",
+      hierarchy: 2,
+    },
   },
   {
     alias: "core-restricted",
-    label: "Restricted Access",
-    path: "/core/restricted",
-    hierarchy: 2,
+    pathName: "/core/restricted",
+    type: "web",
+    data: {
+      label: "Restricted Access",
+      hierarchy: 2,
+    },
+  },
+  {
+    alias: "core-posts",
+    pathName: "/api/core/posts",
+    type: "api",
   },
 ];
 
-export function getPath(alias: NavAlias): string {
+export function getPathName(alias: Alias): string {
   const _nav = nav.find((n) => n.alias === alias);
   if (_nav === undefined) throw new Error("alias not found");
-  return _nav.path;
+  return _nav.pathName;
 }
 
-export function getLabel(alias: NavAlias): string {
+export function getLabel(alias: WebAlias): string {
   const _nav = nav.find((n) => n.alias === alias);
   if (_nav === undefined) throw new Error("alias not found");
-  return _nav.label;
+  if (_nav.type !== "web") throw new Error("alias not web");
+  return _nav.data.label;
 }
 
-export function resolveNav(path: string): Nav[] | undefined {
-  return nav
-    .filter((n) => path.includes(n.path))
-    .sort((a, b) => a.hierarchy - b.hierarchy);
+export function getTag(alias: ApiAlias, search?: Search) {
+  const _path = getPathName(alias);
+  return getFullPath(_path, search);
 }

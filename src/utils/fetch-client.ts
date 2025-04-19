@@ -6,22 +6,29 @@ export class FetchError extends Error {
   }
 }
 
-const base = process.env.API_BASE_URL;
+const base = process.env.NEXT_PUBLIC_API_BASE_URL;
 if (base === undefined) {
   throw new Error("API_BASE_URL is undefined");
 }
 
+export type Search =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams
+  | undefined;
+
 interface Props {
   pathName: string;
-  search?:
-    | string
-    | string[][]
-    | Record<string, string>
-    | URLSearchParams
-    | undefined;
+  search?: Search;
   cache?: "force-cache" | "no-store";
   revalidate?: false | 0 | number;
   tags?: string[];
+}
+
+export function getFullPath(pathName: string, search?: Search) {
+  const params = new URLSearchParams(search);
+  return search === undefined ? pathName : `${pathName}?${params.toString()}`;
 }
 
 export async function fetchClient({
@@ -32,16 +39,14 @@ export async function fetchClient({
   tags,
 }: Props) {
   try {
-    const params = new URLSearchParams(search);
-    const _fullPath =
-      search === undefined ? pathName : `${pathName}?${params.toString()}`;
+    const _fullPath = getFullPath(pathName, search);
     const url = new URL(_fullPath, base);
 
     const res = await fetch(url, {
       ...(cache !== undefined && { cache }),
       next: {
         ...(revalidate !== undefined && { revalidate }),
-        ...(tags !== undefined && { tags }),
+        ...(tags !== undefined && { tags: [...tags, pathName, _fullPath] }),
       },
     });
     if (!res.ok) {

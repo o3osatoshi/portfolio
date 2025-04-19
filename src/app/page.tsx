@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getPath } from "@/utils/path";
+import { getPathName } from "@/utils/path";
 
 export default function Page() {
-  redirect(getPath("core-crud"));
+  redirect(getPathName("core-crud"));
 }

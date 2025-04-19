@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 import PostCard from "@/app/(signedin)/core/_components/post-card";
 import { getPosts } from "@/app/(signedin)/core/_services/getPosts";
 import { auth } from "@/lib/auth";
-import { getPath } from "@/utils/path";
+import { getPathName } from "@/utils/path";
 
 export default async function Page() {
   const session = await auth();
   const userId = session?.user?.id;
   if (userId === undefined) {
-    redirect(getPath("signin"));
+    redirect(getPathName("signin"));
   }
 
   const result = await getPosts({ authorId: userId });
