@@ -41,13 +41,12 @@ interface Props {
 export async function getPosts({
   authorId,
 }: Props | undefined = {}): Promise<Result<Posts, Error>> {
-  const pathName = getPathName("core-posts");
-
-  console.log(`EXEC: ${pathName} fetchClient`);
+  console.log(`EXEC: ${getPathName("core-posts")} fetchClient`);
   return ResultAsync.fromPromise(
     fetchClient({
-      pathName,
+      pathName: getPathName("core-posts"),
       search: authorId === undefined ? undefined : { authorId: authorId },
+      cache: "force-cache",
     }),
     (error: unknown) => {
       if (error instanceof Error) {
