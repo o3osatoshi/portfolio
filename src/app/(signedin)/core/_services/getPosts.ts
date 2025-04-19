@@ -1,7 +1,7 @@
 import { err, ok, Result, ResultAsync } from "neverthrow";
 import { z } from "zod";
 import { fetchClient } from "@/utils/fetch-client";
-import { getPathName } from "@/utils/path";
+import { getPathName, getTag } from "@/utils/path";
 
 const zBase = z.object({
   createdAt: z.coerce.date(),
@@ -41,11 +41,12 @@ interface Props {
 export async function getPosts({
   authorId,
 }: Props | undefined = {}): Promise<Result<Posts, Error>> {
-  console.log(`EXEC: ${getPathName("core-posts")} fetchClient`);
+  const search = authorId === undefined ? undefined : { authorId: authorId };
+  console.log(`EXEC: ${getTag("core-posts", search)} fetchClient`);
   return ResultAsync.fromPromise(
     fetchClient({
       pathName: getPathName("core-posts"),
-      search: authorId === undefined ? undefined : { authorId: authorId },
+      search,
       cache: "force-cache",
     }),
     (error: unknown) => {
