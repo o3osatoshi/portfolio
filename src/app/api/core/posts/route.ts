@@ -23,5 +23,5 @@ export async function GET(request: NextRequest) {
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
   }
 
-  return Response.json({ posts });
+  return Response.json(posts);
 }
