@@ -40,6 +40,7 @@ interface Props {
 export async function getPosts({
   authorId,
 }: Props | undefined = {}): Promise<Result<Posts, Error>> {
+  console.log("EXEC: /api/core/posts fetchClient");
   return ResultAsync.fromPromise(
     fetchClient({
       pathName: "/api/core/posts",

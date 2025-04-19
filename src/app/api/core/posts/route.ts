@@ -23,5 +23,6 @@ export async function GET(request: NextRequest) {
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
   }
 
+  console.log("EXEC: /api/core/posts prisma.post.findMany");
   return Response.json(posts);
 }
