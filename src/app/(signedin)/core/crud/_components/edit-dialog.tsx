@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Post } from "@/prisma";
+import { Post } from "@/generated/prisma";
 import { ActionResult, err } from "@/utils/action-result";
 
 const action = async (

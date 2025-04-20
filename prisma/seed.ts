@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/prisma";
+import { PrismaClient } from "@/generated/prisma";
 import { seedPosts } from "./seeds/post";
 import { seedUsers } from "./seeds/user";
 
