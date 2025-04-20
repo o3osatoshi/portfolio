@@ -12,6 +12,7 @@ export const createPost = async (
   content: string,
 ): Promise<ActionResult<never>> => {
   try {
+    console.log("createPost", title, content);
     const session = await auth();
     const userId = session?.user?.id;
     if (userId === undefined) {
