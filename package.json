@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "prisma generate && pnpm run copy-prisma",
-    "copy-prisma": "rm -rf ./src/generated/prismaAction && cp -R ./src/generated/prisma ./src/generated/prismaAction",
+    "copy-prisma": "rm -rf ./src/generated/prismaAction && cp -R ./src/generated/prisma ./src/generated/prismaRoute",
     "dev": "next dev --turbopack",
     "build": "next build",
     "build:vercel": "prisma migrate deploy && next build",
