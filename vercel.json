@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "app/**.{js,ts,jsx,tsx,mjs}": {
+      "includeFiles": "src/prisma/**"
+    }
+  }
+}
