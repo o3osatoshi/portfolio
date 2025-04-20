@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import prisma from "@/lib/prismaRoute";
+import prisma from "@/lib/prisma";
 import { getTag } from "@/utils/path";
 
 export async function GET(request: NextRequest) {
