@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 import path from "path";
 
-const nextConfig: NextConfig = {
+const prismaDir = path.resolve("src/prisma");
+
+const nextConfig: NextConfig & {
+  outputFileTracingIncludes: Record<string, string[]>;
+} = {
   outputFileTracingIncludes: {
-    "app/**": [path.join(__dirname, "src/prisma/**")],
+    "app/**": [prismaDir],
   },
 };
 

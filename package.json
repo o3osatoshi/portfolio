@@ -6,7 +6,7 @@
     "postinstall": "prisma generate",
     "dev": "next dev --turbopack",
     "build": "next build",
-    "build:vercel": "ls -al ./src/prisma && prisma migrate deploy && next build",
+    "build:vercel": "prisma migrate deploy && next build",
     "start": "next start",
     "lint": "biome check --write .",
     "test": "vitest",
