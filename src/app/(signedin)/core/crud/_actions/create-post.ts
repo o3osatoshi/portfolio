@@ -1,11 +1,11 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { ActionResult, err } from "@/utils/action-result";
-import { getPathName } from "@/utils/path";
+import { getPathName, getTag } from "@/utils/path";
 
 export const createPost = async (
   title: string,
@@ -30,7 +30,8 @@ export const createPost = async (
       return err("Failed to create the post. Please try again later.");
     }
 
-    revalidateTag(getPathName("core-posts"));
+    revalidateTag(getTag("core-posts", { authorId: userId }));
+    revalidatePath(getPathName("core-crud"));
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
