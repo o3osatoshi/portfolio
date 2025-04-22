@@ -6,12 +6,10 @@
     "./*": "./src/*.tsx"
   },
   "scripts": {
-    "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
-    "@turbo/gen": "^2.5.0",
     "@types/node": "^22.14.0",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
