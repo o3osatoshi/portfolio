@@ -39,4 +39,8 @@ npm-debug.log*
 
 
 # idea
-.idea/
+.idea
+
+
+# storyboo
+storybook-static
