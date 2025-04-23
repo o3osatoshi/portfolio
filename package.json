@@ -5,9 +5,12 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "check": "biome check .",
+    "check:fix": "biome check . --write"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "turbo": "^2.4.2",
