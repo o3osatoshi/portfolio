@@ -1,22 +1,12 @@
-import { Button } from "@repo/ui/button";
+import { Button } from "@workspace/ui/components/button"
 
-export default function Home() {
+export default function Page() {
   return (
-    <>
-      <main>
-        <div className="w-full flex flex-col items-center p-3">
-          <ol>
-            <li>
-              Get started by editing <code>apps/web/app/page.tsx</code>
-            </li>
-            <li>Save and see your changes instantly.</li>
-          </ol>
-          <Button appName="web">Open alert</Button>
-        </div>
-      </main>
-      <footer>
-        <div className="w-full flex flex-col items-center p-3">footer</div>
-      </footer>
-    </>
-  );
+    <div className="flex items-center justify-center min-h-svh">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold">Hello World</h1>
+        <Button size="sm">Button</Button>
+      </div>
+    </div>
+  )
 }
