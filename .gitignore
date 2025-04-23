@@ -40,3 +40,7 @@ npm-debug.log*
 
 # jetbrains
 .idea/
+
+
+# storybook
+storybook-static
