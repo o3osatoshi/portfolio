@@ -2,7 +2,7 @@ import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 
 // https://authjs.dev/guides/edge-compatibility
-const authConfig: NextAuthConfig = {
+export const authConfig = {
   providers: [Google],
   callbacks: {
     async jwt({ token, user }) {
@@ -19,5 +19,3 @@ const authConfig: NextAuthConfig = {
     },
   },
 } satisfies NextAuthConfig;
-
-export default authConfig;

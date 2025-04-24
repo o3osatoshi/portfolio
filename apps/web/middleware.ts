@@ -1,4 +1,4 @@
-import authConfig from "@/lib/auth.config";
+import { authConfig } from "@repo/auth/config";
 import NextAuth from "next-auth";
 import type { NextMiddleware } from "next/server";
 

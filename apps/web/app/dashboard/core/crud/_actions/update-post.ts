@@ -1,9 +1,9 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { type ActionResult, err } from "@/utils/action-result";
+import { auth } from "@repo/auth";
 import { prisma } from "@repo/db";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const updatePost = async (
