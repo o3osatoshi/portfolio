@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", "dist", ".next", ".turbo", ".idea"]
+    "ignore": ["node_modules", "dist", ".next", "generated", ".turbo", ".idea"]
   },
   "formatter": {
     "enabled": true,

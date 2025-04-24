@@ -20,6 +20,16 @@
     },
     "check-types": {
       "dependsOn": ["^check-types"]
+    },
+    "db:migrate": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:deploy": {
+      "cache": false
     }
   }
 }
