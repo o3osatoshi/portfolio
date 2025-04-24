@@ -8,7 +8,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@workspace/ui": "workspace:*"
+    "@repo/ui": "workspace:*"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",

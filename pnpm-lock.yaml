@@ -11,7 +11,7 @@ importers:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
-      '@workspace/typescript-config':
+      '@repo/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
       turbo:
@@ -23,7 +23,7 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@workspace/ui':
+      '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
     devDependencies:
@@ -84,7 +84,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@workspace/ui':
+      '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       lucide-react:
@@ -115,7 +115,7 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.2
         version: 19.1.2(@types/react@19.1.2)
-      '@workspace/typescript-config':
+      '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       typescript:
@@ -190,7 +190,7 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.2
         version: 19.1.2(@types/react@19.1.2)
-      '@workspace/typescript-config':
+      '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       tailwindcss:

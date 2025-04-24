@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@workspace/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "turbo": "^2.5.0",
     "typescript": "5.8.3"
   },

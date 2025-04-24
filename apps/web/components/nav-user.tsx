@@ -6,19 +6,19 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@workspace/ui/components/avatar";
+} from "@repo/ui/components/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
+} from "@repo/ui/components/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@workspace/ui/components/sidebar";
+} from "@repo/ui/components/sidebar";
 import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
 
 export function NavUser() {
