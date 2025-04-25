@@ -1,7 +1,6 @@
 import { authConfig } from "@repo/auth/config";
 import NextAuth from "next-auth";
-import type { NextMiddleware } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+const nextAuth = NextAuth(authConfig);
 
-export const middleware = auth as NextMiddleware;
+export const middleware: typeof nextAuth.auth = nextAuth.auth;
