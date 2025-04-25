@@ -1,7 +1,7 @@
 import { authConfig } from "@/lib/auth.config";
-import { prisma } from "@/lib/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
+import { prisma } from "./prisma";
 
 const nextAuth = NextAuth({
   // @ts-ignore
