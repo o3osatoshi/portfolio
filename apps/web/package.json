@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.9.0",
     "@prisma/client": "6.6.0",
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
