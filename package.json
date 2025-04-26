@@ -11,15 +11,12 @@
     "db:push": "turbo run db:push",
     "db:seed": "turbo run db:seed",
     "dev": "turbo run dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check": "biome check .",
     "check:fix": "biome check . --write",
-    "generate": "turbo run generate",
-    "lint": "turbo run lint"
+    "generate": "turbo run generate"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "prettier": "^3.5.3",
     "prisma": "^6.6.0",
     "tsx": "4.19.3",
     "turbo": "^2.5.2"
