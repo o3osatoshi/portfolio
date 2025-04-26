@@ -13,7 +13,6 @@
     "build": "tsup src/*",
     "format": "prisma format",
     "generate": "prisma generate",
-    "lint": "eslint . --max-warnings 0",
     "prebuild": "npm run generate",
     "predev": "npm run generate",
     "studio": "prisma studio"
@@ -22,11 +21,9 @@
     "@prisma/client": "^6.6.0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.15.2",
     "dotenv-cli": "^8.0.0",
-    "eslint": "^9.25.1",
     "prisma": "^6.6.0",
     "rimraf": "^6.0.1",
     "tsup": "^8.4.0",
