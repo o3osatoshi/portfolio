@@ -103,6 +103,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../config-typescript
+      '@types/node':
+        specifier: ^22.15.2
+        version: 22.15.2
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
