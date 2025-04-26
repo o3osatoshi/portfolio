@@ -1,7 +1,7 @@
 import PostCard from "@/app/dashboard/core/_components/post-card";
 import CreateForm from "@/app/dashboard/core/crud/_components/create-form";
 import type { Post, User } from "@/app/generated/prisma";
-import { prisma } from "@repo/db";
+import { prisma } from "@/lib/prisma";
 import { cache } from "react";
 
 const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
