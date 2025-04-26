@@ -16,9 +16,9 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
-    "prettier": "^3.2.5",
-    "prisma": "latest",
-    "tsx": "4.19.1",
+    "prettier": "^3.5.3",
+    "prisma": "^6.6.0",
+    "tsx": "4.19.3",
     "turbo": "^2.5.2"
   },
   "engines": {
@@ -26,7 +26,7 @@
   },
   "name": "with-prisma",
   "dependencies": {
-    "@prisma/client": "latest"
+    "@prisma/client": "^6.6.0"
   },
   "packageManager": "pnpm@10.9.0"
 }
