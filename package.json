@@ -22,11 +22,11 @@
     "turbo": "^2.5.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "name": "with-prisma",
   "dependencies": {
     "@prisma/client": "^6.6.0"
   },
-  "packageManager": "pnpm@10.9.0"
+  "packageManager": "pnpm@9.15.9"
 }
