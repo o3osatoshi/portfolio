@@ -7,7 +7,15 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", "generated", "dist", ".next", ".turbo", ".idea"]
+    "ignore": [
+      "node_modules",
+      "generated",
+      "dist",
+      "storybook-static",
+      ".next",
+      ".turbo",
+      ".idea"
+    ]
   },
   "formatter": {
     "enabled": true,
