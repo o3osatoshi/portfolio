@@ -33,6 +33,9 @@
       "dependsOn": ["^generate"],
       "cache": false
     },
-    "lint": {}
+    "//#check": {},
+    "//#check:fix": {
+      "cache": false
+    }
   }
 }
