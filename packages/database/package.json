@@ -5,7 +5,7 @@
     ".": "./src/client.ts"
   },
   "scripts": {
-    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^8.57.0",
     "prisma": "latest",
     "rimraf": "^5.0.5",
