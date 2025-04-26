@@ -16,7 +16,7 @@ const DEFAULT_USERS = [
       DEFAULT_USERS.map((user) =>
         prisma.user.upsert({
           where: {
-            email: user.email!,
+            email: user.email ?? "",
           },
           update: {
             ...user,
@@ -24,8 +24,8 @@ const DEFAULT_USERS = [
           create: {
             ...user,
           },
-        })
-      )
+        }),
+      ),
     );
   } catch (error) {
     console.error(error);
