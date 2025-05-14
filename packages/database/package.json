@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "main": "dist/client.js",
   "exports": {
-    ".": {
-      "import": "./dist/client.js"
-    }
+    ".": "./src/client.ts"
   },
   "scripts": {
     "db:migrate:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
