@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "@repo/ui/globals.css";
@@ -13,6 +14,11 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 });
 
+export const metadata: Metadata = {
+  title: "exp",
+  description: "engr experiment",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
+        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
       >
         <Providers>{children}</Providers>
       </body>
