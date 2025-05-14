@@ -1,6 +1,6 @@
+import type { PostExtend } from "@/app/(signed)/core/_services/getPosts";
 import DeleteButton from "@/app/(signed)/core/crud/_components/delete-button";
 import EditDialog from "@/app/(signed)/core/crud/_components/edit-dialog";
-import type { Post, User } from "@repo/database";
 import {
   Card,
   CardAction,
@@ -11,7 +11,7 @@ import {
 } from "@repo/ui/components/card";
 
 interface Props {
-  post: Post & { author: Pick<User, "name"> };
+  post: PostExtend;
 }
 
 export default function PostCard({ post }: Props) {

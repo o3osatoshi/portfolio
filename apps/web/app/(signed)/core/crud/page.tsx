@@ -1,26 +1,29 @@
 import PostCard from "@/app/(signed)/core/_components/post-card";
+import { getPosts } from "@/app/(signed)/core/_services/getPosts";
 import CreateForm from "@/app/(signed)/core/crud/_components/create-form";
-import { type Post, type User, prisma } from "@repo/database";
-import { cache } from "react";
 
-const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
-  cache(async () => {
-    return prisma.post.findMany({
-      include: {
-        author: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  });
+// const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
+//   cache(async () => {
+//     return prisma.post.findMany({
+//       include: {
+//         author: {
+//           select: {
+//             name: true,
+//           },
+//         },
+//       },
+//       orderBy: {
+//         createdAt: "desc",
+//       },
+//     });
+//   });
 
 export default async function Page() {
-  const posts = await getPosts();
+  const result = await getPosts();
+  if (result.isErr()) {
+    return null;
+  }
+  const posts = result.value;
 
   return (
     <div className="flex flex-col gap-6">
