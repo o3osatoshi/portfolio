@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type * as React from "react";
 
+import { ThemeToggle } from "@/app/(signed)/_components/theme-toggle";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -33,6 +34,9 @@ export function NavSecondary({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <SidebarMenuItem>
+            <ThemeToggle />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
