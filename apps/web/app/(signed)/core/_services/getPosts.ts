@@ -43,7 +43,7 @@ export async function getPosts({
   const search = authorId === undefined ? undefined : { authorId: authorId };
   return ResultAsync.fromPromise(
     fetchClient({
-      pathName: "/core/posts",
+      pathName: "/api/core/posts",
       search,
       cache: "force-cache",
     }),
