@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/app/(signed)/_components/app-sidebar";
-import BreadcrumbHeader from "@/app/(signed)/_components/breadcrumb-header";
+import { AppSidebar } from "@/app/(signedIn)/_components/app-sidebar";
+import BreadcrumbHeader from "@/app/(signedIn)/_components/breadcrumb-header";
 import { SidebarInset, SidebarProvider } from "@repo/ui/components/sidebar";
 
 interface Props {

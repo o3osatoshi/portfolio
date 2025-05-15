@@ -3,10 +3,10 @@
 import { Atom, FlaskConical } from "lucide-react";
 import type * as React from "react";
 
-import { NavMain } from "@/app/(signed)/_components/nav-main";
-import { NavProjects } from "@/app/(signed)/_components/nav-projects";
-import { NavSecondary } from "@/app/(signed)/_components/nav-secondary";
-import { NavUser } from "@/app/(signed)/_components/nav-user";
+import { NavMain } from "@/app/(signedIn)/_components/nav-main";
+import { NavProjects } from "@/app/(signedIn)/_components/nav-projects";
+import { NavSecondary } from "@/app/(signedIn)/_components/nav-secondary";
+import { NavUser } from "@/app/(signedIn)/_components/nav-user";
 import { getLabel, getPathName } from "@/utils/handle-nav";
 import {
   Sidebar,
