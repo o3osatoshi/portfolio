@@ -6,13 +6,12 @@
     ".": "./src/client.ts"
   },
   "scripts": {
+    "preinstall": "npm run generate",
     "db:migrate:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
-    "predev": "npm run generate",
     "dev": "tsup src/* --watch",
-    "prebuild": "npm run generate",
     "build": "tsup src/*",
     "format": "prisma format",
     "generate": "prisma generate",
