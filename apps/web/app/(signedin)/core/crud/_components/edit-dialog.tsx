@@ -1,6 +1,6 @@
 "use client";
 
-import { updatePost } from "@/app/(signedIn)/core/crud/_actions/update-post";
+import { updatePost } from "@/app/(signedin)/core/crud/_actions/update-post";
 import { type ActionResult, err } from "@/utils/action-result";
 import type { Post } from "@repo/database";
 import { Button } from "@repo/ui/components/button";

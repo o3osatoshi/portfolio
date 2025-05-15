@@ -1,6 +1,6 @@
 "use client";
 
-import { createPost } from "@/app/(signedIn)/core/crud/_actions/create-post";
+import { createPost } from "@/app/(signedin)/core/crud/_actions/create-post";
 import { type ActionResult, err } from "@/utils/action-result";
 import { Alert, AlertTitle } from "@repo/ui/components/alert";
 import { Button } from "@repo/ui/components/button";

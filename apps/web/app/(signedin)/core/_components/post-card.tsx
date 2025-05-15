@@ -1,6 +1,6 @@
-import type { PostExtend } from "@/app/(signedIn)/core/_services/getPosts";
-import DeleteButton from "@/app/(signedIn)/core/crud/_components/delete-button";
-import EditDialog from "@/app/(signedIn)/core/crud/_components/edit-dialog";
+import type { PostExtend } from "@/app/(signedin)/core/_services/getPosts";
+import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
+import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
 import {
   Card,
   CardAction,

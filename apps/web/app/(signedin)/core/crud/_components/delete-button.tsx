@@ -1,6 +1,6 @@
 "use client";
 
-import { deletePost } from "@/app/(signedIn)/core/crud/_actions/delete-post";
+import { deletePost } from "@/app/(signedin)/core/crud/_actions/delete-post";
 import { type ActionResult, err } from "@/utils/action-result";
 import { Button } from "@repo/ui/components/button";
 import { Trash2 } from "lucide-react";

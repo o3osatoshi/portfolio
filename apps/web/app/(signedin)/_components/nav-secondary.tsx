@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type * as React from "react";
 
-import { ThemeToggle } from "@/app/(signedIn)/_components/theme-toggle";
+import { ThemeToggle } from "@/app/(signedin)/_components/theme-toggle";
 import {
   SidebarGroup,
   SidebarGroupContent,
