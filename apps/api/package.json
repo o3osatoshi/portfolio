@@ -3,29 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "npm run generate",
-    "dev": "next dev",
-    "prebuild": "npm run generate",
+    "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "generate": "prisma generate"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "6.7.0",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@repo/database": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "prisma": "^6.7.0",
     "typescript": "^5"
-  },
-  "prisma": {
-    "schema": "./prisma"
   }
 }
