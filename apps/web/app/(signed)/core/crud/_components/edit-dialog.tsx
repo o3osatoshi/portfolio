@@ -1,8 +1,8 @@
 "use client";
 
 import { updatePost } from "@/app/(signed)/core/crud/_actions/update-post";
-import type { Post } from "@/generated/prisma";
 import { type ActionResult, err } from "@/utils/action-result";
+import type { Post } from "@repo/database";
 import { Button } from "@repo/ui/components/button";
 import {
   Dialog,
