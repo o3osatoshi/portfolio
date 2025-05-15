@@ -3,6 +3,7 @@
   "name": "web",
   "version": "0.0.0",
   "scripts": {
+    "predev": "npm run generate",
     "dev": "next dev",
     "prebuild": "npm run generate",
     "build": "next build",
