@@ -26,7 +26,7 @@ interface Props {
   tags?: string[];
 }
 
-export function getFullPath(pathName: string, search?: Search) {
+export function getQueryingPathName(pathName: string, search?: Search) {
   const params = new URLSearchParams(search);
   return search === undefined ? pathName : `${pathName}?${params.toString()}`;
 }
@@ -39,14 +39,16 @@ export async function fetchClient({
   tags,
 }: Props) {
   try {
-    const _fullPath = getFullPath(pathName, search);
-    const url = new URL(_fullPath, base);
+    const _queryingPathName = getQueryingPathName(pathName, search);
+    const url = new URL(_queryingPathName, base);
 
     const res = await fetch(url, {
       ...(cache !== undefined && { cache }),
       next: {
         ...(revalidate !== undefined && { revalidate }),
-        ...(tags !== undefined && { tags: [...tags, pathName, _fullPath] }),
+        ...(tags !== undefined && {
+          tags: [...tags, pathName, _queryingPathName],
+        }),
       },
     });
     if (!res.ok) {
