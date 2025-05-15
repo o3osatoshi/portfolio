@@ -13,6 +13,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.0",
     "@prisma/client": "^6.7.0",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@repo/ui": "workspace:*",
     "lucide-react": "^0.507.0",
     "neverthrow": "^8.2.0",
