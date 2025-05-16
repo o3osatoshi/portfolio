@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "main": "dist/client.js",
   "exports": {
-    ".": "./src/client.ts"
+    ".": "./src/client.ts",
+    "./schemas": "./src/schemas/index.ts"
   },
   "scripts": {
     "preinstall": "npm run generate",
@@ -18,7 +19,8 @@
     "studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "^6.7.0"
+    "@prisma/client": "^6.7.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

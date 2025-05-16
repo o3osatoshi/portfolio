@@ -1,38 +1,7 @@
 import { fetchClient } from "@/utils/fetch-client";
 import { getPathName } from "@/utils/handle-nav";
+import { type Posts, zPosts } from "@repo/database/schemas";
 import { type Result, ResultAsync, err, ok } from "neverthrow";
-import { z } from "zod";
-
-const zBase = z.object({
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-});
-
-const zUser = zBase.extend({
-  id: z.string(),
-  name: z.string().optional(),
-  email: z.string().email(),
-  emailVerified: z.coerce.date().optional(),
-  image: z.string().url().optional(),
-});
-
-const zPost = zBase.extend({
-  id: z.number(),
-  title: z.string(),
-  content: z.string().nullable(),
-  published: z.coerce.boolean(),
-  authorId: z.string(),
-});
-
-const zPostExtend = zPost.extend({
-  author: zUser.pick({ name: true }),
-});
-
-export type PostExtend = z.infer<typeof zPostExtend>;
-
-const zPosts = z.array(zPostExtend);
-
-type Posts = z.infer<typeof zPosts>;
 
 interface Props {
   authorId?: string;
