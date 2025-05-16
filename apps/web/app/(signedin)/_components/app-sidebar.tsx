@@ -30,6 +30,10 @@ const data = {
           title: getLabel("core-crud"),
           url: getPathName("core-crud"),
         },
+        {
+          title: getLabel("core-restricted"),
+          url: getPathName("core-restricted"),
+        },
       ],
     },
   ],
