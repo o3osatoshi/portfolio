@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { type ActionResult, err } from "@/utils/action-result";
+import { getPathName } from "@/utils/handle-nav";
 import { prisma } from "@repo/database";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -38,7 +39,7 @@ export const updatePost = async (
       return err("Failed to update the post. Please try again later.");
     }
 
-    revalidatePath("/core/crud");
+    revalidatePath(getPathName("core-crud"));
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
@@ -47,5 +48,5 @@ export const updatePost = async (
     return err("Failed to update the post. Please try again later.");
   }
 
-  redirect("/core/crud");
+  redirect(getPathName("core-crud"));
 };

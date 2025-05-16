@@ -1,4 +1,5 @@
 import { fetchClient } from "@/utils/fetch-client";
+import { getPathName } from "@/utils/handle-nav";
 import { type Result, ResultAsync, err, ok } from "neverthrow";
 import { z } from "zod";
 
@@ -43,7 +44,7 @@ export async function getPosts({
   const search = authorId === undefined ? undefined : { authorId: authorId };
   return ResultAsync.fromPromise(
     fetchClient({
-      pathName: "/api/core/posts",
+      pathName: getPathName("core-posts"),
       search,
       cache: "force-cache",
     }),

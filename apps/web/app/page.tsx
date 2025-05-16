@@ -1,5 +1,6 @@
+import { getPathName } from "@/utils/handle-nav";
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  redirect("/core/crud");
+  redirect(getPathName("core-crud"));
 }
