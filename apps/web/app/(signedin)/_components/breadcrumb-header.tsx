@@ -12,6 +12,7 @@ import {
 import { Separator } from "@repo/ui/components/separator";
 import { SidebarTrigger } from "@repo/ui/components/sidebar";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 export default function BreadcrumbHeader() {
   const pathname = usePathname();
@@ -30,27 +31,21 @@ export default function BreadcrumbHeader() {
             {navs?.map((nav, index) => {
               if (index === navs.length - 1) {
                 return (
-                  <BreadcrumbItem>
+                  <BreadcrumbItem key={nav.alias}>
                     <BreadcrumbPage>{nav.data.label}</BreadcrumbPage>
                   </BreadcrumbItem>
                 );
               }
 
               return (
-                <>
-                  <BreadcrumbItem
-                    key={`${nav.alias}-item`}
-                    className="hidden md:block"
-                  >
+                <React.Fragment key={nav.alias}>
+                  <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href={nav.pathName}>
                       {nav.data.label}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
-                  <BreadcrumbSeparator
-                    key={`${nav.alias}-separator`}
-                    className="hidden md:block"
-                  />
-                </>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                </React.Fragment>
               );
             })}
           </BreadcrumbList>
