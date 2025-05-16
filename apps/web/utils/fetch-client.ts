@@ -46,9 +46,10 @@ export async function fetchClient({
       ...(cache !== undefined && { cache }),
       next: {
         ...(revalidate !== undefined && { revalidate }),
-        ...(tags !== undefined && {
-          tags: [...tags, pathName, _queryingPathName],
-        }),
+        tags:
+          tags === undefined
+            ? [_queryingPathName]
+            : [...tags, _queryingPathName],
       },
     });
     if (!res.ok) {

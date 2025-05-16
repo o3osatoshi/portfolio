@@ -2,9 +2,9 @@
 
 import { auth } from "@/lib/auth";
 import { type ActionResult, err } from "@/utils/action-result";
-import { getPathName } from "@/utils/handle-nav";
+import { getPathName, getTag } from "@/utils/handle-nav";
 import { prisma } from "@repo/database";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const createPost = async (
@@ -31,7 +31,8 @@ export const createPost = async (
       return err("Failed to create the post. Please try again later.");
     }
 
-    revalidatePath(getPathName("core-crud"));
+    revalidateTag(getPathName("core-posts"));
+    revalidateTag(getTag("core-posts", { authorId: userId }));
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
