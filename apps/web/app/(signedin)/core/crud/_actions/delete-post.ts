@@ -7,8 +7,17 @@ import { prisma } from "@repo/database";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-export const deletePost = async (id: number): Promise<ActionResult<never>> => {
+export const deletePost = async (
+  _: ActionResult<never> | undefined,
+  formData: FormData,
+): Promise<ActionResult<never>> => {
   try {
+    const _id = formData.get("id");
+    if (typeof _id !== "string") {
+      return err("Required fields are missing.");
+    }
+    const id = Number(_id);
+
     const session = await auth();
     const userId = session?.user?.id;
     if (userId === undefined) {

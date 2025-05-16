@@ -1,7 +1,7 @@
 "use client";
 
 import { updatePost } from "@/app/(signedin)/core/crud/_actions/update-post";
-import { type ActionResult, err } from "@/utils/action-result";
+import type { ActionResult } from "@/utils/action-result";
 import type { Post } from "@repo/database";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -19,27 +19,6 @@ import { Pencil } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
 
-const action = async (
-  _: ActionResult<never> | undefined,
-  formData: FormData,
-): Promise<ActionResult<never>> => {
-  const id = formData.get("id");
-  const title = formData.get("title");
-  const content = formData.get("content");
-  if (
-    typeof id !== "string" ||
-    typeof title !== "string" ||
-    typeof content !== "string"
-  ) {
-    return err("Required fields are missing.");
-  }
-  const result = await updatePost(Number(id), title, content);
-  if (!result.ok) {
-    console.log(result.error.message);
-  }
-  return result;
-};
-
 interface Props {
   post: Post;
 }
@@ -48,7 +27,7 @@ export default function EditDialog({ post }: Props) {
   const [_, formAction, isLoading] = useActionState<
     ActionResult<never> | undefined,
     FormData
-  >(action, undefined);
+  >(updatePost, undefined);
 
   return (
     <Dialog>

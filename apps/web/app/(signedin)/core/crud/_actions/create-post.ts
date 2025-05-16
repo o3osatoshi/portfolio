@@ -8,10 +8,16 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const createPost = async (
-  title: string,
-  content: string,
+  _: ActionResult<never> | undefined,
+  formData: FormData,
 ): Promise<ActionResult<never>> => {
   try {
+    const title = formData.get("title");
+    const content = formData.get("content");
+    if (typeof title !== "string" || typeof content !== "string") {
+      return err("Required fields are missing.");
+    }
+
     console.log("createPost", title, content);
     const session = await auth();
     const userId = session?.user?.id;
