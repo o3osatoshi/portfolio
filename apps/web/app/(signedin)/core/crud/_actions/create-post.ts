@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { type ActionResult, err } from "@/utils/action-result";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { prisma } from "@repo/database";
+import { zCreatePost } from "@repo/database/schemas";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -12,13 +13,12 @@ export const createPost = async (
   formData: FormData,
 ): Promise<ActionResult<never>> => {
   try {
-    const title = formData.get("title");
-    const content = formData.get("content");
-    if (typeof title !== "string" || typeof content !== "string") {
-      return err("Required fields are missing.");
+    const result = zCreatePost.safeParse(Object.fromEntries(formData));
+    if (!result.success) {
+      return err("validation error");
     }
+    const { title, content } = result.data;
 
-    console.log("createPost", title, content);
     const session = await auth();
     const userId = session?.user?.id;
     if (userId === undefined) {

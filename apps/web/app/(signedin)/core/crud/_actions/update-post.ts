@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { type ActionResult, err } from "@/utils/action-result";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { prisma } from "@repo/database";
+import { zUpdatePost } from "@repo/database/schemas";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -12,17 +13,11 @@ export const updatePost = async (
   formData: FormData,
 ): Promise<ActionResult<never>> => {
   try {
-    const _id = formData.get("id");
-    const title = formData.get("title");
-    const content = formData.get("content");
-    if (
-      typeof _id !== "string" ||
-      typeof title !== "string" ||
-      typeof content !== "string"
-    ) {
-      return err("Required fields are missing.");
+    const result = zUpdatePost.safeParse(Object.fromEntries(formData));
+    if (!result.success) {
+      return err("validation error");
     }
-    const id = Number(_id);
+    const { id, title, content } = result.data;
 
     const session = await auth();
     const userId = session?.user?.id;

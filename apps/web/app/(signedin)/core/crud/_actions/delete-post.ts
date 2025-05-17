@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { type ActionResult, err } from "@/utils/action-result";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { prisma } from "@repo/database";
+import { zDeletePost } from "@repo/database/schemas";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -12,11 +13,11 @@ export const deletePost = async (
   formData: FormData,
 ): Promise<ActionResult<never>> => {
   try {
-    const _id = formData.get("id");
-    if (typeof _id !== "string") {
-      return err("Required fields are missing.");
+    const result = zDeletePost.safeParse(Object.fromEntries(formData));
+    if (!result.success) {
+      return err("validation error");
     }
-    const id = Number(_id);
+    const { id } = result.data;
 
     const session = await auth();
     const userId = session?.user?.id;
