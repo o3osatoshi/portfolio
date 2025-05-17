@@ -1,6 +1,6 @@
 "use client";
 
-import { createPost } from "@/app/(signedin)/core/crud/server/_actions/create-post";
+import { createPost } from "@/app/(main)/core/crud/server/_actions/create-post";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zCreatePost } from "@repo/database/schemas";

@@ -1,5 +1,5 @@
-import PostCard from "@/app/(signedin)/core/_components/post-card";
-import { getPosts } from "@/app/(signedin)/core/_services/getPosts";
+import PostCard from "@/app/(main)/core/_components/post-card";
+import { getPosts } from "@/app/(main)/core/_services/getPosts";
 import { auth } from "@/lib/auth";
 import { getPathName } from "@/utils/handle-nav";
 import { redirect } from "next/navigation";

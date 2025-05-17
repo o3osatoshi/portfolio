@@ -1,10 +1,10 @@
 import { Atom, FlaskConical, Layers } from "lucide-react";
 import type * as React from "react";
 
-import { NavMain } from "@/app/(signedin)/_components/nav-main";
-import { NavProjects } from "@/app/(signedin)/_components/nav-projects";
-import { NavSecondary } from "@/app/(signedin)/_components/nav-secondary";
-import { NavUser } from "@/app/(signedin)/_components/nav-user";
+import { NavMain } from "@/app/(main)/_components/nav-main";
+import { NavProjects } from "@/app/(main)/_components/nav-projects";
+import { NavSecondary } from "@/app/(main)/_components/nav-secondary";
+import { NavUser } from "@/app/(main)/_components/nav-user";
 import { getLabel, getPathName } from "@/utils/handle-nav";
 import {
   Sidebar,
