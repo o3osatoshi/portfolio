@@ -5,6 +5,7 @@ import type { ActionResult } from "@/utils/action-result";
 import type { Post } from "@repo/database";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
+import { FormInput } from "@repo/ui/components/case/form-input";
 import {
   Dialog,
   DialogContent,
@@ -14,8 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/dialog";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";
@@ -46,31 +45,21 @@ export default function EditDialog({ post }: Props) {
               Make changes to your post here.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right" htmlFor="title">
-                Title
-              </Label>
-              <Input
-                className="col-span-3"
-                defaultValue={post.title}
-                id="title"
-                name="title"
-                type="text"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right" htmlFor="content">
-                Content
-              </Label>
-              <Input
-                className="col-span-3"
-                defaultValue={post.content ?? ""}
-                id="content"
-                name="content"
-                type="text"
-              />
-            </div>
+          <div className="flex flex-col gap-4 py-4">
+            <FormInput
+              label="Title"
+              defaultValue={post.title}
+              id="title"
+              name="title"
+              type="text"
+            />
+            <FormInput
+              label="Content"
+              defaultValue={post.content ?? ""}
+              id="content"
+              name="content"
+              type="text"
+            />
           </div>
           <DialogFooter>
             <div className="flex flex-col items-end gap-2">
