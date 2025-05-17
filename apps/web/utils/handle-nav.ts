@@ -1,6 +1,12 @@
 import { type Search, getQueryingPathName } from "@/utils/fetch-client";
 
-type WebAlias = "signin" | "core" | "core-server-crud" | "core-limited";
+type WebAlias =
+  | "signin"
+  | "core"
+  | "core-server-crud"
+  | "core-limited"
+  | "web3"
+  | "web3-crud";
 
 type ApiAlias = "core-posts";
 
@@ -68,6 +74,25 @@ const navs: Nav[] = [
     alias: "core-posts",
     pathName: "/api/core/posts",
     type: "api",
+  },
+  {
+    alias: "web3",
+    pathName: "/web3",
+    type: "web",
+    data: {
+      label: "Web3",
+      hierarchy: 1,
+    },
+  },
+  {
+    alias: "web3-crud",
+    pathName: "/web3/crud",
+    type: "web",
+    data: {
+      label: "CRUD",
+      hierarchy: 2,
+      parentAlias: "web3",
+    },
   },
 ];
 

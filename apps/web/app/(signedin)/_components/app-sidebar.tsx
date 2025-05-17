@@ -1,4 +1,4 @@
-import { Atom, FlaskConical } from "lucide-react";
+import { Atom, FlaskConical, Layers } from "lucide-react";
 import type * as React from "react";
 
 import { NavMain } from "@/app/(signedin)/_components/nav-main";
@@ -31,6 +31,18 @@ const data = {
         {
           title: getLabel("core-limited"),
           url: getPathName("core-limited"),
+        },
+      ],
+    },
+    {
+      title: getLabel("web3"),
+      url: "#",
+      icon: Layers,
+      isActive: true,
+      items: [
+        {
+          title: getLabel("web3-crud"),
+          url: getPathName("web3-crud"),
         },
       ],
     },
