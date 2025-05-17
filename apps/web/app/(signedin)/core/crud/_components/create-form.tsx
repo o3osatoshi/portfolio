@@ -2,10 +2,9 @@
 
 import { createPost } from "@/app/(signedin)/core/crud/_actions/create-post";
 import type { ActionResult } from "@/utils/action-result";
-import { Alert, AlertTitle } from "@repo/ui/components/alert";
+import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
-import { AlertCircle } from "lucide-react";
 import { useActionState } from "react";
 
 export default function CreateForm() {
@@ -20,10 +19,7 @@ export default function CreateForm() {
         <Input name="title" placeholder="Title" type="text" />
         <Input name="content" placeholder="Content" type="text" />
         {result?.ok === false && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>{result.error.message}</AlertTitle>
-          </Alert>
+          <Message variant="destructive">{result.error.message}</Message>
         )}
         <Button disabled={isLoading} type="submit">
           Create Post
