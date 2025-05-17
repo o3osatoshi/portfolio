@@ -1,5 +1,3 @@
-"use client";
-
 import { ChevronRight, type LucideIcon } from "lucide-react";
 
 import {
@@ -18,6 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@repo/ui/components/sidebar";
+import Link from "next/link";
 
 export function NavMain({
   items,
@@ -58,9 +57,9 @@ export function NavMain({
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <Link href={subItem.url}>
                               <span>{subItem.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

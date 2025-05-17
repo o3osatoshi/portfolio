@@ -1,5 +1,3 @@
-"use client";
-
 import { Atom, FlaskConical } from "lucide-react";
 import type * as React from "react";
 
