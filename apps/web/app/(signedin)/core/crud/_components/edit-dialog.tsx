@@ -3,6 +3,7 @@
 import { updatePost } from "@/app/(signedin)/core/crud/_actions/update-post";
 import type { ActionResult } from "@/utils/action-result";
 import type { Post } from "@repo/database";
+import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import {
   Dialog,
@@ -24,7 +25,7 @@ interface Props {
 }
 
 export default function EditDialog({ post }: Props) {
-  const [_, formAction, isLoading] = useActionState<
+  const [result, formAction, isLoading] = useActionState<
     ActionResult<never> | undefined,
     FormData
   >(updatePost, undefined);
@@ -72,9 +73,14 @@ export default function EditDialog({ post }: Props) {
             </div>
           </div>
           <DialogFooter>
-            <Button disabled={isLoading} type="submit">
-              Save changes
-            </Button>
+            <div className="flex flex-col items-end gap-2">
+              {result?.ok === false && (
+                <Message variant="destructive">{result.error.message}</Message>
+              )}
+              <Button disabled={isLoading} type="submit" className="w-fit">
+                Save changes
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
