@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { type ActionResult, err } from "@/utils/action-result";
+import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { prisma } from "@repo/database";
 import { zCreatePost } from "@repo/database/schemas";
@@ -9,9 +9,9 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const createPost = async (
-  _: ActionResult<never> | undefined,
+  _: ActionState<never> | undefined,
   formData: FormData,
-): Promise<ActionResult<never>> => {
+): Promise<ActionState<never>> => {
   try {
     const result = zCreatePost.safeParse(Object.fromEntries(formData));
     if (!result.success) {

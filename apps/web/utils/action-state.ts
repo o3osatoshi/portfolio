@@ -18,18 +18,18 @@ function newError(message: string, name?: string): ActionError {
   };
 }
 
-export type ActionResult<
+export type ActionState<
   T extends ActionData = Object,
   E extends ActionError = ActionError,
 > = { ok: true; data: T } | { ok: false; error: E };
 
-export function ok<T extends ActionData>(data: T): ActionResult<T, never> {
+export function ok<T extends ActionData>(data: T): ActionState<T, never> {
   return { ok: true, data };
 }
 
 export function err<E extends Error>(
   error: string | E | ActionError,
-): ActionResult<never, ActionError> {
+): ActionState<never, ActionError> {
   return {
     ok: false,
     error:
