@@ -1,8 +1,10 @@
 "use client";
 
 import { updatePost } from "@/app/(signedin)/core/crud/_actions/update-post";
-import type { ActionResult } from "@/utils/action-result";
+import type { ActionState } from "@/utils/action-state";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { Post } from "@repo/database";
+import { zCreatePost, zUpdatePost } from "@repo/database/schemas";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";
@@ -17,17 +19,33 @@ import {
 } from "@repo/ui/components/dialog";
 import { Pencil } from "lucide-react";
 import * as React from "react";
-import { useActionState } from "react";
+import { type FormEvent, useActionState } from "react";
+import { useForm } from "react-hook-form";
 
 interface Props {
   post: Post;
 }
 
 export default function EditDialog({ post }: Props) {
-  const [result, formAction, isLoading] = useActionState<
-    ActionResult<never> | undefined,
+  const [state, dispatch, isPending] = useActionState<
+    ActionState<never> | undefined,
     FormData
   >(updatePost, undefined);
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    getValues,
+  } = useForm({ resolver: zodResolver(zUpdatePost) });
+
+  const validate = async (e: FormEvent<HTMLFormElement>) => {
+    const result = zUpdatePost.safeParse(getValues());
+    if (!result.success) {
+      e.preventDefault();
+    }
+    await handleSubmit(() => {})();
+  };
 
   return (
     <Dialog>
@@ -37,8 +55,8 @@ export default function EditDialog({ post }: Props) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form action={formAction}>
-          <input name="id" type="hidden" value={post.id} />
+        <form action={dispatch} onSubmit={validate}>
+          <input value={post.id} {...register("id")} type="hidden" />
           <DialogHeader>
             <DialogTitle>Edit post</DialogTitle>
             <DialogDescription>
@@ -50,23 +68,29 @@ export default function EditDialog({ post }: Props) {
               label="Title"
               defaultValue={post.title}
               id="title"
-              name="title"
+              {...register("title")}
               type="text"
+              errorMessage={errors.title?.message}
             />
             <FormInput
               label="Content"
               defaultValue={post.content ?? ""}
               id="content"
-              name="content"
+              {...register("content")}
               type="text"
+              errorMessage={errors.content?.message}
             />
           </div>
           <DialogFooter>
             <div className="flex flex-col items-end gap-2">
-              {result?.ok === false && (
-                <Message variant="destructive">{result.error.message}</Message>
+              {state?.ok === false && (
+                <Message variant="destructive">{state.error.message}</Message>
               )}
-              <Button disabled={isLoading} type="submit" className="w-fit">
+              <Button
+                disabled={Object.keys(errors).length > 0 || isPending}
+                type="submit"
+                className="w-fit"
+              >
                 Save changes
               </Button>
             </div>
