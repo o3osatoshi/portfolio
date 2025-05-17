@@ -1,5 +1,5 @@
-import DeleteButton from "@/app/(signedin)/core/crud/_components/delete-button";
-import EditDialog from "@/app/(signedin)/core/crud/_components/edit-dialog";
+import DeleteButton from "@/app/(signedin)/core/crud/server/_components/delete-button";
+import EditDialog from "@/app/(signedin)/core/crud/server/_components/edit-dialog";
 import type { Post } from "@repo/database/schemas";
 import {
   Card,

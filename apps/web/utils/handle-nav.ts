@@ -1,6 +1,6 @@
 import { type Search, getQueryingPathName } from "@/utils/fetch-client";
 
-type WebAlias = "signin" | "core" | "core-crud" | "core-restricted";
+type WebAlias = "signin" | "core" | "core-server-crud" | "core-limited";
 
 type ApiAlias = "core-posts";
 
@@ -45,21 +45,21 @@ const navs: Nav[] = [
     },
   },
   {
-    alias: "core-crud",
-    pathName: "/core/crud",
+    alias: "core-server-crud",
+    pathName: "/core/crud/server",
     type: "web",
     data: {
-      label: "CRUD",
+      label: "Server side CRUD",
       hierarchy: 2,
       parentAlias: "core",
     },
   },
   {
-    alias: "core-restricted",
-    pathName: "/core/restricted",
+    alias: "core-limited",
+    pathName: "/core/limited",
     type: "web",
     data: {
-      label: "Restricted Access",
+      label: "Limited read",
       hierarchy: 2,
       parentAlias: "core",
     },

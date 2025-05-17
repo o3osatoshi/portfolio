@@ -27,12 +27,12 @@ const data = {
       isActive: true,
       items: [
         {
-          title: getLabel("core-crud"),
-          url: getPathName("core-crud"),
+          title: getLabel("core-server-crud"),
+          url: getPathName("core-server-crud"),
         },
         {
-          title: getLabel("core-restricted"),
-          url: getPathName("core-restricted"),
+          title: getLabel("core-limited"),
+          url: getPathName("core-limited"),
         },
       ],
     },

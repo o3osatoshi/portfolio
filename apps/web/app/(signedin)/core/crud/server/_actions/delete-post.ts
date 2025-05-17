@@ -49,5 +49,5 @@ export const deletePost = async (
     return err("Failed to delete the post. Please try again later.");
   }
 
-  redirect(getPathName("core-crud"));
+  redirect(getPathName("core-server-crud"));
 };

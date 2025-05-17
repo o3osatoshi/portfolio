@@ -47,5 +47,5 @@ export const createPost = async (
     return err("Failed to create the post. Please try again later.");
   }
 
-  redirect(getPathName("core-crud"));
+  redirect(getPathName("core-server-crud"));
 };
