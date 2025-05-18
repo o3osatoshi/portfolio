@@ -2,11 +2,24 @@
   "name": "ethereum",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "exports": {
+    ".": "./src/generate.ts"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preinstall": "npm run generate",
+    "generate": "dotenv -e .env.local -- wagmi generate"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.12",
+    "@wagmi/cli": "^2.3.1",
+    "dotenv-cli": "^8.0.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "viem": "^2.29.4",
+    "wagmi": "0.0.0-canary-20250516172625"
+  }
 }

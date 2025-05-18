@@ -11,6 +11,7 @@
         "storybook-static/**"
       ],
       "env": [
+        "ETHERSCAN_API_KEY",
         "DATABASE_URL",
         "AUTH_SECRET",
         "AUTH_GOOGLE_ID",
