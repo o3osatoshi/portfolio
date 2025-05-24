@@ -125,3 +125,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .hide-number-input-spinner {
+    @apply [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+  }
+}
