@@ -16,7 +16,7 @@ const fontMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "exp",
-  description: "engr experiment",
+  description: "engr portfolio",
 };
 
 export default function RootLayout({
