@@ -6,6 +6,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:functions": "turbo run build --filter=functions...",
     "db:migrate:deploy": "turbo run db:migrate:deploy",
     "db:migrate:dev": "turbo run db:migrate:dev",
     "db:push": "turbo run db:push",
@@ -14,7 +15,8 @@
     "check": "biome check .",
     "check:fix": "biome check . --write",
     "generate": "turbo run generate",
-    "preview-storybook": "turbo run preview-storybook"
+    "preview-storybook": "turbo run preview-storybook",
+    "deploy:functions": "pnpm build:functions && firebase deploy --only functions"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
