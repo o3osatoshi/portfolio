@@ -9,7 +9,7 @@
   "scripts": {
     "preinstall": "npm run generate",
     "db:migrate:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:dev": "dotenv -e .env.development.local -- prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
     "dev": "tsup src/* --watch",

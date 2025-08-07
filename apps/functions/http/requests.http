@@ -1,0 +1,3 @@
+### HelloWorld
+GET {{functions_prod_base}}/helloWorld
+Accept: text/plain
