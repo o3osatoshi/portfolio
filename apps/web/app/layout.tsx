@@ -15,8 +15,8 @@ const fontMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "exp",
-  description: "engr portfolio",
+  title: "o3osatoshi",
+  description: "o3osatoshi portfolio",
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
