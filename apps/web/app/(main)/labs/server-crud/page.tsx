@@ -1,6 +1,6 @@
-import PostCard from "@/app/(main)/core/_components/post-card";
-import { getPosts } from "@/app/(main)/core/_services/getPosts";
-import CreateForm from "@/app/(main)/core/crud/server/_components/create-form";
+import PostCard from "@/app/(main)/labs/_components/post-card";
+import { getPosts } from "@/app/(main)/labs/_services/getPosts";
+import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
 
 // const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
 //   cache(async () => {

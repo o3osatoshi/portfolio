@@ -13,7 +13,7 @@ export async function getPosts({
   const search = authorId === undefined ? undefined : { authorId: authorId };
   return ResultAsync.fromPromise(
     fetchClient({
-      pathName: getPathName("core-posts"),
+      pathName: getPathName("labs-posts"),
       search,
       cache: "force-cache",
     }),

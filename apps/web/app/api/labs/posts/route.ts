@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const authorId = searchParams.get("authorId");
 
-  console.log(`[GET /core/posts] called with authorId=${authorId ?? "none"}`);
+  console.log(`[GET /labs/posts] called with authorId=${authorId ?? "none"}`);
 
   const posts = await prisma.post.findMany({
     ...(authorId !== null && { where: { authorId } }),

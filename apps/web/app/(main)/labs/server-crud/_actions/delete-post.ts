@@ -39,8 +39,8 @@ export const deletePost = async (
       return err("Failed to delete the post. Please try again later.");
     }
 
-    revalidateTag(getPathName("core-posts"));
-    revalidateTag(getTag("core-posts", { authorId: userId }));
+    revalidateTag(getPathName("labs-posts"));
+    revalidateTag(getTag("labs-posts", { authorId: userId }));
   } catch (error: unknown) {
     console.error(error);
     if (error instanceof Error) {
@@ -49,5 +49,5 @@ export const deletePost = async (
     return err("Failed to delete the post. Please try again later.");
   }
 
-  redirect(getPathName("core-server-crud"));
+  redirect(getPathName("labs-server-crud"));
 };

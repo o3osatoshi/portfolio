@@ -19,30 +19,29 @@ import {
 const data = {
   navMain: [
     {
-      title: getLabel("core"),
+      title: getLabel("portfolio"),
       url: "#",
       icon: Atom,
       isActive: true,
-      items: [
-        {
-          title: getLabel("core-server-crud"),
-          url: getPathName("core-server-crud"),
-        },
-        {
-          title: getLabel("core-limited"),
-          url: getPathName("core-limited"),
-        },
-      ],
+      items: [],
     },
     {
-      title: getLabel("web3"),
+      title: getLabel("labs"),
       url: "#",
       icon: Layers,
       isActive: true,
       items: [
         {
-          title: getLabel("web3-crud"),
-          url: getPathName("web3-crud"),
+          title: getLabel("labs-server-crud"),
+          url: getPathName("labs-server-crud"),
+        },
+        {
+          title: getLabel("labs-limited-read"),
+          url: getPathName("labs-limited-read"),
+        },
+        {
+          title: getLabel("labs-web3-crud"),
+          url: getPathName("labs-web3-crud"),
         },
       ],
     },

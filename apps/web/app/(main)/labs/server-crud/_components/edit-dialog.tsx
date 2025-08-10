@@ -1,6 +1,6 @@
 "use client";
 
-import { updatePost } from "@/app/(main)/core/crud/server/_actions/update-post";
+import { updatePost } from "@/app/(main)/labs/server-crud/_actions/update-post";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Post } from "@repo/database";

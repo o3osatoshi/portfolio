@@ -2,13 +2,14 @@ import { type Search, getQueryingPathName } from "@/utils/fetch-client";
 
 type WebAlias =
   | "signin"
-  | "core"
-  | "core-server-crud"
-  | "core-limited"
-  | "web3"
-  | "web3-crud";
+  | "portfolio"
+  | "portfolio-about"
+  | "labs"
+  | "labs-server-crud"
+  | "labs-limited-read"
+  | "labs-web3-crud";
 
-type ApiAlias = "core-posts";
+type ApiAlias = "labs-posts";
 
 type Alias = WebAlias | ApiAlias;
 
@@ -42,56 +43,66 @@ const navs: Nav[] = [
     },
   },
   {
-    alias: "core",
-    pathName: "/core",
+    alias: "portfolio",
+    pathName: "/portfolio",
     type: "web",
     data: {
-      label: "Core",
+      label: "Portfolio",
       hierarchy: 1,
     },
   },
   {
-    alias: "core-server-crud",
-    pathName: "/core/crud/server",
+    alias: "portfolio-about",
+    pathName: "/portfolio/about",
+    type: "web",
+    data: {
+      label: "About",
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+  },
+  {
+    alias: "labs",
+    pathName: "/labs",
+    type: "web",
+    data: {
+      label: "Labs",
+      hierarchy: 1,
+    },
+  },
+  {
+    alias: "labs-server-crud",
+    pathName: "/labs/server-crud",
     type: "web",
     data: {
       label: "Server side CRUD",
       hierarchy: 2,
-      parentAlias: "core",
+      parentAlias: "labs",
     },
   },
   {
-    alias: "core-limited",
-    pathName: "/core/limited",
+    alias: "labs-limited-read",
+    pathName: "/labs/limited-read",
     type: "web",
     data: {
       label: "Limited read",
       hierarchy: 2,
-      parentAlias: "core",
+      parentAlias: "labs",
     },
   },
   {
-    alias: "core-posts",
-    pathName: "/api/core/posts",
+    alias: "labs-posts",
+    pathName: "/api/labs/posts",
     type: "api",
   },
   {
-    alias: "web3",
-    pathName: "/web3",
+    alias: "labs-web3-crud",
+    pathName: "/labs/web3-crud",
     type: "web",
     data: {
-      label: "Web3",
-      hierarchy: 1,
-    },
-  },
-  {
-    alias: "web3-crud",
-    pathName: "/web3/crud",
-    type: "web",
-    data: {
-      label: "CRUD",
+      label: "Web3 CRUD",
       hierarchy: 2,
-      parentAlias: "web3",
+      parentAlias: "labs",
     },
   },
 ];
