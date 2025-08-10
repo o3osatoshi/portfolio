@@ -23,7 +23,16 @@ const data = {
       url: "#",
       icon: Atom,
       isActive: true,
-      items: [],
+      items: [
+        {
+          title: getLabel("portfolio-about"),
+          url: getPathName("portfolio-about"),
+        },
+        {
+          title: getLabel("portfolio-blog"),
+          url: getPathName("portfolio-blog"),
+        },
+      ],
     },
     {
       title: getLabel("labs"),

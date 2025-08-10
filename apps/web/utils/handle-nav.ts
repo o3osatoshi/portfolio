@@ -4,6 +4,7 @@ type WebAlias =
   | "signin"
   | "portfolio"
   | "portfolio-about"
+  | "portfolio-blog"
   | "labs"
   | "labs-server-crud"
   | "labs-limited-read"
@@ -57,6 +58,16 @@ const navs: Nav[] = [
     type: "web",
     data: {
       label: "About",
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+  },
+  {
+    alias: "portfolio-blog",
+    pathName: "/portfolio/blog",
+    type: "web",
+    data: {
+      label: "Blog",
       hierarchy: 2,
       parentAlias: "portfolio",
     },
