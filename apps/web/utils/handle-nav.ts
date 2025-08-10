@@ -75,7 +75,7 @@ const navs: Nav[] = [
     pathName: "/labs/server-crud",
     type: "web",
     data: {
-      label: "Server side CRUD",
+      label: "Server Side CRUD",
       hierarchy: 2,
       parentAlias: "labs",
     },
@@ -85,7 +85,7 @@ const navs: Nav[] = [
     pathName: "/labs/limited-read",
     type: "web",
     data: {
-      label: "Limited read",
+      label: "Limited Read",
       hierarchy: 2,
       parentAlias: "labs",
     },
