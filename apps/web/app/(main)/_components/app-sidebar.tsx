@@ -1,4 +1,4 @@
-import { Atom, FlaskConical, Layers } from "lucide-react";
+import { FlaskConical, User } from "lucide-react";
 import type * as React from "react";
 
 import { NavMain } from "@/app/(main)/_components/nav-main";
@@ -21,7 +21,7 @@ const data = {
     {
       title: getLabel("portfolio"),
       url: "#",
-      icon: Atom,
+      icon: User,
       isActive: true,
       items: [
         {
@@ -37,7 +37,7 @@ const data = {
     {
       title: getLabel("labs"),
       url: "#",
-      icon: Layers,
+      icon: FlaskConical,
       isActive: true,
       items: [
         {
