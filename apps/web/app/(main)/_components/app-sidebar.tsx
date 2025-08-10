@@ -67,12 +67,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <FlaskConical className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">o3osatoshi</span>
-                </div>
+                <span className="truncate font-code text-xl md:text-2xl leading-tight">
+                  o3osatoshi
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
