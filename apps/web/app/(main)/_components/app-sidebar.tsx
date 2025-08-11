@@ -5,6 +5,7 @@ import { NavMain } from "@/app/(main)/_components/nav-main";
 import { NavProjects } from "@/app/(main)/_components/nav-projects";
 import { NavSecondary } from "@/app/(main)/_components/nav-secondary";
 import { NavUser } from "@/app/(main)/_components/nav-user";
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import { getLabel, getPathName } from "@/utils/handle-nav";
 import {
   Sidebar,
@@ -66,11 +67,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/">
+              <SidebarLink href="/">
                 <span className="truncate font-code text-xl md:text-2xl leading-tight">
                   o3osatoshi
                 </span>
-              </a>
+              </SidebarLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

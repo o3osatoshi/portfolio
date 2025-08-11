@@ -1,5 +1,6 @@
 import { ChevronRight, type LucideIcon } from "lucide-react";
 
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import {
   Collapsible,
   CollapsibleContent,
@@ -7,7 +8,6 @@ import {
 } from "@repo/ui/components/collapsible";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -16,7 +16,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@repo/ui/components/sidebar";
-import Link from "next/link";
 
 export function NavMain({
   items,
@@ -57,9 +56,9 @@ export function NavMain({
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
+                            <SidebarLink href={subItem.url}>
                               <span>{subItem.title}</span>
-                            </Link>
+                            </SidebarLink>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

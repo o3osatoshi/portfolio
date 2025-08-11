@@ -8,6 +8,7 @@ import {
   Trash2,
 } from "lucide-react";
 
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,10 +43,10 @@ export function NavProjects({
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <SidebarLink href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </SidebarLink>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

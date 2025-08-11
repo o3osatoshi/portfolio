@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type * as React from "react";
 
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import { ThemeToggle } from "@/app/(main)/_components/theme-toggle";
 import {
   SidebarGroup,
@@ -27,10 +28,10 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
-                <a href={item.url}>
+                <SidebarLink href={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </SidebarLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
