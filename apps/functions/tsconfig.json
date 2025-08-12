@@ -8,7 +8,10 @@
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "ES2022",
+    "paths": {
+      "@repo/domain": ["../../packages/domain/src"]
+    }
   },
   "compileOnSave": true,
   "include": ["src"]

@@ -1,8 +1,8 @@
 {
   "name": "functions",
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -14,13 +14,13 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@repo/domain": "workspace:*",
     "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.0.1"
   },
   "devDependencies": {
-    "typescript": "^4.9.0",
-    "firebase-functions-test": "^3.1.0"
+    "firebase-functions-test": "^3.1.0",
+    "tsup": "^8.4.0",
+    "typescript": "^4.9.0"
   },
   "private": true
 }
