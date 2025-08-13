@@ -16,7 +16,7 @@
     "check:fix": "biome check . --write",
     "generate": "turbo run generate",
     "preview-storybook": "turbo run preview-storybook",
-    "deploy:functions": "pnpm build:functions && firebase deploy --only functions"
+    "deploy:functions": "firebase deploy --only functions"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
