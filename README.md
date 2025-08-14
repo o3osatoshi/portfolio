@@ -1,199 +1,147 @@
-# Turborepo + Prisma ORM starter
+# o3osatoshi
 
-This is a example designed to help you quickly set up a Turborepo monorepo with a Next.js app and Prisma ORM. This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+This is the personal portfolio website of **Satoshi Ogura**, showcasing my professional experience, technical skills, and ongoing experiments in software engineering and Web3 technologies.
 
-## What's inside?
+🌐 **Live Site**: [https://o3osatoshi.engr.work](https://o3osatoshi.engr.work)
 
-This turborepo includes the following packages/apps:
+## Purpose
 
-### Apps and packages
+This portfolio serves two main purposes:
 
-- `web`: a [Next.js](https://nextjs.org/) app
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/database`: [Prisma ORM](https://prisma.io/) to manage & access your database
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Self-Introduction
+- **Professional Background**: Experience in software engineering, blockchain development, and system architecture
+- **Core Expertise**: Full-stack development, Web3 integration, cloud infrastructure, and developer tooling
+- **Current Focus**: Exploring emerging technologies in AI, blockchain, and modern web development patterns
+- **Blog & Content**: Technical writing and insights into software engineering practices ([Technical Blog](https://blog.o3osatoshi.engr.work/archives/#tag-coding))
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Technical Experimentation
+This codebase serves as a living laboratory for:
+- **Modern Web Technologies**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Web3 Integration**: RainbowKit, Wagmi, Viem for Ethereum interaction
+- **Architecture Patterns**: Monorepo structure, modular design, serverless functions
+- **Development Practices**: Code quality tools, CI/CD, testing strategies
 
-### Utilities
+**Technical Notes**: Detailed verification notes and implementation insights are documented on my [technical blog](https://blog.o3osatoshi.engr.work/archives/#tag-coding), while the actual source code implementations remain in this repository.
 
-This turborepo has some additional tools already setup for you:
+## Repository as Portfolio
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Prisma ORM](https://prisma.io/) for accessing the database
-- [Docker Compose](https://docs.docker.com/compose/) for a local MySQL database
+This source code itself demonstrates:
+- **Code Quality**: Consistent TypeScript usage, comprehensive linting/formatting
+- **Architecture Design**: Clean separation of concerns, scalable monorepo structure
+- **Modern Tooling**: Latest frameworks, build tools, and development workflows
+- **Operational Excellence**: Automated deployments, environment management, monitoring
 
-## Getting started
+## Technology Stack
 
-Follow these steps to set up and run your Turborepo project with Prisma ORM:
+### Core Technologies
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Authentication**: NextAuth.js with Prisma adapter
+- **Database**: Prisma ORM with multi-environment support
+- **Web3**: RainbowKit, Wagmi, Viem for Ethereum integration
+- **Backend**: Firebase Cloud Functions
+- **Monorepo**: Turborepo with pnpm workspaces
 
-### 1. Create a Turborepo project
+### Development Tools
+- **Code Quality**: Biome for linting and formatting
+- **Package Manager**: pnpm with workspace configuration
+- **Runtime**: Node.js >= 22
+- **CI/CD**: Automated build and deployment pipelines
 
-Start by creating a new Turborepo project using the following command:
+## Monorepo Structure
 
-```sh
-npx create-turbo@latest -e with-prisma
+```
+portfolio/
+├── apps/
+│   ├── web/              # Next.js portfolio application
+│   ├── functions/        # Firebase Cloud Functions
+│   └── storybook/        # Component library documentation
+├── packages/
+│   ├── @repo/database/   # Prisma ORM setup and utilities
+│   ├── @repo/ui/         # Shared React components (Tailwind + shadcn/ui)
+│   ├── @repo/ethereum/   # Web3/Ethereum integration utilities
+│   └── @repo/typescript-config/  # Shared TypeScript configurations
+└── turbo.json           # Turborepo task orchestration
 ```
 
-Choose your desired package manager when prompted and a name for the app (e.g., `my-turborepo`). This will scaffold a new Turborepo project with Prisma ORM included and dependencies installed.
+## Quick Start
 
-Navigate to your project directory:
+### Prerequisites
+- Node.js >= 22
+- pnpm package manager
+- Docker (for local database)
+
+### Local Development
+
+1. **Clone and install dependencies**:
+```bash
+git clone https://github.com/o3osatoshi/portfolio.git
+cd portfolio
+pnpm install
+```
+
+2. **Start development servers**:
+```bash
+pnpm dev
+```
+
+This starts all applications in development mode:
+- Portfolio site: `http://localhost:3000`
+- Storybook: `http://localhost:6006`
+
+### Key Scripts
 
 ```bash
-cd ./my-turborepo
+# Development
+pnpm dev              # Start all development servers
+pnpm build           # Build all apps and packages
+
+# Code Quality
+pnpm check           # Run Biome linting and formatting checks
+pnpm check:fix       # Auto-fix Biome issues
+
+# Database Operations
+pnpm db:migrate:dev     # Run development migrations
+pnpm db:migrate:deploy  # Deploy migrations to production
+pnpm db:push           # Push schema changes without migrations
+pnpm db:seed           # Seed database with test data
+
+# Deployment
+pnpm deploy:functions   # Build and deploy Firebase functions
 ```
 
-### 2. Setup a local database with Docker Compose
+## Deployment & Hosting
 
-We use [Prisma ORM](https://prisma.io/) to manage and access our database. As such you will need a database for this project, either locally or hosted in the cloud.
+### Production Environment
+- **Frontend**: Deployed on modern hosting platform with automatic deployments
+- **Backend**: Firebase Cloud Functions for serverless API endpoints
+- **Database**: Production database with automated backups and monitoring
+- **Domain**: Custom domain with SSL/TLS encryption
 
-To make this process easier, a [`docker-compose.yml` file](./docker-compose.yml) is included to setup a MySQL server locally with a new database named `turborepo`:
+### Environment Variables
+Key environment variables required for deployment:
+- Database connection strings
+- Authentication provider credentials
+- Web3 provider endpoints
+- Firebase project configuration
 
-Start the MySQL database using Docker Compose:
+## Development Highlights
 
-```sh
-docker-compose up -d
-```
+This project showcases modern development practices:
 
-To change the default database name, update the `MYSQL_DATABASE` environment variable in the [`docker-compose.yml` file](/docker-compose.yml).
+- **Type Safety**: 100% TypeScript with strict type checking
+- **Component Architecture**: Reusable UI components with Storybook documentation
+- **Database Design**: Normalized schema with efficient query patterns
+- **Web3 Integration**: Secure wallet connections and blockchain interactions
+- **Performance**: Optimized builds, code splitting, and caching strategies
+- **Testing**: Comprehensive test coverage with modern testing frameworks
 
-### 3. Setup environment variables
+## License
 
-Once the database is ready, copy the `.env.example` file to the [`/packages/database`](./packages/database/) and [`/apps/web`](./apps/web/) directories as `.env`:
+This project is open source and available under the [MIT License](LICENSE).
 
-```bash
-cp .env.example ./packages/database/.env
-cp .env.example ./apps/web/.env
-```
+## Contact & Connect
 
-This ensures Prisma has access to the `DATABASE_URL` environment variable, which is required to connect to your database.
+Prefer to connect via social media:
 
-If you added a custom database name, or use a cloud based database, you will need to update the `DATABASE_URL` in your `.env` accordingly.
-
-### 4. Migrate your database
-
-Once your database is running, you’ll need to create and apply migrations to set up the necessary tables. Run the database migration command:
-
-```bash
-# Using npm
-npm run db:migrate:dev
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run db:migrate:dev
-
-# Using pnpm
-pnpm run db:migrate:dev
-
-# Using bun
-bun run db:migrate:dev
-```
-
-</details>
-
-You’ll be prompted to name the migration. Once you provide a name, Prisma will create and apply the migration to your database.
-
-> Note: The `db:migrate:dev` script (located in [packages/database/package.json](/packages/database/package.json)) uses [Prisma Migrate](https://www.prisma.io/migrate) under the hood.
-
-For production environments, always push schema changes to your database using the [`prisma migrate deploy` command](https://www.prisma.io/docs/orm/prisma-client/deployment/deploy-database-changes-with-prisma-migrate). You can find an example `db:migrate:deploy` script in the [`package.json` file](/packages/database/package.json) of the `database` package.
-
-### 5. Seed your database
-
-To populate your database with initial or fake data, use [Prisma's seeding functionality](https://www.prisma.io/docs/guides/database/seed-database).
-
-Update the seed script located at [`packages/database/src/seed.ts`](/packages/database/src/seed.ts) to include any additional data that you want to seed. Once edited, run the seed command:
-
-```bash
-# Using npm
-npm run db:seed
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run db:seed
-
-# Using pnpm
-pnpm run db:seed
-
-# Using bun
-bun run db:seed
-```
-
-</details>
-
-### 6. Build your application
-
-To build all apps and packages in the monorepo, run:
-
-```bash
-# Using npm
-npm run build
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run build
-
-# Using pnpm
-pnpm run build
-
-# Using bun
-bun run build
-```
-
-</details>
-
-### 7. Start the application
-
-Finally, start your application with:
-
-```bash
-yarn run dev
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run dev
-
-# Using pnpm
-pnpm run dev
-
-# Using bun
-bun run dev
-```
-
-</details>
-
-Your app will be running at `http://localhost:3000`. Open it in your browser to see it in action!
-
-You can also read the official [detailed step-by-step guide from Prisma ORM](https://pris.ly/guide/turborepo?utm_campaign=turborepo-example) to build a project from scratch using Turborepo and Prisma ORM.
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turborepo.com/docs/core-concepts/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- **LinkedIn**: [Satoshi Ogura](https://www.linkedin.com/in/satoshi-ogura-189479135) - Professional networking and career discussions
+- **X (Twitter)**: [@o3osatoshi](https://x.com/o3osatoshi) - Technical discussions and updates
