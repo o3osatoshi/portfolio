@@ -1,3 +1,11 @@
+```
+        _____                  __             __    _ 
+  ____ |__  /____  _________ _/ /_____  _____/ /_  (_)
+ / __ \ /_ </ __ \/ ___/ __ `/ __/ __ \/ ___/ __ \/ / 
+/ /_/ /__/ / /_/ (__  ) /_/ / /_/ /_/ (__  ) / / / /  
+\____/____/\____/____/\__,_/\__/\____/____/_/ /_/_/   
+```
+
 # o3osatoshi
 
 This is the personal portfolio website of **Satoshi Ogura**, showcasing my professional experience, technical skills, and ongoing experiments in software engineering and Web3 technologies.
