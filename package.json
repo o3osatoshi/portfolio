@@ -5,6 +5,7 @@
     "seed": "tsx packages/database/src/seed.ts"
   },
   "scripts": {
+    "sort:pkg": "sort-package-json **/package.json",
     "build": "turbo run build",
     "build:functions": "turbo run build --filter=functions...",
     "db:migrate:deploy": "turbo run db:migrate:deploy",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "prisma": "^6.7.0",
+    "sort-package-json": "^3.4.0",
     "tsx": "4.19.4",
     "turbo": "^2.5.2"
   },
