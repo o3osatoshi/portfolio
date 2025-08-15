@@ -13,7 +13,7 @@
 /_/                                         
 ```
 
-# o3osatoshi
+# o3osatoshi portfolio
 
 This is the personal portfolio website of **Satoshi Ogura**, showcasing my professional experience, technical skills, and ongoing experiments in software engineering and Web3 technologies.
 
