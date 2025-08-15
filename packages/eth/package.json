@@ -2,24 +2,24 @@
   "name": "@repo/eth",
   "version": "0.0.0",
   "description": "",
+  "keywords": [],
+  "author": "",
   "exports": {
     ".": "./src/generate.ts"
   },
   "scripts": {
-    "preinstall": "npm run generate",
-    "generate": "dotenv -e .env.local -- wagmi generate"
+    "generate": "dotenv -e .env.local -- wagmi generate",
+    "preinstall": "npm run generate"
   },
-  "keywords": [],
-  "author": "",
+  "dependencies": {
+    "viem": "^2.29.4",
+    "wagmi": "0.0.0-canary-20250516172625"
+  },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",
     "@types/node": "^22.15.12",
     "@wagmi/cli": "^2.3.1",
     "dotenv-cli": "^8.0.0",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "viem": "^2.29.4",
-    "wagmi": "0.0.0-canary-20250516172625"
   }
 }

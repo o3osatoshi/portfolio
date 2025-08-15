@@ -1,21 +1,21 @@
 {
   "name": "@repo/rdb",
   "version": "0.0.0",
-  "main": "dist/client.js",
   "exports": {
     ".": "./src/client.ts",
     "./schemas": "./src/schemas/index.ts"
   },
+  "main": "dist/client.js",
   "scripts": {
-    "preinstall": "npm run generate",
+    "build": "tsup src/*",
     "db:migrate:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
     "db:migrate:dev": "dotenv -e .env.development.local -- prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
     "dev": "tsup src/* --watch",
-    "build": "tsup src/*",
     "format": "prisma format",
     "generate": "prisma generate",
+    "preinstall": "npm run generate",
     "studio": "prisma studio"
   },
   "dependencies": {
