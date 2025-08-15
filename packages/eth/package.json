@@ -1,5 +1,5 @@
 {
-  "name": "ethereum",
+  "name": "@repo/eth",
   "version": "0.0.0",
   "description": "",
   "exports": {
@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@repo/tsrc": "workspace:*",
     "@types/node": "^22.15.12",
     "@wagmi/cli": "^2.3.1",
     "dotenv-cli": "^8.0.0",

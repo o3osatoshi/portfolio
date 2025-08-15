@@ -1,5 +1,5 @@
 {
-  "name": "@repo/database",
+  "name": "@repo/rdb",
   "version": "0.0.0",
   "main": "dist/client.js",
   "exports": {
@@ -23,7 +23,7 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@repo/tsrc": "workspace:*",
     "@types/node": "^22.15.12",
     "dotenv-cli": "^8.0.0",
     "prisma": "^6.7.0",

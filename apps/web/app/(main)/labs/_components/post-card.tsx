@@ -1,6 +1,6 @@
 import DeleteButton from "@/app/(main)/labs/server-crud/_components/delete-button";
 import EditDialog from "@/app/(main)/labs/server-crud/_components/edit-dialog";
-import type { Post } from "@repo/database/schemas";
+import type { Post } from "@repo/rdb/schemas";
 import {
   Card,
   CardAction,

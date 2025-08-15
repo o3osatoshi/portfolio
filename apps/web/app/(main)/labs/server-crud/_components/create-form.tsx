@@ -3,7 +3,7 @@
 import { createPost } from "@/app/(main)/labs/server-crud/_actions/create-post";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zCreatePost } from "@repo/database/schemas";
+import { zCreatePost } from "@repo/rdb/schemas";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";

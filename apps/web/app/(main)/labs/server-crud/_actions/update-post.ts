@@ -3,8 +3,8 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { prisma } from "@repo/database";
-import { zUpdatePost } from "@repo/database/schemas";
+import { prisma } from "@repo/rdb";
+import { zUpdatePost } from "@repo/rdb/schemas";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 

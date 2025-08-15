@@ -71,10 +71,10 @@ portfolio/
 │   ├── functions/        # Firebase Cloud Functions
 │   └── storybook/        # Component library documentation
 ├── packages/
-│   ├── @repo/database/   # Prisma ORM setup and utilities
+│   ├── @repo/rdb/   # Prisma ORM setup and utilities
 │   ├── @repo/ui/         # Shared React components (Tailwind + shadcn/ui)
 │   ├── @repo/ethereum/   # Web3/Ethereum integration utilities
-│   └── @repo/typescript-config/  # Shared TypeScript configurations
+│   └── @repo/tsrc/  # Shared TypeScript configurations
 └── turbo.json           # Turborepo task orchestration
 ```
 

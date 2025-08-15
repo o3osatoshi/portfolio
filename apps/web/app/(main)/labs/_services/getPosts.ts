@@ -1,6 +1,6 @@
 import { fetchClient } from "@/utils/fetch-client";
 import { getPathName } from "@/utils/handle-nav";
-import { type Posts, zPosts } from "@repo/database/schemas";
+import { type Posts, zPosts } from "@repo/rdb/schemas";
 import { type Result, ResultAsync, err, ok } from "neverthrow";
 
 interface Props {

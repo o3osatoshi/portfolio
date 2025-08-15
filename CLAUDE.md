@@ -12,9 +12,9 @@ This is a Turborepo monorepo with a Next.js portfolio application, Firebase func
 - **storybook**: Component library documentation and testing
 
 ### Packages
-- **@repo/database**: Prisma ORM setup with schema, client, and seeding utilities
+- **@repo/rdb**: Prisma ORM setup with schema, client, and seeding utilities
 - **@repo/ui**: Shared React components built with Tailwind CSS and shadcn/ui
-- **@repo/typescript-config**: Shared TypeScript configurations
+- **@repo/tsrc**: Shared TypeScript configurations
 - **@repo/ethereum**: Web3/Ethereum contract integration utilities
 
 ## Development Commands

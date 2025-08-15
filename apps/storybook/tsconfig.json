@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/react-app.json",
+  "extends": "@repo/tsrc/react-app.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
