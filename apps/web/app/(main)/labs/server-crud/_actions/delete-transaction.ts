@@ -1,5 +1,6 @@
 "use server";
 
+import { zDeleteTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
@@ -7,14 +8,9 @@ import { TransactionUseCase } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 const repo = new PrismaTransactionRepository();
 const usecase = new TransactionUseCase(repo);
-
-const zDeleteTransaction = z.object({
-  id: z.string(),
-});
 
 export const deleteTransaction = async (
   _: ActionState<never> | undefined,

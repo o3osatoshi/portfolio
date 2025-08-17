@@ -1,6 +1,7 @@
 "use client";
 
 import { createTransaction } from "@/app/(main)/labs/server-crud/_actions/create-transaction";
+import { zCreateTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Message from "@repo/ui/components/base/message";
@@ -8,18 +9,6 @@ import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-export const zCreateTransaction = z.object({
-  type: z.string().optional(),
-  datetime: z.coerce.date().optional(),
-  amount: z.coerce.number().optional(),
-  price: z.coerce.number().optional(),
-  currency: z.string().optional(),
-  profitLoss: z.coerce.number().optional(),
-  fee: z.coerce.number().optional(),
-  feeCurrency: z.string().optional(),
-});
 
 export default function CreateForm() {
   const [state, dispatch, isPending] = useActionState<
@@ -49,7 +38,7 @@ export default function CreateForm() {
           label="Type"
           id="type"
           {...register("type")}
-          placeholder="Title"
+          placeholder="Type"
           type="text"
           errorMessage={errors.type?.message}
         />
@@ -57,7 +46,7 @@ export default function CreateForm() {
           label="Datetime"
           id="datetime"
           {...register("datetime")}
-          placeholder="Title"
+          placeholder="Datetime"
           type="datetime-local"
           errorMessage={errors.datetime?.message}
         />
@@ -65,7 +54,7 @@ export default function CreateForm() {
           label="Amount"
           id="amount"
           {...register("amount")}
-          placeholder="Title"
+          placeholder="Amount"
           type="number"
           errorMessage={errors.amount?.message}
         />
@@ -73,7 +62,7 @@ export default function CreateForm() {
           label="Price"
           id="price"
           {...register("price")}
-          placeholder="Title"
+          placeholder="Price"
           type="number"
           errorMessage={errors.price?.message}
         />
@@ -81,7 +70,7 @@ export default function CreateForm() {
           label="Currency"
           id="currency"
           {...register("currency")}
-          placeholder="Title"
+          placeholder="Currency"
           type="text"
           errorMessage={errors.currency?.message}
         />
@@ -89,15 +78,15 @@ export default function CreateForm() {
           label="Profit Loss"
           id="profitLoss"
           {...register("profitLoss")}
-          placeholder="Title"
-          type="text"
+          placeholder="Profit Loss"
+          type="number"
           errorMessage={errors.profitLoss?.message}
         />
         <FormInput
           label="Fee"
           id="fee"
           {...register("fee")}
-          placeholder="Title"
+          placeholder="Fee"
           type="number"
           errorMessage={errors.fee?.message}
         />
@@ -105,7 +94,7 @@ export default function CreateForm() {
           label="Fee Currency"
           id="feeCurrency"
           {...register("feeCurrency")}
-          placeholder="Title"
+          placeholder="Fee Currency"
           type="text"
           errorMessage={errors.feeCurrency?.message}
         />

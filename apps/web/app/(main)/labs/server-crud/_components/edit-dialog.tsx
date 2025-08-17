@@ -20,19 +20,8 @@ import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zUpdateTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 
-export const zUpdateTransaction = z.object({
-  id: z.string(),
-  type: z.string().optional(),
-  datetime: z.coerce.date().optional(),
-  amount: z.coerce.number().optional(),
-  price: z.coerce.number().optional(),
-  currency: z.string().optional(),
-  profitLoss: z.coerce.number().optional(),
-  fee: z.coerce.number().optional(),
-  feeCurrency: z.string().optional(),
-});
 
 interface Props {
   transaction: Transaction;

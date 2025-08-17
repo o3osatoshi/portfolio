@@ -72,9 +72,11 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
       fee: tx.fee && new Prisma.Decimal(tx.fee),
       feeCurrency: tx.feeCurrency,
-      user: {
-        connect: { id: tx.userId },
-      },
+      ...(tx.userId !== undefined && {
+        user: {
+          connect: { id: tx.userId },
+        },
+      }),
     };
     await prisma.transaction.update({
       where: { id: tx.id },

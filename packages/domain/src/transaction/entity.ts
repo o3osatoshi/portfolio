@@ -61,4 +61,21 @@ export class Transaction implements Base {
   get userId() {
     return this.props.userId;
   }
+
+  toJSON(): TransactionProps {
+    return {
+      id: this.id,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      type: this.type,
+      datetime: this.datetime,
+      amount: this.amount,
+      price: this.price,
+      currency: this.currency,
+      profitLoss: this.profitLoss,
+      fee: this.fee,
+      feeCurrency: this.feeCurrency,
+      userId: this.userId,
+    };
+  }
 }

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     `[GET /labs/transactions] called with userId=${userId ?? "none"}`,
   );
 
-  const transactions = usecase.find(_userId);
+  const transactions = await usecase.find(_userId);
 
-  return Response.json(transactions);
+  return Response.json(transactions.map((tx) => tx.toJSON()));
 }

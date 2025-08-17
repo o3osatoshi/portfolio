@@ -1,6 +1,6 @@
 "use server";
 
-import { zUpdateTransaction } from "@/app/(main)/labs/server-crud/_components/edit-dialog";
+import { zUpdateTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
