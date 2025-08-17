@@ -2,8 +2,7 @@
   "name": "@repo/prisma",
   "version": "0.0.0",
   "exports": {
-    ".": "./src/client.ts",
-    "./schemas": "./src/schemas/index.ts"
+    ".": "./src/index.ts"
   },
   "main": "dist/client.js",
   "scripts": {
