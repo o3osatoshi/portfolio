@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@repo/domain": "workspace:*",
     "@auth/prisma-adapter": "^2.9.0",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
