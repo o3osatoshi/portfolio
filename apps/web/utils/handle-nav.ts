@@ -10,7 +10,7 @@ type WebAlias =
   | "labs-limited-read"
   | "labs-web3-crud";
 
-type ApiAlias = "labs-posts";
+type ApiAlias = "labs-transactions";
 
 type Alias = WebAlias | ApiAlias;
 
@@ -102,8 +102,8 @@ const navs: Nav[] = [
     },
   },
   {
-    alias: "labs-posts",
-    pathName: "/api/labs/posts",
+    alias: "labs-transactions",
+    pathName: "/api/labs/transactions",
     type: "api",
   },
   {
