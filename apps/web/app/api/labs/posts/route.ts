@@ -1,4 +1,4 @@
-import { prisma } from "@repo/rdb";
+import { prisma } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {

@@ -3,8 +3,8 @@
 import { updatePost } from "@/app/(main)/labs/server-crud/_actions/update-post";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Post } from "@repo/rdb";
-import { zCreatePost, zUpdatePost } from "@repo/rdb/schemas";
+import type { Post } from "@repo/prisma";
+import { zCreatePost, zUpdatePost } from "@repo/prisma/schemas";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";

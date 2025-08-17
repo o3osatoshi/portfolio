@@ -12,7 +12,7 @@
     "@hookform/resolvers": "^5.0.1",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@rainbow-me/rainbowkit": "^2.2.5",
-    "@repo/rdb": "workspace:*",
+    "@repo/prisma": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.76.1",
     "lucide-react": "^0.507.0",

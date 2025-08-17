@@ -71,7 +71,7 @@ portfolio/
 │   ├── functions/        # Firebase Cloud Functions
 │   └── storybook/        # Component library documentation
 ├── packages/
-│   ├── @repo/rdb/   # Prisma ORM setup and utilities
+│   ├── @repo/prisma/   # Prisma ORM setup and utilities
 │   ├── @repo/ui/         # Shared React components (Tailwind + shadcn/ui)
 │   ├── @repo/ethereum/   # Web3/Ethereum integration utilities
 │   └── @repo/tsrc/  # Shared TypeScript configurations

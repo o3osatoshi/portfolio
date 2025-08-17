@@ -61,7 +61,7 @@ Authentication middleware automatically protects routes based on configuration.
 ```
 
 ### Database Integration
-- **ORM**: Direct integration with `@repo/rdb` workspace
+- **ORM**: Direct integration with `@repo/prisma` workspace
 - **Actions**: Server actions in `_actions/` directories
 - **Forms**: React Hook Form with Zod validation
 
