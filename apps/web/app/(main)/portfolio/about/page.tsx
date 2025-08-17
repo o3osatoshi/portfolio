@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <main className="container mx-auto max-w-3xl px-4 py-10 space-y-8">
+    <div className="container mx-auto max-w-3xl px-4 py-10 space-y-8">
       <header>
         <h1 className="text-3xl font-bold">About</h1>
         <p className="mt-2 text-neutral-600">
@@ -134,6 +134,6 @@ export default async function Page() {
           </li>
         </ul>
       </section>
-    </main>
+    </div>
   );
 }

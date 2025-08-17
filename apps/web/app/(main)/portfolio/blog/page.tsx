@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <main className="container mx-auto max-w-3xl px-4 py-10 space-y-6">
+    <div className="container mx-auto max-w-3xl px-4 py-10 space-y-6">
       <h1 className="text-3xl font-bold">Blog</h1>
       <p className="text-neutral-600">
         I publish detailed explanations for Labs demos and ongoing research
@@ -25,6 +25,6 @@ export default async function Page() {
         </Link>
       </div>
       {/* Optional: fetch and render latest 3–5 posts via RSS on the server */}
-    </main>
+    </div>
   );
 }
