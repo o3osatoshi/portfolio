@@ -1,5 +1,5 @@
-import PostCard from "@/app/(main)/labs/_components/post-card";
-import { getPosts } from "@/app/(main)/labs/_services/getPosts";
+import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
+import { getTransactions } from "@/app/(main)/labs/_services/getTransactions";
 import { auth } from "@/lib/auth";
 import { getPathName } from "@/utils/handle-nav";
 import { redirect } from "next/navigation";
@@ -11,21 +11,23 @@ export default async function Page() {
     redirect(getPathName("signin"));
   }
 
-  const result = await getPosts({ authorId: userId });
+  const result = await getTransactions({ userId });
   if (result.isErr()) {
     return null;
   }
-  const posts = result.value;
+  const transactions = result.value;
 
-  if (posts.length === 0) {
-    return "no posts yet";
+  if (transactions.length === 0) {
+    return "no transactions yet";
   }
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        {posts.map((post) => {
-          return <PostCard key={post.id} post={post} />;
+        {transactions.map((transaction) => {
+          return (
+            <TransactionCard key={transaction.id} transaction={transaction} />
+          );
         })}
       </div>
     </div>

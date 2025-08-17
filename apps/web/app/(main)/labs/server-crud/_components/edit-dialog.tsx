@@ -1,10 +1,9 @@
 "use client";
 
-import { updatePost } from "@/app/(main)/labs/server-crud/_actions/update-post";
+import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Post } from "@repo/prisma";
-import { zCreatePost, zUpdatePost } from "@repo/prisma/schemas";
+import type { Transaction } from "@repo/domain";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";
@@ -21,26 +20,39 @@ import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+export const zUpdateTransaction = z.object({
+  id: z.string(),
+  type: z.string().optional(),
+  datetime: z.coerce.date().optional(),
+  amount: z.coerce.number().optional(),
+  price: z.coerce.number().optional(),
+  currency: z.string().optional(),
+  profitLoss: z.coerce.number().optional(),
+  fee: z.coerce.number().optional(),
+  feeCurrency: z.string().optional(),
+});
 
 interface Props {
-  post: Post;
+  transaction: Transaction;
 }
 
-export default function EditDialog({ post }: Props) {
+export default function EditDialog({ transaction }: Props) {
   const [state, dispatch, isPending] = useActionState<
     ActionState<never> | undefined,
     FormData
-  >(updatePost, undefined);
+  >(updateTransaction, undefined);
 
   const {
     register,
     formState: { errors },
     handleSubmit,
     getValues,
-  } = useForm({ resolver: zodResolver(zUpdatePost) });
+  } = useForm({ resolver: zodResolver(zUpdateTransaction) });
 
   const validate = async (e: FormEvent<HTMLFormElement>) => {
-    const result = zUpdatePost.safeParse(getValues());
+    const result = zUpdateTransaction.safeParse(getValues());
     if (!result.success) {
       e.preventDefault();
     }
@@ -56,29 +68,77 @@ export default function EditDialog({ post }: Props) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form action={dispatch} onSubmit={validate}>
-          <input value={post.id} {...register("id")} type="hidden" />
+          <input value={transaction.id} {...register("id")} type="hidden" />
           <DialogHeader>
-            <DialogTitle>Edit post</DialogTitle>
+            <DialogTitle>Edit transaction</DialogTitle>
             <DialogDescription>
-              Make changes to your post here.
+              Make changes to your transaction here.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <FormInput
-              label="Title"
-              defaultValue={post.title}
-              id="title"
-              {...register("title")}
+              label="Type"
+              defaultValue={transaction.type}
+              id="type"
+              {...register("type")}
               type="text"
-              errorMessage={errors.title?.message}
+              errorMessage={errors.type?.message}
             />
             <FormInput
-              label="Content"
-              defaultValue={post.content ?? ""}
-              id="content"
-              {...register("content")}
+              label="Datetime"
+              defaultValue={transaction.datetime.toISOString().slice(0, 16)}
+              id="datetime"
+              {...register("datetime")}
+              type="datetime-local"
+              errorMessage={errors.datetime?.message}
+            />
+            <FormInput
+              label="Amount"
+              defaultValue={transaction.amount}
+              id="amount"
+              {...register("amount")}
+              type="number"
+              errorMessage={errors.amount?.message}
+            />
+            <FormInput
+              label="Price"
+              defaultValue={transaction.price}
+              id="price"
+              {...register("price")}
+              type="number"
+              errorMessage={errors.price?.message}
+            />
+            <FormInput
+              label="Currency"
+              defaultValue={transaction.currency}
+              id="currency"
+              {...register("currency")}
               type="text"
-              errorMessage={errors.content?.message}
+              errorMessage={errors.currency?.message}
+            />
+            <FormInput
+              label="Profit Loss"
+              defaultValue={transaction.profitLoss ?? ""}
+              id="profitLoss"
+              {...register("profitLoss")}
+              type="text"
+              errorMessage={errors.profitLoss?.message}
+            />
+            <FormInput
+              label="Fee"
+              defaultValue={transaction.fee ?? ""}
+              id="fee"
+              {...register("fee")}
+              type="number"
+              errorMessage={errors.fee?.message}
+            />
+            <FormInput
+              label="Fee Currency"
+              defaultValue={transaction.feeCurrency ?? ""}
+              id="feeCurrency"
+              {...register("feeCurrency")}
+              type="text"
+              errorMessage={errors.feeCurrency?.message}
             />
           </div>
           <DialogFooter>

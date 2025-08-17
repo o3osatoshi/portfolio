@@ -1,10 +1,10 @@
-import PostCard from "@/app/(main)/labs/_components/post-card";
-import { getPosts } from "@/app/(main)/labs/_services/getPosts";
+import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
+import { getTransactions } from "@/app/(main)/labs/_services/getTransactions";
 import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
 
-// const getPosts: () => Promise<(Post & { author: Pick<User, "name"> })[]> =
+// const getTransactions: () => Promise<(Transaction & { author: Pick<User, "name"> })[]> =
 //   cache(async () => {
-//     return prisma.post.findMany({
+//     return prisma.transaction.findMany({
 //       include: {
 //         author: {
 //           select: {
@@ -19,21 +19,22 @@ import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
 //   });
 
 export default async function Page() {
-  const result = await getPosts();
+  const result = await getTransactions();
   if (result.isErr()) {
+    // TODO: handle error
     return null;
   }
-  const posts = result.value;
+  const transactions = result.value;
 
   return (
     <div className="flex flex-col gap-6">
       <CreateForm />
-      {posts.length === 0 ? (
-        "no posts yet"
+      {transactions.length === 0 ? (
+        "no transactions yet"
       ) : (
         <div className="flex flex-col gap-2">
-          {posts.map((post) => {
-            return <PostCard key={post.id} post={post} />;
+          {transactions.map((tx) => {
+            return <TransactionCard key={tx.id} transaction={tx} />;
           })}
         </div>
       )}

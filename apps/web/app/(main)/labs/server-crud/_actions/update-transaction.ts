@@ -1,5 +1,6 @@
 "use server";
 
+import { zUpdateTransaction } from "@/app/(main)/labs/server-crud/_components/edit-dialog";
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
@@ -7,22 +8,9 @@ import { TransactionUseCase, type UpdateTransaction } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 const repo = new PrismaTransactionRepository();
 const usecase = new TransactionUseCase(repo);
-
-const zUpdateTransaction = z.object({
-  id: z.string(),
-  type: z.string().optional(),
-  datetime: z.coerce.date().optional(),
-  amount: z.coerce.number().optional(),
-  price: z.coerce.number().optional(),
-  currency: z.string().optional(),
-  profitLoss: z.coerce.number().optional(),
-  fee: z.coerce.number().optional(),
-  feeCurrency: z.string().optional(),
-});
 
 export const updateTransaction = async (
   _: ActionState<never> | undefined,
