@@ -8,12 +8,6 @@
   "main": "dist/client.js",
   "scripts": {
     "build": "tsup src/*",
-    "dev": "tsup src/* --watch",
-    "format": "prisma format",
-    "generate": "prisma generate",
-    "preinstall": "npm run generate",
-    "with:dev": "dotenv -e .env.development.local --",
-    "with:prod": "dotenv -e .env.production.local --",
     "db:push": "npm run with:dev -- prisma db push",
     "db:push:prod": "npm run with:prod -- prisma db push",
     "db:push:prod:force": "npm run with:prod -- prisma db push --accept-data-loss",
@@ -21,18 +15,25 @@
     "db:reset:skip-seed": "npm run with:dev -- prisma migrate reset --skip-seed",
     "db:seed": "npm run with:dev -- tsx src/seed.ts",
     "db:seed:prod": "npm run with:prod -- tsx src/seed.ts",
-    "migrate:dev": "npm run with:dev -- prisma migrate dev",
+    "dev": "tsup src/* --watch",
+    "format": "prisma format",
+    "generate": "prisma generate",
+    "preinstall": "npm run generate",
     "migrate:deploy": "npm run with:prod -- prisma migrate deploy",
+    "migrate:dev": "npm run with:dev -- prisma migrate dev",
     "migrate:status": "npm run with:dev -- prisma migrate status",
     "migrate:status:prod": "npm run with:prod -- prisma migrate status",
-    "studio": "npm run with:dev -- prisma studio",
-    "studio:prod": "npm run with:prod -- prisma studio",
     "push": "npm run db:push",
     "reset": "npm run db:reset",
-    "seed": "npm run db:seed"
+    "seed": "npm run db:seed",
+    "studio": "npm run with:dev -- prisma studio",
+    "studio:prod": "npm run with:prod -- prisma studio",
+    "with:dev": "dotenv -e .env.development.local --",
+    "with:prod": "dotenv -e .env.production.local --"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
+    "@repo/domain": "workspace:*",
     "zod": "^3.24.4"
   },
   "devDependencies": {
