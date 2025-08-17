@@ -16,7 +16,7 @@ export type CreateTransaction = TransactionDomainType;
 export type UpdateTransaction = Partial<TransactionDomainType> &
   Required<Pick<BaseType, "id">>;
 
-type TransactionProps = BaseType & TransactionDomainType;
+export type TransactionProps = BaseType & TransactionDomainType;
 
 export class Transaction implements Base {
   constructor(private readonly props: TransactionProps) {}
@@ -62,7 +62,7 @@ export class Transaction implements Base {
     return this.props.userId;
   }
 
-  toJSON(): TransactionProps {
+  toObject(): TransactionProps {
     return {
       id: this.id,
       createdAt: this.createdAt,

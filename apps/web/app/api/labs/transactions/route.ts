@@ -16,5 +16,5 @@ export async function GET(request: NextRequest) {
 
   const transactions = await usecase.find(_userId);
 
-  return Response.json(transactions.map((tx) => tx.toJSON()));
+  return Response.json(transactions);
 }
