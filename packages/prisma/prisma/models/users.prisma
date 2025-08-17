@@ -9,7 +9,7 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  posts Post[]
+  transactions Transaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,0 +1,17 @@
+model Transaction {
+  id          String   @id @default(cuid())
+  type        String
+  datetime    DateTime
+  amount      Decimal
+  price       Decimal
+  currency    String
+  profitLoss  Decimal?
+  fee         Decimal?
+  feeCurrency String?
+  userId      String
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
