@@ -44,14 +44,17 @@ const data = {
         {
           title: getLabel("labs-server-crud"),
           url: getPathName("labs-server-crud"),
+          isWIP: true,
         },
         {
           title: getLabel("labs-limited-read"),
           url: getPathName("labs-limited-read"),
+          isWIP: true,
         },
         {
           title: getLabel("labs-web3-crud"),
           url: getPathName("labs-web3-crud"),
+          isWIP: true,
         },
       ],
     },

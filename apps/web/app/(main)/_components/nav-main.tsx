@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, Construction, type LucideIcon } from "lucide-react";
 
 import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import {
@@ -28,6 +28,7 @@ export function NavMain({
     items?: {
       title: string;
       url: string;
+      isWIP?: boolean;
     }[];
   }[];
 }) {
@@ -55,11 +56,18 @@ export function NavMain({
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <SidebarLink href={subItem.url}>
+                          {subItem.isWIP ? (
+                            <SidebarMenuSubButton aria-disabled="true">
+                              <Construction />
                               <span>{subItem.title}</span>
-                            </SidebarLink>
-                          </SidebarMenuSubButton>
+                            </SidebarMenuSubButton>
+                          ) : (
+                            <SidebarMenuSubButton asChild>
+                              <SidebarLink href={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </SidebarLink>
+                            </SidebarMenuSubButton>
+                          )}
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
