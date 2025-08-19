@@ -1,12 +1,12 @@
 "use client";
 
 import { createTransaction } from "@/app/(main)/labs/server-crud/_actions/create-transaction";
-import { zCreateTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";
+import { createTransactionSchema } from "@repo/validation";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -21,10 +21,10 @@ export default function CreateForm() {
     formState: { errors },
     handleSubmit,
     getValues,
-  } = useForm({ resolver: zodResolver(zCreateTransaction) });
+  } = useForm({ resolver: zodResolver(createTransactionSchema) });
 
   const validate = async (e: FormEvent<HTMLFormElement>) => {
-    const result = zCreateTransaction.safeParse(getValues());
+    const result = createTransactionSchema.safeParse(getValues());
     if (!result.success) {
       e.preventDefault();
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
-import { zUpdateTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { TransactionProps } from "@repo/domain";
@@ -17,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/dialog";
+import { updateTransactionSchema } from "@repo/validation";
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";
@@ -38,10 +38,10 @@ export default function EditDialog({ transaction }: Props) {
     formState: { errors },
     handleSubmit,
     getValues,
-  } = useForm({ resolver: zodResolver(zUpdateTransaction) });
+  } = useForm({ resolver: zodResolver(updateTransactionSchema) });
 
   const validate = async (e: FormEvent<HTMLFormElement>) => {
-    const result = zUpdateTransaction.safeParse(getValues());
+    const result = updateTransactionSchema.safeParse(getValues());
     if (!result.success) {
       e.preventDefault();
     }

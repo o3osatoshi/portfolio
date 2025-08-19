@@ -8,13 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
-    "@repo/domain": "workspace:*",
     "@auth/prisma-adapter": "^2.9.0",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@rainbow-me/rainbowkit": "^2.2.5",
+    "@repo/domain": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@repo/validation": "workspace:*",
     "@tanstack/react-query": "^5.76.1",
     "lucide-react": "^0.507.0",
     "neverthrow": "^8.2.0",
@@ -25,8 +26,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
     "viem": "^2.29.4",
-    "wagmi": "0.0.0-canary-20250516172625",
-    "zod": "^3.24.4"
+    "wagmi": "0.0.0-canary-20250516172625"
   },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",

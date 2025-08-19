@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const TransactionsSchema = z.array(
+export const transactionsSchema = z.array(
   z.object({
     props: z.object({
       id: z.string(),
@@ -19,10 +19,10 @@ export const TransactionsSchema = z.array(
   }),
 );
 
-export type Transactions = z.infer<typeof TransactionsSchema>;
+export type Transactions = z.infer<typeof transactionsSchema>;
 
 export function validateTransactions(input: unknown): Transactions {
-  return TransactionsSchema.parse(input);
+  return transactionsSchema.parse(input);
 }
 
 export const createTransactionSchema = z.object({

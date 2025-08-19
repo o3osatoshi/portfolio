@@ -1,11 +1,11 @@
 "use server";
 
-import { zUpdateTransaction } from "@/app/(main)/labs/server-crud/_lib/schemas";
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { TransactionUseCase, type UpdateTransaction } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
+import { updateTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -17,7 +17,9 @@ export const updateTransaction = async (
   formData: FormData,
 ): Promise<ActionState<never>> => {
   try {
-    const result = zUpdateTransaction.safeParse(Object.fromEntries(formData));
+    const result = updateTransactionSchema.safeParse(
+      Object.fromEntries(formData),
+    );
     if (!result.success) {
       return err("validation error");
     }
