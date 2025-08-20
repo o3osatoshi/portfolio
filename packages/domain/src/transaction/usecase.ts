@@ -1,7 +1,7 @@
 import type {
-  CreateTransaction,
+  CreateTransactionType,
   Transaction,
-  UpdateTransaction,
+  UpdateTransactionType,
 } from "./entity";
 import type { ITransactionRepository } from "./repo.port";
 
@@ -20,11 +20,11 @@ export class TransactionUseCase {
     return await this.repo.findAll();
   }
 
-  async create(tx: CreateTransaction): Promise<void> {
+  async create(tx: CreateTransactionType): Promise<void> {
     await this.repo.create(tx);
   }
 
-  async update(tx: UpdateTransaction, userId: string): Promise<void> {
+  async update(tx: UpdateTransactionType, userId: string): Promise<void> {
     const _tx = await this.repo.findById(tx.id);
     if (_tx === null) {
       throw new Error("Transaction not found.");

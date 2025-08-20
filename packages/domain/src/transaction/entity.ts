@@ -12,14 +12,14 @@ interface TransactionDomainType {
   userId: string;
 }
 
-export type CreateTransaction = TransactionDomainType;
-export type UpdateTransaction = Partial<TransactionDomainType> &
+export type CreateTransactionType = TransactionDomainType;
+export type UpdateTransactionType = Partial<TransactionDomainType> &
   Required<Pick<BaseType, "id">>;
 
-export type TransactionProps = BaseType & TransactionDomainType;
+export type TransactionType = BaseType & TransactionDomainType;
 
 export class Transaction implements Base {
-  constructor(private readonly props: TransactionProps) {}
+  constructor(private readonly props: TransactionType) {}
 
   get id() {
     return this.props.id;
@@ -62,7 +62,7 @@ export class Transaction implements Base {
     return this.props.userId;
   }
 
-  toObject(): TransactionProps {
+  toObject(): TransactionType {
     return {
       id: this.id,
       createdAt: this.createdAt,

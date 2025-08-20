@@ -1,14 +1,14 @@
 import type {
-  CreateTransaction,
+  CreateTransactionType,
   Transaction,
-  UpdateTransaction,
+  UpdateTransactionType,
 } from "./entity";
 
 export interface ITransactionRepository {
   findAll(): Promise<Transaction[]>;
   findById(id: string): Promise<Transaction | null>;
   findByUserId(userId: string): Promise<Transaction[]>;
-  create(tx: CreateTransaction): Promise<void>;
-  update(tx: UpdateTransaction): Promise<void>;
+  create(tx: CreateTransactionType): Promise<void>;
+  update(tx: UpdateTransactionType): Promise<void>;
   delete(id: string): Promise<void>;
 }

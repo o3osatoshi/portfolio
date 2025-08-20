@@ -1,8 +1,8 @@
 import {
-  type CreateTransaction,
+  type CreateTransactionType,
   type ITransactionRepository,
   Transaction,
-  type UpdateTransaction,
+  type UpdateTransactionType,
 } from "@repo/domain";
 import {
   Prisma,
@@ -45,7 +45,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     return txs.map(toEntity);
   }
 
-  async create(tx: CreateTransaction) {
+  async create(tx: CreateTransactionType) {
     const data: Prisma.TransactionCreateInput = {
       type: tx.type,
       datetime: tx.datetime,
@@ -62,7 +62,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     await prisma.transaction.create({ data });
   }
 
-  async update(tx: UpdateTransaction) {
+  async update(tx: UpdateTransactionType) {
     const data: Prisma.TransactionUpdateInput = {
       type: tx.type,
       datetime: tx.datetime,

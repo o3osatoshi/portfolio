@@ -3,7 +3,7 @@
 import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { TransactionProps } from "@repo/domain";
+import type { TransactionType } from "@repo/domain";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";
@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 
 // TODO: サーバーコンポーネントからクライアントコンポーネントにはプレーンオブジェクトしか渡せない
 interface Props {
-  transaction: TransactionProps;
+  transaction: TransactionType;
 }
 
 export default function EditDialog({ transaction }: Props) {
