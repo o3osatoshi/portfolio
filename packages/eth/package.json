@@ -12,14 +12,14 @@
     "preinstall": "npm run generate"
   },
   "dependencies": {
-    "viem": "^2.29.4",
-    "wagmi": "0.0.0-canary-20250516172625"
+    "viem": "catalog:",
+    "wagmi": "catalog:"
   },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",
-    "@types/node": "^22.15.12",
+    "@types/node": "catalog:",
     "@wagmi/cli": "^2.3.1",
     "dotenv-cli": "^8.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "catalog:"
   }
 }
