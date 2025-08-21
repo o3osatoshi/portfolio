@@ -1,0 +1,19 @@
+{
+  "name": "@repo/application",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup src/*",
+    "dev": "tsup src/* --watch"
+  },
+  "devDependencies": {
+    "@repo/tsrc": "workspace:*",
+    "@types/node": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:"
+  }
+}
