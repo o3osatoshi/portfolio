@@ -1,4 +1,4 @@
-import { TransactionUseCase } from "@repo/domain";
+import { TransactionUseCase } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 

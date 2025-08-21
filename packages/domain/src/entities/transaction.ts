@@ -1,4 +1,4 @@
-import type { Base, BaseType } from "../base";
+import type { Base, BaseType } from "./base";
 
 interface TransactionDomainType {
   type: string;

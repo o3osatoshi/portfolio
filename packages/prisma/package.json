@@ -32,7 +32,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
-    "@repo/domain": "workspace:*"
+    "@repo/domain": "workspace:*",
+    "@repo/application": "workspace:*"
   },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",

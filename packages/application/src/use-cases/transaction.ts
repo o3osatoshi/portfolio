@@ -2,8 +2,8 @@ import type {
   CreateTransactionType,
   Transaction,
   UpdateTransactionType,
-} from "./entity";
-import type { ITransactionRepository } from "./repo.port";
+} from "@repo/domain";
+import type { ITransactionRepository } from "../interfaces";
 
 export class TransactionUseCase {
   constructor(private readonly repo: ITransactionRepository) {}

@@ -10,7 +10,8 @@
     "strict": true,
     "target": "ES2022",
     "paths": {
-      "@repo/domain": ["../../packages/domain/src"]
+      "@repo/domain": ["../../packages/domain/src"],
+      "@repo/application": ["../../packages/application/src"]
     }
   },
   "compileOnSave": true,

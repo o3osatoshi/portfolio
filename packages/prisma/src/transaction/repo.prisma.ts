@@ -1,6 +1,6 @@
+import type { ITransactionRepository } from "@repo/application";
 import {
   type CreateTransactionType,
-  type ITransactionRepository,
   Transaction,
   type UpdateTransactionType,
 } from "@repo/domain";

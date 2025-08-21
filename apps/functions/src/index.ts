@@ -7,7 +7,7 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import { logCustomMessage, logSampleMessage } from "@repo/domain";
+import { logCustomMessage, logSampleMessage } from "@repo/application";
 import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
 

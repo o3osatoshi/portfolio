@@ -2,7 +2,7 @@ import type {
   CreateTransactionType,
   Transaction,
   UpdateTransactionType,
-} from "./entity";
+} from "@repo/domain";
 
 export interface ITransactionRepository {
   findAll(): Promise<Transaction[]>;

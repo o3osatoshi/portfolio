@@ -3,7 +3,8 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { TransactionUseCase, type UpdateTransactionType } from "@repo/domain";
+import { TransactionUseCase } from "@repo/application";
+import type { UpdateTransactionType } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { updateTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";

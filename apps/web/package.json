@@ -13,6 +13,7 @@
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@rainbow-me/rainbowkit": "^2.2.5",
     "@repo/domain": "workspace:*",
+    "@repo/application": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/validation": "workspace:*",
