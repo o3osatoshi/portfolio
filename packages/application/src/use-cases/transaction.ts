@@ -3,7 +3,7 @@ import type {
   Transaction,
   UpdateTransactionType,
 } from "@repo/domain";
-import type { ITransactionRepository } from "../interfaces";
+import type { ITransactionRepository } from "@repo/domain";
 
 export class TransactionUseCase {
   constructor(private readonly repo: ITransactionRepository) {}

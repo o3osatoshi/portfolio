@@ -1,4 +1,4 @@
-import type { ITransactionRepository } from "@repo/application";
+import type { ITransactionRepository } from "@repo/domain";
 import {
   type CreateTransactionType,
   Transaction,
