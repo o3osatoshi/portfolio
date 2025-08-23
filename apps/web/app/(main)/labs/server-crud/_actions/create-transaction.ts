@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { TransactionUseCase } from "@repo/application";
+import { RegisterTransactionUseCase } from "@repo/application";
 import type { CreateTransactionType } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { createTransactionSchema } from "@repo/validation";
@@ -11,7 +11,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 const repo = new PrismaTransactionRepository();
-const usecase = new TransactionUseCase(repo);
+const usecase = new RegisterTransactionUseCase(repo);
 
 export const createTransaction = async (
   _: ActionState<never> | undefined,
@@ -35,7 +35,7 @@ export const createTransaction = async (
       ...result.data,
       userId,
     };
-    await usecase.create(tx);
+    await usecase.execute(tx);
 
     revalidateTag(getPathName("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));

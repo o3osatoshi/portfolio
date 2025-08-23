@@ -1,9 +1,9 @@
-import { TransactionUseCase } from "@repo/application";
+import { GetTransactionsUseCase } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 
 const repo = new PrismaTransactionRepository();
-const usecase = new TransactionUseCase(repo);
+const usecase = new GetTransactionsUseCase(repo);
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -14,7 +14,10 @@ export async function GET(request: NextRequest) {
     `[GET /labs/transactions] called with userId=${userId ?? "none"}`,
   );
 
-  const transactions = await usecase.find(_userId);
+  if (_userId === undefined) {
+    return Response.json([]);
+  }
+  const transactions = await usecase.execute(_userId);
 
   return Response.json(transactions);
 }

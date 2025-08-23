@@ -3,14 +3,14 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { TransactionUseCase } from "@repo/application";
+import { DeleteTransactionUseCase } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { deleteTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 const repo = new PrismaTransactionRepository();
-const usecase = new TransactionUseCase(repo);
+const usecase = new DeleteTransactionUseCase(repo);
 
 export const deleteTransaction = async (
   _: ActionState<never> | undefined,
@@ -31,7 +31,7 @@ export const deleteTransaction = async (
       return err("You must be logged in to delete a transaction.");
     }
 
-    await usecase.delete(id, userId);
+    await usecase.execute(id, userId);
 
     revalidateTag(getPathName("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));

@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { TransactionUseCase } from "@repo/application";
+import { UpdateTransactionUseCase } from "@repo/application";
 import type { UpdateTransactionType } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { updateTransactionSchema } from "@repo/validation";
@@ -11,7 +11,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 const repo = new PrismaTransactionRepository();
-const usecase = new TransactionUseCase(repo);
+const usecase = new UpdateTransactionUseCase(repo);
 
 export const updateTransaction = async (
   _: ActionState<never> | undefined,
@@ -34,7 +34,7 @@ export const updateTransaction = async (
     const tx: UpdateTransactionType = {
       ...result.data,
     };
-    await usecase.update(tx, userId);
+    await usecase.execute(tx, userId);
 
     revalidateTag(getPathName("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));
