@@ -12,11 +12,14 @@ This is a Turborepo monorepo with a Next.js portfolio application, Firebase func
 - **storybook**: Component library documentation and testing
 
 ### Packages
-- **@repo/prisma**: Prisma ORM setup with schema, client, and seeding utilities
+- **@repo/application**: Application layer with use cases and services (Clean Architecture)
+- **@repo/domain**: Domain entities, repositories, and value objects (Clean Architecture core)
+- **@repo/prisma**: Infrastructure layer with Prisma ORM, database adapters, and utilities
 - **@repo/ui**: Shared React components built with Tailwind CSS and shadcn/ui
-- **@repo/tsrc**: Shared TypeScript configurations
-- **@repo/domain**: Domain logic and utilities
 - **@repo/eth**: Web3/Ethereum contract integration utilities with Wagmi
+- **@repo/validation**: Shared Zod validation schemas and utilities
+- **@repo/toolkit**: Shared utilities, error handling, and helper functions
+- **@repo/tsrc**: Shared TypeScript configurations
 
 ## Development Commands
 
@@ -66,6 +69,22 @@ pnpm deploy:functions  # Build and deploy functions to Firebase
 ## Important Architecture Notes
 
 - Uses Node.js >= 22 as specified in package.json engines
+- **Clean Architecture**: Domain-driven design with clear layer separation (domain → application → infrastructure)
+- **Repository Pattern**: Database adapters implement domain repository interfaces
+- **Error Handling**: Centralized error types with neverthrow Result pattern
 - Turbo tasks define environment variables needed for builds (DATABASE_URL, AUTH_SECRET, etc.)
 - Firebase functions have predeploy hook that runs `pnpm build:functions`
 - Each package may have its own CLAUDE.md file with package-specific guidance
+
+## Testing Strategy
+
+**Unit Tests:**
+```bash
+pnpm test          # Run all unit tests
+pnpm test:watch    # Watch mode for unit tests
+```
+
+**Integration Tests:**
+```bash
+pnpm test:int      # Run integration tests (requires Docker for Testcontainers)
+```
