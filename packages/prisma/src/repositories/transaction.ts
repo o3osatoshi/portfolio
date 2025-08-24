@@ -1,11 +1,13 @@
 import type { ITransactionRepository } from "@repo/domain";
 import type { CreateTransaction, Transaction } from "@repo/domain";
+import { newError as baseError } from "@repo/toolkit";
 import { ResultAsync, err, ok } from "neverthrow";
 import {
   Prisma,
   type Transaction as PrismaTransaction,
   prisma,
 } from "../client";
+import { newPrismaError } from "../prisma-error";
 
 function toEntity(tx: PrismaTransaction): Transaction {
   return {
@@ -62,7 +64,11 @@ export class TransactionRepository implements ITransactionRepository {
       prisma.transaction.findUnique({
         where: { id },
       }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
+      (e) =>
+        newPrismaError({
+          action: "FindTransactionById",
+          cause: e,
+        }),
     ).map((row) => (row ? toEntity(row) : null));
   }
 
@@ -71,7 +77,11 @@ export class TransactionRepository implements ITransactionRepository {
       prisma.transaction.findMany({
         where: { userId },
       }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
+      (e) =>
+        newPrismaError({
+          action: "FindTransactionsByUserId",
+          cause: e,
+        }),
     ).map((rows) => rows.map(toEntity));
   }
 
@@ -80,7 +90,12 @@ export class TransactionRepository implements ITransactionRepository {
       prisma.transaction.create({
         data: toCreateData(tx),
       }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
+      (e) =>
+        newPrismaError({
+          action: "CreateTransaction",
+          hint: "Ensure related user exists and data types are valid.",
+          cause: e,
+        }),
     ).map(toEntity);
   }
 
@@ -90,11 +105,23 @@ export class TransactionRepository implements ITransactionRepository {
         where: { id: tx.id, userId: tx.userId },
         data: toUpdateData(tx),
       }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
+      (e) =>
+        newPrismaError({
+          action: "UpdateTransaction",
+          hint: "Verify ownership and payload schema.",
+          cause: e,
+        }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
-        : err(new Error("Transaction not found or not owned by user.")),
+        : err(
+            baseError({
+              layer: "DB",
+              kind: "NotFound",
+              action: "UpdateTransaction",
+              reason: "Transaction not found or not owned by user.",
+            }),
+          ),
     );
   }
 
@@ -103,11 +130,23 @@ export class TransactionRepository implements ITransactionRepository {
       prisma.transaction.deleteMany({
         where: { id, userId },
       }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
+      (e) =>
+        newPrismaError({
+          action: "DeleteTransaction",
+          hint: "Verify ownership and record existence.",
+          cause: e,
+        }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
-        : err(new Error("Transaction not found or not owned by user.")),
+        : err(
+            baseError({
+              layer: "DB",
+              kind: "NotFound",
+              action: "DeleteTransaction",
+              reason: "Transaction not found or not owned by user.",
+            }),
+          ),
     );
   }
 }
