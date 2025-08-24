@@ -1,17 +1,14 @@
 import type {
-  CreateTransactionType,
+  CreateTransaction,
   Transaction,
-  UpdateTransactionType,
+  UpdateTransaction,
 } from "@repo/domain";
 import type { ResultAsync } from "neverthrow";
 
 export interface ITransactionRepository {
   findById(id: string): ResultAsync<Transaction | null, Error>;
   findByUserId(userId: string): ResultAsync<Transaction[], Error>;
-  create(tx: CreateTransactionType): ResultAsync<void, Error>;
+  create(tx: CreateTransaction): ResultAsync<void, Error>;
   deleteOwned(id: string, userId: string): ResultAsync<void, Error>;
-  updateOwned(
-    tx: UpdateTransactionType,
-    userId: string,
-  ): ResultAsync<void, Error>;
+  updateOwned(tx: UpdateTransaction, userId: string): ResultAsync<void, Error>;
 }

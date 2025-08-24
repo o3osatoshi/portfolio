@@ -2,20 +2,18 @@ import { z } from "zod";
 
 export const transactionsSchema = z.array(
   z.object({
-    props: z.object({
-      id: z.string(),
-      type: z.string(),
-      datetime: z.coerce.date(),
-      amount: z.coerce.number(),
-      price: z.coerce.number(),
-      currency: z.string(),
-      profitLoss: z.coerce.number().optional(),
-      fee: z.coerce.number().optional(),
-      feeCurrency: z.string().optional(),
-      userId: z.string(),
-      createdAt: z.coerce.date(),
-      updatedAt: z.coerce.date(),
-    }),
+    id: z.string(),
+    type: z.string(),
+    datetime: z.coerce.date(),
+    amount: z.coerce.number(),
+    price: z.coerce.number(),
+    currency: z.string(),
+    profitLoss: z.coerce.number().optional(),
+    fee: z.coerce.number().optional(),
+    feeCurrency: z.string().optional(),
+    userId: z.string(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
   }),
 );
 

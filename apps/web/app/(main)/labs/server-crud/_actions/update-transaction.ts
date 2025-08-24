@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { UpdateTransactionUseCase } from "@repo/application";
-import type { UpdateTransactionType } from "@repo/domain";
+import type { UpdateTransaction } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { updateTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
@@ -31,7 +31,7 @@ export const updateTransaction = async (
       return err("You must be logged in to update a transaction.");
     }
 
-    const tx: UpdateTransactionType = {
+    const tx: UpdateTransaction = {
       ...result.data,
     };
     const executeResult = await usecase.execute(tx, userId);

@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { RegisterTransactionUseCase } from "@repo/application";
-import type { CreateTransactionType } from "@repo/domain";
+import type { CreateTransaction } from "@repo/domain";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { createTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
@@ -31,7 +31,7 @@ export const createTransaction = async (
       return err("You must be logged in to create a transaction.");
     }
 
-    const tx: CreateTransactionType = {
+    const tx: CreateTransaction = {
       ...result.data,
       userId,
     };

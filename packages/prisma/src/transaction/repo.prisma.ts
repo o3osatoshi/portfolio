@@ -1,8 +1,8 @@
 import type { ITransactionRepository } from "@repo/domain";
-import {
-  type CreateTransactionType,
+import type {
+  CreateTransaction,
   Transaction,
-  type UpdateTransactionType,
+  UpdateTransaction,
 } from "@repo/domain";
 import { ResultAsync, errAsync, okAsync } from "neverthrow";
 import {
@@ -12,7 +12,7 @@ import {
 } from "../client";
 
 function toEntity(tx: PrismaTransaction): Transaction {
-  return new Transaction({
+  return {
     id: tx.id,
     type: tx.type,
     datetime: tx.datetime,
@@ -25,7 +25,7 @@ function toEntity(tx: PrismaTransaction): Transaction {
     userId: tx.userId,
     createdAt: tx.createdAt,
     updatedAt: tx.updatedAt,
-  });
+  };
 }
 
 export class PrismaTransactionRepository implements ITransactionRepository {
@@ -43,7 +43,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     ).map((rows) => rows.map(toEntity));
   }
 
-  create(tx: CreateTransactionType): ResultAsync<void, Error> {
+  create(tx: CreateTransaction): ResultAsync<void, Error> {
     const data: Prisma.TransactionCreateInput = {
       type: tx.type,
       datetime: tx.datetime,
@@ -73,10 +73,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     );
   }
 
-  updateOwned(
-    tx: UpdateTransactionType,
-    userId: string,
-  ): ResultAsync<void, Error> {
+  updateOwned(tx: UpdateTransaction, userId: string): ResultAsync<void, Error> {
     const data: Prisma.TransactionUpdateInput = {
       type: tx.type,
       datetime: tx.datetime,

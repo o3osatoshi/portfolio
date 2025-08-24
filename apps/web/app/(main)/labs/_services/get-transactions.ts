@@ -1,6 +1,6 @@
 import { fetchClient } from "@/utils/fetch-client";
 import { getPathName } from "@/utils/handle-nav";
-import { Transaction } from "@repo/domain";
+import type { Transaction } from "@repo/domain";
 import { transactionsSchema } from "@repo/validation";
 import { type Result, ResultAsync, err, ok } from "neverthrow";
 
@@ -29,7 +29,6 @@ export async function getTransactions({
       console.error(result.error);
       return err(result.error);
     }
-    const transactions = result.data.map((tx) => new Transaction(tx.props));
-    return ok(transactions);
+    return ok(result.data);
   });
 }

@@ -29,7 +29,7 @@ export default function TransactionCard({ transaction }: Props) {
         </CardDescription>
         <CardAction>
           <div className="flex gap-1">
-            <EditDialog transaction={transaction.toObject()} />
+            <EditDialog transaction={transaction} />
             <DeleteButton id={transaction.id} />
           </div>
         </CardAction>

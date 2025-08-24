@@ -1,6 +1,6 @@
-import type { Base, BaseType } from "./base";
+import type { Base } from "./base";
 
-interface TransactionDomainType {
+interface TransactionDomain {
   type: string;
   datetime: Date;
   amount: number;
@@ -12,70 +12,8 @@ interface TransactionDomainType {
   userId: string;
 }
 
-export type CreateTransactionType = TransactionDomainType;
-export type UpdateTransactionType = Partial<TransactionDomainType> &
-  Required<Pick<BaseType, "id">>;
+export type CreateTransaction = TransactionDomain;
+export type UpdateTransaction = Partial<TransactionDomain> &
+  Required<Pick<Base, "id">>;
 
-export type TransactionType = BaseType & TransactionDomainType;
-
-export class Transaction implements Base {
-  constructor(private readonly props: TransactionType) {}
-
-  get id() {
-    return this.props.id;
-  }
-  get createdAt() {
-    return this.props.createdAt;
-  }
-  get updatedAt() {
-    return this.props.updatedAt;
-  }
-  equals(other: Transaction): boolean {
-    return this.id === other.id;
-  }
-
-  get type() {
-    return this.props.type;
-  }
-  get datetime() {
-    return this.props.datetime;
-  }
-  get amount() {
-    return this.props.amount;
-  }
-  get price() {
-    return this.props.price;
-  }
-  get currency() {
-    return this.props.currency;
-  }
-  get profitLoss() {
-    return this.props.profitLoss;
-  }
-  get fee() {
-    return this.props.fee;
-  }
-  get feeCurrency() {
-    return this.props.feeCurrency;
-  }
-  get userId() {
-    return this.props.userId;
-  }
-
-  toObject(): TransactionType {
-    return {
-      id: this.id,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      type: this.type,
-      datetime: this.datetime,
-      amount: this.amount,
-      price: this.price,
-      currency: this.currency,
-      profitLoss: this.profitLoss,
-      fee: this.fee,
-      feeCurrency: this.feeCurrency,
-      userId: this.userId,
-    };
-  }
-}
+export type Transaction = Base & TransactionDomain;
