@@ -1,0 +1,24 @@
+{
+  "name": "@repo/toolkit",
+  "version": "0.1.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format esm --clean",
+    "clean": "rimraf dist",
+    "dev": "tsup src/index.ts --dts --format esm --watch",
+    "test": "vitest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@repo/tsrc": "workspace:*",
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
