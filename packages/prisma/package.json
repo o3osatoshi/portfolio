@@ -4,7 +4,6 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "main": "dist/client.js",
   "scripts": {
     "build": "tsup src/*",
     "db:push": "npm run with:dev -- prisma db push",
