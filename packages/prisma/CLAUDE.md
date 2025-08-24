@@ -4,7 +4,7 @@ This file provides Prisma-specific guidance for Claude Code when working with th
 
 ## Package Structure
 
-- **prisma/**: Contains schema and migration files
+- **schema/**: Contains schema and migration files
   - **models/**: Modular schema files (users.prisma, transactions.prisma, etc.)
   - **migrations/**: Database migration history
   - **schema.prisma**: Main schema file that includes model files
@@ -12,8 +12,9 @@ This file provides Prisma-specific guidance for Claude Code when working with th
   - **seed.ts**: Database seeding script
 - **src/**: TypeScript source code
   - **adapters/**: Repository implementations (Infrastructure layer)
-  - **client.ts**: Prisma client configuration and export
+  - **prisma-client.ts**: Prisma client configuration and export
   - **prisma-error.ts**: Database-specific error handling
+  - **index.ts**: Package entry point
 - **generated/**: Prisma client generated files
 
 ## Development Commands
@@ -41,7 +42,7 @@ pnpm test:int         # Run integration tests with Testcontainers (requires Dock
 
 ## Schema Architecture
 
-- Uses modular schema files in `prisma/models/` directory
+- Uses modular schema files in `schema/models/` directory
 - Main `schema.prisma` includes model files using relative paths
 - Generated client outputs to `generated/prisma` directory
 - PostgreSQL database with connection via DATABASE_URL environment variable
@@ -65,5 +66,5 @@ pnpm test:int         # Run integration tests with Testcontainers (requires Dock
 - Modular schema files must be included in main `schema.prisma`
 - Repository implementations are in `src/adapters/` (Infrastructure layer)
 - Database URL is configured via environment variables
-- Client is exported from `src/client.ts` for use across the monorepo
+- Client is exported from `src/prisma-client.ts` for use across the monorepo
 - Integration tests require Docker for Testcontainers
