@@ -31,7 +31,10 @@ export const deleteTransaction = async (
       return err("You must be logged in to delete a transaction.");
     }
 
-    await usecase.execute(id, userId);
+    const executeResult = await usecase.execute(id, userId);
+    if (executeResult.isErr()) {
+      return err(executeResult.error);
+    }
 
     revalidateTag(getPathName("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));

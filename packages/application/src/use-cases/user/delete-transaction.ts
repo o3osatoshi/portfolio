@@ -1,18 +1,10 @@
 import type { ITransactionRepository } from "@repo/domain";
+import type { ResultAsync } from "neverthrow";
 
 export class DeleteTransactionUseCase {
   constructor(private readonly repo: ITransactionRepository) {}
 
-  async execute(id: string, userId: string): Promise<void> {
-    const _tx = await this.repo.findById(id);
-    if (_tx === null) {
-      return;
-    }
-
-    if (_tx.userId !== userId) {
-      throw new Error("You are not authorized to delete this transaction.");
-    }
-
-    await this.repo.delete(id);
+  execute(id: string, userId: string): ResultAsync<void, Error> {
+    return this.repo.deleteOwned(id, userId);
   }
 }

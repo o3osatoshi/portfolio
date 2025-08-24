@@ -17,7 +17,11 @@ export async function GET(request: NextRequest) {
   if (_userId === undefined) {
     return Response.json([]);
   }
-  const transactions = await usecase.execute(_userId);
+  const result = await usecase.execute(_userId);
+  if (result.isErr()) {
+    return new Response(result.error.message, { status: 500 });
+  }
+  const transactions = result.value;
 
   return Response.json(transactions);
 }

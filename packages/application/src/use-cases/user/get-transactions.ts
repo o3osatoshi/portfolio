@@ -1,10 +1,11 @@
 import type { Transaction } from "@repo/domain";
 import type { ITransactionRepository } from "@repo/domain";
+import type { ResultAsync } from "neverthrow";
 
 export class GetTransactionsUseCase {
   constructor(private readonly repo: ITransactionRepository) {}
 
-  async execute(userId: string): Promise<Transaction[]> {
-    return await this.repo.findByUserId(userId);
+  execute(userId: string): ResultAsync<Transaction[], Error> {
+    return this.repo.findByUserId(userId);
   }
 }

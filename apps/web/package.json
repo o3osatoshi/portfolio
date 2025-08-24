@@ -19,7 +19,7 @@
     "@repo/validation": "workspace:*",
     "@tanstack/react-query": "^5.76.1",
     "lucide-react": "catalog:",
-    "neverthrow": "^8.2.0",
+    "neverthrow": "catalog:",
     "next": "^15.3.1",
     "next-auth": "5.0.0-beta.27",
     "next-themes": "catalog:",

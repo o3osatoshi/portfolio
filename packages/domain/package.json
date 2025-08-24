@@ -10,6 +10,9 @@
     "build": "tsup src/*",
     "dev": "tsup src/* --watch"
   },
+  "dependencies": {
+    "neverthrow": "catalog:"
+  },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",
     "@types/node": "catalog:",

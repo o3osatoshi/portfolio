@@ -35,7 +35,10 @@ export const createTransaction = async (
       ...result.data,
       userId,
     };
-    await usecase.execute(tx);
+    const executeResult = await usecase.execute(tx);
+    if (executeResult.isErr()) {
+      return err(executeResult.error);
+    }
 
     revalidateTag(getPathName("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));

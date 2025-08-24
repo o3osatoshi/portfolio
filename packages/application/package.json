@@ -11,7 +11,8 @@
     "dev": "tsup src/* --watch"
   },
   "dependencies": {
-    "@repo/domain": "workspace:*"
+    "@repo/domain": "workspace:*",
+    "neverthrow": "catalog:"
   },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",
