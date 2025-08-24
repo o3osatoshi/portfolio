@@ -4,7 +4,7 @@ import {
   Transaction,
   type UpdateTransactionType,
 } from "@repo/domain";
-import { ResultAsync, okAsync, errAsync } from "neverthrow";
+import { ResultAsync, errAsync, okAsync } from "neverthrow";
 import {
   Prisma,
   type Transaction as PrismaTransaction,
@@ -29,12 +29,6 @@ function toEntity(tx: PrismaTransaction): Transaction {
 }
 
 export class PrismaTransactionRepository implements ITransactionRepository {
-  findAll(): ResultAsync<Transaction[], Error> {
-    return ResultAsync.fromPromise(prisma.transaction.findMany(), (e) =>
-      e instanceof Error ? e : new Error("Unknown Error"),
-    ).map((rows) => rows.map(toEntity));
-  }
-
   findById(id: string): ResultAsync<Transaction | null, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findUnique({ where: { id } }),
@@ -68,35 +62,6 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     ).map(() => undefined);
   }
 
-  update(tx: UpdateTransactionType): ResultAsync<void, Error> {
-    const data: Prisma.TransactionUpdateInput = {
-      type: tx.type,
-      datetime: tx.datetime,
-      amount: tx.amount && new Prisma.Decimal(tx.amount),
-      price: tx.price && new Prisma.Decimal(tx.price),
-      currency: tx.currency,
-      profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
-      fee: tx.fee && new Prisma.Decimal(tx.fee),
-      feeCurrency: tx.feeCurrency,
-      ...(tx.userId !== undefined && {
-        user: {
-          connect: { id: tx.userId },
-        },
-      }),
-    };
-    return ResultAsync.fromPromise(
-      prisma.transaction.update({ where: { id: tx.id }, data }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
-    ).map(() => undefined);
-  }
-
-  delete(id: string): ResultAsync<void, Error> {
-    return ResultAsync.fromPromise(
-      prisma.transaction.delete({ where: { id } }),
-      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
-    ).map(() => undefined);
-  }
-
   deleteOwned(id: string, userId: string): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.deleteMany({ where: { id, userId } }),
@@ -108,7 +73,10 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     );
   }
 
-  updateOwned(tx: UpdateTransactionType, userId: string): ResultAsync<void, Error> {
+  updateOwned(
+    tx: UpdateTransactionType,
+    userId: string,
+  ): ResultAsync<void, Error> {
     const data: Prisma.TransactionUpdateInput = {
       type: tx.type,
       datetime: tx.datetime,
