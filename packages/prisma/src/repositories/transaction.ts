@@ -56,7 +56,7 @@ function toUpdateData(tx: Transaction): Prisma.TransactionUpdateInput {
   };
 }
 
-export class PrismaTransactionRepository implements ITransactionRepository {
+export class TransactionRepository implements ITransactionRepository {
   findById(id: string): ResultAsync<Transaction | null, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findUnique({

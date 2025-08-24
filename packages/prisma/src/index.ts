@@ -1,2 +1,2 @@
-export * from "./transaction";
+export * from "./repositories";
 export * from "./client";

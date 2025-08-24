@@ -1,8 +1,8 @@
 import { GetTransactionsUseCase } from "@repo/application";
-import { PrismaTransactionRepository } from "@repo/prisma";
+import { TransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 
-const repo = new PrismaTransactionRepository();
+const repo = new TransactionRepository();
 const usecase = new GetTransactionsUseCase(repo);
 
 export async function GET(request: NextRequest) {

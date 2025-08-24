@@ -5,12 +5,12 @@ import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { RegisterTransactionUseCase } from "@repo/application";
 import type { CreateTransaction } from "@repo/domain";
-import { PrismaTransactionRepository } from "@repo/prisma";
+import { TransactionRepository } from "@repo/prisma";
 import { createTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-const repo = new PrismaTransactionRepository();
+const repo = new TransactionRepository();
 const usecase = new RegisterTransactionUseCase(repo);
 
 export const createTransaction = async (
