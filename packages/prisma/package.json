@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
-    "@repo/application": "workspace:*",
     "@repo/domain": "workspace:*",
     "@repo/toolkit": "workspace:*",
     "neverthrow": "catalog:"
@@ -54,6 +53,6 @@
     "vitest": "catalog:"
   },
   "prisma": {
-    "schema": "./prisma"
+    "schema": "./schema"
   }
 }

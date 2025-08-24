@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Prisma } from "./client";
+import { Prisma } from "./prisma-client";
 import { newPrismaError } from "./prisma-error";
 
 function fabricateKnownRequestError(

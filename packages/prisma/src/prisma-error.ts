@@ -1,5 +1,5 @@
 import { newError as newBaseError } from "@repo/toolkit";
-import { Prisma } from "./client";
+import { Prisma } from "./prisma-client";
 
 type NewPrismaError = {
   action?: string;

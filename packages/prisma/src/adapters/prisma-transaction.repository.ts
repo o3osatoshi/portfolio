@@ -6,7 +6,7 @@ import {
   Prisma,
   type Transaction as PrismaTransaction,
   prisma,
-} from "../client";
+} from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
 
 function toEntity(tx: PrismaTransaction): Transaction {
@@ -42,7 +42,9 @@ function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
   };
 }
 
-function toUpdateData(tx: Transaction): Prisma.TransactionUpdateManyMutationInput {
+function toUpdateData(
+  tx: Transaction,
+): Prisma.TransactionUpdateManyMutationInput {
   return {
     type: tx.type,
     datetime: tx.datetime,
@@ -55,7 +57,7 @@ function toUpdateData(tx: Transaction): Prisma.TransactionUpdateManyMutationInpu
   };
 }
 
-export class TransactionRepository implements ITransactionRepository {
+export class PrismaTransactionRepository implements ITransactionRepository {
   findById(id: string): ResultAsync<Transaction | null, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findUnique({

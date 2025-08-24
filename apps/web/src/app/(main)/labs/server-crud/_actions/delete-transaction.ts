@@ -4,12 +4,12 @@ import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { DeleteTransactionUseCase } from "@repo/application";
-import { TransactionRepository } from "@repo/prisma";
+import { PrismaTransactionRepository } from "@repo/prisma";
 import { deleteTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-const repo = new TransactionRepository();
+const repo = new PrismaTransactionRepository();
 const usecase = new DeleteTransactionUseCase(repo);
 
 export const deleteTransaction = async (

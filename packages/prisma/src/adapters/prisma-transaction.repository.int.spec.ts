@@ -10,8 +10,10 @@ import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 let container: StartedPostgreSqlContainer | undefined;
-let prisma: typeof import("../client")["prisma"] | undefined;
-let repo: import("./transaction").TransactionRepository | undefined;
+let prisma: typeof import("../prisma-client")["prisma"] | undefined;
+let repo:
+  | import("./prisma-transaction.repository").PrismaTransactionRepository
+  | undefined;
 
 const pkgRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -50,9 +52,11 @@ describe("TransactionRepository (integration with Testcontainers)", () => {
       env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL },
     });
 
-    prisma = (await import("../client")).prisma;
-    const { TransactionRepository } = await import("./transaction");
-    repo = new TransactionRepository();
+    prisma = (await import("../prisma-client")).prisma;
+    const { PrismaTransactionRepository } = await import(
+      "./prisma-transaction.repository"
+    );
+    repo = new PrismaTransactionRepository();
 
     await prisma.user.create({
       data: { id: "user-1", email: "user1@example.com" },
