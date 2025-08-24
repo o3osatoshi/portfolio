@@ -10,7 +10,8 @@
     "build": "tsup src/index.ts --dts --format esm --clean",
     "clean": "rimraf dist",
     "dev": "tsup src/index.ts --dts --format esm --watch",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "zod": "catalog:"

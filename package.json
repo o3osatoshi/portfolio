@@ -14,7 +14,9 @@
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "preview-storybook": "turbo run preview-storybook",
-    "sort:pkg": "sort-package-json **/package.json"
+    "sort:pkg": "sort-package-json **/package.json",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch --parallel"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0"
