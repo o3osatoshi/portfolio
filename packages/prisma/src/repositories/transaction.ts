@@ -42,7 +42,7 @@ function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
   };
 }
 
-function toUpdateData(tx: Transaction): Prisma.TransactionUpdateInput {
+function toUpdateData(tx: Transaction): Prisma.TransactionUpdateManyMutationInput {
   return {
     type: tx.type,
     datetime: tx.datetime,
@@ -52,9 +52,6 @@ function toUpdateData(tx: Transaction): Prisma.TransactionUpdateInput {
     profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
     fee: tx.fee && new Prisma.Decimal(tx.fee),
     feeCurrency: tx.feeCurrency,
-    user: {
-      connect: { id: tx.userId },
-    },
   };
 }
 
