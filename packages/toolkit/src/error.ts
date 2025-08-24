@@ -1,10 +1,23 @@
-type Layer = "Domain" | "Application" | "Infra" | "Auth" | "UI";
+type Layer =
+  | "Domain"
+  | "Application"
+  | "Infra"
+  | "Auth"
+  | "UI"
+  | "DB"
+  | "External";
 type Kind =
   | "Validation"
   | "NotFound"
   | "Conflict"
+  | "Integrity"
   | "Timeout"
+  | "Unavailable"
   | "Forbidden"
+  | "Unauthorized"
+  | "Deadlock"
+  | "Serialization"
+  | "Config"
   | "RateLimit"
   | "Unknown";
 
@@ -58,7 +71,7 @@ function truncate(s: string, max: number): string {
  *   only summarized into the message.
  *
  * ## Recommended usage
- * - Use `layer` and `kind` to categorize error origin (`Domain`, `Application`, `Infra`, `Auth`, `UI`) and type (`Validation`, `Timeout`, etc.).
+ * - Use `layer` and `kind` to categorize error origin (`Domain`, `Application`, `Infra`, `Auth`, `UI`, `DB`, `External`) and type (`Validation`, `Timeout`, `Unavailable`, `Integrity`, `Deadlock`, `Serialization`, etc.).
  * - Use `action` to describe what failed (e.g. "UpdateTransaction").
  * - Use `reason` to explain why (short, technical).
  * - Use `impact` to describe the consequence.

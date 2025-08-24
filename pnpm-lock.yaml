@@ -309,6 +309,9 @@ importers:
       '@repo/domain':
         specifier: workspace:*
         version: link:../domain
+      '@repo/toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
@@ -337,6 +340,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
+      vitest:
+        specifier: 'catalog:'
+        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.12)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)
 
   packages/toolkit:
     devDependencies:

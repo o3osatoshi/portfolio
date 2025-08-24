@@ -27,6 +27,8 @@
     "seed": "npm run db:seed",
     "studio": "npm run with:dev -- prisma studio",
     "studio:prod": "npm run with:prod -- prisma studio",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "with:dev": "dotenv -e .env.development.local --",
     "with:prod": "dotenv -e .env.production.local --"
   },
@@ -34,6 +36,7 @@
     "@prisma/client": "^6.7.0",
     "@repo/application": "workspace:*",
     "@repo/domain": "workspace:*",
+    "@repo/toolkit": "workspace:*",
     "neverthrow": "catalog:"
   },
   "devDependencies": {
@@ -44,7 +47,8 @@
     "rimraf": "catalog:",
     "tsup": "catalog:",
     "tsx": "4.19.4",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "prisma": {
     "schema": "./prisma"
