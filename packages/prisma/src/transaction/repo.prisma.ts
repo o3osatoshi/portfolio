@@ -1,10 +1,6 @@
 import type { ITransactionRepository } from "@repo/domain";
-import type {
-  CreateTransaction,
-  Transaction,
-  UpdateTransaction,
-} from "@repo/domain";
-import { ResultAsync, errAsync, okAsync } from "neverthrow";
+import type { CreateTransaction, Transaction } from "@repo/domain";
+import { ResultAsync, err, ok } from "neverthrow";
 import {
   Prisma,
   type Transaction as PrismaTransaction,
@@ -28,74 +24,90 @@ function toEntity(tx: PrismaTransaction): Transaction {
   };
 }
 
+function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
+  return {
+    type: tx.type,
+    datetime: tx.datetime,
+    amount: new Prisma.Decimal(tx.amount),
+    price: new Prisma.Decimal(tx.price),
+    currency: tx.currency,
+    profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
+    fee: tx.fee && new Prisma.Decimal(tx.fee),
+    feeCurrency: tx.feeCurrency,
+    user: {
+      connect: { id: tx.userId },
+    },
+  };
+}
+
+function toUpdateData(tx: Transaction): Prisma.TransactionUpdateInput {
+  return {
+    type: tx.type,
+    datetime: tx.datetime,
+    amount: new Prisma.Decimal(tx.amount),
+    price: new Prisma.Decimal(tx.price),
+    currency: tx.currency,
+    profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
+    fee: tx.fee && new Prisma.Decimal(tx.fee),
+    feeCurrency: tx.feeCurrency,
+    user: {
+      connect: { id: tx.userId },
+    },
+  };
+}
+
 export class PrismaTransactionRepository implements ITransactionRepository {
   findById(id: string): ResultAsync<Transaction | null, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.findUnique({ where: { id } }),
+      prisma.transaction.findUnique({
+        where: { id },
+      }),
       (e) => (e instanceof Error ? e : new Error("Unknown Error")),
     ).map((row) => (row ? toEntity(row) : null));
   }
 
   findByUserId(userId: string): ResultAsync<Transaction[], Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.findMany({ where: { userId } }),
+      prisma.transaction.findMany({
+        where: { userId },
+      }),
       (e) => (e instanceof Error ? e : new Error("Unknown Error")),
     ).map((rows) => rows.map(toEntity));
   }
 
-  create(tx: CreateTransaction): ResultAsync<void, Error> {
-    const data: Prisma.TransactionCreateInput = {
-      type: tx.type,
-      datetime: tx.datetime,
-      amount: tx.amount && new Prisma.Decimal(tx.amount),
-      price: tx.price && new Prisma.Decimal(tx.price),
-      currency: tx.currency,
-      profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
-      fee: tx.fee && new Prisma.Decimal(tx.fee),
-      feeCurrency: tx.feeCurrency,
-      user: {
-        connect: { id: tx.userId },
-      },
-    };
-    return ResultAsync.fromPromise(prisma.transaction.create({ data }), (e) =>
-      e instanceof Error ? e : new Error("Unknown Error"),
-    ).map(() => undefined);
+  create(tx: CreateTransaction): ResultAsync<Transaction, Error> {
+    return ResultAsync.fromPromise(
+      prisma.transaction.create({
+        data: toCreateData(tx),
+      }),
+      (e) => (e instanceof Error ? e : new Error("Unknown Error")),
+    ).map(toEntity);
   }
 
-  deleteOwned(id: string, userId: string): ResultAsync<void, Error> {
+  update(tx: Transaction): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.deleteMany({ where: { id, userId } }),
+      prisma.transaction.updateMany({
+        where: { id: tx.id, userId: tx.userId },
+        data: toUpdateData(tx),
+      }),
       (e) => (e instanceof Error ? e : new Error("Unknown Error")),
     ).andThen((res) =>
       res.count === 1
-        ? okAsync<void>(undefined)
-        : errAsync(new Error("Transaction not found or not owned by user.")),
+        ? ok<void>(undefined)
+        : err(new Error("Transaction not found or not owned by user.")),
     );
   }
 
-  updateOwned(tx: UpdateTransaction, userId: string): ResultAsync<void, Error> {
-    const data: Prisma.TransactionUpdateInput = {
-      type: tx.type,
-      datetime: tx.datetime,
-      amount: tx.amount && new Prisma.Decimal(tx.amount),
-      price: tx.price && new Prisma.Decimal(tx.price),
-      currency: tx.currency,
-      profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
-      fee: tx.fee && new Prisma.Decimal(tx.fee),
-      feeCurrency: tx.feeCurrency,
-      ...(tx.userId !== undefined && {
-        user: {
-          connect: { id: tx.userId },
-        },
-      }),
-    };
+  delete(id: string, userId: string): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.updateMany({ where: { id: tx.id, userId }, data }),
+      prisma.transaction.deleteMany({
+        where: { id, userId },
+      }),
       (e) => (e instanceof Error ? e : new Error("Unknown Error")),
     ).andThen((res) =>
       res.count === 1
-        ? okAsync<void>(undefined)
-        : errAsync(new Error("Transaction not found or not owned by user.")),
+        ? ok<void>(undefined)
+        : err(new Error("Transaction not found or not owned by user.")),
     );
   }
 }

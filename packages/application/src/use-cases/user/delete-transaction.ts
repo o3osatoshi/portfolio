@@ -5,6 +5,6 @@ export class DeleteTransactionUseCase {
   constructor(private readonly repo: ITransactionRepository) {}
 
   execute(id: string, userId: string): ResultAsync<void, Error> {
-    return this.repo.deleteOwned(id, userId);
+    return this.repo.delete(id, userId);
   }
 }
