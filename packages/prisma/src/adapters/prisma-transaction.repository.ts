@@ -1,20 +1,10 @@
+import { newTransaction } from "@repo/domain";
 import type {
   CreateTransaction,
   ITransactionRepository,
   Transaction,
   TransactionId,
   UserId,
-} from "@repo/domain";
-import {
-  makeAmount,
-  makeCurrencyCode,
-  makeDateTime,
-  makeFee,
-  makePrice,
-  makeProfitLoss,
-  makeTransactionId,
-  makeTransactionType,
-  makeUserId,
 } from "@repo/domain";
 import { newError as baseError } from "@repo/toolkit";
 import { Result, ResultAsync, err, ok } from "neverthrow";
@@ -26,48 +16,13 @@ import {
 import { newPrismaError } from "../prisma-error";
 
 function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
-  return Result.combine([
-    makeTransactionId(tx.id),
-    makeTransactionType(tx.type),
-    makeDateTime(tx.datetime),
-    makeAmount(tx.amount.toString()),
-    makePrice(tx.price.toString()),
-    makeCurrencyCode(tx.currency),
-    tx.profitLoss ? makeProfitLoss(tx.profitLoss.toString()) : ok(undefined),
-    tx.fee ? makeFee(tx.fee.toString()) : ok(undefined),
-    tx.feeCurrency ? makeCurrencyCode(tx.feeCurrency) : ok(undefined),
-    makeUserId(tx.userId),
-    makeDateTime(tx.createdAt),
-    makeDateTime(tx.updatedAt),
-  ]).map(
-    ([
-      id,
-      type,
-      datetime,
-      amount,
-      price,
-      currency,
-      profitLoss,
-      fee,
-      feeCurrency,
-      userId,
-      createdAt,
-      updatedAt,
-    ]) => ({
-      id,
-      type,
-      datetime,
-      amount,
-      price,
-      currency,
-      profitLoss,
-      fee,
-      feeCurrency,
-      userId,
-      createdAt,
-      updatedAt,
-    }),
-  );
+  return newTransaction({
+    ...tx,
+    amount: tx.amount.toString(),
+    price: tx.price.toString(),
+    profitLoss: tx.profitLoss?.toString(),
+    fee: tx.fee?.toString(),
+  });
 }
 
 function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
