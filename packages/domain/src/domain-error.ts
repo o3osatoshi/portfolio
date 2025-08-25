@@ -62,4 +62,3 @@ export const domainUnavailableError = (p: Omit<NewDomainError, "kind">) =>
   newDomainError({ kind: "Unavailable", ...p });
 export const domainUnknownError = (p: Omit<NewDomainError, "kind">) =>
   newDomainError({ kind: "Unknown", ...p });
-
