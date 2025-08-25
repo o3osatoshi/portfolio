@@ -1,19 +1,16 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type {
-  CreateTransaction,
-  Transaction as DomainTransaction,
-} from "@repo/domain";
+import type { CreateTransaction, Transaction } from "@repo/domain";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { TestHelpers, expectOk } from "../test-utils";
+import type { PrismaTransactionRepository } from "./prisma-transaction.repository";
 
 let container: StartedPostgreSqlContainer | undefined;
 let prisma: typeof import("../prisma-client")["prisma"] | undefined;
-let repo:
-  | import("./prisma-transaction.repository").PrismaTransactionRepository
-  | undefined;
+let repo: PrismaTransactionRepository | undefined;
 
 const pkgRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -72,163 +69,203 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   }, 60_000);
 
   it("fails to create when user does not exist (NotFound via connect)", async () => {
-    const tx: CreateTransaction = {
-      type: "BUY",
-      datetime: new Date(),
-      amount: 1,
-      price: 10,
+    const tx = TestHelpers.createValidTransaction({
+      amount: "1",
+      price: "10",
       currency: "USD",
       userId: "missing-user",
-    };
+    });
 
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
+
     const res = await _repo.create(tx);
+
     expect(res.isErr()).toBe(true);
-    const err = res._unsafeUnwrapErr();
-    // Prisma's connect on missing relation -> P2025 -> NotFound
-    expect(err.name).toBe("DBNotFoundError");
+    if (res.isErr()) {
+      expect(res.error.name).toBe("DBNotFoundError");
+    }
   });
 
   it("returns NotFound on update when user does not own the transaction", async () => {
     const _repo = repo;
-    if (!_repo || !prisma) throw new Error("Repository not initialized");
+    if (!_repo) throw new Error("Repository not initialized");
 
-    const created = (
-      await _repo.create({
-        type: "BUY",
-        datetime: new Date(),
-        amount: 2,
-        price: 20,
-        currency: "USD",
-        userId: "user-1",
-      })
-    )._unsafeUnwrap();
+    const tx = TestHelpers.createValidTransaction({
+      type: "BUY",
+      amount: "2",
+      price: "20",
+      currency: "USD",
+      userId: "user-1",
+    });
+
+    const createRes = await _repo.create(tx);
+    const created = expectOk(createRes);
 
     // Attempt to update with mismatched userId
-    const toUpdate: DomainTransaction = {
+    const updateTx: Transaction = {
       ...created,
-      userId: "other-user",
-      price: 21,
+      userId: TestHelpers.makeUserId("other-user"),
+      price: TestHelpers.makePrice("21"),
     };
-    const res = await _repo.update(toUpdate);
+
+    const res = await _repo.update(updateTx);
+
     expect(res.isErr()).toBe(true);
-    const err = res._unsafeUnwrapErr();
-    expect(err.name).toBe("DBNotFoundError");
+    if (res.isErr()) {
+      expect(res.error.name).toBe("DBNotFoundError");
+    }
   });
 
   it("returns NotFound on delete when user does not own the transaction", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
 
-    const createdRes = await _repo.create({
+    const tx = TestHelpers.createValidTransaction({
       type: "SELL",
-      datetime: new Date(),
-      amount: 3,
-      price: 30,
+      amount: "3",
+      price: "30",
       currency: "USD",
       userId: "user-1",
     });
-    const created = createdRes._unsafeUnwrap();
 
-    const res = await _repo.delete(created.id, "other-user");
+    const createRes = await _repo.create(tx);
+    const createTx = expectOk(createRes);
+
+    const res = await _repo.delete(
+      createTx.id,
+      TestHelpers.makeUserId("other-user"),
+    );
+
     expect(res.isErr()).toBe(true);
-    const err = res._unsafeUnwrapErr();
-    expect(err.name).toBe("DBNotFoundError");
+    if (res.isErr()) {
+      expect(res.error.name).toBe("DBNotFoundError");
+    }
   });
 
   it("returns null on findById for missing id (non-error)", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
-    const res = await _repo.findById("tx-missing");
+
+    const res = await _repo.findById(
+      TestHelpers.makeTransactionId("tx-missing"),
+    );
+
     expect(res.isOk()).toBe(true);
-    expect(res._unsafeUnwrap()).toBeNull();
+    if (res.isOk()) {
+      expect(res.value).toBeNull();
+    }
   });
 
   it("lists empty when user has no transactions (non-error)", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
-    const res = await _repo.findByUserId("no-tx-user");
+
+    const res = await _repo.findByUserId(TestHelpers.makeUserId("no-tx-user"));
+
     expect(res.isOk()).toBe(true);
-    expect(res._unsafeUnwrap()).toEqual([]);
+    if (res.isOk()) {
+      expect(res.value).toEqual([]);
+    }
   });
 
   it("returns NotFound on update when id does not exist", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
-    const res = await _repo.update({
-      id: "missing-id",
-      type: "BUY",
-      datetime: new Date(),
-      amount: 1,
-      price: 10,
-      currency: "USD",
-      userId: "user-1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+
+    const tx: Transaction = {
+      id: TestHelpers.makeTransactionId("missing-id"),
+      type: TestHelpers.makeTransactionType("BUY"),
+      datetime: TestHelpers.makeDateTime(new Date()),
+      amount: TestHelpers.makeAmount("1"),
+      price: TestHelpers.makePrice("10"),
+      currency: TestHelpers.makeCurrencyCode("USD"),
+      userId: TestHelpers.makeUserId("user-1"),
+      createdAt: TestHelpers.makeDateTime(new Date()),
+      updatedAt: TestHelpers.makeDateTime(new Date()),
+    };
+
+    const res = await _repo.update(tx);
+
     expect(res.isErr()).toBe(true);
-    const err = res._unsafeUnwrapErr();
-    expect(err.name).toBe("DBNotFoundError");
+    if (res.isErr()) {
+      expect(res.error.name).toBe("DBNotFoundError");
+    }
   });
 
   it("returns NotFound on delete when id does not exist", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
-    const res = await _repo.delete("missing-id", "user-1");
+
+    const res = await _repo.delete(
+      TestHelpers.makeTransactionId("missing-id"),
+      TestHelpers.makeUserId("user-1"),
+    );
+
     expect(res.isErr()).toBe(true);
-    const err = res._unsafeUnwrapErr();
-    expect(err.name).toBe("DBNotFoundError");
+    if (res.isErr()) {
+      expect(res.error.name).toBe("DBNotFoundError");
+    }
   });
 
   it("returns Validation error when datetime is invalid", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
-    const invalid = {
-      type: "BUY",
+
+    // Create invalid transaction with bad datetime
+    const invalidTx = {
+      type: TestHelpers.makeTransactionType("BUY"),
       // Intentionally invalid datetime
-      datetime: "not-a-date" as unknown as Date,
-      amount: 1,
-      price: 10,
-      currency: "USD",
-      userId: "user-1",
+      datetime: "not-a-date" as unknown as import("@repo/domain").DateTime,
+      amount: TestHelpers.makeAmount("1"),
+      price: TestHelpers.makePrice("10"),
+      currency: TestHelpers.makeCurrencyCode("USD"),
+      userId: TestHelpers.makeUserId("user-1"),
     } satisfies Partial<CreateTransaction> as CreateTransaction;
 
-    const res = await _repo.create(invalid);
+    const res = await _repo.create(invalidTx);
+
     expect(res.isErr()).toBe(true);
-    const err = res._unsafeUnwrapErr();
-    expect(err.name).toBe("DBValidationError");
+    if (res.isErr()) {
+      expect(res.error.name).toBe("DBValidationError");
+    }
   });
 
   it("happy path: create, read, update, list, delete", async () => {
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
 
-    const base: CreateTransaction = {
+    const tx = TestHelpers.createValidTransaction({
       type: "BUY",
-      datetime: new Date(),
-      amount: 1.23,
-      price: 100.5,
+      amount: "1.23",
+      price: "100.5",
       currency: "USD",
       userId: "user-1",
-    };
+    });
 
-    const createdRes = await _repo.create(base);
-    expect(createdRes.isOk()).toBe(true);
-    const created = createdRes._unsafeUnwrap();
+    const createRes = await _repo.create(tx);
+    expect(createRes.isOk()).toBe(true);
+    const createTx = expectOk(createRes);
 
-    const foundRes = await _repo.findById(created.id);
-    expect(foundRes.isOk()).toBe(true);
-    expect(foundRes._unsafeUnwrap()?.id).toBe(created.id);
+    const findRes = await _repo.findById(createTx.id);
+    expect(findRes.isOk()).toBe(true);
+    if (findRes.isOk()) {
+      expect(findRes.value?.id).toBe(createTx.id);
+    }
 
-    const updateRes = await _repo.update({ ...created, price: 101 });
+    const updateRes = await _repo.update({
+      ...createTx,
+      price: TestHelpers.makePrice("101"),
+    });
     expect(updateRes.isOk()).toBe(true);
 
-    const listRes = await _repo.findByUserId(base.userId);
+    const listRes = await _repo.findByUserId(tx.userId);
     expect(listRes.isOk()).toBe(true);
-    expect(listRes._unsafeUnwrap().length).toBeGreaterThanOrEqual(1);
+    if (listRes.isOk()) {
+      expect(listRes.value.length).toBeGreaterThanOrEqual(1);
+    }
 
-    const deleteRes = await _repo.delete(created.id, base.userId);
+    const deleteRes = await _repo.delete(createTx.id, tx.userId);
     expect(deleteRes.isOk()).toBe(true);
   });
 
@@ -236,20 +273,27 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
 
-    const beforeUser1 = (await _repo.findByUserId("user-1"))._unsafeUnwrap();
+    const beforeFindRes = await _repo.findByUserId(
+      TestHelpers.makeUserId("user-1"),
+    );
+    const beforeTxs = expectOk(beforeFindRes);
 
-    const tx2: CreateTransaction = {
+    const tx = TestHelpers.createValidTransaction({
       type: "BUY",
-      datetime: new Date(),
-      amount: 5,
-      price: 50,
+      amount: "5",
+      price: "50",
       currency: "USD",
       userId: "user-2",
-    };
-    const create2 = await _repo.create(tx2);
-    expect(create2.isOk()).toBe(true);
+    });
 
-    const afterUser1 = (await _repo.findByUserId("user-1"))._unsafeUnwrap();
-    expect(afterUser1.length).toBe(beforeUser1.length);
+    const createRes = await _repo.create(tx);
+    expect(createRes.isOk()).toBe(true);
+
+    const afterFindRes = await _repo.findByUserId(
+      TestHelpers.makeUserId("user-1"),
+    );
+    const afterTxs = expectOk(afterFindRes);
+
+    expect(afterTxs.length).toBe(beforeTxs.length);
   });
 });

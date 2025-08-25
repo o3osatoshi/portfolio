@@ -1,6 +1,5 @@
 import DeleteButton from "@/app/(main)/labs/server-crud/_components/delete-button";
 import EditDialog from "@/app/(main)/labs/server-crud/_components/edit-dialog";
-import type { Transaction } from "@repo/domain";
 import {
   Card,
   CardAction,
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/card";
+import type { Transaction } from "@repo/validation";
 
 interface Props {
   transaction: Transaction;

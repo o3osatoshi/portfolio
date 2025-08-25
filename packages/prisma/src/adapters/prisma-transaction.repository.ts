@@ -1,7 +1,23 @@
-import type { ITransactionRepository } from "@repo/domain";
-import type { CreateTransaction, Transaction } from "@repo/domain";
+import type {
+  CreateTransaction,
+  ITransactionRepository,
+  Transaction,
+  TransactionId,
+  UserId,
+} from "@repo/domain";
+import {
+  makeAmount,
+  makeCurrencyCode,
+  makeDateTime,
+  makeFee,
+  makePrice,
+  makeProfitLoss,
+  makeTransactionId,
+  makeTransactionType,
+  makeUserId,
+} from "@repo/domain";
 import { newError as baseError } from "@repo/toolkit";
-import { ResultAsync, err, ok } from "neverthrow";
+import { Result, ResultAsync, err, ok } from "neverthrow";
 import {
   Prisma,
   type Transaction as PrismaTransaction,
@@ -9,21 +25,49 @@ import {
 } from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
 
-function toEntity(tx: PrismaTransaction): Transaction {
-  return {
-    id: tx.id,
-    type: tx.type,
-    datetime: tx.datetime,
-    amount: tx.amount.toNumber(),
-    price: tx.price.toNumber(),
-    currency: tx.currency,
-    profitLoss: tx.profitLoss?.toNumber(),
-    fee: tx.fee?.toNumber(),
-    feeCurrency: tx.feeCurrency ?? undefined,
-    userId: tx.userId,
-    createdAt: tx.createdAt,
-    updatedAt: tx.updatedAt,
-  };
+function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
+  return Result.combine([
+    makeTransactionId(tx.id),
+    makeTransactionType(tx.type),
+    makeDateTime(tx.datetime),
+    makeAmount(tx.amount.toString()),
+    makePrice(tx.price.toString()),
+    makeCurrencyCode(tx.currency),
+    tx.profitLoss ? makeProfitLoss(tx.profitLoss.toString()) : ok(undefined),
+    tx.fee ? makeFee(tx.fee.toString()) : ok(undefined),
+    tx.feeCurrency ? makeCurrencyCode(tx.feeCurrency) : ok(undefined),
+    makeUserId(tx.userId),
+    makeDateTime(tx.createdAt),
+    makeDateTime(tx.updatedAt),
+  ]).map(
+    ([
+      id,
+      type,
+      datetime,
+      amount,
+      price,
+      currency,
+      profitLoss,
+      fee,
+      feeCurrency,
+      userId,
+      createdAt,
+      updatedAt,
+    ]) => ({
+      id,
+      type,
+      datetime,
+      amount,
+      price,
+      currency,
+      profitLoss,
+      fee,
+      feeCurrency,
+      userId,
+      createdAt,
+      updatedAt,
+    }),
+  );
 }
 
 function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
@@ -58,7 +102,7 @@ function toUpdateData(
 }
 
 export class PrismaTransactionRepository implements ITransactionRepository {
-  findById(id: string): ResultAsync<Transaction | null, Error> {
+  findById(id: TransactionId): ResultAsync<Transaction | null, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findUnique({
         where: { id },
@@ -68,10 +112,10 @@ export class PrismaTransactionRepository implements ITransactionRepository {
           action: "FindTransactionById",
           cause: e,
         }),
-    ).map((row) => (row ? toEntity(row) : null));
+    ).andThen((row) => (row ? toEntity(row) : ok(null)));
   }
 
-  findByUserId(userId: string): ResultAsync<Transaction[], Error> {
+  findByUserId(userId: UserId): ResultAsync<Transaction[], Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findMany({
         where: { userId },
@@ -81,7 +125,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
           action: "FindTransactionsByUserId",
           cause: e,
         }),
-    ).map((rows) => rows.map(toEntity));
+    ).andThen((rows) => Result.combine(rows.map(toEntity)));
   }
 
   create(tx: CreateTransaction): ResultAsync<Transaction, Error> {
@@ -95,7 +139,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
           hint: "Ensure related user exists and data types are valid.",
           cause: e,
         }),
-    ).map(toEntity);
+    ).andThen(toEntity);
   }
 
   update(tx: Transaction): ResultAsync<void, Error> {
@@ -124,7 +168,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     );
   }
 
-  delete(id: string, userId: string): ResultAsync<void, Error> {
+  delete(id: TransactionId, userId: UserId): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.deleteMany({
         where: { id, userId },

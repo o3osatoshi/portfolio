@@ -1,2 +1,2 @@
-export * from "./sample";
+export * from "./dtos";
 export * from "./use-cases";

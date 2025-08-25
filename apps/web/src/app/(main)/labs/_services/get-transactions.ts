@@ -1,7 +1,7 @@
 import { fetchClient } from "@/utils/fetch-client";
 import { getPathName } from "@/utils/handle-nav";
-import type { Transaction } from "@repo/domain";
 import { transactionsSchema } from "@repo/validation";
+import type { Transactions } from "@repo/validation";
 import { type Result, ResultAsync, err, ok } from "neverthrow";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 export async function getTransactions({
   userId,
-}: Props | undefined = {}): Promise<Result<Transaction[], Error>> {
+}: Props | undefined = {}): Promise<Result<Transactions, Error>> {
   const search = userId === undefined ? undefined : { userId };
   return ResultAsync.fromPromise(
     fetchClient({

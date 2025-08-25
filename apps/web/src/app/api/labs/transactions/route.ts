@@ -1,4 +1,7 @@
-import { GetTransactionsUseCase } from "@repo/application";
+import {
+  GetTransactionsDtoSchema,
+  GetTransactionsUseCase,
+} from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 
@@ -9,15 +12,18 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const userId = searchParams.get("userId");
   const _userId = userId === null ? undefined : userId;
-
   console.log(
     `[GET /labs/transactions] called with userId=${userId ?? "none"}`,
   );
-
   if (_userId === undefined) {
     return Response.json([]);
   }
-  const result = await usecase.execute(_userId);
+
+  const res = GetTransactionsDtoSchema.safeParse({ userId: _userId });
+  if (!res.success) {
+    return new Response("Invalid request", { status: 400 });
+  }
+  const result = await usecase.execute(res.data);
   if (result.isErr()) {
     return new Response(result.error.message, { status: 500 });
   }

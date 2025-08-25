@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@repo/domain": "workspace:*",
-    "neverthrow": "catalog:"
+    "neverthrow": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",

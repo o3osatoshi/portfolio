@@ -1,5 +1,6 @@
+import type { DateTime } from "../value-objects";
+
 export interface Base {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
 }

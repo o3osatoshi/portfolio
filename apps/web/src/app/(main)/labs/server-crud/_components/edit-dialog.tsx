@@ -3,7 +3,6 @@
 import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Transaction } from "@repo/domain";
 import Message from "@repo/ui/components/base/message";
 import { Button } from "@repo/ui/components/button";
 import { FormInput } from "@repo/ui/components/case/form-input";
@@ -16,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/dialog";
+import type { Transaction } from "@repo/validation";
 import { updateTransactionSchema } from "@repo/validation";
 import { Pencil } from "lucide-react";
 import * as React from "react";

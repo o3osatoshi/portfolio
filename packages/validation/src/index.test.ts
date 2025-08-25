@@ -13,8 +13,8 @@ describe("validateTransactions", () => {
         id: "1",
         type: "buy",
         datetime: "2023-01-01T00:00:00Z",
-        amount: 100,
-        price: 50000,
+        amount: "100",
+        price: "50000",
         currency: "BTC",
         userId: "user1",
         createdAt: "2023-01-01T00:00:00Z",
@@ -40,7 +40,7 @@ describe("validateCreateTransaction", () => {
 
     const result = validateCreateTransaction(validData);
     expect(result.type).toBe("buy");
-    expect(result.amount).toBe(100);
+    expect(result.amount).toBe("100");
   });
 });
 
@@ -55,7 +55,7 @@ describe("validateUpdateTransaction", () => {
     const result = validateUpdateTransaction(validData);
     expect(result.id).toBe("1");
     expect(result.type).toBe("sell");
-    expect(result.amount).toBe(50);
+    expect(result.amount).toBe("50");
   });
 });
 

@@ -7,7 +7,6 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import { logCustomMessage, logSampleMessage } from "@repo/application";
 import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
 
@@ -17,9 +16,5 @@ import { onRequest } from "firebase-functions/v2/https";
 export const helloWorld = onRequest((request, response) => {
   logger.info("Hello logs! by turbo!", { structuredData: true });
 
-  // Use domain package functions
-  logSampleMessage();
-  logCustomMessage("Firebase Functions is working with domain package!");
-
-  response.send("Hello from Firebase! by turbo! with bundle!");
+  response.send("Hello from Firebase! by turbo! with clean architecture!");
 });

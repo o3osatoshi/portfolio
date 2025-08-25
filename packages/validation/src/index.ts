@@ -1,21 +1,29 @@
 import { z } from "zod";
 
-export const transactionsSchema = z.array(
-  z.object({
-    id: z.string(),
-    type: z.string(),
-    datetime: z.coerce.date(),
-    amount: z.coerce.number(),
-    price: z.coerce.number(),
-    currency: z.string(),
-    profitLoss: z.coerce.number().optional(),
-    fee: z.coerce.number().optional(),
-    feeCurrency: z.string().optional(),
-    userId: z.string(),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
-  }),
-);
+// decimal-as-string schema: accept string or number, output canonical string
+const decimalString = z
+  .union([z.string(), z.number()])
+  .transform((v) => (typeof v === "number" ? v.toString() : v))
+  .pipe(z.string().regex(/^-?(?:\d+)(?:\.\d+)?$/));
+
+export const transactionSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  datetime: z.coerce.date(),
+  amount: decimalString,
+  price: decimalString,
+  currency: z.string(),
+  profitLoss: decimalString.optional(),
+  fee: decimalString.optional(),
+  feeCurrency: z.string().optional(),
+  userId: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type Transaction = z.infer<typeof transactionSchema>;
+
+export const transactionsSchema = z.array(transactionSchema);
 
 export type Transactions = z.infer<typeof transactionsSchema>;
 
@@ -26,11 +34,11 @@ export function validateTransactions(input: unknown): Transactions {
 export const createTransactionSchema = z.object({
   type: z.string(),
   datetime: z.coerce.date(),
-  amount: z.coerce.number(),
-  price: z.coerce.number(),
+  amount: decimalString,
+  price: decimalString,
   currency: z.string(),
-  profitLoss: z.coerce.number().optional(),
-  fee: z.coerce.number().optional(),
+  profitLoss: decimalString.optional(),
+  fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
 });
 
@@ -44,11 +52,11 @@ export const updateTransactionSchema = z.object({
   id: z.string(),
   type: z.string().optional(),
   datetime: z.coerce.date().optional(),
-  amount: z.coerce.number().optional(),
-  price: z.coerce.number().optional(),
+  amount: decimalString.optional(),
+  price: decimalString.optional(),
   currency: z.string().optional(),
-  profitLoss: z.coerce.number().optional(),
-  fee: z.coerce.number().optional(),
+  profitLoss: decimalString.optional(),
+  fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
 });
 

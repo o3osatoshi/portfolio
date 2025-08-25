@@ -3,7 +3,10 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { DeleteTransactionUseCase } from "@repo/application";
+import {
+  DeleteTransactionDtoSchema,
+  DeleteTransactionUseCase,
+} from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { deleteTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
@@ -31,7 +34,14 @@ export const deleteTransaction = async (
       return err("You must be logged in to delete a transaction.");
     }
 
-    const executeResult = await usecase.execute(id, userId);
+    const res = DeleteTransactionDtoSchema.safeParse({
+      id,
+      userId,
+    });
+    if (!res.success) {
+      return err("validation error");
+    }
+    const executeResult = await usecase.execute(res.data);
     if (executeResult.isErr()) {
       return err(executeResult.error);
     }

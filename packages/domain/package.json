@@ -11,6 +11,8 @@
     "dev": "tsup src/* --watch"
   },
   "dependencies": {
+    "@repo/toolkit": "workspace:*",
+    "decimal.js": "^10.6.0",
     "neverthrow": "catalog:"
   },
   "devDependencies": {
