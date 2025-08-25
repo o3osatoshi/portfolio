@@ -46,7 +46,7 @@ export type UpdateTransaction = Partial<
 
 export type Transaction = Base & TransactionDomain;
 
-export type NewTransaction = {
+export type _NewTransaction = {
   id: unknown;
   type: unknown;
   datetime: unknown;
@@ -61,7 +61,9 @@ export type NewTransaction = {
   updatedAt: unknown;
 };
 
-export function newTransaction(tx: NewTransaction): Result<Transaction, Error> {
+export function newTransaction(
+  tx: _NewTransaction,
+): Result<Transaction, Error> {
   return Result.combine([
     makeTransactionId(tx.id),
     makeTransactionType(tx.type),
@@ -106,11 +108,77 @@ export function newTransaction(tx: NewTransaction): Result<Transaction, Error> {
   );
 }
 
+export type _CreateTransaction = {
+  type: unknown;
+  datetime: unknown;
+  amount: unknown;
+  price: unknown;
+  currency: unknown;
+  profitLoss?: unknown;
+  fee?: unknown;
+  feeCurrency?: unknown;
+  userId: unknown;
+};
+
+export function createTransaction(
+  tx: _CreateTransaction,
+): Result<CreateTransaction, Error> {
+  return Result.combine([
+    makeTransactionType(tx.type),
+    makeDateTime(tx.datetime),
+    makeAmount(tx.amount),
+    makePrice(tx.price),
+    makeCurrencyCode(tx.currency),
+    tx.profitLoss ? makeProfitLoss(tx.profitLoss) : ok(undefined),
+    tx.fee ? makeFee(tx.fee) : ok(undefined),
+    tx.feeCurrency ? makeCurrencyCode(tx.feeCurrency) : ok(undefined),
+    makeUserId(tx.userId),
+  ]).map(
+    ([
+      type,
+      datetime,
+      amount,
+      price,
+      currency,
+      profitLoss,
+      fee,
+      feeCurrency,
+      userId,
+    ]) => ({
+      type,
+      datetime,
+      amount,
+      price,
+      currency,
+      profitLoss,
+      fee,
+      feeCurrency,
+      userId,
+    }),
+  );
+}
+
+export type _UpdateTransaction = {
+  id: unknown;
+  type?: unknown;
+  datetime?: unknown;
+  amount?: unknown;
+  price?: unknown;
+  currency?: unknown;
+  profitLoss?: unknown;
+  fee?: unknown;
+  feeCurrency?: unknown;
+};
+
 export function updateTransaction(
-  transaction: Transaction,
-  patch: UpdateTransaction,
+  tx: Transaction,
+  patch: _UpdateTransaction,
 ): Result<Transaction, Error> {
-  if (transaction.id !== patch.id) {
+  const res = makeTransactionId(patch.id);
+  if (res.isErr()) return err(res.error);
+  const id = res.value;
+
+  if (tx.id !== id) {
     return err(
       domainValidationError({
         action: "UpdateTransaction",
@@ -119,8 +187,35 @@ export function updateTransaction(
     );
   }
 
-  return ok({
-    ...transaction,
-    ...patch,
-  });
+  return Result.combine([
+    patch.type ? makeTransactionType(patch.type) : ok(undefined),
+    patch.datetime ? makeDateTime(patch.datetime) : ok(undefined),
+    patch.amount ? makeAmount(patch.amount) : ok(undefined),
+    patch.price ? makePrice(patch.price) : ok(undefined),
+    patch.currency ? makeCurrencyCode(patch.currency) : ok(undefined),
+    patch.profitLoss ? makeProfitLoss(patch.profitLoss) : ok(undefined),
+    patch.fee ? makeFee(patch.fee) : ok(undefined),
+    patch.feeCurrency ? makeCurrencyCode(patch.feeCurrency) : ok(undefined),
+  ]).map(
+    ([
+      type,
+      datetime,
+      amount,
+      price,
+      currency,
+      profitLoss,
+      fee,
+      feeCurrency,
+    ]) => ({
+      ...tx,
+      ...(type && { type }),
+      ...(datetime && { datetime }),
+      ...(amount !== undefined && { amount }),
+      ...(price !== undefined && { price }),
+      ...(currency && { currency }),
+      ...(profitLoss !== undefined && { profitLoss }),
+      ...(fee !== undefined && { fee }),
+      ...(feeCurrency && { feeCurrency }),
+    }),
+  );
 }

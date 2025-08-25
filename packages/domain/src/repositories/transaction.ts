@@ -1,6 +1,6 @@
+import type { ResultAsync } from "neverthrow";
 import type { CreateTransaction, Transaction } from "../entities";
 import type { TransactionId, UserId } from "../value-objects";
-import type { ResultAsync } from "neverthrow";
 
 export interface ITransactionRepository {
   findById(id: TransactionId): ResultAsync<Transaction | null, Error>;
