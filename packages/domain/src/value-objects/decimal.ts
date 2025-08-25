@@ -1,4 +1,4 @@
-import Decimal from "decimal.js";
+import { default as DecimalJs } from "decimal.js";
 import { type Result, err, ok } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
@@ -7,7 +7,7 @@ export type DecimalString = Brand<string, "Decimal">;
 
 export function newDecimal(v: unknown): Result<DecimalString, Error> {
   try {
-    const d = new Decimal(v as unknown as Decimal.Value);
+    const d = new DecimalJs(v as unknown as DecimalJs.Value);
     if (!d.isFinite()) {
       return err(
         domainValidationError({
@@ -30,7 +30,7 @@ export function newDecimal(v: unknown): Result<DecimalString, Error> {
 export function isDecimal(v: unknown): v is DecimalString {
   if (typeof v !== "string") return false;
   try {
-    const d = new Decimal(v);
+    const d = new DecimalJs(v);
     return d.isFinite();
   } catch {
     return false;
