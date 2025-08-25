@@ -38,11 +38,6 @@ interface TransactionDomain {
 }
 
 export type CreateTransaction = Omit<TransactionDomain, "id">;
-export type UpdateTransaction = Partial<
-  Omit<TransactionDomain, "id" | "userId">
-> & {
-  id: TransactionId;
-};
 
 export type Transaction = Base & TransactionDomain;
 
