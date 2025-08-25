@@ -1,11 +1,34 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { CreateTransaction, Transaction } from "@repo/domain";
+import type {
+  Amount,
+  CreateTransaction,
+  CurrencyCode,
+  DateTime,
+  Fee,
+  Price,
+  ProfitLoss,
+  Transaction,
+  TransactionId,
+  TransactionType,
+  UserId,
+} from "@repo/domain";
+import {
+  newAmount,
+  newCurrencyCode,
+  newDateTime,
+  newFee,
+  newPrice,
+  newProfitLoss,
+  newTransactionId,
+  newTransactionType,
+  newUserId,
+} from "@repo/domain";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
+import type { Result } from "neverthrow";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { TestHelpers, expectOk } from "../test-utils";
 import type { PrismaTransactionRepository } from "./prisma-transaction.repository";
 
 let container: StartedPostgreSqlContainer | undefined;
@@ -69,6 +92,8 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   }, 60_000);
 
   it("fails to create when user does not exist (NotFound via connect)", async () => {
+    if (!repo) throw new Error("Repository not initialized");
+
     const tx = TestHelpers.createValidTransaction({
       amount: "1",
       price: "10",
@@ -76,10 +101,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       userId: "missing-user",
     });
 
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
-
-    const res = await _repo.create(tx);
+    const res = await repo.create(tx);
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -88,8 +110,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("returns NotFound on update when user does not own the transaction", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
     const tx = TestHelpers.createValidTransaction({
       type: "BUY",
@@ -99,7 +120,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       userId: "user-1",
     });
 
-    const createRes = await _repo.create(tx);
+    const createRes = await repo.create(tx);
     const created = expectOk(createRes);
 
     // Attempt to update with mismatched userId
@@ -109,7 +130,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       price: TestHelpers.newPrice("21"),
     };
 
-    const res = await _repo.update(updateTx);
+    const res = await repo.update(updateTx);
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -118,8 +139,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("returns NotFound on delete when user does not own the transaction", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
     const tx = TestHelpers.createValidTransaction({
       type: "SELL",
@@ -129,10 +149,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       userId: "user-1",
     });
 
-    const createRes = await _repo.create(tx);
+    const createRes = await repo.create(tx);
     const createTx = expectOk(createRes);
 
-    const res = await _repo.delete(
+    const res = await repo.delete(
       createTx.id,
       TestHelpers.newUserId("other-user"),
     );
@@ -144,12 +164,9 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("returns null on findById for missing id (non-error)", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
-    const res = await _repo.findById(
-      TestHelpers.newTransactionId("tx-missing"),
-    );
+    const res = await repo.findById(TestHelpers.newTransactionId("tx-missing"));
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
@@ -158,10 +175,9 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("lists empty when user has no transactions (non-error)", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
-    const res = await _repo.findByUserId(TestHelpers.newUserId("no-tx-user"));
+    const res = await repo.findByUserId(TestHelpers.newUserId("no-tx-user"));
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
@@ -170,8 +186,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("returns NotFound on update when id does not exist", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
     const tx: Transaction = {
       id: TestHelpers.newTransactionId("missing-id"),
@@ -185,7 +200,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       updatedAt: TestHelpers.newDateTime(new Date()),
     };
 
-    const res = await _repo.update(tx);
+    const res = await repo.update(tx);
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -194,10 +209,9 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("returns NotFound on delete when id does not exist", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
-    const res = await _repo.delete(
+    const res = await repo.delete(
       TestHelpers.newTransactionId("missing-id"),
       TestHelpers.newUserId("user-1"),
     );
@@ -209,8 +223,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("returns Validation error when datetime is invalid", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
     // Create invalid transaction with bad datetime
     const invalidTx = {
@@ -223,7 +236,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       userId: TestHelpers.newUserId("user-1"),
     } satisfies Partial<CreateTransaction> as CreateTransaction;
 
-    const res = await _repo.create(invalidTx);
+    const res = await repo.create(invalidTx);
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -232,8 +245,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 
   it("happy path: create, read, update, list, delete", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
     const tx = TestHelpers.createValidTransaction({
       type: "BUY",
@@ -243,37 +255,36 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       userId: "user-1",
     });
 
-    const createRes = await _repo.create(tx);
+    const createRes = await repo.create(tx);
     expect(createRes.isOk()).toBe(true);
     const createTx = expectOk(createRes);
 
-    const findRes = await _repo.findById(createTx.id);
+    const findRes = await repo.findById(createTx.id);
     expect(findRes.isOk()).toBe(true);
     if (findRes.isOk()) {
       expect(findRes.value?.id).toBe(createTx.id);
     }
 
-    const updateRes = await _repo.update({
+    const updateRes = await repo.update({
       ...createTx,
       price: TestHelpers.newPrice("101"),
     });
     expect(updateRes.isOk()).toBe(true);
 
-    const listRes = await _repo.findByUserId(tx.userId);
+    const listRes = await repo.findByUserId(tx.userId);
     expect(listRes.isOk()).toBe(true);
     if (listRes.isOk()) {
       expect(listRes.value.length).toBeGreaterThanOrEqual(1);
     }
 
-    const deleteRes = await _repo.delete(createTx.id, tx.userId);
+    const deleteRes = await repo.delete(createTx.id, tx.userId);
     expect(deleteRes.isOk()).toBe(true);
   });
 
   it("findByUserId returns only own transactions", async () => {
-    const _repo = repo;
-    if (!_repo) throw new Error("Repository not initialized");
+    if (!repo) throw new Error("Repository not initialized");
 
-    const beforeFindRes = await _repo.findByUserId(
+    const beforeFindRes = await repo.findByUserId(
       TestHelpers.newUserId("user-1"),
     );
     const beforeTxs = expectOk(beforeFindRes);
@@ -286,10 +297,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       userId: "user-2",
     });
 
-    const createRes = await _repo.create(tx);
+    const createRes = await repo.create(tx);
     expect(createRes.isOk()).toBe(true);
 
-    const afterFindRes = await _repo.findByUserId(
+    const afterFindRes = await repo.findByUserId(
       TestHelpers.newUserId("user-1"),
     );
     const afterTxs = expectOk(afterFindRes);
@@ -297,3 +308,90 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     expect(afterTxs.length).toBe(beforeTxs.length);
   });
 });
+
+function expectOk<T, E>(result: Result<T, E>): T {
+  if (result.isErr()) {
+    throw new Error(`Expected Ok but got Err: ${result.error}`);
+  }
+  return result.value;
+}
+
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+class TestHelpers {
+  static createValidTransaction(
+    overrides: Partial<{
+      type: "BUY" | "SELL";
+      datetime: Date;
+      amount: string;
+      price: string;
+      currency: string;
+      userId: string;
+      profitLoss?: string;
+      fee?: string;
+      feeCurrency?: string;
+    }> = {},
+  ): CreateTransaction {
+    const defaults = {
+      type: "BUY" as const,
+      datetime: new Date(),
+      amount: "1.0",
+      price: "100.0",
+      currency: "USD",
+      userId: "test-user-1",
+    };
+
+    const merged = { ...defaults, ...overrides };
+
+    return {
+      type: expectOk(newTransactionType(merged.type)),
+      datetime: expectOk(newDateTime(merged.datetime)),
+      amount: expectOk(newAmount(merged.amount)),
+      price: expectOk(newPrice(merged.price)),
+      currency: expectOk(newCurrencyCode(merged.currency)),
+      profitLoss: merged.profitLoss
+        ? expectOk(newProfitLoss(merged.profitLoss))
+        : undefined,
+      fee: merged.fee ? expectOk(newFee(merged.fee)) : undefined,
+      feeCurrency: merged.feeCurrency
+        ? expectOk(newCurrencyCode(merged.feeCurrency))
+        : undefined,
+      userId: expectOk(newUserId(merged.userId)),
+    };
+  }
+
+  static newTransactionId(id: string): TransactionId {
+    return expectOk(newTransactionId(id));
+  }
+
+  static newUserId(id: string): UserId {
+    return expectOk(newUserId(id));
+  }
+
+  static newTransactionType(type: "BUY" | "SELL"): TransactionType {
+    return expectOk(newTransactionType(type));
+  }
+
+  static newDateTime(date: Date): DateTime {
+    return expectOk(newDateTime(date));
+  }
+
+  static newAmount(amount: string): Amount {
+    return expectOk(newAmount(amount));
+  }
+
+  static newPrice(price: string): Price {
+    return expectOk(newPrice(price));
+  }
+
+  static newCurrencyCode(currency: string): CurrencyCode {
+    return expectOk(newCurrencyCode(currency));
+  }
+
+  static newFee(fee: string): Fee {
+    return expectOk(newFee(fee));
+  }
+
+  static newProfitLoss(profitLoss: string): ProfitLoss {
+    return expectOk(newProfitLoss(profitLoss));
+  }
+}
