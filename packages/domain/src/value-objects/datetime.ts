@@ -1,21 +1,21 @@
-import { err, ok, type Result } from "neverthrow";
+import { type Result, err, ok } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
 export type DateTime = Brand<Date, "DateTime">;
 
-export function makeDateTime(v: unknown): Result<DateTime, Error> {
+export function newDateTime(v: unknown): Result<DateTime, Error> {
   if (!(v instanceof Date))
     return err(
       domainValidationError({
-        action: "MakeDateTime",
+        action: "NewDateTime",
         reason: "DateTime must be a Date",
       }),
     );
   if (Number.isNaN(v.getTime()))
     return err(
       domainValidationError({
-        action: "MakeDateTime",
+        action: "NewDateTime",
         reason: "DateTime is invalid",
       }),
     );

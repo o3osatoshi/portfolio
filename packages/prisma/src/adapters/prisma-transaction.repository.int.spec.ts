@@ -105,8 +105,8 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     // Attempt to update with mismatched userId
     const updateTx: Transaction = {
       ...created,
-      userId: TestHelpers.makeUserId("other-user"),
-      price: TestHelpers.makePrice("21"),
+      userId: TestHelpers.newUserId("other-user"),
+      price: TestHelpers.newPrice("21"),
     };
 
     const res = await _repo.update(updateTx);
@@ -134,7 +134,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     const res = await _repo.delete(
       createTx.id,
-      TestHelpers.makeUserId("other-user"),
+      TestHelpers.newUserId("other-user"),
     );
 
     expect(res.isErr()).toBe(true);
@@ -148,7 +148,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!_repo) throw new Error("Repository not initialized");
 
     const res = await _repo.findById(
-      TestHelpers.makeTransactionId("tx-missing"),
+      TestHelpers.newTransactionId("tx-missing"),
     );
 
     expect(res.isOk()).toBe(true);
@@ -161,7 +161,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     const _repo = repo;
     if (!_repo) throw new Error("Repository not initialized");
 
-    const res = await _repo.findByUserId(TestHelpers.makeUserId("no-tx-user"));
+    const res = await _repo.findByUserId(TestHelpers.newUserId("no-tx-user"));
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
@@ -174,15 +174,15 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!_repo) throw new Error("Repository not initialized");
 
     const tx: Transaction = {
-      id: TestHelpers.makeTransactionId("missing-id"),
-      type: TestHelpers.makeTransactionType("BUY"),
-      datetime: TestHelpers.makeDateTime(new Date()),
-      amount: TestHelpers.makeAmount("1"),
-      price: TestHelpers.makePrice("10"),
-      currency: TestHelpers.makeCurrencyCode("USD"),
-      userId: TestHelpers.makeUserId("user-1"),
-      createdAt: TestHelpers.makeDateTime(new Date()),
-      updatedAt: TestHelpers.makeDateTime(new Date()),
+      id: TestHelpers.newTransactionId("missing-id"),
+      type: TestHelpers.newTransactionType("BUY"),
+      datetime: TestHelpers.newDateTime(new Date()),
+      amount: TestHelpers.newAmount("1"),
+      price: TestHelpers.newPrice("10"),
+      currency: TestHelpers.newCurrencyCode("USD"),
+      userId: TestHelpers.newUserId("user-1"),
+      createdAt: TestHelpers.newDateTime(new Date()),
+      updatedAt: TestHelpers.newDateTime(new Date()),
     };
 
     const res = await _repo.update(tx);
@@ -198,8 +198,8 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!_repo) throw new Error("Repository not initialized");
 
     const res = await _repo.delete(
-      TestHelpers.makeTransactionId("missing-id"),
-      TestHelpers.makeUserId("user-1"),
+      TestHelpers.newTransactionId("missing-id"),
+      TestHelpers.newUserId("user-1"),
     );
 
     expect(res.isErr()).toBe(true);
@@ -214,13 +214,13 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     // Create invalid transaction with bad datetime
     const invalidTx = {
-      type: TestHelpers.makeTransactionType("BUY"),
+      type: TestHelpers.newTransactionType("BUY"),
       // Intentionally invalid datetime
       datetime: "not-a-date" as unknown as import("@repo/domain").DateTime,
-      amount: TestHelpers.makeAmount("1"),
-      price: TestHelpers.makePrice("10"),
-      currency: TestHelpers.makeCurrencyCode("USD"),
-      userId: TestHelpers.makeUserId("user-1"),
+      amount: TestHelpers.newAmount("1"),
+      price: TestHelpers.newPrice("10"),
+      currency: TestHelpers.newCurrencyCode("USD"),
+      userId: TestHelpers.newUserId("user-1"),
     } satisfies Partial<CreateTransaction> as CreateTransaction;
 
     const res = await _repo.create(invalidTx);
@@ -255,7 +255,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     const updateRes = await _repo.update({
       ...createTx,
-      price: TestHelpers.makePrice("101"),
+      price: TestHelpers.newPrice("101"),
     });
     expect(updateRes.isOk()).toBe(true);
 
@@ -274,7 +274,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!_repo) throw new Error("Repository not initialized");
 
     const beforeFindRes = await _repo.findByUserId(
-      TestHelpers.makeUserId("user-1"),
+      TestHelpers.newUserId("user-1"),
     );
     const beforeTxs = expectOk(beforeFindRes);
 
@@ -290,7 +290,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     expect(createRes.isOk()).toBe(true);
 
     const afterFindRes = await _repo.findByUserId(
-      TestHelpers.makeUserId("user-1"),
+      TestHelpers.newUserId("user-1"),
     );
     const afterTxs = expectOk(afterFindRes);
 

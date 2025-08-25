@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "neverthrow";
+import { type Result, err, ok } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -9,22 +9,22 @@ function nonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.trim().length > 0;
 }
 
-export function makeTransactionId(v: unknown): Result<TransactionId, Error> {
+export function newTransactionId(v: unknown): Result<TransactionId, Error> {
   if (!nonEmptyString(v))
     return err(
       domainValidationError({
-        action: "MakeTransactionId",
+        action: "NewTransactionId",
         reason: "TransactionId must be non-empty",
       }),
     );
   return ok(v as TransactionId);
 }
 
-export function makeUserId(v: unknown): Result<UserId, Error> {
+export function newUserId(v: unknown): Result<UserId, Error> {
   if (!nonEmptyString(v))
     return err(
       domainValidationError({
-        action: "MakeUserId",
+        action: "NewUserId",
         reason: "UserId must be non-empty",
       }),
     );

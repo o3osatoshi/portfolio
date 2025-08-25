@@ -1,15 +1,15 @@
 import { Result, err, ok } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import {
-  makeAmount,
-  makeCurrencyCode,
-  makeDateTime,
-  makeFee,
-  makePrice,
-  makeProfitLoss,
-  makeTransactionId,
-  makeTransactionType,
-  makeUserId,
+  newAmount,
+  newCurrencyCode,
+  newDateTime,
+  newFee,
+  newPrice,
+  newProfitLoss,
+  newTransactionId,
+  newTransactionType,
+  newUserId,
 } from "../value-objects";
 import type {
   Amount,
@@ -65,18 +65,18 @@ export function newTransaction(
   tx: _NewTransaction,
 ): Result<Transaction, Error> {
   return Result.combine([
-    makeTransactionId(tx.id),
-    makeTransactionType(tx.type),
-    makeDateTime(tx.datetime),
-    makeAmount(tx.amount),
-    makePrice(tx.price),
-    makeCurrencyCode(tx.currency),
-    tx.profitLoss ? makeProfitLoss(tx.profitLoss) : ok(undefined),
-    tx.fee ? makeFee(tx.fee) : ok(undefined),
-    tx.feeCurrency ? makeCurrencyCode(tx.feeCurrency) : ok(undefined),
-    makeUserId(tx.userId),
-    makeDateTime(tx.createdAt),
-    makeDateTime(tx.updatedAt),
+    newTransactionId(tx.id),
+    newTransactionType(tx.type),
+    newDateTime(tx.datetime),
+    newAmount(tx.amount),
+    newPrice(tx.price),
+    newCurrencyCode(tx.currency),
+    tx.profitLoss ? newProfitLoss(tx.profitLoss) : ok(undefined),
+    tx.fee ? newFee(tx.fee) : ok(undefined),
+    tx.feeCurrency ? newCurrencyCode(tx.feeCurrency) : ok(undefined),
+    newUserId(tx.userId),
+    newDateTime(tx.createdAt),
+    newDateTime(tx.updatedAt),
   ]).map(
     ([
       id,
@@ -124,15 +124,15 @@ export function createTransaction(
   tx: _CreateTransaction,
 ): Result<CreateTransaction, Error> {
   return Result.combine([
-    makeTransactionType(tx.type),
-    makeDateTime(tx.datetime),
-    makeAmount(tx.amount),
-    makePrice(tx.price),
-    makeCurrencyCode(tx.currency),
-    tx.profitLoss ? makeProfitLoss(tx.profitLoss) : ok(undefined),
-    tx.fee ? makeFee(tx.fee) : ok(undefined),
-    tx.feeCurrency ? makeCurrencyCode(tx.feeCurrency) : ok(undefined),
-    makeUserId(tx.userId),
+    newTransactionType(tx.type),
+    newDateTime(tx.datetime),
+    newAmount(tx.amount),
+    newPrice(tx.price),
+    newCurrencyCode(tx.currency),
+    tx.profitLoss ? newProfitLoss(tx.profitLoss) : ok(undefined),
+    tx.fee ? newFee(tx.fee) : ok(undefined),
+    tx.feeCurrency ? newCurrencyCode(tx.feeCurrency) : ok(undefined),
+    newUserId(tx.userId),
   ]).map(
     ([
       type,
@@ -174,7 +174,7 @@ export function updateTransaction(
   tx: Transaction,
   patch: _UpdateTransaction,
 ): Result<Transaction, Error> {
-  const res = makeTransactionId(patch.id);
+  const res = newTransactionId(patch.id);
   if (res.isErr()) return err(res.error);
   const id = res.value;
 
@@ -188,14 +188,14 @@ export function updateTransaction(
   }
 
   return Result.combine([
-    patch.type ? makeTransactionType(patch.type) : ok(undefined),
-    patch.datetime ? makeDateTime(patch.datetime) : ok(undefined),
-    patch.amount ? makeAmount(patch.amount) : ok(undefined),
-    patch.price ? makePrice(patch.price) : ok(undefined),
-    patch.currency ? makeCurrencyCode(patch.currency) : ok(undefined),
-    patch.profitLoss ? makeProfitLoss(patch.profitLoss) : ok(undefined),
-    patch.fee ? makeFee(patch.fee) : ok(undefined),
-    patch.feeCurrency ? makeCurrencyCode(patch.feeCurrency) : ok(undefined),
+    patch.type ? newTransactionType(patch.type) : ok(undefined),
+    patch.datetime ? newDateTime(patch.datetime) : ok(undefined),
+    patch.amount ? newAmount(patch.amount) : ok(undefined),
+    patch.price ? newPrice(patch.price) : ok(undefined),
+    patch.currency ? newCurrencyCode(patch.currency) : ok(undefined),
+    patch.profitLoss ? newProfitLoss(patch.profitLoss) : ok(undefined),
+    patch.fee ? newFee(patch.fee) : ok(undefined),
+    patch.feeCurrency ? newCurrencyCode(patch.feeCurrency) : ok(undefined),
   ]).map(
     ([
       type,

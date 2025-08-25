@@ -1,5 +1,5 @@
 import type { ITransactionRepository } from "@repo/domain";
-import { makeTransactionId, makeUserId } from "@repo/domain";
+import { newTransactionId, newUserId } from "@repo/domain";
 import { Result, type ResultAsync, errAsync } from "neverthrow";
 import type { DeleteTransactionDto } from "../../dtos";
 
@@ -8,8 +8,8 @@ export class DeleteTransactionUseCase {
 
   execute(dto: DeleteTransactionDto): ResultAsync<void, Error> {
     const res = Result.combine([
-      makeTransactionId(dto.id),
-      makeUserId(dto.userId),
+      newTransactionId(dto.id),
+      newUserId(dto.userId),
     ]);
     if (res.isErr()) return errAsync(res.error);
 

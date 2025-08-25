@@ -1,14 +1,14 @@
-import { err, ok, type Result } from "neverthrow";
+import { type Result, err, ok } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
 export type TransactionType = Brand<"BUY" | "SELL", "TransactionType">;
 
-export function makeTransactionType(v: unknown): Result<TransactionType, Error> {
+export function newTransactionType(v: unknown): Result<TransactionType, Error> {
   if (v === "BUY" || v === "SELL") return ok(v as TransactionType);
   return err(
     domainValidationError({
-      action: "MakeTransactionType",
+      action: "NewTransactionType",
       reason: "TransactionType must be BUY or SELL",
     }),
   );

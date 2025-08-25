@@ -9,15 +9,15 @@ import {
   type TransactionId,
   type TransactionType,
   type UserId,
-  makeAmount,
-  makeCurrencyCode,
-  makeDateTime,
-  makeFee,
-  makePrice,
-  makeProfitLoss,
-  makeTransactionId,
-  makeTransactionType,
-  makeUserId,
+  newAmount,
+  newCurrencyCode,
+  newDateTime,
+  newFee,
+  newPrice,
+  newProfitLoss,
+  newTransactionId,
+  newTransactionType,
+  newUserId,
 } from "@repo/domain";
 import type { Result } from "neverthrow";
 
@@ -58,58 +58,58 @@ export class TestHelpers {
     const merged = { ...defaults, ...overrides };
 
     return {
-      type: expectOk(makeTransactionType(merged.type)),
-      datetime: expectOk(makeDateTime(merged.datetime)),
-      amount: expectOk(makeAmount(merged.amount)),
-      price: expectOk(makePrice(merged.price)),
-      currency: expectOk(makeCurrencyCode(merged.currency)),
+      type: expectOk(newTransactionType(merged.type)),
+      datetime: expectOk(newDateTime(merged.datetime)),
+      amount: expectOk(newAmount(merged.amount)),
+      price: expectOk(newPrice(merged.price)),
+      currency: expectOk(newCurrencyCode(merged.currency)),
       profitLoss: merged.profitLoss
-        ? expectOk(makeProfitLoss(merged.profitLoss))
+        ? expectOk(newProfitLoss(merged.profitLoss))
         : undefined,
-      fee: merged.fee ? expectOk(makeFee(merged.fee)) : undefined,
+      fee: merged.fee ? expectOk(newFee(merged.fee)) : undefined,
       feeCurrency: merged.feeCurrency
-        ? expectOk(makeCurrencyCode(merged.feeCurrency))
+        ? expectOk(newCurrencyCode(merged.feeCurrency))
         : undefined,
-      userId: expectOk(makeUserId(merged.userId)),
+      userId: expectOk(newUserId(merged.userId)),
     };
   }
 
   /**
    * 値オブジェクトを直接作成
    */
-  static makeTransactionId(id: string): TransactionId {
-    return expectOk(makeTransactionId(id));
+  static newTransactionId(id: string): TransactionId {
+    return expectOk(newTransactionId(id));
   }
 
-  static makeUserId(id: string): UserId {
-    return expectOk(makeUserId(id));
+  static newUserId(id: string): UserId {
+    return expectOk(newUserId(id));
   }
 
-  static makeTransactionType(type: "BUY" | "SELL"): TransactionType {
-    return expectOk(makeTransactionType(type));
+  static newTransactionType(type: "BUY" | "SELL"): TransactionType {
+    return expectOk(newTransactionType(type));
   }
 
-  static makeDateTime(date: Date): DateTime {
-    return expectOk(makeDateTime(date));
+  static newDateTime(date: Date): DateTime {
+    return expectOk(newDateTime(date));
   }
 
-  static makeAmount(amount: string): Amount {
-    return expectOk(makeAmount(amount));
+  static newAmount(amount: string): Amount {
+    return expectOk(newAmount(amount));
   }
 
-  static makePrice(price: string): Price {
-    return expectOk(makePrice(price));
+  static newPrice(price: string): Price {
+    return expectOk(newPrice(price));
   }
 
-  static makeCurrencyCode(currency: string): CurrencyCode {
-    return expectOk(makeCurrencyCode(currency));
+  static newCurrencyCode(currency: string): CurrencyCode {
+    return expectOk(newCurrencyCode(currency));
   }
 
-  static makeFee(fee: string): Fee {
-    return expectOk(makeFee(fee));
+  static newFee(fee: string): Fee {
+    return expectOk(newFee(fee));
   }
 
-  static makeProfitLoss(profitLoss: string): ProfitLoss {
-    return expectOk(makeProfitLoss(profitLoss));
+  static newProfitLoss(profitLoss: string): ProfitLoss {
+    return expectOk(newProfitLoss(profitLoss));
   }
 }

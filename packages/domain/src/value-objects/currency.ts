@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "neverthrow";
+import { type Result, err, ok } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -6,11 +6,11 @@ export type CurrencyCode = Brand<string, "CurrencyCode">;
 
 const CURRENCY_RE = /^[A-Z]{3}$/;
 
-export function makeCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
+export function newCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
   if (typeof v !== "string")
     return err(
       domainValidationError({
-        action: "MakeCurrencyCode",
+        action: "NewCurrencyCode",
         reason: "CurrencyCode must be string",
       }),
     );
@@ -18,7 +18,7 @@ export function makeCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
   if (!CURRENCY_RE.test(code))
     return err(
       domainValidationError({
-        action: "MakeCurrencyCode",
+        action: "NewCurrencyCode",
         reason: "CurrencyCode must be A-Z 3 letters",
       }),
     );

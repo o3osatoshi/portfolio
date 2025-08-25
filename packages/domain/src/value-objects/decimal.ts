@@ -5,13 +5,13 @@ import type { Brand } from "./brand";
 
 export type DecimalString = Brand<string, "Decimal">;
 
-export function makeDecimal(v: unknown): Result<DecimalString, Error> {
+export function newDecimal(v: unknown): Result<DecimalString, Error> {
   try {
     const d = new Decimal(v as unknown as Decimal.Value);
     if (!d.isFinite()) {
       return err(
         domainValidationError({
-          action: "MakeDecimal",
+          action: "NewDecimal",
           reason: "Decimal must be finite",
         }),
       );
@@ -20,7 +20,7 @@ export function makeDecimal(v: unknown): Result<DecimalString, Error> {
   } catch {
     return err(
       domainValidationError({
-        action: "MakeDecimal",
+        action: "NewDecimal",
         reason: "Invalid decimal input",
       }),
     );
