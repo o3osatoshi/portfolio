@@ -1,4 +1,6 @@
+import { type Result, err, ok } from "neverthrow";
 import { z } from "zod";
+import { applicationValidationError } from "../application-error";
 
 const DecimalStringSchema = z.string().refine(
   (val) => {
@@ -22,7 +24,7 @@ const NonNegativeDecimalSchema = DecimalStringSchema.refine(
   { message: "Must be greater than or equal to 0" },
 );
 
-export const createTransactionReqDtoSchema = z.object({
+const createTransactionReqDtoSchema = z.object({
   type: z.enum(["BUY", "SELL"]),
   datetime: z.coerce.date(),
   amount: PositiveDecimalSchema,
@@ -37,7 +39,7 @@ export const createTransactionReqDtoSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
-export const updateTransactionReqDtoSchema = z.object({
+const updateTransactionReqDtoSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   type: z.enum(["BUY", "SELL"]).optional(),
   datetime: z.coerce.date().optional(),
@@ -55,15 +57,11 @@ export const updateTransactionReqDtoSchema = z.object({
     .optional(),
 });
 
-export const getTransactionsReqDtoSchema = z.object({
+const getTransactionsReqDtoSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
-export const getTransactionByIdReqDtoSchema = z.object({
-  id: z.string().min(1, "Transaction ID is required"),
-});
-
-export const deleteTransactionReqDtoSchema = z.object({
+const deleteTransactionReqDtoSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   userId: z.string().min(1, "UserId is required"),
 });
@@ -78,3 +76,69 @@ export type GetTransactionsReqDto = z.infer<typeof getTransactionsReqDtoSchema>;
 export type DeleteTransactionReqDto = z.infer<
   typeof deleteTransactionReqDtoSchema
 >;
+
+function formatZodErrors(e: z.ZodError): string {
+  return e.issues
+    .map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`)
+    .join("; ");
+}
+
+export function parseCreateTransactionReqDto(
+  input: unknown,
+): Result<CreateTransactionReqDto, Error> {
+  const res = createTransactionReqDtoSchema.safeParse(input);
+  if (!res.success) {
+    return err(
+      applicationValidationError({
+        action: "ParseCreateTransactionReqDto",
+        reason: formatZodErrors(res.error),
+      }),
+    );
+  }
+  return ok(res.data);
+}
+
+export function parseUpdateTransactionReqDto(
+  input: unknown,
+): Result<UpdateTransactionReqDto, Error> {
+  const res = updateTransactionReqDtoSchema.safeParse(input);
+  if (!res.success) {
+    return err(
+      applicationValidationError({
+        action: "ParseUpdateTransactionReqDto",
+        reason: formatZodErrors(res.error),
+      }),
+    );
+  }
+  return ok(res.data);
+}
+
+export function parseGetTransactionsReqDto(
+  input: unknown,
+): Result<GetTransactionsReqDto, Error> {
+  const res = getTransactionsReqDtoSchema.safeParse(input);
+  if (!res.success) {
+    return err(
+      applicationValidationError({
+        action: "ParseGetTransactionsReqDto",
+        reason: formatZodErrors(res.error),
+      }),
+    );
+  }
+  return ok(res.data);
+}
+
+export function parseDeleteTransactionReqDto(
+  input: unknown,
+): Result<DeleteTransactionReqDto, Error> {
+  const res = deleteTransactionReqDtoSchema.safeParse(input);
+  if (!res.success) {
+    return err(
+      applicationValidationError({
+        action: "ParseDeleteTransactionReqDto",
+        reason: formatZodErrors(res.error),
+      }),
+    );
+  }
+  return ok(res.data);
+}
