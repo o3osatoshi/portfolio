@@ -237,6 +237,9 @@ importers:
       '@repo/domain':
         specifier: workspace:*
         version: link:../domain
+      '@repo/toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
