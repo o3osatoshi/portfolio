@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import {
-  CreateTransactionDtoSchema,
-  RegisterTransactionUseCase,
+  CreateTransactionUseCase,
+  createTransactionReqDtoSchema,
 } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { createTransactionSchema } from "@repo/validation";
@@ -13,7 +13,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 const repo = new PrismaTransactionRepository();
-const usecase = new RegisterTransactionUseCase(repo);
+const usecase = new CreateTransactionUseCase(repo);
 
 export const createTransaction = async (
   _: ActionState<never> | undefined,
@@ -33,7 +33,7 @@ export const createTransaction = async (
       return err("You must be logged in to create a transaction.");
     }
 
-    const res = CreateTransactionDtoSchema.safeParse({
+    const res = createTransactionReqDtoSchema.safeParse({
       ...result.data,
       userId,
     });

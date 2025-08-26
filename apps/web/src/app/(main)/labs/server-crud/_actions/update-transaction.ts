@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import {
-  UpdateTransactionDtoSchema,
   UpdateTransactionUseCase,
+  updateTransactionReqDtoSchema,
 } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { updateTransactionSchema } from "@repo/validation";
@@ -33,7 +33,7 @@ export const updateTransaction = async (
       return err("You must be logged in to update a transaction.");
     }
 
-    const res = UpdateTransactionDtoSchema.safeParse(result.data);
+    const res = updateTransactionReqDtoSchema.safeParse(result.data);
     if (!res.success) {
       return err("validation error");
     }

@@ -22,7 +22,7 @@ const NonNegativeDecimalSchema = DecimalStringSchema.refine(
   { message: "Must be greater than or equal to 0" },
 );
 
-export const CreateTransactionDtoSchema = z.object({
+export const createTransactionReqDtoSchema = z.object({
   type: z.enum(["BUY", "SELL"]),
   datetime: z.coerce.date(),
   amount: PositiveDecimalSchema,
@@ -37,7 +37,7 @@ export const CreateTransactionDtoSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
-export const UpdateTransactionDtoSchema = z.object({
+export const updateTransactionReqDtoSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   type: z.enum(["BUY", "SELL"]).optional(),
   datetime: z.coerce.date().optional(),
@@ -55,21 +55,26 @@ export const UpdateTransactionDtoSchema = z.object({
     .optional(),
 });
 
-export const GetTransactionsDtoSchema = z.object({
+export const getTransactionsReqDtoSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
-export const GetTransactionByIdDtoSchema = z.object({
+export const getTransactionByIdReqDtoSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
 });
 
-export const DeleteTransactionDtoSchema = z.object({
+export const deleteTransactionReqDtoSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   userId: z.string().min(1, "UserId is required"),
 });
 
-export type CreateTransactionDto = z.infer<typeof CreateTransactionDtoSchema>;
-export type UpdateTransactionDto = z.infer<typeof UpdateTransactionDtoSchema>;
-export type GetTransactionsDto = z.infer<typeof GetTransactionsDtoSchema>;
-export type GetTransactionByIdDto = z.infer<typeof GetTransactionByIdDtoSchema>;
-export type DeleteTransactionDto = z.infer<typeof DeleteTransactionDtoSchema>;
+export type CreateTransactionReqDto = z.infer<
+  typeof createTransactionReqDtoSchema
+>;
+export type UpdateTransactionReqDto = z.infer<
+  typeof updateTransactionReqDtoSchema
+>;
+export type GetTransactionsReqDto = z.infer<typeof getTransactionsReqDtoSchema>;
+export type DeleteTransactionReqDto = z.infer<
+  typeof deleteTransactionReqDtoSchema
+>;

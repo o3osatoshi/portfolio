@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import {
-  DeleteTransactionDtoSchema,
   DeleteTransactionUseCase,
+  deleteTransactionReqDtoSchema,
 } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { deleteTransactionSchema } from "@repo/validation";
@@ -34,7 +34,7 @@ export const deleteTransaction = async (
       return err("You must be logged in to delete a transaction.");
     }
 
-    const res = DeleteTransactionDtoSchema.safeParse({
+    const res = deleteTransactionReqDtoSchema.safeParse({
       id,
       userId,
     });

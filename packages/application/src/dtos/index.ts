@@ -1,1 +1,2 @@
-export * from "./transaction.dto";
+export * from "./transaction.req.dto";
+export * from "./transaction.res.dto";

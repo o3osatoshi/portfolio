@@ -1,6 +1,6 @@
 import {
-  GetTransactionsDtoSchema,
   GetTransactionsUseCase,
+  getTransactionsReqDtoSchema,
 } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     return Response.json([]);
   }
 
-  const res = GetTransactionsDtoSchema.safeParse({ userId: _userId });
+  const res = getTransactionsReqDtoSchema.safeParse({ userId: _userId });
   if (!res.success) {
     return new Response("Invalid request", { status: 400 });
   }
