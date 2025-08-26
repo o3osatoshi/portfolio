@@ -2,7 +2,7 @@ import type { ResultAsync } from "neverthrow";
 import type { CreateTransaction, Transaction } from "../entities";
 import type { TransactionId, UserId } from "../value-objects";
 
-export interface ITransactionRepository {
+export interface TransactionRepository {
   findById(id: TransactionId): ResultAsync<Transaction | null, Error>;
   findByUserId(userId: UserId): ResultAsync<Transaction[], Error>;
   create(tx: CreateTransaction): ResultAsync<Transaction, Error>;

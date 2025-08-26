@@ -1,11 +1,11 @@
 import type { Transaction, UserId } from "@repo/domain";
-import type { ITransactionRepository } from "@repo/domain";
+import type { TransactionRepository } from "@repo/domain";
 import { newUserId } from "@repo/domain";
 import { type ResultAsync, errAsync } from "neverthrow";
 import type { GetTransactionsDto } from "../../dtos";
 
 export class GetTransactionsUseCase {
-  constructor(private readonly repo: ITransactionRepository) {}
+  constructor(private readonly repo: TransactionRepository) {}
 
   execute(dto: GetTransactionsDto): ResultAsync<Transaction[], Error> {
     const res = newUserId(dto.userId);

@@ -1,10 +1,10 @@
-import type { ITransactionRepository } from "@repo/domain";
+import type { TransactionRepository } from "@repo/domain";
 import { newTransactionId, newUserId } from "@repo/domain";
 import { Result, type ResultAsync, errAsync } from "neverthrow";
 import type { DeleteTransactionDto } from "../../dtos";
 
 export class DeleteTransactionUseCase {
-  constructor(private readonly repo: ITransactionRepository) {}
+  constructor(private readonly repo: TransactionRepository) {}
 
   execute(dto: DeleteTransactionDto): ResultAsync<void, Error> {
     const res = Result.combine([

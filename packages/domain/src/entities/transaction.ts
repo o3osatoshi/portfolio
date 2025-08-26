@@ -24,7 +24,7 @@ import type {
 } from "../value-objects";
 import { type Base, newBase } from "./base";
 
-interface TransactionDomain {
+interface TransactionCore {
   id: TransactionId;
   type: TransactionType;
   datetime: DateTime;
@@ -37,11 +37,11 @@ interface TransactionDomain {
   userId: UserId;
 }
 
-export type CreateTransaction = Omit<TransactionDomain, "id">;
+export type CreateTransaction = Omit<TransactionCore, "id">;
 
-export type Transaction = Base & TransactionDomain;
+export type Transaction = Base & TransactionCore;
 
-export type _NewTransaction = {
+export type NewTransactionInput = {
   id: unknown;
   type: unknown;
   datetime: unknown;
@@ -57,7 +57,7 @@ export type _NewTransaction = {
 };
 
 export function newTransaction(
-  tx: _NewTransaction,
+  tx: NewTransactionInput,
 ): Result<Transaction, Error> {
   return Result.combine([
     newTransactionId(tx.id),
@@ -101,7 +101,7 @@ export function newTransaction(
   );
 }
 
-export type _CreateTransaction = {
+export type CreateTransactionInput = {
   type: unknown;
   datetime: unknown;
   amount: unknown;
@@ -114,7 +114,7 @@ export type _CreateTransaction = {
 };
 
 export function createTransaction(
-  tx: _CreateTransaction,
+  tx: CreateTransactionInput,
 ): Result<CreateTransaction, Error> {
   return Result.combine([
     newTransactionType(tx.type),
@@ -151,7 +151,7 @@ export function createTransaction(
   );
 }
 
-export type _UpdateTransaction = {
+export type UpdateTransactionInput = {
   id: unknown;
   type?: unknown;
   datetime?: unknown;
@@ -165,7 +165,7 @@ export type _UpdateTransaction = {
 
 export function updateTransaction(
   tx: Transaction,
-  patch: _UpdateTransaction,
+  patch: UpdateTransactionInput,
 ): Result<Transaction, Error> {
   const res = newTransactionId(patch.id);
   if (res.isErr()) return err(res.error);

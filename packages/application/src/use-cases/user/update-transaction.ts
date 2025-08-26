@@ -1,10 +1,10 @@
 import { newTransactionId, updateTransaction } from "@repo/domain";
-import type { ITransactionRepository } from "@repo/domain";
+import type { TransactionRepository } from "@repo/domain";
 import { type ResultAsync, err, errAsync, ok } from "neverthrow";
 import type { UpdateTransactionDto } from "../../dtos";
 
 export class UpdateTransactionUseCase {
-  constructor(private readonly repo: ITransactionRepository) {}
+  constructor(private readonly repo: TransactionRepository) {}
 
   execute(dto: UpdateTransactionDto, userId: string): ResultAsync<void, Error> {
     const res = newTransactionId(dto.id);

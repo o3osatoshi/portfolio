@@ -53,7 +53,7 @@ pnpm clean    # Remove dist directory
 ```typescript
 export class GetTransactionsUseCase {
   constructor(
-    private readonly transactionRepository: ITransactionRepository
+    private readonly transactionRepository: TransactionRepositoryPort
   ) {}
 
   async execute(userId: string): Promise<Result<Transaction[], Error>> {

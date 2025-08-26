@@ -6,12 +6,12 @@ export interface Base {
   updatedAt: DateTime;
 }
 
-export type _NewBase = {
+export type NewBaseInput = {
   createdAt: unknown;
   updatedAt: unknown;
 };
 
-export function newBase(base: _NewBase): Result<Base, Error> {
+export function newBase(base: NewBaseInput): Result<Base, Error> {
   return Result.combine([
     newDateTime(base.createdAt),
     newDateTime(base.updatedAt),

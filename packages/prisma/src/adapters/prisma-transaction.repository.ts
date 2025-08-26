@@ -1,9 +1,9 @@
 import { newTransaction } from "@repo/domain";
 import type {
   CreateTransaction,
-  ITransactionRepository,
   Transaction,
   TransactionId,
+  TransactionRepository,
   UserId,
 } from "@repo/domain";
 import { newError as baseError } from "@repo/toolkit";
@@ -56,7 +56,7 @@ function toUpdateData(
   };
 }
 
-export class PrismaTransactionRepository implements ITransactionRepository {
+export class PrismaTransactionRepository implements TransactionRepository {
   findById(id: TransactionId): ResultAsync<Transaction | null, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findUnique({
