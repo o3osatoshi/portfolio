@@ -22,7 +22,7 @@ import type {
   TransactionType,
   UserId,
 } from "../value-objects";
-import type { Base } from "./base";
+import { type Base, newBase } from "./base";
 
 interface TransactionDomain {
   id: TransactionId;
@@ -70,8 +70,7 @@ export function newTransaction(
     tx.fee ? newFee(tx.fee) : ok(undefined),
     tx.feeCurrency ? newCurrencyCode(tx.feeCurrency) : ok(undefined),
     newUserId(tx.userId),
-    newDateTime(tx.createdAt),
-    newDateTime(tx.updatedAt),
+    newBase({ createdAt: tx.createdAt, updatedAt: tx.updatedAt }),
   ]).map(
     ([
       id,
@@ -84,8 +83,7 @@ export function newTransaction(
       fee,
       feeCurrency,
       userId,
-      createdAt,
-      updatedAt,
+      base,
     ]) => ({
       id,
       type,
@@ -97,8 +95,8 @@ export function newTransaction(
       fee,
       feeCurrency,
       userId,
-      createdAt,
-      updatedAt,
+      createdAt: base.createdAt,
+      updatedAt: base.updatedAt,
     }),
   );
 }
