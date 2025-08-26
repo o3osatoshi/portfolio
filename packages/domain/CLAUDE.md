@@ -12,7 +12,7 @@ The domain package contains the business logic core of the application, independ
   - **base.ts**: Base entity class with common properties
   - **transaction.ts**: Transaction business entity
 - **src/ports/**: Port interfaces (abstractions)
-  - **transaction-repository.port.ts**: TransactionRepositoryPort interface
+  - **transaction.repository.ts**: TransactionRepository interface
 - **src/services/**: Domain services for complex business logic
 - **src/value-objects/**: Value objects for domain modeling
 
