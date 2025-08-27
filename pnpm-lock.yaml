@@ -363,6 +363,10 @@ importers:
         version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.12)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.8.1)
 
   packages/toolkit:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 3.24.4
     devDependencies:
       '@repo/tsrc':
         specifier: workspace:*

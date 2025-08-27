@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "zod": "catalog:"
+  },
   "devDependencies": {
     "@repo/tsrc": "workspace:*",
     "@types/node": "catalog:",
