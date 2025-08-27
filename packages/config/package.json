@@ -1,0 +1,53 @@
+{
+  "name": "@o3osatoshi/config",
+  "version": "0.1.0",
+  "private": false,
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./tsup": {
+      "types": "./dist/tsup/index.d.ts",
+      "import": "./dist/tsup/index.js",
+      "default": "./dist/tsup/index.js"
+    },
+    "./vitest/base": {
+      "import": "./dist/vitest/base.js",
+      "default": "./dist/vitest/base.js"
+    },
+    "./tsconfig/*": "./tsconfig/*"
+  },
+  "types": "./dist/tsup/index.d.ts",
+  "files": [
+    "dist",
+    "tsconfig",
+    "vitest",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/tsup/index.ts --dts --format esm --sourcemap --clean && tsup vitest/base.ts --format esm --sourcemap --out-dir dist/vitest",
+    "clean": "rimraf dist",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm clean && pnpm build && pnpm typecheck",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
