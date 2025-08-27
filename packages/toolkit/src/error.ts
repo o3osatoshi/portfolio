@@ -1,3 +1,20 @@
+/** Convert unknown cause into a safe string (prioritize Error.message) */
+function summarizeCause(cause: unknown, max = 300): string | undefined {
+  if (cause == null) return;
+  if (cause instanceof Error) return truncate(cause.message, max);
+  if (typeof cause === "string") return truncate(cause, max);
+  try {
+    return truncate(JSON.stringify(cause), max);
+  } catch {
+    return String(cause);
+  }
+}
+
+/** Truncate a string to avoid overly large messages */
+function truncate(s: string, max: number): string {
+  return s.length > max ? `${s.slice(0, max)}…` : s;
+}
+
 type Layer =
   | "Domain"
   | "Application"
@@ -30,23 +47,6 @@ type NewError = {
   hint?: string; // possible next step
   cause?: unknown; // original cause (any type)
 };
-
-/** Convert unknown cause into a safe string (prioritize Error.message) */
-function summarizeCause(cause: unknown, max = 300): string | undefined {
-  if (cause == null) return;
-  if (cause instanceof Error) return truncate(cause.message, max);
-  if (typeof cause === "string") return truncate(cause, max);
-  try {
-    return truncate(JSON.stringify(cause), max);
-  } catch {
-    return String(cause);
-  }
-}
-
-/** Truncate a string to avoid overly large messages */
-function truncate(s: string, max: number): string {
-  return s.length > max ? `${s.slice(0, max)}…` : s;
-}
 
 /**
  * Creates a structured Error object with a consistent `name` and `message`.

@@ -1,29 +1,6 @@
 import { type ZodError, type ZodIssue, ZodIssueCode, z } from "zod";
 import { newError as baseNewError } from "./error";
 
-type Layer =
-  | "Domain"
-  | "Application"
-  | "Infra"
-  | "Auth"
-  | "UI"
-  | "DB"
-  | "External";
-
-export function isZodError(e: unknown): e is ZodError {
-  return e instanceof z.ZodError;
-}
-
-export function summarizeZodIssue(issue: ZodIssue): string {
-  const path = issue.path?.length ? issue.path.join(".") : "(root)";
-  const msg = issueMessage(issue);
-  return `${path}: ${msg}`;
-}
-
-export function summarizeZodError(err: ZodError): string {
-  return err.issues.map(summarizeZodIssue).join("; ");
-}
-
 function issueMessage(issue: ZodIssue): string {
   switch (issue.code) {
     case ZodIssueCode.invalid_type: {
@@ -98,6 +75,55 @@ function issueMessage(issue: ZodIssue): string {
   }
 }
 
+export function summarizeZodIssue(issue: ZodIssue): string {
+  const path = issue.path?.length ? issue.path.join(".") : "(root)";
+  const msg = issueMessage(issue);
+  return `${path}: ${msg}`;
+}
+
+export function summarizeZodError(err: ZodError): string {
+  return err.issues.map(summarizeZodIssue).join("; ");
+}
+
+function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
+  const i = issues[0];
+  switch (i.code) {
+    case ZodIssueCode.unrecognized_keys:
+      return "Remove unknown fields from the payload.";
+    case ZodIssueCode.invalid_type:
+      return "Check field types match the schema.";
+    case ZodIssueCode.invalid_enum_value:
+      return "Use one of the allowed enum values.";
+    case ZodIssueCode.too_small:
+      return "Increase value/length to meet the minimum.";
+    case ZodIssueCode.too_big:
+      return "Reduce value/length to meet the maximum.";
+    case ZodIssueCode.invalid_string:
+      return "Ensure string matches the required format.";
+    case ZodIssueCode.invalid_date:
+      return "Provide a valid date value.";
+    case ZodIssueCode.not_multiple_of:
+      return "Adjust value to a valid multiple.";
+    case ZodIssueCode.not_finite:
+      return "Use a finite number.";
+    default:
+      return undefined;
+  }
+}
+
+export function isZodError(e: unknown): e is ZodError {
+  return e instanceof z.ZodError;
+}
+
+export type Layer =
+  | "Domain"
+  | "Application"
+  | "Infra"
+  | "Auth"
+  | "UI"
+  | "DB"
+  | "External";
+
 export type NewZodError = {
   layer?: Layer; // default Application
   action?: string;
@@ -138,30 +164,4 @@ export function newZodError({
     hint: effectiveHint,
     cause,
   });
-}
-
-function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
-  const i = issues[0];
-  switch (i.code) {
-    case ZodIssueCode.unrecognized_keys:
-      return "Remove unknown fields from the payload.";
-    case ZodIssueCode.invalid_type:
-      return "Check field types match the schema.";
-    case ZodIssueCode.invalid_enum_value:
-      return "Use one of the allowed enum values.";
-    case ZodIssueCode.too_small:
-      return "Increase value/length to meet the minimum.";
-    case ZodIssueCode.too_big:
-      return "Reduce value/length to meet the maximum.";
-    case ZodIssueCode.invalid_string:
-      return "Ensure string matches the required format.";
-    case ZodIssueCode.invalid_date:
-      return "Provide a valid date value.";
-    case ZodIssueCode.not_multiple_of:
-      return "Adjust value to a valid multiple.";
-    case ZodIssueCode.not_finite:
-      return "Use a finite number.";
-    default:
-      return undefined;
-  }
 }
