@@ -1,6 +1,5 @@
-import { type Result, err, ok } from "neverthrow";
+import { parseWith } from "@repo/toolkit";
 import { z } from "zod";
-import { applicationValidationError } from "../application-error";
 
 const DecimalStringSchema = z.string().refine(
   (val) => {
@@ -77,68 +76,30 @@ export type DeleteTransactionReqDto = z.infer<
   typeof deleteTransactionReqDtoSchema
 >;
 
-function formatZodErrors(e: z.ZodError): string {
-  return e.issues
-    .map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`)
-    .join("; ");
-}
+export const parseCreateTransactionReqDto = parseWith(
+  createTransactionReqDtoSchema,
+  {
+    action: "ParseCreateTransactionReqDto",
+  },
+);
 
-export function parseCreateTransactionReqDto(
-  input: unknown,
-): Result<CreateTransactionReqDto, Error> {
-  const res = createTransactionReqDtoSchema.safeParse(input);
-  if (!res.success) {
-    return err(
-      applicationValidationError({
-        action: "ParseCreateTransactionReqDto",
-        reason: formatZodErrors(res.error),
-      }),
-    );
-  }
-  return ok(res.data);
-}
+export const parseUpdateTransactionReqDto = parseWith(
+  updateTransactionReqDtoSchema,
+  {
+    action: "ParseUpdateTransactionReqDto",
+  },
+);
 
-export function parseUpdateTransactionReqDto(
-  input: unknown,
-): Result<UpdateTransactionReqDto, Error> {
-  const res = updateTransactionReqDtoSchema.safeParse(input);
-  if (!res.success) {
-    return err(
-      applicationValidationError({
-        action: "ParseUpdateTransactionReqDto",
-        reason: formatZodErrors(res.error),
-      }),
-    );
-  }
-  return ok(res.data);
-}
+export const parseGetTransactionsReqDto = parseWith(
+  getTransactionsReqDtoSchema,
+  {
+    action: "ParseGetTransactionsReqDto",
+  },
+);
 
-export function parseGetTransactionsReqDto(
-  input: unknown,
-): Result<GetTransactionsReqDto, Error> {
-  const res = getTransactionsReqDtoSchema.safeParse(input);
-  if (!res.success) {
-    return err(
-      applicationValidationError({
-        action: "ParseGetTransactionsReqDto",
-        reason: formatZodErrors(res.error),
-      }),
-    );
-  }
-  return ok(res.data);
-}
-
-export function parseDeleteTransactionReqDto(
-  input: unknown,
-): Result<DeleteTransactionReqDto, Error> {
-  const res = deleteTransactionReqDtoSchema.safeParse(input);
-  if (!res.success) {
-    return err(
-      applicationValidationError({
-        action: "ParseDeleteTransactionReqDto",
-        reason: formatZodErrors(res.error),
-      }),
-    );
-  }
-  return ok(res.data);
-}
+export const parseDeleteTransactionReqDto = parseWith(
+  deleteTransactionReqDtoSchema,
+  {
+    action: "ParseDeleteTransactionReqDto",
+  },
+);
