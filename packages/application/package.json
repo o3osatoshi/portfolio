@@ -8,7 +8,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup src/*",
-    "dev": "tsup src/* --watch"
+    "dev": "tsup src/* --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@repo/domain": "workspace:*",
@@ -20,6 +22,7 @@
     "@repo/tsrc": "workspace:*",
     "@types/node": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
