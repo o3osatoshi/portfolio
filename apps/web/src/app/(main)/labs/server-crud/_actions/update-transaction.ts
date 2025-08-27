@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { UpdateTransactionUseCase, parseUpdateTransactionReqDto } from "@repo/application";
+import { UpdateTransactionUseCase, parseUpdateTransactionRequest } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { updateTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
@@ -30,7 +30,7 @@ export const updateTransaction = async (
       return err("You must be logged in to update a transaction.");
     }
 
-    const res = parseUpdateTransactionReqDto(result.data);
+    const res = parseUpdateTransactionRequest(result.data);
     if (res.isErr()) {
       return err("validation error");
     }

@@ -11,7 +11,7 @@ import { type Layer, newZodError } from "./zod-error";
  * @template T extends ZodTypeAny
  * @param schema - Zod schema to validate/transform the input.
  * @param ctx - Context for standardized error shaping.
- * @param ctx.action - Logical operation name (e.g. "ParseCreateTransactionReqDto").
+ * @param ctx.action - Logical operation name (e.g. "ParseCreateTransactionRequest").
  * @param ctx.layer - Error layer; defaults to Application inside `newZodError`.
  * @returns Function that parses input into `Result<z.infer<T>, Error>`.
  * @example

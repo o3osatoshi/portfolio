@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { DeleteTransactionUseCase, parseDeleteTransactionReqDto } from "@repo/application";
+import { DeleteTransactionUseCase, parseDeleteTransactionRequest } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { deleteTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
@@ -31,7 +31,7 @@ export const deleteTransaction = async (
       return err("You must be logged in to delete a transaction.");
     }
 
-    const res = parseDeleteTransactionReqDto({
+    const res = parseDeleteTransactionRequest({
       id,
       userId,
     });

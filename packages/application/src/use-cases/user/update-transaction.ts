@@ -5,16 +5,16 @@ import {
   applicationForbiddenError,
   applicationNotFoundError,
 } from "../../application-error";
-import type { UpdateTransactionReqDto } from "../../dtos";
+import type { UpdateTransactionRequest } from "../../dtos";
 
 export class UpdateTransactionUseCase {
   constructor(private readonly repo: TransactionRepository) {}
 
   execute(
-    dto: UpdateTransactionReqDto,
+    req: UpdateTransactionRequest,
     userId: string,
   ): ResultAsync<void, Error> {
-    const res = newTransactionId(dto.id);
+    const res = newTransactionId(req.id);
     if (res.isErr()) return errAsync(res.error);
     const id = res.value;
 
@@ -40,7 +40,7 @@ export class UpdateTransactionUseCase {
             )
           : ok(tx),
       )
-      .andThen((tx) => updateTransaction(tx, dto))
+      .andThen((tx) => updateTransaction(tx, req))
       .andThen((updatedTx) => this.repo.update(updatedTx));
   }
 }

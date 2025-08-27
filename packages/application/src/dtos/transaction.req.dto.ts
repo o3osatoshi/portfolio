@@ -23,7 +23,7 @@ const NonNegativeDecimalSchema = DecimalStringSchema.refine(
   { message: "Must be greater than or equal to 0" },
 );
 
-const createTransactionReqDtoSchema = z.object({
+const createTransactionRequestSchema = z.object({
   type: z.enum(["BUY", "SELL"]),
   datetime: z.coerce.date(),
   amount: PositiveDecimalSchema,
@@ -38,7 +38,7 @@ const createTransactionReqDtoSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
-const updateTransactionReqDtoSchema = z.object({
+const updateTransactionRequestSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   type: z.enum(["BUY", "SELL"]).optional(),
   datetime: z.coerce.date().optional(),
@@ -56,50 +56,52 @@ const updateTransactionReqDtoSchema = z.object({
     .optional(),
 });
 
-const getTransactionsReqDtoSchema = z.object({
+const getTransactionsRequestSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
-const deleteTransactionReqDtoSchema = z.object({
+const deleteTransactionRequestSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   userId: z.string().min(1, "UserId is required"),
 });
 
-export type CreateTransactionReqDto = z.infer<
-  typeof createTransactionReqDtoSchema
+export type CreateTransactionRequest = z.infer<
+  typeof createTransactionRequestSchema
 >;
-export type UpdateTransactionReqDto = z.infer<
-  typeof updateTransactionReqDtoSchema
+export type UpdateTransactionRequest = z.infer<
+  typeof updateTransactionRequestSchema
 >;
-export type GetTransactionsReqDto = z.infer<typeof getTransactionsReqDtoSchema>;
-export type DeleteTransactionReqDto = z.infer<
-  typeof deleteTransactionReqDtoSchema
+export type GetTransactionsRequest = z.infer<
+  typeof getTransactionsRequestSchema
+>;
+export type DeleteTransactionRequest = z.infer<
+  typeof deleteTransactionRequestSchema
 >;
 
-export const parseCreateTransactionReqDto = parseWith(
-  createTransactionReqDtoSchema,
+export const parseCreateTransactionRequest = parseWith(
+  createTransactionRequestSchema,
   {
-    action: "ParseCreateTransactionReqDto",
+    action: "ParseCreateTransactionRequest",
   },
 );
 
-export const parseUpdateTransactionReqDto = parseWith(
-  updateTransactionReqDtoSchema,
+export const parseUpdateTransactionRequest = parseWith(
+  updateTransactionRequestSchema,
   {
-    action: "ParseUpdateTransactionReqDto",
+    action: "ParseUpdateTransactionRequest",
   },
 );
 
-export const parseGetTransactionsReqDto = parseWith(
-  getTransactionsReqDtoSchema,
+export const parseGetTransactionsRequest = parseWith(
+  getTransactionsRequestSchema,
   {
-    action: "ParseGetTransactionsReqDto",
+    action: "ParseGetTransactionsRequest",
   },
 );
 
-export const parseDeleteTransactionReqDto = parseWith(
-  deleteTransactionReqDtoSchema,
+export const parseDeleteTransactionRequest = parseWith(
+  deleteTransactionRequestSchema,
   {
-    action: "ParseDeleteTransactionReqDto",
+    action: "ParseDeleteTransactionRequest",
   },
 );

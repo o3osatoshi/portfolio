@@ -1,4 +1,4 @@
-import { GetTransactionsUseCase, parseGetTransactionsReqDto } from "@repo/application";
+import { GetTransactionsUseCase, parseGetTransactionsRequest } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     return Response.json([]);
   }
 
-  const res = parseGetTransactionsReqDto({ userId: _userId });
+  const res = parseGetTransactionsRequest({ userId: _userId });
   if (res.isErr()) {
     return new Response("Invalid request", { status: 400 });
   }

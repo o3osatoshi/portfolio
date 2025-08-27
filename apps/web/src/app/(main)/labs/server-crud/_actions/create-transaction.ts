@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
-import { CreateTransactionUseCase, parseCreateTransactionReqDto } from "@repo/application";
+import { CreateTransactionUseCase, parseCreateTransactionRequest } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { createTransactionSchema } from "@repo/validation";
 import { revalidateTag } from "next/cache";
@@ -30,7 +30,7 @@ export const createTransaction = async (
       return err("You must be logged in to create a transaction.");
     }
 
-    const res = parseCreateTransactionReqDto({
+    const res = parseCreateTransactionRequest({
       ...result.data,
       userId,
     });

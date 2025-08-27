@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
-  parseCreateTransactionReqDto,
-  parseUpdateTransactionReqDto,
-  parseGetTransactionsReqDto,
-  parseDeleteTransactionReqDto,
+  parseCreateTransactionRequest,
+  parseUpdateTransactionRequest,
+  parseGetTransactionsRequest,
+  parseDeleteTransactionRequest,
 } from "./transaction.req.dto";
 
 describe("application/dtos: transaction.req.dto parsers", () => {
-  it("parseCreateTransactionReqDto ok on valid payload", () => {
-    const res = parseCreateTransactionReqDto({
+  it("parseCreateTransactionRequest ok on valid payload", () => {
+    const res = parseCreateTransactionRequest({
       type: "BUY",
       datetime: new Date("2024-01-02T03:04:05Z"),
       amount: "1.23",
@@ -19,8 +19,8 @@ describe("application/dtos: transaction.req.dto parsers", () => {
     expect(res.isOk()).toBe(true);
   });
 
-  it("parseCreateTransactionReqDto err on invalid currency", () => {
-    const res = parseCreateTransactionReqDto({
+  it("parseCreateTransactionRequest err on invalid currency", () => {
+    const res = parseCreateTransactionRequest({
       type: "BUY",
       datetime: new Date(),
       amount: "1",
@@ -35,18 +35,18 @@ describe("application/dtos: transaction.req.dto parsers", () => {
     }
   });
 
-  it("parseUpdateTransactionReqDto ok with partial fields", () => {
-    const res = parseUpdateTransactionReqDto({ id: "tx_1", price: "10" });
+  it("parseUpdateTransactionRequest ok with partial fields", () => {
+    const res = parseUpdateTransactionRequest({ id: "tx_1", price: "10" });
     expect(res.isOk()).toBe(true);
   });
 
-  it("parseGetTransactionsReqDto err on empty userId", () => {
-    const res = parseGetTransactionsReqDto({ userId: "" });
+  it("parseGetTransactionsRequest err on empty userId", () => {
+    const res = parseGetTransactionsRequest({ userId: "" });
     expect(res.isErr()).toBe(true);
   });
 
-  it("parseDeleteTransactionReqDto ok", () => {
-    const res = parseDeleteTransactionReqDto({ id: "tx_1", userId: "u" });
+  it("parseDeleteTransactionRequest ok", () => {
+    const res = parseDeleteTransactionRequest({ id: "tx_1", userId: "u" });
     expect(res.isOk()).toBe(true);
   });
 });

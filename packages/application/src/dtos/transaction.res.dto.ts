@@ -1,6 +1,6 @@
 import type { Transaction } from "@repo/domain";
 
-export type TransactionResDto = {
+export type TransactionResponse = {
   id: string;
   type: "BUY" | "SELL";
   datetime: Date;
@@ -15,7 +15,7 @@ export type TransactionResDto = {
   updatedAt: Date;
 };
 
-export function toTransactionResDto(tx: Transaction): TransactionResDto {
+export function toTransactionResponse(tx: Transaction): TransactionResponse {
   return {
     id: tx.id,
     type: tx.type,
@@ -32,9 +32,11 @@ export function toTransactionResDto(tx: Transaction): TransactionResDto {
   };
 }
 
-export function toTransactionsResDto(txs: Transaction[]): TransactionResDto[] {
-  return txs.map(toTransactionResDto);
+export function toTransactionsResponse(
+  txs: Transaction[],
+): TransactionResponse[] {
+  return txs.map(toTransactionResponse);
 }
 
-export type GetTransactionsResDto = TransactionResDto[];
-export type CreateTransactionResDto = TransactionResDto;
+export type GetTransactionsResponse = TransactionResponse[];
+export type CreateTransactionResponse = TransactionResponse;
