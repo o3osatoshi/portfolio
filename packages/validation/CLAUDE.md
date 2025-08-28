@@ -43,4 +43,4 @@ pnpm clean    # Remove dist directory
 - **Type**: ESM module with sideEffects: false for optimal bundling
 - **Exports**: Single entry point at `./dist/index.js` with types
 - **Dependencies**: Zod for validation, minimal surface area
-- **TypeScript**: Extends shared config from `@repo/tsrc`
+- **TypeScript**: Extends shared config from `@o3osatoshi/config`

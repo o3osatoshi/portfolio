@@ -69,7 +69,7 @@ firebase logs --only functions   # View function logs
 
 ### Build Process
 - **Turbo Integration**: Part of workspace build system
-- **Shared TypeScript Config**: Uses `@repo/tsrc` configuration
+- **Shared TypeScript Config**: Uses `@o3osatoshi/config` configuration
 - **Environment Variables**: Defined in turbo.json for builds
 
 ## API Design

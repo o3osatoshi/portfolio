@@ -19,7 +19,7 @@ This is a Turborepo monorepo with a Next.js portfolio application, Firebase func
 - **@repo/eth**: Web3/Ethereum contract integration utilities with Wagmi
 - **@repo/validation**: Shared Zod validation schemas and utilities
 - **@repo/toolkit**: Shared utilities, error handling, and helper functions
-- **@repo/tsrc**: Shared TypeScript configurations
+- **@o3osatoshi/config**: Shared TypeScript configurations
 
 ## Development Commands
 
