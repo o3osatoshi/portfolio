@@ -18,31 +18,6 @@
         "AUTH_GOOGLE_SECRET"
       ]
     },
-    "db:migrate:dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "db:migrate:deploy": {
-      "cache": false
-    },
-    "db:push": {
-      "cache": false
-    },
-    "db:seed": {
-      "cache": false
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "generate": {
-      "dependsOn": ["^generate"],
-      "cache": false
-    },
-    "//#check": {},
-    "//#check:fix": {
-      "cache": false
-    },
     "preview-storybook": {
       "dependsOn": ["^build"],
       "cache": false

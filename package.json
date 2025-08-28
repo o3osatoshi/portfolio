@@ -4,13 +4,8 @@
   "scripts": {
     "build": "turbo run build",
     "build:functions": "turbo run build --filter=functions...",
-    "db:migrate:deploy": "turbo run db:migrate:deploy",
-    "db:migrate:dev": "turbo run db:migrate:dev",
-    "db:push": "turbo run db:push",
-    "db:seed": "turbo run db:seed",
     "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
-    "generate": "turbo run generate",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "preview-storybook": "turbo run preview-storybook",
@@ -18,12 +13,9 @@
     "test": "turbo run test",
     "test:watch": "turbo run test:watch --parallel"
   },
-  "dependencies": {
-    "@prisma/client": "^6.7.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "prisma": "^6.7.0",
     "sort-package-json": "^3.4.0",
     "tsx": "4.19.4",
     "turbo": "^2.5.2"
@@ -31,9 +23,5 @@
   "packageManager": "pnpm@9.15.9",
   "engines": {
     "node": ">=22"
-  },
-  "prisma": {
-    "schema": "packages/database/prisma/schema.prisma",
-    "seed": "tsx packages/database/src/seed.ts"
   }
 }
