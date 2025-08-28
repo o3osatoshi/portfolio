@@ -19,7 +19,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@repo/tsrc": "workspace:*",
+    "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",

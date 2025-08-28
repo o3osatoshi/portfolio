@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/tsrc/react-app.json",
+  "extends": "@o3osatoshi/config/tsconfig/react-app.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

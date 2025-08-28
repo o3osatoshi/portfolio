@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/tsrc/react-library.json",
+  "extends": "@o3osatoshi/config/tsconfig/react-library.json",
   "compilerOptions": {
     "outDir": "dist"
   },

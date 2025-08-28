@@ -15,7 +15,7 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@repo/tsrc": "workspace:*",
+    "@o3osatoshi/config": "workspace:*",
     "@storybook/addon-actions": "^8.6.12",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-links": "^8.6.12",

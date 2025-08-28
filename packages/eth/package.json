@@ -16,7 +16,7 @@
     "wagmi": "catalog:"
   },
   "devDependencies": {
-    "@repo/tsrc": "workspace:*",
+    "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
     "@wagmi/cli": "^2.3.1",
     "dotenv-cli": "^8.0.0",

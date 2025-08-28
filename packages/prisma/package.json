@@ -39,7 +39,7 @@
     "neverthrow": "catalog:"
   },
   "devDependencies": {
-    "@repo/tsrc": "workspace:*",
+    "@o3osatoshi/config": "workspace:*",
     "@testcontainers/postgresql": "^11.5.1",
     "@types/node": "^22.15.12",
     "dotenv-cli": "^8.0.0",

@@ -30,7 +30,7 @@
     "wagmi": "catalog:"
   },
   "devDependencies": {
-    "@repo/tsrc": "workspace:*",
+    "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

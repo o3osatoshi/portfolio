@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/tsrc/base.json",
+  "extends": "@o3osatoshi/config/tsconfig/base.json",
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }
