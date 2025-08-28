@@ -395,6 +395,12 @@ importers:
       '@repo/tsrc':
         specifier: workspace:*
         version: link:../tsrc
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.12
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.0.1
       tsup:
         specifier: 'catalog:'
         version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.1)
