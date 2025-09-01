@@ -1,6 +1,6 @@
 {
   "name": "@o3osatoshi/config",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": false,
   "sideEffects": false,
   "type": "module",
@@ -42,10 +42,6 @@
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.3"
-  },
-  "packageManager": "pnpm@9.15.9",
-  "engines": {
-    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
