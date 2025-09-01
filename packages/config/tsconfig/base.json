@@ -1,20 +1,30 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Base",
   "compilerOptions": {
-    "composite": false,
-    "declaration": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "inlineSources": false,
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "moduleDetection": "force",
     "isolatedModules": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "preserveWatchOutput": true,
+
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": true
-  },
-  "exclude": ["node_modules"]
+    "resolveJsonModule": true,
+
+    "strict": true,
+    "useUnknownInCatchVariables": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo",
+    "noEmit": true
+  }
 }
