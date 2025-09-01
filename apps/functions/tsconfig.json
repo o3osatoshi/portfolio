@@ -1,19 +1,10 @@
 {
+  "extends": "../../packages/config/tsconfig/functions.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "esModuleInterop": true,
-    "moduleResolution": "nodenext",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2022",
     "paths": {
       "@repo/domain": ["../../packages/domain/src"],
       "@repo/application": ["../../packages/application/src"]
     }
   },
-  "compileOnSave": true,
   "include": ["src"]
 }

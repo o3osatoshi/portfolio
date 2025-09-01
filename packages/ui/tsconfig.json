@@ -1,11 +1,9 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/react-library.json",
+  "extends": "@o3osatoshi/config/tsconfig/browser.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@repo/ui/*": ["./src/*"]
     }
   },
-  "include": ["."],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"]
 }

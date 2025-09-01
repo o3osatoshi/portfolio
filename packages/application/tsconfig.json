@@ -1,5 +1,4 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/base.json",
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "extends": "@o3osatoshi/config/tsconfig/node.json",
+  "include": ["src"]
 }

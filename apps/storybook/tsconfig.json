@@ -1,12 +1,10 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/react-app.json",
+  "extends": "@o3osatoshi/config/tsconfig/storybook.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
       "@repo/ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "include": [".storybook", "src", "stories"]
 }

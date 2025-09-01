@@ -1,5 +1,4 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/base.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tsup.config.ts"],
-  "exclude": ["node_modules"]
+  "extends": "@o3osatoshi/config/tsconfig/node.json",
+  "include": ["src", "schema"]
 }
