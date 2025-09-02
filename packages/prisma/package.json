@@ -5,7 +5,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --sourcemap --clean",
+    "build": "tsup",
     "db:push": "npm run with:dev -- prisma db push",
     "db:push:prod": "npm run with:prod -- prisma db push",
     "db:push:prod:force": "npm run with:prod -- prisma db push --accept-data-loss",
@@ -13,7 +13,7 @@
     "db:reset:skip-seed": "npm run with:dev -- prisma migrate reset --skip-seed",
     "db:seed": "npm run with:dev -- tsx scripts/seed.ts",
     "db:seed:prod": "npm run with:prod -- tsx scripts/seed.ts",
-    "dev": "tsup src/index.ts --format esm --watch",
+    "dev": "tsup --watch",
     "format": "prisma format",
     "generate": "prisma generate",
     "preinstall": "npm run generate",

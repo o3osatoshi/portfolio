@@ -7,9 +7,9 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.ts --dts --format esm --clean",
+    "build": "tsup",
     "clean": "rimraf dist",
-    "dev": "tsup src/index.ts --dts --format esm --watch",
+    "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest"
   },
