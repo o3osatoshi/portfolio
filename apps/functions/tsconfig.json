@@ -1,6 +1,7 @@
 {
   "extends": "../../packages/config/tsconfig/functions.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@repo/domain": ["../../packages/domain/src"],
       "@repo/application": ["../../packages/application/src"]

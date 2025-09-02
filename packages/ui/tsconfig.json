@@ -1,6 +1,7 @@
 {
   "extends": "@o3osatoshi/config/tsconfig/browser.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@repo/ui/*": ["./src/*"]
     }

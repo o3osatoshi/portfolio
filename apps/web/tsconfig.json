@@ -1,6 +1,7 @@
 {
   "extends": "@o3osatoshi/config/tsconfig/next.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@repo/ui/*": ["../../packages/ui/src/*"]
