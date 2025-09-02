@@ -7,9 +7,9 @@ export type TransactionResponse = {
   amount: string;
   price: string;
   currency: string;
-  profitLoss?: string;
-  fee?: string;
-  feeCurrency?: string;
+  profitLoss?: string | undefined;
+  fee?: string | undefined;
+  feeCurrency?: string | undefined;
   userId: string;
   createdAt: Date;
   updatedAt: Date;

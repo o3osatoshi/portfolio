@@ -41,11 +41,11 @@ type Kind =
 type NewError = {
   layer: Layer;
   kind: Kind;
-  action?: string; // what operation was being performed
-  reason?: string; // why it failed (short explanation)
-  impact?: string; // what the impact is
-  hint?: string; // possible next step
-  cause?: unknown; // original cause (any type)
+  action?: string | undefined; // what operation was being performed
+  reason?: string | undefined; // why it failed (short explanation)
+  impact?: string | undefined; // what the impact is
+  hint?: string | undefined; // possible next step
+  cause?: unknown | undefined; // original cause (any type)
 };
 
 /**

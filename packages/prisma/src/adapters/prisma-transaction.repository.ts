@@ -32,9 +32,9 @@ function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
     amount: new Prisma.Decimal(tx.amount),
     price: new Prisma.Decimal(tx.price),
     currency: tx.currency,
-    profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
-    fee: tx.fee && new Prisma.Decimal(tx.fee),
-    feeCurrency: tx.feeCurrency,
+    ...(tx.profitLoss ? { profitLoss: new Prisma.Decimal(tx.profitLoss) } : {}),
+    ...(tx.fee ? { fee: new Prisma.Decimal(tx.fee) } : {}),
+    ...(tx.feeCurrency ? { feeCurrency: tx.feeCurrency } : {}),
     user: {
       connect: { id: tx.userId },
     },
@@ -50,9 +50,9 @@ function toUpdateData(
     amount: new Prisma.Decimal(tx.amount),
     price: new Prisma.Decimal(tx.price),
     currency: tx.currency,
-    profitLoss: tx.profitLoss && new Prisma.Decimal(tx.profitLoss),
-    fee: tx.fee && new Prisma.Decimal(tx.fee),
-    feeCurrency: tx.feeCurrency,
+    ...(tx.profitLoss ? { profitLoss: new Prisma.Decimal(tx.profitLoss) } : {}),
+    ...(tx.fee ? { fee: new Prisma.Decimal(tx.fee) } : {}),
+    ...(tx.feeCurrency ? { feeCurrency: tx.feeCurrency } : {}),
   };
 }
 

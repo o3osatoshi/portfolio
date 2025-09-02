@@ -6,7 +6,8 @@ export class FetchError extends Error {
   }
 }
 
-const base = process.env.NEXT_PUBLIC_API_BASE_URL;
+// biome-ignore lint/complexity/useLiteralKeys: prioritize TS4111
+const base = process.env["NEXT_PUBLIC_API_BASE_URL"];
 if (base === undefined) {
   throw new Error("API_BASE_URL is undefined");
 }

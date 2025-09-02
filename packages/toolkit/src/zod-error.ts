@@ -87,7 +87,7 @@ export function summarizeZodError(err: ZodError): string {
 
 function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
   const i = issues[0];
-  switch (i.code) {
+  switch (i?.code) {
     case ZodIssueCode.unrecognized_keys:
       return "Remove unknown fields from the payload.";
     case ZodIssueCode.invalid_type:
@@ -125,12 +125,12 @@ export type Layer =
   | "External";
 
 export type NewZodError = {
-  layer?: Layer; // default Application
-  action?: string;
-  impact?: string;
-  hint?: string;
-  cause?: unknown; // ideally a ZodError
-  issues?: ZodIssue[];
+  layer?: Layer | undefined; // default Application
+  action?: string | undefined;
+  impact?: string | undefined;
+  hint?: string | undefined;
+  cause?: unknown | undefined; // ideally a ZodError
+  issues?: ZodIssue[] | undefined;
 };
 
 export function newZodError({

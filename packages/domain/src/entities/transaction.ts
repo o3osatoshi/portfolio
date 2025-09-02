@@ -31,9 +31,9 @@ interface TransactionCore {
   amount: Amount;
   price: Price;
   currency: CurrencyCode;
-  profitLoss?: ProfitLoss;
-  fee?: Fee;
-  feeCurrency?: CurrencyCode;
+  profitLoss?: ProfitLoss | undefined;
+  fee?: Fee | undefined;
+  feeCurrency?: CurrencyCode | undefined;
   userId: UserId;
 }
 
