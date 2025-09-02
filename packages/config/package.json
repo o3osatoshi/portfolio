@@ -27,7 +27,6 @@
   "scripts": {
     "build": "tsup src/tsup/index.ts --dts --format esm --sourcemap --clean && tsup vitest/base.ts --format esm --sourcemap --out-dir dist/vitest",
     "clean": "rimraf dist",
-    "dev": "tsup --watch",
     "prepublishOnly": "pnpm clean && pnpm build && pnpm typecheck",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

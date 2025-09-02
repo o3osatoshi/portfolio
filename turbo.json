@@ -18,6 +18,10 @@
         "AUTH_GOOGLE_SECRET"
       ]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "preview-storybook": {
       "dependsOn": ["^build"],
       "cache": false
