@@ -17,15 +17,9 @@
     "./tsconfig/*": "./tsconfig/*"
   },
   "types": "./dist/tsup/index.d.ts",
-  "files": [
-    "dist",
-    "tsconfig",
-    "vitest",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["dist", "tsconfig", "README.md", "LICENSE"],
   "scripts": {
-    "build": "tsup src/tsup/index.ts --dts --format esm --sourcemap --clean && tsup vitest/base.ts --format esm --sourcemap --out-dir dist/vitest",
+    "build": "tsup",
     "clean": "rimraf dist",
     "prepublishOnly": "pnpm clean && pnpm build && pnpm typecheck",
     "typecheck": "tsc -p tsconfig.json --noEmit"
