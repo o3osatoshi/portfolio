@@ -1,6 +1,9 @@
 {
   "name": "@repo/prisma",
   "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts"
   },
@@ -35,7 +38,7 @@
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "@repo/domain": "workspace:*",
-    "@repo/toolkit": "workspace:*",
+    "@o3osatoshi/toolkit": "workspace:*",
     "neverthrow": "catalog:"
   },
   "devDependencies": {

@@ -2,10 +2,11 @@
   "name": "@repo/application",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts"
   },
-  "main": "dist/index.js",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -14,7 +15,7 @@
   },
   "dependencies": {
     "@repo/domain": "workspace:*",
-    "@repo/toolkit": "workspace:*",
+    "@o3osatoshi/toolkit": "workspace:*",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },

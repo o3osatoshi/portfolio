@@ -1,12 +1,20 @@
 {
   "name": "@repo/eth",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
-  "author": "",
+  "private": false,
+  "type": "module",
+  "sideEffects": false,
+  "description": "ETH contract types and hooks (generated)",
   "exports": {
-    ".": "./src/generate.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
   },
+  "files": ["dist", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "generate": "dotenv -e .env.local -- wagmi generate",
     "preinstall": "npm run generate"
@@ -20,6 +28,7 @@
     "@types/node": "catalog:",
     "@wagmi/cli": "^2.3.1",
     "dotenv-cli": "^8.0.0",
+    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }
