@@ -12,9 +12,9 @@ const isCI = !!process.env["CI"];
 const isProd = process.env["NODE_ENV"] === "production" || isCI;
 
 /**
- * Common defaults for consistent configuration
+ * Defaults for consistent configuration
  */
-const COMMON_DEFAULTS = {
+const DEFAULTS = {
   target: "es2022",
   platform: "node",
   sourcemap: false,
@@ -69,6 +69,7 @@ function findNearestPackageJson(dir: string): string | null {
     if (fs.existsSync(p)) return p;
     cur = path.dirname(cur);
   }
+  console.warn("No package.json found");
   return null;
 }
 
@@ -108,15 +109,15 @@ export async function defineTsupPreset(opts: PresetOptions = {}) {
     entry: opts.entry ?? { index: "src/index.ts" },
     format,
     dts: !!opts.dts,
-    sourcemap: opts.sourcemap ?? COMMON_DEFAULTS.sourcemap,
-    clean: opts.clean ?? COMMON_DEFAULTS.clean,
+    sourcemap: opts.sourcemap ?? DEFAULTS.sourcemap,
+    clean: opts.clean ?? DEFAULTS.clean,
     treeshake: true,
-    minify: opts.minify ?? COMMON_DEFAULTS.minify,
+    minify: opts.minify ?? DEFAULTS.minify,
     splitting:
       opts.splitting ?? (Array.isArray(format) && format.includes("esm")),
-    target: opts.target ?? COMMON_DEFAULTS.target,
+    target: opts.target ?? DEFAULTS.target,
     external,
-    platform: opts.platform ?? COMMON_DEFAULTS.platform,
+    platform: opts.platform ?? DEFAULTS.platform,
     ...(opts.env ? { env: opts.env } : {}),
     // Pass banner directly to tsup; it forwards to esbuild as needed
     ...(opts.banner ? { banner: opts.banner } : {}),
@@ -142,7 +143,7 @@ export async function internalEsmPreset(
     format: ["esm"],
     dts: false,
     splitting: true,
-    // All other values use COMMON_DEFAULTS
+    // All other values use DEFAULTS
   });
 }
 
@@ -162,7 +163,7 @@ export async function publicDualPreset(
     sourcemap: withSourceMap,
     minify: isProd, // minify on CI/production
     splitting: true,
-    // target and platform use COMMON_DEFAULTS
+    // target and platform use DEFAULTS
   });
 }
 
@@ -171,7 +172,7 @@ export async function publicDualPreset(
  * - ESM only, browser platform, React externals, DTS optional (usually not needed)
  * - preserve JSX transform via esbuild default; Next handles it later
  */
-export async function reactComponentPreset(
+export async function browserPreset(
   entry: Record<string, string> | undefined = { index: "src/index.tsx" },
   options: { dts?: boolean } = {},
 ) {
@@ -181,7 +182,7 @@ export async function reactComponentPreset(
     dts: !!options.dts,
     platform: "browser",
     // React components should use consistent target
-    target: COMMON_DEFAULTS.target,
+    target: DEFAULTS.target,
     // UI treats React/Next as externals (autoExternals also captures them; explicit for clarity)
     external: ["react", "react-dom", "next"],
   });
@@ -237,6 +238,6 @@ export async function multiEntryEsmPreset(entries: Record<string, string>) {
     format: ["esm"],
     dts: false,
     splitting: true,
-    // All other values use COMMON_DEFAULTS
+    // All other values use DEFAULTS
   });
 }
