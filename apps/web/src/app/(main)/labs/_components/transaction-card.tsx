@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card";
+} from "@o3osatoshi/ui/components/card";
 import type { Transaction } from "@repo/validation";
 
 interface Props {

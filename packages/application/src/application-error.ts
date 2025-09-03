@@ -1,4 +1,4 @@
-import { newError as baseNewError } from "@repo/toolkit";
+import { newError as baseNewError } from "@o3osatoshi/toolkit";
 
 export type ApplicationKind =
   | "Validation"
@@ -21,7 +21,7 @@ export type NewApplicationError = {
 };
 
 /**
- * Application-layer error constructor wrapping @repo/toolkit with layer "Application".
+ * Application-layer error constructor wrapping @o3osatoshi/toolkit with layer "Application".
  * Use in application/use-case orchestration for consistent error classification.
  */
 export function newApplicationError({

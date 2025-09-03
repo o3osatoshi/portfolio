@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@repo/ui/*": ["../../packages/ui/src/*"]
+      "@o3osatoshi/ui/*": ["../../packages/ui/src/*"]
     }
   },
   "include": [".storybook", "src", "stories"]

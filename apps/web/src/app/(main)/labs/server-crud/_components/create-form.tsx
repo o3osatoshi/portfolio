@@ -3,9 +3,9 @@
 import { createTransaction } from "@/app/(main)/labs/server-crud/_actions/create-transaction";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Message from "@repo/ui/components/base/message";
-import { Button } from "@repo/ui/components/button";
-import { FormInput } from "@repo/ui/components/case/form-input";
+import Message from "@o3osatoshi/ui/components/base/message";
+import { Button } from "@o3osatoshi/ui/components/button";
+import { FormInput } from "@o3osatoshi/ui/components/case/form-input";
 import { createTransactionSchema } from "@repo/validation";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";

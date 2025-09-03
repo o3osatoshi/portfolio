@@ -2,7 +2,7 @@ import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@repo/ui"],
+  transpilePackages: ["@o3osatoshi/ui"],
   eslint: {
     ignoreDuringBuilds: true,
   },

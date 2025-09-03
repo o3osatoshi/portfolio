@@ -4,7 +4,7 @@ This file provides guidance for the Storybook application - component library do
 
 ## Application Overview
 
-Storybook app provides interactive documentation, development environment, and visual testing for the `@repo/ui` component library and other shared components.
+Storybook app provides interactive documentation, development environment, and visual testing for the `@o3osatoshi/ui` component library and other shared components.
 
 ## Application Structure
 
@@ -35,7 +35,7 @@ pnpm test:watch       # Watch mode for tests
 ```typescript
 // Example story file
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@repo/ui';
+import { Button } from '@o3osatoshi/ui';
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
@@ -71,8 +71,8 @@ export const Default: Story = {
 
 ## UI Component Integration
 
-### @repo/ui Components
-- Import components directly from `@repo/ui` package
+### @o3osatoshi/ui Components
+- Import components directly from `@o3osatoshi/ui` package
 - Stories automatically reflect component API changes
 - Shared styling and theme system integration
 
@@ -121,7 +121,7 @@ export const Default: Story = {
 ## Workspace Integration
 
 ### Package Dependencies
-- **@repo/ui**: Primary component library being documented
+- **@o3osatoshi/ui**: Primary component library being documented
 - **Shared Config**: Uses workspace TypeScript and build configuration
 - **Theme System**: Integrates with shared theme and styling
 
@@ -132,7 +132,7 @@ export const Default: Story = {
 
 ## Important Notes
 
-- **Component Library Focus**: Primarily documents `@repo/ui` components
+- **Component Library Focus**: Primarily documents `@o3osatoshi/ui` components
 - **Design System**: Serves as the source of truth for component usage
 - **Testing Environment**: Provides isolated component testing environment
 - **Documentation**: Auto-generates documentation from component props and JSDoc

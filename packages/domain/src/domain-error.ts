@@ -1,4 +1,4 @@
-import { newError as baseNewError } from "@repo/toolkit";
+import { newError as baseNewError } from "@o3osatoshi/toolkit";
 
 export type DomainKind =
   | "Validation"
@@ -21,7 +21,7 @@ export type NewDomainError = {
 };
 
 /**
- * Domain-aware error constructor. Shapes an Error using @repo/toolkit with layer "Domain".
+ * Domain-aware error constructor. Shapes an Error using @o3osatoshi/toolkit with layer "Domain".
  * Prefer this over new Error(...) in domain code for consistent classification.
  */
 export function newDomainError({

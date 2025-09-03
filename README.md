@@ -72,7 +72,7 @@ portfolio/
 │   └── storybook/        # Component library documentation
 ├── packages/
 │   ├── @repo/prisma/   # Prisma ORM setup and utilities
-│   ├── @repo/ui/         # Shared React components (Tailwind + shadcn/ui)
+│   ├── @o3osatoshi/ui/         # Shared React components (Tailwind + shadcn/ui)
 │   ├── @repo/ethereum/   # Web3/Ethereum integration utilities
 │   └── @o3osatoshi/config/  # Shared TypeScript configurations
 └── turbo.json           # Turborepo task orchestration

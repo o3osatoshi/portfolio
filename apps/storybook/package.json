@@ -10,7 +10,7 @@
     "preview-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
+    "@o3osatoshi/ui": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

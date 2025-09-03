@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@repo/ui/components/button";
+import { Button } from "@o3osatoshi/ui/components/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card";
-import { cn } from "@repo/ui/lib/utils";
+} from "@o3osatoshi/ui/components/card";
+import { cn } from "@o3osatoshi/ui/lib/utils";
 import { signIn } from "next-auth/react";
 
 export function SigninForm({

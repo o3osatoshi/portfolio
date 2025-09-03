@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@repo/ui/*": ["../../packages/ui/src/*"]
+      "@o3osatoshi/ui/*": ["../../packages/ui/src/*"]
     },
     "allowJs": true
   },

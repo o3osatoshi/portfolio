@@ -5,8 +5,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@repo/ui/components/dropdown-menu";
-import { SidebarMenuButton, useSidebar } from "@repo/ui/components/sidebar";
+} from "@o3osatoshi/ui/components/dropdown-menu";
+import { SidebarMenuButton, useSidebar } from "@o3osatoshi/ui/components/sidebar";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";

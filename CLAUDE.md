@@ -15,10 +15,10 @@ This is a Turborepo monorepo with a Next.js portfolio application, Firebase func
 - **@repo/application**: Application layer with use cases and services (Clean Architecture)
 - **@repo/domain**: Domain entities, repositories, and value objects (Clean Architecture core)
 - **@repo/prisma**: Infrastructure layer with Prisma ORM, database adapters, and utilities
-- **@repo/ui**: Shared React components built with Tailwind CSS and shadcn/ui
+- **@o3osatoshi/ui**: Shared React components built with Tailwind CSS and shadcn/ui
 - **@repo/eth**: Web3/Ethereum contract integration utilities with Wagmi
 - **@repo/validation**: Shared Zod validation schemas and utilities
-- **@repo/toolkit**: Shared utilities, error handling, and helper functions
+- **@o3osatoshi/toolkit**: Shared utilities, error handling, and helper functions
 - **@o3osatoshi/config**: Shared TypeScript configurations
 
 ## Development Commands

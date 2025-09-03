@@ -1,6 +1,6 @@
 # CLAUDE.md - Toolkit Package
 
-This file provides guidance for the `@repo/toolkit` package - shared utilities and helper functions across the monorepo.
+This file provides guidance for the `@o3osatoshi/toolkit` package - shared utilities and helper functions across the monorepo.
 
 ## Package Overview
 

@@ -90,7 +90,7 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@repo/ui':
+      '@o3osatoshi/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       react:
@@ -166,7 +166,7 @@ importers:
       '@repo/prisma':
         specifier: workspace:*
         version: link:../../packages/prisma
-      '@repo/ui':
+      '@o3osatoshi/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@repo/validation':
@@ -230,7 +230,7 @@ importers:
       '@repo/domain':
         specifier: workspace:*
         version: link:../domain
-      '@repo/toolkit':
+      '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
       neverthrow:
@@ -276,7 +276,7 @@ importers:
 
   packages/domain:
     dependencies:
-      '@repo/toolkit':
+      '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
       decimal.js:
@@ -323,6 +323,9 @@ importers:
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
+      tsup:
+        specifier: 'catalog:'
+        version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.1)
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -335,7 +338,7 @@ importers:
       '@repo/domain':
         specifier: workspace:*
         version: link:../domain
-      '@repo/toolkit':
+      '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
       neverthrow:
@@ -439,6 +442,9 @@ importers:
       lucide-react:
         specifier: 'catalog:'
         version: 0.507.0(react@19.1.0)
+      next:
+        specifier: ^14 || ^15
+        version: 15.3.1(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-themes:
         specifier: 'catalog:'
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -13708,7 +13714,7 @@ snapshots:
     dependencies:
       color: 4.2.3
       detect-libc: 2.0.4
-      semver: 7.7.1
+      semver: 7.7.2
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.1
       '@img/sharp-darwin-x64': 0.34.1

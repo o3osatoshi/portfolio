@@ -1,6 +1,6 @@
 # CLAUDE.md - UI Package
 
-This file provides guidance for the `@repo/ui` package - shared React components and design system.
+This file provides guidance for the `@o3osatoshi/ui` package - shared React components and design system.
 
 ## Package Overview
 
@@ -101,7 +101,7 @@ const buttonVariants = cva(
 ### Usage in Apps
 ```typescript
 // Import components from the package
-import { Button, Card, Input } from "@repo/ui";
+import { Button, Card, Input } from "@o3osatoshi/ui";
 
 // Components work with Tailwind CSS classes
 <Button variant="default" size="sm" className="custom-class">

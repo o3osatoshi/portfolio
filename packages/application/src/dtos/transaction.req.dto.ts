@@ -1,4 +1,4 @@
-import { parseWith } from "@repo/toolkit";
+import { parseWith } from "@o3osatoshi/toolkit";
 import { z } from "zod";
 
 const DecimalStringSchema = z.string().refine(

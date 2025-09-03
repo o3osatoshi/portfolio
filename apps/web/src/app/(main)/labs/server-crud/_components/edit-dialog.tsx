@@ -3,9 +3,9 @@
 import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Message from "@repo/ui/components/base/message";
-import { Button } from "@repo/ui/components/button";
-import { FormInput } from "@repo/ui/components/case/form-input";
+import Message from "@o3osatoshi/ui/components/base/message";
+import { Button } from "@o3osatoshi/ui/components/button";
+import { FormInput } from "@o3osatoshi/ui/components/case/form-input";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@repo/ui/components/dialog";
+} from "@o3osatoshi/ui/components/dialog";
 import type { Transaction } from "@repo/validation";
 import { updateTransactionSchema } from "@repo/validation";
 import { Pencil } from "lucide-react";

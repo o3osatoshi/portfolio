@@ -2,7 +2,7 @@
 
 import { deleteTransaction } from "@/app/(main)/labs/server-crud/_actions/delete-transaction";
 import type { ActionState } from "@/utils/action-state";
-import { Button } from "@repo/ui/components/button";
+import { Button } from "@o3osatoshi/ui/components/button";
 import { Trash2 } from "lucide-react";
 import * as React from "react";
 import { useActionState } from "react";

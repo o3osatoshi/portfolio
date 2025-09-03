@@ -40,7 +40,7 @@ Authentication middleware automatically protects routes based on configuration.
 ## UI & Styling
 
 ### Component Architecture
-- **Shared UI**: Uses `@repo/ui` workspace package
+- **Shared UI**: Uses `@o3osatoshi/ui` workspace package
 - **shadcn/ui**: Configured with "new-york" style variant
 - **Theme System**: Dark/light mode with `next-themes`
 - **Fonts**: Custom Google Fonts (Geist Sans/Mono, JetBrains Mono)
@@ -55,7 +55,7 @@ Authentication middleware automatically protects routes based on configuration.
 ### Build Configuration
 ```javascript
 // next.config.mjs specifics:
-- Transpiles @repo/ui package
+- Transpiles @o3osatoshi/ui package
 - ESLint ignored during builds
 - Prisma monorepo plugin for database access
 ```
@@ -107,7 +107,7 @@ pnpm db:seed            # Seed with test data
 @/app/*          - App directory
 @/lib/*          - Library utilities
 @/components/*   - Local components
-@repo/ui/*       - Shared UI components
+@o3osatoshi/ui/*       - Shared UI components
 ```
 
 ## Testing & Quality

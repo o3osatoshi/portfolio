@@ -6,7 +6,7 @@ import type {
   TransactionRepository,
   UserId,
 } from "@repo/domain";
-import { newError as baseError } from "@repo/toolkit";
+import { newError as baseError } from "@o3osatoshi/toolkit";
 import { Result, ResultAsync, err, ok } from "neverthrow";
 import {
   Prisma,

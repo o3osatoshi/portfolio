@@ -1,7 +1,7 @@
 import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 import type { Metadata } from "next";
 
-import "@repo/ui/globals.css";
+import "@o3osatoshi/ui/globals.css";
 import { Providers } from "@/app/_components/providers";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import { newError as newBaseError } from "@repo/toolkit";
+import { newError as newBaseError } from "@o3osatoshi/toolkit";
 import { Prisma } from "./prisma-client";
 
 type NewPrismaError = {
@@ -52,7 +52,7 @@ function metaString(meta: unknown, key: string): string | undefined {
  * Prisma-aware newError override.
  *
  * Maps common Prisma error classes/codes to a stable error shape and delegates
- * to `@repo/toolkit`'s `newError` with `layer: "DB"` and an appropriate `kind`.
+ * to `@o3osatoshi/toolkit`'s `newError` with `layer: "DB"` and an appropriate `kind`.
  *
  * Major mappings
  * - P2002: kind=Integrity, reason=Unique constraint violation (meta.target is shown if present)
@@ -73,7 +73,7 @@ function metaString(meta: unknown, key: string): string | undefined {
  * @param impact - Optional description of effect on the system.
  * @param hint - Optional remediation tip for operators/users.
  * @param cause - The original Prisma error (or unknown) to classify.
- * @returns Error shaped by `@repo/toolkit`'s `newError` with layer `DB`.
+ * @returns Error shaped by `@o3osatoshi/toolkit`'s `newError` with layer `DB`.
  */
 export function newPrismaError({
   action,
