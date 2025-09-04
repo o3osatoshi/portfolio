@@ -1,15 +1,15 @@
 {
   "extends": "./base.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
 
     "target": "ES2022",
     "lib": ["ES2022"],
     "rootDir": "src",
     "outDir": "dist",
 
-    "noEmit": false,
+    "noEmit": true,
     "declaration": false,
     "sourceMap": false,
 

@@ -241,3 +241,24 @@ export async function multiEntryEsmPreset(entries: Record<string, string>) {
     // All other values use DEFAULTS
   });
 }
+
+/**
+ * 7) Firebase Functions preset (Node runtime, ESM output)
+ * - ESM single-file output for Functions runtime
+ * - Node platform, Node22 target, sourcemaps for debugging
+ * - Bundle local code, externalize deps automatically (via autoExternals)
+ */
+export async function functionsPreset(
+  entry: Record<string, string> | undefined = { index: "src/index.ts" },
+) {
+  return defineTsupPreset({
+    entry,
+    format: ["esm"],
+    dts: false,
+    platform: "node",
+    target: "node22",
+    minify: isProd,
+    sourcemap: true,
+    splitting: false,
+  });
+}
