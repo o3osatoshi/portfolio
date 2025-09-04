@@ -9,8 +9,7 @@
     "dev": "storybook dev -p 6006",
     "preview-storybook": "serve storybook-static",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static",
-    "chromatic": "chromatic --project-token=chpt_2b5e2fca71cf3a3"
+    "build-storybook": "storybook build -o storybook-static"
   },
   "dependencies": {
     "@o3osatoshi/ui": "workspace:*",
