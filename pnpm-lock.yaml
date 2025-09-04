@@ -80,13 +80,13 @@ importers:
     devDependencies:
       firebase-functions-test:
         specifier: ^3.1.0
-        version: 3.4.1(firebase-admin@12.7.0)(firebase-functions@6.4.0(firebase-admin@12.7.0))(jest@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5)))
+        version: 3.4.1(firebase-admin@12.7.0)(firebase-functions@6.4.0(firebase-admin@12.7.0))(jest@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3)))
       tsup:
         specifier: ^8.4.0
-        version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@4.9.5)(yaml@2.8.1)
+        version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.1)
       typescript:
-        specifier: ^4.9.0
-        version: 4.9.5
+        specifier: ^5.8.3
+        version: 5.8.3
 
   apps/storybook:
     dependencies:
@@ -151,6 +151,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.4(react@19.1.0))
+      '@o3osatoshi/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@prisma/nextjs-monorepo-workaround-plugin':
         specifier: ^6.7.0
         version: 6.7.0
@@ -166,9 +169,6 @@ importers:
       '@repo/prisma':
         specifier: workspace:*
         version: link:../../packages/prisma
-      '@o3osatoshi/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@repo/validation':
         specifier: workspace:*
         version: link:../../packages/validation
@@ -227,12 +227,12 @@ importers:
 
   packages/application:
     dependencies:
-      '@repo/domain':
-        specifier: workspace:*
-        version: link:../domain
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
+      '@repo/domain':
+        specifier: workspace:*
+        version: link:../domain
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
@@ -332,15 +332,15 @@ importers:
 
   packages/prisma:
     dependencies:
+      '@o3osatoshi/toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
       '@prisma/client':
         specifier: ^6.7.0
         version: 6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)
       '@repo/domain':
         specifier: workspace:*
         version: link:../domain
-      '@o3osatoshi/toolkit':
-        specifier: workspace:*
-        version: link:../toolkit
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
@@ -6317,11 +6317,6 @@ packages:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
 
-  typescript@4.9.5:
-    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
-
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
@@ -7572,7 +7567,7 @@ snapshots:
       jest-util: 30.0.5
       slash: 3.0.0
 
-  '@jest/core@30.0.5(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))':
+  '@jest/core@30.0.5(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))':
     dependencies:
       '@jest/console': 30.0.5
       '@jest/pattern': 30.0.1
@@ -7587,7 +7582,7 @@ snapshots:
       exit-x: 0.2.2
       graceful-fs: 4.2.11
       jest-changed-files: 30.0.5
-      jest-config: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))
+      jest-config: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))
       jest-haste-map: 30.0.5
       jest-message-util: 30.0.5
       jest-regex-util: 30.0.1
@@ -11630,12 +11625,12 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.4.1(firebase-admin@12.7.0)(firebase-functions@6.4.0(firebase-admin@12.7.0))(jest@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))):
+  firebase-functions-test@3.4.1(firebase-admin@12.7.0)(firebase-functions@6.4.0(firebase-admin@12.7.0))(jest@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))):
     dependencies:
       '@types/lodash': 4.17.20
       firebase-admin: 12.7.0
       firebase-functions: 6.4.0(firebase-admin@12.7.0)
-      jest: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))
+      jest: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))
       lodash: 4.17.21
       ts-deepmerge: 2.0.7
 
@@ -12180,15 +12175,15 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5)):
+  jest-cli@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3)):
     dependencies:
-      '@jest/core': 30.0.5(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))
+      '@jest/core': 30.0.5(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))
       '@jest/test-result': 30.0.5
       '@jest/types': 30.0.5
       chalk: 4.1.2
       exit-x: 0.2.2
       import-local: 3.2.0
-      jest-config: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))
+      jest-config: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))
       jest-util: 30.0.5
       jest-validate: 30.0.5
       yargs: 17.7.2
@@ -12199,7 +12194,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5)):
+  jest-config@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3)):
     dependencies:
       '@babel/core': 7.28.0
       '@jest/get-type': 30.0.1
@@ -12228,7 +12223,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.12
       esbuild-register: 3.6.0(esbuild@0.25.4)
-      ts-node: 10.9.2(@types/node@22.15.12)(typescript@4.9.5)
+      ts-node: 10.9.2(@types/node@22.15.12)(typescript@5.8.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -12448,12 +12443,12 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5)):
+  jest@30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3)):
     dependencies:
-      '@jest/core': 30.0.5(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))
+      '@jest/core': 30.0.5(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))
       '@jest/types': 30.0.5
       import-local: 3.2.0
-      jest-cli: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5))
+      jest-cli: 30.0.5(@types/node@22.15.12)(esbuild-register@3.6.0(esbuild@0.25.4))(ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3))
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -14168,25 +14163,6 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@types/node@22.15.12)(typescript@4.9.5):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 22.15.12
-      acorn: 8.14.1
-      acorn-walk: 8.3.4
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 4.9.5
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optional: true
-
   ts-node@10.9.2(@types/node@22.15.12)(typescript@5.8.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -14214,33 +14190,6 @@ snapshots:
   tslib@1.14.1: {}
 
   tslib@2.8.1: {}
-
-  tsup@8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@4.9.5)(yaml@2.8.1):
-    dependencies:
-      bundle-require: 5.1.0(esbuild@0.25.4)
-      cac: 6.7.14
-      chokidar: 4.0.3
-      consola: 3.4.2
-      debug: 4.4.1
-      esbuild: 0.25.4
-      joycon: 3.1.1
-      picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(yaml@2.8.1)
-      resolve-from: 5.0.0
-      rollup: 4.40.2
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tinyexec: 0.3.2
-      tinyglobby: 0.2.13
-      tree-kill: 1.2.2
-    optionalDependencies:
-      postcss: 8.5.3
-      typescript: 4.9.5
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - tsx
-      - yaml
 
   tsup@8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.1):
     dependencies:
@@ -14317,8 +14266,6 @@ snapshots:
     dependencies:
       media-typer: 0.3.0
       mime-types: 2.1.35
-
-  typescript@4.9.5: {}
 
   typescript@5.8.3: {}
 
