@@ -1,4 +1,0 @@
-{
-  "extends": "@o3osatoshi/config/tsconfig/node.json",
-  "include": ["src"]
-}

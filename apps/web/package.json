@@ -16,7 +16,6 @@
     "@repo/application": "workspace:*",
     "@repo/domain": "workspace:*",
     "@repo/prisma": "workspace:*",
-    "@repo/validation": "workspace:*",
     "@tanstack/react-query": "^5.76.1",
     "lucide-react": "catalog:",
     "neverthrow": "catalog:",
@@ -27,7 +26,8 @@
     "react-dom": "catalog:",
     "react-hook-form": "^7.56.4",
     "viem": "catalog:",
-    "wagmi": "catalog:"
+    "wagmi": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",

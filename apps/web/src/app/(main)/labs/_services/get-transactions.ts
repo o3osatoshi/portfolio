@@ -1,7 +1,7 @@
 import { fetchClient } from "@/utils/fetch-client";
 import { getPathName } from "@/utils/handle-nav";
-import { transactionsSchema } from "@repo/validation";
-import type { Transactions } from "@repo/validation";
+import { transactionsSchema } from "@/lib/validation";
+import type { Transactions } from "@/lib/validation";
 import { type Result, ResultAsync, err, ok } from "neverthrow";
 
 interface Props {

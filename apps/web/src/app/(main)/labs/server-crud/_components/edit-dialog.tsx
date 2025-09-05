@@ -15,8 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@o3osatoshi/ui/components/dialog";
-import type { Transaction } from "@repo/validation";
-import { updateTransactionSchema } from "@repo/validation";
+import type { Transaction } from "@/lib/validation";
+import { updateTransactionSchema } from "@/lib/validation";
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";

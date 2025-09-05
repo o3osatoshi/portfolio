@@ -5,7 +5,7 @@ import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
 import { CreateTransactionUseCase, parseCreateTransactionRequest } from "@repo/application";
 import { PrismaTransactionRepository } from "@repo/prisma";
-import { createTransactionSchema } from "@repo/validation";
+import { createTransactionSchema } from "@/lib/validation";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
