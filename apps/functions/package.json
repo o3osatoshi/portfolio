@@ -6,13 +6,13 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
     "deploy": "firebase deploy --only functions",
+    "dev": "tsup --watch",
     "logs": "firebase functions:log",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell"
+    "start": "npm run shell",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "firebase-admin": "^12.6.0",

@@ -2,8 +2,8 @@
   "name": "@repo/prisma",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -36,9 +36,9 @@
     "with:prod": "dotenv -e .env.production.local --"
   },
   "dependencies": {
+    "@o3osatoshi/toolkit": "workspace:*",
     "@prisma/client": "^6.7.0",
     "@repo/domain": "workspace:*",
-    "@o3osatoshi/toolkit": "workspace:*",
     "neverthrow": "catalog:"
   },
   "devDependencies": {

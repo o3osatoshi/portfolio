@@ -17,7 +17,12 @@
     "./tsconfig/*": "./tsconfig/*"
   },
   "types": "./dist/tsup/index.d.ts",
-  "files": ["dist", "tsconfig", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "tsconfig",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",

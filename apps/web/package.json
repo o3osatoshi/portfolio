@@ -10,12 +10,12 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.0",
     "@hookform/resolvers": "^5.0.1",
+    "@o3osatoshi/ui": "workspace:*",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@rainbow-me/rainbowkit": "^2.2.5",
     "@repo/application": "workspace:*",
     "@repo/domain": "workspace:*",
     "@repo/prisma": "workspace:*",
-    "@o3osatoshi/ui": "workspace:*",
     "@repo/validation": "workspace:*",
     "@tanstack/react-query": "^5.76.1",
     "lucide-react": "catalog:",

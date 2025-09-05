@@ -2,8 +2,8 @@
   "name": "@repo/application",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -14,8 +14,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@repo/domain": "workspace:*",
     "@o3osatoshi/toolkit": "workspace:*",
+    "@repo/domain": "workspace:*",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },

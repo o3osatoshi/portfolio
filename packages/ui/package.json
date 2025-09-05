@@ -2,8 +2,10 @@
   "name": "@o3osatoshi/ui",
   "version": "0.0.0",
   "private": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "type": "module",
-  "sideEffects": ["*.css"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -16,14 +18,12 @@
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts"
   },
-  "files": ["dist", "README.md", "LICENSE"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {},
-  "peerDependencies": {
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
-    "next": "^14 || ^15"
-  },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.9",
     "@radix-ui/react-collapsible": "^1.1.10",
@@ -51,5 +51,13 @@
     "@types/react-dom": "catalog:",
     "tailwindcss": "^4.1.5",
     "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "^14 || ^15",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
