@@ -4,8 +4,13 @@
   "scripts": {
     "build": "turbo run build",
     "build:functions": "turbo run build --filter=functions...",
+    "build:storybook": "turbo run build --filter=storybook...",
+    "build:web": "turbo run build --filter=web...",
     "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
+    "dev:functions": "turbo run dev --filter=functions...",
+    "dev:storybook": "turbo run dev --filter=storybook...",
+    "dev:web": "turbo run dev --filter=web...",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "preview-storybook": "turbo run preview-storybook",
