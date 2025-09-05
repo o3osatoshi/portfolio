@@ -489,31 +489,6 @@ importers:
         specifier: 'catalog:'
         version: 5.8.3
 
-  packages/validation:
-    dependencies:
-      zod:
-        specifier: 'catalog:'
-        version: 3.24.4
-    devDependencies:
-      '@o3osatoshi/config':
-        specifier: workspace:*
-        version: link:../config
-      '@types/node':
-        specifier: 'catalog:'
-        version: 22.15.12
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.0.1
-      tsup:
-        specifier: 'catalog:'
-        version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.1)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.8.3
-      vitest:
-        specifier: 'catalog:'
-        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.12)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.8.1)
-
 packages:
 
   '@adobe/css-tools@4.4.2':
