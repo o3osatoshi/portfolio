@@ -19,8 +19,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "generate": "dotenv -e .env.local -- wagmi generate",
-    "preinstall": "npm run generate"
+    "generate": "dotenv -e .env.local -- wagmi generate"
   },
   "dependencies": {
     "viem": "catalog:",
