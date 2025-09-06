@@ -11,9 +11,7 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@/components",
-    "hooks": "@/hooks",
-    "lib": "@/lib",
+    "components": "@o3osatoshi/ui/components",
     "utils": "@o3osatoshi/ui/lib/utils",
     "ui": "@o3osatoshi/ui/components"
   }
