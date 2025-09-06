@@ -8,10 +8,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@o3osatoshi/toolkit": "workspace:*",
@@ -22,7 +21,6 @@
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
-    "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
