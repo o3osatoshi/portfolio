@@ -10,9 +10,9 @@ function fabricateKnownRequestError(
   const err = Object.create(
     Prisma.PrismaClientKnownRequestError.prototype,
   ) as Record<string, unknown>;
-  err.code = code;
-  if (meta) err.meta = meta;
-  err.message = message ?? code;
+  err["code"] = code;
+  if (meta) err["meta"] = meta;
+  err["message"] = message ?? code;
   return err as unknown;
 }
 
@@ -20,7 +20,7 @@ function fabricateUnknownRequestError(message: string): unknown {
   const err = Object.create(
     Prisma.PrismaClientUnknownRequestError.prototype,
   ) as Record<string, unknown>;
-  err.message = message;
+  err["message"] = message;
   return err as unknown;
 }
 
@@ -28,7 +28,7 @@ function fabricateInitializationError(message: string): unknown {
   const err = Object.create(
     Prisma.PrismaClientInitializationError.prototype,
   ) as Record<string, unknown>;
-  err.message = message;
+  err["message"] = message;
   return err as unknown;
 }
 
@@ -36,7 +36,7 @@ function fabricateValidationError(message: string): unknown {
   const err = Object.create(
     Prisma.PrismaClientValidationError.prototype,
   ) as Record<string, unknown>;
-  err.message = message;
+  err["message"] = message;
   return err as unknown;
 }
 
