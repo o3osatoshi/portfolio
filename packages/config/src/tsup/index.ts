@@ -6,9 +6,7 @@ import { type Options, defineConfig } from "tsup";
  * Build-time heuristics
  */
 
-// biome-ignore lint/complexity/useLiteralKeys: prioritize TS4111
 const isCI = !!process.env["CI"];
-// biome-ignore lint/complexity/useLiteralKeys: prioritize TS4111
 const isProd = process.env["NODE_ENV"] === "production" || isCI;
 
 /**

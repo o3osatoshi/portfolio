@@ -2,7 +2,6 @@ import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { http } from "wagmi";
 import { holesky } from "wagmi/chains";
 
-// biome-ignore lint/complexity/useLiteralKeys: prioritize TS4111
 const projectId = process.env["NEXT_PUBLIC_PROJECT_ID"];
 if (projectId === undefined) {
   throw new Error("NEXT_PUBLIC_PROJECT_ID is undefined");
