@@ -4,7 +4,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export default function AmountInput({
+export function AmountInput({
   type = "number",
   placeholder = "0.00",
   disabled = false,

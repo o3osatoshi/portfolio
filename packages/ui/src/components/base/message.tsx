@@ -6,7 +6,7 @@ interface Props {
   variant?: "default" | "destructive";
 }
 
-export default function Message({ children, variant }: Props) {
+export function Message({ children, variant }: Props) {
   if (children === undefined) return null;
 
   return (

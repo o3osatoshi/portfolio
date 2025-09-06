@@ -4,7 +4,7 @@ import { createTransaction } from "@/app/(main)/labs/server-crud/_actions/create
 import { createTransactionSchema } from "@/lib/validation";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Message from "@o3osatoshi/ui/components/base/message";
+import { Message } from "@o3osatoshi/ui/components/base/message";
 import { Button } from "@o3osatoshi/ui/components/button";
 import { FormInput } from "@o3osatoshi/ui/components/case/form-input";
 import { type FormEvent, useActionState } from "react";
