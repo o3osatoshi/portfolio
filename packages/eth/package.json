@@ -3,6 +3,16 @@
   "version": "0.0.0",
   "private": false,
   "description": "ETH contract types and hooks (generated)",
+  "keywords": [],
+  "homepage": "https://github.com/o3osatoshi/portfolio/packages/eth",
+  "bugs": {
+    "url": "https://github.com/o3osatoshi/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o3osatoshi/portfolio.git",
+    "directory": "packages/eth"
+  },
   "sideEffects": false,
   "type": "module",
   "exports": {
@@ -13,13 +23,19 @@
       "default": "./dist/index.js"
     }
   },
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "generate": "dotenv -e .env.local -- wagmi generate"
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "dev": "tsup --watch",
+    "generate": "dotenv -e .env.local -- wagmi generate",
+    "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test:run && NODE_ENV=production pnpm build",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "viem": "catalog:",
@@ -29,9 +45,13 @@
     "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
     "@wagmi/cli": "^2.3.1",
-    "dotenv-cli": "^8.0.0",
+    "dotenv-cli": "catalog:",
+    "rimraf": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
