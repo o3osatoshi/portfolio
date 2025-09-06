@@ -16,17 +16,42 @@ describe("zod-error helpers (with real Zod)", () => {
     expect(isZodError(new Error("Hello, zod!"))).toBe(false);
   });
 
+  it("isZodError recognizes duck-typed ZodError shape (cross-instance)", () => {
+    // Simulate a ZodError-like object coming from a different Zod instance
+    const fake = {
+      name: "ZodError",
+      issues: [
+        {
+          code: "invalid_type",
+          path: [],
+          expected: "string",
+          received: "number",
+          message: "Expected string, received number",
+        },
+      ],
+    } as unknown;
+
+    expect(isZodError(fake)).toBe(true);
+
+    const almost = { name: "ZodError" } as unknown;
+    expect(isZodError(almost)).toBe(false);
+  });
+
   it("summarizeZodIssue handles invalid_type and invalid_enum_value", () => {
     const schema1 = z.string();
     const res1 = schema1.safeParse(42);
     if (res1.success) throw new Error("Expected failure");
-    const s1 = summarizeZodIssue(res1.error.issues[0]);
+    const issue1 = res1.error.issues[0];
+    if (issue1 === undefined) throw new Error("Expected an issue");
+    const s1 = summarizeZodIssue(issue1);
     expect(s1).toContain("(root): Expected string, received number");
 
     const schema2 = z.object({ type: z.enum(["BUY", "SELL"]) });
     const res2 = schema2.safeParse({ type: "HOGE" });
     if (res2.success) throw new Error("Expected failure");
-    const s2 = summarizeZodIssue(res2.error.issues[0]);
+    const issue2 = res2.error.issues[0];
+    if (issue2 === undefined) throw new Error("Expected an issue");
+    const s2 = summarizeZodIssue(issue2);
     expect(s2).toContain(
       "type: Invalid enum value, expected one of: BUY, SELL",
     );

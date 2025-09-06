@@ -112,7 +112,15 @@ function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
 }
 
 export function isZodError(e: unknown): e is ZodError {
-  return e instanceof z.ZodError;
+  // Prefer instanceof when the same Zod instance is used
+  if (e instanceof z.ZodError) return true;
+  // Fallback: duck typing for cross-instance safety
+  const anyE = e as { name?: unknown; issues?: unknown } | null | undefined;
+  return (
+    !!anyE &&
+    anyE.name === "ZodError" &&
+    Array.isArray(anyE.issues)
+  );
 }
 
 export type Layer =
