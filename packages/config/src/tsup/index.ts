@@ -154,7 +154,7 @@ export async function internalEsmPreset(
  */
 export async function publicDualPreset(
   entry: Record<string, string> | undefined = { index: "src/index.ts" },
-  withSourceMap = false,
+  withSourceMap = isProd,
 ) {
   return defineTsupPreset({
     entry,
