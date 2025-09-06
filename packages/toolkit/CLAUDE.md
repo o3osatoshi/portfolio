@@ -1,45 +1,52 @@
 # CLAUDE.md - Toolkit Package
 
-This file provides guidance for the `@o3osatoshi/toolkit` package - shared utilities and helper functions across the monorepo.
+This file provides guidance for the `@o3osatoshi/toolkit` package - shared utilities for error handling and validation across the monorepo.
 
 ## Package Overview
 
-The toolkit package provides common utilities, error handling, and helper functions that can be used across all layers of the application.
+The toolkit package provides error handling utilities, Zod integration helpers, and validation utilities that can be used across all architectural layers. This is a **public npm package** designed for broader community use.
 
 ## Package Structure
 
-- **src/error.ts**: Centralized error handling utilities
+- **src/error.ts**: Centralized error handling utilities with neverthrow integration
+- **src/zod-error.ts**: Zod error transformation utilities
+- **src/zod-parse.ts**: Safe Zod parsing utilities with Result pattern
 - **src/index.ts**: Main export file for all utilities
 
 ## Key Features
 
 ### Error Handling
-- **Standardized Errors**: Consistent error structure across the application
+- **Standardized Errors**: Consistent error structure across applications
 - **Error Factory Functions**: `newError()` function for creating structured errors
 - **Layer Identification**: Errors include layer information (Domain, Application, Infrastructure)
-- **Error Categories**: Different error kinds (Validation, NotFound, etc.)
+- **Error Categories**: Different error kinds (Validation, NotFound, Unauthorized, ServerError)
+- **neverthrow Integration**: Seamless Result pattern support
 
-### Utility Functions
-- Common helper functions that don't belong to specific domain logic
-- Type utilities for enhanced TypeScript support
-- Shared constants and configuration values
+### Zod Integration
+- **Safe Parsing**: `safeParse()` utilities that return Result types
+- **Error Transformation**: Convert Zod errors to standardized error format
+- **Validation Helpers**: Common validation patterns and utilities
+- **Type Safety**: Full TypeScript integration with Zod schemas
 
 ## Development Commands
 
 **Build the package:**
 ```bash
-pnpm build    # Build with TypeScript compiler
-pnpm dev      # Watch mode for development
+pnpm build         # Build with tsup (ESM + CJS + DTS)
+pnpm dev           # Watch mode for development
+pnpm typecheck     # TypeScript type checking
 ```
 
 **Testing:**
 ```bash
-pnpm test     # Run utility tests
+pnpm test          # Run tests with Vitest
+pnpm test:run      # Same as pnpm test
 ```
 
-**Clean up:**
+**Publishing:**
 ```bash
-pnpm clean    # Remove dist directory
+pnpm clean         # Remove dist directory
+pnpm prepublishOnly # Full build, test, and typecheck pipeline
 ```
 
 ## Error Handling Pattern
@@ -80,16 +87,48 @@ const dbError = newError({
 - Errors can be wrapped in `err()` for Result types
 - Consistent error handling across all application layers
 
+## Zod Integration Utilities
+
+### Safe Parsing
+```typescript
+import { safeParse } from '@o3osatoshi/toolkit';
+import { z } from 'zod';
+
+const schema = z.string();
+const result = safeParse(schema, "valid string");
+// Returns Result<string, Error>
+```
+
+### Error Transformation
+```typescript
+import { zodErrorToAppError } from '@o3osatoshi/toolkit';
+
+// Converts ZodError to standardized ApplicationError
+const appError = zodErrorToAppError(zodError, 'ValidateInput');
+```
+
 ## Package Configuration
 
-- **Type**: ESM module with TypeScript support
-- **Dependencies**: Minimal dependencies for maximum compatibility
-- **Exports**: Single entry point with all utilities
-- **Build**: Fast bundling with tsup
+- **Type**: Dual ESM + CommonJS module with full TypeScript support
+- **Dependencies**: `neverthrow` and `zod` for core functionality
+- **Exports**: Single entry point with comprehensive type definitions
+- **Build**: Fast bundling with tsup using custom preset
+- **Target**: Node.js 22+ (specified in engines)
+- **Distribution**: Public npm package (`@o3osatoshi/toolkit`)
+
+## Publication Information
+
+- **Repository**: https://github.com/o3osatoshi/portfolio
+- **Package Directory**: `packages/toolkit`
+- **License**: MIT
+- **Keywords**: `zod`, `neverthrow`, `error-handling`, `validation`, `result`, `typescript`
+- **Homepage**: https://github.com/o3osatoshi/portfolio#readme
 
 ## Important Notes
 
-- **Framework Agnostic**: No external framework dependencies
-- **Layer Neutral**: Can be used by any architectural layer
-- **Error Consistency**: Provides standard error format for the entire application
+- **Framework Agnostic**: No external framework dependencies beyond core utilities
+- **Layer Neutral**: Can be used by any architectural layer (Domain, Application, Infrastructure)
+- **Error Consistency**: Provides standard error format across applications
 - **Type Safety**: Full TypeScript support with proper type exports
+- **Public Package**: Designed for community use with proper npm metadata
+- **Zero Breaking Changes**: Semantic versioning and backward compatibility focus
