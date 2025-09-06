@@ -17,7 +17,7 @@
     "db:seed:prod": "npm run with:prod -- tsx scripts/seed.ts",
     "format": "prisma format",
     "generate": "prisma generate",
-    "preinstall": "npm run generate",
+    "postinstall": "npm run generate",
     "migrate:deploy": "npm run with:prod -- prisma migrate deploy",
     "migrate:dev": "npm run with:dev -- prisma migrate dev",
     "migrate:status": "npm run with:dev -- prisma migrate status",
@@ -47,11 +47,13 @@
     "@types/node": "catalog:",
     "dotenv-cli": "catalog:",
     "prisma": "^6.7.0",
-    "rimraf": "catalog:",
     "testcontainers": "^11.5.1",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "prisma": {
     "schema": "./schema"
