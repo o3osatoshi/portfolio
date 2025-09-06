@@ -7,19 +7,15 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@o3osatoshi/ui/components/avatar";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@o3osatoshi/ui/components/dropdown-menu";
-import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@o3osatoshi/ui/components/sidebar";
+} from "@o3osatoshi/ui";
 
 export function NavUser() {
   const { isMobile } = useSidebar();

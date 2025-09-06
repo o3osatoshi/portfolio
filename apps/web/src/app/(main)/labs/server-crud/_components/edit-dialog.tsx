@@ -1,12 +1,12 @@
 "use client";
 
 import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
+import type { Transaction } from "@/lib/validation";
+import { updateTransactionSchema } from "@/lib/validation";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Message } from "@o3osatoshi/ui/components/base/message";
-import { Button } from "@o3osatoshi/ui/components/button";
-import { FormInput } from "@o3osatoshi/ui/components/case/form-input";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -14,9 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@o3osatoshi/ui/components/dialog";
-import type { Transaction } from "@/lib/validation";
-import { updateTransactionSchema } from "@/lib/validation";
+  FormInput,
+  Message,
+} from "@o3osatoshi/ui";
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";

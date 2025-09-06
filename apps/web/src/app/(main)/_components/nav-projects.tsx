@@ -15,16 +15,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@o3osatoshi/ui/components/dropdown-menu";
-import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@o3osatoshi/ui/components/sidebar";
+} from "@o3osatoshi/ui";
 
 export function NavProjects({
   projects,

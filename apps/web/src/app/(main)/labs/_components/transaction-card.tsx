@@ -1,5 +1,6 @@
 import DeleteButton from "@/app/(main)/labs/server-crud/_components/delete-button";
 import EditDialog from "@/app/(main)/labs/server-crud/_components/edit-dialog";
+import type { Transaction } from "@/lib/validation";
 import {
   Card,
   CardAction,
@@ -7,8 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@o3osatoshi/ui/components/card";
-import type { Transaction } from "@/lib/validation";
+} from "@o3osatoshi/ui";
 
 interface Props {
   transaction: Transaction;

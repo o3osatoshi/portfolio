@@ -1,9 +1,7 @@
 "use client";
 
+import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Heading } from "@o3osatoshi/ui/components/base/heading";
-import { Card, CardContent } from "@o3osatoshi/ui/components/card";
-import { AmountInput } from "@o3osatoshi/ui/components/case/amount-input";
 import type * as React from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Web3Provider } from "@/app/(main)/labs/web3-crud/_components/web3-provider";

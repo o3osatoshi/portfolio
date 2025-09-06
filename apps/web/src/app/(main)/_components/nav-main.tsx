@@ -5,8 +5,6 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@o3osatoshi/ui/components/collapsible";
-import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuAction,
@@ -15,7 +13,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@o3osatoshi/ui/components/sidebar";
+} from "@o3osatoshi/ui";
 
 export function NavMain({
   items,
