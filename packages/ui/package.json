@@ -7,24 +7,20 @@
   ],
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./globals.css": "./src/styles/globals.css",
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts"
   },
   "files": [
-    "dist",
+    "src/styles",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch"
+    "prepublishOnly": "pnpm typecheck",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.9",
@@ -39,8 +35,6 @@
     "clsx": "^2.1.1",
     "lucide-react": "catalog:",
     "next-themes": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.9"
   },

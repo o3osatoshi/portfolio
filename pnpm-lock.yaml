@@ -451,10 +451,10 @@ importers:
         specifier: 'catalog:'
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
-        specifier: 'catalog:'
+        specifier: ^18 || ^19
         version: 19.1.0
       react-dom:
-        specifier: 'catalog:'
+        specifier: ^18 || ^19
         version: 19.1.0(react@19.1.0)
       tailwind-merge:
         specifier: ^3.2.0
