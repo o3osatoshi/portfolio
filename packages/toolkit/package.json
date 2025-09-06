@@ -21,8 +21,8 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "neverthrow": "catalog:",
