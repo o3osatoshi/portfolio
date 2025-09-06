@@ -10,10 +10,6 @@
       "import": "./dist/tsup/index.js",
       "default": "./dist/tsup/index.js"
     },
-    "./vitest/base": {
-      "import": "./dist/vitest/base.js",
-      "default": "./dist/vitest/base.js"
-    },
     "./tsconfig/*": "./tsconfig/*"
   },
   "types": "./dist/tsup/index.d.ts",
