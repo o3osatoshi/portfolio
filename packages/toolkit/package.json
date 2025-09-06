@@ -2,6 +2,16 @@
   "name": "@o3osatoshi/toolkit",
   "version": "0.0.0",
   "private": false,
+  "homepage": "https://github.com/o3osatoshi/portfolio#readme",
+  "bugs": {
+    "url": "https://github.com/o3osatoshi/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o3osatoshi/portfolio.git",
+    "directory": "packages/toolkit"
+  },
+  "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "exports": {
@@ -12,6 +22,7 @@
       "default": "./dist/index.js"
     }
   },
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "README.md",
@@ -21,7 +32,8 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
-    "test": "vitest",
+    "prepublishOnly": "pnpm clean && pnpm build && tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
     "test:run": "vitest run"
   },
   "dependencies": {
@@ -35,6 +47,9 @@
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
