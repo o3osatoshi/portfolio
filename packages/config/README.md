@@ -1,10 +1,9 @@
 # @o3osatoshi/config
 
-Shared configuration presets for TypeScript projects.
+Shared configuration for my TypeScript projects.
 
-- tsup presets for libraries and multi‑entry builds
-- TypeScript `tsconfig` bases for Node, React, and Next.js
-- Vitest base configuration
+- tsup presets (library/dual-format/browser/CLI/prisma/multi-entry/functions)
+- TypeScript tsconfig bases (base/node/browser/next/functions/storybook)
 
 ## Installation
 
@@ -14,67 +13,83 @@ pnpm add -D @o3osatoshi/config
 
 ## Usage
 
-### tsup
+## tsup presets
+
+Import presets from `@o3osatoshi/config/tsup` and export a config in `tsup.config.mjs`.
+
 ```ts
-import { libraryPreset, dualFormatPreset, multiEntryPreset } from "@o3osatoshi/config/tsup";
+import {
+  internalEsmPreset,
+  publicDualPreset,
+  browserPreset,
+  nodeCliPreset,
+  prismaPreset,
+  multiEntryEsmPreset,
+  functionsPreset,
+} from "@o3osatoshi/config/tsup";
 
-// Simple ESM library build with types
-export default libraryPreset();
+// 1) Internal library (ESM only)
+export default await internalEsmPreset({ index: "src/index.ts" });
 
-// Or dual ESM/CJS output
-// export default dualFormatPreset();
+// 2) Public library (ESM + CJS, with DTS). withSourceMap = false by default
+// export default await publicDualPreset({ index: "src/index.ts" }, false);
 
-// Or multiple entry points
-// export default multiEntryPreset({ index: "src/index.ts", cli: "src/cli.ts" });
+// 3) Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
+// export default await browserPreset({ index: "src/index.tsx" }, { dts: true });
+
+// 4) Node CLI (CJS with shebang)
+// export default await nodeCliPreset({ cli: "src/cli.ts" });
+
+// 5) Prisma helpers (transpile only; prisma client stays external)
+// export default await prismaPreset({ index: "src/index.ts" });
+
+// 6) Multi‑entry ESM (internal)
+// export default await multiEntryEsmPreset({ index: "src/index.ts", util: "src/util.ts" });
+
+// 7) Firebase Functions (ESM, Node target). Adjust target per runtime.
+// export default await functionsPreset({ index: "src/index.ts" });
 ```
 
-### tsconfig
-Pick a base that fits your project:
+Notes
+- Externals are automatically derived from dependencies/peerDependencies; common React/Next externals are also considered. The browser preset explicitly marks React/Next as externals for UI packages.
+- `publicDualPreset` accepts a boolean `withSourceMap` (default false).
+- You can pass through `env`, `banner`, and `external` as needed.
+
+## tsconfig bases
+Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).
 
 ```jsonc
 // Node/Library (default)
 {
-  "extends": "@o3osatoshi/config/tsconfig/base.json"
-}
-```
-
-```jsonc
-// React application
-{
-  "extends": "@o3osatoshi/config/tsconfig/react-app.json"
-}
-```
-
-```jsonc
-// React library
-{
-  "extends": "@o3osatoshi/config/tsconfig/react-library.json"
+  "extends": "@o3osatoshi/config/tsconfig/node.json"
 }
 ```
 
 ```jsonc
 // Next.js app
 {
-  "extends": "@o3osatoshi/config/tsconfig/nextjs.json"
+  "extends": "@o3osatoshi/config/tsconfig/next.json"
 }
 ```
 
-### Vitest
-```ts
-import base from "@o3osatoshi/config/vitest/base";
-export default base;
-
-// To customize:
-// import { defineConfig } from "vitest/config";
-// export default defineConfig({
-//   ...base,
-//   test: { ...base.test, coverage: { enabled: true } },
-// });
+```jsonc
+// Firebase Functions (typecheck‑only; output is handled by your bundler)
+{
+  "extends": "@o3osatoshi/config/tsconfig/functions.json"
+}
 ```
+
+```jsonc
+// Storybook (React + Vite)
+{
+  "extends": "@o3osatoshi/config/tsconfig/storybook.json"
+}
+```
+
 
 ## Publishing
 
 - Build: `pnpm build` (generates `dist/`)
 - Publish to npm: `pnpm publish --access public`
 
-Consumers only need to add `@o3osatoshi/config` as a dev dependency to use the shared presets and configs.
+Add `@o3osatoshi/config` as a dev dependency to consume the tsup presets and tsconfig bases.
