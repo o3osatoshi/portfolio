@@ -1,4 +1,4 @@
-import { Button } from "@o3osatoshi/ui/components/button";
+import { Button } from "@o3osatoshi/ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
