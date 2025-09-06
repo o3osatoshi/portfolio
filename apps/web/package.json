@@ -31,10 +31,12 @@
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.5",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "pino-pretty": "^13.0.0",
+    "tailwindcss": "catalog:",
     "typescript": "catalog:"
   }
 }

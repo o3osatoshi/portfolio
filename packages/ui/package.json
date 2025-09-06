@@ -13,7 +13,6 @@
       "default": "./dist/index.js"
     },
     "./globals.css": "./src/styles/globals.css",
-    "./postcss.config": "./postcss.config.mjs",
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts"
@@ -47,12 +46,11 @@
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
-    "@tailwindcss/postcss": "^4.1.5",
     "@turbo/gen": "^2.5.2",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "tailwindcss": "^4.1.5",
+    "tailwindcss": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:"
   },
