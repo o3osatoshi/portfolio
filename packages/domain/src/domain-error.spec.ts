@@ -1,8 +1,5 @@
-import { describe, it, expect } from "vitest";
-import {
-  domainValidationError,
-  newDomainError,
-} from "../domain-error";
+import { describe, expect, it } from "vitest";
+import { domainValidationError, newDomainError } from "./domain-error";
 
 describe("domain-error", () => {
   it("newDomainError shapes name and message", () => {
@@ -23,4 +20,3 @@ describe("domain-error", () => {
     expect(err.message).toContain("Parse failed");
   });
 });
-
