@@ -6,8 +6,6 @@
 
     "target": "ES2022",
     "lib": ["ES2022"],
-    "types": ["node"],
-
-    "noEmit": true
+    "types": ["node"]
   }
 }
