@@ -39,6 +39,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
+    "dev": "tsup --watch",
     "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
