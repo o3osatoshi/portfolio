@@ -120,7 +120,25 @@ export function newError({
   ].filter(Boolean);
   const message = messages.join(" ");
 
-  const err: Error = new Error(message || name);
+  // Try to attach native `cause` (ErrorOptions) when available
+  let err: Error;
+  try {
+    // Node >=16 supports ErrorOptions; TS may not know, so cast
+    err = new (Error as unknown as new (m?: string, o?: { cause?: unknown }) => Error)(
+      message || name,
+      cause !== undefined ? { cause } : undefined,
+    );
+  } catch {
+    err = new Error(message || name);
+    // As a fallback, attach cause as a non-enumerable property to avoid noisy JSON
+    if (cause !== undefined) {
+      try {
+        Object.defineProperty(err, "cause", { value: cause, enumerable: false });
+      } catch {
+        // ignore if defineProperty fails
+      }
+    }
+  }
   err.name = name;
 
   return err;
