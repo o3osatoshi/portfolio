@@ -2,6 +2,23 @@
   "name": "@o3osatoshi/config",
   "version": "0.0.0",
   "private": false,
+  "description": "Shared tsup presets and TypeScript tsconfig bases for personal projects.",
+  "keywords": [
+    "tsup",
+    "tsconfig",
+    "typescript",
+    "build",
+    "config"
+  ],
+  "homepage": "https://github.com/o3osatoshi/portfolio#readme",
+  "bugs": {
+    "url": "https://github.com/o3osatoshi/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o3osatoshi/portfolio.git",
+    "directory": "packages/config"
+  },
   "sideEffects": false,
   "type": "module",
   "exports": {
@@ -22,20 +39,21 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
-    "prepublishOnly": "pnpm clean && pnpm build && pnpm typecheck",
+    "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "rimraf": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "tsup": "^8.4.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.1.3"
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
