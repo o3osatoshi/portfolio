@@ -3,7 +3,17 @@
   "version": "0.0.0",
   "private": false,
   "description": "ETH contract types and hooks (generated)",
-  "keywords": [],
+  "keywords": [
+    "ethereum",
+    "eth",
+    "web3",
+    "wagmi",
+    "viem",
+    "abi",
+    "contracts",
+    "hooks",
+    "generated"
+  ],
   "homepage": "https://github.com/o3osatoshi/portfolio/packages/eth",
   "bugs": {
     "url": "https://github.com/o3osatoshi/portfolio/issues"
@@ -34,13 +44,10 @@
     "clean": "rimraf dist",
     "dev": "tsup --watch",
     "generate": "dotenv -e .env.local -- wagmi generate",
-    "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test:run && NODE_ENV=production pnpm build",
+    "prepublishOnly": "pnpm clean && pnpm generate && pnpm typecheck && NODE_ENV=production pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "viem": "catalog:",
-    "wagmi": "catalog:"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
@@ -48,7 +55,9 @@
     "dotenv-cli": "catalog:",
     "rimraf": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "viem": "catalog:",
+    "wagmi": "catalog:"
   },
   "engines": {
     "node": ">=22"
