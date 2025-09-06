@@ -2,6 +2,14 @@
   "name": "@o3osatoshi/toolkit",
   "version": "0.0.0",
   "private": false,
+  "keywords": [
+    "zod",
+    "neverthrow",
+    "error-handling",
+    "validation",
+    "result",
+    "typescript"
+  ],
   "homepage": "https://github.com/o3osatoshi/portfolio#readme",
   "bugs": {
     "url": "https://github.com/o3osatoshi/portfolio/issues"
@@ -32,9 +40,10 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
-    "prepublishOnly": "pnpm clean && pnpm build && tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test:run && NODE_ENV=production pnpm build",
     "test": "vitest run",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "neverthrow": "catalog:",
