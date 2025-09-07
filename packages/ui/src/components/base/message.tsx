@@ -1,4 +1,4 @@
-import { Alert, AlertTitle } from "@o3osatoshi/ui";
+import { Alert, AlertTitle } from "@o3osatoshi/ui/components";
 import { AlertCircle } from "lucide-react";
 
 interface Props {

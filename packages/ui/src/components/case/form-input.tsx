@@ -1,4 +1,5 @@
-import { Input, Label, Message, cn } from "@o3osatoshi/ui";
+import { Input, Label, Message } from "@o3osatoshi/ui/components";
+import { cn } from "@o3osatoshi/ui/lib/utils";
 import type * as React from "react";
 
 type Props = React.ComponentProps<"input"> & {

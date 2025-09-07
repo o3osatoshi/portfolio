@@ -19,9 +19,9 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-  cn,
-  useIsMobile,
-} from "@o3osatoshi/ui";
+} from "@o3osatoshi/ui/components";
+import { useIsMobile } from "@o3osatoshi/ui/hooks";
+import { cn } from "@o3osatoshi/ui/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

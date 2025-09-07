@@ -2,24 +2,43 @@
   "name": "@o3osatoshi/ui",
   "version": "0.0.0",
   "private": false,
+  "keywords": [],
+  "homepage": "https://github.com/o3osatoshi/portfolio/packages/ui",
+  "bugs": {
+    "url": "https://github.com/o3osatoshi/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o3osatoshi/portfolio.git",
+    "directory": "packages/ui"
+  },
   "sideEffects": [
     "*.css"
   ],
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/entry.d.ts",
+      "import": "./dist/entry.js",
+      "default": "./dist/entry.js"
+    },
+    "./ts": "./src/index.ts",
     "./globals.css": "./src/styles/globals.css",
-    "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./hooks/*": "./src/hooks/*.ts",
+    "./lib/*": "./src/lib/*.ts"
   },
+  "types": "./dist/entry.d.ts",
   "files": [
     "src/styles",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "prepublishOnly": "pnpm typecheck",
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
@@ -44,6 +63,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "rimraf": "catalog:",
     "tailwindcss": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:"
