@@ -15,7 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@o3osatoshi/ui";
+} from "@o3osatoshi/ui/src";
 
 export function NavUser() {
   const { isMobile } = useSidebar();

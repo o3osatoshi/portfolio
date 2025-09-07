@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@o3osatoshi/ui";
+} from "@o3osatoshi/ui/src";
 
 export function NavSecondary({
   items,

@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
   Separator,
   SidebarTrigger,
-} from "@o3osatoshi/ui";
+} from "@o3osatoshi/ui/src";
 import { usePathname } from "next/navigation";
 import React from "react";
 

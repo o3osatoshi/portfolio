@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@o3osatoshi/ui";
+} from "@o3osatoshi/ui/src";
 
 interface Props {
   transaction: Transaction;

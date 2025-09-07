@@ -16,7 +16,7 @@ import {
   DialogTrigger,
   FormInput,
   Message,
-} from "@o3osatoshi/ui";
+} from "@o3osatoshi/ui/src";
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";
