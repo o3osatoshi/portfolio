@@ -1,5 +1,5 @@
 import { Result, ResultAsync } from "neverthrow";
-import type { ZodTypeAny, z } from "zod";
+import type { z } from "zod";
 import { type Layer, newZodError } from "./zod-error";
 
 /**
@@ -18,7 +18,7 @@ import { type Layer, newZodError } from "./zod-error";
  * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
  * const res = parseUser({ name: "alice" }); // Result<User, Error>
  */
-export function parseWith<T extends ZodTypeAny>(
+export function parseWith<T extends z.ZodType>(
   schema: T,
   ctx: { action: string; layer?: Layer },
 ): (input: unknown) => Result<z.infer<T>, Error> {
@@ -45,7 +45,7 @@ export function parseWith<T extends ZodTypeAny>(
  * const parseToken = parseAsyncWith(tokenSchema, { action: "ParseToken", layer: "Auth" });
  * const res = await parseToken({ token: "ok" }); // ResultAsync<Token, Error>
  */
-export function parseAsyncWith<T extends ZodTypeAny>(
+export function parseAsyncWith<T extends z.ZodType>(
   schema: T,
   ctx: { action: string; layer?: Layer },
 ): (input: unknown) => ResultAsync<z.infer<T>, Error> {

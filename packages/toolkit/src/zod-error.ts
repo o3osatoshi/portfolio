@@ -1,76 +1,101 @@
-import { type ZodError, type ZodIssue, ZodIssueCode, z } from "zod";
+import { type ZodError, type ZodIssue, z } from "zod";
 import { newError as baseNewError } from "./error";
 
 function issueMessage(issue: ZodIssue): string {
   switch (issue.code) {
-    case ZodIssueCode.invalid_type: {
-      return `Expected ${String(issue.expected)}, received ${String(issue.received)}`;
+    case "invalid_type": {
+      const expected = String(issue.expected);
+      // v4 does not always include `input`; prefer parsing the locale message.
+      if (expected === "date") return "Invalid date";
+      const msg = issue.message ?? "";
+      const m = /received\s+([^,]+)$/i.exec(msg);
+      const received = m
+        ? m[1]?.trim()
+        : issue.input !== undefined
+          ? z.util.getParsedType(issue.input)
+          : "unknown";
+      return `Expected ${expected}, received ${received}`;
     }
-    case ZodIssueCode.invalid_literal: {
-      return `Invalid literal, expected ${JSON.stringify(issue.expected)}`;
+    case "invalid_value": {
+      const values = issue.values;
+      if (values.length <= 1) {
+        const v = values[0];
+        return `Invalid literal, expected ${JSON.stringify(v)}`;
+      }
+      return `Invalid enum value, expected one of: ${values.join(", ")}`;
     }
-    case ZodIssueCode.unrecognized_keys: {
-      return `Unrecognized keys: ${(issue.keys || []).join(", ")}`;
+    case "unrecognized_keys": {
+      return `Unrecognized keys: ${issue.keys.join(", ")}`;
     }
-    case ZodIssueCode.invalid_union: {
-      const first = issue.unionErrors?.[0]?.issues?.[0];
+    case "invalid_union": {
+      // If discriminator provided, use it directly
+      if (issue.discriminator) {
+        const valueOptions = new Set<string>();
+        for (const branch of issue.errors) {
+          for (const sub of branch) {
+            if (sub.code === "invalid_value") {
+              // biome-ignore lint/complexity/noForEach: since the process is simple
+              sub.values.forEach((v) => valueOptions.add(String(v)));
+            }
+          }
+        }
+        const opts = Array.from(valueOptions).join(", ");
+        return `Invalid discriminator value${opts ? ` (expected one of: ${opts})` : ""}`;
+      }
+      // unionFallback case (no discriminator field on the top-level issue)
+      let candidateKey: string | undefined;
+      const allowed = new Set<string>();
+      for (const branch of issue.errors) {
+        for (const sub of branch) {
+          if (
+            sub.code === "invalid_value" &&
+            sub.path.length === 1 &&
+            typeof sub.path[0] === "string"
+          ) {
+            candidateKey = sub.path[0];
+            // biome-ignore lint/complexity/noForEach: since the process is simple
+            sub.values.forEach((v) => allowed.add(String(v)));
+          }
+        }
+      }
+      if (candidateKey && allowed.size > 0) {
+        const opts = Array.from(allowed).join(", ");
+        return `Invalid discriminator value${opts ? ` (expected one of: ${opts})` : ""}`;
+      }
+      const first = issue.errors?.[0]?.[0];
       const hint = first ? ` (${summarizeZodIssue(first)})` : "";
       return `Invalid value for union type${hint}`;
     }
-    case ZodIssueCode.invalid_union_discriminator: {
-      const opts = Array.isArray(issue.options)
-        ? issue.options.join(", ")
-        : String(issue.options);
-      const received = (issue as unknown as { received?: unknown }).received;
-      return received !== undefined
-        ? `Invalid discriminator value: ${String(received)} (expected one of: ${opts})`
-        : `Invalid discriminator value (expected one of: ${opts})`;
+    case "invalid_key": {
+      return `Invalid key in ${issue.origin}`;
     }
-    case ZodIssueCode.invalid_enum_value: {
-      const opts = Array.isArray(issue.options)
-        ? issue.options.join(", ")
-        : String(issue.options);
-      return `Invalid enum value, expected one of: ${opts}`;
+    case "invalid_element": {
+      return `Invalid value in ${issue.origin}`;
     }
-    case ZodIssueCode.invalid_arguments: {
-      return "Invalid function arguments";
+    case "invalid_format": {
+      // Keep legacy-style wording used in tests
+      return `Invalid string (${issue.format})`;
     }
-    case ZodIssueCode.invalid_return_type: {
-      return "Invalid function return type";
-    }
-    case ZodIssueCode.invalid_date: {
-      return "Invalid date";
-    }
-    case ZodIssueCode.invalid_string: {
-      if (typeof issue.validation === "object") return "Invalid string";
-      return `Invalid string (${issue.validation})`;
-    }
-    case ZodIssueCode.too_small: {
-      const what = issue.type;
+    case "too_small": {
+      const what = issue.origin;
       const min = issue.minimum;
       const incl = issue.inclusive ? "(inclusive)" : "";
       return `Too small ${what}: min ${min} ${incl}`.trim();
     }
-    case ZodIssueCode.too_big: {
-      const what = issue.type;
+    case "too_big": {
+      const what = issue.origin;
       const max = issue.maximum;
       const incl = issue.inclusive ? "(inclusive)" : "";
       return `Too big ${what}: max ${max} ${incl}`.trim();
     }
-    case ZodIssueCode.not_multiple_of: {
-      return `Not a multiple of ${issue.multipleOf}`;
+    case "not_multiple_of": {
+      return `Not a multiple of ${issue.divisor}`;
     }
-    case ZodIssueCode.not_finite: {
-      return "Number must be finite";
-    }
-    case ZodIssueCode.custom: {
+    case "custom": {
       return issue.message || "Invalid value";
     }
-    case ZodIssueCode.invalid_intersection_types: {
-      return "Invalid intersection types";
-    }
     default: {
-      return (issue as { message?: string }).message || "Invalid input";
+      return "Invalid input";
     }
   }
 }
@@ -88,24 +113,21 @@ export function summarizeZodError(err: ZodError): string {
 function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
   const i = issues[0];
   switch (i?.code) {
-    case ZodIssueCode.unrecognized_keys:
+    case "unrecognized_keys":
       return "Remove unknown fields from the payload.";
-    case ZodIssueCode.invalid_type:
+    case "invalid_type":
+      if (i.expected === "date") return "Provide a valid date value.";
       return "Check field types match the schema.";
-    case ZodIssueCode.invalid_enum_value:
+    case "invalid_value":
       return "Use one of the allowed enum values.";
-    case ZodIssueCode.too_small:
+    case "too_small":
       return "Increase value/length to meet the minimum.";
-    case ZodIssueCode.too_big:
+    case "too_big":
       return "Reduce value/length to meet the maximum.";
-    case ZodIssueCode.invalid_string:
+    case "invalid_format":
       return "Ensure string matches the required format.";
-    case ZodIssueCode.invalid_date:
-      return "Provide a valid date value.";
-    case ZodIssueCode.not_multiple_of:
+    case "not_multiple_of":
       return "Adjust value to a valid multiple.";
-    case ZodIssueCode.not_finite:
-      return "Use a finite number.";
     default:
       return undefined;
   }
@@ -114,11 +136,11 @@ function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
 export function isZodError(e: unknown): e is ZodError {
   // Prefer instanceof when the same Zod instance is used
   if (e instanceof z.ZodError) return true;
-  // Fallback: duck typing for cross-instance safety
+  // Fallback: duck typing for cross-instance or core error class
   const anyE = e as { name?: unknown; issues?: unknown } | null | undefined;
   return (
     !!anyE &&
-    anyE.name === "ZodError" &&
+    (anyE.name === "ZodError" || anyE.name === "$ZodError") &&
     Array.isArray(anyE.issues)
   );
 }

@@ -128,11 +128,26 @@ describe("zod-error helpers (with real Zod)", () => {
     expect(summary).toContain("u: Invalid value for union type");
   });
 
-  it("handles invalid_union_discriminator without accessing non-existent received", () => {
+  it("handles invalid_union_discriminator (v4) without listing options", () => {
     const schema = z.discriminatedUnion("type", [
       z.object({ type: z.literal("a"), a: z.string() }),
       z.object({ type: z.literal("b"), b: z.number() }),
     ]);
+    const res = schema.safeParse({ type: "c" });
+    if (!isZodError(res.error)) throw new Error("Expected ZodError");
+    const summary = summarizeZodError(res.error);
+    expect(summary).toContain("Invalid discriminator value");
+  });
+
+  it("invalid_union_discriminator with unionFallback includes expected options", () => {
+    const schema = z.discriminatedUnion(
+      "type",
+      [
+        z.object({ type: z.literal("a"), a: z.string() }),
+        z.object({ type: z.literal("b"), b: z.number() }),
+      ],
+      { unionFallback: true },
+    );
     const res = schema.safeParse({ type: "c" });
     if (!isZodError(res.error)) throw new Error("Expected ZodError");
     const summary = summarizeZodError(res.error);
