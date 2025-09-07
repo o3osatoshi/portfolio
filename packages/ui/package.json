@@ -22,7 +22,7 @@
       "import": "./dist/entry.js",
       "default": "./dist/entry.js"
     },
-    "./ts": "./src/index.ts",
+    "./src": "./src/index.ts",
     "./globals.css": "./src/styles/globals.css",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
