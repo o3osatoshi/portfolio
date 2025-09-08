@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@o3osatoshi/ui/*": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

@@ -18,27 +18,29 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/entry.d.ts",
-      "import": "./dist/entry.js",
-      "default": "./dist/entry.js"
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
     },
-    "./src": "./src/index.ts",
-    "./globals.css": "./src/styles/globals.css",
-    "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts",
-    "./lib/*": "./src/lib/*.ts"
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./globals.css": "./src/styles/globals.css"
   },
-  "types": "./dist/entry.d.ts",
   "files": [
-    "src",
+    "dist",
     "src/styles",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm build:server && pnpm build:client",
+    "build:client": "tsup --config tsup.client.config.mjs",
+    "build:server": "tsup --config tsup.server.config.mjs",
     "clean": "rimraf dist",
-    "dev": "tsup --watch",
+    "dev": "pnpm build --watch",
     "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

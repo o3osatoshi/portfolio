@@ -6,22 +6,20 @@ import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
 import {
-  Button,
-  Input,
   Separator,
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  Skeleton,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@o3osatoshi/ui/components";
-import { useIsMobile } from "@o3osatoshi/ui/hooks";
-import { cn } from "@o3osatoshi/ui/lib/utils";
+} from "@/components/index.client";
+import { Button, Input, Skeleton } from "@/components/index.server";
+import { useIsMobile } from "@/hooks";
+import { cn } from "@/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
