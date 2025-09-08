@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
   cn,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui";
 import { signIn } from "next-auth/react";
 
 export function SigninForm({

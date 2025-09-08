@@ -8,9 +8,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Separator,
-  SidebarTrigger,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui";
+import { Separator, SidebarTrigger } from "@o3osatoshi/ui/client";
 import { usePathname } from "next/navigation";
 import React from "react";
 

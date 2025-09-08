@@ -5,8 +5,8 @@ import type { Transaction } from "@/lib/validation";
 import { updateTransactionSchema } from "@/lib/validation";
 import type { ActionState } from "@/utils/action-state";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, FormInput, Message } from "@o3osatoshi/ui";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -14,9 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  FormInput,
-  Message,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui/client";
 import { Pencil } from "lucide-react";
 import * as React from "react";
 import { type FormEvent, useActionState } from "react";

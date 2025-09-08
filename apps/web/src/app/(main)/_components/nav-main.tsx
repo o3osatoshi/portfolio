@@ -13,7 +13,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui/client";
 
 export function NavMain({
   items,

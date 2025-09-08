@@ -21,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui/client";
 
 export function NavProjects({
   projects,

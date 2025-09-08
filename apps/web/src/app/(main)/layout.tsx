@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/app/(main)/_components/app-sidebar";
 import BreadcrumbHeader from "@/app/(main)/_components/breadcrumb-header";
-import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/src";
+import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/client";
 
 interface Props {
   children: React.ReactNode;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSidebar } from "@o3osatoshi/ui/src";
+import { useSidebar } from "@o3osatoshi/ui/client";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 

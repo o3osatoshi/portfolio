@@ -15,7 +15,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui/client";
 
 const data = {
   navMain: [

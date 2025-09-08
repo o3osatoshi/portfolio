@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   SidebarMenuButton,
   useSidebar,
-} from "@o3osatoshi/ui/src";
+} from "@o3osatoshi/ui/client";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
