@@ -29,31 +29,32 @@ import {
 } from "@o3osatoshi/config/tsup";
 
 // 1) Internal library (ESM only)
-export default await internalEsmPreset({ index: "src/index.ts" });
+export default await internalEsmPreset({ entry: { index: "src/index.ts" } });
 
 // 2) Public library (ESM + CJS, with DTS). withSourceMap = false by default
-// export default await publicDualPreset({ index: "src/index.ts" }, false);
+// export default await publicDualPreset({ entry: { index: "src/index.ts" }, sourcemap: false });
 
 // 3) Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
-// export default await browserPreset({ index: "src/index.tsx" }, { dts: true });
+// export default await browserPreset({ entry: { index: "src/index.tsx" }, dts: true });
 
 // 4) Node CLI (CJS with shebang)
-// export default await nodeCliPreset({ cli: "src/cli.ts" });
+// export default await nodeCliPreset({ entry: { cli: "src/cli.ts" } });
 
 // 5) Prisma helpers (transpile only; prisma client stays external)
-// export default await prismaPreset({ index: "src/index.ts" });
+// export default await prismaPreset({ entry: { index: "src/index.ts" } });
 
 // 6) Multi‑entry ESM (internal)
-// export default await multiEntryEsmPreset({ index: "src/index.ts", util: "src/util.ts" });
+// export default await multiEntryEsmPreset({ entry: { index: "src/index.ts", util: "src/util.ts" } });
 
 // 7) Firebase Functions (ESM, Node target). Adjust target per runtime.
-// export default await functionsPreset({ index: "src/index.ts" });
+// export default await functionsPreset({ entry: { index: "src/index.ts" } });
 ```
 
 Notes
 - Externals are automatically derived from dependencies/peerDependencies; common React/Next externals are also considered. The browser preset explicitly marks React/Next as externals for UI packages.
-- `publicDualPreset` accepts a boolean `withSourceMap` (default false).
-- You can pass through `env`, `banner`, and `external` as needed.
+- Each preset now accepts a single `opts: PresetOptions` and sets defaults in the preset itself.
+- `publicDualPreset` enables `sourcemap` by default in production; pass `{ sourcemap: false }` to disable.
+- You can pass through `env`, `banner`, `external`, `outDir`, and `onSuccess` as needed.
 
 ## tsconfig bases
 Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).

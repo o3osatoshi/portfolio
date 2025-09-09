@@ -5,20 +5,8 @@ import { type Options, defineConfig } from "tsup";
 /**
  * Build-time heuristics
  */
-
 const isCI = !!process.env["CI"];
 const isProd = process.env["NODE_ENV"] === "production" || isCI;
-
-/**
- * Defaults for consistent configuration
- */
-const DEFAULTS = {
-  target: "es2022",
-  platform: "node",
-  sourcemap: false,
-  minify: false,
-  clean: true,
-} as const;
 
 /**
  * Package.json structure for type safety
@@ -26,7 +14,6 @@ const DEFAULTS = {
 interface PackageJson {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
-  optionalDependencies?: Record<string, string>;
 }
 
 /**
@@ -44,7 +31,6 @@ function autoExternals(pkgDir = process.cwd()): string[] {
     const ext = new Set<string>([
       ...Object.keys(pkg.dependencies ?? {}),
       ...Object.keys(pkg.peerDependencies ?? {}),
-      ...Object.keys(pkg.optionalDependencies ?? {}),
     ]);
 
     // Common always-externals for UI/libs (avoid double-bundling)
@@ -71,61 +57,6 @@ function findNearestPackageJson(dir: string): string | null {
   return null;
 }
 
-/**
- * Shared defaults:
- * - ESM first
- * - tree-shaken, minimal out
- * - no sourcemap / no minify / no dts by default for monorepo-internal speed & size
- *   (override per-preset when publishing)
- */
-export type PresetOptions = {
-  entry?: Options["entry"];
-  format?: Options["format"];
-  dts?: boolean;
-  target?: Options["target"];
-  external?: Options["external"]; // allow string | RegExp
-  platform?: Options["platform"];
-  minify?: boolean;
-  splitting?: boolean;
-  sourcemap?: boolean;
-  clean?: boolean;
-  banner?: Options["banner"];
-  env?: Options["env"];
-  bundle?: Options["bundle"];
-};
-
-export async function defineTsupPreset(opts: PresetOptions = {}) {
-  // Normalize commonly reused values
-  const format = opts.format ?? ["esm"];
-
-  const external: NonNullable<Options["external"]> = [
-    ...autoExternals(),
-    ...((opts.external ?? []) as NonNullable<Options["external"]>),
-  ];
-
-  return defineConfig({
-    entry: opts.entry ?? { index: "src/index.ts" },
-    format,
-    dts: !!opts.dts,
-    sourcemap: opts.sourcemap ?? DEFAULTS.sourcemap,
-    clean: opts.clean ?? DEFAULTS.clean,
-    treeshake: true,
-    minify: opts.minify ?? DEFAULTS.minify,
-    splitting:
-      opts.splitting ?? (Array.isArray(format) && format.includes("esm")),
-    target: opts.target ?? DEFAULTS.target,
-    external,
-    platform: opts.platform ?? DEFAULTS.platform,
-    ...(opts.env ? { env: opts.env } : {}),
-    // Pass banner directly to tsup; it forwards to esbuild as needed
-    ...(opts.banner ? { banner: opts.banner } : {}),
-    // Allow explicit bundle control when needed (e.g., Prisma preset)
-    ...(typeof opts.bundle !== "undefined" ? { bundle: opts.bundle } : {}),
-    // Fastest dev feedback
-    ...(!isCI ? { onSuccess: "echo \u2705 tsup build finished" } : {}),
-  });
-}
-
 /* ----------------------------- Presets ---------------------------------- */
 
 /**
@@ -133,15 +64,23 @@ export async function defineTsupPreset(opts: PresetOptions = {}) {
  * - ESM only, no dts, no sourcemap, no minify
  * - fastest for day-to-day development
  */
-export async function internalEsmPreset(
-  entry: Record<string, string> | undefined = { index: "src/index.ts" },
-) {
-  return defineTsupPreset({
-    entry,
-    format: ["esm"],
-    dts: false,
-    splitting: true,
-    // All other values use DEFAULTS
+export async function internalEsmPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { index: "src/index.ts" },
+    format: opts.format ?? ["esm"],
+    dts: opts.dts ?? false,
+    target: opts.target ?? "es2022",
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    minify: opts.minify ?? false,
+    splitting: opts.splitting ?? true,
+    clean: opts.clean ?? true,
+    external: [
+      ...autoExternals(),
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
   });
 }
 
@@ -150,18 +89,23 @@ export async function internalEsmPreset(
  * - ESM + CJS, DTS on, still treeshake
  * - sourcemap off by default (turn on if you really need it)
  */
-export async function publicDualPreset(
-  entry: Record<string, string> | undefined = { index: "src/index.ts" },
-  withSourceMap = isProd,
-) {
-  return defineTsupPreset({
-    entry,
-    format: ["esm", "cjs"],
-    dts: true,
-    sourcemap: withSourceMap,
-    minify: isProd, // minify on CI/production
-    splitting: true,
-    // target and platform use DEFAULTS
+export async function publicDualPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { index: "src/index.ts" },
+    format: opts.format ?? ["esm", "cjs"],
+    dts: opts.dts ?? true,
+    target: opts.target ?? "es2022",
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? isProd,
+    minify: opts.minify ?? false,
+    splitting: opts.splitting ?? true,
+    clean: opts.clean ?? true,
+    external: [
+      ...autoExternals(),
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
   });
 }
 
@@ -170,19 +114,26 @@ export async function publicDualPreset(
  * - ESM only, browser platform, React externals, DTS optional (usually not needed)
  * - preserve JSX transform via esbuild default; Next handles it later
  */
-export async function browserPreset(
-  entry: Record<string, string> | undefined = { index: "src/index.tsx" },
-  options: { dts?: boolean } = {},
-) {
-  return defineTsupPreset({
-    entry,
-    format: ["esm"],
-    dts: !!options.dts,
-    platform: "browser",
-    // React components should use consistent target
-    target: DEFAULTS.target,
-    // UI treats React/Next as externals (autoExternals also captures them; explicit for clarity)
-    external: ["react", "react-dom", "next"],
+export async function browserPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { index: "src/index.tsx" },
+    format: opts.format ?? ["esm"],
+    dts: opts.dts ?? false,
+    target: opts.target ?? "es2022",
+    platform: opts.platform ?? "browser",
+    sourcemap: opts.sourcemap ?? false,
+    minify: opts.minify ?? false,
+    splitting: opts.splitting ?? true,
+    clean: opts.clean ?? true,
+    external: [
+      ...autoExternals(),
+      "react",
+      "react-dom",
+      "next",
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
   });
 }
 
@@ -191,18 +142,24 @@ export async function browserPreset(
  * - CJS single-file output with shebang
  * - ideal for lightweight CLI tools
  */
-export async function nodeCliPreset(
-  entry: Record<string, string> | undefined = { cli: "src/cli.ts" },
-) {
-  return defineTsupPreset({
-    entry,
-    format: ["cjs"],
-    dts: false,
-    // CLI can use slightly older target for compatibility
-    target: "es2020",
-    minify: isProd,
-    splitting: false,
-    banner: { js: "#!/usr/bin/env node" },
+export async function nodeCliPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { cli: "src/cli.ts" },
+    format: opts.format ?? ["cjs"],
+    dts: opts.dts ?? false,
+    target: opts.target ?? "es2020",
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    minify: opts.minify ?? isProd,
+    splitting: opts.splitting ?? false,
+    clean: opts.clean ?? true,
+    external: [
+      ...autoExternals(),
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
+    banner: opts.banner ?? { js: "#!/usr/bin/env node" },
   });
 }
 
@@ -210,19 +167,26 @@ export async function nodeCliPreset(
  * 5) Prisma helper preset (no bundle, just transpile)
  * - Keep things simple; prisma often prefers Node runtime resolution
  */
-export async function prismaPreset(
-  entry: Record<string, string> | undefined = { index: "src/index.ts" },
-) {
-  return defineTsupPreset({
-    entry,
-    format: ["esm"],
-    dts: false,
-    // Prisma works better with slightly older target
-    target: "es2020",
-    splitting: false,
-    bundle: false,
-    // Prisma client is runtime-generated; keep it external always
-    external: ["@prisma/client"],
+export async function prismaPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { index: "src/index.ts" },
+    format: opts.format ?? ["esm"],
+    dts: opts.dts ?? false,
+    target: opts.target ?? "es2020",
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    minify: opts.minify ?? false,
+    splitting: opts.splitting ?? false,
+    clean: opts.clean ?? true,
+    // Prisma prefers runtime resolution
+    bundle: opts.bundle ?? false,
+    external: [
+      ...autoExternals(),
+      "@prisma/client",
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
   });
 }
 
@@ -230,13 +194,23 @@ export async function prismaPreset(
  * 6) Multi-entry ESM preset (internal)
  * - For packages exposing multiple entry points but monorepo-only usage
  */
-export async function multiEntryEsmPreset(entries: Record<string, string>) {
-  return defineTsupPreset({
-    entry: entries,
-    format: ["esm"],
-    dts: false,
-    splitting: true,
-    // All other values use DEFAULTS
+export async function multiEntryEsmPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { index: "src/index.ts" },
+    format: opts.format ?? ["esm"],
+    dts: opts.dts ?? false,
+    target: opts.target ?? "es2022",
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    minify: opts.minify ?? false,
+    splitting: opts.splitting ?? true,
+    clean: opts.clean ?? true,
+    external: [
+      ...autoExternals(),
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
   });
 }
 
@@ -246,17 +220,22 @@ export async function multiEntryEsmPreset(entries: Record<string, string>) {
  * - Node platform, Node22 target, sourcemaps for debugging
  * - Bundle local code, externalize deps automatically (via autoExternals)
  */
-export async function functionsPreset(
-  entry: Record<string, string> | undefined = { index: "src/index.ts" },
-) {
-  return defineTsupPreset({
-    entry,
-    format: ["esm"],
-    dts: false,
-    platform: "node",
-    target: "node22",
-    minify: isProd,
-    sourcemap: true,
-    splitting: false,
+export async function functionsPreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    entry: opts.entry ?? { index: "src/index.ts" },
+    format: opts.format ?? ["esm"],
+    dts: opts.dts ?? false,
+    target: opts.target ?? "node22",
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? true,
+    minify: opts.minify ?? isProd,
+    splitting: opts.splitting ?? false,
+    clean: opts.clean ?? true,
+    external: [
+      ...autoExternals(),
+      ...((opts.external ?? []) as NonNullable<Options["external"]>),
+    ],
   });
 }
