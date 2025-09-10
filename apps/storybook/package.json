@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "storybook build --docs",
-    "clean": "rm -rf .turbo node_modules",
+    "clean": "rimraf storybook-static",
     "dev": "storybook dev -p 6006",
     "preview-storybook": "serve storybook-static"
   },
@@ -24,6 +24,7 @@
     "@storybook/react-vite": "^8.6.12",
     "@tailwindcss/vite": "^4.1.5",
     "@vitejs/plugin-react": "^4.4.1",
+    "rimraf": "catalog:",
     "serve": "^14.2.4",
     "storybook": "^8.6.12",
     "typescript": "catalog:",

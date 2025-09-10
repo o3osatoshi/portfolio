@@ -6,6 +6,7 @@
     "build:functions": "turbo run build --filter=functions...",
     "build:storybook": "turbo run build --filter=storybook...",
     "build:web": "turbo run build --filter=web...",
+    "clean": "turbo run clean --parallel",
     "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
     "dev:functions": "turbo run dev --filter=functions...",
