@@ -37,7 +37,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "pnpm build:server && pnpm build:client",
+    "build": "sh -c 'pnpm build:server && pnpm build:client'",
     "build:client": "tsup --config tsup.client.config.mjs",
     "build:server": "tsup --config tsup.server.config.mjs",
     "clean": "rimraf dist",
