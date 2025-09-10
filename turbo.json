@@ -5,6 +5,11 @@
       "cache": false,
       "outputs": []
     },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "outputs": [],
+      "inputs": ["$TURBO_DEFAULT$","tsconfig.json"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],

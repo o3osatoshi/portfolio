@@ -7,7 +7,8 @@
     "build": "storybook build --docs",
     "clean": "rimraf storybook-static",
     "dev": "storybook dev -p 6006",
-    "preview-storybook": "serve storybook-static"
+    "preview-storybook": "serve storybook-static",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@o3osatoshi/ui": "workspace:*",
@@ -23,6 +24,7 @@
     "@storybook/react": "^8.6.12",
     "@storybook/react-vite": "^8.6.12",
     "@tailwindcss/vite": "^4.1.5",
+    "@types/node": "catalog:",
     "@vitejs/plugin-react": "^4.4.1",
     "rimraf": "catalog:",
     "serve": "^14.2.4",

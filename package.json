@@ -16,7 +16,8 @@
     "lint:fix": "biome check . --write",
     "sort:pkg": "sort-package-json **/package.json",
     "test": "turbo run test",
-    "test:watch": "turbo run test:watch --parallel"
+    "test:watch": "turbo run test:watch --parallel",
+    "typecheck": "turbo run typecheck"
   },
   "dependencies": {},
   "devDependencies": {

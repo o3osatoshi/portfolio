@@ -6,7 +6,8 @@
     "build": "next build",
     "clean": "rimraf .next out",
     "dev": "next dev",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.0",
