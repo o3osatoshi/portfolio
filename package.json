@@ -13,7 +13,6 @@
     "dev:web": "turbo run dev --filter=web...",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
-    "preview-storybook": "turbo run preview-storybook",
     "sort:pkg": "sort-package-json **/package.json",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch --parallel"
@@ -22,7 +21,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "sort-package-json": "^3.4.0",
-    "tsx": "4.19.4",
+    "tsx": "catalog:",
     "turbo": "^2.5.2"
   },
   "packageManager": "pnpm@10.15.0",
