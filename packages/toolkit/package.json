@@ -40,9 +40,8 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
-    "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test:run && NODE_ENV=production pnpm build",
-    "test": "vitest",
-    "test:run": "vitest run",
+    "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test && NODE_ENV=production pnpm build",
+    "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

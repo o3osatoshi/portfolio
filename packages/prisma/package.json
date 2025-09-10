@@ -27,10 +27,8 @@
     "seed": "npm run db:seed",
     "studio": "npm run with:dev -- prisma studio",
     "studio:prod": "npm run with:prod -- prisma studio",
-    "test": "vitest --exclude **/*.int.spec.ts",
-    "test:int": "vitest -c vitest.int.config.ts",
-    "test:run": "vitest run --exclude **/*.int.spec.ts",
-    "test:run:int": "vitest run -c vitest.int.config.ts",
+    "test": "vitest run --exclude **/*.int.spec.ts",
+    "test:int": "vitest run -c vitest.int.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "with:dev": "dotenv -e .env.development.local --",
     "with:prod": "dotenv -e .env.production.local --"
