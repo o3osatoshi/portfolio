@@ -5,7 +5,9 @@
     "paths": {
       "@repo/domain": ["../../packages/domain/src"],
       "@repo/application": ["../../packages/application/src"]
-    }
+    },
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
   "include": ["src"]
 }

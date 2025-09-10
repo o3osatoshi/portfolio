@@ -35,7 +35,7 @@ describe("GetTransactionsUseCase", () => {
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
       expect(res.value).toHaveLength(1);
-      expect(res.value[0].id).toBe("tx1");
+      expect(res.value[0]?.id).toBe("tx1");
     }
   });
 });
