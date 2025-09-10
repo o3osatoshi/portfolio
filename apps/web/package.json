@@ -38,5 +38,8 @@
     "pino-pretty": "^13.0.0",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

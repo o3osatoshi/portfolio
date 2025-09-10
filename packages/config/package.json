@@ -19,6 +19,7 @@
     "url": "https://github.com/o3osatoshi/portfolio.git",
     "directory": "packages/config"
   },
+  "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "exports": {

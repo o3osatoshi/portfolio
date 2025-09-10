@@ -29,5 +29,8 @@
     "typescript": "catalog:",
     "vite": "^6.3.5",
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

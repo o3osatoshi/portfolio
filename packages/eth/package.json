@@ -23,6 +23,7 @@
     "url": "https://github.com/o3osatoshi/portfolio.git",
     "directory": "packages/eth"
   },
+  "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "exports": {
