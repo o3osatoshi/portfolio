@@ -4,9 +4,9 @@ import Link from "next/link";
 import { getPathName } from "@/utils/handle-nav";
 
 export const metadata: Metadata = {
-  title: "Satoshi Ogura",
   description:
     "Portfolio site for technical learning and knowledge sharing. Featuring portfolio content and experimental labs.",
+  title: "Satoshi Ogura",
 };
 
 export default function Page() {

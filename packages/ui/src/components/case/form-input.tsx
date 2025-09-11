@@ -9,10 +9,10 @@ type Props = React.ComponentProps<"input"> & {
 };
 
 export function FormInput({
-  label,
+  className,
   errorMessage,
   id,
-  className,
+  label,
   type,
   ...props
 }: Props) {

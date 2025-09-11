@@ -19,8 +19,6 @@ import { getLabel, getPathName } from "@/utils/handle-nav";
 const data = {
   navMain: [
     {
-      title: getLabel("portfolio"),
-      url: "#",
       icon: User,
       isActive: true,
       items: [
@@ -33,10 +31,10 @@ const data = {
           url: getPathName("portfolio-blog"),
         },
       ],
+      title: getLabel("portfolio"),
+      url: "#",
     },
     {
-      title: getLabel("labs"),
-      url: "#",
       icon: FlaskConical,
       isActive: true,
       items: [
@@ -49,11 +47,13 @@ const data = {
           url: getPathName("labs-limited-read"),
         },
         {
+          isWIP: true,
           title: getLabel("labs-web3-crud"),
           url: getPathName("labs-web3-crud"),
-          isWIP: true,
         },
       ],
+      title: getLabel("labs"),
+      url: "#",
     },
   ],
   navSecondary: [],

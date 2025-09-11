@@ -100,13 +100,13 @@ type NewError = {
  * @returns An Error with enriched `name` and `message`.
  */
 export function newError({
-  layer,
-  kind,
   action,
-  reason,
-  impact,
-  hint,
   cause,
+  hint,
+  impact,
+  kind,
+  layer,
+  reason,
 }: NewError): Error {
   const name = `${layer}${kind}Error`;
 
@@ -136,8 +136,8 @@ export function newError({
     if (cause !== undefined) {
       try {
         Object.defineProperty(err, "cause", {
-          value: cause,
           enumerable: false,
+          value: cause,
         });
       } catch {
         // ignore if defineProperty fails

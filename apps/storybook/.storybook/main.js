@@ -5,17 +5,21 @@ function getAbsolutePath(value) {
 }
 
 const config = {
-  stories: ["../stories/*.stories.@(ts|tsx|js|jsx|mdx)"],
   addons: [
     getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@storybook/addon-essentials"),
   ],
+  core: {},
+  docs: {
+    autodocs: true,
+  },
+
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
 
-  core: {},
+  stories: ["../stories/*.stories.@(ts|tsx|js|jsx|mdx)"],
 
   async viteFinal(config, { _configType }) {
     // customize the Vite config here
@@ -31,10 +35,6 @@ const config = {
         ],
       },
     };
-  },
-
-  docs: {
-    autodocs: true,
   },
 };
 

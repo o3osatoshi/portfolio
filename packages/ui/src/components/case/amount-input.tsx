@@ -5,9 +5,9 @@ interface Props {
 }
 
 export function AmountInput({
-  type = "number",
-  placeholder = "0.00",
   disabled = false,
+  placeholder = "0.00",
+  type = "number",
 }: Props) {
   return (
     <input

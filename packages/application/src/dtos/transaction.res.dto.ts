@@ -17,18 +17,18 @@ export type TransactionResponse = {
 
 export function toTransactionResponse(tx: Transaction): TransactionResponse {
   return {
-    id: tx.id,
-    type: tx.type,
-    datetime: tx.datetime,
     amount: tx.amount,
-    price: tx.price,
+    createdAt: tx.createdAt,
     currency: tx.currency,
-    profitLoss: tx.profitLoss,
+    datetime: tx.datetime,
     fee: tx.fee,
     feeCurrency: tx.feeCurrency,
-    userId: tx.userId,
-    createdAt: tx.createdAt,
+    id: tx.id,
+    price: tx.price,
+    profitLoss: tx.profitLoss,
+    type: tx.type,
     updatedAt: tx.updatedAt,
+    userId: tx.userId,
   };
 }
 

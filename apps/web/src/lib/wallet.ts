@@ -9,10 +9,10 @@ if (projectId === undefined) {
 
 export const config = getDefaultConfig({
   appName: "RainbowKit demo",
-  projectId,
   chains: [holesky],
+  projectId,
+  ssr: true,
   transports: {
     [holesky.id]: http(),
   },
-  ssr: true,
 });

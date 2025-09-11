@@ -9,11 +9,11 @@ import {
 describe("application/dtos: transaction.req.dto parsers", () => {
   it("parseCreateTransactionRequest ok on valid payload", () => {
     const res = parseCreateTransactionRequest({
-      type: "BUY",
-      datetime: new Date("2024-01-02T03:04:05Z"),
       amount: "1.23",
-      price: "100.5",
       currency: "USD",
+      datetime: new Date("2024-01-02T03:04:05Z"),
+      price: "100.5",
+      type: "BUY",
       userId: "user_1",
     });
     expect(res.isOk()).toBe(true);
@@ -21,11 +21,11 @@ describe("application/dtos: transaction.req.dto parsers", () => {
 
   it("parseCreateTransactionRequest err on invalid currency", () => {
     const res = parseCreateTransactionRequest({
-      type: "BUY",
-      datetime: new Date(),
       amount: "1",
-      price: "1",
       currency: "usd",
+      datetime: new Date(),
+      price: "1",
+      type: "BUY",
       userId: "u",
     });
     expect(res.isErr()).toBe(true);

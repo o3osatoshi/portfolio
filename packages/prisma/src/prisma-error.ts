@@ -77,9 +77,9 @@ function metaString(meta: unknown, key: string): string | undefined {
  */
 export function newPrismaError({
   action,
-  impact,
-  hint,
   cause,
+  hint,
+  impact,
 }: NewPrismaError): Error {
   if (isKnownRequestError(cause)) {
     const code = cause.code;
@@ -91,40 +91,40 @@ export function newPrismaError({
           ? meta?.target.join(", ")
           : meta?.target;
         return newBaseError({
-          layer: "DB",
-          kind: "Integrity",
           action,
+          cause,
+          hint: hint ?? "Use a different value for unique fields.",
+          impact,
+          kind: "Integrity",
+          layer: "DB",
           reason: target
             ? `Unique constraint violation on ${target}`
             : "Unique constraint violation",
-          impact,
-          hint: hint ?? "Use a different value for unique fields.",
-          cause,
         });
       }
       case "P2025": {
         // Record not found
         const m = metaString(cause.meta, "cause");
         return newBaseError({
-          layer: "DB",
-          kind: "NotFound",
           action,
-          reason: m ?? "Record not found",
-          impact,
-          hint: hint ?? "Verify where conditions or record id.",
           cause,
+          hint: hint ?? "Verify where conditions or record id.",
+          impact,
+          kind: "NotFound",
+          layer: "DB",
+          reason: m ?? "Record not found",
         });
       }
       case "P2003": {
         // Foreign key constraint failed
         return newBaseError({
-          layer: "DB",
-          kind: "Integrity",
           action,
-          reason: "Foreign key constraint failed",
-          impact,
-          hint: hint ?? "Ensure related records exist before linking.",
           cause,
+          hint: hint ?? "Ensure related records exist before linking.",
+          impact,
+          kind: "Integrity",
+          layer: "DB",
+          reason: "Foreign key constraint failed",
         });
       }
       case "P2000": {
@@ -132,51 +132,51 @@ export function newPrismaError({
         const meta = cause.meta as { column_name?: string } | undefined;
         const column = meta?.column_name;
         return newBaseError({
-          layer: "DB",
-          kind: "Validation",
           action,
-          reason: column ? `Value too long for ${column}` : "Value too long",
-          impact,
-          hint: hint ?? "Shorten value or alter schema.",
           cause,
+          hint: hint ?? "Shorten value or alter schema.",
+          impact,
+          kind: "Validation",
+          layer: "DB",
+          reason: column ? `Value too long for ${column}` : "Value too long",
         });
       }
       case "P2005": // Value out of range for the type
       case "P2006": {
         // Invalid value
         return newBaseError({
-          layer: "DB",
-          kind: "Validation",
           action,
-          reason: code === "P2005" ? "Value out of range" : "Invalid value",
-          impact,
-          hint: hint ?? "Check data types and constraints.",
           cause,
+          hint: hint ?? "Check data types and constraints.",
+          impact,
+          kind: "Validation",
+          layer: "DB",
+          reason: code === "P2005" ? "Value out of range" : "Invalid value",
         });
       }
       case "P2021": // Table does not exist
       case "P2022": {
         // Column does not exist
         return newBaseError({
-          layer: "DB",
-          kind: "Config",
           action,
+          cause,
+          hint: hint ?? "Run migrations or verify schema.",
+          impact,
+          kind: "Config",
+          layer: "DB",
           reason:
             code === "P2021" ? "Table does not exist" : "Column does not exist",
-          impact,
-          hint: hint ?? "Run migrations or verify schema.",
-          cause,
         });
       }
       default: {
         return newBaseError({
-          layer: "DB",
-          kind: "Unknown",
           action,
-          reason: `Known request error ${code}`,
-          impact,
-          hint,
           cause,
+          hint,
+          impact,
+          kind: "Unknown",
+          layer: "DB",
+          reason: `Known request error ${code}`,
         });
       }
     }
@@ -184,13 +184,13 @@ export function newPrismaError({
 
   if (isValidationError(cause)) {
     return newBaseError({
-      layer: "DB",
-      kind: "Validation",
       action,
-      reason: "Invalid Prisma query or data",
-      impact,
-      hint: hint ?? "Check schema types and provided data.",
       cause,
+      hint: hint ?? "Check schema types and provided data.",
+      impact,
+      kind: "Validation",
+      layer: "DB",
+      reason: "Invalid Prisma query or data",
     });
   }
 
@@ -216,11 +216,8 @@ export function newPrismaError({
               : "Unknown";
 
     return newBaseError({
-      layer: "DB",
-      kind,
       action,
-      reason: msg,
-      impact,
+      cause,
       hint:
         hint ??
         (kind === "Unavailable"
@@ -228,19 +225,22 @@ export function newPrismaError({
           : kind === "Timeout"
             ? "Check database connectivity and network."
             : undefined),
-      cause,
+      impact,
+      kind,
+      layer: "DB",
+      reason: msg,
     });
   }
 
   if (isRustPanicError(cause)) {
     return newBaseError({
-      layer: "DB",
-      kind: "Unknown",
       action,
-      reason: "Prisma engine panic",
-      impact,
-      hint: hint ?? "Inspect logs; restart the process.",
       cause,
+      hint: hint ?? "Inspect logs; restart the process.",
+      impact,
+      kind: "Unknown",
+      layer: "DB",
+      reason: "Prisma engine panic",
     });
   }
 
@@ -254,24 +254,24 @@ export function newPrismaError({
         ? "Serialization"
         : "Unknown";
     return newBaseError({
-      layer: "DB",
-      kind,
       action,
-      reason: msg,
-      impact,
-      hint,
       cause,
+      hint,
+      impact,
+      kind,
+      layer: "DB",
+      reason: msg,
     });
   }
 
   // Fallback for non-Prisma errors: delegate to base newError with a sensible default.
   return newBaseError({
-    layer: "DB",
-    kind: "Unknown",
     action,
-    reason: "Unexpected error",
-    impact,
-    hint,
     cause,
+    hint,
+    impact,
+    kind: "Unknown",
+    layer: "DB",
+    reason: "Unexpected error",
   });
 }

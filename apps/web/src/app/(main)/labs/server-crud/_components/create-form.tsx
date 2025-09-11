@@ -15,10 +15,10 @@ export default function CreateForm() {
   >(createTransaction, undefined);
 
   const {
-    register,
     formState: { errors },
-    handleSubmit,
     getValues,
+    handleSubmit,
+    register,
   } = useForm({ resolver: zodResolver(createTransactionSchema) });
 
   const validate = async (e: FormEvent<HTMLFormElement>) => {

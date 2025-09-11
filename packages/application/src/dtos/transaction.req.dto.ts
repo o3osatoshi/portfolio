@@ -24,36 +24,36 @@ const NonNegativeDecimalSchema = DecimalStringSchema.refine(
 );
 
 const createTransactionRequestSchema = z.object({
-  type: z.enum(["BUY", "SELL"]),
-  datetime: z.coerce.date(),
   amount: PositiveDecimalSchema,
-  price: PositiveDecimalSchema,
   currency: z.string().regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code"),
-  profitLoss: DecimalStringSchema.optional(),
+  datetime: z.coerce.date(),
   fee: NonNegativeDecimalSchema.optional(),
   feeCurrency: z
     .string()
     .regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code")
     .optional(),
+  price: PositiveDecimalSchema,
+  profitLoss: DecimalStringSchema.optional(),
+  type: z.enum(["BUY", "SELL"]),
   userId: z.string().min(1, "UserId is required"),
 });
 
 const updateTransactionRequestSchema = z.object({
-  id: z.string().min(1, "Transaction ID is required"),
-  type: z.enum(["BUY", "SELL"]).optional(),
-  datetime: z.coerce.date().optional(),
   amount: PositiveDecimalSchema.optional(),
-  price: PositiveDecimalSchema.optional(),
   currency: z
     .string()
     .regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code")
     .optional(),
-  profitLoss: DecimalStringSchema.optional(),
+  datetime: z.coerce.date().optional(),
   fee: NonNegativeDecimalSchema.optional(),
   feeCurrency: z
     .string()
     .regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code")
     .optional(),
+  id: z.string().min(1, "Transaction ID is required"),
+  price: PositiveDecimalSchema.optional(),
+  profitLoss: DecimalStringSchema.optional(),
+  type: z.enum(["BUY", "SELL"]).optional(),
 });
 
 const getTransactionsRequestSchema = z.object({

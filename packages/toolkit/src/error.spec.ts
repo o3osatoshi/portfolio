@@ -5,13 +5,13 @@ describe("newError", () => {
   it("composes name and message, and attaches cause", () => {
     const cause = new Error("DB timeout");
     const err = newError({
-      layer: "Infra",
-      kind: "Timeout",
       action: "FetchUser",
-      reason: "dependency unavailable",
-      impact: "no data returned",
-      hint: "retry with backoff",
       cause,
+      hint: "retry with backoff",
+      impact: "no data returned",
+      kind: "Timeout",
+      layer: "Infra",
+      reason: "dependency unavailable",
     });
 
     // Name

@@ -4,10 +4,10 @@ import { domainValidationError, newDomainError } from "./domain-error";
 describe("domain-error", () => {
   it("newDomainError shapes name and message", () => {
     const err = newDomainError({
-      kind: "Conflict",
       action: "CreateTransaction",
-      reason: "duplicate id",
       hint: "use a new id",
+      kind: "Conflict",
+      reason: "duplicate id",
     });
     expect(err.name).toBe("DomainConflictError");
     expect(err.message).toContain("CreateTransaction failed");

@@ -164,12 +164,12 @@ export type NewZodError = {
 };
 
 export function newZodError({
-  layer = "Application",
   action,
-  impact,
-  hint,
   cause,
+  hint,
+  impact,
   issues,
+  layer = "Application",
 }: NewZodError): Error {
   const zIssues: ZodIssue[] | undefined = issues
     ? issues
@@ -186,12 +186,12 @@ export function newZodError({
     hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
 
   return baseNewError({
-    layer,
-    kind: "Validation",
     action,
-    reason,
-    impact,
-    hint: effectiveHint,
     cause,
+    hint: effectiveHint,
+    impact,
+    kind: "Validation",
+    layer,
+    reason,
   });
 }

@@ -19,19 +19,19 @@ function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
   return newTransaction({
     ...tx,
     amount: tx.amount.toString(),
+    fee: tx.fee?.toString(),
     price: tx.price.toString(),
     profitLoss: tx.profitLoss?.toString(),
-    fee: tx.fee?.toString(),
   });
 }
 
 function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
   return {
-    type: tx.type,
-    datetime: tx.datetime,
     amount: new Prisma.Decimal(tx.amount),
-    price: new Prisma.Decimal(tx.price),
     currency: tx.currency,
+    datetime: tx.datetime,
+    price: new Prisma.Decimal(tx.price),
+    type: tx.type,
     ...(tx.profitLoss ? { profitLoss: new Prisma.Decimal(tx.profitLoss) } : {}),
     ...(tx.fee ? { fee: new Prisma.Decimal(tx.fee) } : {}),
     ...(tx.feeCurrency ? { feeCurrency: tx.feeCurrency } : {}),
@@ -45,11 +45,11 @@ function toUpdateData(
   tx: Transaction,
 ): Prisma.TransactionUpdateManyMutationInput {
   return {
-    type: tx.type,
-    datetime: tx.datetime,
     amount: new Prisma.Decimal(tx.amount),
-    price: new Prisma.Decimal(tx.price),
     currency: tx.currency,
+    datetime: tx.datetime,
+    price: new Prisma.Decimal(tx.price),
+    type: tx.type,
     ...(tx.profitLoss ? { profitLoss: new Prisma.Decimal(tx.profitLoss) } : {}),
     ...(tx.fee ? { fee: new Prisma.Decimal(tx.fee) } : {}),
     ...(tx.feeCurrency ? { feeCurrency: tx.feeCurrency } : {}),
@@ -91,8 +91,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
       (e) =>
         newPrismaError({
           action: "CreateTransaction",
-          hint: "Ensure related user exists and data types are valid.",
           cause: e,
+          hint: "Ensure related user exists and data types are valid.",
         }),
     ).andThen(toEntity);
   }
@@ -100,23 +100,23 @@ export class PrismaTransactionRepository implements TransactionRepository {
   update(tx: Transaction): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.updateMany({
-        where: { id: tx.id, userId: tx.userId },
         data: toUpdateData(tx),
+        where: { id: tx.id, userId: tx.userId },
       }),
       (e) =>
         newPrismaError({
           action: "UpdateTransaction",
-          hint: "Verify ownership and payload schema.",
           cause: e,
+          hint: "Verify ownership and payload schema.",
         }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
         : err(
             baseError({
-              layer: "DB",
-              kind: "NotFound",
               action: "UpdateTransaction",
+              kind: "NotFound",
+              layer: "DB",
               reason: "Transaction not found or not owned by user.",
             }),
           ),
@@ -131,17 +131,17 @@ export class PrismaTransactionRepository implements TransactionRepository {
       (e) =>
         newPrismaError({
           action: "DeleteTransaction",
-          hint: "Verify ownership and record existence.",
           cause: e,
+          hint: "Verify ownership and record existence.",
         }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
         : err(
             baseError({
-              layer: "DB",
-              kind: "NotFound",
               action: "DeleteTransaction",
+              kind: "NotFound",
+              layer: "DB",
               reason: "Transaction not found or not owned by user.",
             }),
           ),

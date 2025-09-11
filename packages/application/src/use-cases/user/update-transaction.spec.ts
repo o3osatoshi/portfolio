@@ -7,11 +7,11 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
+    create: () => errAsync(new Error("not used")),
+    delete: () => errAsync(new Error("not used")),
     findById: () => errAsync(new Error("not implemented")),
     findByUserId: () => errAsync(new Error("not used")),
-    create: () => errAsync(new Error("not used")),
     update: () => errAsync(new Error("not implemented")),
-    delete: () => errAsync(new Error("not used")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }
@@ -29,15 +29,15 @@ describe("UpdateTransactionUseCase", () => {
 
   it("errors with ApplicationForbiddenError when owner mismatch", async () => {
     const tx = {
-      id: "tx1",
-      type: "BUY",
-      datetime: new Date("2024-01-01T00:00:00Z"),
       amount: "1",
-      price: "1",
-      currency: "USD",
-      userId: "other",
       createdAt: new Date("2024-01-01T00:00:00Z"),
+      currency: "USD",
+      datetime: new Date("2024-01-01T00:00:00Z"),
+      id: "tx1",
+      price: "1",
+      type: "BUY",
       updatedAt: new Date("2024-01-01T00:00:00Z"),
+      userId: "other",
     } as Transaction;
     const repo = makeRepo({ findById: () => okAsync(tx) });
     const usecase = new UpdateTransactionUseCase(repo);
@@ -50,15 +50,15 @@ describe("UpdateTransactionUseCase", () => {
 
   it("updates when found and owned", async () => {
     const tx = {
-      id: "tx1",
-      type: "BUY",
-      datetime: new Date("2024-01-01T00:00:00Z"),
       amount: "1",
-      price: "1",
-      currency: "USD",
-      userId: "u1",
       createdAt: new Date("2024-01-01T00:00:00Z"),
+      currency: "USD",
+      datetime: new Date("2024-01-01T00:00:00Z"),
+      id: "tx1",
+      price: "1",
+      type: "BUY",
       updatedAt: new Date("2024-01-01T00:00:00Z"),
+      userId: "u1",
     } as Transaction;
     const repo = makeRepo({
       findById: () => okAsync(tx),

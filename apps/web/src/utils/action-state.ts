@@ -13,8 +13,8 @@ export type ActionError = {
 
 function newError(message: string, name?: string): ActionError {
   return {
-    name: name || "ActionError",
     message: message || "",
+    name: name || "ActionError",
   };
 }
 
@@ -24,19 +24,19 @@ export type ActionState<
 > = { ok: true; data: T } | { ok: false; error: E };
 
 export function ok<T extends ActionData>(data: T): ActionState<T, never> {
-  return { ok: true, data };
+  return { data, ok: true };
 }
 
 export function err<E extends Error>(
   error: string | E | ActionError,
 ): ActionState<never, ActionError> {
   return {
-    ok: false,
     error:
       typeof error === "string"
         ? newError(error)
         : error instanceof Error
           ? newError(error.name, error.message)
           : error,
+    ok: false,
   };
 }

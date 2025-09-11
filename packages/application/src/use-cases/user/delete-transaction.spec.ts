@@ -7,11 +7,11 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
+    create: () => errAsync(new Error("not used")),
+    delete: () => errAsync(new Error("not implemented")),
     findById: () => errAsync(new Error("not used")),
     findByUserId: () => errAsync(new Error("not used")),
-    create: () => errAsync(new Error("not used")),
     update: () => errAsync(new Error("not used")),
-    delete: () => errAsync(new Error("not implemented")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }

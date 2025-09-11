@@ -25,21 +25,21 @@ export type NewApplicationError = {
  * Use in application/use-case orchestration for consistent error classification.
  */
 export function newApplicationError({
-  kind,
   action,
-  reason,
-  impact,
-  hint,
   cause,
+  hint,
+  impact,
+  kind,
+  reason,
 }: NewApplicationError): Error {
   return baseNewError({
-    layer: "Application",
-    kind,
     action,
-    reason,
-    impact,
-    hint,
     cause,
+    hint,
+    impact,
+    kind,
+    layer: "Application",
+    reason,
   });
 }
 

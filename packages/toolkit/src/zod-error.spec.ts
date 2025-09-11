@@ -19,16 +19,16 @@ describe("zod-error helpers (with real Zod)", () => {
   it("isZodError recognizes duck-typed ZodError shape (cross-instance)", () => {
     // Simulate a ZodError-like object coming from a different Zod instance
     const fake = {
-      name: "ZodError",
       issues: [
         {
           code: "invalid_type",
-          path: [],
           expected: "string",
-          received: "number",
           message: "Expected string, received number",
+          path: [],
+          received: "number",
         },
       ],
+      name: "ZodError",
     } as unknown;
 
     expect(isZodError(fake)).toBe(true);
@@ -85,9 +85,9 @@ describe("zod-error helpers (with real Zod)", () => {
     const res = strictSchema.safeParse({ a: "x", extra: 1 });
     if (res.success) throw new Error("Expected failure");
     const err = newZodError({
-      layer: "UI",
       action: "ValidateForm",
       issues: res.error.issues,
+      layer: "UI",
     });
     expect(err.name).toBe("UIValidationError");
     expect(err.message).toContain("ValidateForm failed");
@@ -106,18 +106,18 @@ describe("zod-error helpers (with real Zod)", () => {
 
   it("covers more codes: too_big, invalid_string(email), not_multiple_of, invalid_date, union", () => {
     const schema = z.object({
-      n: z.number().max(5),
       email: z.string().email(),
       k: z.number().multipleOf(5),
-      when: z.date(),
+      n: z.number().max(5),
       u: z.union([z.string(), z.number()]),
+      when: z.date(),
     });
     const res = schema.safeParse({
-      n: 10,
       email: "a",
       k: 3,
-      when: new Date(Number.NaN),
+      n: 10,
       u: {},
+      when: new Date(Number.NaN),
     });
     if (!isZodError(res.error)) throw new Error("Expected ZodError");
     const summary = summarizeZodError(res.error);
@@ -130,8 +130,8 @@ describe("zod-error helpers (with real Zod)", () => {
 
   it("handles invalid_union_discriminator (v4) without listing options", () => {
     const schema = z.discriminatedUnion("type", [
-      z.object({ type: z.literal("a"), a: z.string() }),
-      z.object({ type: z.literal("b"), b: z.number() }),
+      z.object({ a: z.string(), type: z.literal("a") }),
+      z.object({ b: z.number(), type: z.literal("b") }),
     ]);
     const res = schema.safeParse({ type: "c" });
     if (!isZodError(res.error)) throw new Error("Expected ZodError");
@@ -143,8 +143,8 @@ describe("zod-error helpers (with real Zod)", () => {
     const schema = z.discriminatedUnion(
       "type",
       [
-        z.object({ type: z.literal("a"), a: z.string() }),
-        z.object({ type: z.literal("b"), b: z.number() }),
+        z.object({ a: z.string(), type: z.literal("a") }),
+        z.object({ b: z.number(), type: z.literal("b") }),
       ],
       { unionFallback: true },
     );

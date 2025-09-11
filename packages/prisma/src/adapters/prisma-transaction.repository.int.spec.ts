@@ -67,8 +67,8 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     process.env["DATABASE_URL"] = container.getConnectionUri();
     execSync("npx prisma db push --skip-generate", {
       cwd: pkgRoot,
-      stdio: "inherit",
       env: { ...process.env, DATABASE_URL: process.env["DATABASE_URL"] },
+      stdio: "inherit",
     });
 
     prisma = (await import("../prisma-client")).prisma;
@@ -79,10 +79,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     // Seed an existing user for ownership tests
     await prisma.user.create({
-      data: { id: "user-1", email: "user1@example.com" },
+      data: { email: "user1@example.com", id: "user-1" },
     });
     await prisma.user.create({
-      data: { id: "user-2", email: "user2@example.com" },
+      data: { email: "user2@example.com", id: "user-2" },
     });
   }, 60_000);
 
@@ -96,8 +96,8 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     const tx = TestHelpers.createValidTransaction({
       amount: "1",
-      price: "10",
       currency: "USD",
+      price: "10",
       userId: "missing-user",
     });
 
@@ -113,10 +113,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!repo) throw new Error("Repository not initialized");
 
     const tx = TestHelpers.createValidTransaction({
-      type: "BUY",
       amount: "2",
-      price: "20",
       currency: "USD",
+      price: "20",
+      type: "BUY",
       userId: "user-1",
     });
 
@@ -126,8 +126,8 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     // Attempt to update with mismatched userId
     const updateTx: Transaction = {
       ...created,
-      userId: TestHelpers.newUserId("other-user"),
       price: TestHelpers.newPrice("21"),
+      userId: TestHelpers.newUserId("other-user"),
     };
 
     const res = await repo.update(updateTx);
@@ -142,10 +142,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!repo) throw new Error("Repository not initialized");
 
     const tx = TestHelpers.createValidTransaction({
-      type: "SELL",
       amount: "3",
-      price: "30",
       currency: "USD",
+      price: "30",
+      type: "SELL",
       userId: "user-1",
     });
 
@@ -189,15 +189,15 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!repo) throw new Error("Repository not initialized");
 
     const tx: Transaction = {
-      id: TestHelpers.newTransactionId("missing-id"),
-      type: TestHelpers.newTransactionType("BUY"),
-      datetime: TestHelpers.newDateTime(new Date()),
       amount: TestHelpers.newAmount("1"),
-      price: TestHelpers.newPrice("10"),
-      currency: TestHelpers.newCurrencyCode("USD"),
-      userId: TestHelpers.newUserId("user-1"),
       createdAt: TestHelpers.newDateTime(new Date()),
+      currency: TestHelpers.newCurrencyCode("USD"),
+      datetime: TestHelpers.newDateTime(new Date()),
+      id: TestHelpers.newTransactionId("missing-id"),
+      price: TestHelpers.newPrice("10"),
+      type: TestHelpers.newTransactionType("BUY"),
       updatedAt: TestHelpers.newDateTime(new Date()),
+      userId: TestHelpers.newUserId("user-1"),
     };
 
     const res = await repo.update(tx);
@@ -227,12 +227,12 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     // Create invalid transaction with bad datetime
     const invalidTx = {
-      type: TestHelpers.newTransactionType("BUY"),
+      amount: TestHelpers.newAmount("1"),
+      currency: TestHelpers.newCurrencyCode("USD"),
       // Intentionally invalid datetime
       datetime: "not-a-date" as unknown as import("@repo/domain").DateTime,
-      amount: TestHelpers.newAmount("1"),
       price: TestHelpers.newPrice("10"),
-      currency: TestHelpers.newCurrencyCode("USD"),
+      type: TestHelpers.newTransactionType("BUY"),
       userId: TestHelpers.newUserId("user-1"),
     } satisfies Partial<CreateTransaction> as CreateTransaction;
 
@@ -248,10 +248,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!repo) throw new Error("Repository not initialized");
 
     const tx = TestHelpers.createValidTransaction({
-      type: "BUY",
       amount: "1.23",
-      price: "100.5",
       currency: "USD",
+      price: "100.5",
+      type: "BUY",
       userId: "user-1",
     });
 
@@ -290,10 +290,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     const beforeTxs = expectOk(beforeFindRes);
 
     const tx = TestHelpers.createValidTransaction({
-      type: "BUY",
       amount: "5",
-      price: "50",
       currency: "USD",
+      price: "50",
+      type: "BUY",
       userId: "user-2",
     });
 
@@ -332,29 +332,29 @@ class TestHelpers {
     }> = {},
   ): CreateTransaction {
     const defaults = {
-      type: "BUY" as const,
-      datetime: new Date(),
       amount: "1.0",
-      price: "100.0",
       currency: "USD",
+      datetime: new Date(),
+      price: "100.0",
+      type: "BUY" as const,
       userId: "test-user-1",
     };
 
     const merged = { ...defaults, ...overrides };
 
     return {
-      type: expectOk(newTransactionType(merged.type)),
-      datetime: expectOk(newDateTime(merged.datetime)),
       amount: expectOk(newAmount(merged.amount)),
-      price: expectOk(newPrice(merged.price)),
       currency: expectOk(newCurrencyCode(merged.currency)),
-      profitLoss: merged.profitLoss
-        ? expectOk(newProfitLoss(merged.profitLoss))
-        : undefined,
+      datetime: expectOk(newDateTime(merged.datetime)),
       fee: merged.fee ? expectOk(newFee(merged.fee)) : undefined,
       feeCurrency: merged.feeCurrency
         ? expectOk(newCurrencyCode(merged.feeCurrency))
         : undefined,
+      price: expectOk(newPrice(merged.price)),
+      profitLoss: merged.profitLoss
+        ? expectOk(newProfitLoss(merged.profitLoss))
+        : undefined,
+      type: expectOk(newTransactionType(merged.type)),
       userId: expectOk(newUserId(merged.userId)),
     };
   }

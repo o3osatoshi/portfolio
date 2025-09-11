@@ -68,19 +68,19 @@ export async function internalEsmPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { index: "src/index.ts" },
-    format: opts.format ?? ["esm"],
-    dts: opts.dts ?? false,
-    target: opts.target ?? "es2022",
-    platform: opts.platform ?? "node",
-    sourcemap: opts.sourcemap ?? false,
-    minify: opts.minify ?? false,
-    splitting: opts.splitting ?? true,
     clean: opts.clean ?? true,
+    dts: opts.dts ?? false,
+    entry: opts.entry ?? { index: "src/index.ts" },
     external: [
       ...autoExternals(),
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
+    format: opts.format ?? ["esm"],
+    minify: opts.minify ?? false,
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    splitting: opts.splitting ?? true,
+    target: opts.target ?? "es2022",
   });
 }
 
@@ -93,19 +93,19 @@ export async function publicDualPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { index: "src/index.ts" },
-    format: opts.format ?? ["esm", "cjs"],
-    dts: opts.dts ?? true,
-    target: opts.target ?? "es2022",
-    platform: opts.platform ?? "node",
-    sourcemap: opts.sourcemap ?? isProd,
-    minify: opts.minify ?? false,
-    splitting: opts.splitting ?? true,
     clean: opts.clean ?? true,
+    dts: opts.dts ?? true,
+    entry: opts.entry ?? { index: "src/index.ts" },
     external: [
       ...autoExternals(),
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
+    format: opts.format ?? ["esm", "cjs"],
+    minify: opts.minify ?? false,
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? isProd,
+    splitting: opts.splitting ?? true,
+    target: opts.target ?? "es2022",
   });
 }
 
@@ -118,15 +118,9 @@ export async function browserPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { index: "src/index.tsx" },
-    format: opts.format ?? ["esm"],
-    dts: opts.dts ?? false,
-    target: opts.target ?? "es2022",
-    platform: opts.platform ?? "browser",
-    sourcemap: opts.sourcemap ?? false,
-    minify: opts.minify ?? false,
-    splitting: opts.splitting ?? true,
     clean: opts.clean ?? true,
+    dts: opts.dts ?? false,
+    entry: opts.entry ?? { index: "src/index.tsx" },
     external: [
       ...autoExternals(),
       "react",
@@ -134,6 +128,12 @@ export async function browserPreset(opts: Options = {}) {
       "next",
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
+    format: opts.format ?? ["esm"],
+    minify: opts.minify ?? false,
+    platform: opts.platform ?? "browser",
+    sourcemap: opts.sourcemap ?? false,
+    splitting: opts.splitting ?? true,
+    target: opts.target ?? "es2022",
   });
 }
 
@@ -146,20 +146,20 @@ export async function nodeCliPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { cli: "src/cli.ts" },
-    format: opts.format ?? ["cjs"],
-    dts: opts.dts ?? false,
-    target: opts.target ?? "es2020",
-    platform: opts.platform ?? "node",
-    sourcemap: opts.sourcemap ?? false,
-    minify: opts.minify ?? isProd,
-    splitting: opts.splitting ?? false,
+    banner: opts.banner ?? { js: "#!/usr/bin/env node" },
     clean: opts.clean ?? true,
+    dts: opts.dts ?? false,
+    entry: opts.entry ?? { cli: "src/cli.ts" },
     external: [
       ...autoExternals(),
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
-    banner: opts.banner ?? { js: "#!/usr/bin/env node" },
+    format: opts.format ?? ["cjs"],
+    minify: opts.minify ?? isProd,
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    splitting: opts.splitting ?? false,
+    target: opts.target ?? "es2020",
   });
 }
 
@@ -171,22 +171,22 @@ export async function prismaPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { index: "src/index.ts" },
-    format: opts.format ?? ["esm"],
-    dts: opts.dts ?? false,
-    target: opts.target ?? "es2020",
-    platform: opts.platform ?? "node",
-    sourcemap: opts.sourcemap ?? false,
-    minify: opts.minify ?? false,
-    splitting: opts.splitting ?? false,
-    clean: opts.clean ?? true,
     // Prisma prefers runtime resolution
     bundle: opts.bundle ?? false,
+    clean: opts.clean ?? true,
+    dts: opts.dts ?? false,
+    entry: opts.entry ?? { index: "src/index.ts" },
     external: [
       ...autoExternals(),
       "@prisma/client",
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
+    format: opts.format ?? ["esm"],
+    minify: opts.minify ?? false,
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    splitting: opts.splitting ?? false,
+    target: opts.target ?? "es2020",
   });
 }
 
@@ -198,19 +198,19 @@ export async function multiEntryEsmPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { index: "src/index.ts" },
-    format: opts.format ?? ["esm"],
-    dts: opts.dts ?? false,
-    target: opts.target ?? "es2022",
-    platform: opts.platform ?? "node",
-    sourcemap: opts.sourcemap ?? false,
-    minify: opts.minify ?? false,
-    splitting: opts.splitting ?? true,
     clean: opts.clean ?? true,
+    dts: opts.dts ?? false,
+    entry: opts.entry ?? { index: "src/index.ts" },
     external: [
       ...autoExternals(),
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
+    format: opts.format ?? ["esm"],
+    minify: opts.minify ?? false,
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? false,
+    splitting: opts.splitting ?? true,
+    target: opts.target ?? "es2022",
   });
 }
 
@@ -224,18 +224,18 @@ export async function functionsPreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
-    entry: opts.entry ?? { index: "src/index.ts" },
-    format: opts.format ?? ["esm"],
-    dts: opts.dts ?? false,
-    target: opts.target ?? "node22",
-    platform: opts.platform ?? "node",
-    sourcemap: opts.sourcemap ?? true,
-    minify: opts.minify ?? isProd,
-    splitting: opts.splitting ?? false,
     clean: opts.clean ?? true,
+    dts: opts.dts ?? false,
+    entry: opts.entry ?? { index: "src/index.ts" },
     external: [
       ...autoExternals(),
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
+    format: opts.format ?? ["esm"],
+    minify: opts.minify ?? isProd,
+    platform: opts.platform ?? "node",
+    sourcemap: opts.sourcemap ?? true,
+    splitting: opts.splitting ?? false,
+    target: opts.target ?? "node22",
   });
 }

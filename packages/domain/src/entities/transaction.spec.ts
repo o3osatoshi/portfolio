@@ -8,18 +8,18 @@ import {
 function validNewTx(overrides: Partial<Record<string, unknown>> = {}) {
   const now = new Date();
   return {
-    id: "tx-1",
-    type: "BUY",
-    datetime: now,
     amount: "1.23",
-    price: "100.5",
+    createdAt: now,
     currency: "USD",
-    profitLoss: "-10",
+    datetime: now,
     fee: "0.1",
     feeCurrency: "USD",
-    userId: "user-1",
-    createdAt: now,
+    id: "tx-1",
+    price: "100.5",
+    profitLoss: "-10",
+    type: "BUY",
     updatedAt: now,
+    userId: "user-1",
     ...overrides,
   } as const;
 }
@@ -40,11 +40,11 @@ describe("entities/transaction", () => {
 
   it("createTransaction builds a CreateTransaction without id/base fields", () => {
     const r = createTransaction({
-      type: "BUY",
-      datetime: new Date(),
       amount: "2",
-      price: "50",
       currency: "JPY",
+      datetime: new Date(),
+      price: "50",
+      type: "BUY",
       userId: "user-1",
     });
     expect(r.isOk()).toBe(true);
@@ -77,10 +77,10 @@ describe("entities/transaction", () => {
     expect(base.isOk()).toBe(true);
     if (!base.isOk()) return;
     const r = updateTransaction(base.value, {
-      id: "tx-1",
-      type: "SELL",
-      price: "200",
       feeCurrency: "JPY",
+      id: "tx-1",
+      price: "200",
+      type: "SELL",
     });
     expect(r.isOk()).toBe(true);
     if (r.isOk()) {
@@ -94,7 +94,7 @@ describe("entities/transaction", () => {
     const base = newTransaction(validNewTx());
     expect(base.isOk()).toBe(true);
     if (!base.isOk()) return;
-    const r = updateTransaction(base.value, { id: "tx-1", amount: "0" });
+    const r = updateTransaction(base.value, { amount: "0", id: "tx-1" });
     expect(r.isErr()).toBe(true);
     if (r.isErr()) expect(r.error.name).toBe("DomainValidationError");
   });

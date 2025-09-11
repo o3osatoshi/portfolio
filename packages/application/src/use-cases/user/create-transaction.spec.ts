@@ -7,11 +7,11 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
+    create: () => errAsync(new Error("not implemented")),
+    delete: () => errAsync(new Error("not used")),
     findById: () => errAsync(new Error("not used")),
     findByUserId: () => errAsync(new Error("not used")),
-    create: () => errAsync(new Error("not implemented")),
     update: () => errAsync(new Error("not used")),
-    delete: () => errAsync(new Error("not used")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }
@@ -21,24 +21,24 @@ describe("CreateTransactionUseCase", () => {
     const repo = makeRepo({
       create: () =>
         okAsync({
-          id: "tx1",
-          type: "BUY",
-          datetime: new Date("2024-01-01T00:00:00Z"),
           amount: "1.0",
-          price: "99.9",
-          currency: "USD",
-          userId: "u1",
           createdAt: new Date("2024-01-01T00:00:00Z"),
+          currency: "USD",
+          datetime: new Date("2024-01-01T00:00:00Z"),
+          id: "tx1",
+          price: "99.9",
+          type: "BUY",
           updatedAt: new Date("2024-01-01T00:00:00Z"),
+          userId: "u1",
         } as Transaction),
     });
     const usecase = new CreateTransactionUseCase(repo);
     const res = await usecase.execute({
-      type: "BUY",
-      datetime: new Date("2024-01-01T00:00:00Z"),
       amount: "1.0",
-      price: "99.9",
       currency: "USD",
+      datetime: new Date("2024-01-01T00:00:00Z"),
+      price: "99.9",
+      type: "BUY",
       userId: "u1",
     });
     expect(res.isOk()).toBe(true);

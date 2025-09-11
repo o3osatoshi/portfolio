@@ -3,7 +3,6 @@ import Google from "next-auth/providers/google";
 
 // https://authjs.dev/guides/edge-compatibilitye
 export const authConfig: NextAuthConfig = {
-  providers: [Google],
   callbacks: {
     async jwt({ token, user }) {
       if (user !== undefined) {
@@ -18,4 +17,5 @@ export const authConfig: NextAuthConfig = {
       return session;
     },
   },
+  providers: [Google],
 } satisfies NextAuthConfig;

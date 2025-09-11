@@ -30,10 +30,10 @@ export default function EditDialog({ transaction }: Props) {
   >(updateTransaction, undefined);
 
   const {
-    register,
     formState: { errors },
-    handleSubmit,
     getValues,
+    handleSubmit,
+    register,
   } = useForm({ resolver: zodResolver(updateTransactionSchema) });
 
   const validate = async (e: FormEvent<HTMLFormElement>) => {

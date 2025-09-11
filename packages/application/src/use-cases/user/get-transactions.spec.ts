@@ -7,11 +7,11 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
+    create: () => errAsync(new Error("not used")),
+    delete: () => errAsync(new Error("not used")),
     findById: () => errAsync(new Error("not used")),
     findByUserId: () => errAsync(new Error("not implemented")),
-    create: () => errAsync(new Error("not used")),
     update: () => errAsync(new Error("not used")),
-    delete: () => errAsync(new Error("not used")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }
@@ -19,15 +19,15 @@ function makeRepo(
 describe("GetTransactionsUseCase", () => {
   it("returns ok with mapped list", async () => {
     const tx = {
-      id: "tx1",
-      type: "SELL",
-      datetime: new Date("2024-01-02T00:00:00Z"),
       amount: "2",
-      price: "10",
-      currency: "USD",
-      userId: "u1",
       createdAt: new Date("2024-01-02T00:00:00Z"),
+      currency: "USD",
+      datetime: new Date("2024-01-02T00:00:00Z"),
+      id: "tx1",
+      price: "10",
+      type: "SELL",
       updatedAt: new Date("2024-01-02T00:00:00Z"),
+      userId: "u1",
     } as Transaction;
     const repo = makeRepo({ findByUserId: () => okAsync([tx]) });
     const usecase = new GetTransactionsUseCase(repo);

@@ -4,7 +4,16 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const headingVariants = cva("font-bold tracking-tight", {
+  defaultVariants: {
+    align: "left",
+    level: "h2",
+  },
   variants: {
+    align: {
+      center: "text-center",
+      left: "text-left",
+      right: "text-right",
+    },
     level: {
       h1: "text-4xl md:text-5xl lg:text-6xl",
       h2: "text-3xl md:text-4xl",
@@ -13,15 +22,6 @@ const headingVariants = cva("font-bold tracking-tight", {
       h5: "text-lg md:text-xl",
       h6: "text-base md:text-lg",
     },
-    align: {
-      left: "text-left",
-      center: "text-center",
-      right: "text-right",
-    },
-  },
-  defaultVariants: {
-    level: "h2",
-    align: "left",
   },
 });
 
@@ -29,13 +29,13 @@ type Props = React.HTMLAttributes<HTMLHeadingElement> &
   VariantProps<typeof headingVariants>;
 
 function Heading({
-  className,
-  level = "h2",
   align,
   children,
+  className,
+  level = "h2",
   ...props
 }: Props) {
-  const classes = cn(headingVariants({ level, align, className }));
+  const classes = cn(headingVariants({ align, className, level }));
 
   switch (level) {
     case "h1":

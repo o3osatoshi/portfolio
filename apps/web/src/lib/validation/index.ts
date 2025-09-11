@@ -7,18 +7,18 @@ const decimalString = z
   .pipe(z.string().regex(/^-?(?:\d+)(?:\.\d+)?$/));
 
 export const transactionSchema = z.object({
-  id: z.string(),
-  type: z.string(),
-  datetime: z.coerce.date(),
   amount: decimalString,
-  price: decimalString,
+  createdAt: z.coerce.date(),
   currency: z.string(),
-  profitLoss: decimalString.optional(),
+  datetime: z.coerce.date(),
   fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
-  userId: z.string(),
-  createdAt: z.coerce.date(),
+  id: z.string(),
+  price: decimalString,
+  profitLoss: decimalString.optional(),
+  type: z.string(),
   updatedAt: z.coerce.date(),
+  userId: z.string(),
 });
 
 export type Transaction = z.infer<typeof transactionSchema>;
@@ -32,14 +32,14 @@ export function validateTransactions(input: unknown): Transactions {
 }
 
 export const createTransactionSchema = z.object({
-  type: z.string(),
-  datetime: z.coerce.date(),
   amount: decimalString,
-  price: decimalString,
   currency: z.string(),
-  profitLoss: decimalString.optional(),
+  datetime: z.coerce.date(),
   fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
+  price: decimalString,
+  profitLoss: decimalString.optional(),
+  type: z.string(),
 });
 
 export type CreateTransaction = z.infer<typeof createTransactionSchema>;
@@ -49,15 +49,15 @@ export function validateCreateTransaction(input: unknown): CreateTransaction {
 }
 
 export const updateTransactionSchema = z.object({
-  id: z.string(),
-  type: z.string().optional(),
-  datetime: z.coerce.date().optional(),
   amount: decimalString.optional(),
-  price: decimalString.optional(),
   currency: z.string().optional(),
-  profitLoss: decimalString.optional(),
+  datetime: z.coerce.date().optional(),
   fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
+  id: z.string(),
+  price: decimalString.optional(),
+  profitLoss: decimalString.optional(),
+  type: z.string().optional(),
 });
 
 export type UpdateTransaction = z.infer<typeof updateTransactionSchema>;

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Satoshi Ogura",
   description:
     "Full-stack engineer specializing in Next.js, TypeScript, and Web3/DeFi. Focused on type safety, testing, and CI/CD.",
+  title: "About — Satoshi Ogura",
 };
 
 export default async function Page() {

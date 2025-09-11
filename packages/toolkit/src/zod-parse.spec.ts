@@ -4,19 +4,19 @@ import { parseAsyncWith, parseWith } from "./zod-parse";
 
 describe("zod-parse: parseWith", () => {
   it("returns ok for valid input", () => {
-    const schema = z.object({ name: z.string(), age: z.number() });
+    const schema = z.object({ age: z.number(), name: z.string() });
     const parse = parseWith(schema, { action: "ParseUser" });
-    const res = parse({ name: "alice", age: 42 });
+    const res = parse({ age: 42, name: "alice" });
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
-      expect(res.value).toEqual({ name: "alice", age: 42 });
+      expect(res.value).toEqual({ age: 42, name: "alice" });
     }
   });
 
   it("returns err with ApplicationValidationError by default", () => {
-    const schema = z.object({ name: z.string(), age: z.number() });
+    const schema = z.object({ age: z.number(), name: z.string() });
     const parse = parseWith(schema, { action: "ParseUser" });
-    const res = parse({ name: 123, age: "x" });
+    const res = parse({ age: "x", name: 123 });
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("ApplicationValidationError");

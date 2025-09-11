@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Blog — Satoshi Ogura",
   description:
     "Latest technical notes and write-ups. Detailed explanations for Labs demos are published on the blog.",
+  title: "Blog — Satoshi Ogura",
 };
 
 export default async function Page() {

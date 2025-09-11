@@ -36,70 +36,70 @@ type Nav = WebNav | ApiNav;
 const navs: Nav[] = [
   {
     alias: "signin",
+    data: {
+      hierarchy: 1,
+      label: "Signin",
+    },
     pathName: "/signin",
     type: "web",
-    data: {
-      label: "Signin",
-      hierarchy: 1,
-    },
   },
   {
     alias: "portfolio",
+    data: {
+      hierarchy: 1,
+      label: "Portfolio",
+    },
     pathName: "/portfolio",
     type: "web",
-    data: {
-      label: "Portfolio",
-      hierarchy: 1,
-    },
   },
   {
     alias: "portfolio-about",
-    pathName: "/portfolio/about",
-    type: "web",
     data: {
-      label: "About",
       hierarchy: 2,
+      label: "About",
       parentAlias: "portfolio",
     },
+    pathName: "/portfolio/about",
+    type: "web",
   },
   {
     alias: "portfolio-blog",
-    pathName: "/portfolio/blog",
-    type: "web",
     data: {
-      label: "Blog",
       hierarchy: 2,
+      label: "Blog",
       parentAlias: "portfolio",
     },
+    pathName: "/portfolio/blog",
+    type: "web",
   },
   {
     alias: "labs",
+    data: {
+      hierarchy: 1,
+      label: "Labs",
+    },
     pathName: "/labs",
     type: "web",
-    data: {
-      label: "Labs",
-      hierarchy: 1,
-    },
   },
   {
     alias: "labs-server-crud",
-    pathName: "/labs/server-crud",
-    type: "web",
     data: {
-      label: "Server Side CRUD",
       hierarchy: 2,
+      label: "Server Side CRUD",
       parentAlias: "labs",
     },
+    pathName: "/labs/server-crud",
+    type: "web",
   },
   {
     alias: "labs-limited-read",
-    pathName: "/labs/limited-read",
-    type: "web",
     data: {
-      label: "Limited Read",
       hierarchy: 2,
+      label: "Limited Read",
       parentAlias: "labs",
     },
+    pathName: "/labs/limited-read",
+    type: "web",
   },
   {
     alias: "labs-transactions",
@@ -108,13 +108,13 @@ const navs: Nav[] = [
   },
   {
     alias: "labs-web3-crud",
-    pathName: "/labs/web3-crud",
-    type: "web",
     data: {
-      label: "Web3 CRUD",
       hierarchy: 2,
+      label: "Web3 CRUD",
       parentAlias: "labs",
     },
+    pathName: "/labs/web3-crud",
+    type: "web",
   },
 ];
 

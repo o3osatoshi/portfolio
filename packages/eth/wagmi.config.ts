@@ -9,23 +9,23 @@ if (apiKey === undefined) {
 }
 
 export default defineConfig({
-  out: "src/generated.ts",
   contracts: [
     {
-      name: "erc20",
       abi: erc20Abi,
+      name: "erc20",
     },
   ],
+  out: "src/generated.ts",
   plugins: [
     etherscan({
       apiKey,
       chainId: mainnet.id,
       contracts: [
         {
-          name: "WETH",
           address: {
             [mainnet.id]: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
           },
+          name: "WETH",
         },
       ],
     }),

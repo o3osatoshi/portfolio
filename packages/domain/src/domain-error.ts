@@ -25,21 +25,21 @@ export type NewDomainError = {
  * Prefer this over new Error(...) in domain code for consistent classification.
  */
 export function newDomainError({
-  kind,
   action,
-  reason,
-  impact,
-  hint,
   cause,
+  hint,
+  impact,
+  kind,
+  reason,
 }: NewDomainError): Error {
   return baseNewError({
-    layer: "Domain",
-    kind,
     action,
-    reason,
-    impact,
-    hint,
     cause,
+    hint,
+    impact,
+    kind,
+    layer: "Domain",
+    reason,
   });
 }
 

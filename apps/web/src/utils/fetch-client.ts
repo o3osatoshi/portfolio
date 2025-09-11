@@ -32,10 +32,10 @@ export function getQueryingPathName(pathName: string, search?: Search) {
 }
 
 export async function fetchClient({
-  pathName,
-  search,
   cache,
+  pathName,
   revalidate,
+  search,
   tags,
 }: Props) {
   try {

@@ -2,11 +2,16 @@ import { Button } from "@o3osatoshi/ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "UI/Button",
-  component: Button,
-  tags: ["autodocs"],
-
+  args: {
+    children: "Button",
+    size: "default",
+    variant: "default",
+  },
   argTypes: {
+    size: {
+      control: "select",
+      options: ["default", "sm", "lg", "icon"],
+    },
     variant: {
       control: "select",
       options: [
@@ -18,54 +23,49 @@ const meta = {
         "link",
       ],
     },
-    size: {
-      control: "select",
-      options: ["default", "sm", "lg", "icon"],
-    },
   },
+  component: Button,
 
-  args: {
-    children: "Button",
-    variant: "default",
-    size: "default",
-  },
+  tags: ["autodocs"],
+
+  title: "UI/Button",
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: { variant: "default", children: "Default" },
+  args: { children: "Default", variant: "default" },
 };
 
 export const Destructive: Story = {
-  args: { variant: "destructive", children: "Destructive" },
+  args: { children: "Destructive", variant: "destructive" },
 };
 
 export const Outline: Story = {
-  args: { variant: "outline", children: "Outline" },
+  args: { children: "Outline", variant: "outline" },
 };
 
 export const Secondary: Story = {
-  args: { variant: "secondary", children: "Secondary" },
+  args: { children: "Secondary", variant: "secondary" },
 };
 
 export const Ghost: Story = {
-  args: { variant: "ghost", children: "Ghost" },
+  args: { children: "Ghost", variant: "ghost" },
 };
 
 export const Link: Story = {
-  args: { variant: "link", children: "Link" },
+  args: { children: "Link", variant: "link" },
 };
 
 export const Small: Story = {
-  args: { size: "sm", children: "Small" },
+  args: { children: "Small", size: "sm" },
 };
 
 export const Large: Story = {
-  args: { size: "lg", children: "Large" },
+  args: { children: "Large", size: "lg" },
 };
 
 export const Icon: Story = {
-  args: { size: "icon", children: "★" },
+  args: { children: "★", size: "icon" },
 };

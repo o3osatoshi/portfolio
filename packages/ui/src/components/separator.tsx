@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 
 function Separator({
   className,
-  orientation = "horizontal",
   decorative = true,
+  orientation = "horizontal",
   ...props
 }: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
   return (
