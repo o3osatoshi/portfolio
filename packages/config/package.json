@@ -25,9 +25,9 @@
   "exports": {
     "./tsconfig/*": "./tsconfig/*",
     "./tsup": {
-      "default": "./dist/tsup/index.js",
+      "types": "./dist/tsup/index.d.ts",
       "import": "./dist/tsup/index.js",
-      "types": "./dist/tsup/index.d.ts"
+      "default": "./dist/tsup/index.js"
     }
   },
   "types": "./dist/tsup/index.d.ts",
