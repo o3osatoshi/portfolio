@@ -7,5 +7,5 @@
       "@o3osatoshi/ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": [".storybook", "src", "stories"]
+  "include": [".storybook", "src", "stories", "vitest.workspace.ts"]
 }
