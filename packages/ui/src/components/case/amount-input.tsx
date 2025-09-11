@@ -11,7 +11,7 @@ export function AmountInput({
 }: Props) {
   return (
     <input
-      className="hide-number-input-spinner focus:outline-none w-full"
+      className="hide-number-input-spinner w-full focus:outline-none"
       type={type}
       placeholder={placeholder}
       disabled={disabled}

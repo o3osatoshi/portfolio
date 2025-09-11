@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-10 space-y-8">
+    <div className="container mx-auto max-w-3xl space-y-8 px-4 py-10">
       <header>
-        <h1 className="text-3xl font-bold">Welcome to o3osatoshi portfolio</h1>
+        <h1 className="font-bold text-3xl">Welcome to o3osatoshi portfolio</h1>
         <p className="mt-2 text-neutral-600">
           This is my portfolio site where I share technical learning and
           experiments. A place to output daily technical insights and contribute
@@ -23,15 +23,15 @@ export default function Page() {
       </header>
 
       <section className="space-y-6">
-        <h2 className="text-xl font-semibold">Site Structure</h2>
+        <h2 className="font-semibold text-xl">Site Structure</h2>
 
         <div className="space-y-4">
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Portfolio</h3>
-            <p className="text-neutral-600 mb-3">
+          <div className="rounded-lg border p-4">
+            <h3 className="mb-2 font-semibold">Portfolio</h3>
+            <p className="mb-3 text-neutral-600">
               Information about the site author and creator
             </p>
-            <ul className="list-disc pl-6 space-y-1 text-sm text-neutral-600 mb-4">
+            <ul className="mb-4 list-disc space-y-1 pl-6 text-neutral-600 text-sm">
               <li>Personal introduction and skill set</li>
               <li>Technical blog articles</li>
               <li>Project history and experience</li>
@@ -44,12 +44,12 @@ export default function Page() {
             </Link>
           </div>
 
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Labs</h3>
-            <p className="text-neutral-600 mb-3">
+          <div className="rounded-lg border p-4">
+            <h3 className="mb-2 font-semibold">Labs</h3>
+            <p className="mb-3 text-neutral-600">
               Technical validation and experimental features
             </p>
-            <ul className="list-disc pl-6 space-y-1 text-sm text-neutral-600 mb-4">
+            <ul className="mb-4 list-disc space-y-1 pl-6 text-neutral-600 text-sm">
               <li>Server-side CRUD operations</li>
               <li>Web3 and blockchain integration</li>
               <li>Latest technology validation and implementation</li>
@@ -65,7 +65,7 @@ export default function Page() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Source Code</h2>
+        <h2 className="font-semibold text-xl">Source Code</h2>
         <p className="text-neutral-600">
           The source code for this portfolio site is publicly available on
           GitHub.

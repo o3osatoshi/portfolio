@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-10 space-y-8">
+    <div className="container mx-auto max-w-3xl space-y-8 px-4 py-10">
       <header>
-        <h1 className="text-3xl font-bold">About</h1>
+        <h1 className="font-bold text-3xl">About</h1>
         <p className="mt-2 text-neutral-600">
           Full-stack engineer. I work across Web3 (DeFi, Solidity, wagmi/viem)
           and Web2 (CRM, Firebase, Express). I care about type safety, tests,
@@ -20,8 +20,8 @@ export default async function Page() {
       </header>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Skills</h2>
-        <ul className="list-disc pl-6 space-y-2">
+        <h2 className="font-semibold text-xl">Skills</h2>
+        <ul className="list-disc space-y-2 pl-6">
           <li>
             <strong>Frontend:</strong> TypeScript, React, Next.js, Tailwind CSS
           </li>
@@ -40,7 +40,7 @@ export default async function Page() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Experience (Highlights)</h2>
+        <h2 className="font-semibold text-xl">Experience (Highlights)</h2>
         <ul className="space-y-4">
           <li>
             <strong>Napier Labs — Frontend Engineer (2024-08 → 2025-04)</strong>
@@ -78,16 +78,16 @@ export default async function Page() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Education</h2>
-        <ul className="list-disc pl-6 space-y-2">
+        <h2 className="font-semibold text-xl">Education</h2>
+        <ul className="list-disc space-y-2 pl-6">
           <li>The University of Tokyo, Graduate School of Frontier Sciences</li>
           <li>Rikkyo University, Faculty of Science (GPA 3.72)</li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Links</h2>
-        <ul className="list-disc pl-6 space-y-2">
+        <h2 className="font-semibold text-xl">Links</h2>
+        <ul className="list-disc space-y-2 pl-6">
           <li>
             GitHub:{" "}
             <a

@@ -68,7 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <SidebarLink href="/">
-                <span className="truncate font-code text-xl md:text-2xl leading-tight">
+                <span className="truncate font-code text-xl leading-tight md:text-2xl">
                   o3osatoshi
                 </span>
               </SidebarLink>

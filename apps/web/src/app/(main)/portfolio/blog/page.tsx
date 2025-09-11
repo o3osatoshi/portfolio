@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-10 space-y-6">
-      <h1 className="text-3xl font-bold">Blog</h1>
+    <div className="container mx-auto max-w-3xl space-y-6 px-4 py-10">
+      <h1 className="font-bold text-3xl">Blog</h1>
       <p className="text-neutral-600">
         I publish detailed explanations for Labs demos and ongoing research
         notes on my blog.

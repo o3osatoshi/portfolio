@@ -36,31 +36,31 @@ export default function TransactionCard({ transaction }: Props) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>Type: </span>
             <span>{transaction.type}</span>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>Amount: </span>
             <span>{transaction.amount}</span>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>Price: </span>
             <span>{transaction.price}</span>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>Currency: </span>
             <span>{transaction.currency}</span>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>ProfitLoss: </span>
             <span>{transaction.profitLoss}</span>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>Fee: </span>
             <span>{transaction.fee}</span>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             <span>FeeCurrency: </span>
             <span>{transaction.feeCurrency}</span>
           </div>

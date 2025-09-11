@@ -35,7 +35,7 @@ export function NavUser() {
                 <UserRound />
               </AvatarFallback>
             </Avatar>
-            <span className="text-left text-sm leading-tight font-medium">
+            <span className="text-left font-medium text-sm leading-tight">
               Sign in
             </span>
           </SidebarMenuButton>

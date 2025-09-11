@@ -12,7 +12,7 @@ export default function Page() {
         <div className="flex justify-end">
           <ConnectButton />
         </div>
-        <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col items-center gap-3">
           <Heading level="h2">Deposit</Heading>
           <Card className="w-96">
             <CardContent>
@@ -20,7 +20,7 @@ export default function Page() {
             </CardContent>
           </Card>
         </div>
-        <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col items-center gap-3">
           <Heading level="h2">Withdraw</Heading>
           <Card className="w-96">
             <CardContent>
