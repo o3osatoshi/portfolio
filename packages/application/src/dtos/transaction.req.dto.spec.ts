@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   parseCreateTransactionRequest,
-  parseUpdateTransactionRequest,
-  parseGetTransactionsRequest,
   parseDeleteTransactionRequest,
+  parseGetTransactionsRequest,
+  parseUpdateTransactionRequest,
 } from "./transaction.req.dto";
 
 describe("application/dtos: transaction.req.dto parsers", () => {
@@ -50,4 +50,3 @@ describe("application/dtos: transaction.req.dto parsers", () => {
     expect(res.isOk()).toBe(true);
   });
 });
-

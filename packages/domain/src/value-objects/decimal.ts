@@ -1,5 +1,5 @@
 import { default as DecimalJs } from "decimal.js";
-import { type Result, err, ok } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 

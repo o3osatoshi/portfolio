@@ -67,7 +67,8 @@ export default function Page() {
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Source Code</h2>
         <p className="text-neutral-600">
-          The source code for this portfolio site is publicly available on GitHub.
+          The source code for this portfolio site is publicly available on
+          GitHub.
         </p>
         <Link
           href="https://github.com/o3osatoshi/portfolio"

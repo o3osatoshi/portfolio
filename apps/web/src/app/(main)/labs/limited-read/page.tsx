@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
 import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
 import { getTransactions } from "@/app/(main)/labs/_services/get-transactions";
 import { auth } from "@/lib/auth";
 import { getPathName } from "@/utils/handle-nav";
-import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth();

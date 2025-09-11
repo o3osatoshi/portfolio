@@ -1,16 +1,5 @@
-import { Result, err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import { domainValidationError } from "../domain-error";
-import {
-  newAmount,
-  newCurrencyCode,
-  newDateTime,
-  newFee,
-  newPrice,
-  newProfitLoss,
-  newTransactionId,
-  newTransactionType,
-  newUserId,
-} from "../value-objects";
 import type {
   Amount,
   CurrencyCode,
@@ -21,6 +10,17 @@ import type {
   TransactionId,
   TransactionType,
   UserId,
+} from "../value-objects";
+import {
+  newAmount,
+  newCurrencyCode,
+  newDateTime,
+  newFee,
+  newPrice,
+  newProfitLoss,
+  newTransactionId,
+  newTransactionType,
+  newUserId,
 } from "../value-objects";
 import { type Base, newBase } from "./base";
 

@@ -34,7 +34,7 @@ function issueMessage(issue: ZodIssue): string {
         for (const branch of issue.errors) {
           for (const sub of branch) {
             if (sub.code === "invalid_value") {
-              // biome-ignore lint/complexity/noForEach: since the process is simple
+              // biome-ignore lint/suspicious/useIterableCallbackReturn: allow forEach due to very simple processing
               sub.values.forEach((v) => valueOptions.add(String(v)));
             }
           }
@@ -53,7 +53,7 @@ function issueMessage(issue: ZodIssue): string {
             typeof sub.path[0] === "string"
           ) {
             candidateKey = sub.path[0];
-            // biome-ignore lint/complexity/noForEach: since the process is simple
+            // biome-ignore lint/suspicious/useIterableCallbackReturn: allow forEach due to very simple processing
             sub.values.forEach((v) => allowed.add(String(v)));
           }
         }

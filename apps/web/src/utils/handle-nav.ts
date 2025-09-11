@@ -1,4 +1,4 @@
-import { type Search, getQueryingPathName } from "@/utils/fetch-client";
+import { getQueryingPathName, type Search } from "@/utils/fetch-client";
 
 type WebAlias =
   | "signin"

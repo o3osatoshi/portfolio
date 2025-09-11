@@ -1,8 +1,8 @@
+import { err, ok, type Result, ResultAsync } from "neverthrow";
+import type { Transactions } from "@/lib/validation";
+import { transactionsSchema } from "@/lib/validation";
 import { fetchClient } from "@/utils/fetch-client";
 import { getPathName } from "@/utils/handle-nav";
-import { transactionsSchema } from "@/lib/validation";
-import type { Transactions } from "@/lib/validation";
-import { type Result, ResultAsync, err, ok } from "neverthrow";
 
 interface Props {
   userId?: string;

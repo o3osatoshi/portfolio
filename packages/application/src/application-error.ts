@@ -62,13 +62,10 @@ export const applicationUnauthorizedError = (
 export const applicationRateLimitError = (
   p: Omit<NewApplicationError, "kind">,
 ) => newApplicationError({ kind: "RateLimit", ...p });
-export const applicationTimeoutError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Timeout", ...p });
+export const applicationTimeoutError = (p: Omit<NewApplicationError, "kind">) =>
+  newApplicationError({ kind: "Timeout", ...p });
 export const applicationUnavailableError = (
   p: Omit<NewApplicationError, "kind">,
 ) => newApplicationError({ kind: "Unavailable", ...p });
-export const applicationUnknownError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Unknown", ...p });
-
+export const applicationUnknownError = (p: Omit<NewApplicationError, "kind">) =>
+  newApplicationError({ kind: "Unknown", ...p });

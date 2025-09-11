@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   isAmount,
   isFee,
@@ -22,8 +22,10 @@ describe("value-objects/numeric", () => {
     expect(priceBad.isErr()).toBe(true);
     if (amountOk.isOk()) expect(isAmount(amountOk.value)).toBe(true);
     if (priceOk.isOk()) expect(isPrice(priceOk.value)).toBe(true);
-    if (amountBad.isErr()) expect(amountBad.error.name).toBe("DomainValidationError");
-    if (priceBad.isErr()) expect(priceBad.error.name).toBe("DomainValidationError");
+    if (amountBad.isErr())
+      expect(amountBad.error.name).toBe("DomainValidationError");
+    if (priceBad.isErr())
+      expect(priceBad.error.name).toBe("DomainValidationError");
   });
 
   it("Fee must be >= 0", () => {
@@ -47,4 +49,3 @@ describe("value-objects/numeric", () => {
     if (pos.isOk()) expect(isProfitLoss(pos.value)).toBe(true);
   });
 });
-

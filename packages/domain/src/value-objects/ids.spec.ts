@@ -1,10 +1,5 @@
-import { describe, it, expect } from "vitest";
-import {
-  isTransactionId,
-  isUserId,
-  newTransactionId,
-  newUserId,
-} from "./ids";
+import { describe, expect, it } from "vitest";
+import { isTransactionId, isUserId, newTransactionId, newUserId } from "./ids";
 
 describe("value-objects/ids", () => {
   it("creates branded non-empty ids", () => {
@@ -25,4 +20,3 @@ describe("value-objects/ids", () => {
     if (u.isErr()) expect(u.error.name).toBe("DomainValidationError");
   });
 });
-

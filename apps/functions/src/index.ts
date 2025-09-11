@@ -13,7 +13,7 @@ import { onRequest } from "firebase-functions/v2/https";
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-export const helloWorld = onRequest((request, response) => {
+export const helloWorld = onRequest((_request, response) => {
   logger.info("Hello logs! by turbo!", { structuredData: true });
 
   response.send("Hello from Firebase! by turbo! with clean architecture!");

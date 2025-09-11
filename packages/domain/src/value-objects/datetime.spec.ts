@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { isDateTime, newDateTime } from "./datetime";
 
 describe("value-objects/datetime", () => {
@@ -15,8 +15,9 @@ describe("value-objects/datetime", () => {
     const invalid = newDateTime(new Date("invalid"));
     expect(notDate.isErr()).toBe(true);
     expect(invalid.isErr()).toBe(true);
-    if (notDate.isErr()) expect(notDate.error.name).toBe("DomainValidationError");
-    if (invalid.isErr()) expect(invalid.error.name).toBe("DomainValidationError");
+    if (notDate.isErr())
+      expect(notDate.error.name).toBe("DomainValidationError");
+    if (invalid.isErr())
+      expect(invalid.error.name).toBe("DomainValidationError");
   });
 });
-

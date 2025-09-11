@@ -25,8 +25,8 @@ import {
   newTransactionType,
   newUserId,
 } from "@repo/domain";
-import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
+import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import type { Result } from "neverthrow";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { PrismaTransactionRepository } from "./prisma-transaction.repository";
@@ -316,7 +316,7 @@ function expectOk<T, E>(result: Result<T, E>): T {
   return result.value;
 }
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: allow only static members since this is a test class
 class TestHelpers {
   static createValidTransaction(
     overrides: Partial<{

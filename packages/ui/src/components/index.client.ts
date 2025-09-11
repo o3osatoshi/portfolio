@@ -1,7 +1,6 @@
+export * from "./avatar";
 export * from "./base/index.client";
 export * from "./case/index.client";
-
-export * from "./avatar";
 export * from "./collapsible";
 export * from "./dialog";
 export * from "./dropdown-menu";

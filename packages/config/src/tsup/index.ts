@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { type Options, defineConfig } from "tsup";
+import { defineConfig, type Options } from "tsup";
 
 /**
  * Build-time heuristics

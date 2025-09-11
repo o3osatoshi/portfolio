@@ -1,7 +1,7 @@
+import type * as React from "react";
 import { Label } from "@/components/index.client";
 import { Input, Message } from "@/components/index.server";
 import { cn } from "@/lib/utils";
-import type * as React from "react";
 
 type Props = React.ComponentProps<"input"> & {
   label: string;

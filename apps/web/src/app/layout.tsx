@@ -1,5 +1,5 @@
-import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 import type { Metadata } from "next";
+import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 
 import "@o3osatoshi/ui/globals.css";
 import { Providers } from "@/app/_components/providers";

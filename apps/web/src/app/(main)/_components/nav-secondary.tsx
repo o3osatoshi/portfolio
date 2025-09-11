@@ -1,8 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-import type * as React from "react";
-
-import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
-import { ThemeToggle } from "@/app/(main)/_components/theme-toggle";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,6 +5,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@o3osatoshi/ui/client";
+import type { LucideIcon } from "lucide-react";
+import type * as React from "react";
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
+import { ThemeToggle } from "@/app/(main)/_components/theme-toggle";
 
 export function NavSecondary({
   items,
