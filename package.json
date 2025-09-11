@@ -6,21 +6,19 @@
     "build:functions": "turbo run build --filter=functions...",
     "build:storybook": "turbo run build --filter=storybook...",
     "build:web": "turbo run build --filter=web...",
+    "check": "biome check --write",
     "clean": "turbo run clean --parallel",
     "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
     "dev:functions": "turbo run dev --filter=functions...",
     "dev:storybook": "turbo run dev --filter=storybook...",
     "dev:web": "turbo run dev --filter=web...",
-    "lint": "biome check .",
-    "lint:fix": "biome check . --write",
     "sort:pkg": "sort-package-json **/package.json",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.2.4",
     "sort-package-json": "^3.4.0",
     "tsx": "catalog:",
     "turbo": "^2.5.2"
