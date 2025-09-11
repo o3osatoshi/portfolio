@@ -37,11 +37,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "sh -c 'pnpm build:server && pnpm build:client'",
+    "build": "run-s build:server build:client",
     "build:client": "tsup --config tsup.client.config.mjs",
     "build:server": "tsup --config tsup.server.config.mjs",
     "clean": "rimraf dist",
-    "dev": "sh -c 'pnpm dev:server & pnpm dev:client'",
+    "dev": "run-p dev:server dev:client",
     "dev:client": "tsup --config tsup.client.config.mjs --watch",
     "dev:server": "tsup --config tsup.server.config.mjs --watch",
     "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
@@ -68,6 +68,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "npm-run-all": "catalog:",
     "rimraf": "catalog:",
     "tailwindcss": "catalog:",
     "tsup": "catalog:",
