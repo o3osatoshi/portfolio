@@ -1,10 +1,10 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/browser.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
+  "extends": "@o3osatoshi/config/tsconfig/browser.json",
   "include": ["src"]
 }

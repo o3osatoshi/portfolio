@@ -1,9 +1,30 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "ETHERSCAN_API_KEY",
+        "DATABASE_URL",
+        "AUTH_SECRET",
+        "AUTH_GOOGLE_ID",
+        "AUTH_GOOGLE_SECRET"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "storybook-static/**"
+      ]
+    },
     "clean": {
       "cache": false,
       "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
     },
     "test": {
       "dependsOn": ["^test"],
@@ -11,29 +32,8 @@
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],
-      "outputs": [],
-      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json"]
-    },
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**",
-        "storybook-static/**"
-      ],
-      "env": [
-        "ETHERSCAN_API_KEY",
-        "DATABASE_URL",
-        "AUTH_SECRET",
-        "AUTH_GOOGLE_ID",
-        "AUTH_GOOGLE_SECRET"
-      ]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json"],
+      "outputs": []
     }
   }
 }

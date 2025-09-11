@@ -1,13 +1,13 @@
 {
-  "extends": "../../packages/config/tsconfig/functions.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "./dist",
     "paths": {
-      "@repo/domain": ["../../packages/domain/src"],
-      "@repo/application": ["../../packages/application/src"]
+      "@repo/application": ["../../packages/application/src"],
+      "@repo/domain": ["../../packages/domain/src"]
     },
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "rootDir": "./src"
   },
+  "extends": "../../packages/config/tsconfig/functions.json",
   "include": ["src"]
 }

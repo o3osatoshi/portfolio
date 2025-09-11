@@ -1,13 +1,13 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/next.json",
   "compilerOptions": {
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@o3osatoshi/ui/*": ["../../packages/ui/src/*"]
-    },
-    "allowJs": true
+    }
   },
-  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "extends": "@o3osatoshi/config/tsconfig/next.json",
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"]
 }

@@ -19,14 +19,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js",
       "import": "./dist/server/index.js",
-      "default": "./dist/server/index.js"
+      "types": "./dist/server/index.d.ts"
     },
     "./client": {
-      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js",
       "import": "./dist/client/index.js",
-      "default": "./dist/client/index.js"
+      "types": "./dist/client/index.d.ts"
     },
     "./globals.css": "./src/styles/globals.css"
   },

@@ -28,10 +28,10 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
-      "default": "./dist/index.js"
+      "types": "./dist/index.d.ts"
     }
   },
   "types": "./dist/index.d.ts",

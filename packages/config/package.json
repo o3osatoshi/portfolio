@@ -23,12 +23,12 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
+    "./tsconfig/*": "./tsconfig/*",
     "./tsup": {
-      "types": "./dist/tsup/index.d.ts",
+      "default": "./dist/tsup/index.js",
       "import": "./dist/tsup/index.js",
-      "default": "./dist/tsup/index.js"
-    },
-    "./tsconfig/*": "./tsconfig/*"
+      "types": "./dist/tsup/index.d.ts"
+    }
   },
   "types": "./dist/tsup/index.d.ts",
   "files": [

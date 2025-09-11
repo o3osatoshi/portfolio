@@ -1,14 +1,12 @@
 {
-  "extends": "./base.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-
     "jsx": "preserve",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
     "plugins": [{ "name": "next" }],
-    "types": ["node"],
-
-    "noEmit": true
-  }
+    "types": ["node"]
+  },
+  "extends": "./base.json"
 }

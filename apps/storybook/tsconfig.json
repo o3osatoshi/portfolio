@@ -1,5 +1,4 @@
 {
-  "extends": "@o3osatoshi/config/tsconfig/storybook.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -7,5 +6,6 @@
       "@o3osatoshi/ui/*": ["../../packages/ui/src/*"]
     }
   },
+  "extends": "@o3osatoshi/config/tsconfig/storybook.json",
   "include": [".storybook", "src", "stories", "vitest.workspace.ts"]
 }
