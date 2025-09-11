@@ -13,12 +13,17 @@
     "dev:functions": "turbo run dev --filter=functions...",
     "dev:storybook": "turbo run dev --filter=storybook...",
     "dev:web": "turbo run dev --filter=web...",
+    "lint:sort": "eslint . --fix",
     "sort:pkg": "sort-package-json **/package.json",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-plugin-perfectionist": "^4.15.0",
     "sort-package-json": "^3.4.0",
     "tsx": "catalog:",
     "turbo": "^2.5.2"
