@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@o3osatoshi/config": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",
     "eslint": "^9.35.0",

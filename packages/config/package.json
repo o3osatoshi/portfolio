@@ -23,6 +23,7 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
+    "./biome/*": "./biome/*",
     "./tsconfig/*": "./tsconfig/*",
     "./tsup": {
       "types": "./dist/tsup/index.d.ts",
@@ -34,6 +35,7 @@
   "files": [
     "dist",
     "tsconfig",
+    "biome",
     "README.md",
     "LICENSE"
   ],

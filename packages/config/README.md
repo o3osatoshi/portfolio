@@ -88,6 +88,41 @@ Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).
 ```
 
 
+## Biome (shared config)
+
+This package also exports a shared Biome configuration so multiple repositories can share the same lint/format rules.
+
+Usage in another repository:
+
+1. Install the package as a dev dependency.
+
+   ```bash
+   pnpm add -D @o3osatoshi/config
+   ```
+
+2. Create `biome.json` at the repository root and extend the shared config:
+
+   ```json
+   {
+     "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+     "extends": ["@o3osatoshi/config/biome"]
+   }
+   ```
+
+### Variants (optional)
+
+If you need different presets for specific contexts (e.g. `strict`, `next`, `functions`), add files under `packages/config/biome/` (e.g. `strict.json`) and reference them:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "extends": ["@o3osatoshi/config/biome/strict.json"]
+}
+```
+
+Within this monorepo, the root already extends `./packages/config/biome/base.json`.
+
+
 ## Publishing
 
 - Build: `pnpm build` (generates `dist/`)
