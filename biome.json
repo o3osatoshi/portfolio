@@ -11,16 +11,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!**/node_modules",
-      "!**/generated",
-      "!**/dist",
-      "!**/storybook-static",
-      "!**/.next",
-      "!**/.turbo",
-      "!**/.idea"
-    ]
+    "includes": ["**"]
   },
   "formatter": {
     "enabled": true,
@@ -54,7 +45,7 @@
   },
   "vcs": {
     "clientKind": "git",
-    "enabled": false,
-    "useIgnoreFile": false
+    "enabled": true,
+    "useIgnoreFile": true
   }
 }
