@@ -4,6 +4,7 @@ Shared configuration for my TypeScript projects.
 
 - tsup presets (library/dual-format/browser/CLI/prisma/multi-entry/functions)
 - TypeScript tsconfig bases (base/node/browser/next/functions/storybook)
+- Biome shared configs (base, web)
 
 ## Installation
 
@@ -31,8 +32,10 @@ import {
 // 1) Internal library (ESM only)
 export default await internalEsmPreset({ entry: { index: "src/index.ts" } });
 
-// 2) Public library (ESM + CJS, with DTS). withSourceMap = false by default
-// export default await publicDualPreset({ entry: { index: "src/index.ts" }, sourcemap: false });
+// 2) Public library (ESM + CJS, with DTS).
+//    Default sourcemap: enabled in production/CI, disabled in dev.
+//    Pass { sourcemap: false } to disable in prod.
+// export default await publicDualPreset({ entry: { index: "src/index.ts" } });
 
 // 3) Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
 // export default await browserPreset({ entry: { index: "src/index.tsx" }, dts: true });
@@ -52,8 +55,8 @@ export default await internalEsmPreset({ entry: { index: "src/index.ts" } });
 
 Notes
 - Externals are automatically derived from dependencies/peerDependencies; common React/Next externals are also considered. The browser preset explicitly marks React/Next as externals for UI packages.
-- Each preset now accepts a single `opts: PresetOptions` and sets defaults in the preset itself.
-- `publicDualPreset` enables `sourcemap` by default in production; pass `{ sourcemap: false }` to disable.
+- Each preset accepts standard `tsup` `Options` and sets sensible defaults.
+- `publicDualPreset` enables `sourcemap` by default in production/CI; pass `{ sourcemap: false }` to disable.
 - You can pass through `env`, `banner`, `external`, `outDir`, and `onSuccess` as needed.
 
 ## tsconfig bases
@@ -70,6 +73,13 @@ Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).
 // Next.js app
 {
   "extends": "@o3osatoshi/config/tsconfig/next.json"
+}
+```
+
+```jsonc
+// Browser library (React/Vite)
+{
+  "extends": "@o3osatoshi/config/tsconfig/browser.json"
 }
 ```
 
@@ -100,27 +110,59 @@ Usage in another repository:
    pnpm add -D @o3osatoshi/config
    ```
 
-2. Create `biome.json` at the repository root and extend the shared config:
+2. Create `biome.json` at the repository root and extend the shared config (using the package export):
 
    ```json
    {
      "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
-     "extends": ["@o3osatoshi/config/biome"]
+     "extends": ["@o3osatoshi/config/biome/base.json"]
+   }
+   ```
+
+3. (Recommended) Mark it as the root config so Biome doesn’t traverse upward:
+
+   ```json
+   {
+     "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+     "root": true,
+     "extends": ["@o3osatoshi/config/biome/base.json"]
    }
    ```
 
 ### Variants (optional)
 
-If you need different presets for specific contexts (e.g. `strict`, `next`, `functions`), add files under `packages/config/biome/` (e.g. `strict.json`) and reference them:
+If you need different presets for specific contexts, you can publish additional files under `packages/config/biome/` and extend them from the package export. This repo currently ships:
+
+- `@o3osatoshi/config/biome/base.json`
+- `@o3osatoshi/config/biome/web.json` (Next.js/web-oriented tweaks)
 
 ```json
 {
   "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
-  "extends": ["@o3osatoshi/config/biome/strict.json"]
+  "extends": ["@o3osatoshi/config/biome/web.json"]
 }
 ```
 
-Within this monorepo, the root already extends `./packages/config/biome/base.json`.
+Within this monorepo, the root already extends `@o3osatoshi/config/biome/base.json`.
+
+### What it enforces
+
+- Double quotes across JS/TS formatting.
+- Organized imports and sorted object keys via assist actions.
+- Recommended lint rules plus explicit `noDuplicateJsxProps`.
+- Class name sorting for utilities like `clsx`, `cva`, and `tw`.
+- `web.json` adds `next` domain recommended rules for Next.js apps.
+
+#### Ready-made variants
+
+- Web (Next.js app):
+
+  ```json
+  {
+    "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+    "extends": ["./node_modules/@o3osatoshi/config/biome/web.json"]
+  }
+  ```
 
 
 ## Publishing
