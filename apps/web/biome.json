@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "@o3osatoshi/config/biome/base.json",
+    "@o3osatoshi/config/biome/web.json"
+  ],
+  "root": false
+}

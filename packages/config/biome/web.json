@@ -1,0 +1,7 @@
+{
+  "linter": {
+    "domains": {
+      "next": "recommended"
+    }
+  }
+}
