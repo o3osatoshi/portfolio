@@ -23,6 +23,9 @@
     }
   },
   "linter": {
+    "domains": {
+      "project": "recommended"
+    },
     "enabled": true,
     "rules": {
       "complexity": {
