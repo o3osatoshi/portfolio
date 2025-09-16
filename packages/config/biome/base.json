@@ -31,19 +31,7 @@
       "complexity": {
         "useLiteralKeys": "off"
       },
-      "nursery": {
-        "useSortedClasses": {
-          "level": "error",
-          "options": {
-            "attributes": ["classList"],
-            "functions": ["clsx", "cva", "tw", "tw.*"]
-          }
-        }
-      },
-      "recommended": true,
-      "suspicious": {
-        "noDuplicateJsxProps": "error"
-      }
+      "recommended": true
     }
   },
   "vcs": {

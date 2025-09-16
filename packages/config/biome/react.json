@@ -2,6 +2,20 @@
   "linter": {
     "domains": {
       "react": "recommended"
+    },
+    "rules": {
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "options": {
+            "attributes": ["classList"],
+            "functions": ["clsx", "cva", "tw", "tw.*"]
+          }
+        }
+      },
+      "suspicious": {
+        "noDuplicateJsxProps": "error"
+      }
     }
   }
 }
