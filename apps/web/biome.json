@@ -1,6 +1,7 @@
 {
   "extends": [
     "@o3osatoshi/config/biome/base.json",
+    "@o3osatoshi/config/biome/react.json",
     "@o3osatoshi/config/biome/next.json"
   ],
   "root": false
