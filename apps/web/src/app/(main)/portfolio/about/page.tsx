@@ -91,10 +91,10 @@ export default async function Page() {
           <li>
             GitHub:{" "}
             <a
-              className="underline"
               href="https://github.com/o3osatoshi"
-              target="_blank"
+              className="underline"
               rel="noreferrer"
+              target="_blank"
             >
               @o3osatoshi
             </a>
@@ -102,10 +102,10 @@ export default async function Page() {
           <li>
             Blog:{" "}
             <a
-              className="underline"
               href="https://o3osatoshi.github.io"
-              target="_blank"
+              className="underline"
               rel="noreferrer"
+              target="_blank"
             >
               o3osatoshi.github.io
             </a>
@@ -113,10 +113,10 @@ export default async function Page() {
           <li>
             LinkedIn:{" "}
             <a
-              className="underline"
               href="https://www.linkedin.com/in/satoshi-ogura-189479135/"
-              target="_blank"
+              className="underline"
               rel="noreferrer"
+              target="_blank"
             >
               Satoshi Ogura
             </a>
@@ -124,10 +124,10 @@ export default async function Page() {
           <li>
             X (Twitter):{" "}
             <a
-              className="underline"
               href="https://x.com/o3osatoshi"
-              target="_blank"
+              className="underline"
               rel="noreferrer"
+              target="_blank"
             >
               @o3osatoshi
             </a>

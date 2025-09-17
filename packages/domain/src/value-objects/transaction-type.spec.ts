@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { isTransactionType, newTransactionType } from "./transaction-type";
 
 describe("value-objects/transaction-type", () => {

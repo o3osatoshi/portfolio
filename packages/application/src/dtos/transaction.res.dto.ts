@@ -1,29 +1,33 @@
 import type { Transaction } from "@repo/domain";
 
+export type CreateTransactionResponse = TransactionResponse;
+
+export type GetTransactionsResponse = TransactionResponse[];
+
 export type TransactionResponse = {
-  id: string;
-  type: "BUY" | "SELL";
-  datetime: Date;
   amount: string;
-  price: string;
+  createdAt: Date;
   currency: string;
-  profitLoss?: string | undefined;
+  datetime: Date;
   fee?: string | undefined;
   feeCurrency?: string | undefined;
-  userId: string;
-  createdAt: Date;
+  id: string;
+  price: string;
+  profitLoss?: string | undefined;
+  type: "BUY" | "SELL";
   updatedAt: Date;
+  userId: string;
 };
 
 export function toTransactionResponse(tx: Transaction): TransactionResponse {
   return {
+    id: tx.id,
     amount: tx.amount,
     createdAt: tx.createdAt,
     currency: tx.currency,
     datetime: tx.datetime,
     fee: tx.fee,
     feeCurrency: tx.feeCurrency,
-    id: tx.id,
     price: tx.price,
     profitLoss: tx.profitLoss,
     type: tx.type,
@@ -31,12 +35,8 @@ export function toTransactionResponse(tx: Transaction): TransactionResponse {
     userId: tx.userId,
   };
 }
-
 export function toTransactionsResponse(
   txs: Transaction[],
 ): TransactionResponse[] {
   return txs.map(toTransactionResponse);
 }
-
-export type GetTransactionsResponse = TransactionResponse[];
-export type CreateTransactionResponse = TransactionResponse;

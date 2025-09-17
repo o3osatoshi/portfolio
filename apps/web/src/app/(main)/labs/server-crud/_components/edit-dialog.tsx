@@ -62,68 +62,68 @@ export default function EditDialog({ transaction }: Props) {
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <FormInput
-              label="Type"
-              defaultValue={transaction.type}
               id="type"
+              defaultValue={transaction.type}
+              label="Type"
               {...register("type")}
-              type="text"
               errorMessage={errors.type?.message}
+              type="text"
             />
             <FormInput
-              label="Datetime"
-              defaultValue={transaction.datetime.toISOString().slice(0, 16)}
               id="datetime"
+              defaultValue={transaction.datetime.toISOString().slice(0, 16)}
+              label="Datetime"
               {...register("datetime")}
-              type="datetime-local"
               errorMessage={errors.datetime?.message}
+              type="datetime-local"
             />
             <FormInput
-              label="Amount"
-              defaultValue={transaction.amount}
               id="amount"
+              defaultValue={transaction.amount}
+              label="Amount"
               {...register("amount")}
-              type="number"
               errorMessage={errors.amount?.message}
+              type="number"
             />
             <FormInput
-              label="Price"
-              defaultValue={transaction.price}
               id="price"
+              defaultValue={transaction.price}
+              label="Price"
               {...register("price")}
-              type="number"
               errorMessage={errors.price?.message}
-            />
-            <FormInput
-              label="Currency"
-              defaultValue={transaction.currency}
-              id="currency"
-              {...register("currency")}
-              type="text"
-              errorMessage={errors.currency?.message}
-            />
-            <FormInput
-              label="Profit Loss"
-              defaultValue={transaction.profitLoss ?? ""}
-              id="profitLoss"
-              {...register("profitLoss")}
-              type="text"
-              errorMessage={errors.profitLoss?.message}
-            />
-            <FormInput
-              label="Fee"
-              defaultValue={transaction.fee ?? ""}
-              id="fee"
-              {...register("fee")}
               type="number"
-              errorMessage={errors.fee?.message}
             />
             <FormInput
-              label="Fee Currency"
-              defaultValue={transaction.feeCurrency ?? ""}
-              id="feeCurrency"
-              {...register("feeCurrency")}
+              id="currency"
+              defaultValue={transaction.currency}
+              label="Currency"
+              {...register("currency")}
+              errorMessage={errors.currency?.message}
               type="text"
+            />
+            <FormInput
+              id="profitLoss"
+              defaultValue={transaction.profitLoss ?? ""}
+              label="Profit Loss"
+              {...register("profitLoss")}
+              errorMessage={errors.profitLoss?.message}
+              type="text"
+            />
+            <FormInput
+              id="fee"
+              defaultValue={transaction.fee ?? ""}
+              label="Fee"
+              {...register("fee")}
+              errorMessage={errors.fee?.message}
+              type="number"
+            />
+            <FormInput
+              id="feeCurrency"
+              defaultValue={transaction.feeCurrency ?? ""}
+              label="Fee Currency"
+              {...register("feeCurrency")}
               errorMessage={errors.feeCurrency?.message}
+              type="text"
             />
           </div>
           <DialogFooter>
@@ -132,9 +132,9 @@ export default function EditDialog({ transaction }: Props) {
                 <Message variant="destructive">{state.error.message}</Message>
               )}
               <Button
+                className="w-fit"
                 disabled={Object.keys(errors).length > 0 || isPending}
                 type="submit"
-                className="w-fit"
               >
                 Save changes
               </Button>

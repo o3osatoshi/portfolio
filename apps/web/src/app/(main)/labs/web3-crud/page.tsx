@@ -1,8 +1,9 @@
 "use client";
 
+import "@rainbow-me/rainbowkit/styles.css";
+
 import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import "@rainbow-me/rainbowkit/styles.css";
 import { Web3Provider } from "@/app/(main)/labs/web3-crud/_components/web3-provider";
 
 export default function Page() {

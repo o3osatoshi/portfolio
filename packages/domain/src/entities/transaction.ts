@@ -1,4 +1,5 @@
 import { err, ok, Result } from "neverthrow";
+
 import { domainValidationError } from "../domain-error";
 import type {
   Amount,
@@ -24,94 +25,61 @@ import {
 } from "../value-objects";
 import { type Base, newBase } from "./base";
 
-interface TransactionCore {
-  id: TransactionId;
-  type: TransactionType;
-  datetime: DateTime;
-  amount: Amount;
-  price: Price;
-  currency: CurrencyCode;
-  profitLoss?: ProfitLoss | undefined;
-  fee?: Fee | undefined;
-  feeCurrency?: CurrencyCode | undefined;
-  userId: UserId;
-}
-
 export type CreateTransaction = Omit<TransactionCore, "id">;
+
+export type CreateTransactionInput = {
+  amount: unknown;
+  currency: unknown;
+  datetime: unknown;
+  fee?: unknown;
+  feeCurrency?: unknown;
+  price: unknown;
+  profitLoss?: unknown;
+  type: unknown;
+  userId: unknown;
+};
+
+export type NewTransactionInput = {
+  amount: unknown;
+  createdAt: unknown;
+  currency: unknown;
+  datetime: unknown;
+  fee?: unknown;
+  feeCurrency?: unknown;
+  id: unknown;
+  price: unknown;
+  profitLoss?: unknown;
+  type: unknown;
+  updatedAt: unknown;
+  userId: unknown;
+};
 
 export type Transaction = Base & TransactionCore;
 
-export type NewTransactionInput = {
+export type UpdateTransactionInput = {
+  amount?: unknown;
+  currency?: unknown;
+  datetime?: unknown;
+  fee?: unknown;
+  feeCurrency?: unknown;
   id: unknown;
-  type: unknown;
-  datetime: unknown;
-  amount: unknown;
-  price: unknown;
-  currency: unknown;
+  price?: unknown;
   profitLoss?: unknown;
-  fee?: unknown;
-  feeCurrency?: unknown;
-  userId: unknown;
-  createdAt: unknown;
-  updatedAt: unknown;
+  type?: unknown;
 };
 
-export function newTransaction(
-  tx: NewTransactionInput,
-): Result<Transaction, Error> {
-  return Result.combine([
-    newTransactionId(tx.id),
-    newTransactionType(tx.type),
-    newDateTime(tx.datetime),
-    newAmount(tx.amount),
-    newPrice(tx.price),
-    newCurrencyCode(tx.currency),
-    tx.profitLoss ? newProfitLoss(tx.profitLoss) : ok(undefined),
-    tx.fee ? newFee(tx.fee) : ok(undefined),
-    tx.feeCurrency ? newCurrencyCode(tx.feeCurrency) : ok(undefined),
-    newUserId(tx.userId),
-    newBase({ createdAt: tx.createdAt, updatedAt: tx.updatedAt }),
-  ]).map(
-    ([
-      id,
-      type,
-      datetime,
-      amount,
-      price,
-      currency,
-      profitLoss,
-      fee,
-      feeCurrency,
-      userId,
-      base,
-    ]) => ({
-      amount,
-      createdAt: base.createdAt,
-      currency,
-      datetime,
-      fee,
-      feeCurrency,
-      id,
-      price,
-      profitLoss,
-      type,
-      updatedAt: base.updatedAt,
-      userId,
-    }),
-  );
+interface TransactionCore {
+  amount: Amount;
+  currency: CurrencyCode;
+  datetime: DateTime;
+  fee?: Fee | undefined;
+  feeCurrency?: CurrencyCode | undefined;
+  id: TransactionId;
+  price: Price;
+  profitLoss?: ProfitLoss | undefined;
+  type: TransactionType;
+  userId: UserId;
 }
-
-export type CreateTransactionInput = {
-  type: unknown;
-  datetime: unknown;
-  amount: unknown;
-  price: unknown;
-  currency: unknown;
-  profitLoss?: unknown;
-  fee?: unknown;
-  feeCurrency?: unknown;
-  userId: unknown;
-};
 
 export function createTransaction(
   tx: CreateTransactionInput,
@@ -151,17 +119,50 @@ export function createTransaction(
   );
 }
 
-export type UpdateTransactionInput = {
-  id: unknown;
-  type?: unknown;
-  datetime?: unknown;
-  amount?: unknown;
-  price?: unknown;
-  currency?: unknown;
-  profitLoss?: unknown;
-  fee?: unknown;
-  feeCurrency?: unknown;
-};
+export function newTransaction(
+  tx: NewTransactionInput,
+): Result<Transaction, Error> {
+  return Result.combine([
+    newTransactionId(tx.id),
+    newTransactionType(tx.type),
+    newDateTime(tx.datetime),
+    newAmount(tx.amount),
+    newPrice(tx.price),
+    newCurrencyCode(tx.currency),
+    tx.profitLoss ? newProfitLoss(tx.profitLoss) : ok(undefined),
+    tx.fee ? newFee(tx.fee) : ok(undefined),
+    tx.feeCurrency ? newCurrencyCode(tx.feeCurrency) : ok(undefined),
+    newUserId(tx.userId),
+    newBase({ createdAt: tx.createdAt, updatedAt: tx.updatedAt }),
+  ]).map(
+    ([
+      id,
+      type,
+      datetime,
+      amount,
+      price,
+      currency,
+      profitLoss,
+      fee,
+      feeCurrency,
+      userId,
+      base,
+    ]) => ({
+      id,
+      amount,
+      createdAt: base.createdAt,
+      currency,
+      datetime,
+      fee,
+      feeCurrency,
+      price,
+      profitLoss,
+      type,
+      updatedAt: base.updatedAt,
+      userId,
+    }),
+  );
+}
 
 export function updateTransaction(
   tx: Transaction,

@@ -1,10 +1,15 @@
 import { err, ok, type Result } from "neverthrow";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
 export type CurrencyCode = Brand<string, "CurrencyCode">;
 
 const CURRENCY_RE = /^[A-Z]{3}$/;
+
+export function isCurrencyCode(v: unknown): v is CurrencyCode {
+  return typeof v === "string" && CURRENCY_RE.test(v);
+}
 
 export function newCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
   if (typeof v !== "string")
@@ -23,8 +28,4 @@ export function newCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
       }),
     );
   return ok(code as CurrencyCode);
-}
-
-export function isCurrencyCode(v: unknown): v is CurrencyCode {
-  return typeof v === "string" && CURRENCY_RE.test(v);
 }

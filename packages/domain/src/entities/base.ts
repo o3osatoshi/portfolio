@@ -1,4 +1,5 @@
 import { Result } from "neverthrow";
+
 import { type DateTime, newDateTime } from "../value-objects";
 
 export interface Base {

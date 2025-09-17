@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { isCurrencyCode, newCurrencyCode } from "./currency";
 
 describe("value-objects/currency", () => {

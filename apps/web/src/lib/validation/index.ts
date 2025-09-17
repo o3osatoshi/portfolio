@@ -7,13 +7,13 @@ const decimalString = z
   .pipe(z.string().regex(/^-?(?:\d+)(?:\.\d+)?$/));
 
 export const transactionSchema = z.object({
+  id: z.string(),
   amount: decimalString,
   createdAt: z.coerce.date(),
   currency: z.string(),
   datetime: z.coerce.date(),
   fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
-  id: z.string(),
   price: decimalString,
   profitLoss: decimalString.optional(),
   type: z.string(),
@@ -49,12 +49,12 @@ export function validateCreateTransaction(input: unknown): CreateTransaction {
 }
 
 export const updateTransactionSchema = z.object({
+  id: z.string(),
   amount: decimalString.optional(),
   currency: z.string().optional(),
   datetime: z.coerce.date().optional(),
   fee: decimalString.optional(),
   feeCurrency: z.string().optional(),
-  id: z.string(),
   price: decimalString.optional(),
   profitLoss: decimalString.optional(),
   type: z.string().optional(),

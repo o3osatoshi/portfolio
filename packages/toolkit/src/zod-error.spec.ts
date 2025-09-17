@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
+
 import {
   isZodError,
   newZodError,
@@ -19,6 +20,7 @@ describe("zod-error helpers (with real Zod)", () => {
   it("isZodError recognizes duck-typed ZodError shape (cross-instance)", () => {
     // Simulate a ZodError-like object coming from a different Zod instance
     const fake = {
+      name: "ZodError",
       issues: [
         {
           code: "invalid_type",
@@ -28,7 +30,6 @@ describe("zod-error helpers (with real Zod)", () => {
           received: "number",
         },
       ],
-      name: "ZodError",
     } as unknown;
 
     expect(isZodError(fake)).toBe(true);

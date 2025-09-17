@@ -1,8 +1,13 @@
 import { err, ok, type Result } from "neverthrow";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
 export type DateTime = Brand<Date, "DateTime">;
+
+export function isDateTime(v: unknown): v is DateTime {
+  return v instanceof Date && !Number.isNaN(v.getTime());
+}
 
 export function newDateTime(v: unknown): Result<DateTime, Error> {
   if (!(v instanceof Date))
@@ -20,8 +25,4 @@ export function newDateTime(v: unknown): Result<DateTime, Error> {
       }),
     );
   return ok(v as DateTime);
-}
-
-export function isDateTime(v: unknown): v is DateTime {
-  return v instanceof Date && !Number.isNaN(v.getTime());
 }

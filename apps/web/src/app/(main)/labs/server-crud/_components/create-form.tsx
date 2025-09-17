@@ -33,68 +33,68 @@ export default function CreateForm() {
     <form action={dispatch} onSubmit={validate}>
       <div className="flex flex-col gap-2">
         <FormInput
-          label="Type"
           id="type"
+          label="Type"
           {...register("type")}
+          errorMessage={errors.type?.message}
           placeholder="Type"
           type="text"
-          errorMessage={errors.type?.message}
         />
         <FormInput
-          label="Datetime"
           id="datetime"
+          label="Datetime"
           {...register("datetime")}
+          errorMessage={errors.datetime?.message}
           placeholder="Datetime"
           type="datetime-local"
-          errorMessage={errors.datetime?.message}
         />
         <FormInput
-          label="Amount"
           id="amount"
+          label="Amount"
           {...register("amount")}
+          errorMessage={errors.amount?.message}
           placeholder="Amount"
           type="number"
-          errorMessage={errors.amount?.message}
         />
         <FormInput
-          label="Price"
           id="price"
+          label="Price"
           {...register("price")}
+          errorMessage={errors.price?.message}
           placeholder="Price"
           type="number"
-          errorMessage={errors.price?.message}
         />
         <FormInput
-          label="Currency"
           id="currency"
+          label="Currency"
           {...register("currency")}
+          errorMessage={errors.currency?.message}
           placeholder="Currency"
           type="text"
-          errorMessage={errors.currency?.message}
         />
         <FormInput
-          label="Profit Loss"
           id="profitLoss"
+          label="Profit Loss"
           {...register("profitLoss")}
+          errorMessage={errors.profitLoss?.message}
           placeholder="Profit Loss"
           type="number"
-          errorMessage={errors.profitLoss?.message}
         />
         <FormInput
-          label="Fee"
           id="fee"
+          label="Fee"
           {...register("fee")}
+          errorMessage={errors.fee?.message}
           placeholder="Fee"
           type="number"
-          errorMessage={errors.fee?.message}
         />
         <FormInput
-          label="Fee Currency"
           id="feeCurrency"
+          label="Fee Currency"
           {...register("feeCurrency")}
+          errorMessage={errors.feeCurrency?.message}
           placeholder="Fee Currency"
           type="text"
-          errorMessage={errors.feeCurrency?.message}
         />
         {state?.ok === false && (
           <Message variant="destructive">{state.error.message}</Message>

@@ -1,7 +1,7 @@
 interface Props {
-  type?: "number" | "text";
-  placeholder?: string;
   disabled?: boolean;
+  placeholder?: string;
+  type?: "number" | "text";
 }
 
 export function AmountInput({
@@ -12,13 +12,13 @@ export function AmountInput({
   return (
     <input
       className="hide-number-input-spinner w-full focus:outline-none"
-      type={type}
-      placeholder={placeholder}
       disabled={disabled}
       onWheel={(e) => {
         e.currentTarget.blur();
         e.stopPropagation();
       }}
+      placeholder={placeholder}
+      type={type}
     />
   );
 }

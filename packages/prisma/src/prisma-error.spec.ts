@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
+
 import { Prisma } from "./prisma-client";
 import { newPrismaError } from "./prisma-error";
+
+function fabricateInitializationError(message: string): unknown {
+  const err = Object.create(
+    Prisma.PrismaClientInitializationError.prototype,
+  ) as Record<string, unknown>;
+  err["message"] = message;
+  return err as unknown;
+}
 
 function fabricateKnownRequestError(
   code: string,
@@ -19,14 +28,6 @@ function fabricateKnownRequestError(
 function fabricateUnknownRequestError(message: string): unknown {
   const err = Object.create(
     Prisma.PrismaClientUnknownRequestError.prototype,
-  ) as Record<string, unknown>;
-  err["message"] = message;
-  return err as unknown;
-}
-
-function fabricateInitializationError(message: string): unknown {
-  const err = Object.create(
-    Prisma.PrismaClientInitializationError.prototype,
   ) as Record<string, unknown>;
   err["message"] = message;
   return err as unknown;

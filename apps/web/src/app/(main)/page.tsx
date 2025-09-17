@@ -73,8 +73,8 @@ export default function Page() {
         <Link
           href="https://github.com/o3osatoshi/portfolio"
           className="inline-block rounded border px-4 py-2 underline"
-          target="_blank"
           rel="noreferrer"
+          target="_blank"
         >
           View on GitHub
         </Link>

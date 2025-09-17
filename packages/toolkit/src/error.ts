@@ -1,53 +1,36 @@
-/** Convert unknown cause into a safe string (prioritize Error.message) */
-function summarizeCause(cause: unknown, max = 300): string | undefined {
-  if (cause == null) return;
-  if (cause instanceof Error) return truncate(cause.message, max);
-  if (typeof cause === "string") return truncate(cause, max);
-  try {
-    return truncate(JSON.stringify(cause), max);
-  } catch {
-    return String(cause);
-  }
-}
-
-/** Truncate a string to avoid overly large messages */
-function truncate(s: string, max: number): string {
-  return s.length > max ? `${s.slice(0, max)}…` : s;
-}
+type Kind =
+  | "Config"
+  | "Conflict"
+  | "Deadlock"
+  | "Forbidden"
+  | "Integrity"
+  | "NotFound"
+  | "RateLimit"
+  | "Serialization"
+  | "Timeout"
+  | "Unauthorized"
+  | "Unavailable"
+  | "Unknown"
+  | "Validation";
 
 type Layer =
-  | "Domain"
   | "Application"
-  | "Infra"
   | "Auth"
-  | "UI"
   | "DB"
-  | "External";
-type Kind =
-  | "Validation"
-  | "NotFound"
-  | "Conflict"
-  | "Integrity"
-  | "Timeout"
-  | "Unavailable"
-  | "Forbidden"
-  | "Unauthorized"
-  | "Deadlock"
-  | "Serialization"
-  | "Config"
-  | "RateLimit"
-  | "Unknown";
+  | "Domain"
+  | "External"
+  | "Infra"
+  | "UI";
 
 type NewError = {
-  layer: Layer;
-  kind: Kind;
   action?: string | undefined; // what operation was being performed
-  reason?: string | undefined; // why it failed (short explanation)
-  impact?: string | undefined; // what the impact is
+  cause?: undefined | unknown; // original cause (any type)
   hint?: string | undefined; // possible next step
-  cause?: unknown | undefined; // original cause (any type)
+  impact?: string | undefined; // what the impact is
+  kind: Kind;
+  layer: Layer;
+  reason?: string | undefined; // why it failed (short explanation)
 };
-
 /**
  * Creates a structured Error object with a consistent `name` and `message`.
  * Intended for use in Domain/Application/Infra/Auth/UI layers where you want
@@ -147,4 +130,21 @@ export function newError({
   err.name = name;
 
   return err;
+}
+
+/** Convert unknown cause into a safe string (prioritize Error.message) */
+function summarizeCause(cause: unknown, max = 300): string | undefined {
+  if (cause == null) return;
+  if (cause instanceof Error) return truncate(cause.message, max);
+  if (typeof cause === "string") return truncate(cause, max);
+  try {
+    return truncate(JSON.stringify(cause), max);
+  } catch {
+    return String(cause);
+  }
+}
+
+/** Truncate a string to avoid overly large messages */
+function truncate(s: string, max: number): string {
+  return s.length > max ? `${s.slice(0, max)}…` : s;
 }

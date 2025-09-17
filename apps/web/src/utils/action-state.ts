@@ -1,34 +1,23 @@
-type Object = Record<string, unknown>;
-
 export type ActionData<T extends Object = Object> =
   | never
   | null
-  | undefined
-  | T;
+  | T
+  | undefined;
 
 export type ActionError = {
-  name: string;
   message: string;
+  name: string;
 };
-
-function newError(message: string, name?: string): ActionError {
-  return {
-    message: message || "",
-    name: name || "ActionError",
-  };
-}
 
 export type ActionState<
   T extends ActionData = Object,
   E extends ActionError = ActionError,
-> = { ok: true; data: T } | { ok: false; error: E };
+> = { data: T; ok: true } | { error: E; ok: false };
 
-export function ok<T extends ActionData>(data: T): ActionState<T, never> {
-  return { data, ok: true };
-}
+type Object = Record<string, unknown>;
 
 export function err<E extends Error>(
-  error: string | E | ActionError,
+  error: ActionError | E | string,
 ): ActionState<never, ActionError> {
   return {
     error:
@@ -38,5 +27,16 @@ export function err<E extends Error>(
           ? newError(error.name, error.message)
           : error,
     ok: false,
+  };
+}
+
+export function ok<T extends ActionData>(data: T): ActionState<T, never> {
+  return { data, ok: true };
+}
+
+function newError(message: string, name?: string): ActionError {
+  return {
+    name: name || "ActionError",
+    message: message || "",
   };
 }

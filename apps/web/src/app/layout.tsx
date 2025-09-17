@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
-import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
-
 import "@o3osatoshi/ui/globals.css";
+
+import type { Metadata } from "next";
+
 import { Providers } from "@/app/_components/providers";
+import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 
 export const metadata: Metadata = {
   description: "o3osatoshi portfolio",

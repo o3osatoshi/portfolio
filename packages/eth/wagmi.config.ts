@@ -11,8 +11,8 @@ if (apiKey === undefined) {
 export default defineConfig({
   contracts: [
     {
-      abi: erc20Abi,
       name: "erc20",
+      abi: erc20Abi,
     },
   ],
   out: "src/generated.ts",
@@ -22,10 +22,10 @@ export default defineConfig({
       chainId: mainnet.id,
       contracts: [
         {
+          name: "WETH",
           address: {
             [mainnet.id]: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
           },
-          name: "WETH",
         },
       ],
     }),

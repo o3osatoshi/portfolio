@@ -1,12 +1,17 @@
 import { err, ok, type Result } from "neverthrow";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
 export type TransactionId = Brand<string, "TransactionId">;
 export type UserId = Brand<string, "UserId">;
 
-function nonEmptyString(v: unknown): v is string {
-  return typeof v === "string" && v.trim().length > 0;
+export function isTransactionId(v: unknown): v is TransactionId {
+  return typeof v === "string" && v.length > 0;
+}
+
+export function isUserId(v: unknown): v is UserId {
+  return typeof v === "string" && v.length > 0;
 }
 
 export function newTransactionId(v: unknown): Result<TransactionId, Error> {
@@ -31,10 +36,6 @@ export function newUserId(v: unknown): Result<UserId, Error> {
   return ok(v as UserId);
 }
 
-export function isTransactionId(v: unknown): v is TransactionId {
-  return typeof v === "string" && v.length > 0;
-}
-
-export function isUserId(v: unknown): v is UserId {
-  return typeof v === "string" && v.length > 0;
+function nonEmptyString(v: unknown): v is string {
+  return typeof v === "string" && v.trim().length > 0;
 }

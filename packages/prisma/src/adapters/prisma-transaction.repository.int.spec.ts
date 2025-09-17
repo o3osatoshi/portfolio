@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
 import type {
   Amount,
   CreateTransaction,
@@ -29,6 +30,7 @@ import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import type { Result } from "neverthrow";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+
 import type { PrismaTransactionRepository } from "./prisma-transaction.repository";
 
 let container: StartedPostgreSqlContainer | undefined;
@@ -79,10 +81,10 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     // Seed an existing user for ownership tests
     await prisma.user.create({
-      data: { email: "user1@example.com", id: "user-1" },
+      data: { id: "user-1", email: "user1@example.com" },
     });
     await prisma.user.create({
-      data: { email: "user2@example.com", id: "user-2" },
+      data: { id: "user-2", email: "user2@example.com" },
     });
   }, 60_000);
 
@@ -189,11 +191,11 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     if (!repo) throw new Error("Repository not initialized");
 
     const tx: Transaction = {
+      id: TestHelpers.newTransactionId("missing-id"),
       amount: TestHelpers.newAmount("1"),
       createdAt: TestHelpers.newDateTime(new Date()),
       currency: TestHelpers.newCurrencyCode("USD"),
       datetime: TestHelpers.newDateTime(new Date()),
-      id: TestHelpers.newTransactionId("missing-id"),
       price: TestHelpers.newPrice("10"),
       type: TestHelpers.newTransactionType("BUY"),
       updatedAt: TestHelpers.newDateTime(new Date()),
@@ -309,26 +311,19 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
   });
 });
 
-function expectOk<T, E>(result: Result<T, E>): T {
-  if (result.isErr()) {
-    throw new Error(`Expected Ok but got Err: ${result.error}`);
-  }
-  return result.value;
-}
-
 // biome-ignore lint/complexity/noStaticOnlyClass: allow only static members since this is a test class
 class TestHelpers {
   static createValidTransaction(
     overrides: Partial<{
-      type: "BUY" | "SELL";
-      datetime: Date;
       amount: string;
-      price: string;
       currency: string;
-      userId: string;
-      profitLoss?: string;
+      datetime: Date;
       fee?: string;
       feeCurrency?: string;
+      price: string;
+      profitLoss?: string;
+      type: "BUY" | "SELL";
+      userId: string;
     }> = {},
   ): CreateTransaction {
     const defaults = {
@@ -359,39 +354,46 @@ class TestHelpers {
     };
   }
 
-  static newTransactionId(id: string): TransactionId {
-    return expectOk(newTransactionId(id));
-  }
-
-  static newUserId(id: string): UserId {
-    return expectOk(newUserId(id));
-  }
-
-  static newTransactionType(type: "BUY" | "SELL"): TransactionType {
-    return expectOk(newTransactionType(type));
-  }
-
-  static newDateTime(date: Date): DateTime {
-    return expectOk(newDateTime(date));
-  }
-
   static newAmount(amount: string): Amount {
     return expectOk(newAmount(amount));
-  }
-
-  static newPrice(price: string): Price {
-    return expectOk(newPrice(price));
   }
 
   static newCurrencyCode(currency: string): CurrencyCode {
     return expectOk(newCurrencyCode(currency));
   }
 
+  static newDateTime(date: Date): DateTime {
+    return expectOk(newDateTime(date));
+  }
+
   static newFee(fee: string): Fee {
     return expectOk(newFee(fee));
+  }
+
+  static newPrice(price: string): Price {
+    return expectOk(newPrice(price));
   }
 
   static newProfitLoss(profitLoss: string): ProfitLoss {
     return expectOk(newProfitLoss(profitLoss));
   }
+
+  static newTransactionId(id: string): TransactionId {
+    return expectOk(newTransactionId(id));
+  }
+
+  static newTransactionType(type: "BUY" | "SELL"): TransactionType {
+    return expectOk(newTransactionType(type));
+  }
+
+  static newUserId(id: string): UserId {
+    return expectOk(newUserId(id));
+  }
+}
+
+function expectOk<T, E>(result: Result<T, E>): T {
+  if (result.isErr()) {
+    throw new Error(`Expected Ok but got Err: ${result.error}`);
+  }
+  return result.value;
 }

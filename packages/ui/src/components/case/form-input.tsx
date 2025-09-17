@@ -1,17 +1,18 @@
 import type * as React from "react";
+
 import { Label } from "@/components/index.client";
 import { Input, Message } from "@/components/index.server";
 import { cn } from "@/lib/utils";
 
-type Props = React.ComponentProps<"input"> & {
-  label: string;
+type Props = {
   errorMessage?: string | undefined;
-};
+  label: string;
+} & React.ComponentProps<"input">;
 
 export function FormInput({
+  id,
   className,
   errorMessage,
-  id,
   label,
   type,
   ...props
@@ -21,7 +22,7 @@ export function FormInput({
       <Label className="text-right" htmlFor={id}>
         {label}
       </Label>
-      <Input id={id} type={type} className={cn(className)} {...props} />
+      <Input id={id} className={cn(className)} type={type} {...props} />
       <Message variant="destructive">{errorMessage}</Message>
     </div>
   );

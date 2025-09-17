@@ -12,29 +12,24 @@ if (base === undefined) {
 }
 
 export type Search =
+  | Record<string, string>
   | string
   | string[][]
-  | Record<string, string>
-  | URLSearchParams
-  | undefined;
+  | undefined
+  | URLSearchParams;
 
 interface Props {
-  pathName: string;
-  search?: Search;
   cache?: "force-cache" | "no-store";
-  revalidate?: false | 0 | number;
+  pathName: string;
+  revalidate?: 0 | false | number;
+  search?: Search;
   tags?: string[];
 }
 
-export function getQueryingPathName(pathName: string, search?: Search) {
-  const params = new URLSearchParams(search);
-  return search === undefined ? pathName : `${pathName}?${params.toString()}`;
-}
-
 export async function fetchClient({
+  revalidate,
   cache,
   pathName,
-  revalidate,
   search,
   tags,
 }: Props) {
@@ -64,4 +59,9 @@ export async function fetchClient({
     }
     throw new Error("unknown error");
   }
+}
+
+export function getQueryingPathName(pathName: string, search?: Search) {
+  const params = new URLSearchParams(search);
+  return search === undefined ? pathName : `${pathName}?${params.toString()}`;
 }

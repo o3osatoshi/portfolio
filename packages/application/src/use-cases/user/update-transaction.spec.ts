@@ -1,6 +1,7 @@
 import type { Transaction, TransactionRepository } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
+
 import { UpdateTransactionUseCase } from "./update-transaction";
 
 function makeRepo(
@@ -29,11 +30,11 @@ describe("UpdateTransactionUseCase", () => {
 
   it("errors with ApplicationForbiddenError when owner mismatch", async () => {
     const tx = {
+      id: "tx1",
       amount: "1",
       createdAt: new Date("2024-01-01T00:00:00Z"),
       currency: "USD",
       datetime: new Date("2024-01-01T00:00:00Z"),
-      id: "tx1",
       price: "1",
       type: "BUY",
       updatedAt: new Date("2024-01-01T00:00:00Z"),
@@ -50,11 +51,11 @@ describe("UpdateTransactionUseCase", () => {
 
   it("updates when found and owned", async () => {
     const tx = {
+      id: "tx1",
       amount: "1",
       createdAt: new Date("2024-01-01T00:00:00Z"),
       currency: "USD",
       datetime: new Date("2024-01-01T00:00:00Z"),
-      id: "tx1",
       price: "1",
       type: "BUY",
       updatedAt: new Date("2024-01-01T00:00:00Z"),

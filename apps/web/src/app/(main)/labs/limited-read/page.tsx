@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+
 import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
 import { getTransactions } from "@/app/(main)/labs/_services/get-transactions";
 import { auth } from "@/lib/auth";

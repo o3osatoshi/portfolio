@@ -1,52 +1,13 @@
 import { newError as newBaseError } from "@o3osatoshi/toolkit";
+
 import { Prisma } from "./prisma-client";
 
 type NewPrismaError = {
   action?: string;
-  impact?: string;
-  hint?: string;
   cause?: unknown;
+  hint?: string;
+  impact?: string;
 };
-
-function isKnownRequestError(
-  e: unknown,
-): e is Prisma.PrismaClientKnownRequestError {
-  return e instanceof Prisma.PrismaClientKnownRequestError;
-}
-
-function isValidationError(
-  e: unknown,
-): e is Prisma.PrismaClientValidationError {
-  return e instanceof Prisma.PrismaClientValidationError;
-}
-
-function isUnknownRequestError(
-  e: unknown,
-): e is Prisma.PrismaClientUnknownRequestError {
-  return e instanceof Prisma.PrismaClientUnknownRequestError;
-}
-
-function isInitializationError(
-  e: unknown,
-): e is Prisma.PrismaClientInitializationError {
-  return e instanceof Prisma.PrismaClientInitializationError;
-}
-
-function isRustPanicError(e: unknown): e is Prisma.PrismaClientRustPanicError {
-  return e instanceof Prisma.PrismaClientRustPanicError;
-}
-
-/**
- * Safely read a string property from a possibly-unknown `meta` object.
- * Avoids using `any` and works with Prisma's loosely-typed `meta` payloads.
- */
-function metaString(meta: unknown, key: string): string | undefined {
-  if (meta && typeof meta === "object") {
-    const value = (meta as Record<string, unknown>)[key];
-    return typeof value === "string" ? value : undefined;
-  }
-  return undefined;
-}
 
 /**
  * Prisma-aware newError override.
@@ -84,6 +45,20 @@ export function newPrismaError({
   if (isKnownRequestError(cause)) {
     const code = cause.code;
     switch (code) {
+      case "P2000": {
+        // Value too long for column
+        const meta = cause.meta as { column_name?: string } | undefined;
+        const column = meta?.column_name;
+        return newBaseError({
+          action,
+          cause,
+          hint: hint ?? "Shorten value or alter schema.",
+          impact,
+          kind: "Validation",
+          layer: "DB",
+          reason: column ? `Value too long for ${column}` : "Value too long",
+        });
+      }
       case "P2002": {
         // Unique constraint failed
         const meta = cause.meta as { target?: string | string[] } | undefined;
@@ -102,19 +77,6 @@ export function newPrismaError({
             : "Unique constraint violation",
         });
       }
-      case "P2025": {
-        // Record not found
-        const m = metaString(cause.meta, "cause");
-        return newBaseError({
-          action,
-          cause,
-          hint: hint ?? "Verify where conditions or record id.",
-          impact,
-          kind: "NotFound",
-          layer: "DB",
-          reason: m ?? "Record not found",
-        });
-      }
       case "P2003": {
         // Foreign key constraint failed
         return newBaseError({
@@ -125,20 +87,6 @@ export function newPrismaError({
           kind: "Integrity",
           layer: "DB",
           reason: "Foreign key constraint failed",
-        });
-      }
-      case "P2000": {
-        // Value too long for column
-        const meta = cause.meta as { column_name?: string } | undefined;
-        const column = meta?.column_name;
-        return newBaseError({
-          action,
-          cause,
-          hint: hint ?? "Shorten value or alter schema.",
-          impact,
-          kind: "Validation",
-          layer: "DB",
-          reason: column ? `Value too long for ${column}` : "Value too long",
         });
       }
       case "P2005": // Value out of range for the type
@@ -166,6 +114,19 @@ export function newPrismaError({
           layer: "DB",
           reason:
             code === "P2021" ? "Table does not exist" : "Column does not exist",
+        });
+      }
+      case "P2025": {
+        // Record not found
+        const m = metaString(cause.meta, "cause");
+        return newBaseError({
+          action,
+          cause,
+          hint: hint ?? "Verify where conditions or record id.",
+          impact,
+          kind: "NotFound",
+          layer: "DB",
+          reason: m ?? "Record not found",
         });
       }
       default: {
@@ -274,4 +235,44 @@ export function newPrismaError({
     layer: "DB",
     reason: "Unexpected error",
   });
+}
+
+function isInitializationError(
+  e: unknown,
+): e is Prisma.PrismaClientInitializationError {
+  return e instanceof Prisma.PrismaClientInitializationError;
+}
+
+function isKnownRequestError(
+  e: unknown,
+): e is Prisma.PrismaClientKnownRequestError {
+  return e instanceof Prisma.PrismaClientKnownRequestError;
+}
+
+function isRustPanicError(e: unknown): e is Prisma.PrismaClientRustPanicError {
+  return e instanceof Prisma.PrismaClientRustPanicError;
+}
+
+function isUnknownRequestError(
+  e: unknown,
+): e is Prisma.PrismaClientUnknownRequestError {
+  return e instanceof Prisma.PrismaClientUnknownRequestError;
+}
+
+function isValidationError(
+  e: unknown,
+): e is Prisma.PrismaClientValidationError {
+  return e instanceof Prisma.PrismaClientValidationError;
+}
+
+/**
+ * Safely read a string property from a possibly-unknown `meta` object.
+ * Avoids using `any` and works with Prisma's loosely-typed `meta` payloads.
+ */
+function metaString(meta: unknown, key: string): string | undefined {
+  if (meta && typeof meta === "object") {
+    const value = (meta as Record<string, unknown>)[key];
+    return typeof value === "string" ? value : undefined;
+  }
+  return undefined;
 }

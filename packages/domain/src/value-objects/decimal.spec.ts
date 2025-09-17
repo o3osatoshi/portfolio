@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { isDecimal, newDecimal } from "./decimal";
 
 describe("value-objects/decimal", () => {

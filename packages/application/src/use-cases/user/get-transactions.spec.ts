@@ -1,6 +1,7 @@
 import type { Transaction, TransactionRepository } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
+
 import { GetTransactionsUseCase } from "./get-transactions";
 
 function makeRepo(
@@ -19,11 +20,11 @@ function makeRepo(
 describe("GetTransactionsUseCase", () => {
   it("returns ok with mapped list", async () => {
     const tx = {
+      id: "tx1",
       amount: "2",
       createdAt: new Date("2024-01-02T00:00:00Z"),
       currency: "USD",
       datetime: new Date("2024-01-02T00:00:00Z"),
-      id: "tx1",
       price: "10",
       type: "SELL",
       updatedAt: new Date("2024-01-02T00:00:00Z"),

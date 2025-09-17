@@ -26,9 +26,9 @@ export function NavProjects({
   projects,
 }: {
   projects: {
+    icon: LucideIcon;
     name: string;
     url: string;
-    icon: LucideIcon;
   }[];
 }) {
   const { isMobile } = useSidebar();
@@ -52,9 +52,9 @@ export function NavProjects({
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-48"
                 side={isMobile ? "bottom" : "right"}
                 align={isMobile ? "end" : "start"}
+                className="w-48"
               >
                 <DropdownMenuItem>
                   <Folder className="text-muted-foreground" />

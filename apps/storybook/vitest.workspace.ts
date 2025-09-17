@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
 import { storybookTest } from "@storybook/experimental-addon-test/vitest-plugin";
 import { defineWorkspace } from "vitest/config";
 
@@ -19,13 +20,13 @@ export default defineWorkspace([
       storybookTest({ configDir: path.join(dirname, ".storybook") }),
     ],
     test: {
+      name: "storybook",
       browser: {
+        provider: "playwright",
         enabled: true,
         headless: true,
         instances: [{ browser: "chromium" }],
-        provider: "playwright",
       },
-      name: "storybook",
       setupFiles: [".storybook/vitest.setup.ts"],
     },
   },

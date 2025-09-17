@@ -66,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton asChild size="lg">
               <SidebarLink href="/">
                 <span className="truncate font-code text-xl leading-tight md:text-2xl">
                   o3osatoshi
@@ -79,7 +79,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary className="mt-auto" items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

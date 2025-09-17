@@ -18,15 +18,15 @@ export function NavMain({
   items,
 }: {
   items: {
-    title: string;
-    url: string;
     icon: LucideIcon;
     isActive?: boolean;
     items?: {
+      isWIP?: boolean;
       title: string;
       url: string;
-      isWIP?: boolean;
     }[];
+    title: string;
+    url: string;
   }[];
 }) {
   return (

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import {
   createTransaction,
   newTransaction,
@@ -8,13 +9,13 @@ import {
 function validNewTx(overrides: Partial<Record<string, unknown>> = {}) {
   const now = new Date();
   return {
+    id: "tx-1",
     amount: "1.23",
     createdAt: now,
     currency: "USD",
     datetime: now,
     fee: "0.1",
     feeCurrency: "USD",
-    id: "tx-1",
     price: "100.5",
     profitLoss: "-10",
     type: "BUY",
@@ -77,8 +78,8 @@ describe("entities/transaction", () => {
     expect(base.isOk()).toBe(true);
     if (!base.isOk()) return;
     const r = updateTransaction(base.value, {
-      feeCurrency: "JPY",
       id: "tx-1",
+      feeCurrency: "JPY",
       price: "200",
       type: "SELL",
     });
@@ -94,7 +95,7 @@ describe("entities/transaction", () => {
     const base = newTransaction(validNewTx());
     expect(base.isOk()).toBe(true);
     if (!base.isOk()) return;
-    const r = updateTransaction(base.value, { amount: "0", id: "tx-1" });
+    const r = updateTransaction(base.value, { id: "tx-1", amount: "0" });
     expect(r.isErr()).toBe(true);
     if (r.isErr()) expect(r.error.name).toBe("DomainValidationError");
   });

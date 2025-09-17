@@ -1,23 +1,23 @@
 import { newError as baseNewError } from "@o3osatoshi/toolkit";
 
 export type DomainKind =
-  | "Validation"
-  | "NotFound"
   | "Conflict"
   | "Forbidden"
-  | "Unauthorized"
+  | "NotFound"
   | "RateLimit"
   | "Timeout"
+  | "Unauthorized"
   | "Unavailable"
-  | "Unknown";
+  | "Unknown"
+  | "Validation";
 
 export type NewDomainError = {
-  kind: DomainKind;
   action?: string;
-  reason?: string;
-  impact?: string;
-  hint?: string;
   cause?: unknown;
+  hint?: string;
+  impact?: string;
+  kind: DomainKind;
+  reason?: string;
 };
 
 /**

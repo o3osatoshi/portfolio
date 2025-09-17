@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { domainValidationError, newDomainError } from "./domain-error";
 
 describe("domain-error", () => {

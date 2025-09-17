@@ -1,29 +1,8 @@
 import { getQueryingPathName, type Search } from "@/utils/fetch-client";
 
-type WebAlias =
-  | "signin"
-  | "portfolio"
-  | "portfolio-about"
-  | "portfolio-blog"
-  | "labs"
-  | "labs-server-crud"
-  | "labs-limited-read"
-  | "labs-web3-crud";
+type Alias = ApiAlias | WebAlias;
 
 type ApiAlias = "labs-transactions";
-
-type Alias = WebAlias | ApiAlias;
-
-interface WebNav {
-  alias: WebAlias;
-  pathName: string;
-  type: "web";
-  data: {
-    label: string;
-    hierarchy: number;
-    parentAlias?: WebAlias;
-  };
-}
 
 interface ApiNav {
   alias: ApiAlias;
@@ -31,7 +10,28 @@ interface ApiNav {
   type: "api";
 }
 
-type Nav = WebNav | ApiNav;
+type Nav = ApiNav | WebNav;
+
+type WebAlias =
+  | "labs-limited-read"
+  | "labs-server-crud"
+  | "labs-web3-crud"
+  | "labs"
+  | "portfolio-about"
+  | "portfolio-blog"
+  | "portfolio"
+  | "signin";
+
+interface WebNav {
+  alias: WebAlias;
+  data: {
+    hierarchy: number;
+    label: string;
+    parentAlias?: WebAlias;
+  };
+  pathName: string;
+  type: "web";
+}
 
 const navs: Nav[] = [
   {
@@ -118,25 +118,7 @@ const navs: Nav[] = [
   },
 ];
 
-export function getPathName(alias: Alias): string {
-  const _nav = navs.find((n) => n.alias === alias);
-  if (_nav === undefined) throw new Error("alias not found");
-  return _nav.pathName;
-}
-
-export function getLabel(alias: WebAlias): string {
-  const _nav = navs.find((n) => n.alias === alias);
-  if (_nav === undefined) throw new Error("alias not found");
-  if (_nav.type !== "web") throw new Error("alias not web");
-  return _nav.data.label;
-}
-
-export function getTag(alias: ApiAlias, search?: Search) {
-  const _path = getPathName(alias);
-  return getQueryingPathName(_path, search);
-}
-
-export function findNavs(pathName: string): WebNav[] | undefined {
+export function findNavs(pathName: string): undefined | WebNav[] {
   let _nav = navs.find((n) => n.pathName === pathName);
   if (_nav === undefined || _nav.type !== "web") return undefined;
 
@@ -151,4 +133,22 @@ export function findNavs(pathName: string): WebNav[] | undefined {
   }
 
   return _navs.reverse();
+}
+
+export function getLabel(alias: WebAlias): string {
+  const _nav = navs.find((n) => n.alias === alias);
+  if (_nav === undefined) throw new Error("alias not found");
+  if (_nav.type !== "web") throw new Error("alias not web");
+  return _nav.data.label;
+}
+
+export function getPathName(alias: Alias): string {
+  const _nav = navs.find((n) => n.alias === alias);
+  if (_nav === undefined) throw new Error("alias not found");
+  return _nav.pathName;
+}
+
+export function getTag(alias: ApiAlias, search?: Search) {
+  const _path = getPathName(alias);
+  return getQueryingPathName(_path, search);
 }

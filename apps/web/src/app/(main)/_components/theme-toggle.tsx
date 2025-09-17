@@ -24,7 +24,7 @@ export function ThemeToggle() {
           <span>Toggle theme</span>
         </SidebarMenuButton>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" side={isMobile ? "bottom" : "right"}>
+      <DropdownMenuContent side={isMobile ? "bottom" : "right"} align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>

@@ -39,6 +39,7 @@ const createTransactionRequestSchema = z.object({
 });
 
 const updateTransactionRequestSchema = z.object({
+  id: z.string().min(1, "Transaction ID is required"),
   amount: PositiveDecimalSchema.optional(),
   currency: z
     .string()
@@ -50,7 +51,6 @@ const updateTransactionRequestSchema = z.object({
     .string()
     .regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code")
     .optional(),
-  id: z.string().min(1, "Transaction ID is required"),
   price: PositiveDecimalSchema.optional(),
   profitLoss: DecimalStringSchema.optional(),
   type: z.enum(["BUY", "SELL"]).optional(),
@@ -68,14 +68,14 @@ const deleteTransactionRequestSchema = z.object({
 export type CreateTransactionRequest = z.infer<
   typeof createTransactionRequestSchema
 >;
-export type UpdateTransactionRequest = z.infer<
-  typeof updateTransactionRequestSchema
+export type DeleteTransactionRequest = z.infer<
+  typeof deleteTransactionRequestSchema
 >;
 export type GetTransactionsRequest = z.infer<
   typeof getTransactionsRequestSchema
 >;
-export type DeleteTransactionRequest = z.infer<
-  typeof deleteTransactionRequestSchema
+export type UpdateTransactionRequest = z.infer<
+  typeof updateTransactionRequestSchema
 >;
 
 export const parseCreateTransactionRequest = parseWith(
