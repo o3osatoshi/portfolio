@@ -1,8 +1,6 @@
 import tsParser from "@typescript-eslint/parser";
 import perfectionist from "eslint-plugin-perfectionist";
 
-const INTERNAL_PATTERNS = ["^@/", "^@o3osatoshi/", "^apps/", "^packages/"];
-
 export default [
   {
     ignores: [
@@ -64,7 +62,7 @@ export default [
             "style",
             "unknown",
           ],
-          internalPattern: INTERNAL_PATTERNS,
+          internalPattern: ["^@/", "^@o3osatoshi/", "^apps/", "^packages/"],
           newlinesBetween: "always",
           order: "asc",
           type: "natural",
