@@ -25,6 +25,7 @@
   "exports": {
     "./biome/*": "./biome/*",
     "./tsconfig/*": "./tsconfig/*",
+    "./eslint/*": "./eslint/*",
     "./tsup": {
       "types": "./dist/tsup/index.d.ts",
       "import": "./dist/tsup/index.js",
@@ -36,6 +37,7 @@
     "dist",
     "tsconfig",
     "biome",
+    "eslint",
     "README.md",
     "LICENSE"
   ],
@@ -53,6 +55,9 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-perfectionist": "^4.15.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   },
