@@ -1,33 +1,111 @@
 import tsParser from "@typescript-eslint/parser";
 import perfectionist from "eslint-plugin-perfectionist";
 
-/** @type {import("eslint").Linter.FlatConfig[]} */
+const INTERNAL_PATTERNS = ["^@/", "^@o3osatoshi/", "^apps/", "^packages/"];
+
 export default [
   {
     ignores: [
       "**/node_modules/**",
-      "**/generated/**",
       "**/dist/**",
-      "**/storybook-static/**",
+      "**/generated/**",
       "**/.next/**",
       "**/.turbo/**",
       "**/.idea/**",
+      "**/storybook-static/**",
     ],
   },
 
+  // ① Perfectionist plugin registration (no presets)
   {
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      parser: tsParser,
-      sourceType: "module",
-    },
+    files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
+    linterOptions: { reportUnusedDisableDirectives: true },
     plugins: { perfectionist },
-    rules: { "perfectionist/sort-objects": "error" },
   },
 
+  // ② Use the TS parser in a separate block
   {
-    files: ["**/*.{js,jsx,mjs,cjs,mts,cts}"],
-    plugins: { perfectionist },
-    rules: { "perfectionist/sort-objects": "error" },
+    files: ["**/*.{ts,tsx,mts,cts}"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+  },
+
+  // ③ Override rules in another block (no "plugins" here)
+  {
+    files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
+    rules: {
+      "perfectionist/sort-named-exports": [
+        "error",
+        { ignoreCase: true, order: "asc", type: "natural" },
+      ],
+      "perfectionist/sort-named-imports": [
+        "error",
+        { ignoreCase: true, order: "asc", type: "natural" },
+      ],
+      "perfectionist/sort-array-includes": "error",
+      "perfectionist/sort-classes": "error",
+      "perfectionist/sort-decorators": "error",
+      "perfectionist/sort-enums": "error",
+      "perfectionist/sort-exports": "error",
+      "perfectionist/sort-imports": [
+        "error",
+        {
+          groups: [
+            "side-effect",
+            "builtin",
+            "external",
+            "internal",
+            ["parent", "sibling", "index"],
+            "style",
+            "unknown",
+          ],
+          internalPattern: INTERNAL_PATTERNS,
+          newlinesBetween: "always",
+          order: "asc",
+          type: "natural",
+        },
+      ],
+      "perfectionist/sort-interfaces": "error",
+      "perfectionist/sort-intersection-types": "error",
+      "perfectionist/sort-maps": "error",
+      "perfectionist/sort-modules": "error",
+      "perfectionist/sort-object-types": "error",
+      "perfectionist/sort-objects": [
+        "error",
+        {
+          customGroups: { top: ["id", "name"] },
+          groups: ["top", "unknown"],
+          order: "asc",
+          partitionByNewLine: true,
+          type: "natural",
+        },
+      ],
+      "perfectionist/sort-sets": "error",
+      "perfectionist/sort-union-types": "error",
+      "perfectionist/sort-variable-declarations": "error",
+    },
+  },
+
+  // ④ JSX-specific sorting
+  {
+    files: ["**/*.{jsx,tsx}"],
+    rules: {
+      "perfectionist/sort-jsx-props": [
+        "error",
+        {
+          customGroups: {
+            top: ["key", "ref", "id", "data-testid"],
+          },
+          groups: ["top", "unknown"],
+          order: "asc",
+          type: "natural",
+        },
+      ],
+    },
   },
 ];

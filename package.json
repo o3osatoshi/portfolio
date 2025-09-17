@@ -12,7 +12,7 @@
     "dev:functions": "turbo run dev --filter=functions...",
     "dev:storybook": "turbo run dev --filter=storybook...",
     "dev:web": "turbo run dev --filter=web...",
-    "style": "run-s style:biome style:eslint style:pkg",
+    "style": "run-s style:pkg style:eslint style:biome",
     "style:biome": "biome check --write",
     "style:biome:fix": "biome check --write --unsafe",
     "style:eslint": "eslint . --fix",
