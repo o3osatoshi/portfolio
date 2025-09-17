@@ -4,18 +4,6 @@ import perfectionist from "eslint-plugin-perfectionist";
 const INTERNAL_PATTERNS = ["^@/", "^@o3osatoshi/", "^apps/", "^packages/"];
 
 export default [
-  {
-    ignores: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/generated/**",
-      "**/.next/**",
-      "**/.turbo/**",
-      "**/.idea/**",
-      "**/storybook-static/**",
-    ],
-  },
-
   // ① Perfectionist plugin registration (no presets)
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
