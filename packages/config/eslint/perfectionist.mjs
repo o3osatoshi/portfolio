@@ -4,14 +4,14 @@ import perfectionist from "eslint-plugin-perfectionist";
 const INTERNAL_PATTERNS = ["^@/", "^@o3osatoshi/", "^apps/", "^packages/"];
 
 export default [
-  // ① Perfectionist plugin registration (no presets)
+  // 1. Perfectionist plugin registration (no presets)
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
     linterOptions: { reportUnusedDisableDirectives: true },
     plugins: { perfectionist },
   },
 
-  // ② Use the TS parser in a separate block
+  // 2. Use the TS parser in a separate block
   {
     files: ["**/*.{ts,tsx,mts,cts}"],
     languageOptions: {
@@ -25,7 +25,7 @@ export default [
     },
   },
 
-  // ③ Override rules in another block (no "plugins" here)
+  // 3. Override rules in another block (no "plugins" here)
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
     rules: {
@@ -81,7 +81,7 @@ export default [
     },
   },
 
-  // ④ JSX-specific sorting
+  // 4. JSX-specific sorting
   {
     files: ["**/*.{jsx,tsx}"],
     rules: {

@@ -1,16 +1,15 @@
-// packages/config/eslint/vitest.mjs
 // @ts-check
 import vitest from "eslint-plugin-vitest";
 
 /**
- * Vitest-focused Flat Config (fast & effective)
+ * Vitest-focused flat config
  * - Targets only test files
- * - Starts from plugin's recommended rules
+ * - Starts from plugin recommended rules
  * - Adds a few high-signal checks
  */
 export default [
   {
-    // テストだけに限定（性能◎）
+    // Target test files only
     files: [
       "**/*.{test,spec}.{js,jsx,ts,tsx,mjs,cjs,mts,cts}",
       "**/__tests__/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}",
@@ -18,7 +17,7 @@ export default [
 
     plugins: { vitest },
 
-    // Vitest のグローバルを明示（環境依存の未定義エラーを防止）
+    // Declare Vitest globals to avoid undefined variable errors
     languageOptions: {
       globals: {
         afterAll: "readonly",
@@ -35,26 +34,22 @@ export default [
       },
     },
 
-    // 推奨セットをベースに（衝突・ノイズが少ない）
+    // Start from plugin recommended config
     ...vitest.configs.recommended,
 
     rules: {
       "vitest/no-identical-title": "warn",
       "vitest/valid-title": "warn",
       "vitest/expect-expect": "warn",
-      "vitest/no-disabled-tests": "warn", // .skip を減らす
-      // 追加の“効きが良い”ルール（誤検出少なめ）
-      "vitest/no-focused-tests": "error", // .only 防止
+      "vitest/no-disabled-tests": "warn", // discourage .skip
+      // High-signal, low-noise extras
+      "vitest/no-focused-tests": "error", // prevent .only
       "vitest/prefer-hooks-in-order": "warn",
       "vitest/prefer-hooks-on-top": "warn",
-      // 必要に応じて追加:
-      // "vitest/no-conditional-expect": "warn",
-      // "vitest/no-alias-methods": "warn",
-      // "vitest/max-nested-describe": ["warn", { max: 4 }],
     },
   },
 
-  // セットアップ/環境ファイルは厳しめルールを緩める（誤検出回避）
+  // Relax rules for setup/environment files
   {
     files: ["**/vitest.setup.*", "**/setupTests.*", "**/test-utils/**"],
     rules: {
