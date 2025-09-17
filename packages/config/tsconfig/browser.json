@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "noEmit": true,
+
     "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    "noEmit": true,
+
     "types": ["react", "react-dom", "node"]
   },
   "extends": "./base.json"
