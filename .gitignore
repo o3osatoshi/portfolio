@@ -1,6 +1,7 @@
 # common
 dist
 generated
+.cache
 
 
 # turbo
