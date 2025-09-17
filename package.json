@@ -6,6 +6,9 @@
     "build:functions": "turbo run build --filter=functions...",
     "build:storybook": "turbo run build --filter=storybook...",
     "build:web": "turbo run build --filter=web...",
+    "check": "run-s check:type check:test",
+    "check:test": "turbo run test",
+    "check:type": "turbo run typecheck",
     "clean": "turbo run clean --parallel",
     "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
@@ -15,10 +18,8 @@
     "style": "run-s style:pkg style:eslint style:biome",
     "style:biome": "biome check --write",
     "style:biome:fix": "biome check --write --unsafe",
-    "style:eslint": "eslint . --fix",
-    "style:pkg": "sort-package-json **/package.json",
-    "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "style:eslint": "eslint . --fix --cache --cache-location .cache/eslint/",
+    "style:pkg": "sort-package-json **/package.json"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
