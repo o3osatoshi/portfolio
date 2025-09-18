@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
     "jsx": "preserve",
-
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-
     "noEmit": true,
-
     "plugins": [{ "name": "next" }],
-
     "types": ["node"]
   },
   "extends": "./base.json"

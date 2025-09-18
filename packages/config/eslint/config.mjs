@@ -1,3 +1,4 @@
+import jsonc from "./jsonc.mjs";
 import perfectionist from "./perfectionist.mjs";
 import vitest from "./vitest.mjs";
 
@@ -14,5 +15,6 @@ export default [
     ],
   },
   ...perfectionist,
+  ...jsonc,
   ...vitest,
 ];
