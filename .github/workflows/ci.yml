@@ -36,11 +36,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run biome, eslint and pkg
-        run: pnpm style:pure
-
       - name: Build packages
         run: pnpm build
 
       - name: Run typecheck and test
         run: pnpm check
+
+      - name: Run biome, eslint and pkg
+        run: pnpm style:pure

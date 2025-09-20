@@ -21,8 +21,8 @@
     "style:biome:pure": "biome check .",
     "style:eslint": "eslint . --fix --cache --cache-location .cache/eslint/",
     "style:eslint:pure": "eslint . --cache --cache-location .cache/eslint/",
-    "style:pkg": "sort-package-json --ignore '**/node_modules' **/package.json",
-    "style:pkg:pure": "sort-package-json --check --ignore '**/node_modules' **/package.json",
+    "style:pkg": "sort-package-json --ignore '**/node_modules' --ignore '**/generated' **/package.json",
+    "style:pkg:pure": "sort-package-json --ignore '**/node_modules' --check --ignore '**/generated' **/package.json",
     "style:pure": "run-s style:pkg:pure style:eslint:pure style:biome:pure"
   },
   "devDependencies": {
