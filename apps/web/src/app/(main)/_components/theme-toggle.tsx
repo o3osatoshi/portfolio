@@ -1,5 +1,8 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,8 +11,6 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@o3osatoshi/ui/client";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();

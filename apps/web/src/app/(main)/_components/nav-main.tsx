@@ -1,3 +1,6 @@
+import { ChevronRight, Construction, type LucideIcon } from "lucide-react";
+
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import {
   Collapsible,
   CollapsibleContent,
@@ -11,8 +14,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@o3osatoshi/ui/client";
-import { ChevronRight, Construction, type LucideIcon } from "lucide-react";
-import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 
 export function NavMain({
   items,

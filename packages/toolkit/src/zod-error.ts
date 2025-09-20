@@ -1,4 +1,4 @@
-import { type ZodError, type ZodIssue, z } from "zod";
+import { z, type ZodError, type ZodIssue } from "zod";
 
 import { newError as baseNewError } from "./error";
 

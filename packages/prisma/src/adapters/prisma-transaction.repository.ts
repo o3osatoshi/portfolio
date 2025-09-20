@@ -1,4 +1,3 @@
-import { newError as baseError } from "@o3osatoshi/toolkit";
 import type {
   CreateTransaction,
   Transaction,
@@ -9,10 +8,12 @@ import type {
 import { newTransaction } from "@repo/domain";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
+import { newError as baseError } from "@o3osatoshi/toolkit";
+
 import {
   Prisma,
-  type Transaction as PrismaTransaction,
   prisma,
+  type Transaction as PrismaTransaction,
 } from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
 

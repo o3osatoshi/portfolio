@@ -1,8 +1,9 @@
 "use client";
 
-import { useSidebar } from "@o3osatoshi/ui/client";
 import Link from "next/link";
 import type { ComponentProps } from "react";
+
+import { useSidebar } from "@o3osatoshi/ui/client";
 
 interface SidebarLinkProps extends ComponentProps<typeof Link> {
   children: React.ReactNode;

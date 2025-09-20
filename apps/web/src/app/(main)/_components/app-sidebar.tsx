@@ -1,3 +1,12 @@
+import { FlaskConical, User } from "lucide-react";
+import type * as React from "react";
+
+import { NavMain } from "@/app/(main)/_components/nav-main";
+import { NavProjects } from "@/app/(main)/_components/nav-projects";
+import { NavSecondary } from "@/app/(main)/_components/nav-secondary";
+import { NavUser } from "@/app/(main)/_components/nav-user";
+import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
+import { getLabel, getPathName } from "@/utils/handle-nav";
 import {
   Sidebar,
   SidebarContent,
@@ -7,14 +16,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@o3osatoshi/ui/client";
-import { FlaskConical, User } from "lucide-react";
-import type * as React from "react";
-import { NavMain } from "@/app/(main)/_components/nav-main";
-import { NavProjects } from "@/app/(main)/_components/nav-projects";
-import { NavSecondary } from "@/app/(main)/_components/nav-secondary";
-import { NavUser } from "@/app/(main)/_components/nav-user";
-import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
-import { getLabel, getPathName } from "@/utils/handle-nav";
 
 const data = {
   navMain: [

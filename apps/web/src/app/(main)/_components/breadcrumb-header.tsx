@@ -1,5 +1,9 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import React from "react";
+
+import { findNavs } from "@/utils/handle-nav";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,9 +13,6 @@ import {
   BreadcrumbSeparator,
 } from "@o3osatoshi/ui";
 import { Separator, SidebarTrigger } from "@o3osatoshi/ui/client";
-import { usePathname } from "next/navigation";
-import React from "react";
-import { findNavs } from "@/utils/handle-nav";
 
 export default function BreadcrumbHeader() {
   const pathname = usePathname();

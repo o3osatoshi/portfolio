@@ -1,10 +1,11 @@
 "use client";
 
-import { Button } from "@o3osatoshi/ui";
 import { Trash2 } from "lucide-react";
 import { useActionState } from "react";
+
 import { deleteTransaction } from "@/app/(main)/labs/server-crud/_actions/delete-transaction";
 import type { ActionState } from "@/utils/action-state";
+import { Button } from "@o3osatoshi/ui";
 
 export default function DeleteButton({ id }: { id: string }) {
   const [_, dispatch, isPending] = useActionState<

@@ -1,5 +1,7 @@
 "use client";
 
+import { signIn } from "next-auth/react";
+
 import {
   Button,
   Card,
@@ -8,7 +10,6 @@ import {
   CardTitle,
   cn,
 } from "@o3osatoshi/ui";
-import { signIn } from "next-auth/react";
 
 export function SigninForm({
   className,
