@@ -39,5 +39,8 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Run type and test checks
+      - name: Run typecheck and test
         run: pnpm check
+
+      - name: Run biome, eslint and pkg
+        run: pnpm style:pure
