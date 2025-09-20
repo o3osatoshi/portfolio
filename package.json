@@ -16,10 +16,14 @@
     "dev:storybook": "turbo run dev --filter=storybook...",
     "dev:web": "turbo run dev --filter=web...",
     "style": "run-s style:pkg style:eslint style:biome",
-    "style:biome": "biome check --write",
-    "style:biome:fix": "biome check --write --unsafe",
+    "style:biome": "biome check . --write",
+    "style:biome:fix": "biome check . --write --unsafe",
+    "style:biome:pure": "biome check .",
     "style:eslint": "eslint . --fix --cache --cache-location .cache/eslint/",
-    "style:pkg": "sort-package-json **/package.json"
+    "style:eslint:pure": "eslint . --cache --cache-location .cache/eslint/",
+    "style:pkg": "sort-package-json **/package.json",
+    "style:pkg:pure": "sort-package-json --check **/package.json",
+    "style:pure": "run-s style:pkg:pure style:eslint:pure style:biome:pure"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
