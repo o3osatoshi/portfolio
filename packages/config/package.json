@@ -1,6 +1,6 @@
 {
   "name": "@o3osatoshi/config",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "description": "Shared tsup presets and TypeScript tsconfig bases for personal projects.",
   "keywords": [
