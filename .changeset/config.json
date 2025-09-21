@@ -13,6 +13,7 @@
     "@repo/application",
     "@repo/domain",
     "@repo/prisma",
+    "@repo/eth",
     "functions",
     "storybook",
     "web"
