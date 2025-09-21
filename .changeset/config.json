@@ -14,9 +14,9 @@
     "@repo/domain",
     "@repo/prisma",
     "@repo/eth",
-    "functions",
-    "storybook",
-    "web"
+    "@o3osatoshi/functions",
+    "@o3osatoshi/storybook",
+    "@o3osatoshi/web"
   ],
   "linked": [],
   "updateInternalDependencies": "patch"
