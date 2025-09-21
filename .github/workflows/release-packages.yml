@@ -1,4 +1,4 @@
-name: Publish Packages
+name: Release Packages
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  publish:
-    name: Publish Packages
+  release:
     runs-on: ubuntu-latest
     env:
-      CI: true
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     permissions:
       contents: write
       pull-requests: write
@@ -46,8 +46,8 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm publish:version
-          publish: pnpm publish
+          version: pnpm release:version
+          publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
