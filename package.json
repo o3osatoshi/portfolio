@@ -15,6 +15,9 @@
     "dev:functions": "turbo run dev --filter=functions...",
     "dev:storybook": "turbo run dev --filter=storybook...",
     "dev:web": "turbo run dev --filter=web...",
+    "publish:note": "pnpm exec changeset",
+    "publish:packages": "pnpm exec changeset publish",
+    "publish:version": "pnpm exec changeset version",
     "style": "run-s style:pkg style:eslint style:biome",
     "style:biome": "biome check . --write",
     "style:biome:fix": "biome check . --write --unsafe",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@changesets/cli": "^2.29.7",
     "@o3osatoshi/config": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "access": "public",
+  "baseBranch": "main",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "o3osatoshi/portfolio" }
+  ],
+  "commit": true,
+  "commitMessage": "chore(release): version packages",
+  "fixed": [],
+  "ignore": ["@repo/application", "@repo/domain", "@repo/prisma"],
+  "linked": [],
+  "updateInternalDependencies": "patch"
+}
