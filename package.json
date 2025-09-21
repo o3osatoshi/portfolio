@@ -10,7 +10,7 @@
     "check:test": "turbo run test",
     "check:type": "turbo run typecheck",
     "clean": "turbo run clean --parallel",
-    "deploy:functions": "firebase deploy --only @o3osatoshi/functions",
+    "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
     "dev:functions": "turbo run dev --filter=@o3osatoshi/functions...",
     "dev:storybook": "turbo run dev --filter=@o3osatoshi/storybook...",
