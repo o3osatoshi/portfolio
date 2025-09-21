@@ -32,7 +32,7 @@ Tip: if you need to inspect or edit changelog output before publishing, review t
   ```
   - Quote package names.
   - Use one line per package, with the bump type `major`, `minor`, or `patch`.
-  - Include only the packages that should publish; private packages and the workspaces listed in `ignore` (e.g. `@repo/application`, `@repo/domain`, `@repo/prisma`) are skipped automatically.
+  - Include only the packages that should publish; private packages and the workspaces listed in `ignore` (e.g. `@repo/application`, `@repo/domain`, `@repo/prisma`, `web`, `functions`, `storybook`) are skipped automatically.
 - Write the body in markdown using short, imperative sentences. A single bullet point is usually enough:
   ```
   - add motion tokens and expose `useMotionPreset`

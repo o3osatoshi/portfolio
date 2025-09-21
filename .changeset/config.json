@@ -9,7 +9,14 @@
   "commit": true,
   "commitMessage": "chore(release): version packages",
   "fixed": [],
-  "ignore": ["@repo/application", "@repo/domain", "@repo/prisma"],
+  "ignore": [
+    "@repo/application",
+    "@repo/domain",
+    "@repo/prisma",
+    "functions",
+    "storybook",
+    "web"
+  ],
   "linked": [],
   "updateInternalDependencies": "patch"
 }
