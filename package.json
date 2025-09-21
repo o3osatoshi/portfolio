@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "@o3osatoshi/config": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
