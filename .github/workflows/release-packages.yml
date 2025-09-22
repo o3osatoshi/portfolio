@@ -50,14 +50,6 @@ jobs:
             //registry.npmjs.org/:_authToken=${NPM_TOKEN}
           EOF
 
-      - name: Check npm
-        run: |
-          cat ~/.npmrc || echo "<no .npmrc>"
-          echo "userconfig: $(npm config get userconfig)"
-          echo "registry:   $(npm config get registry)"
-          echo "scope-reg:  $(npm config get @o3osatoshi:registry || echo '<empty>')"
-          npm whoami || echo "<anonymous>"
-
       - name: Create release PR or publish to npm
         uses: changesets/action@v1
         with:
