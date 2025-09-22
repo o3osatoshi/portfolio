@@ -17,18 +17,14 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove runner user .npmrc
-        run: rm -f ~/.npmrc
-
       - name: Seed workspace .npmrc
         run: |
-          cat << EOF > ".npmrc"
+          cat << EOF > "$HOME/.npmrc"
             registry=https://registry.npmjs.org/
             @o3osatoshi:registry=https://registry.npmjs.org/
             always-auth=true
@@ -60,4 +56,4 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
