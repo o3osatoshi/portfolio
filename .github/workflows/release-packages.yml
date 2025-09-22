@@ -28,7 +28,7 @@ jobs:
 
       - name: Seed workspace .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
+          cat << EOF > ".npmrc"
             registry=https://registry.npmjs.org/
             @o3osatoshi:registry=https://registry.npmjs.org/
             always-auth=true
@@ -62,4 +62,4 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
