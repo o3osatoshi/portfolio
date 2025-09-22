@@ -1,5 +1,11 @@
 # @o3osatoshi/ui
 
+## 0.0.2
+
+### Patch Changes
+
+- [`bc9ed90`](https://github.com/o3osatoshi/portfolio/commit/bc9ed90a7831a8d366984fad24c2f087b478f1f8) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - release test
+
 ## 0.0.1
 
 ### Patch Changes
