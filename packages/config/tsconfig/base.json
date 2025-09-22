@@ -21,7 +21,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2022",
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo",
+    "tsBuildInfoFile": ".cache/tsbuildinfo",
     "useUnknownInCatchVariables": true,
     "verbatimModuleSyntax": true
   },
