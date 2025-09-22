@@ -24,11 +24,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Remove runner user .npmrc
-        run: rm -f ~/.npmrc
+        run: rm -f $HOME/.npmrc
 
       - name: Seed workspace .npmrc
         run: |
-          cat << EOF > "~/.npmrc"
+          cat << EOF > "$HOME/.npmrc"
             registry=https://registry.npmjs.org/
             @o3osatoshi:registry=https://registry.npmjs.org/
             always-auth=true
