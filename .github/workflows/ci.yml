@@ -36,6 +36,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Restore caches (.cache/*)
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/.cache/eslint
+            **/.cache/tsbuildinfo
+          key: cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-${{ hashFiles('**/tsconfig*.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-
+            cache-${{ runner.os }}-
+
       - name: Build packages
         run: pnpm build
 
