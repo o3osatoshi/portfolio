@@ -40,6 +40,13 @@ jobs:
       - name: Build packages
         run: pnpm build
 
+      - name: Check npm
+        run: |
+          echo "userconfig: $(npm config get userconfig)"
+          echo "registry:   $(npm config get registry)"
+          echo "scope-reg:  $(npm config get @o3osatoshi:registry || echo '<empty>')"
+          npm whoami || echo "<anonymous>"
+
       - name: Create release PR or publish to npm
         uses: changesets/action@v1
         with:
