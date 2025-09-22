@@ -17,6 +17,7 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -48,8 +49,6 @@ jobs:
             always-auth=true
             //registry.npmjs.org/:_authToken=${NPM_TOKEN}
           EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Check npm
         run: |
@@ -58,8 +57,6 @@ jobs:
           echo "registry:   $(npm config get registry)"
           echo "scope-reg:  $(npm config get @o3osatoshi:registry || echo '<empty>')"
           npm whoami || echo "<anonymous>"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create release PR or publish to npm
         uses: changesets/action@v1
@@ -68,4 +65,3 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
