@@ -28,6 +28,9 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Check .npmrc
+        run: cat "$HOME/.npmrc"
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
