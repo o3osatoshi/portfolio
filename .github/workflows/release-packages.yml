@@ -18,6 +18,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -32,10 +33,8 @@ jobs:
             registry=https://registry.npmjs.org/
             @o3osatoshi:registry=https://registry.npmjs.org/
             always-auth=true
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+            //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
           EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -62,4 +61,3 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
