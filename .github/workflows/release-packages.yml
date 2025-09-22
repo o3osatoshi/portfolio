@@ -22,17 +22,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Remove runner user .npmrc
         run: rm -f ~/.npmrc
 
       - name: Seed workspace .npmrc
         run: |
-          echo "registry=https://registry.npmjs.org/" > .npmrc
-          echo "@o3osatoshi:registry=https://registry.npmjs.org/" >> .npmrc
-          echo "always-auth=true" >> .npmrc
+          cat << EOF > "$HOME/.npmrc"
+            registry=https://registry.npmjs.org/
+            @o3osatoshi:registry=https://registry.npmjs.org/
+            always-auth=true
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -45,7 +48,6 @@ jobs:
         with:
           node-version: 22.x
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
