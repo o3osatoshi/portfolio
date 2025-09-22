@@ -17,19 +17,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Creating .npmrc
+      - name: Remove runner user .npmrc
+        run: rm -f ~/.npmrc
+
+      - name: Seed workspace .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-            registry=https://registry.npmjs.org/
-            always-auth=true
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          echo "@o3osatoshi:registry=https://registry.npmjs.org/" >> .npmrc
+          echo "always-auth=true" >> .npmrc
 
-      - name: Check .npmrc
-        run: cat "$HOME/.npmrc"
+      - name: Pin npm userconfig
+        run: echo "Pinned userconfig to workspace"
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+          npm_config_userconfig: ${{ github.workspace }}/.npmrc
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -42,21 +46,26 @@ jobs:
         with:
           node-version: 22.x
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+          npm_config_userconfig: ${{ github.workspace }}/.npmrc
 
       - name: Build packages
         run: pnpm build
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+          npm_config_userconfig: ${{ github.workspace }}/.npmrc
 
       - name: Create release PR or publish to npm
-        id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm release:version
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.NPM_TOKEN }}
+          NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+          npm_config_userconfig: ${{ github.workspace }}/.npmrc
