@@ -42,6 +42,7 @@ jobs:
 
       - name: Check npm
         run: |
+          cat ~/.npmrc || echo "<no .npmrc>"
           echo "userconfig: $(npm config get userconfig)"
           echo "registry:   $(npm config get registry)"
           echo "scope-reg:  $(npm config get @o3osatoshi:registry || echo '<empty>')"
