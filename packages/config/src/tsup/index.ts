@@ -18,7 +18,7 @@ interface PackageJson {
 }
 
 /**
- * 3) React component preset (for packages/ui consumed by Next)
+ * Browser React component preset (used by packages/ui consumed by Next)
  * - ESM only, browser platform, React externals, DTS optional (usually not needed)
  * - preserve JSX transform via esbuild default; Next handles it later
  */
@@ -46,7 +46,7 @@ export async function browserPreset(opts: Options = {}) {
 }
 
 /**
- * 7) Firebase Functions preset (Node runtime, ESM output)
+ * Firebase Functions preset (Node runtime, ESM output)
  * - ESM single-file output for Functions runtime
  * - Node platform, Node22 target, sourcemaps for debugging
  * - Bundle local code, externalize deps automatically (via autoExternals)
@@ -72,7 +72,7 @@ export async function functionsPreset(opts: Options = {}) {
 }
 
 /**
- * 2) Public library preset (dual format + DTS)
+ * Public library preset (dual format + DTS)
  * - ESM + CJS, DTS on, still treeshake
  * - sourcemap off by default (turn on if you really need it)
  */

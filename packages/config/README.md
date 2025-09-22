@@ -2,7 +2,7 @@
 
 Shared configuration for my TypeScript projects.
 
-- tsup presets (library/dual-format/browser/CLI/prisma/multi-entry/functions)
+- tsup presets (browser/public-dual/functions)
 - TypeScript tsconfig bases (base/node/browser/next/functions/storybook)
 - Biome shared configs (base, react, next)
 - ESLint flat config (perfectionist import/order rules)
@@ -35,37 +35,16 @@ Notes
 Import presets from `@o3osatoshi/config/tsup` and export a config in `tsup.config.mjs`.
 
 ```ts
-import {
-  internalEsmPreset,
-  publicDualPreset,
-  browserPreset,
-  nodeCliPreset,
-  prismaPreset,
-  multiEntryEsmPreset,
-  functionsPreset,
-} from "@o3osatoshi/config/tsup";
+import { browserPreset, publicDualPreset, functionsPreset } from "@o3osatoshi/config/tsup";
 
-// 1) Internal library (ESM only)
-export default await internalEsmPreset({ entry: { index: "src/index.ts" } });
+// Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
+export default await browserPreset({ entry: { index: "src/index.tsx" }, dts: true });
 
-// 2) Public library (ESM + CJS, with DTS).
+// Public library (ESM + CJS, with DTS).
 //    Default sourcemap: enabled in production/CI, disabled in dev.
-//    Pass { sourcemap: false } to disable in prod.
 // export default await publicDualPreset({ entry: { index: "src/index.ts" } });
 
-// 3) Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
-// export default await browserPreset({ entry: { index: "src/index.tsx" }, dts: true });
-
-// 4) Node CLI (CJS with shebang)
-// export default await nodeCliPreset({ entry: { cli: "src/cli.ts" } });
-
-// 5) Prisma helpers (transpile only; prisma client stays external)
-// export default await prismaPreset({ entry: { index: "src/index.ts" } });
-
-// 6) Multi‑entry ESM (internal)
-// export default await multiEntryEsmPreset({ entry: { index: "src/index.ts", util: "src/util.ts" } });
-
-// 7) Firebase Functions (ESM, Node target). Adjust target per runtime.
+// Firebase Functions (ESM, Node target). Adjust target per runtime.
 // export default await functionsPreset({ entry: { index: "src/index.ts" } });
 ```
 
@@ -77,11 +56,8 @@ Notes
 - You can pass through `env`, `banner`, `external`, `outDir`, and `onSuccess` as needed.
 
 Defaults (high-level)
-- `internalEsmPreset`: ESM only, no DTS, no sourcemap, fast dev builds.
-- `publicDualPreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prod, off in dev.
 - `browserPreset`: ESM, platform `browser`, React/Next external, `dts` off by default.
-- `nodeCliPreset`: CJS single file with shebang, minify in prod/CI.
-- `prismaPreset`: `bundle: false` and `@prisma/client` externalized.
+- `publicDualPreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prod, off in dev.
 - `functionsPreset`: ESM, platform `node`, `target: node22`, sourcemap enabled.
 
 ## tsconfig bases
