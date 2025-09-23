@@ -37,7 +37,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "run-s build:server build:client",
+    "build": "run-p build:server build:client",
     "build:client": "tsup --config tsup.client.config.mjs",
     "build:server": "tsup --config tsup.server.config.mjs",
     "clean": "rimraf dist",

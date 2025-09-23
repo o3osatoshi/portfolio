@@ -27,7 +27,7 @@ export async function browserPreset(opts: Options = {}) {
     treeshake: true,
     ...opts,
     clean: opts.clean ?? true,
-    dts: opts.dts ?? false,
+    dts: opts.dts ?? true,
     entry: opts.entry ?? { index: "src/index.tsx" },
     external: [
       ...autoExternals(),
