@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@repo/application": ["../../packages/application/src"],
-      "@repo/domain": ["../../packages/domain/src"]
+      "@repo/prisma": ["../../packages/prisma/src"]
     }
   },
   "extends": "../../packages/config/tsconfig/functions.json",

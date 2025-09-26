@@ -2,7 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["@repo/domain#build"]
+      "dependsOn": ["@repo/application#build", "@repo/prisma#build"]
     }
   }
 }

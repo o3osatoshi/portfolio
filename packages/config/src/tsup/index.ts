@@ -62,7 +62,7 @@ export async function functionsPreset(opts: Options = {}) {
       ...autoExternals(),
       ...((opts.external ?? []) as NonNullable<Options["external"]>),
     ],
-    format: opts.format ?? ["esm"],
+    format: opts.format ?? ["cjs"],
     minify: opts.minify ?? isProd,
     platform: opts.platform ?? "node",
     sourcemap: opts.sourcemap ?? true,
