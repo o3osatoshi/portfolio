@@ -10,10 +10,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.9.0",
+    "@auth/prisma-adapter": "^2.10.0",
     "@hookform/resolvers": "^5.0.1",
     "@o3osatoshi/ui": "workspace:*",
-    "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@rainbow-me/rainbowkit": "^2.2.5",
     "@repo/application": "workspace:*",
     "@repo/domain": "workspace:*",
