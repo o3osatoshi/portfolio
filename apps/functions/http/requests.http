@@ -1,3 +1,7 @@
 ### HelloWorld
 GET {{functions_prod_base}}/helloWorld
 Accept: text/plain
+
+### GetTransactions
+GET {{functions_prod_base}}/getTransactions?userId={{user_id}}
+Accept: application/json
