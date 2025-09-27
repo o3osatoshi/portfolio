@@ -1,5 +1,6 @@
 import "@o3osatoshi/ui/globals.css";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 
 import { Providers } from "@/app/_components/providers";
@@ -46,6 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <GoogleAnalytics gaId="G-QFX9PV6BLQ" />
       <body
         className={`${fontSans.variable} ${fontMono.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >

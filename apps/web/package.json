@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
     "@hookform/resolvers": "^5.0.1",
+    "@next/third-parties": "^15.5.4",
     "@o3osatoshi/ui": "workspace:*",
     "@rainbow-me/rainbowkit": "^2.2.5",
     "@repo/application": "workspace:*",
