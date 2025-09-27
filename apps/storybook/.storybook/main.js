@@ -6,8 +6,9 @@ function getAbsolutePath(value) {
 
 const config = {
   addons: [
-    getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@storybook/addon-essentials"),
+    getAbsolutePath("@storybook/addon-google-analytics"),
+    getAbsolutePath("@storybook/addon-links"),
   ],
   core: {},
   docs: {
