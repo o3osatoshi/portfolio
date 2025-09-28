@@ -1,0 +1,27 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "categorizeByGroup": false,
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/domain",
+    "packages/application",
+    "packages/toolkit",
+    "packages/prisma"
+  ],
+  "exclude": ["**/*.spec.ts", "**/*.stories.tsx", "**/dist/**", "**/.next/**"],
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "gitRevision": "main",
+  "hideBreadcrumbs": false,
+  "includeVersion": true,
+  "out": "docs/api",
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"]
+  },
+  "plugin": ["typedoc-plugin-markdown"],
+  "readme": "none",
+  "sourceLinkTemplate": "https://github.com/o3osatoshi/portfolio/blob/{gitRevision}/{path}#L{line}",
+  "tsconfig": "tsconfig.json"
+}
