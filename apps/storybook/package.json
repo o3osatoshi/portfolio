@@ -19,7 +19,6 @@
     "@o3osatoshi/config": "workspace:*",
     "@storybook/addon-actions": "^8.6.12",
     "@storybook/addon-essentials": "^8.6.12",
-    "@storybook/addon-google-analytics": "^6.2.9",
     "@storybook/addon-links": "^8.6.12",
     "@storybook/experimental-addon-test": "^8.6.12",
     "@storybook/react": "^8.6.12",
