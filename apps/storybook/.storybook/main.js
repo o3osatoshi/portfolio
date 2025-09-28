@@ -13,12 +13,11 @@ const config = {
   docs: {
     autodocs: true,
   },
-
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
-
+  staticDirs: ["../public"],
   stories: ["../stories/*.stories.@(ts|tsx|js|jsx|mdx)"],
 
   async viteFinal(config, { _configType }) {
