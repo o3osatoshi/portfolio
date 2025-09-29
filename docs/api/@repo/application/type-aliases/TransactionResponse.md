@@ -8,7 +8,12 @@
 
 > **TransactionResponse** = `object`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:7](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L7)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:19](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L19)
+
+DTO exposed by the application layer for transaction entities.
+
+Dates stay as `Date` to preserve timezone awareness and decimal values remain
+normalized strings so consumers can choose their own numeric formatting.
 
 ## Properties
 
@@ -16,7 +21,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:7](https://git
 
 > **amount**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:8](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L8)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:20](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L20)
 
 ***
 
@@ -24,7 +29,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:8](https://git
 
 > **createdAt**: `Date`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:9](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L9)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:21](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L21)
 
 ***
 
@@ -32,7 +37,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:9](https://git
 
 > **currency**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:10](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L10)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:22](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L22)
 
 ***
 
@@ -40,7 +45,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:10](https://gi
 
 > **datetime**: `Date`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:11](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L11)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:23](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L23)
 
 ***
 
@@ -48,7 +53,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:11](https://gi
 
 > `optional` **fee**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:12](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L12)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:24](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L24)
 
 ***
 
@@ -56,7 +61,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:12](https://gi
 
 > `optional` **feeCurrency**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:13](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L13)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:25](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L25)
 
 ***
 
@@ -64,7 +69,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:13](https://gi
 
 > **id**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:14](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L14)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:26](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L26)
 
 ***
 
@@ -72,7 +77,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:14](https://gi
 
 > **price**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:15](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L15)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:27](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L27)
 
 ***
 
@@ -80,7 +85,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:15](https://gi
 
 > `optional` **profitLoss**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:16](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L16)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:28](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L28)
 
 ***
 
@@ -88,7 +93,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:16](https://gi
 
 > **type**: `"BUY"` \| `"SELL"`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:17](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L17)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:29](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L29)
 
 ***
 
@@ -96,7 +101,7 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:17](https://gi
 
 > **updatedAt**: `Date`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:18](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L18)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:30](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L30)
 
 ***
 
@@ -104,4 +109,4 @@ Defined in: [packages/application/src/dtos/transaction.res.dto.ts:18](https://gi
 
 > **userId**: `string`
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:19](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.res.dto.ts#L19)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:31](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.res.dto.ts#L31)

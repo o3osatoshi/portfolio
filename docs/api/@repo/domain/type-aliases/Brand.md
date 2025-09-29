@@ -8,7 +8,9 @@
 
 > **Brand**\<`T`, `B`\> = `object` & `T`
 
-Defined in: [value-objects/brand.ts:2](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/domain/src/value-objects/brand.ts#L2)
+Defined in: [value-objects/brand.ts:4](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/domain/src/value-objects/brand.ts#L4)
+
+Utility type implementing nominal typing through an opaque string brand.
 
 ## Type Declaration
 

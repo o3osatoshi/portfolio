@@ -8,7 +8,9 @@
 
 > **isUserId**(`v`): `v is UserId`
 
-Defined in: [value-objects/ids.ts:13](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/domain/src/value-objects/ids.ts#L13)
+Defined in: [value-objects/ids.ts:21](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/domain/src/value-objects/ids.ts#L21)
+
+Type guard ensuring the value is a [UserId](../type-aliases/UserId.md).
 
 ## Parameters
 

@@ -8,4 +8,6 @@
 
 > **CreateTransactionRequest** = `z.infer`\<*typeof* `createTransactionRequestSchema`\>
 
-Defined in: [packages/application/src/dtos/transaction.req.dto.ts:69](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/dtos/transaction.req.dto.ts#L69)
+Defined in: [packages/application/src/dtos/transaction.req.dto.ts:84](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/dtos/transaction.req.dto.ts#L84)
+
+Validated shape of a create-transaction request after Zod parsing.

@@ -6,7 +6,9 @@
 
 # Class: DeleteTransactionUseCase
 
-Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:7](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/use-cases/user/delete-transaction.ts#L7)
+Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:10](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/use-cases/user/delete-transaction.ts#L10)
+
+Use case encapsulating the deletion of a transaction for a given user.
 
 ## Constructors
 
@@ -14,7 +16,7 @@ Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:7](ht
 
 > **new DeleteTransactionUseCase**(`repo`): `DeleteTransactionUseCase`
 
-Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:8](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/use-cases/user/delete-transaction.ts#L8)
+Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:11](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/use-cases/user/delete-transaction.ts#L11)
 
 #### Parameters
 
@@ -32,11 +34,15 @@ Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:8](ht
 
 > **execute**(`req`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:10](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/use-cases/user/delete-transaction.ts#L10)
+Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:19](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/use-cases/user/delete-transaction.ts#L19)
+
+Validate identifiers and delegate deletion to the persistence layer.
 
 #### Parameters
 
 ##### req
+
+Normalized request containing transaction and user identifiers.
 
 ###### id
 
@@ -49,3 +55,5 @@ Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:10](h
 #### Returns
 
 `ResultAsync`\<`void`, `Error`\>
+
+ResultAsync that resolves when the transaction is removed.

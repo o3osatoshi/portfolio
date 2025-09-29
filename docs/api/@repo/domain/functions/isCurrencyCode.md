@@ -8,7 +8,9 @@
 
 > **isCurrencyCode**(`v`): `v is CurrencyCode`
 
-Defined in: [value-objects/currency.ts:10](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/domain/src/value-objects/currency.ts#L10)
+Defined in: [value-objects/currency.ts:14](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/domain/src/value-objects/currency.ts#L14)
+
+Type guard ensuring the value is a [CurrencyCode](../type-aliases/CurrencyCode.md).
 
 ## Parameters
 

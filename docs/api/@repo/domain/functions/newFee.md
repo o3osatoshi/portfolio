@@ -8,7 +8,9 @@
 
 > **newFee**(`v`): `Result`\<`never`, `Error`\>
 
-Defined in: [value-objects/numeric.ts:40](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/domain/src/value-objects/numeric.ts#L40)
+Defined in: [value-objects/numeric.ts:54](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/domain/src/value-objects/numeric.ts#L54)
+
+Normalize an unknown value into a [Fee](../type-aliases/Fee.md), ensuring it is >= 0.
 
 ## Parameters
 

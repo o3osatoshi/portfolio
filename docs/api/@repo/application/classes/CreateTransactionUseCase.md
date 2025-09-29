@@ -6,7 +6,9 @@
 
 # Class: CreateTransactionUseCase
 
-Defined in: [packages/application/src/use-cases/user/create-transaction.ts:11](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/use-cases/user/create-transaction.ts#L11)
+Defined in: [packages/application/src/use-cases/user/create-transaction.ts:14](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/use-cases/user/create-transaction.ts#L14)
+
+Use case responsible for validating and persisting a new transaction for a user.
 
 ## Constructors
 
@@ -14,7 +16,7 @@ Defined in: [packages/application/src/use-cases/user/create-transaction.ts:11](h
 
 > **new CreateTransactionUseCase**(`repo`): `CreateTransactionUseCase`
 
-Defined in: [packages/application/src/use-cases/user/create-transaction.ts:12](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/use-cases/user/create-transaction.ts#L12)
+Defined in: [packages/application/src/use-cases/user/create-transaction.ts:15](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/use-cases/user/create-transaction.ts#L15)
 
 #### Parameters
 
@@ -32,11 +34,16 @@ Defined in: [packages/application/src/use-cases/user/create-transaction.ts:12](h
 
 > **execute**(`req`): `ResultAsync`\<[`TransactionResponse`](../type-aliases/TransactionResponse.md), `Error`\>
 
-Defined in: [packages/application/src/use-cases/user/create-transaction.ts:14](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/application/src/use-cases/user/create-transaction.ts#L14)
+Defined in: [packages/application/src/use-cases/user/create-transaction.ts:24](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/application/src/use-cases/user/create-transaction.ts#L24)
+
+Validate the inbound request, persist the transaction, and convert the
+domain entity into a DTO-friendly response.
 
 #### Parameters
 
 ##### req
+
+Normalized request payload from the application layer.
 
 ###### amount
 
@@ -77,3 +84,5 @@ Defined in: [packages/application/src/use-cases/user/create-transaction.ts:14](h
 #### Returns
 
 `ResultAsync`\<[`TransactionResponse`](../type-aliases/TransactionResponse.md), `Error`\>
+
+ResultAsync wrapping the created transaction DTO or a structured error.

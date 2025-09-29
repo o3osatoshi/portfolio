@@ -8,7 +8,10 @@
 
 > **updateTransaction**(`tx`, `patch`): `Result`\<[`Transaction`](../type-aliases/Transaction.md), `Error`\>
 
-Defined in: [entities/transaction.ts:167](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/domain/src/entities/transaction.ts#L167)
+Defined in: [entities/transaction.ts:194](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/domain/src/entities/transaction.ts#L194)
+
+Apply a partial update to an existing transaction while enforcing
+immutability rules (e.g., ID consistency) and value-object invariants.
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **newError**(`__namedParameters`): `Error`
 
-Defined in: [error.ts:85](https://github.com/o3osatoshi/experiment/blob/5bd7d1b2e07e346ab8abb44ddf7730e7fe84cf4f/packages/toolkit/src/error.ts#L85)
+Defined in: [error.ts:94](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/error.ts#L94)
 
 Creates a structured Error object with a consistent `name` and `message`.
 Intended for use in Domain/Application/Infra/Auth/UI layers where you want
