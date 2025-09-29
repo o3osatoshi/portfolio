@@ -4,13 +4,13 @@ import path from "node:path";
 import { defineConfig, type Options } from "tsup";
 
 /**
- * Build-time heuristics
+ * Build-time heuristics used by the presets to infer sensible defaults.
  */
 const isCI = !!process.env["CI"];
 const isProd = process.env["NODE_ENV"] === "production" || isCI;
 
 /**
- * Package.json structure for type safety
+ * Minimal package.json representation used when loading externals.
  */
 interface PackageJson {
   dependencies?: Record<string, string>;
@@ -18,9 +18,14 @@ interface PackageJson {
 }
 
 /**
- * Browser React component preset (used by packages/ui consumed by Next)
- * - ESM only, browser platform, React externals, DTS optional (usually not needed)
- * - preserve JSX transform via esbuild default; Next handles it later
+ * Generate a tsup configuration for browser-facing React bundles.
+ *
+ * - Targets ESM output and marks core React/Next dependencies as externals.
+ * - Designed for packages consumed by Next.js (e.g. `packages/ui`).
+ * - Tree-shaking and code splitting are enabled by default to keep bundles small.
+ *
+ * @param opts - Additional tsup {@link Options} to merge with the preset defaults.
+ * @returns Resolved tsup configuration ready to be consumed by tsup CLI.
  */
 export async function browserPreset(opts: Options = {}) {
   return defineConfig({
@@ -46,10 +51,15 @@ export async function browserPreset(opts: Options = {}) {
 }
 
 /**
- * Firebase Functions preset (Node runtime, ESM output)
- * - ESM single-file output for Functions runtime
- * - Node platform, Node22 target, sourcemaps for debugging
- * - Bundle local code, externalize deps automatically (via autoExternals)
+ * Generate a tsup configuration tailored for Firebase Cloud Functions.
+ *
+ * - Emits CommonJS output targeting Node 22 with sourcemaps for local debugging.
+ * - Automatically externalizes dependencies declared in package.json to keep
+ *   the deployed artifact slim.
+ * - Bundles project code into a single file to match the Functions runtime
+ *   expectations.
+ *
+ * @param opts - Additional tsup {@link Options} to merge with the preset defaults.
  */
 export async function functionsPreset(opts: Options = {}) {
   return defineConfig({
@@ -72,9 +82,13 @@ export async function functionsPreset(opts: Options = {}) {
 }
 
 /**
- * Public library preset (dual format + DTS)
- * - ESM + CJS, DTS on, still treeshake
- * - sourcemap off by default (turn on if you really need it)
+ * Generate a tsup configuration for public libraries publishing dual outputs.
+ *
+ * - Produces both ESM and CJS bundles alongside TypeScript declaration files.
+ * - Keeps source maps off in development for speed, but enables them in CI/production.
+ * - Externalizes peer and runtime dependencies automatically to avoid double bundling.
+ *
+ * @param opts - Additional tsup {@link Options} to merge with the preset defaults.
  */
 export async function publicDualPreset(opts: Options = {}) {
   return defineConfig({
@@ -97,8 +111,13 @@ export async function publicDualPreset(opts: Options = {}) {
 }
 
 /**
- * Read package.json (closest upwards) and collect externals.
- * - externalize all deps and peerDeps to keep bundles tiny and fast
+ * Resolve package dependencies to mark them as externals in bundler configs.
+ *
+ * Reads the closest `package.json` upwards from the provided directory and
+ * returns a de-duplicated list of dependency names (dependencies + peerDependencies).
+ *
+ * @param pkgDir - Directory to start searching from (defaults to `process.cwd`).
+ * @returns Array of dependency names that should be treated as externals.
  */
 function autoExternals(pkgDir = process.cwd()): string[] {
   try {
@@ -126,6 +145,12 @@ function autoExternals(pkgDir = process.cwd()): string[] {
   }
 }
 
+/**
+ * Traverse upwards from a directory to locate the nearest `package.json` file.
+ *
+ * @param dir - Starting directory for the lookup.
+ * @returns Absolute path to the located `package.json`, or `null` if none found.
+ */
 function findNearestPackageJson(dir: string): null | string {
   let cur = dir;
   while (cur && cur !== path.dirname(cur)) {
