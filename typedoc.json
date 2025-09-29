@@ -3,10 +3,12 @@
   "categorizeByGroup": false,
   "entryPointStrategy": "packages",
   "entryPoints": [
-    "packages/domain",
     "packages/application",
+    "packages/config",
+    "packages/domain",
+    "packages/prisma",
     "packages/toolkit",
-    "packages/prisma"
+    "packages/ui"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.tsx", "**/dist/**", "**/.next/**"],
   "excludeExternals": true,
@@ -18,7 +20,7 @@
   "includeVersion": true,
   "out": "docs/api",
   "packageOptions": {
-    "entryPoints": ["src/index.ts"]
+    "entryPoints": ["src/index.ts", "src/index.*.ts"]
   },
   "plugin": ["typedoc-plugin-markdown"],
   "readme": "none",
