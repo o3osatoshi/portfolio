@@ -4,10 +4,16 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Semantic navigation region that renders a breadcrumb trail.
+ *
+ * Wraps the list of breadcrumb items and provides the correct ARIA labelling.
+ */
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
+/** Collapsed breadcrumb marker rendered when paths are truncated. */
 function BreadcrumbEllipsis({
   className,
   ...props
@@ -26,6 +32,7 @@ function BreadcrumbEllipsis({
   );
 }
 
+/** Container for a single breadcrumb segment within the list. */
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
@@ -36,6 +43,11 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   );
 }
 
+/**
+ * Linkable breadcrumb segment.
+ *
+ * Set `asChild` to render custom anchor components (e.g. Next.js `Link`).
+ */
 function BreadcrumbLink({
   asChild,
   className,
@@ -54,6 +66,7 @@ function BreadcrumbLink({
   );
 }
 
+/** Ordered list wrapper providing layout for {@link BreadcrumbItem} entries. */
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
@@ -67,6 +80,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   );
 }
 
+/** Read-only breadcrumb segment describing the current page. */
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -79,6 +93,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   );
 }
 
+/** Visual separator displayed between breadcrumb items. */
 function BreadcrumbSeparator({
   children,
   className,

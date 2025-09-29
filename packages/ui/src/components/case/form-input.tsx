@@ -9,6 +9,12 @@ type Props = {
   label: string;
 } & React.ComponentProps<"input">;
 
+/**
+ * Input field paired with a label and optional validation message.
+ *
+ * Designed for quick form scaffolding in portfolio demos where labels, inputs,
+ * and error feedback are vertically stacked.
+ */
 export function FormInput({
   id,
   className,

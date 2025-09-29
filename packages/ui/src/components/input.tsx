@@ -2,6 +2,9 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Text input styled to match the design system (focus rings, disabled state, etc.).
+ */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input

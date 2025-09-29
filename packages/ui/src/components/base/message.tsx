@@ -7,6 +7,9 @@ interface Props {
   variant?: "default" | "destructive";
 }
 
+/**
+ * Helper that lifts alert styling into forms by rendering an inline {@link Alert}.
+ */
 export function Message({ children, variant }: Props) {
   if (children === undefined) return null;
 

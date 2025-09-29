@@ -2,6 +2,9 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Structured container with padding and border used for grouping related content.
+ */
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -15,6 +18,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Slot aligned to the card header for housing action buttons or toggles. */
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -28,6 +32,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Main body area of the card, typically containing rich content. */
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -38,6 +43,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Muted supporting text rendered below the title. */
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -48,6 +54,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Footer region used for buttons or metadata below the body. */
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -58,6 +65,9 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/**
+ * Header wrapper that controls title/action layout using CSS container queries.
+ */
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -71,6 +81,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Title element rendered inside {@link CardHeader}. */
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

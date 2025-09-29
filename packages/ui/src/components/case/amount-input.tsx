@@ -4,6 +4,12 @@ interface Props {
   type?: "number" | "text";
 }
 
+/**
+ * Numeric input tailored for currency-style amounts.
+ *
+ * Disables mouse wheel scrolling to avoid accidental value changes and hides
+ * the default number input spinner for a cleaner look.
+ */
 export function AmountInput({
   disabled = false,
   placeholder = "0.00",

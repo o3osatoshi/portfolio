@@ -5,6 +5,12 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Circular avatar wrapper around Radix Avatar primitives.
+ *
+ * Ensures a consistent size and shape while exposing Radix features such as
+ * lazy loading, fallbacks, and accessible semantics.
+ */
 function Avatar({
   className,
   ...props
@@ -21,6 +27,9 @@ function Avatar({
   );
 }
 
+/**
+ * Graceful fallback displayed when the avatar image is missing or fails to load.
+ */
 function AvatarFallback({
   className,
   ...props
@@ -37,6 +46,7 @@ function AvatarFallback({
   );
 }
 
+/** Styled `<img>` element that fills the avatar container. */
 function AvatarImage({
   className,
   ...props

@@ -6,18 +6,27 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Controlled dialog root built on top of Radix Dialog primitives.
+ *
+ * Provides `data-slot` attributes so downstream styles can target dialog parts.
+ */
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
+/** Imperative close button rendered inside the dialog content. */
 function DialogClose({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
+/**
+ * Centered dialog surface with animated transitions and a pinned close affordance.
+ */
 function DialogContent({
   children,
   className,
@@ -44,6 +53,7 @@ function DialogContent({
   );
 }
 
+/** Muted description text rendered beneath the dialog title. */
 function DialogDescription({
   className,
   ...props
@@ -57,6 +67,7 @@ function DialogDescription({
   );
 }
 
+/** Flex container for call-to-action buttons at the bottom of the dialog. */
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -70,6 +81,9 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/**
+ * Header wrapper controlling spacing between {@link DialogTitle} and description.
+ */
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -80,6 +94,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Backdrop overlay that dims the page when the dialog is open. */
 function DialogOverlay({
   className,
   ...props
@@ -96,12 +111,14 @@ function DialogOverlay({
   );
 }
 
+/** Portal component that mounts dialog elements at the document root. */
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
+/** Semantic heading displayed at the top of the dialog. */
 function DialogTitle({
   className,
   ...props
@@ -115,6 +132,7 @@ function DialogTitle({
   );
 }
 
+/** Element that toggles the dialog open state when interacted with. */
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {

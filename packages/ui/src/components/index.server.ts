@@ -1,3 +1,4 @@
+/** Server-compatible components (no browser APIs). */
 export * from "./alert";
 export * from "./base/index.server";
 export * from "./breadcrumb";

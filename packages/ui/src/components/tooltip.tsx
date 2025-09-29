@@ -5,6 +5,9 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Tooltip root that auto-wraps children with the shared provider.
+ */
 function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
@@ -15,6 +18,7 @@ function Tooltip({
   );
 }
 
+/** Floating panel that renders the tooltip body and arrow. */
 function TooltipContent({
   sideOffset = 0,
   children,
@@ -39,6 +43,7 @@ function TooltipContent({
   );
 }
 
+/** Provider exposing Radix tooltip context with zero-delay default. */
 function TooltipProvider({
   delayDuration = 0,
   ...props
@@ -52,6 +57,7 @@ function TooltipProvider({
   );
 }
 
+/** Element that toggles tooltip visibility on hover or focus. */
 function TooltipTrigger({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {

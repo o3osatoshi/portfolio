@@ -3,6 +3,7 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/** Variant map controlling typography scale and alignment for {@link Heading}. */
 const headingVariants = cva("font-bold tracking-tight", {
   defaultVariants: {
     align: "left",
@@ -28,6 +29,13 @@ const headingVariants = cva("font-bold tracking-tight", {
 type Props = React.HTMLAttributes<HTMLHeadingElement> &
   VariantProps<typeof headingVariants>;
 
+/**
+ * Typography helper that renders semantic heading levels with gradient sizing.
+ *
+ * Choose the `level` prop to control the rendered element and corresponding
+ * Tailwind scale. Alignment options adjust text justification without
+ * requiring additional wrappers.
+ */
 function Heading({
   align,
   children,
