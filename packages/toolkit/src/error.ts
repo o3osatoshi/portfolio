@@ -1,3 +1,6 @@
+/**
+ * Generic error classifications shared across application layers.
+ */
 type Kind =
   | "Config"
   | "Conflict"
@@ -13,6 +16,9 @@ type Kind =
   | "Unknown"
   | "Validation";
 
+/**
+ * Architectural layer where the error originated.
+ */
 type Layer =
   | "Application"
   | "Auth"
@@ -22,6 +28,9 @@ type Layer =
   | "Infra"
   | "UI";
 
+/**
+ * Payload used to construct a structured {@link Error} via {@link newError}.
+ */
 type NewError = {
   action?: string | undefined; // what operation was being performed
   cause?: undefined | unknown; // original cause (any type)
@@ -132,7 +141,7 @@ export function newError({
   return err;
 }
 
-/** Convert unknown cause into a safe string (prioritize Error.message) */
+/** Convert an unknown cause into a safe string (prioritize `Error.message`). */
 function summarizeCause(cause: unknown, max = 300): string | undefined {
   if (cause == null) return;
   if (cause instanceof Error) return truncate(cause.message, max);
@@ -144,7 +153,7 @@ function summarizeCause(cause: unknown, max = 300): string | undefined {
   }
 }
 
-/** Truncate a string to avoid overly large messages */
+/** Truncate a string to avoid overly large messages. */
 function truncate(s: string, max: number): string {
   return s.length > max ? `${s.slice(0, max)}…` : s;
 }

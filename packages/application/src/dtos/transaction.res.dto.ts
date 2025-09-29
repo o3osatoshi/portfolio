@@ -1,9 +1,21 @@
 import type { Transaction } from "@repo/domain";
 
+/**
+ * Successful payload returned when a single transaction gets created.
+ */
 export type CreateTransactionResponse = TransactionResponse;
 
+/**
+ * Successful payload returned when listing transactions for a user.
+ */
 export type GetTransactionsResponse = TransactionResponse[];
 
+/**
+ * DTO exposed by the application layer for transaction entities.
+ *
+ * Dates stay as `Date` to preserve timezone awareness and decimal values remain
+ * normalized strings so consumers can choose their own numeric formatting.
+ */
 export type TransactionResponse = {
   amount: string;
   createdAt: Date;
@@ -18,7 +30,9 @@ export type TransactionResponse = {
   updatedAt: Date;
   userId: string;
 };
-
+/**
+ * Map a domain {@link Transaction} onto an externally visible DTO.
+ */
 export function toTransactionResponse(tx: Transaction): TransactionResponse {
   return {
     id: tx.id,
@@ -35,6 +49,9 @@ export function toTransactionResponse(tx: Transaction): TransactionResponse {
     userId: tx.userId,
   };
 }
+/**
+ * Transform a list of domain transactions into DTOs, preserving order.
+ */
 export function toTransactionsResponse(
   txs: Transaction[],
 ): TransactionResponse[] {

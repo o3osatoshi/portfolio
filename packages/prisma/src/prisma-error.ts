@@ -2,6 +2,9 @@ import { newError as newBaseError } from "@o3osatoshi/toolkit";
 
 import { Prisma } from "./prisma-client";
 
+/**
+ * Context passed to {@link newPrismaError} before classifying the Prisma error.
+ */
 type NewPrismaError = {
   action?: string;
   cause?: unknown;
@@ -237,28 +240,33 @@ export function newPrismaError({
   });
 }
 
+/** Type guard for initialization errors (connection issues, auth failures, etc.). */
 function isInitializationError(
   e: unknown,
 ): e is Prisma.PrismaClientInitializationError {
   return e instanceof Prisma.PrismaClientInitializationError;
 }
 
+/** Type guard for Prisma errors carrying a `code` property. */
 function isKnownRequestError(
   e: unknown,
 ): e is Prisma.PrismaClientKnownRequestError {
   return e instanceof Prisma.PrismaClientKnownRequestError;
 }
 
+/** Type guard for low-level engine panics during Prisma execution. */
 function isRustPanicError(e: unknown): e is Prisma.PrismaClientRustPanicError {
   return e instanceof Prisma.PrismaClientRustPanicError;
 }
 
+/** Type guard for Prisma errors surfaced as "unknown request errors". */
 function isUnknownRequestError(
   e: unknown,
 ): e is Prisma.PrismaClientUnknownRequestError {
   return e instanceof Prisma.PrismaClientUnknownRequestError;
 }
 
+/** Type guard for Prisma validation errors thrown before hitting the DB. */
 function isValidationError(
   e: unknown,
 ): e is Prisma.PrismaClientValidationError {

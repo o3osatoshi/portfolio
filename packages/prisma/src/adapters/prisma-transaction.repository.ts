@@ -17,7 +17,12 @@ import {
 } from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
 
+/**
+ * Prisma-backed implementation of the {@link TransactionRepository} port.
+ * Maps domain value objects to Prisma primitives and normalizes errors.
+ */
 export class PrismaTransactionRepository implements TransactionRepository {
+  /** @inheritdoc */
   create(tx: CreateTransaction): ResultAsync<Transaction, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.create({
@@ -32,6 +37,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
     ).andThen(toEntity);
   }
 
+  /** @inheritdoc */
   delete(id: TransactionId, userId: UserId): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.deleteMany({
@@ -57,6 +63,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
     );
   }
 
+  /** @inheritdoc */
   findById(id: TransactionId): ResultAsync<null | Transaction, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findUnique({
@@ -70,6 +77,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
     ).andThen((row) => (row ? toEntity(row) : ok(null)));
   }
 
+  /** @inheritdoc */
   findByUserId(userId: UserId): ResultAsync<Transaction[], Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.findMany({
@@ -83,6 +91,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
     ).andThen((rows) => Result.combine(rows.map(toEntity)));
   }
 
+  /** @inheritdoc */
   update(tx: Transaction): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
       prisma.transaction.updateMany({
@@ -110,6 +119,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 }
 
+/** Convert validated domain data into a Prisma create payload. */
 function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
   return {
     amount: new Prisma.Decimal(tx.amount),
@@ -126,6 +136,10 @@ function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
   };
 }
 
+/**
+ * Transform a Prisma row into a domain {@link Transaction} by normalizing
+ * decimal values into strings expected by the value objects.
+ */
 function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
   return newTransaction({
     ...tx,
@@ -136,6 +150,7 @@ function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
   });
 }
 
+/** Convert a domain transaction into a Prisma update payload. */
 function toUpdateData(
   tx: Transaction,
 ): Prisma.TransactionUpdateManyMutationInput {

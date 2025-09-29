@@ -2,6 +2,9 @@ import { z, type ZodError, type ZodIssue } from "zod";
 
 import { newError as baseNewError } from "./error";
 
+/**
+ * Architectural layer used to contextualize validation errors.
+ */
 export type Layer =
   | "Application"
   | "Auth"
@@ -11,6 +14,9 @@ export type Layer =
   | "Infra"
   | "UI";
 
+/**
+ * Shape accepted by {@link newZodError} for normalizing Zod validation issues.
+ */
 export type NewZodError = {
   action?: string | undefined;
   cause?: undefined | unknown; // ideally a ZodError
@@ -19,7 +25,7 @@ export type NewZodError = {
   issues?: undefined | ZodIssue[];
   layer?: Layer | undefined; // default Application
 };
-
+/** Determine whether an unknown value is a ZodError. */
 export function isZodError(e: unknown): e is ZodError {
   // Prefer instanceof when the same Zod instance is used
   if (e instanceof z.ZodError) return true;
@@ -31,7 +37,9 @@ export function isZodError(e: unknown): e is ZodError {
     Array.isArray(anyE.issues)
   );
 }
-
+/**
+ * Wrap a Zod validation error into the structured error format exposed by the toolkit.
+ */
 export function newZodError({
   action,
   cause,
@@ -64,17 +72,17 @@ export function newZodError({
     reason,
   });
 }
-
+/** Summarize all issues inside a `ZodError` into a single human-readable string. */
 export function summarizeZodError(err: ZodError): string {
   return err.issues.map(summarizeZodIssue).join("; ");
 }
-
+/** Serialize a single {@link ZodIssue} into "path: message" format. */
 export function summarizeZodIssue(issue: ZodIssue): string {
   const path = issue.path?.length ? issue.path.join(".") : "(root)";
   const msg = issueMessage(issue);
   return `${path}: ${msg}`;
 }
-
+/** Attempt to produce user-friendly hints based on the first validation issue. */
 function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
   const i = issues[0];
   switch (i?.code) {
@@ -97,7 +105,7 @@ function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
       return undefined;
   }
 }
-
+/** Generate a concise message for a single Zod issue. */
 function issueMessage(issue: ZodIssue): string {
   switch (issue.code) {
     case "custom": {

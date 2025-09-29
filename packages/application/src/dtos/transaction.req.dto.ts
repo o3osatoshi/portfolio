@@ -24,6 +24,9 @@ const NonNegativeDecimalSchema = DecimalStringSchema.refine(
   { message: "Must be greater than or equal to 0" },
 );
 
+/**
+ * Schema describing the payload required to create a transaction from the API.
+ */
 const createTransactionRequestSchema = z.object({
   amount: PositiveDecimalSchema,
   currency: z.string().regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code"),
@@ -39,6 +42,9 @@ const createTransactionRequestSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
+/**
+ * Schema describing partial updates allowed on an existing transaction.
+ */
 const updateTransactionRequestSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   amount: PositiveDecimalSchema.optional(),
@@ -57,49 +63,77 @@ const updateTransactionRequestSchema = z.object({
   type: z.enum(["BUY", "SELL"]).optional(),
 });
 
+/**
+ * Schema describing the payload to list transactions for a user.
+ */
 const getTransactionsRequestSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
+/**
+ * Schema describing the payload to delete a transaction owned by a user.
+ */
 const deleteTransactionRequestSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   userId: z.string().min(1, "UserId is required"),
 });
 
+/**
+ * Validated shape of a create-transaction request after Zod parsing.
+ */
 export type CreateTransactionRequest = z.infer<
   typeof createTransactionRequestSchema
 >;
+/**
+ * Validated shape of a delete-transaction request after Zod parsing.
+ */
 export type DeleteTransactionRequest = z.infer<
   typeof deleteTransactionRequestSchema
 >;
+/**
+ * Validated shape of a get-transactions request after Zod parsing.
+ */
 export type GetTransactionsRequest = z.infer<
   typeof getTransactionsRequestSchema
 >;
+/**
+ * Validated shape of an update-transaction request after Zod parsing.
+ */
 export type UpdateTransactionRequest = z.infer<
   typeof updateTransactionRequestSchema
 >;
 
+/**
+ * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
+ * Wraps {@link parseWith} to return a `Result` with typed error metadata.
+ */
 export const parseCreateTransactionRequest = parseWith(
   createTransactionRequestSchema,
   {
     action: "ParseCreateTransactionRequest",
   },
 );
-
+/**
+ * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
+ */
 export const parseUpdateTransactionRequest = parseWith(
   updateTransactionRequestSchema,
   {
     action: "ParseUpdateTransactionRequest",
   },
 );
-
+/**
+ * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
+ */
 export const parseGetTransactionsRequest = parseWith(
   getTransactionsRequestSchema,
   {
     action: "ParseGetTransactionsRequest",
   },
 );
-
+/**
+ * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
+ */
 export const parseDeleteTransactionRequest = parseWith(
   deleteTransactionRequestSchema,
   {

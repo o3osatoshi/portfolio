@@ -8,9 +8,21 @@ import {
 } from "../../application-error";
 import type { UpdateTransactionRequest } from "../../dtos";
 
+/**
+ * Use case that coordinates ownership checks and domain validation before
+ * applying updates to an existing transaction.
+ */
 export class UpdateTransactionUseCase {
   constructor(private readonly repo: TransactionRepository) {}
 
+  /**
+   * Validate identifiers, ensure ownership, apply domain updates, and persist
+   * the patched transaction entity.
+   *
+   * @param req - Normalized update payload supplied by the application layer.
+   * @param userId - Authenticated user identifier used for authorization.
+   * @returns ResultAsync that resolves when the transaction is updated.
+   */
   execute(
     req: UpdateTransactionRequest,
     userId: string,

@@ -25,8 +25,15 @@ import {
 } from "../value-objects";
 import { type Base, newBase } from "./base";
 
+/**
+ * Validated shape returned when constructing a new transaction that has not yet
+ * been persisted (no `id` assigned).
+ */
 export type CreateTransaction = Omit<TransactionCore, "id">;
 
+/**
+ * Untyped payload accepted by {@link createTransaction} prior to validation.
+ */
 export type CreateTransactionInput = {
   amount: unknown;
   currency: unknown;
@@ -39,6 +46,9 @@ export type CreateTransactionInput = {
   userId: unknown;
 };
 
+/**
+ * Untyped payload accepted by {@link newTransaction} (usually from persistence).
+ */
 export type NewTransactionInput = {
   amount: unknown;
   createdAt: unknown;
@@ -54,8 +64,14 @@ export type NewTransactionInput = {
   userId: unknown;
 };
 
+/**
+ * Fully validated transaction entity consisting of base metadata and core fields.
+ */
 export type Transaction = Base & TransactionCore;
 
+/**
+ * Untyped patch payload accepted by {@link updateTransaction}.
+ */
 export type UpdateTransactionInput = {
   amount?: unknown;
   currency?: unknown;
@@ -68,6 +84,9 @@ export type UpdateTransactionInput = {
   type?: unknown;
 };
 
+/**
+ * Internal representation shared by create/update flows.
+ */
 interface TransactionCore {
   amount: Amount;
   currency: CurrencyCode;
@@ -80,7 +99,10 @@ interface TransactionCore {
   type: TransactionType;
   userId: UserId;
 }
-
+/**
+ * Validate raw input collected from external layers into a transaction ready to
+ * be persisted. Aggregates validation errors using `neverthrow.Result`.
+ */
 export function createTransaction(
   tx: CreateTransactionInput,
 ): Result<CreateTransaction, Error> {
@@ -118,7 +140,9 @@ export function createTransaction(
     }),
   );
 }
-
+/**
+ * Validate raw input (commonly from a database) into a domain {@link Transaction}.
+ */
 export function newTransaction(
   tx: NewTransactionInput,
 ): Result<Transaction, Error> {
@@ -163,7 +187,10 @@ export function newTransaction(
     }),
   );
 }
-
+/**
+ * Apply a partial update to an existing transaction while enforcing
+ * immutability rules (e.g., ID consistency) and value-object invariants.
+ */
 export function updateTransaction(
   tx: Transaction,
   patch: UpdateTransactionInput,
