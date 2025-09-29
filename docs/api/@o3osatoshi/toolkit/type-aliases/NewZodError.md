@@ -8,7 +8,7 @@
 
 > **NewZodError** = `object`
 
-Defined in: [zod-error.ts:20](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L20)
+Defined in: [zod-error.ts:20](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L20)
 
 Shape accepted by [newZodError](../functions/newZodError.md) for normalizing Zod validation issues.
 
@@ -18,7 +18,7 @@ Shape accepted by [newZodError](../functions/newZodError.md) for normalizing Zod
 
 > `optional` **action**: `string`
 
-Defined in: [zod-error.ts:21](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L21)
+Defined in: [zod-error.ts:21](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L21)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [zod-error.ts:21](https://github.com/o3osatoshi/experiment/blob/f1d2
 
 > `optional` **cause**: `unknown`
 
-Defined in: [zod-error.ts:22](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L22)
+Defined in: [zod-error.ts:22](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L22)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [zod-error.ts:22](https://github.com/o3osatoshi/experiment/blob/f1d2
 
 > `optional` **hint**: `string`
 
-Defined in: [zod-error.ts:23](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L23)
+Defined in: [zod-error.ts:23](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L23)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [zod-error.ts:23](https://github.com/o3osatoshi/experiment/blob/f1d2
 
 > `optional` **impact**: `string`
 
-Defined in: [zod-error.ts:24](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L24)
+Defined in: [zod-error.ts:24](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L24)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [zod-error.ts:24](https://github.com/o3osatoshi/experiment/blob/f1d2
 
 > `optional` **issues**: `ZodIssue`[]
 
-Defined in: [zod-error.ts:25](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L25)
+Defined in: [zod-error.ts:25](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L25)
 
 ***
 
@@ -58,4 +58,4 @@ Defined in: [zod-error.ts:25](https://github.com/o3osatoshi/experiment/blob/f1d2
 
 > `optional` **layer**: [`Layer`](Layer.md)
 
-Defined in: [zod-error.ts:26](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/toolkit/src/zod-error.ts#L26)
+Defined in: [zod-error.ts:26](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L26)

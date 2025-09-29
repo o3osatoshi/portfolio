@@ -8,7 +8,7 @@
 
 > **isTransactionId**(`v`): `v is TransactionId`
 
-Defined in: [value-objects/ids.ts:16](https://github.com/o3osatoshi/experiment/blob/f1d231870a1d13a36a9ead236d22edc1fb9797dd/packages/domain/src/value-objects/ids.ts#L16)
+Defined in: [value-objects/ids.ts:16](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/value-objects/ids.ts#L16)
 
 Type guard ensuring the value is a [TransactionId](../type-aliases/TransactionId.md).
 
