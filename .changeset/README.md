@@ -26,7 +26,7 @@ Pushing to `main` triggers `.github/workflows/release-packages.yml`. The workflo
   ---
   ```
   - Quote package names and use `major`, `minor`, or `patch` bumps.
-  - Only list packages that should publish; private workspaces and the ignored entries (`@repo/application`, `@repo/domain`, `@repo/prisma`, `@repo/eth`, `@o3osatoshi/functions`, `@o3osatoshi/storybook`, `@o3osatoshi/web`) are skipped automatically.
+  - Only list packages that should publish; private workspaces and the ignored entries (`@repo/application`, `@repo/domain`, `@repo/prisma`, `@repo/eth`, `@repo/functions`, `@repo/storybook`, `@repo/web`) are skipped automatically.
 - Write the body in concise markdown—one bullet point in the imperative mood is usually enough:
   ```
   - add motion tokens and expose `useMotionPreset`
