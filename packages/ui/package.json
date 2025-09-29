@@ -37,6 +37,12 @@
     "LICENSE"
   ],
   "scripts": {
+    "api:extract": "run-s api:extract:server api:extract:client",
+    "api:extract:client": "api-extractor run --local -c api-extractor.client.json",
+    "api:extract:server": "api-extractor run --local -c api-extractor.server.json",
+    "api:report": "run-s api:report:server api:report:client",
+    "api:report:client": "api-extractor run --diagnostics -c api-extractor.client.json",
+    "api:report:server": "api-extractor run --diagnostics -c api-extractor.server.json",
     "build": "run-p build:server build:client",
     "build:client": "tsup --config tsup.client.config.mjs",
     "build:server": "tsup --config tsup.server.config.mjs",
@@ -63,6 +69,7 @@
     "tw-animate-css": "^1.2.9"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "catalog:",
     "@o3osatoshi/config": "workspace:*",
     "@turbo/gen": "^2.5.2",
     "@types/node": "catalog:",

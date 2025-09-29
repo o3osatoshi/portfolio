@@ -1,0 +1,36 @@
+name: API Report
+
+on:
+  pull_request:
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: API extract
+        run: pnpm api:extract
+
+      - name: API report
+        run: pnpm api:report

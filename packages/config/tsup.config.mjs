@@ -5,13 +5,12 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   clean: true,
   dts: true,
-  entry: { index: "src/tsup/index.ts" },
+  entry: { index: "src/index.ts" },
   format: ["esm"],
   minify: false,
-  outDir: "dist/tsup",
   platform: "node",
   sourcemap: false,
-  splitting: false,
+  splitting: true,
   target: "es2022",
   treeshake: true,
 });

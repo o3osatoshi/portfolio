@@ -1,0 +1,18 @@
+{
+  "apiReport": {
+    "enabled": true,
+    "reportFileName": "<unscopedPackageName>-server.api.md",
+    "reportFolder": "<projectFolder>/etc",
+    "reportTempFolder": "<projectFolder>/temp"
+  },
+  "docModel": {
+    "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>-server.api.json",
+    "enabled": true
+  },
+  "dtsRollup": {
+    "enabled": true,
+    "publicTrimmedFilePath": "<projectFolder>/dist/server/index.d.ts"
+  },
+  "extends": "@o3osatoshi/config/api-extractor/base.json",
+  "mainEntryPointFilePath": "<projectFolder>/dist/server/index.d.ts"
+}

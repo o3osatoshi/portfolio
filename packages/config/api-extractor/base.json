@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/etc",
+    "reportTempFolder": "<projectFolder>/temp"
+  },
+  "compiler": {
+    "tsconfigFilePath": "<projectFolder>/tsconfig.json"
+  },
+  "docModel": {
+    "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>.api.json",
+    "enabled": true
+  },
+  "dtsRollup": {
+    "enabled": true,
+    "publicTrimmedFilePath": "<projectFolder>/dist/index.d.ts"
+  },
+  "mainEntryPointFilePath": "<projectFolder>/dist/index.d.ts",
+  "newlineKind": "lf"
+}

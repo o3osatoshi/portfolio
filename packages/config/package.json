@@ -24,12 +24,13 @@
   "type": "module",
   "exports": {
     "./biome/*": "./biome/*",
-    "./tsconfig/*": "./tsconfig/*",
+    "./api-extractor/*": "./api-extractor/*",
     "./eslint/*": "./eslint/*",
+    "./tsconfig/*": "./tsconfig/*",
     "./tsup": {
-      "types": "./dist/tsup/index.d.ts",
-      "import": "./dist/tsup/index.js",
-      "default": "./dist/tsup/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "types": "./dist/tsup/index.d.ts",
@@ -42,6 +43,8 @@
     "LICENSE"
   ],
   "scripts": {
+    "api:extract": "api-extractor run --local",
+    "api:report": "api-extractor run --diagnostics",
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
@@ -55,6 +58,7 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
+    "@microsoft/api-extractor": "catalog:",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.0.0",
     "eslint-plugin-jsonc": "^2.20.1",

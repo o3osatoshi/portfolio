@@ -1,6 +1,15 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
+    "api:extract": {
+      "cache": true,
+      "dependsOn": ["^build", "build"],
+      "outputs": ["packages/*/dist/**", "packages/*/etc/**"]
+    },
+    "api:report": {
+      "cache": false,
+      "dependsOn": ["api:extract"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "env": [
