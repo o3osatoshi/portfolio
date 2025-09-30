@@ -57,7 +57,7 @@ jobs:
         run: pnpm check:type
 
       - name: Run test
-        run: pnpm check:test --reporter=junit
+        run: pnpm check:test -- --reporter=junit
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5
@@ -112,7 +112,7 @@ jobs:
         run: pnpm check:type
 
       - name: Run test
-        run: pnpm check:test --reporter=junit
+        run: pnpm check:test -- --reporter=junit
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5
