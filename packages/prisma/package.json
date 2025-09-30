@@ -28,7 +28,9 @@
     "studio": "npm run with:dev -- prisma studio",
     "studio:prod": "npm run with:prod -- prisma studio",
     "test": "vitest run --exclude **/*.int.spec.ts",
+    "test:cvrg": "vitest run --coverage --exclude **/*.int.spec.ts",
     "test:int": "vitest run -c vitest.int.config.ts",
+    "test:int:cvrg": "vitest run --coverage -c vitest.int.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "with:dev": "dotenv -e .env.development.local --",
     "with:prod": "dotenv -e .env.production.local --"
@@ -44,6 +46,7 @@
     "@o3osatoshi/config": "workspace:*",
     "@testcontainers/postgresql": "^11.5.1",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "dotenv-cli": "catalog:",
     "prisma": "^6.16.2",
     "testcontainers": "^11.5.1",

@@ -31,6 +31,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./vitest": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "types": "./dist/tsup/index.d.ts",
@@ -53,20 +58,24 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "rimraf": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@microsoft/api-extractor": "catalog:",
+    "@microsoft/api-extractor": "^7.52.13",
     "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.35.0",
     "eslint-plugin-jsonc": "^2.20.1",
     "eslint-plugin-perfectionist": "^4.15.0",
     "eslint-plugin-vitest": "^0.5.4",
     "jsonc-eslint-parser": "^2.4.0",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "3.2.4"
   },
   "engines": {
     "node": ">=22"

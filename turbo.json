@@ -36,8 +36,14 @@
       "persistent": true
     },
     "test": {
-      "dependsOn": ["^test"],
-      "outputs": []
+      "cache": true,
+      "dependsOn": ["^build"],
+      "outputs": [".reports/**"]
+    },
+    "test:cvrg": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "outputs": [".reports/**"]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],
