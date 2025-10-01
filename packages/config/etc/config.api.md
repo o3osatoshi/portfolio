@@ -5,6 +5,10 @@
 ```ts
 
 import { Options } from 'tsup';
+import * as vite from 'vite';
+
+// @public (undocumented)
+export function baseConfig(): vite.UserConfig;
 
 // @public
 export function browserPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
