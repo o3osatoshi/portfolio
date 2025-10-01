@@ -12,7 +12,7 @@ import { type Layer, newZodError } from "./zod-error";
  * @typeParam T - Zod schema type inferred from the provided `schema`.
  * @param schema - Zod schema used to validate or transform incoming data.
  * @param ctx - Context describing the logical action and optional layer override.
- * @returns A function that parses input into `ResultAsync<z.infer<T>, Error>`.
+ * @returns A function that yields a neverthrow `ResultAsync` containing the inferred schema output.
  * @example
  * const parseToken = parseAsyncWith(tokenSchema, { action: "ParseToken", layer: "Auth" });
  * const res = await parseToken({ token: "ok" }); // ResultAsync<Token, Error>
@@ -39,7 +39,7 @@ export function parseAsyncWith<T extends z.ZodType>(
  * @typeParam T - Zod schema type inferred from the provided `schema`.
  * @param schema - Zod schema used to validate or transform incoming data.
  * @param ctx - Context describing the logical action and optional layer override.
- * @returns A function that parses input into `Result<z.infer<T>, Error>`.
+ * @returns A function that yields a neverthrow `Result` containing the inferred schema output.
  * @example
  * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
  * const res = parseUser({ name: "alice" }); // Result<User, Error>
