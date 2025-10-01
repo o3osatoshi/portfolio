@@ -54,11 +54,11 @@ jobs:
       - name: Run biome, eslint and pkg
         run: pnpm style:pure
 
-      - name: Run typecheck
-        run: pnpm check:type
-
       - name: Build packages
         run: pnpm build
+
+      - name: Run typecheck
+        run: pnpm check:type
 
       - name: Run test
         run: pnpm check:test:cvrg -- --reporter=junit
