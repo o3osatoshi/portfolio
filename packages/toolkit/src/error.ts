@@ -69,6 +69,16 @@ type NewError = {
  * - Use `impact` to describe the consequence.
  * - Use `hint` to suggest a possible fix or next step.
  *
+ * @remarks
+ * The `params` object accepts the following fields:
+ * - `layer`: Architectural layer where the failure happened (required).
+ * - `kind`: High-level error classification (required).
+ * - `action`: Logical operation being performed.
+ * - `reason`: Short explanation of the failure cause.
+ * - `impact`: Description of the resulting effect.
+ * - `hint`: Suggested follow-up or remediation.
+ * - `cause`: Original error or data that triggered the failure.
+ *
  * @example
  * ```ts
  * throw newError({
@@ -82,24 +92,12 @@ type NewError = {
  * });
  * ```
  *
- * @param layer - Which architectural layer the error originated in.
- * @param kind - What category/type of error it is.
- * @param action - What operation or use case was attempted.
- * @param reason - Why the error occurred (short explanation).
- * @param impact - What effect this error has.
- * @param hint - Suggestion for recovery or debugging.
- * @param cause - Original underlying error/exception (Error, string, or any object).
+ * @param params - Structured descriptor for the error (layer, kind, and optional metadata).
  * @returns An Error with enriched `name` and `message`.
+ * @public
  */
-export function newError({
-  action,
-  cause,
-  hint,
-  impact,
-  kind,
-  layer,
-  reason,
-}: NewError): Error {
+export function newError(params: NewError): Error {
+  const { action, cause, hint, impact, kind, layer, reason } = params;
   const name = `${layer}${kind}Error`;
 
   const causeText = summarizeCause(cause);

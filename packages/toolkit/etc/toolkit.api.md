@@ -19,7 +19,7 @@ export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Inf
 // Warning: (ae-forgotten-export) The symbol "NewError" needs to be exported by the entry point index.d.ts
 //
 // @public
-export function newError({ action, cause, hint, impact, kind, layer, reason, }: NewError): Error;
+export function newError(params: NewError): Error;
 
 // @public
 export type NewZodError = {
@@ -32,7 +32,7 @@ export type NewZodError = {
 };
 
 // @public
-export function newZodError({ action, cause, hint, impact, issues, layer, }: NewZodError): Error;
+export function newZodError(options: NewZodError): Error;
 
 // @public
 export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {

@@ -4,6 +4,8 @@ import { newError as baseNewError } from "./error";
 
 /**
  * Architectural layer used to contextualize validation errors.
+ *
+ * @public
  */
 export type Layer =
   | "Application"
@@ -15,7 +17,9 @@ export type Layer =
   | "UI";
 
 /**
- * Shape accepted by {@link newZodError} for normalizing Zod validation issues.
+ * Options accepted by {@link newZodError} when normalizing validation issues.
+ *
+ * @public
  */
 export type NewZodError = {
   action?: string | undefined;
@@ -25,7 +29,11 @@ export type NewZodError = {
   issues?: undefined | ZodIssue[];
   layer?: Layer | undefined; // default Application
 };
-/** Determine whether an unknown value is a ZodError. */
+/**
+ * Determines whether a value came from Zod validation.
+ *
+ * @public
+ */
 export function isZodError(e: unknown): e is ZodError {
   // Prefer instanceof when the same Zod instance is used
   if (e instanceof z.ZodError) return true;
@@ -38,16 +46,13 @@ export function isZodError(e: unknown): e is ZodError {
   );
 }
 /**
- * Wrap a Zod validation error into the structured error format exposed by the toolkit.
+ * Wraps a Zod validation error and returns a structured toolkit error.
+ *
+ * @param options - Validation context plus optional override data.
+ * @public
  */
-export function newZodError({
-  action,
-  cause,
-  hint,
-  impact,
-  issues,
-  layer = "Application",
-}: NewZodError): Error {
+export function newZodError(options: NewZodError): Error {
+  const { action, cause, hint, impact, issues, layer = "Application" } = options;
   const zIssues: undefined | ZodIssue[] = issues
     ? issues
     : isZodError(cause)
@@ -72,11 +77,19 @@ export function newZodError({
     reason,
   });
 }
-/** Summarize all issues inside a `ZodError` into a single human-readable string. */
+/**
+ * Summarizes every issue inside a Zod error into a single readable string.
+ *
+ * @public
+ */
 export function summarizeZodError(err: ZodError): string {
   return err.issues.map(summarizeZodIssue).join("; ");
 }
-/** Serialize a single {@link ZodIssue} into "path: message" format. */
+/**
+ * Serializes one Zod issue into the "path: message" format used by the toolkit.
+ *
+ * @public
+ */
 export function summarizeZodIssue(issue: ZodIssue): string {
   const path = issue.path?.length ? issue.path.join(".") : "(root)";
   const msg = issueMessage(issue);
