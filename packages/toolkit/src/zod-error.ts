@@ -52,7 +52,14 @@ export function isZodError(e: unknown): e is ZodError {
  * @public
  */
 export function newZodError(options: NewZodError): Error {
-  const { action, cause, hint, impact, issues, layer = "Application" } = options;
+  const {
+    action,
+    cause,
+    hint,
+    impact,
+    issues,
+    layer = "Application",
+  } = options;
   const zIssues: undefined | ZodIssue[] = issues
     ? issues
     : isZodError(cause)
