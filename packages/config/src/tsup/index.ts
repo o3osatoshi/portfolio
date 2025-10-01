@@ -24,7 +24,7 @@ interface PackageJson {
  * - Emits ESM output and automatically marks core React/Next dependencies as externals.
  * - Enables tree shaking and code splitting by default to keep bundle size small.
  *
- * @param opts - Additional tsup {@link Options} to override the preset defaults.
+ * @param opts - Additional tsup options to override the preset defaults.
  * @returns Resolved configuration object that can be passed directly to the tsup CLI.
  * @public
  */
@@ -59,7 +59,7 @@ export async function browserPreset(opts: Options = {}) {
  * - Automatically externalizes dependencies declared in the nearest package.json to keep bundles slim.
  * - Bundles project code into a single file to match the Functions runtime expectations.
  *
- * @param opts - Additional tsup {@link Options} to override the preset defaults.
+ * @param opts - Additional tsup options to override the preset defaults.
  * @returns Resolved configuration object that can be passed directly to the tsup CLI.
  * @public
  */
@@ -91,7 +91,7 @@ export async function functionsPreset(opts: Options = {}) {
  * - Disables sourcemaps during local development for speed, enabling them in CI/production.
  * - Automatically externalizes runtime and peer dependencies to avoid duplicate bundling.
  *
- * @param opts - Additional tsup {@link Options} to override the preset defaults.
+ * @param opts - Additional tsup options to override the preset defaults.
  * @returns Resolved configuration object that can be passed directly to the tsup CLI.
  * @public
  */

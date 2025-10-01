@@ -7,7 +7,7 @@ import { defineConfig } from "vitest/config";
  * - Disables coverage by default but keeps reporters configured so individual packages can opt in.
  * - Emits JUnit output under `.reports/junit.xml` to integrate with CI dashboards.
  *
- * @returns A {@link https://vitest.dev/config/ | Vitest} configuration object produced via {@link defineConfig}.
+ * @returns A Vitest configuration object produced via `defineConfig`.
  * @public
  */
 export function baseConfig() {
