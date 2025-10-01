@@ -16,8 +16,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  pr:
-    if: github.event_name == 'pull_request'
+  integration:
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -52,17 +51,17 @@ jobs:
             cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-
             cache-${{ runner.os }}-
 
-      - name: Build packages
-        run: pnpm build
-
       - name: Run biome, eslint and pkg
         run: pnpm style:pure
 
       - name: Run typecheck
         run: pnpm check:type
 
+      - name: Build packages
+        run: pnpm build
+
       - name: Run test
-        run: pnpm check:test -- --reporter=junit
+        run: pnpm check:test:cvrg -- --reporter=junit
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5
@@ -70,69 +69,10 @@ jobs:
         with:
           report_paths: "**/.reports/junit.xml"
           detailed_summary: true
-
-  main:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Restore caches (.cache/*)
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/.cache/eslint
-            **/.cache/tsbuildinfo
-          key: cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-${{ hashFiles('**/tsconfig*.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-
-            cache-${{ runner.os }}-
-
-      - name: Build packages
-        run: pnpm build
-
-      - name: Run biome, eslint and pkg
-        run: pnpm style:pure
-
-      - name: Run typecheck
-        run: pnpm check:type
-
-      - name: Run test
-        run: pnpm check:test -- --reporter=junit
-
-      - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
-        if: success() || failure()
-        with:
-          report_paths: "**/.reports/junit.xml"
-          detailed_summary: true
-
-      - name: Run test coverage
-        run: pnpm check:test:cvrg
 
       - name: Upload coverage
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
           files: "**/.reports/coverage/lcov.info"
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
