@@ -21,6 +21,6 @@ catalog:
   tsx: 4.19.4
   typescript: ^5.8.3
   viem: ^2.29.4
-  vitest: 3.2.4
+  vitest: ^3.2.4
   wagmi: 0.0.0-canary-20250516172625
   zod: ^4.1.5

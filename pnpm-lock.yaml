@@ -61,7 +61,7 @@ catalogs:
       specifier: ^2.29.4
       version: 2.37.4
     vitest:
-      specifier: 3.2.4
+      specifier: ^3.2.4
       version: 3.2.4
     wagmi:
       specifier: 0.0.0-canary-20250516172625
