@@ -46,7 +46,7 @@ type NewError = {
  * more context than a plain `new Error(...)`.
  *
  * ## Error name
- * - Computed as `<Layer><Kind>Error` (e.g. `DomainValidationError`).
+ * - Computed as `"\{Layer\}\{Kind\}Error"` (for example `DomainValidationError`).
  * - Useful for quick classification or HTTP mapping.
  *
  * ## Error message
@@ -81,7 +81,7 @@ type NewError = {
  *
  * @example
  * ```ts
- * throw newError({
+ * throw newError(\{
  *   layer: "Domain",
  *   kind: "Validation",
  *   action: "CreateUser",
@@ -89,7 +89,7 @@ type NewError = {
  *   impact: "user cannot be registered",
  *   hint: "ensure email has @",
  *   cause: originalError,
- * });
+ * \});
  * ```
  *
  * @param params - Structured descriptor for the error (layer, kind, and optional metadata).
