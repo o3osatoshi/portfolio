@@ -8,12 +8,17 @@ import { cn } from "@/lib/utils";
  * Semantic navigation region that renders a breadcrumb trail.
  *
  * Wraps the list of breadcrumb items and provides the correct ARIA labelling.
+ *
+ * @public
  */
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
-/** Collapsed breadcrumb marker rendered when paths are truncated. */
+/** Collapsed breadcrumb marker rendered when paths are truncated.
+ *
+ * @public
+ */
 function BreadcrumbEllipsis({
   className,
   ...props
@@ -32,7 +37,10 @@ function BreadcrumbEllipsis({
   );
 }
 
-/** Container for a single breadcrumb segment within the list. */
+/** Container for a single breadcrumb segment within the list.
+ *
+ * @public
+ */
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
@@ -47,6 +55,8 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
  * Linkable breadcrumb segment.
  *
  * Set `asChild` to render custom anchor components (e.g. Next.js `Link`).
+ *
+ * @public
  */
 function BreadcrumbLink({
   asChild,
@@ -66,7 +76,10 @@ function BreadcrumbLink({
   );
 }
 
-/** Ordered list wrapper providing layout for {@link BreadcrumbItem} entries. */
+/** Ordered list wrapper providing layout for {@link BreadcrumbItem} entries.
+ *
+ * @public
+ */
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
@@ -80,7 +93,10 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   );
 }
 
-/** Read-only breadcrumb segment describing the current page. */
+/** Read-only breadcrumb segment describing the current page.
+ *
+ * @public
+ */
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -93,7 +109,10 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   );
 }
 
-/** Visual separator displayed between breadcrumb items. */
+/** Visual separator displayed between breadcrumb items.
+ *
+ * @public
+ */
 function BreadcrumbSeparator({
   children,
   className,

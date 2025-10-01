@@ -9,6 +9,8 @@ interface Props {
  *
  * Disables mouse wheel scrolling to avoid accidental value changes and hides
  * the default number input spinner for a cleaner look.
+ *
+ * @public
  */
 export function AmountInput({
   disabled = false,

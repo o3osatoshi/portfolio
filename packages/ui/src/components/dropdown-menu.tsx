@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Controlled dropdown menu root mirroring Radix Dropdown behaviour.
+ *
+ * @public
  */
 function DropdownMenu({
   ...props
@@ -15,7 +17,10 @@ function DropdownMenu({
   return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
 }
 
-/** Checkbox-style menu item that manages a checked state indicator. */
+/** Checkbox-style menu item that manages a checked state indicator.
+ *
+ * @public
+ */
 function DropdownMenuCheckboxItem({
   checked,
   children,
@@ -45,6 +50,8 @@ function DropdownMenuCheckboxItem({
 
 /**
  * Popover surface that wraps menu items and handles portal/animation wiring.
+ *
+ * @public
  */
 function DropdownMenuContent({
   sideOffset = 4,
@@ -66,7 +73,10 @@ function DropdownMenuContent({
   );
 }
 
-/** Logical grouping container for related dropdown items. */
+/** Logical grouping container for related dropdown items.
+ *
+ * @public
+ */
 function DropdownMenuGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Group>) {
@@ -77,6 +87,8 @@ function DropdownMenuGroup({
 
 /**
  * Standard clickable menu item with optional destructive styling.
+ *
+ * @public
  */
 function DropdownMenuItem({
   className,
@@ -101,7 +113,10 @@ function DropdownMenuItem({
   );
 }
 
-/** Section heading used to label a group of menu items. */
+/** Section heading used to label a group of menu items.
+ *
+ * @public
+ */
 function DropdownMenuLabel({
   className,
   inset,
@@ -122,7 +137,10 @@ function DropdownMenuLabel({
   );
 }
 
-/** Portal helper that mounts dropdown content near the document body. */
+/** Portal helper that mounts dropdown content near the document body.
+ *
+ * @public
+ */
 function DropdownMenuPortal({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
@@ -131,7 +149,10 @@ function DropdownMenuPortal({
   );
 }
 
-/** Radio group wrapper ensuring only one dropdown radio item is selected. */
+/** Radio group wrapper ensuring only one dropdown radio item is selected.
+ *
+ * @public
+ */
 function DropdownMenuRadioGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>) {
@@ -145,6 +166,8 @@ function DropdownMenuRadioGroup({
 
 /**
  * Menu item that behaves like a radio option, rendering a dot when selected.
+ *
+ * @public
  */
 function DropdownMenuRadioItem({
   children,
@@ -170,7 +193,10 @@ function DropdownMenuRadioItem({
   );
 }
 
-/** Horizontal rule separating logical sections inside the menu. */
+/** Horizontal rule separating logical sections inside the menu.
+ *
+ * @public
+ */
 function DropdownMenuSeparator({
   className,
   ...props
@@ -184,7 +210,10 @@ function DropdownMenuSeparator({
   );
 }
 
-/** Muted text slot for showing keyboard shortcuts alongside items. */
+/** Muted text slot for showing keyboard shortcuts alongside items.
+ *
+ * @public
+ */
 function DropdownMenuShortcut({
   className,
   ...props
@@ -203,6 +232,8 @@ function DropdownMenuShortcut({
 
 /**
  * Wrapper for nested submenu interactions.
+ *
+ * @public
  */
 function DropdownMenuSub({
   ...props
@@ -210,7 +241,10 @@ function DropdownMenuSub({
   return <DropdownMenuPrimitive.Sub data-slot="dropdown-menu-sub" {...props} />;
 }
 
-/** Portal surface for nested submenu panes. */
+/** Portal surface for nested submenu panes.
+ *
+ * @public
+ */
 function DropdownMenuSubContent({
   className,
   ...props
@@ -227,7 +261,10 @@ function DropdownMenuSubContent({
   );
 }
 
-/** Menu trigger that opens a nested submenu when hovered or clicked. */
+/** Menu trigger that opens a nested submenu when hovered or clicked.
+ *
+ * @public
+ */
 function DropdownMenuSubTrigger({
   children,
   className,
@@ -252,7 +289,10 @@ function DropdownMenuSubTrigger({
   );
 }
 
-/** Element that toggles the dropdown menu open state. */
+/** Element that toggles the dropdown menu open state.
+ *
+ * @public
+ */
 function DropdownMenuTrigger({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {

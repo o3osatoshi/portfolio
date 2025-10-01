@@ -7,6 +7,8 @@ const MOBILE_BREAKPOINT = 768;
  *
  * Updates on resize using a `matchMedia` subscription so responsive components
  * can adapt without duplicating breakpoint logic.
+ *
+ * @public
  */
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(

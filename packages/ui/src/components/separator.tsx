@@ -5,7 +5,10 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Layout separator that renders a horizontal or vertical rule. */
+/** Layout separator that renders a horizontal or vertical rule.
+ *
+ * @public
+ */
 function Separator({
   className,
   decorative = true,

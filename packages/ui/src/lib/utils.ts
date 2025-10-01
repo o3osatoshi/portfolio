@@ -11,6 +11,7 @@ import { twMerge } from "tailwind-merge";
  *
  * @param inputs - Class name fragments or conditional tuples accepted by `clsx`.
  * @returns A single space-delimited class name string safe to pass to React elements.
+ * @public
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

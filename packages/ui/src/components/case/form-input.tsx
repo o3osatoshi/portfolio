@@ -14,6 +14,8 @@ type Props = {
  *
  * Designed for quick form scaffolding in portfolio demos where labels, inputs,
  * and error feedback are vertically stacked.
+ *
+ * @public
  */
 export function FormInput({
   id,

@@ -2,14 +2,20 @@
 
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 
-/** Wrapper around Radix Collapsible providing data-slot hooks. */
+/** Wrapper around Radix Collapsible providing data-slot hooks.
+ *
+ * @public
+ */
 function Collapsible({
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.Root>) {
   return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} />;
 }
 
-/** Content region revealed when the collapsible is expanded. */
+/** Content region revealed when the collapsible is expanded.
+ *
+ * @public
+ */
 function CollapsibleContent({
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
@@ -21,7 +27,10 @@ function CollapsibleContent({
   );
 }
 
-/** Button that toggles the collapsible open state. */
+/** Button that toggles the collapsible open state.
+ *
+ * @public
+ */
 function CollapsibleTrigger({
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>) {

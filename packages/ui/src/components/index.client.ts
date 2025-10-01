@@ -1,4 +1,7 @@
-/** Client components composed from Radix primitives. */
+/** Client components composed from Radix primitives.
+ *
+ * @public
+ */
 export * from "./avatar";
 export * from "./base/index.client";
 export * from "./case/index.client";

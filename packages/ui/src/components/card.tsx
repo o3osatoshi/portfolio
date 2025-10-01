@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Structured container with padding and border used for grouping related content.
+ *
+ * @public
  */
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -18,7 +20,10 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Slot aligned to the card header for housing action buttons or toggles. */
+/** Slot aligned to the card header for housing action buttons or toggles.
+ *
+ * @public
+ */
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -32,7 +37,10 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Main body area of the card, typically containing rich content. */
+/** Main body area of the card, typically containing rich content.
+ *
+ * @public
+ */
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -43,7 +51,10 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Muted supporting text rendered below the title. */
+/** Muted supporting text rendered below the title.
+ *
+ * @public
+ */
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -54,7 +65,10 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Footer region used for buttons or metadata below the body. */
+/** Footer region used for buttons or metadata below the body.
+ *
+ * @public
+ */
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -67,6 +81,8 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 /**
  * Header wrapper that controls title/action layout using CSS container queries.
+ *
+ * @public
  */
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -81,7 +97,10 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Title element rendered inside {@link CardHeader}. */
+/** Title element rendered inside {@link CardHeader}.
+ *
+ * @public
+ */
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
