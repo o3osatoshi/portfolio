@@ -7,7 +7,7 @@
 import { Options } from 'tsup';
 import * as vite from 'vite';
 
-// @public (undocumented)
+// @public
 export function baseConfig(): vite.UserConfig;
 
 // @public
