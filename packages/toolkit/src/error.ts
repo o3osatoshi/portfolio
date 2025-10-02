@@ -1,5 +1,29 @@
 /**
+ * Structured descriptor passed into {@link newError}, exported for consumers
+ * that want to build wrappers or share strongly typed error payloads.
+ *
+ * @public
+ * @property action - Logical operation being performed when the error occurred.
+ * @property cause - Original cause (any type) captured for diagnostic context.
+ * @property hint - Suggested follow-up or remediation for the caller.
+ * @property impact - Description of the resulting effect or blast radius.
+ * @property kind - High-level error classification shared across layers.
+ * @property layer - Architectural layer where the failure originated.
+ * @property reason - Short explanation of why the operation failed.
+ */
+export type NewError = {
+  action?: string | undefined;
+  cause?: undefined | unknown;
+  hint?: string | undefined;
+  impact?: string | undefined;
+  kind: Kind;
+  layer: Layer;
+  reason?: string | undefined;
+};
+
+/**
  * Generic error classifications shared across application layers.
+ * @internal
  */
 type Kind =
   | "Config"
@@ -18,6 +42,7 @@ type Kind =
 
 /**
  * Architectural layer where the error originated.
+ * @internal
  */
 type Layer =
   | "Application"
@@ -28,18 +53,6 @@ type Layer =
   | "Infra"
   | "UI";
 
-/**
- * Payload used to construct a structured {@link Error} via {@link newError}.
- */
-type NewError = {
-  action?: string | undefined; // what operation was being performed
-  cause?: undefined | unknown; // original cause (any type)
-  hint?: string | undefined; // possible next step
-  impact?: string | undefined; // what the impact is
-  kind: Kind;
-  layer: Layer;
-  reason?: string | undefined; // why it failed (short explanation)
-};
 /**
  * Creates a structured Error object with a consistent `name` and `message`.
  * Intended for use in Domain/Application/Infra/Auth/UI layers where you want
@@ -92,7 +105,7 @@ type NewError = {
  * \});
  * ```
  *
- * @param params - Structured descriptor for the error (layer, kind, and optional metadata).
+ * @param params - Structured descriptor for the error (see {@link NewError}).
  * @returns An Error with enriched `name` and `message`.
  * @public
  */

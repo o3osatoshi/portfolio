@@ -16,8 +16,17 @@ export function isZodError(e: unknown): e is ZodError;
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
 
-// Warning: (ae-forgotten-export) The symbol "NewError" needs to be exported by the entry point index.d.ts
-//
+// @public
+export type NewError = {
+    action?: string | undefined;
+    cause?: undefined | unknown;
+    hint?: string | undefined;
+    impact?: string | undefined;
+    kind: Kind;
+    layer: Layer$1;
+    reason?: string | undefined;
+};
+
 // @public
 export function newError(params: NewError): Error;
 
@@ -51,6 +60,11 @@ export function summarizeZodError(err: ZodError): string;
 
 // @public
 export function summarizeZodIssue(issue: ZodIssue): string;
+
+// Warnings were encountered during analysis:
+//
+// dist/index.d.ts:22:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:23:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -18,17 +18,25 @@ export type Layer =
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.
+ * Designed to mirror {@link NewError} while providing Zod-specific hooks.
  *
  * @public
+ * @property action - Logical operation being validated when the failure occurred.
+ * @property cause - Original throwable (ideally a `ZodError`) used to derive issues.
+ * @property hint - Suggested remediation; falls back to an inferred hint when omitted.
+ * @property impact - Description of the effect of the validation failure.
+ * @property issues - Explicit Zod issues list; inferred from `cause` when absent.
+ * @property layer - Architectural layer responsible for validation (default `"Application"`).
  */
 export type NewZodError = {
   action?: string | undefined;
-  cause?: undefined | unknown; // ideally a ZodError
+  cause?: undefined | unknown;
   hint?: string | undefined;
   impact?: string | undefined;
   issues?: undefined | ZodIssue[];
-  layer?: Layer | undefined; // default Application
+  layer?: Layer | undefined;
 };
+
 /**
  * Determines whether a value came from Zod validation.
  *
@@ -48,7 +56,7 @@ export function isZodError(e: unknown): e is ZodError {
 /**
  * Wraps a Zod validation error and returns a structured toolkit error.
  *
- * @param options - Validation context plus optional override data.
+ * @param options - Validation context plus optional override data (see {@link NewZodError}).
  * @public
  */
 export function newZodError(options: NewZodError): Error {
