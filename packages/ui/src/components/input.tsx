@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Text input styled to match the design system (focus rings, disabled state, etc.).
+ *
+ * @public
  */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (

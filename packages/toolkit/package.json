@@ -44,6 +44,7 @@
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test && NODE_ENV=production pnpm build",
     "test": "vitest run",
+    "test:cvrg": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
@@ -54,6 +55,7 @@
     "@microsoft/api-extractor": "catalog:",
     "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "rimraf": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",

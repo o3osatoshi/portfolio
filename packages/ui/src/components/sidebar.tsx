@@ -45,6 +45,8 @@ const SidebarContext = React.createContext<null | SidebarContextProps>(null);
  *
  * Accepts `variant` and `collapsible` options to mirror the shadcn/ui sidebar
  * blueprint while exposing `data-slot` attributes for styling.
+ *
+ * @public
  */
 function Sidebar({
   side = "left",
@@ -148,7 +150,10 @@ function Sidebar({
   );
 }
 
-/** Scrollable body region that holds sidebar groups and menu items. */
+/** Scrollable body region that holds sidebar groups and menu items.
+ *
+ * @public
+ */
 function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -163,7 +168,10 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Footer slot ideal for secondary actions or account switchers. */
+/** Footer slot ideal for secondary actions or account switchers.
+ *
+ * @public
+ */
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -175,7 +183,10 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Wrapper that groups related sidebar items with shared padding. */
+/** Wrapper that groups related sidebar items with shared padding.
+ *
+ * @public
+ */
 function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -187,7 +198,10 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Inline button displayed in the top-right corner of a sidebar group. */
+/** Inline button displayed in the top-right corner of a sidebar group.
+ *
+ * @public
+ */
 function SidebarGroupAction({
   asChild = false,
   className,
@@ -211,7 +225,10 @@ function SidebarGroupAction({
   );
 }
 
-/** Container for the main content of a sidebar group (menu, links, etc.). */
+/** Container for the main content of a sidebar group (menu, links, etc.).
+ *
+ * @public
+ */
 function SidebarGroupContent({
   className,
   ...props
@@ -226,7 +243,10 @@ function SidebarGroupContent({
   );
 }
 
-/** Label shown above a group to describe its contents. */
+/** Label shown above a group to describe its contents.
+ *
+ * @public
+ */
 function SidebarGroupLabel({
   asChild = false,
   className,
@@ -248,7 +268,10 @@ function SidebarGroupLabel({
   );
 }
 
-/** Top section of the sidebar, typically containing logo or search. */
+/** Top section of the sidebar, typically containing logo or search.
+ *
+ * @public
+ */
 function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -260,7 +283,10 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Search input variant scoped to the sidebar area. */
+/** Search input variant scoped to the sidebar area.
+ *
+ * @public
+ */
 function SidebarInput({
   className,
   ...props
@@ -275,7 +301,10 @@ function SidebarInput({
   );
 }
 
-/** Main content wrapper that adjusts layout based on sidebar state. */
+/** Main content wrapper that adjusts layout based on sidebar state.
+ *
+ * @public
+ */
 function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   return (
     <main
@@ -290,7 +319,10 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   );
 }
 
-/** Unordered list containing top-level sidebar menu items. */
+/** Unordered list containing top-level sidebar menu items.
+ *
+ * @public
+ */
 function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
@@ -302,7 +334,10 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   );
 }
 
-/** List item wrapper for individual sidebar navigational entries. */
+/** List item wrapper for individual sidebar navigational entries.
+ *
+ * @public
+ */
 function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
@@ -316,6 +351,8 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 
 /**
  * Context provider that manages open/collapsed state and keyboard shortcuts.
+ *
+ * @public
  */
 function SidebarProvider({
   children,
@@ -416,7 +453,10 @@ function SidebarProvider({
   );
 }
 
-/** Thin hit-area positioned outside the sidebar for quick expand/collapse. */
+/** Thin hit-area positioned outside the sidebar for quick expand/collapse.
+ *
+ * @public
+ */
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar();
 
@@ -442,7 +482,10 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   );
 }
 
-/** Separator variant that respects sidebar colour tokens. */
+/** Separator variant that respects sidebar colour tokens.
+ *
+ * @public
+ */
 function SidebarSeparator({
   className,
   ...props
@@ -457,7 +500,10 @@ function SidebarSeparator({
   );
 }
 
-/** Toolbar button that toggles the sidebar while preserving caller props. */
+/** Toolbar button that toggles the sidebar while preserving caller props.
+ *
+ * @public
+ */
 function SidebarTrigger({
   className,
   onClick,
@@ -484,7 +530,10 @@ function SidebarTrigger({
   );
 }
 
-/** Hook exposing the sidebar context; throws when used outside provider. */
+/** Hook exposing the sidebar context; throws when used outside provider.
+ *
+ * @public
+ */
 function useSidebar() {
   const context = React.useContext(SidebarContext);
   if (!context) {
@@ -494,7 +543,10 @@ function useSidebar() {
   return context;
 }
 
-/** Variant map that drives visual styling for {@link SidebarMenuButton}. */
+/** Variant map that drives visual styling for {@link SidebarMenuButton}.
+ *
+ * @public
+ */
 const sidebarMenuButtonVariants = cva(
   "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
@@ -517,7 +569,10 @@ const sidebarMenuButtonVariants = cva(
   },
 );
 
-/** Action button that appears on hover next to a sidebar menu item. */
+/** Action button that appears on hover next to a sidebar menu item.
+ *
+ * @public
+ */
 function SidebarMenuAction({
   asChild = false,
   className,
@@ -550,7 +605,10 @@ function SidebarMenuAction({
   );
 }
 
-/** Numeric/label badge used to highlight counts inside menu items. */
+/** Numeric/label badge used to highlight counts inside menu items.
+ *
+ * @public
+ */
 function SidebarMenuBadge({
   className,
   ...props
@@ -577,6 +635,8 @@ function SidebarMenuBadge({
  * Primary interactive element for sidebar navigation rows.
  *
  * Supports collapsing mode tooltips and size variants.
+ *
+ * @public
  */
 function SidebarMenuButton({
   asChild = false,
@@ -629,7 +689,10 @@ function SidebarMenuButton({
   );
 }
 
-/** Placeholder shimmer representing a loading sidebar entry. */
+/** Placeholder shimmer representing a loading sidebar entry.
+ *
+ * @public
+ */
 function SidebarMenuSkeleton({
   className,
   showIcon = false,
@@ -668,7 +731,10 @@ function SidebarMenuSkeleton({
   );
 }
 
-/** Container for nested sidebar sub-menus. */
+/** Container for nested sidebar sub-menus.
+ *
+ * @public
+ */
 function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
@@ -684,7 +750,10 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   );
 }
 
-/** Link/button used inside nested sub-menu lists. */
+/** Link/button used inside nested sub-menu lists.
+ *
+ * @public
+ */
 function SidebarMenuSubButton({
   asChild = false,
   className,
@@ -717,7 +786,10 @@ function SidebarMenuSubButton({
   );
 }
 
-/** List item wrapper for entries contained within {@link SidebarMenuSub}. */
+/** List item wrapper for entries contained within {@link SidebarMenuSub}.
+ *
+ * @public
+ */
 function SidebarMenuSubItem({
   className,
   ...props

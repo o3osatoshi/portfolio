@@ -4,20 +4,19 @@ import type { z } from "zod";
 import { type Layer, newZodError } from "./zod-error";
 
 /**
- * Create an async Result-returning parser from a Zod schema.
+ * Creates an async Result-returning parser from a Zod schema.
  *
- * - Uses `schema.parseAsync` for async refinements/validations.
- * - Rejections are normalized via `newZodError` using the provided `action`/`layer`.
+ * - Uses `schema.parseAsync` to respect asynchronous refinements.
+ * - Normalises failures through {@link newZodError} with the supplied context.
  *
- * @template T extends ZodTypeAny
- * @param schema - Zod schema to validate/transform input asynchronously.
- * @param ctx - Context for standardized error shaping.
- * @param ctx.action - Logical operation name (e.g. "ParseToken").
- * @param ctx.layer - Error layer; defaults to Application inside `newZodError`.
- * @returns Function that parses input into `ResultAsync<z.infer<T>, Error>`.
+ * @typeParam T - Zod schema type inferred from the provided `schema`.
+ * @param schema - Zod schema used to validate or transform incoming data.
+ * @param ctx - Context describing the logical action and optional layer override.
+ * @returns A function that yields a neverthrow `ResultAsync` containing the inferred schema output.
  * @example
- * const parseToken = parseAsyncWith(tokenSchema, { action: "ParseToken", layer: "Auth" });
- * const res = await parseToken({ token: "ok" }); // ResultAsync<Token, Error>
+ * const parseToken = parseAsyncWith(tokenSchema, \{ action: "ParseToken", layer: "Auth" \});
+ * const res = await parseToken(\{ token: "ok" \}); // `ResultAsync<Token, Error\>`
+ * @public
  */
 export function parseAsyncWith<T extends z.ZodType>(
   schema: T,
@@ -32,20 +31,19 @@ export function parseAsyncWith<T extends z.ZodType>(
 }
 
 /**
- * Create a Result-returning parser from a Zod schema.
+ * Creates a synchronous Result-returning parser from a Zod schema.
  *
- * - Uses `schema.parse` (sync). If validation fails, Zod throws.
- * - Thrown errors are normalized via `newZodError` using the provided `action`/`layer`.
+ * - Uses `schema.parse`, allowing Zod to throw on validation errors.
+ * - Normalises thrown errors through {@link newZodError} with the supplied context.
  *
- * @template T extends ZodTypeAny
- * @param schema - Zod schema to validate/transform the input.
- * @param ctx - Context for standardized error shaping.
- * @param ctx.action - Logical operation name (e.g. "ParseCreateTransactionRequest").
- * @param ctx.layer - Error layer; defaults to Application inside `newZodError`.
- * @returns Function that parses input into `Result<z.infer<T>, Error>`.
+ * @typeParam T - Zod schema type inferred from the provided `schema`.
+ * @param schema - Zod schema used to validate or transform incoming data.
+ * @param ctx - Context describing the logical action and optional layer override.
+ * @returns A function that yields a neverthrow `Result` containing the inferred schema output.
  * @example
- * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
- * const res = parseUser({ name: "alice" }); // Result<User, Error>
+ * const parseUser = parseWith(userSchema, \{ action: "ParseUser", layer: "UI" \});
+ * const res = parseUser(\{ name: "alice" \}); // `Result<User, Error\>`
+ * @public
  */
 export function parseWith<T extends z.ZodType>(
   schema: T,

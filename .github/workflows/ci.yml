@@ -10,6 +10,11 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   integrate:
     runs-on: ubuntu-latest
@@ -47,11 +52,35 @@ jobs:
             cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-
             cache-${{ runner.os }}-
 
+      - name: Run biome, eslint and pkg
+        run: pnpm style:pure
+
       - name: Build packages
         run: pnpm build
 
-      - name: Run typecheck and test
-        run: pnpm check
+      - name: Run typecheck
+        run: pnpm check:type
 
-      - name: Run biome, eslint and pkg
-        run: pnpm style:pure
+      - name: Run test
+        run: pnpm check:test:cvrg -- --reporter=junit
+
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: "**/.reports/junit.xml"
+          detailed_summary: true
+
+      - name: Upload test report
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: "**/.reports/junit.xml"
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          files: "**/.reports/coverage/lcov.info"
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -9,6 +9,8 @@ interface Props {
 
 /**
  * Helper that lifts alert styling into forms by rendering an inline {@link Alert}.
+ *
+ * @public
  */
 export function Message({ children, variant }: Props) {
   if (children === undefined) return null;

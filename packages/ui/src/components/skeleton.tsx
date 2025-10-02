@@ -1,6 +1,9 @@
 import { cn } from "@/lib/utils";
 
-/** Pulsing placeholder block for loading states. */
+/** Pulsing placeholder block for loading states.
+ *
+ * @public
+ */
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Tooltip root that auto-wraps children with the shared provider.
+ *
+ * @public
  */
 function Tooltip({
   ...props
@@ -18,7 +20,10 @@ function Tooltip({
   );
 }
 
-/** Floating panel that renders the tooltip body and arrow. */
+/** Floating panel that renders the tooltip body and arrow.
+ *
+ * @public
+ */
 function TooltipContent({
   sideOffset = 0,
   children,
@@ -43,7 +48,10 @@ function TooltipContent({
   );
 }
 
-/** Provider exposing Radix tooltip context with zero-delay default. */
+/** Provider exposing Radix tooltip context with zero-delay default.
+ *
+ * @public
+ */
 function TooltipProvider({
   delayDuration = 0,
   ...props
@@ -57,7 +65,10 @@ function TooltipProvider({
   );
 }
 
-/** Element that toggles tooltip visibility on hover or focus. */
+/** Element that toggles tooltip visibility on hover or focus.
+ *
+ * @public
+ */
 function TooltipTrigger({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {

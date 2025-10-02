@@ -1,5 +1,29 @@
 /**
+ * Structured descriptor passed into {@link newError}, exported for consumers
+ * that want to build wrappers or share strongly typed error payloads.
+ *
+ * @public
+ */
+export type NewError = {
+  /** Logical operation being performed when the error occurred. */
+  action?: string | undefined;
+  /** Original cause (any type) captured for diagnostic context. */
+  cause?: undefined | unknown;
+  /** Suggested follow-up or remediation for the caller. */
+  hint?: string | undefined;
+  /** Description of the resulting effect or blast radius. */
+  impact?: string | undefined;
+  /** High-level error classification shared across layers. */
+  kind: Kind;
+  /** Architectural layer where the failure originated. */
+  layer: Layer;
+  /** Short explanation of why the operation failed. */
+  reason?: string | undefined;
+};
+
+/**
  * Generic error classifications shared across application layers.
+ * @internal
  */
 type Kind =
   | "Config"
@@ -18,6 +42,7 @@ type Kind =
 
 /**
  * Architectural layer where the error originated.
+ * @internal
  */
 type Layer =
   | "Application"
@@ -29,24 +54,12 @@ type Layer =
   | "UI";
 
 /**
- * Payload used to construct a structured {@link Error} via {@link newError}.
- */
-type NewError = {
-  action?: string | undefined; // what operation was being performed
-  cause?: undefined | unknown; // original cause (any type)
-  hint?: string | undefined; // possible next step
-  impact?: string | undefined; // what the impact is
-  kind: Kind;
-  layer: Layer;
-  reason?: string | undefined; // why it failed (short explanation)
-};
-/**
  * Creates a structured Error object with a consistent `name` and `message`.
  * Intended for use in Domain/Application/Infra/Auth/UI layers where you want
  * more context than a plain `new Error(...)`.
  *
  * ## Error name
- * - Computed as `<Layer><Kind>Error` (e.g. `DomainValidationError`).
+ * - Computed as `"\{Layer\}\{Kind\}Error"` (for example `DomainValidationError`).
  * - Useful for quick classification or HTTP mapping.
  *
  * ## Error message
@@ -69,9 +82,19 @@ type NewError = {
  * - Use `impact` to describe the consequence.
  * - Use `hint` to suggest a possible fix or next step.
  *
+ * @remarks
+ * The `params` object accepts the following fields:
+ * - `layer`: Architectural layer where the failure happened (required).
+ * - `kind`: High-level error classification (required).
+ * - `action`: Logical operation being performed.
+ * - `reason`: Short explanation of the failure cause.
+ * - `impact`: Description of the resulting effect.
+ * - `hint`: Suggested follow-up or remediation.
+ * - `cause`: Original error or data that triggered the failure.
+ *
  * @example
  * ```ts
- * throw newError({
+ * throw newError(\{
  *   layer: "Domain",
  *   kind: "Validation",
  *   action: "CreateUser",
@@ -79,27 +102,15 @@ type NewError = {
  *   impact: "user cannot be registered",
  *   hint: "ensure email has @",
  *   cause: originalError,
- * });
+ * \});
  * ```
  *
- * @param layer - Which architectural layer the error originated in.
- * @param kind - What category/type of error it is.
- * @param action - What operation or use case was attempted.
- * @param reason - Why the error occurred (short explanation).
- * @param impact - What effect this error has.
- * @param hint - Suggestion for recovery or debugging.
- * @param cause - Original underlying error/exception (Error, string, or any object).
+ * @param params - Structured descriptor for the error (see {@link NewError}).
  * @returns An Error with enriched `name` and `message`.
+ * @public
  */
-export function newError({
-  action,
-  cause,
-  hint,
-  impact,
-  kind,
-  layer,
-  reason,
-}: NewError): Error {
+export function newError(params: NewError): Error {
+  const { action, cause, hint, impact, kind, layer, reason } = params;
   const name = `${layer}${kind}Error`;
 
   const causeText = summarizeCause(cause);

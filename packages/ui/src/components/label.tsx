@@ -5,7 +5,10 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Accessible label element that forwards props to Radix Label root. */
+/** Accessible label element that forwards props to Radix Label root.
+ *
+ * @public
+ */
 function Label({
   className,
   ...props

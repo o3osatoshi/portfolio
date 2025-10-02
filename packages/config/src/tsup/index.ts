@@ -18,14 +18,15 @@ interface PackageJson {
 }
 
 /**
- * Generate a tsup configuration for browser-facing React bundles.
+ * Creates a tsup configuration preset tailored for browser-facing React bundles.
  *
- * - Targets ESM output and marks core React/Next dependencies as externals.
- * - Designed for packages consumed by Next.js (e.g. `packages/ui`).
- * - Tree-shaking and code splitting are enabled by default to keep bundles small.
+ * @remarks
+ * - Emits ESM output and automatically marks core React/Next dependencies as externals.
+ * - Enables tree shaking and code splitting by default to keep bundle size small.
  *
- * @param opts - Additional tsup {@link Options} to merge with the preset defaults.
- * @returns Resolved tsup configuration ready to be consumed by tsup CLI.
+ * @param opts - Additional tsup options to override the preset defaults.
+ * @returns Resolved configuration object that can be passed directly to the tsup CLI.
+ * @public
  */
 export async function browserPreset(opts: Options = {}) {
   return defineConfig({
@@ -51,15 +52,16 @@ export async function browserPreset(opts: Options = {}) {
 }
 
 /**
- * Generate a tsup configuration tailored for Firebase Cloud Functions.
+ * Creates a tsup configuration preset for Firebase Cloud Functions deployments.
  *
- * - Emits CommonJS output targeting Node 22 with sourcemaps for local debugging.
- * - Automatically externalizes dependencies declared in package.json to keep
- *   the deployed artifact slim.
- * - Bundles project code into a single file to match the Functions runtime
- *   expectations.
+ * @remarks
+ * - Emits CommonJS output targeting Node 22 and includes sourcemaps for local debugging.
+ * - Automatically externalizes dependencies declared in the nearest package.json to keep bundles slim.
+ * - Bundles project code into a single file to match the Functions runtime expectations.
  *
- * @param opts - Additional tsup {@link Options} to merge with the preset defaults.
+ * @param opts - Additional tsup options to override the preset defaults.
+ * @returns Resolved configuration object that can be passed directly to the tsup CLI.
+ * @public
  */
 export async function functionsPreset(opts: Options = {}) {
   return defineConfig({
@@ -82,13 +84,16 @@ export async function functionsPreset(opts: Options = {}) {
 }
 
 /**
- * Generate a tsup configuration for public libraries publishing dual outputs.
+ * Creates a tsup configuration preset for public libraries that need dual ESM/CJS outputs.
  *
+ * @remarks
  * - Produces both ESM and CJS bundles alongside TypeScript declaration files.
- * - Keeps source maps off in development for speed, but enables them in CI/production.
- * - Externalizes peer and runtime dependencies automatically to avoid double bundling.
+ * - Disables sourcemaps during local development for speed, enabling them in CI/production.
+ * - Automatically externalizes runtime and peer dependencies to avoid duplicate bundling.
  *
- * @param opts - Additional tsup {@link Options} to merge with the preset defaults.
+ * @param opts - Additional tsup options to override the preset defaults.
+ * @returns Resolved configuration object that can be passed directly to the tsup CLI.
+ * @public
  */
 export async function publicDualPreset(opts: Options = {}) {
   return defineConfig({

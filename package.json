@@ -10,6 +10,7 @@
     "build:web": "turbo run build --filter=@repo/web...",
     "check": "run-s check:type check:test",
     "check:test": "turbo run test",
+    "check:test:cvrg": "turbo run test:cvrg",
     "check:type": "turbo run typecheck",
     "clean": "turbo run clean --parallel",
     "deploy:functions": "firebase deploy --only functions",

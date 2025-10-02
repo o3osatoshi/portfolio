@@ -8,12 +8,17 @@ import { cn } from "@/lib/utils";
 
 /**
  * Responsive slide-over panel built on Radix Dialog primitives.
+ *
+ * @public
  */
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
-/** Button that closes the sheet when activated. */
+/** Button that closes the sheet when activated.
+ *
+ * @public
+ */
 function SheetClose({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Close>) {
@@ -22,6 +27,8 @@ function SheetClose({
 
 /**
  * Sheet surface that slides in from the specified side of the viewport.
+ *
+ * @public
  */
 function SheetContent({
   side = "right",
@@ -60,7 +67,10 @@ function SheetContent({
   );
 }
 
-/** Supporting copy rendered underneath the sheet title. */
+/** Supporting copy rendered underneath the sheet title.
+ *
+ * @public
+ */
 function SheetDescription({
   className,
   ...props
@@ -74,7 +84,10 @@ function SheetDescription({
   );
 }
 
-/** Sticky footer area for actions placed at the bottom of the sheet. */
+/** Sticky footer area for actions placed at the bottom of the sheet.
+ *
+ * @public
+ */
 function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -85,7 +98,10 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Header wrapper used to align {@link SheetTitle} and description text. */
+/** Header wrapper used to align {@link SheetTitle} and description text.
+ *
+ * @public
+ */
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -96,7 +112,10 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** Modal overlay shown behind the sheet to dim the page content. */
+/** Modal overlay shown behind the sheet to dim the page content.
+ *
+ * @public
+ */
 function SheetOverlay({
   className,
   ...props
@@ -113,14 +132,20 @@ function SheetOverlay({
   );
 }
 
-/** Portal target so sheets render outside normal stacking context. */
+/** Portal target so sheets render outside normal stacking context.
+ *
+ * @public
+ */
 function SheetPortal({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Portal>) {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
-/** Large heading rendered at the top of the sheet. */
+/** Large heading rendered at the top of the sheet.
+ *
+ * @public
+ */
 function SheetTitle({
   className,
   ...props
@@ -134,7 +159,10 @@ function SheetTitle({
   );
 }
 
-/** Element that toggles the sheet open/close state. */
+/** Element that toggles the sheet open/close state.
+ *
+ * @public
+ */
 function SheetTrigger({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Trigger>) {

@@ -3,7 +3,10 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Tailwind variants powering the visual styling of {@link Alert}. */
+/** Tailwind variants powering the visual styling of {@link Alert}.
+ *
+ * @public
+ */
 const alertVariants = cva(
   "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
   {
@@ -26,6 +29,8 @@ const alertVariants = cva(
  * Applies slot data attributes so nested children (icons, descriptions) can
  * inherit consistent spacing. Use the `destructive` variant to highlight
  * failures while keeping the default palette for neutral information.
+ *
+ * @public
  */
 function Alert({
   className,
@@ -42,7 +47,10 @@ function Alert({
   );
 }
 
-/** Secondary message area rendered beneath the alert title. */
+/** Secondary message area rendered beneath the alert title.
+ *
+ * @public
+ */
 function AlertDescription({
   className,
   ...props
@@ -59,7 +67,10 @@ function AlertDescription({
   );
 }
 
-/** Bold heading displayed on the first row of an {@link Alert}. */
+/** Bold heading displayed on the first row of an {@link Alert}.
+ *
+ * @public
+ */
 function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

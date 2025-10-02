@@ -1,2 +1,5 @@
-/** Responsive utilities exposed by the UI hooks bundle. */
+/** Responsive utilities exposed by the UI hooks bundle.
+ *
+ * @public
+ */
 export * from "./use-mobile";

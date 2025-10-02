@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  integrate:
+  report:
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}

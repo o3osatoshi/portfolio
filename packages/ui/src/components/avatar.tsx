@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
  *
  * Ensures a consistent size and shape while exposing Radix features such as
  * lazy loading, fallbacks, and accessible semantics.
+ *
+ * @public
  */
 function Avatar({
   className,
@@ -29,6 +31,8 @@ function Avatar({
 
 /**
  * Graceful fallback displayed when the avatar image is missing or fails to load.
+ *
+ * @public
  */
 function AvatarFallback({
   className,
@@ -46,7 +50,10 @@ function AvatarFallback({
   );
 }
 
-/** Styled `<img>` element that fills the avatar container. */
+/** Styled `<img>` element that fills the avatar container.
+ *
+ * @public
+ */
 function AvatarImage({
   className,
   ...props
