@@ -21,19 +21,22 @@ export type Layer =
  * Designed to mirror {@link NewError} while providing Zod-specific hooks.
  *
  * @public
- * @property action - Logical operation being validated when the failure occurred.
- * @property cause - Original throwable (ideally a `ZodError`) used to derive issues.
- * @property hint - Suggested remediation; falls back to an inferred hint when omitted.
- * @property impact - Description of the effect of the validation failure.
- * @property issues - Explicit Zod issues list; inferred from `cause` when absent.
- * @property layer - Architectural layer responsible for validation (default `"Application"`).
  */
 export type NewZodError = {
+  /** Logical operation being validated when the failure occurred. */
   action?: string | undefined;
+  /**
+   * Original throwable (ideally a {@link ZodError}) used to derive issues.
+   * Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
+   */
   cause?: undefined | unknown;
+  /** Suggested remediation; falls back to an inferred hint when omitted. */
   hint?: string | undefined;
+  /** Description of the effect of the validation failure. */
   impact?: string | undefined;
+  /** Explicit Zod issues list; inferred from the `cause` when absent. */
   issues?: undefined | ZodIssue[];
+  /** Architectural layer responsible for validation (default `"Application"`). */
   layer?: Layer | undefined;
 };
 

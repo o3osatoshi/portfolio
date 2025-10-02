@@ -3,21 +3,21 @@
  * that want to build wrappers or share strongly typed error payloads.
  *
  * @public
- * @property action - Logical operation being performed when the error occurred.
- * @property cause - Original cause (any type) captured for diagnostic context.
- * @property hint - Suggested follow-up or remediation for the caller.
- * @property impact - Description of the resulting effect or blast radius.
- * @property kind - High-level error classification shared across layers.
- * @property layer - Architectural layer where the failure originated.
- * @property reason - Short explanation of why the operation failed.
  */
 export type NewError = {
+  /** Logical operation being performed when the error occurred. */
   action?: string | undefined;
+  /** Original cause (any type) captured for diagnostic context. */
   cause?: undefined | unknown;
+  /** Suggested follow-up or remediation for the caller. */
   hint?: string | undefined;
+  /** Description of the resulting effect or blast radius. */
   impact?: string | undefined;
+  /** High-level error classification shared across layers. */
   kind: Kind;
+  /** Architectural layer where the failure originated. */
   layer: Layer;
+  /** Short explanation of why the operation failed. */
   reason?: string | undefined;
 };
 
