@@ -8,7 +8,7 @@ import { Options } from 'tsup';
 import * as vite from 'vite';
 
 // @public
-export function baseConfig(): vite.UserConfig;
+export function basePreset(): vite.UserConfig;
 
 // @public
 export function browserPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;

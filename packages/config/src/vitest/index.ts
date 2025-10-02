@@ -10,7 +10,7 @@ import { defineConfig } from "vitest/config";
  * @returns A Vitest configuration object produced via `defineConfig`.
  * @public
  */
-export function baseConfig() {
+export function basePreset() {
   return defineConfig({
     test: {
       coverage: {
