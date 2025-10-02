@@ -26,7 +26,7 @@ export type NewZodError = {
   /** Logical operation being validated when the failure occurred. */
   action?: string | undefined;
   /**
-   * Original throwable (ideally a {@link ZodError}) used to derive issues.
+   * Original throwable (ideally a `ZodError`) used to derive issues.
    * Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
    */
   cause?: undefined | unknown;
