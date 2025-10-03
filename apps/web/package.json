@@ -19,6 +19,7 @@
     "@repo/domain": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@tanstack/react-query": "^5.76.1",
+    "@vercel/speed-insights": "^1.2.0",
     "lucide-react": "catalog:",
     "neverthrow": "catalog:",
     "next": "^15.3.1",

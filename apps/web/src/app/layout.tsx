@@ -1,6 +1,7 @@
 import "@o3osatoshi/ui/globals.css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 
 import { Providers } from "@/app/_components/providers";
@@ -51,6 +52,7 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
+        <SpeedInsights />
         <Providers>{children}</Providers>
       </body>
     </html>
