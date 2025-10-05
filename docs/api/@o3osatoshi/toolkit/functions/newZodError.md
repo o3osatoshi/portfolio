@@ -6,17 +6,19 @@
 
 # Function: newZodError()
 
-> **newZodError**(`__namedParameters`): `Error`
+> **newZodError**(`options`): `Error`
 
-Defined in: [zod-error.ts:43](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L43)
+Defined in: [zod-error.ts:65](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/toolkit/src/zod-error.ts#L65)
 
-Wrap a Zod validation error into the structured error format exposed by the toolkit.
+Wraps a Zod validation error and returns a structured toolkit error.
 
 ## Parameters
 
-### \_\_namedParameters
+### options
 
 [`NewZodError`](../type-aliases/NewZodError.md)
+
+Validation context plus optional override data (see [NewZodError](../type-aliases/NewZodError.md)).
 
 ## Returns
 

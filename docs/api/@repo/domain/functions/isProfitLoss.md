@@ -8,7 +8,7 @@
 
 > **isProfitLoss**(`v`): `v is never`
 
-Defined in: [value-objects/numeric.ts:31](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/value-objects/numeric.ts#L31)
+Defined in: [value-objects/numeric.ts:31](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/value-objects/numeric.ts#L31)
 
 Type guard verifying the value is a [ProfitLoss](../type-aliases/ProfitLoss.md).
 

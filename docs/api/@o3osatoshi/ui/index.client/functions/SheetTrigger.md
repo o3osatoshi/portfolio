@@ -8,7 +8,7 @@
 
 > **SheetTrigger**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sheet.tsx:138](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sheet.tsx#L138)
+Defined in: [packages/ui/src/components/sheet.tsx:166](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/components/sheet.tsx#L166)
 
 Element that toggles the sheet open/close state.
 

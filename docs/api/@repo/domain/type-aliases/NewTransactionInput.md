@@ -8,7 +8,7 @@
 
 > **NewTransactionInput** = `object`
 
-Defined in: [entities/transaction.ts:52](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L52)
+Defined in: [entities/transaction.ts:52](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L52)
 
 Untyped payload accepted by [newTransaction](../functions/newTransaction.md) (usually from persistence).
 
@@ -18,7 +18,7 @@ Untyped payload accepted by [newTransaction](../functions/newTransaction.md) (us
 
 > **amount**: `unknown`
 
-Defined in: [entities/transaction.ts:53](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L53)
+Defined in: [entities/transaction.ts:53](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L53)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [entities/transaction.ts:53](https://github.com/o3osatoshi/experimen
 
 > **createdAt**: `unknown`
 
-Defined in: [entities/transaction.ts:54](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L54)
+Defined in: [entities/transaction.ts:54](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L54)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [entities/transaction.ts:54](https://github.com/o3osatoshi/experimen
 
 > **currency**: `unknown`
 
-Defined in: [entities/transaction.ts:55](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L55)
+Defined in: [entities/transaction.ts:55](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L55)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [entities/transaction.ts:55](https://github.com/o3osatoshi/experimen
 
 > **datetime**: `unknown`
 
-Defined in: [entities/transaction.ts:56](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L56)
+Defined in: [entities/transaction.ts:56](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L56)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [entities/transaction.ts:56](https://github.com/o3osatoshi/experimen
 
 > `optional` **fee**: `unknown`
 
-Defined in: [entities/transaction.ts:57](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L57)
+Defined in: [entities/transaction.ts:57](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L57)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [entities/transaction.ts:57](https://github.com/o3osatoshi/experimen
 
 > `optional` **feeCurrency**: `unknown`
 
-Defined in: [entities/transaction.ts:58](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L58)
+Defined in: [entities/transaction.ts:58](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L58)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [entities/transaction.ts:58](https://github.com/o3osatoshi/experimen
 
 > **id**: `unknown`
 
-Defined in: [entities/transaction.ts:59](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L59)
+Defined in: [entities/transaction.ts:59](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L59)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [entities/transaction.ts:59](https://github.com/o3osatoshi/experimen
 
 > **price**: `unknown`
 
-Defined in: [entities/transaction.ts:60](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L60)
+Defined in: [entities/transaction.ts:60](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L60)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [entities/transaction.ts:60](https://github.com/o3osatoshi/experimen
 
 > `optional` **profitLoss**: `unknown`
 
-Defined in: [entities/transaction.ts:61](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L61)
+Defined in: [entities/transaction.ts:61](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L61)
 
 ***
 
@@ -90,7 +90,7 @@ Defined in: [entities/transaction.ts:61](https://github.com/o3osatoshi/experimen
 
 > **type**: `unknown`
 
-Defined in: [entities/transaction.ts:62](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L62)
+Defined in: [entities/transaction.ts:62](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L62)
 
 ***
 
@@ -98,7 +98,7 @@ Defined in: [entities/transaction.ts:62](https://github.com/o3osatoshi/experimen
 
 > **updatedAt**: `unknown`
 
-Defined in: [entities/transaction.ts:63](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L63)
+Defined in: [entities/transaction.ts:63](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L63)
 
 ***
 
@@ -106,4 +106,4 @@ Defined in: [entities/transaction.ts:63](https://github.com/o3osatoshi/experimen
 
 > **userId**: `unknown`
 
-Defined in: [entities/transaction.ts:64](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/transaction.ts#L64)
+Defined in: [entities/transaction.ts:64](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/entities/transaction.ts#L64)

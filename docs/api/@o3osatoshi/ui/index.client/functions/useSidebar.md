@@ -8,7 +8,7 @@
 
 > **useSidebar**(): `SidebarContextProps`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:488](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L488)
+Defined in: [packages/ui/src/components/sidebar.tsx:537](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/components/sidebar.tsx#L537)
 
 Hook exposing the sidebar context; throws when used outside provider.
 

@@ -8,7 +8,7 @@
 
 > **SheetHeader**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sheet.tsx:89](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sheet.tsx#L89)
+Defined in: [packages/ui/src/components/sheet.tsx:105](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/components/sheet.tsx#L105)
 
 Header wrapper used to align [SheetTitle](SheetTitle.md) and description text.
 

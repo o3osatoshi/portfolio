@@ -9,16 +9,19 @@ import { Options } from 'tsup';
 import * as vite from 'vite';
 
 // @public
-export function basePreset(opts?: InlineConfig): vite.UserConfig;
+export function baseTestPreset(opts?: InlineConfig): vite.UserConfig;
 
 // @public
-export function browserPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+export function browserBundlePreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
 
 // @public
-export function functionsPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+export function browserTestPreset(opts?: InlineConfig): vite.UserConfig;
 
 // @public
-export function publicDualPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+export function functionsBundlePreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+
+// @public
+export function publicDualBundlePreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
 
 // (No @packageDocumentation comment for this package)
 

@@ -8,7 +8,7 @@
 
 > **SidebarGroupAction**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:191](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L191)
+Defined in: [packages/ui/src/components/sidebar.tsx:205](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/components/sidebar.tsx#L205)
 
 Inline button displayed in the top-right corner of a sidebar group.
 

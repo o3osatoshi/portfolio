@@ -8,12 +8,12 @@
 
 > **parseWith**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod-parse.ts:50](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-parse.ts#L50)
+Defined in: [zod-parse.ts:48](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/toolkit/src/zod-parse.ts#L48)
 
-Create a Result-returning parser from a Zod schema.
+Creates a synchronous Result-returning parser from a Zod schema.
 
-- Uses `schema.parse` (sync). If validation fails, Zod throws.
-- Thrown errors are normalized via `newZodError` using the provided `action`/`layer`.
+- Uses `schema.parse`, allowing Zod to throw on validation errors.
+- Normalises thrown errors through [newZodError](newZodError.md) with the supplied context.
 
 ## Type Parameters
 
@@ -21,7 +21,7 @@ Create a Result-returning parser from a Zod schema.
 
 `T` *extends* `ZodType`\<`unknown`, `unknown`, `$ZodTypeInternals`\<`unknown`, `unknown`\>\>
 
-extends ZodTypeAny
+Zod schema type inferred from the provided `schema`.
 
 ## Parameters
 
@@ -29,27 +29,23 @@ extends ZodTypeAny
 
 `T`
 
-Zod schema to validate/transform the input.
+Zod schema used to validate or transform incoming data.
 
 ### ctx
 
-Context for standardized error shaping.
+Context describing the logical action and optional layer override.
 
 #### action
 
 `string`
 
-Logical operation name (e.g. "ParseCreateTransactionRequest").
-
 #### layer?
 
 [`Layer`](../type-aliases/Layer.md)
 
-Error layer; defaults to Application inside `newZodError`.
-
 ## Returns
 
-Function that parses input into `Result<z.infer<T>, Error>`.
+A function that yields a neverthrow `Result` containing the inferred schema output.
 
 > (`input`): `Result`\<`output`\<`T`\>, `Error`\>
 
@@ -67,5 +63,6 @@ Function that parses input into `Result<z.infer<T>, Error>`.
 
 ```ts
 const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
-const res = parseUser({ name: "alice" }); // Result<User, Error>
+const res = parseUser({ name: "alice" }); // `Result<User, Error\>`
+@public
 ```

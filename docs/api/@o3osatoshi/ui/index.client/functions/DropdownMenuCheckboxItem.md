@@ -8,7 +8,7 @@
 
 > **DropdownMenuCheckboxItem**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/dropdown-menu.tsx:19](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/dropdown-menu.tsx#L19)
+Defined in: [packages/ui/src/components/dropdown-menu.tsx:24](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/components/dropdown-menu.tsx#L24)
 
 Checkbox-style menu item that manages a checked state indicator.
 

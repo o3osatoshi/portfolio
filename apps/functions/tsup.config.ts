@@ -1,3 +1,3 @@
-import { functionsPreset } from "@o3osatoshi/config/tsup";
+import { functionsBundlePreset } from "@o3osatoshi/config/tsup";
 
-export default await functionsPreset();
+export default await functionsBundlePreset();

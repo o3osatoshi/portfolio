@@ -8,7 +8,7 @@
 
 > **cn**(...`inputs`): `string`
 
-Defined in: [packages/ui/src/lib/utils.ts:15](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/lib/utils.ts#L15)
+Defined in: [packages/ui/src/lib/utils.ts:16](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/lib/utils.ts#L16)
 
 Merge Tailwind CSS class names while de-duplicating conflicting utilities.
 

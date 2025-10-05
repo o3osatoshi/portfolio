@@ -8,7 +8,7 @@
 
 > **SidebarFooter**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:167](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L167)
+Defined in: [packages/ui/src/components/sidebar.tsx:175](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/components/sidebar.tsx#L175)
 
 Footer slot ideal for secondary actions or account switchers.
 
