@@ -11,7 +11,7 @@ import type { InlineConfig } from "vitest/node";
  * `.reports/junit.xml` by default; provide `opts.outputFile` to change the destination. Currently only
  * the coverage-related fields and `outputFile` from `opts` are honored.
  *
- * @param opts Inline overrides for coverage behaviour or output locations.
+ * @param opts - Inline overrides for coverage behaviour or output locations.
  * @returns Vitest configuration produced via `defineConfig`.
  * @public
  */
