@@ -1,26 +1,37 @@
 import { defineConfig } from "vitest/config";
+import type { InlineConfig } from "vitest/node";
 
 /**
- * Builds the shared Vitest configuration used across workspace packages.
+ * Creates the shared Vitest configuration for workspace packages with consistent reporting defaults.
  *
  * @remarks
- * - Disables coverage by default but keeps reporters configured so individual packages can opt in.
- * - Emits JUnit output under `.reports/junit.xml` to integrate with CI dashboards.
+ * Coverage defaults to the `v8` provider and remains disabled unless `opts.coverage?.enabled` is set.
+ * Core exclusions are enforced, with any additional `opts.coverage?.exclude` entries appended, and
+ * reports write to `.reports/coverage` unless overridden. A JUnit report is emitted to
+ * `.reports/junit.xml` by default; provide `opts.outputFile` to change the destination. Currently only
+ * the coverage-related fields and `outputFile` from `opts` are honored.
  *
- * @returns A Vitest configuration object produced via `defineConfig`.
+ * @param opts Inline overrides for coverage behaviour or output locations.
+ * @returns Vitest configuration produced via `defineConfig`.
  * @public
  */
-export function basePreset() {
+export function basePreset(opts: InlineConfig = {}) {
+  const cvrg = opts.coverage;
   return defineConfig({
     test: {
       coverage: {
         provider: "v8",
-        enabled: false,
-        exclude: ["**/*.d.ts", "dist/**", "coverage/**"],
+        enabled: cvrg?.enabled ?? false,
+        exclude: [
+          "**/*.d.ts",
+          "dist/**",
+          "coverage/**",
+          ...(cvrg?.exclude ?? []),
+        ],
         reporter: ["text-summary", "lcov", "html"],
-        reportsDirectory: ".reports/coverage",
+        reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
-      outputFile: ".reports/junit.xml",
+      outputFile: opts.outputFile ?? ".reports/junit.xml",
     },
   });
 }
