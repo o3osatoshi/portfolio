@@ -7,7 +7,7 @@ describe("Alert", () => {
   it("renders as an accessible alert with slots", () => {
     render(
       <Alert>
-        <svg role="img" aria-label="Info" />
+        <svg aria-label="Info" role="img" />
         <AlertTitle>Heads up</AlertTitle>
         <AlertDescription>This action cannot be undone.</AlertDescription>
       </Alert>,
@@ -20,9 +20,10 @@ describe("Alert", () => {
       "data-slot",
       "alert-title",
     );
-    expect(
-      screen.getByText("This action cannot be undone."),
-    ).toHaveAttribute("data-slot", "alert-description");
+    expect(screen.getByText("This action cannot be undone.")).toHaveAttribute(
+      "data-slot",
+      "alert-description",
+    );
   });
 
   it("applies variant styles and merges custom class names", () => {
@@ -33,9 +34,7 @@ describe("Alert", () => {
     const alert = container.querySelector('[role="alert"]') as HTMLElement;
     expect(alert).toHaveClass("text-destructive");
 
-    rerender(
-      <Alert className="border-dashed">Daily summary ready</Alert>,
-    );
+    rerender(<Alert className="border-dashed">Daily summary ready</Alert>);
 
     const updated = container.querySelector('[role="alert"]') as HTMLElement;
     expect(updated).toHaveClass("border-dashed");

@@ -47,10 +47,9 @@ describe("Card", () => {
       "data-slot",
       "card-footer",
     );
-    expect(screen.getByRole("button", { name: "Refresh" }).parentElement).toHaveAttribute(
-      "data-slot",
-      "card-action",
-    );
+    expect(
+      screen.getByRole("button", { name: "Refresh" }).parentElement,
+    ).toHaveAttribute("data-slot", "card-action");
   });
 
   it("merges additional class names on the root slot", () => {

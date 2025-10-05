@@ -5,9 +5,7 @@ import { Avatar, AvatarFallback } from "./avatar";
 
 describe("Avatar", () => {
   it("adds data attributes and merges class names on the root", () => {
-    const { container } = render(
-      <Avatar className="ring-2 ring-primary" />,
-    );
+    const { container } = render(<Avatar className="ring-2 ring-primary" />);
 
     const avatar = container.querySelector('[data-slot="avatar"]');
 
@@ -18,7 +16,7 @@ describe("Avatar", () => {
   it("exposes the fallback slot", async () => {
     const { container } = render(
       <Avatar>
-        <AvatarFallback delayMs={0} className="bg-emerald-500">
+        <AvatarFallback className="bg-emerald-500" delayMs={0}>
           OS
         </AvatarFallback>
       </Avatar>,
