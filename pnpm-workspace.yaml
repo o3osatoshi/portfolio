@@ -24,3 +24,4 @@ catalog:
   vitest: ^3.2.4
   wagmi: 0.0.0-canary-20250516172625
   zod: ^4.1.5
+  vite-tsconfig-paths: ^5.1.4

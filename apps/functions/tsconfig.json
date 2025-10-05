@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@o3osatoshi/config": ["../../packages/config/src"],
       "@repo/application": ["../../packages/application/src"],
       "@repo/prisma": ["../../packages/prisma/src"]
     }
