@@ -6,6 +6,8 @@ import type { InlineConfig } from "vitest/node";
  *
  * Combines `InlineConfig` so consumers can forward common Vitest options while exposing a
  * `plugins` property mirroring `ViteUserConfig["plugins"]` for Vite/Vitest plugin registration.
+ *
+ * @public
  */
 export type Options = {
   plugins?: ViteUserConfig["plugins"];
@@ -16,7 +18,7 @@ export type Options = {
  *
  * @remarks
  * Applies workspace defaults for coverage and reporting while allowing consumers to forward
- * frequently customised {@link InlineConfig} fields.
+ * frequently customised {@link https://vitest.dev/config | InlineConfig} fields.
  * - Coverage defaults to the `v8` provider and remains disabled unless `opts.coverage?.enabled` is set.
  * - Core exclusions are enforced, with any additional `opts.coverage?.exclude` entries appended, and
  *   reports write to `.reports/coverage` unless overridden.
