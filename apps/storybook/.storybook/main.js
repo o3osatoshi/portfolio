@@ -18,7 +18,7 @@ const config = {
     options: {},
   },
   staticDirs: ["../public"],
-  stories: ["../stories/*.stories.@(ts|tsx|js|jsx|mdx)"],
+  stories: ["../../../packages/ui/src/**/*.stories.@(ts|tsx|js|jsx|mdx)"],
 
   async viteFinal(config, { _configType }) {
     // customize the Vite config here

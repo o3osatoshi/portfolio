@@ -31,6 +31,7 @@
     "storybook": "^8.6.12",
     "typescript": "catalog:",
     "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "catalog:"
   },
   "engines": {
