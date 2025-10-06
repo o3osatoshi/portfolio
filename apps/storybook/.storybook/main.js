@@ -24,6 +24,10 @@ const config = {
     // customize the Vite config here
     return {
       ...config,
+      build: {
+        ...(config.build ?? {}),
+        chunkSizeWarningLimit: 1500,
+      },
       define: { "process.env": {} },
       resolve: {
         alias: [
