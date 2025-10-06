@@ -1,3 +1,4 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   BarChart4,
   FolderKanban,
@@ -7,7 +8,6 @@ import {
   Settings2,
   Star,
 } from "lucide-react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
   Sidebar,
@@ -52,7 +52,7 @@ export const Default: Story = {
           <SidebarHeader>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton size="lg" isActive tooltip="Launchpad">
+                <SidebarMenuButton isActive size="lg" tooltip="Launchpad">
                   <Rocket className="size-4" />
                   <span className="font-semibold">Launchpad</span>
                 </SidebarMenuButton>
@@ -86,13 +86,19 @@ export const Default: Story = {
                     </SidebarMenuButton>
                     <SidebarMenuSub>
                       <SidebarMenuSubItem>
-                        <SidebarMenuSubButton isActive>Quarterly roadmap</SidebarMenuSubButton>
+                        <SidebarMenuSubButton isActive>
+                          Quarterly roadmap
+                        </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
-                        <SidebarMenuSubButton>Design review</SidebarMenuSubButton>
+                        <SidebarMenuSubButton>
+                          Design review
+                        </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
-                        <SidebarMenuSubButton size="sm">Team updates</SidebarMenuSubButton>
+                        <SidebarMenuSubButton size="sm">
+                          Team updates
+                        </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
                   </SidebarMenuItem>
@@ -129,7 +135,9 @@ export const Default: Story = {
                 <SidebarMenuButton size="sm" tooltip="Switch workspace">
                   <span className="inline-flex flex-col">
                     <span className="font-semibold text-sm">o3osatoshi</span>
-                    <span className="text-muted-foreground text-xs">Founder</span>
+                    <span className="text-muted-foreground text-xs">
+                      Founder
+                    </span>
                   </span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -142,7 +150,7 @@ export const Default: Story = {
         <SidebarInset className="flex-1 rounded-lg border bg-background p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold">Overview</h1>
+              <h1 className="font-semibold text-2xl">Overview</h1>
               <p className="text-muted-foreground">
                 Quick snapshot of traffic, conversions, and revenue trends.
               </p>
@@ -151,12 +159,12 @@ export const Default: Story = {
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-lg border p-4">
-              <h2 className="text-sm font-medium">Weekly reach</h2>
-              <p className="mt-2 text-2xl font-semibold">24,320</p>
+              <h2 className="font-medium text-sm">Weekly reach</h2>
+              <p className="mt-2 font-semibold text-2xl">24,320</p>
             </div>
             <div className="rounded-lg border p-4">
-              <h2 className="text-sm font-medium">Conversion rate</h2>
-              <p className="mt-2 text-2xl font-semibold">4.7%</p>
+              <h2 className="font-medium text-sm">Conversion rate</h2>
+              <p className="mt-2 font-semibold text-2xl">4.7%</p>
             </div>
           </div>
         </SidebarInset>

@@ -1,6 +1,6 @@
-import * as React from "react";
-import { CheckCircle, LogOut, Settings } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { CheckCircle, LogOut, Settings } from "lucide-react";
+import * as React from "react";
 
 import { Button } from "./button";
 import {
@@ -77,8 +77,8 @@ export const Default: Story = {
           <DropdownMenuGroup>
             <DropdownMenuLabel inset>Panel position</DropdownMenuLabel>
             <DropdownMenuRadioGroup
-              value={panel}
               onValueChange={(value) => setPanel(value)}
+              value={panel}
             >
               <DropdownMenuRadioItem value="left">Left</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="bottom">
@@ -130,9 +130,7 @@ export const WithStatus: Story = {
         <DropdownMenuItem>Switch workspace</DropdownMenuItem>
         <DropdownMenuItem>Re-authorise</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">
-          Disconnect
-        </DropdownMenuItem>
+        <DropdownMenuItem variant="destructive">Disconnect</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ),

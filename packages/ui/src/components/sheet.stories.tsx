@@ -37,7 +37,9 @@ export const Default: Story = {
         <div className="space-y-4 px-4 pb-4 text-sm">
           <div>
             <h4 className="font-medium">Appearance</h4>
-            <p className="text-muted-foreground">Pick the theme for your dashboard.</p>
+            <p className="text-muted-foreground">
+              Pick the theme for your dashboard.
+            </p>
           </div>
           <div>
             <h4 className="font-medium">Integrations</h4>
@@ -61,7 +63,7 @@ export const Placement: Story = {
       {(["left", "right", "top", "bottom"] as const).map((side) => (
         <Sheet key={side}>
           <SheetTrigger asChild>
-            <Button variant="ghost" className="capitalize">
+            <Button className="capitalize" variant="ghost">
               {side} sheet
             </Button>
           </SheetTrigger>

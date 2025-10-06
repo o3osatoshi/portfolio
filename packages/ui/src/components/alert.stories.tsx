@@ -1,6 +1,6 @@
-import type * as React from "react";
-import { AlertCircle } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { AlertCircle } from "lucide-react";
+import type * as React from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "./alert";
 

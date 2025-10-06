@@ -12,6 +12,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Horizontal: Story = {
+  args: {
+    orientation: "horizontal",
+  },
   render: (args) => (
     <div className="space-y-4">
       <div className="text-sm">Section one</div>
@@ -19,12 +22,12 @@ export const Horizontal: Story = {
       <div className="text-sm">Section two</div>
     </div>
   ),
-  args: {
-    orientation: "horizontal",
-  },
 };
 
 export const Vertical: Story = {
+  args: {
+    orientation: "vertical",
+  },
   render: (args) => (
     <div className="flex h-24 items-center">
       <span className="text-sm">Left</span>
@@ -32,7 +35,4 @@ export const Vertical: Story = {
       <span className="text-sm">Right</span>
     </div>
   ),
-  args: {
-    orientation: "vertical",
-  },
 };

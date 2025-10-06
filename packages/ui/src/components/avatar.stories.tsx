@@ -1,5 +1,5 @@
-import type * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type * as React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
@@ -14,10 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 const renderAvatar = (args: React.ComponentProps<typeof Avatar>) => (
   <Avatar {...args}>
-    <AvatarImage
-      alt="Satoshi Nakamoto"
-      src="https://i.pravatar.cc/64?img=8"
-    />
+    <AvatarImage alt="Satoshi Nakamoto" src="https://i.pravatar.cc/64?img=8" />
     <AvatarFallback>SN</AvatarFallback>
   </Avatar>
 );

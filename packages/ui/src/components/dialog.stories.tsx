@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button } from "./button";
-import { Input } from "./input";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import { Input } from "./input";
 
 const meta = {
   component: Dialog,
@@ -36,10 +36,10 @@ export const Default: Story = {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-3 py-2">
-          <label className="text-sm font-medium" htmlFor="username">
+          <label className="font-medium text-sm" htmlFor="username">
             Display name
           </label>
-          <Input defaultValue="o3osatoshi" id="username" />
+          <Input id="username" defaultValue="o3osatoshi" />
         </div>
         <DialogFooter>
           <Button variant="outline">Cancel</Button>

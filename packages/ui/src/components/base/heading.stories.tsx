@@ -3,6 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Heading } from "./heading";
 
 const meta = {
+  args: {
+    align: "left",
+    children: "Design System",
+    level: "h2",
+  },
   argTypes: {
     align: {
       control: "inline-radio",
@@ -12,11 +17,6 @@ const meta = {
       control: "select",
       options: ["h1", "h2", "h3", "h4", "h5", "h6"],
     },
-  },
-  args: {
-    align: "left",
-    children: "Design System",
-    level: "h2",
   },
   component: Heading,
   tags: ["autodocs"],

@@ -1,6 +1,6 @@
-import * as React from "react";
-import { ChevronDown } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ChevronDown } from "lucide-react";
+import * as React from "react";
 
 import { Button } from "./button";
 import {
@@ -19,6 +19,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    defaultOpen: false,
+  },
   render: (args) => (
     <Collapsible className="w-full max-w-md space-y-2" {...args}>
       <div className="flex items-center justify-between">
@@ -36,9 +39,6 @@ export const Default: Story = {
       </CollapsibleContent>
     </Collapsible>
   ),
-  args: {
-    defaultOpen: false,
-  },
 };
 
 export const Controlled: Story = {
@@ -48,8 +48,8 @@ export const Controlled: Story = {
     return (
       <Collapsible
         className="w-full max-w-md space-y-2"
-        open={open}
         onOpenChange={setOpen}
+        open={open}
         {...args}
       >
         <CollapsibleTrigger asChild>
