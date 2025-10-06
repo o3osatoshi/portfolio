@@ -7,5 +7,5 @@
     }
   },
   "extends": "@o3osatoshi/config/tsconfig/storybook.json",
-  "include": [".storybook", "src", "stories", "vitest.workspace.ts"]
+  "include": [".storybook/**/*.ts", ".storybook/**/*.tsx"]
 }
