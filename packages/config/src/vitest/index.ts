@@ -61,8 +61,8 @@ export function baseTestPreset(opts: Options = {}) {
  * Mirrors the shared coverage configuration from {@link baseTestPreset}, defaulting to the `v8` provider
  * and staying disabled unless `opts.coverage?.enabled` is truthy. Additional behaviour:
  * - CSS processing is enabled unless explicitly turned off through `opts.css`.
- * - The setup sequence prepends `./src/test/setup-tests.ts` (relative to the consuming package) before
- *   any `opts.setupFiles` entries so DOM polyfills run consistently.
+ * - The setup sequence always prepends `./src/test/setup-tests.ts` (relative to the consuming package)
+ *   before any `opts.setupFiles` entries so DOM polyfills run consistently.
  * - Any `opts.plugins` array is forwarded to `defineConfig` to register extra Vite/Vitest plugins.
  * As with the base preset, other {@link Options} fields are currently ignored.
  *
