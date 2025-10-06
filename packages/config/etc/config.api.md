@@ -23,7 +23,8 @@ export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Opt
 // @public
 export type Options = {
     plugins?: ViteUserConfig["plugins"];
-} & InlineConfig;
+    test?: InlineConfig;
+};
 
 // @public
 export function publicDualBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;

@@ -4,35 +4,38 @@ import type { InlineConfig } from "vitest/node";
 /**
  * Supported overrides for the shared Vitest presets.
  *
- * Combines `InlineConfig` so consumers can forward common Vitest options while exposing a
- * `plugins` property mirroring `ViteUserConfig["plugins"]` for Vite/Vitest plugin registration.
+ * Provides a thin wrapper allowing consumers to forward a `test` {@link InlineConfig} alongside
+ * optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]`.
  *
  * @public
  */
 export type Options = {
   plugins?: ViteUserConfig["plugins"];
-} & InlineConfig;
+  test?: InlineConfig;
+};
 
 /**
  * Creates the shared Vitest configuration for workspace packages with consistent reporting defaults.
  *
  * @remarks
- * Applies workspace defaults for coverage and reporting while allowing consumers to forward
- * frequently customised {@link https://vitest.dev/config | InlineConfig} fields.
- * - Coverage defaults to the `v8` provider and remains disabled unless `opts.coverage?.enabled` is set.
- * - Core exclusions are enforced, with any additional `opts.coverage?.exclude` entries appended, and
- *   reports write to `.reports/coverage` unless overridden.
- * - Provide `opts.outputFile` to change the default JUnit destination (`.reports/junit.xml`).
- * - Any `opts.plugins` array is passed directly to `defineConfig` for additional Vite/Vitest plugins.
- * Fields beyond those listed above currently have no effect but remain type-compatible through
- * {@link Options}.
+ * Applies workspace defaults before spreading any user-provided {@link InlineConfig} through
+ * `opts.test`.
+ * - Coverage uses the `v8` provider, stays disabled by default, and emits text-summary, LCOV, and HTML
+ *   reports under `.reports/coverage` whenever no explicit `opts.test?.coverage` is supplied. Supplying
+ *   a coverage object replaces the defaults entirely, so include baseline values if they are still
+ *   required.
+ * - The test environment defaults to `node`, and the JUnit reporter writes to `.reports/junit.xml`
+ *   unless `opts.test?.environment` or `opts.test?.outputFile` override those values.
+ * - Any Vite/Vitest `opts.plugins` values are forwarded directly to `defineConfig`.
+ * Additional {@link InlineConfig} fields can be provided via `opts.test` and override the defaults after
+ * they are applied.
  *
- * @param opts - Inline overrides for coverage behaviour, plugin registration, or report locations.
+ * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
  * @returns Vitest configuration produced via `defineConfig`.
  * @public
  */
 export function baseTestPreset(opts: Options = {}) {
-  const cvrg = opts.coverage;
+  const cvrg = opts.test?.coverage;
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -49,7 +52,8 @@ export function baseTestPreset(opts: Options = {}) {
         reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
       environment: "node",
-      outputFile: opts.outputFile ?? ".reports/junit.xml",
+      outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
+      ...opts.test,
     },
   });
 }
@@ -58,19 +62,20 @@ export function baseTestPreset(opts: Options = {}) {
  * Creates a browser-oriented Vitest configuration with CSS support and shared setup defaults.
  *
  * @remarks
- * Mirrors the shared coverage configuration from {@link baseTestPreset}, defaulting to the `v8` provider
- * and staying disabled unless `opts.coverage?.enabled` is truthy. Additional behaviour:
- * - CSS processing is enabled unless explicitly turned off through `opts.css`.
- * - Any `opts.setupFiles` value is forwarded directly so packages fully control their setup pipeline.
- * - Any `opts.plugins` array is forwarded to `defineConfig` to register extra Vite/Vitest plugins.
- * As with the base preset, other {@link Options} fields are currently ignored.
+ * Shares the merge behaviour of {@link baseTestPreset} while tailoring defaults for browser tests.
+ * - Coverage falls back to the same `v8`-based defaults unless `opts.test?.coverage` is supplied, in
+ *   which case the provided object replaces the preset values.
+ * - CSS handling is enabled (`true`) by default and can be disabled by setting `opts.test?.css`.
+ * - The environment defaults to `jsdom`, though any fields supplied via `opts.test` override the
+ *   preset after defaults are applied.
+ * - Additional Vite/Vitest plugins can be registered through `opts.plugins`.
  *
- * @param opts - Inline overrides for coverage behaviour, CSS handling, setup files, or plugins.
+ * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
  * @returns Vitest configuration produced via `defineConfig`.
  * @public
  */
 export function browserTestPreset(opts: Options = {}) {
-  const cvrg = opts.coverage;
+  const cvrg = opts.test?.coverage;
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -86,10 +91,10 @@ export function browserTestPreset(opts: Options = {}) {
         reporter: ["text-summary", "lcov", "html"],
         reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
-      css: opts.css ?? true,
+      css: opts.test?.css ?? true,
       environment: "jsdom",
-      outputFile: opts.outputFile ?? ".reports/junit.xml",
-      ...(opts.setupFiles ? { setupFiles: opts.setupFiles } : {}),
+      outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
+      ...opts.test,
     },
   });
 }

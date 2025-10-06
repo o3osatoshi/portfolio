@@ -1,9 +1,7 @@
-import { defineConfig } from "vitest/config";
+import { baseTestPreset } from "@o3osatoshi/config/vitest";
 
-export default defineConfig({
+export default baseTestPreset({
   test: {
-    environment: "node",
-    globals: true,
     hookTimeout: 120_000,
     include: ["src/**/*.int.spec.ts"],
     testTimeout: 120_000,
