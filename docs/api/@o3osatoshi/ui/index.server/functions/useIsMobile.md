@@ -8,7 +8,7 @@
 
 > **useIsMobile**(): `boolean`
 
-Defined in: [packages/ui/src/hooks/use-mobile.ts:13](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/ui/src/hooks/use-mobile.ts#L13)
+Defined in: [packages/ui/src/hooks/use-mobile.ts:13](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/hooks/use-mobile.ts#L13)
 
 Track whether the viewport is below the mobile breakpoint.
 

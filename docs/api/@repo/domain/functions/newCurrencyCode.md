@@ -8,7 +8,7 @@
 
 > **newCurrencyCode**(`v`): `Result`\<[`CurrencyCode`](../type-aliases/CurrencyCode.md), `Error`\>
 
-Defined in: [value-objects/currency.ts:20](https://github.com/o3osatoshi/experiment/blob/54ab00df974a3e9f8283fbcd8c611ed1e0274132/packages/domain/src/value-objects/currency.ts#L20)
+Defined in: [value-objects/currency.ts:20](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/value-objects/currency.ts#L20)
 
 Validate unknown input and return a normalized uppercase currency code.
 

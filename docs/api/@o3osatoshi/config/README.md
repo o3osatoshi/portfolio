@@ -203,6 +203,10 @@ The package exposes `tsup` presets, `tsconfig`, `biome`, and `eslint` exports. I
 
 Entry point for the shared configuration package. Currently exposes tsup presets and a Vitest base config.
 
+## Type Aliases
+
+- [Options](type-aliases/Options.md)
+
 ## Functions
 
 - [baseTestPreset](functions/baseTestPreset.md)
