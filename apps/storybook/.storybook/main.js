@@ -6,24 +6,28 @@ function getAbsolutePath(value) {
 
 const config = {
   addons: [
-    getAbsolutePath("@storybook/addon-essentials"),
     getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@storybook/addon-docs"),
   ],
+
   core: {},
-  docs: {
-    autodocs: true,
-  },
+
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
+
   staticDirs: ["../public"],
-  stories: ["../stories/*.stories.@(ts|tsx|js|jsx|mdx)"],
+  stories: ["../../../packages/ui/src/**/*.stories.@(ts|tsx|js|jsx|mdx)"],
 
   async viteFinal(config, { _configType }) {
     // customize the Vite config here
     return {
       ...config,
+      build: {
+        ...(config.build ?? {}),
+        chunkSizeWarningLimit: 1500,
+      },
       define: { "process.env": {} },
       resolve: {
         alias: [

@@ -8,7 +8,7 @@
 
 > **SidebarMenuSkeleton**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:633](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L633)
+Defined in: [packages/ui/src/components/sidebar.tsx:696](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L696)
 
 Placeholder shimmer representing a loading sidebar entry.
 

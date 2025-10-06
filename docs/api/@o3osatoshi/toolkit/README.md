@@ -80,6 +80,7 @@ try {
 ## Type Aliases
 
 - [Layer](type-aliases/Layer.md)
+- [NewError](type-aliases/NewError.md)
 - [NewZodError](type-aliases/NewZodError.md)
 
 ## Functions

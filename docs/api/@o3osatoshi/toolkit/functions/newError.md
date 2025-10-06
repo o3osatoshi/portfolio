@@ -6,16 +6,16 @@
 
 # Function: newError()
 
-> **newError**(`__namedParameters`): `Error`
+> **newError**(`params`): `Error`
 
-Defined in: [error.ts:94](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/error.ts#L94)
+Defined in: [error.ts:112](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/error.ts#L112)
 
 Creates a structured Error object with a consistent `name` and `message`.
 Intended for use in Domain/Application/Infra/Auth/UI layers where you want
 more context than a plain `new Error(...)`.
 
 ## Error name
-- Computed as `<Layer><Kind>Error` (e.g. `DomainValidationError`).
+- Computed as `"\{Layer\}\{Kind\}Error"` (for example `DomainValidationError`).
 - Useful for quick classification or HTTP mapping.
 
 ## Error message
@@ -40,9 +40,11 @@ more context than a plain `new Error(...)`.
 
 ## Parameters
 
-### \_\_namedParameters
+### params
 
-`NewError`
+[`NewError`](../type-aliases/NewError.md)
+
+Structured descriptor for the error (see [NewError](../type-aliases/NewError.md)).
 
 ## Returns
 
@@ -50,10 +52,21 @@ more context than a plain `new Error(...)`.
 
 An Error with enriched `name` and `message`.
 
+## Remarks
+
+The `params` object accepts the following fields:
+- `layer`: Architectural layer where the failure happened (required).
+- `kind`: High-level error classification (required).
+- `action`: Logical operation being performed.
+- `reason`: Short explanation of the failure cause.
+- `impact`: Description of the resulting effect.
+- `hint`: Suggested follow-up or remediation.
+- `cause`: Original error or data that triggered the failure.
+
 ## Example
 
 ```ts
-throw newError({
+throw newError(\{
   layer: "Domain",
   kind: "Validation",
   action: "CreateUser",
@@ -61,5 +74,5 @@ throw newError({
   impact: "user cannot be registered",
   hint: "ensure email has @",
   cause: originalError,
-});
+\});
 ```

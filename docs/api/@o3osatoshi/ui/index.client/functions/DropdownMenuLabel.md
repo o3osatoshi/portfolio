@@ -8,7 +8,7 @@
 
 > **DropdownMenuLabel**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/dropdown-menu.tsx:105](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/dropdown-menu.tsx#L105)
+Defined in: [packages/ui/src/components/dropdown-menu.tsx:120](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/dropdown-menu.tsx#L120)
 
 Section heading used to label a group of menu items.
 

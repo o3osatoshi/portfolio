@@ -41,30 +41,30 @@ Notes
 Import presets from `@o3osatoshi/config/tsup` and export a config in `tsup.config.mjs`.
 
 ```ts
-import { browserPreset, publicDualPreset, functionsPreset } from "@o3osatoshi/config/tsup";
+import { browserBundlePreset, publicDualBundlePreset, functionsBundlePreset } from "@o3osatoshi/config/tsup";
 
 // Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
-export default await browserPreset({ entry: { index: "src/index.tsx" }, dts: true });
+export default await browserBundlePreset({ entry: { index: "src/index.tsx" }, dts: true });
 
 // Public library (ESM + CJS, with DTS).
 //    Default sourcemap: enabled in production/CI, disabled in dev.
-// export default await publicDualPreset({ entry: { index: "src/index.ts" } });
+// export default await publicDualBundlePreset({ entry: { index: "src/index.ts" } });
 
 // Firebase Functions (ESM, Node target). Adjust target per runtime.
-// export default await functionsPreset({ entry: { index: "src/index.ts" } });
+// export default await functionsBundlePreset({ entry: { index: "src/index.ts" } });
 ```
 
 Notes
 - Externals are automatically derived from dependencies/peerDependencies of the nearest package.json. In addition, common UI libs are always externalized: `react`, `react-dom`, `next`.
-- The browser preset explicitly marks React/Next as externals for UI packages.
+- The browser bundle preset explicitly marks React/Next as externals for UI packages.
 - Each preset accepts standard `tsup` `Options` and sets sensible defaults.
-- `publicDualPreset` enables `sourcemap` by default in production/CI; pass `{ sourcemap: false }` to disable.
+- `publicDualBundlePreset` enables `sourcemap` by default in production/CI; pass `{ sourcemap: false }` to disable.
 - You can pass through `env`, `banner`, `external`, `outDir`, and `onSuccess` as needed.
 
 Defaults (high-level)
-- `browserPreset`: ESM, platform `browser`, React/Next external, `dts` off by default.
-- `publicDualPreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prod, off in dev.
-- `functionsPreset`: ESM, platform `node`, `target: node22`, sourcemap enabled.
+- `browserBundlePreset`: ESM, platform `browser`, React/Next external, `dts` off by default.
+- `publicDualBundlePreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prod, off in dev.
+- `functionsBundlePreset`: ESM, platform `node`, `target: node22`, sourcemap enabled.
 
 ## tsconfig bases
 Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).
@@ -201,8 +201,16 @@ Within this monorepo, the root already extends `@o3osatoshi/config/biome/base.js
 
 The package exposes `tsup` presets, `tsconfig`, `biome`, and `eslint` exports. Install it as a dev dependency and import what you need per project.
 
+Entry point for the shared configuration package. Currently exposes tsup presets and a Vitest base config.
+
+## Type Aliases
+
+- [Options](type-aliases/Options.md)
+
 ## Functions
 
-- [browserPreset](functions/browserPreset.md)
-- [functionsPreset](functions/functionsPreset.md)
-- [publicDualPreset](functions/publicDualPreset.md)
+- [baseTestPreset](functions/baseTestPreset.md)
+- [browserBundlePreset](functions/browserBundlePreset.md)
+- [browserTestPreset](functions/browserTestPreset.md)
+- [functionsBundlePreset](functions/functionsBundlePreset.md)
+- [publicDualBundlePreset](functions/publicDualBundlePreset.md)

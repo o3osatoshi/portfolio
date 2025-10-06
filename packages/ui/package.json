@@ -51,6 +51,8 @@
     "dev:client": "tsup --config tsup.client.config.ts --watch",
     "dev:server": "tsup --config tsup.server.config.ts --watch",
     "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
+    "test": "vitest run",
+    "test:cvrg": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
@@ -71,15 +73,23 @@
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",
     "@o3osatoshi/config": "workspace:*",
+    "@storybook/react-vite": "^9.1.10",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@turbo/gen": "^2.5.2",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "jsdom": "^27.0.0",
     "npm-run-all": "catalog:",
     "rimraf": "catalog:",
     "tailwindcss": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "next": "^14 || ^15",

@@ -1,3 +1,3 @@
-import { basePreset } from "@o3osatoshi/config/vitest";
+import { baseTestPreset } from "@o3osatoshi/config/vitest";
 
-export default basePreset();
+export default baseTestPreset();

@@ -8,7 +8,7 @@
 
 > **Avatar**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/avatar.tsx:14](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/avatar.tsx#L14)
+Defined in: [packages/ui/src/components/avatar.tsx:16](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/avatar.tsx#L16)
 
 Circular avatar wrapper around Radix Avatar primitives.
 

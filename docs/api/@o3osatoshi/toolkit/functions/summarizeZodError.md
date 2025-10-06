@@ -8,9 +8,9 @@
 
 > **summarizeZodError**(`err`): `string`
 
-Defined in: [zod-error.ts:76](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-error.ts#L76)
+Defined in: [zod-error.ts:103](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L103)
 
-Summarize all issues inside a `ZodError` into a single human-readable string.
+Summarizes every issue inside a Zod error into a single readable string.
 
 ## Parameters
 

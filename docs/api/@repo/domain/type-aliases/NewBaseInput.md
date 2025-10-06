@@ -8,7 +8,7 @@
 
 > **NewBaseInput** = `object`
 
-Defined in: [entities/base.ts:16](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/base.ts#L16)
+Defined in: [entities/base.ts:16](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/entities/base.ts#L16)
 
 Untyped input accepted by [newBase](../functions/newBase.md) before validation.
 
@@ -18,7 +18,7 @@ Untyped input accepted by [newBase](../functions/newBase.md) before validation.
 
 > **createdAt**: `unknown`
 
-Defined in: [entities/base.ts:17](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/base.ts#L17)
+Defined in: [entities/base.ts:17](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/entities/base.ts#L17)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [entities/base.ts:17](https://github.com/o3osatoshi/experiment/blob/
 
 > **updatedAt**: `unknown`
 
-Defined in: [entities/base.ts:18](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/domain/src/entities/base.ts#L18)
+Defined in: [entities/base.ts:18](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/entities/base.ts#L18)

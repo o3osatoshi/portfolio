@@ -8,7 +8,7 @@
 
 > **AmountInput**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/case/amount-input.tsx:13](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/case/amount-input.tsx#L13)
+Defined in: [packages/ui/src/components/case/amount-input.tsx:15](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/case/amount-input.tsx#L15)
 
 Numeric input tailored for currency-style amounts.
 

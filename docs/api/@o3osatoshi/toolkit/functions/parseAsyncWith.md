@@ -8,12 +8,12 @@
 
 > **parseAsyncWith**\<`T`\>(`schema`, `ctx`): (`input`) => `ResultAsync`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod-parse.ts:22](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/toolkit/src/zod-parse.ts#L22)
+Defined in: [zod-parse.ts:21](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-parse.ts#L21)
 
-Create an async Result-returning parser from a Zod schema.
+Creates an async Result-returning parser from a Zod schema.
 
-- Uses `schema.parseAsync` for async refinements/validations.
-- Rejections are normalized via `newZodError` using the provided `action`/`layer`.
+- Uses `schema.parseAsync` to respect asynchronous refinements.
+- Normalises failures through [newZodError](newZodError.md) with the supplied context.
 
 ## Type Parameters
 
@@ -21,7 +21,7 @@ Create an async Result-returning parser from a Zod schema.
 
 `T` *extends* `ZodType`\<`unknown`, `unknown`, `$ZodTypeInternals`\<`unknown`, `unknown`\>\>
 
-extends ZodTypeAny
+Zod schema type inferred from the provided `schema`.
 
 ## Parameters
 
@@ -29,27 +29,23 @@ extends ZodTypeAny
 
 `T`
 
-Zod schema to validate/transform input asynchronously.
+Zod schema used to validate or transform incoming data.
 
 ### ctx
 
-Context for standardized error shaping.
+Context describing the logical action and optional layer override.
 
 #### action
 
 `string`
 
-Logical operation name (e.g. "ParseToken").
-
 #### layer?
 
 [`Layer`](../type-aliases/Layer.md)
 
-Error layer; defaults to Application inside `newZodError`.
-
 ## Returns
 
-Function that parses input into `ResultAsync<z.infer<T>, Error>`.
+A function that yields a neverthrow `ResultAsync` containing the inferred schema output.
 
 > (`input`): `ResultAsync`\<`output`\<`T`\>, `Error`\>
 
@@ -67,5 +63,6 @@ Function that parses input into `ResultAsync<z.infer<T>, Error>`.
 
 ```ts
 const parseToken = parseAsyncWith(tokenSchema, { action: "ParseToken", layer: "Auth" });
-const res = await parseToken({ token: "ok" }); // ResultAsync<Token, Error>
+const res = await parseToken({ token: "ok" }); // `ResultAsync<Token, Error\>`
+@public
 ```

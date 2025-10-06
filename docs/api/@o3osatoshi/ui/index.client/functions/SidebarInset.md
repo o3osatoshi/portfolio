@@ -8,7 +8,7 @@
 
 > **SidebarInset**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:279](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L279)
+Defined in: [packages/ui/src/components/sidebar.tsx:308](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L308)
 
 Main content wrapper that adjusts layout based on sidebar state.
 

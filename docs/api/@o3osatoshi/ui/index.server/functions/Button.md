@@ -8,7 +8,7 @@
 
 > **Button**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/button.tsx:45](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/button.tsx#L45)
+Defined in: [packages/ui/src/components/button.tsx:50](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/button.tsx#L50)
 
 Primary clickable button with Tailwind + CVA driven variants.
 

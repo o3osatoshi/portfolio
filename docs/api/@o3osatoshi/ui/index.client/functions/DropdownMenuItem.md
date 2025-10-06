@@ -8,7 +8,7 @@
 
 > **DropdownMenuItem**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/dropdown-menu.tsx:81](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/dropdown-menu.tsx#L81)
+Defined in: [packages/ui/src/components/dropdown-menu.tsx:93](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/dropdown-menu.tsx#L93)
 
 Standard clickable menu item with optional destructive styling.
 

@@ -4,20 +4,29 @@
 
 ```ts
 
-import { Options } from 'tsup';
-import * as vite from 'vite';
+import { InlineConfig } from 'vitest/node';
+import { Options as Options_2 } from 'tsup';
+import { ViteUserConfig } from 'vitest/config';
 
 // @public
-export function basePreset(): vite.UserConfig;
+export function baseTestPreset(opts?: Options): ViteUserConfig;
 
 // @public
-export function browserPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+export function browserBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
-export function functionsPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+export function browserTestPreset(opts?: Options): ViteUserConfig;
 
 // @public
-export function publicDualPreset(opts?: Options): Promise<Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>)>;
+export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
+
+// @public
+export type Options = {
+    plugins?: ViteUserConfig["plugins"];
+} & InlineConfig;
+
+// @public
+export function publicDualBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // (No @packageDocumentation comment for this package)
 

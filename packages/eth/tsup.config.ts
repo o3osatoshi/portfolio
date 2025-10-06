@@ -1,3 +1,3 @@
-import { publicDualPreset } from "@o3osatoshi/config/tsup";
+import { publicDualBundlePreset } from "@o3osatoshi/config/tsup";
 
-export default await publicDualPreset();
+export default await publicDualBundlePreset();

@@ -8,7 +8,7 @@
 
 > **SidebarMenu**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:294](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L294)
+Defined in: [packages/ui/src/components/sidebar.tsx:326](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L326)
 
 Unordered list containing top-level sidebar menu items.
 

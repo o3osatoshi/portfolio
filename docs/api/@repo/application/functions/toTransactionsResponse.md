@@ -8,7 +8,7 @@
 
 > **toTransactionsResponse**(`txs`): [`TransactionResponse`](../type-aliases/TransactionResponse.md)[]
 
-Defined in: [packages/application/src/dtos/transaction.res.dto.ts:55](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/application/src/dtos/transaction.res.dto.ts#L55)
+Defined in: [packages/application/src/dtos/transaction.res.dto.ts:55](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/dtos/transaction.res.dto.ts#L55)
 
 Transform a list of domain transactions into DTOs, preserving order.
 

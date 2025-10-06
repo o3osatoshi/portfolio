@@ -8,7 +8,7 @@
 
 > **SidebarGroupContent**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:215](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L215)
+Defined in: [packages/ui/src/components/sidebar.tsx:232](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L232)
 
 Container for the main content of a sidebar group (menu, links, etc.).
 

@@ -8,7 +8,7 @@
 
 > **SidebarRail**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:420](https://github.com/o3osatoshi/experiment/blob/04dfa58df6e48824a200a24d77afef7ce464e1ae/packages/ui/src/components/sidebar.tsx#L420)
+Defined in: [packages/ui/src/components/sidebar.tsx:460](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L460)
 
 Thin hit-area positioned outside the sidebar for quick expand/collapse.
 
