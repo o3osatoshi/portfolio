@@ -1,19 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
-
-beforeAll(() => {
-  if (!globalThis.ResizeObserver) {
-    class ResizeObserver {
-      disconnect() {}
-      observe() {}
-      unobserve() {}
-    }
-
-    globalThis.ResizeObserver = ResizeObserver;
-  }
-});
 
 describe("Tooltip", () => {
   it("renders trigger and content through the shared provider", async () => {
