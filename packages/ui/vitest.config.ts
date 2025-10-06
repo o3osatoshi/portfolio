@@ -7,4 +7,5 @@ export default browserTestPreset({
     exclude: ["**/*.stories.tsx", "tsup.*.config.ts"],
   },
   plugins: [tsconfigPaths()],
+  setupFiles: ["./src/test/setup-tests.ts"],
 });

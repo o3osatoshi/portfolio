@@ -31,7 +31,6 @@ Vitest configuration produced via `defineConfig`.
 Mirrors the shared coverage configuration from [baseTestPreset](baseTestPreset.md), defaulting to the `v8` provider
 and staying disabled unless `opts.coverage?.enabled` is truthy. Additional behaviour:
 - CSS processing is enabled unless explicitly turned off through `opts.css`.
-- The setup sequence always prepends `./src/test/setup-tests.ts` (relative to the consuming package)
-  before any `opts.setupFiles` entries so DOM polyfills run consistently.
+- Any `opts.setupFiles` value is forwarded directly so packages fully control their setup pipeline.
 - Any `opts.plugins` array is forwarded to `defineConfig` to register extra Vite/Vitest plugins.
 As with the base preset, other [Options](../type-aliases/Options.md) fields are currently ignored.
