@@ -4,7 +4,7 @@ import type { InlineConfig } from "vitest/node";
 /**
  * Supported overrides for the shared Vitest presets.
  *
- * Provides a thin wrapper allowing consumers to forward a `test` {@link InlineConfig} alongside
+ * Provides a thin wrapper allowing consumers to forward a `test` InlineConfig from `vitest/node` alongside
  * optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]`.
  *
  * @public
@@ -18,7 +18,7 @@ export type Options = {
  * Creates the shared Vitest configuration for workspace packages with consistent reporting defaults.
  *
  * @remarks
- * Applies workspace defaults before spreading any user-provided {@link InlineConfig} through
+ * Applies workspace defaults before spreading any user-provided InlineConfig through
  * `opts.test`.
  * - Coverage uses the `v8` provider, stays disabled by default, and emits text-summary, LCOV, and HTML
  *   reports under `.reports/coverage` whenever no explicit `opts.test?.coverage` is supplied. Supplying
@@ -27,7 +27,7 @@ export type Options = {
  * - The test environment defaults to `node`, and the JUnit reporter writes to `.reports/junit.xml`
  *   unless `opts.test?.environment` or `opts.test?.outputFile` override those values.
  * - Any Vite/Vitest `opts.plugins` values are forwarded directly to `defineConfig`.
- * Additional {@link InlineConfig} fields can be provided via `opts.test` and override the defaults after
+ * Additional InlineConfig fields can be provided via `opts.test` and override the defaults after
  * they are applied.
  *
  * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
@@ -46,6 +46,8 @@ export function baseTestPreset(opts: Options = {}) {
           "**/*.d.ts",
           "dist/**",
           "coverage/**",
+          "**/index.{ts,js}",
+          "vitest.config.{ts,js}",
           ...(cvrg?.exclude ?? []),
         ],
         reporter: ["text-summary", "lcov", "html"],
@@ -86,7 +88,8 @@ export function browserTestPreset(opts: Options = {}) {
           "**/*.d.ts",
           "dist/**",
           "coverage/**",
-          "**/index.ts",
+          "**/index.{ts,js}",
+          "vitest.config.{ts,js}",
           ...(cvrg?.exclude ?? []),
         ],
         reporter: ["text-summary", "lcov", "html"],
