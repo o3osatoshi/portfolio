@@ -18,17 +18,16 @@ export type Options = {
  * Creates the shared Vitest configuration for workspace packages with consistent reporting defaults.
  *
  * @remarks
- * Applies workspace defaults before spreading any user-provided InlineConfig through
- * `opts.test`.
+ * Spreads any user-provided InlineConfig through `opts.test` before re-applying the shared defaults for
+ * coverage, environment, and reporting paths so the baseline remains consistent.
  * - Coverage uses the `v8` provider, stays disabled by default, and emits text-summary, LCOV, and HTML
- *   reports under `.reports/coverage` whenever no explicit `opts.test?.coverage` is supplied. Supplying
- *   a coverage object replaces the defaults entirely, so include baseline values if they are still
- *   required.
+ *   reports under `.reports/coverage`. Supply `opts.test?.coverage` to adjust the baseline—because the
+ *   preset rebuilds the coverage object, specify all desired fields when overriding.
  * - The test environment defaults to `node`, and the JUnit reporter writes to `.reports/junit.xml`
  *   unless `opts.test?.environment` or `opts.test?.outputFile` override those values.
  * - Any Vite/Vitest `opts.plugins` values are forwarded directly to `defineConfig`.
- * Additional InlineConfig fields can be provided via `opts.test` and override the defaults after
- * they are applied.
+ * Additional InlineConfig fields provided via `opts.test` remain untouched unless they collide with the
+ * enforced defaults above.
  *
  * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
  * @returns Vitest configuration produced via `defineConfig`.
@@ -39,6 +38,7 @@ export function baseTestPreset(opts: Options = {}) {
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
+      ...opts.test,
       coverage: {
         provider: "v8",
         enabled: cvrg?.enabled ?? false,
@@ -54,7 +54,6 @@ export function baseTestPreset(opts: Options = {}) {
       },
       environment: "node",
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
-      ...opts.test,
     },
   });
 }
@@ -64,8 +63,10 @@ export function baseTestPreset(opts: Options = {}) {
  *
  * @remarks
  * Shares the merge behaviour of {@link baseTestPreset} while tailoring defaults for browser tests.
- * - Coverage falls back to the same `v8`-based defaults unless `opts.test?.coverage` is supplied, in
- *   which case the provided object replaces the preset values.
+ * - Spreads `opts.test` first, then reapplies the shared defaults so coverage, environment, and CSS
+ *   handling stay aligned across packages.
+ * - Coverage falls back to the same `v8`-based defaults unless `opts.test?.coverage` is supplied. When
+ *   overriding coverage, include every field you need because the preset rebuilds the object.
  * - CSS handling is enabled (`true`) by default and can be disabled by setting `opts.test?.css`.
  * - The environment defaults to `jsdom`, though any fields supplied via `opts.test` override the
  *   preset after defaults are applied.
@@ -80,6 +81,7 @@ export function browserTestPreset(opts: Options = {}) {
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
+      ...opts.test,
       coverage: {
         provider: "v8",
         enabled: cvrg?.enabled ?? false,
@@ -96,7 +98,6 @@ export function browserTestPreset(opts: Options = {}) {
       css: opts.test?.css ?? true,
       environment: "jsdom",
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
-      ...opts.test,
     },
   });
 }
