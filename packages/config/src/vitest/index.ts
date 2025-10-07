@@ -86,6 +86,7 @@ export function browserTestPreset(opts: Options = {}) {
           "**/*.d.ts",
           "dist/**",
           "coverage/**",
+          "**/index.ts",
           ...(cvrg?.exclude ?? []),
         ],
         reporter: ["text-summary", "lcov", "html"],

@@ -6,7 +6,12 @@ export default browserTestPreset({
   plugins: [tsconfigPaths()],
   test: {
     coverage: {
-      exclude: ["**/*.stories.tsx", "tsup.*.config.ts"],
+      exclude: [
+        "**/*.stories.tsx",
+        "tsup.*.config.ts",
+        "index.*.ts",
+        "**/index.*.ts",
+      ],
     },
     setupFiles: ["./src/test/setup-tests.ts"],
   },
