@@ -61,6 +61,9 @@ jobs:
       - name: Run typecheck
         run: pnpm check:type
 
+      - name: Install playwright
+        run: npx playwright install --with-deps
+
       - name: Setup testcontainers cloud client
         uses: atomicjar/testcontainers-cloud-setup-action@v1
         with:
