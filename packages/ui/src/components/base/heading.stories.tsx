@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "@storybook/test";
 
 import { Heading } from "./heading";
 
@@ -26,9 +27,31 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const heading = canvas.getByRole("heading", {
+      name: "Design System",
+      level: 2,
+    });
+
+    expect(heading).toBeVisible();
+  },
+};
 
 export const Levels: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    for (const level of [1, 2, 3, 4, 5, 6]) {
+      const heading = canvas.getByRole("heading", {
+        name: `Heading level ${level}`,
+        level,
+      });
+
+      expect(heading).toBeVisible();
+    }
+  },
   render: () => (
     <div className="space-y-3">
       <Heading level="h1">Heading level 1</Heading>

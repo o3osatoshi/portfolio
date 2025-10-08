@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 
 import { Button } from "./button";
 import {
@@ -21,6 +22,27 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Open settings" }),
+    );
+
+    const title = await body.findByRole("heading", {
+      name: "Workspace settings",
+      level: 2,
+    });
+
+    expect(title).toBeVisible();
+
+    await waitFor(() => {
+      expect(
+        body.getByRole("button", { name: "Manage billing" }),
+      ).toBeVisible();
+    });
+  },
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
@@ -58,6 +80,19 @@ export const Default: Story = {
 };
 
 export const Placement: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Right sheet" }));
+
+    const drawerHeading = await body.findByRole("heading", {
+      name: "Right drawer",
+      level: 2,
+    });
+
+    expect(drawerHeading).toBeVisible();
+  },
   render: () => (
     <div className="grid gap-4 sm:grid-cols-2">
       {(["left", "right", "top", "bottom"] as const).map((side) => (

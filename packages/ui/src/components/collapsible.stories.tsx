@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
@@ -22,6 +23,21 @@ export const Default: Story = {
   args: {
     defaultOpen: false,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const content = canvas.getByText("Error: Something went wrong", {
+      exact: false,
+    });
+    const toggle = canvas.getByRole("button", { name: "Toggle" });
+
+    expect(content).not.toBeVisible();
+
+    await userEvent.click(toggle);
+
+    await waitFor(() => {
+      expect(content).toBeVisible();
+    });
+  },
   render: (args) => (
     <Collapsible className="w-full max-w-md space-y-2" {...args}>
       <div className="flex items-center justify-between">
@@ -42,6 +58,24 @@ export const Default: Story = {
 };
 
 export const Controlled: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole("button", { name: "Debug log" });
+    const content = canvas.getByText(
+      "POST /api/authenticate 401 (Unauthorized)",
+      {
+        exact: false,
+      },
+    );
+
+    expect(content).not.toBeVisible();
+
+    await userEvent.click(toggle);
+
+    await waitFor(() => {
+      expect(content).toBeVisible();
+    });
+  },
   render: (args) => {
     const [open, setOpen] = React.useState(false);
 

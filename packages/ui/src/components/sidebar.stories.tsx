@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "@storybook/test";
 import {
   BarChart4,
   FolderKanban,
@@ -45,6 +46,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    expect(
+      canvas.getByRole("button", { name: "Toggle sidebar" }),
+    ).toBeVisible();
+    expect(canvas.getByPlaceholderText("Search projects")).toBeEnabled();
+    expect(
+      canvas.getByRole("heading", { name: "Overview", level: 1 }),
+    ).toBeVisible();
+  },
   render: () => (
     <SidebarProvider defaultOpen>
       <div className="flex min-h-[32rem] w-full gap-6 bg-muted/30 p-6">

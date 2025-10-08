@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "@storybook/test";
 
 import { Input } from "./input";
 import { Label } from "./label";
@@ -13,6 +14,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Email address");
+
+    expect(input).toHaveAttribute("placeholder", "you@example.com");
+  },
   render: () => (
     <div className="flex flex-col gap-2">
       <Label htmlFor="email">Email address</Label>
@@ -22,6 +29,15 @@ export const Default: Story = {
 };
 
 export const WithDescription: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Username");
+
+    expect(input).toHaveAttribute("placeholder", "o3osatoshi");
+    expect(
+      canvas.getByText("This name will be displayed on your public profile."),
+    ).toBeVisible();
+  },
   render: () => (
     <div className="flex flex-col gap-2">
       <Label htmlFor="username">Username</Label>

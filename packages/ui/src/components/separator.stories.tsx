@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "@storybook/test";
 
 import { Separator } from "./separator";
 
@@ -15,6 +16,13 @@ export const Horizontal: Story = {
   args: {
     orientation: "horizontal",
   },
+  play: async ({ canvasElement }) => {
+    const separators = canvasElement.querySelectorAll(
+      '[data-slot="separator-root"][data-orientation="horizontal"]',
+    );
+
+    expect(separators.length).toBe(1);
+  },
   render: (args) => (
     <div className="space-y-4">
       <div className="text-sm">Section one</div>
@@ -27,6 +35,13 @@ export const Horizontal: Story = {
 export const Vertical: Story = {
   args: {
     orientation: "vertical",
+  },
+  play: async ({ canvasElement }) => {
+    const separators = canvasElement.querySelectorAll(
+      '[data-slot="separator-root"][data-orientation="vertical"]',
+    );
+
+    expect(separators.length).toBe(1);
   },
   render: (args) => (
     <div className="flex h-24 items-center">

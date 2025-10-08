@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { CheckCircle, LogOut, Settings } from "lucide-react";
 import * as React from "react";
 
@@ -30,6 +31,36 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open menu" }));
+
+    const menu = await body.findByRole("menu");
+
+    expect(menu).toBeVisible();
+
+    const activityBar = body.getByRole("menuitemcheckbox", {
+      name: "Activity bar",
+    });
+
+    expect(activityBar).toHaveAttribute("aria-checked", "false");
+
+    await userEvent.click(activityBar);
+
+    await waitFor(() => {
+      expect(activityBar).toHaveAttribute("aria-checked", "true");
+    });
+
+    const rightPanel = body.getByRole("menuitemradio", { name: "Right" });
+
+    await userEvent.click(rightPanel);
+
+    await waitFor(() => {
+      expect(rightPanel).toHaveAttribute("aria-checked", "true");
+    });
+  },
   render: () => {
     const [statusBar, setStatusBar] = React.useState(true);
     const [activityBar, setActivityBar] = React.useState(false);
@@ -116,6 +147,18 @@ export const Default: Story = {
 };
 
 export const WithStatus: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    expect(canvas.getByRole("button", { name: "Connected" })).toBeVisible();
+
+    const switchWorkspace = await body.findByRole("menuitem", {
+      name: "Switch workspace",
+    });
+
+    expect(switchWorkspace).toBeVisible();
+  },
   render: () => (
     <DropdownMenu defaultOpen>
       <DropdownMenuTrigger asChild>

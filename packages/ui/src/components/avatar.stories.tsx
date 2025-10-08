@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, waitFor, within } from "@storybook/test";
 import type * as React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
@@ -20,10 +21,26 @@ const renderAvatar = (args: React.ComponentProps<typeof Avatar>) => (
 );
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const image = canvas.getByRole("img", { name: "Satoshi Nakamoto" });
+
+    expect(image).toBeInTheDocument();
+  },
   render: renderAvatar,
 };
 
 export const WithFallback: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const image = canvas.getByRole("img", { name: "Offline user" });
+
+    image.dispatchEvent(new Event("error"));
+
+    await waitFor(() => {
+      expect(canvas.getByText("??")).toBeVisible();
+    });
+  },
   render: (args) => (
     <Avatar {...args}>
       <AvatarImage alt="Offline user" src="https://invalid.url/avatar.png" />

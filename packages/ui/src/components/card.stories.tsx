@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "@storybook/test";
 
 import { Button } from "./button";
 import {
@@ -21,6 +22,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByText("Project Snapshot")).toBeVisible();
+    expect(canvas.getByRole("button", { name: "View Details" })).toBeVisible();
+  },
   render: () => (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -41,6 +48,13 @@ export const Default: Story = {
 };
 
 export const WithAction: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByRole("button", { name: "Manage" })).toBeVisible();
+    expect(canvas.getByText("Plan")).toBeVisible();
+    expect(canvas.getByText("Pro")).toBeVisible();
+  },
   render: () => (
     <Card className="w-full max-w-md">
       <CardHeader className="border-b pb-6">

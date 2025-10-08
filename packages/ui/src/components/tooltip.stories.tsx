@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, within } from "@storybook/test";
 
 import { Button } from "./button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
@@ -13,6 +14,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.hover(canvas.getByRole("button", { name: "Hover me" }));
+
+    const content = await body.findByText("Tooltip content");
+
+    expect(content).toBeVisible();
+  },
   render: () => (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -26,6 +37,16 @@ export const Default: Story = {
 export const DelayAndPlacement: Story = {
   args: {
     delayDuration: 200,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.hover(canvas.getByRole("button", { name: "Focus me" }));
+
+    const content = await body.findByText("Appears after a short delay");
+
+    expect(content).toBeVisible();
   },
   render: (args) => (
     <Tooltip {...args}>
