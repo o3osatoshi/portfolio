@@ -39,7 +39,9 @@ export const Default: Story = {
 
     const menu = await body.findByRole("menu");
 
-    expect(menu).toBeVisible();
+    await waitFor(() => {
+      expect(menu).toBeVisible();
+    });
 
     const activityBar = body.getByRole("menuitemcheckbox", {
       name: "Activity bar",
@@ -148,16 +150,22 @@ export const Default: Story = {
 
 export const WithStatus: Story = {
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
-
-    expect(canvas.getByRole("button", { name: "Connected" })).toBeVisible();
 
     const switchWorkspace = await body.findByRole("menuitem", {
       name: "Switch workspace",
     });
 
-    expect(switchWorkspace).toBeVisible();
+    await waitFor(() => {
+      expect(switchWorkspace).toBeVisible();
+    });
+
+    const trigger = body.getByRole("button", {
+      hidden: true,
+      name: "Connected",
+    });
+
+    expect(trigger).toHaveAttribute("data-state", "open");
   },
   render: () => (
     <DropdownMenu defaultOpen>

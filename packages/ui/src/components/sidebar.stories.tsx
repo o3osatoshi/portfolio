@@ -48,10 +48,20 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
 
-    expect(
-      canvas.getByRole("button", { name: "Toggle sidebar" }),
-    ).toBeVisible();
+    const triggers = await body.findAllByRole("button", {
+      name: /toggle sidebar/i,
+    });
+    const trigger = triggers.find(
+      (element) => element.getAttribute("data-slot") === "sidebar-trigger",
+    );
+
+    if (!trigger) {
+      throw new Error("Sidebar trigger button not found");
+    }
+
+    expect(trigger).toBeVisible();
     expect(canvas.getByPlaceholderText("Search projects")).toBeEnabled();
     expect(
       canvas.getByRole("heading", { name: "Overview", level: 1 }),

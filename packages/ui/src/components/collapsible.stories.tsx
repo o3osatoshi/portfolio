@@ -25,14 +25,18 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const content = canvas.getByText("Error: Something went wrong", {
+    const toggle = canvas.getByRole("button", { name: "Toggle" });
+    const initialContent = canvas.queryByText("Error: Something went wrong", {
       exact: false,
     });
-    const toggle = canvas.getByRole("button", { name: "Toggle" });
 
-    expect(content).not.toBeVisible();
+    expect(initialContent).toBeNull();
 
     await userEvent.click(toggle);
+
+    const content = await canvas.findByText("Error: Something went wrong", {
+      exact: false,
+    });
 
     await waitFor(() => {
       expect(content).toBeVisible();
@@ -61,16 +65,23 @@ export const Controlled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toggle = canvas.getByRole("button", { name: "Debug log" });
-    const content = canvas.getByText(
+    const initialContent = canvas.queryByText(
       "POST /api/authenticate 401 (Unauthorized)",
       {
         exact: false,
       },
     );
 
-    expect(content).not.toBeVisible();
+    expect(initialContent).toBeNull();
 
     await userEvent.click(toggle);
+
+    const content = await canvas.findByText(
+      "POST /api/authenticate 401 (Unauthorized)",
+      {
+        exact: false,
+      },
+    );
 
     await waitFor(() => {
       expect(content).toBeVisible();

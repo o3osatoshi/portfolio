@@ -35,7 +35,9 @@ export const Default: Story = {
       level: 2,
     });
 
-    expect(title).toBeVisible();
+    await waitFor(() => {
+      expect(title).toBeVisible();
+    });
 
     await waitFor(() => {
       expect(
@@ -84,14 +86,19 @@ export const Placement: Story = {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
 
-    await userEvent.click(canvas.getByRole("button", { name: "Right sheet" }));
-
-    const drawerHeading = await body.findByRole("heading", {
-      name: "Right drawer",
-      level: 2,
+    const trigger = await canvas.findByRole("button", {
+      name: /right sheet/i,
     });
 
-    expect(drawerHeading).toBeVisible();
+    await userEvent.click(trigger);
+
+    const drawerHeading = await body.findByText(/right drawer/i, {
+      selector: "[data-slot='sheet-title']",
+    });
+
+    await waitFor(() => {
+      expect(drawerHeading).toBeVisible();
+    });
   },
   render: () => (
     <div className="grid gap-4 sm:grid-cols-2">

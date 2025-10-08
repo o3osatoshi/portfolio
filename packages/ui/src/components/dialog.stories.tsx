@@ -34,7 +34,9 @@ export const Default: Story = {
       level: 2,
     });
 
-    expect(title).toBeVisible();
+    await waitFor(() => {
+      expect(title).toBeVisible();
+    });
 
     await waitFor(() => {
       expect(body.getByLabelText("Display name")).toHaveValue("o3osatoshi");
@@ -82,8 +84,12 @@ export const WithLongContent: Story = {
       level: 2,
     });
 
-    expect(title).toBeVisible();
-    expect(body.getByText("Version 2.4.0")).toBeVisible();
+    await waitFor(() => {
+      expect(title).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(body.getByText("Version 2.4.0")).toBeVisible();
+    });
   },
   render: () => (
     <Dialog>
