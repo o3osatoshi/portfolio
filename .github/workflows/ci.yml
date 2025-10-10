@@ -42,7 +42,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install playwright
-        run: pnpm -F apps/storybook exec playwright install --with-deps
+        run: pnpm -F @repo/storybook exec playwright install --with-deps
 
       - name: Restore caches (.cache/*)
         uses: actions/cache@v4
