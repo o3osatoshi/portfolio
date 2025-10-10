@@ -42,7 +42,7 @@
     },
     "test:cvrg": {
       "cache": true,
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^test:cvrg"],
       "outputs": [".reports/**"]
     },
     "typecheck": {
