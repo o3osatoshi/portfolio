@@ -8,7 +8,7 @@ import jsoncParser from "jsonc-eslint-parser";
 export default [
   {
     files: ["**/*.{json,jsonc,json5}"],
-    ignores: ["**/package.json", "**/pnpm-lock.yaml"],
+    ignores: ["**/package.json", "**/pnpm-lock.yaml", "**/coverage/**"],
 
     languageOptions: { parser: jsoncParser },
     plugins: { jsonc },
@@ -23,7 +23,7 @@ export default [
 
   {
     files: ["**/*.json"],
-    ignores: ["**/package.json"],
+    ignores: ["**/package.json", "**/coverage/**"],
     rules: {
       "jsonc/no-comments": "error",
     },
