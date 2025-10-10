@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install playwright
+        run: pnpm -F apps/storybook exec playwright install --with-deps
+
       - name: Restore caches (.cache/*)
         uses: actions/cache@v4
         with:
@@ -60,9 +63,6 @@ jobs:
 
       - name: Run typecheck
         run: pnpm check:type
-
-      - name: Install playwright
-        run: npx playwright install --with-deps
 
       - name: Setup testcontainers cloud client
         uses: atomicjar/testcontainers-cloud-setup-action@v1
