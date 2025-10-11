@@ -17,6 +17,9 @@ import { storybookTestPreset } from "@o3osatoshi/config/vitest";
 export default storybookTestPreset({
   plugins: [tailwindcss(), react(), tsconfigPaths()],
   test: {
+    coverage: {
+      exclude: [".storybook/**"],
+    },
     projects: [
       {
         plugins: [

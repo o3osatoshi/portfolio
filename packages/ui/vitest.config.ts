@@ -7,6 +7,7 @@ export default browserTestPreset({
   test: {
     coverage: {
       exclude: [
+        "scripts/**",
         "**/*.stories.tsx",
         "tsup.*.config.ts",
         "index.*.ts",
