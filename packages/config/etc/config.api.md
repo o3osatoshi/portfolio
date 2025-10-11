@@ -29,6 +29,9 @@ export type Options = {
 // @public
 export function publicDualBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
+// @public
+export function storybookTestPreset(opts?: Options): ViteUserConfig;
+
 // (No @packageDocumentation comment for this package)
 
 ```
