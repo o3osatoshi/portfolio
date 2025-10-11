@@ -108,6 +108,7 @@ export function browserTestPreset(opts: Options = {}) {
 }
 
 export function storybookTestPreset(opts: Options = {}) {
+  const cvrg = opts.test?.coverage;
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -138,6 +139,20 @@ export function storybookTestPreset(opts: Options = {}) {
             }),
           }
         : {}),
+      coverage: {
+        provider: "v8",
+        enabled: cvrg?.enabled ?? false,
+        exclude: [
+          "**/*.d.ts",
+          "dist/**",
+          "coverage/**",
+          "**/index.{ts,js}",
+          ...(cvrg?.exclude ?? []),
+        ],
+        reporter: ["text-summary", "lcov", "html"],
+        reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
+      },
+      outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
   });
 }
