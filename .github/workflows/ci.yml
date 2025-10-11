@@ -54,7 +54,7 @@ jobs:
 
       - name: Install playwright browsers
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm -F @repo/storybook exec playwright install --only=chromium
+        run: pnpm -F @repo/storybook exec playwright install chromium
 
       - name: Restore caches
         uses: actions/cache@v4
