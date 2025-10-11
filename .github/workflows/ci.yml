@@ -41,20 +41,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Determine Playwright version
+      - name: Determine playwright version
         id: pw
         run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Cache Playwright browsers
+      - name: Cache playwright browsers
         id: pw-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: ms-playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
 
-      - name: Install Playwright browsers (chromium only)
+      - name: Install playwright browsers
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install --only=chromium
+        run: pnpm -F @repo/storybook exec playwright install --only=chromium
 
       - name: Restore caches
         uses: actions/cache@v4
