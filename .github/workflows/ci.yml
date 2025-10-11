@@ -43,7 +43,10 @@ jobs:
 
       - name: Determine playwright version
         id: pw
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          set -euo pipefail
+          version=$(pnpm --filter @repo/storybook exec node -p "require('playwright/package.json').version")
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
 
       - name: Cache playwright browsers
         id: pw-cache
