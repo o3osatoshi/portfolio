@@ -18,7 +18,7 @@ export default storybookTestPreset({
   plugins: [tailwindcss(), react(), tsconfigPaths()],
   test: {
     coverage: {
-      exclude: [".storybook/**"],
+      exclude: [".storybook/**", "vite.config.ts"],
     },
     projects: [
       {
