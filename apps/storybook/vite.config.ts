@@ -5,20 +5,20 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 /// <reference types="vitest/config" />
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 const dirname =
   typeof __dirname !== "undefined"
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
+import { storybookTestPreset } from "@o3osatoshi/config/vitest";
+
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export default defineConfig({
+export default storybookTestPreset({
   plugins: [tailwindcss(), react(), tsconfigPaths()],
   test: {
     projects: [
       {
-        extends: true,
         plugins: [
           // The plugin will run tests for the stories defined in your Storybook config
           // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
@@ -27,17 +27,6 @@ export default defineConfig({
           }),
         ],
         test: {
-          name: "storybook",
-          browser: {
-            provider: "playwright",
-            enabled: true,
-            headless: true,
-            instances: [
-              {
-                browser: "chromium",
-              },
-            ],
-          },
           setupFiles: [".storybook/vitest.setup.ts"],
         },
       },

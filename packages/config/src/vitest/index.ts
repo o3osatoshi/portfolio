@@ -1,4 +1,9 @@
-import { defineConfig, type ViteUserConfig } from "vitest/config";
+import {
+  defineConfig,
+  type TestProjectConfiguration,
+  type TestProjectInlineConfiguration,
+  type ViteUserConfig,
+} from "vitest/config";
 import type { InlineConfig } from "vitest/node";
 
 /**
@@ -100,4 +105,58 @@ export function browserTestPreset(opts: Options = {}) {
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
   });
+}
+
+export function storybookTestPreset(opts: Options = {}) {
+  return defineConfig({
+    ...(opts.plugins ? { plugins: opts.plugins } : {}),
+    test: {
+      ...(opts.test?.projects
+        ? {
+            projects: opts.test.projects.map((p) => {
+              if (!checkIfTestProjectInlineConfiguration(p)) return p;
+              return {
+                extends: true,
+                ...(p.plugins ? { plugins: p.plugins } : {}),
+                test: {
+                  name: "storybook",
+                  browser: {
+                    provider: "playwright",
+                    enabled: true,
+                    headless: true,
+                    instances: [
+                      {
+                        browser: "chromium",
+                      },
+                    ],
+                  },
+                  ...(p.test?.setupFiles
+                    ? { setupFiles: p.test.setupFiles }
+                    : {}),
+                },
+              };
+            }),
+          }
+        : {}),
+    },
+  });
+}
+
+function checkIfTestProjectInlineConfiguration(
+  config: TestProjectConfiguration,
+): config is TestProjectInlineConfiguration {
+  // string
+  if (typeof config === "string") return false;
+  // UserProjectConfigFn
+  if (typeof config === "function") return false;
+  // Promise<UserWorkspaceConfig>
+  if (
+    "then" in config &&
+    typeof config.then === "function" &&
+    "catch" in config &&
+    typeof config.catch === "function"
+  )
+    return false;
+  // TestProjectInlineConfiguration
+  return true;
 }
