@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "storybook build --docs",
+    "build-storybook": "pnpm run build",
+    "chromatic": "npx chromatic --project-token=chpt_a463051ccfca813",
     "clean": "rimraf storybook-static",
     "dev": "storybook dev -p 6006",
     "preview-storybook": "serve storybook-static",
@@ -18,6 +20,7 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.1",
     "@o3osatoshi/config": "workspace:*",
     "@storybook/addon-a11y": "^9.1.10",
     "@storybook/addon-coverage": "^2.0.0",
@@ -30,6 +33,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "@vitest/browser": "^3.2.4",
     "@vitest/coverage-v8": "catalog:",
+    "chromatic": "^13.3.0",
     "eslint-plugin-storybook": "^9.1.10",
     "playwright": "^1.56.0",
     "rimraf": "catalog:",
