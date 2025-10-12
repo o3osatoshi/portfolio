@@ -1,5 +1,3 @@
-import type * as React from "react";
-
 import { ServiceLogo } from "@/app/(main)/_components/sidebar/service-logo";
 import {
   SidebarContent,
@@ -12,9 +10,9 @@ import { Navigation } from "./navigation";
 import { Setting } from "./setting";
 import { User } from "./user";
 
-export function Sidebar({ ...props }: React.ComponentProps<typeof UiSidebar>) {
+export function Sidebar() {
   return (
-    <UiSidebar variant="inset" {...props}>
+    <UiSidebar variant="inset">
       <SidebarHeader>
         <ServiceLogo />
       </SidebarHeader>

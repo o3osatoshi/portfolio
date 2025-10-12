@@ -23,7 +23,7 @@ import {
 
 import { SidebarLink } from "./sidebar-link";
 
-type NavMain = {
+type NavigateOption = {
   icon: LucideIcon;
   isActive?: boolean;
   items?: {
@@ -33,68 +33,66 @@ type NavMain = {
   }[];
   title: string;
   url: string;
-}[];
-
-const data: { navMain: NavMain } = {
-  navMain: [
-    {
-      icon: User,
-      isActive: true,
-      items: [
-        {
-          title: getLabel("portfolio-about"),
-          url: getPathName("portfolio-about"),
-        },
-        {
-          title: getLabel("portfolio-blog"),
-          url: getPathName("portfolio-blog"),
-        },
-      ],
-      title: getLabel("portfolio"),
-      url: "#",
-    },
-    {
-      icon: FlaskConical,
-      isActive: true,
-      items: [
-        {
-          title: getLabel("labs-server-crud"),
-          url: getPathName("labs-server-crud"),
-        },
-        {
-          title: getLabel("labs-limited-read"),
-          url: getPathName("labs-limited-read"),
-        },
-        {
-          isWIP: true,
-          title: getLabel("labs-web3-crud"),
-          url: getPathName("labs-web3-crud"),
-        },
-      ],
-      title: getLabel("labs"),
-      url: "#",
-    },
-  ],
 };
+
+const navigateOptions: NavigateOption[] = [
+  {
+    icon: User,
+    isActive: true,
+    items: [
+      {
+        title: getLabel("portfolio-about"),
+        url: getPathName("portfolio-about"),
+      },
+      {
+        title: getLabel("portfolio-blog"),
+        url: getPathName("portfolio-blog"),
+      },
+    ],
+    title: getLabel("portfolio"),
+    url: "#",
+  },
+  {
+    icon: FlaskConical,
+    isActive: true,
+    items: [
+      {
+        title: getLabel("labs-server-crud"),
+        url: getPathName("labs-server-crud"),
+      },
+      {
+        title: getLabel("labs-limited-read"),
+        url: getPathName("labs-limited-read"),
+      },
+      {
+        isWIP: true,
+        title: getLabel("labs-web3-crud"),
+        url: getPathName("labs-web3-crud"),
+      },
+    ],
+    title: getLabel("labs"),
+    url: "#",
+  },
+];
 
 export function Navigation() {
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {data.navMain.map((item) => (
+        {navigateOptions.map((opt) => (
           <Collapsible
-            key={item.title}
+            key={opt.title}
             asChild
-            defaultOpen={item.isActive === true}
+            defaultOpen={opt.isActive === true}
           >
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
+              <SidebarMenuButton asChild tooltip={opt.title}>
+                <a href={opt.url}>
+                  <opt.icon />
+                  <span>{opt.title}</span>
                 </a>
               </SidebarMenuButton>
-              {item.items?.length ? (
+              {opt.items?.length ? (
                 <>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">
@@ -104,7 +102,7 @@ export function Navigation() {
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
+                      {opt.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           {subItem.isWIP ? (
                             <SidebarMenuSubButton aria-disabled="true">
