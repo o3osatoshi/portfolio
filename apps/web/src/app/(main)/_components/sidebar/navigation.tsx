@@ -77,7 +77,7 @@ const data: { navMain: NavMain } = {
   ],
 };
 
-export function NavMain() {
+export function Navigation() {
   return (
     <SidebarGroup>
       <SidebarMenu>

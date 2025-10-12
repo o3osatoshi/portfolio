@@ -8,9 +8,9 @@ import {
   Sidebar as UiSidebar,
 } from "@o3osatoshi/ui/client";
 
-import { NavMain } from "./nav-main";
-import { NavSecondary } from "./nav-secondary";
-import { NavUser } from "./nav-user";
+import { Navigation } from "./navigation";
+import { Setting } from "./setting";
+import { User } from "./user";
 
 export function Sidebar({ ...props }: React.ComponentProps<typeof UiSidebar>) {
   return (
@@ -19,11 +19,11 @@ export function Sidebar({ ...props }: React.ComponentProps<typeof UiSidebar>) {
         <ServiceLogo />
       </SidebarHeader>
       <SidebarContent className="justify-between">
-        <NavMain />
-        <NavSecondary />
+        <Navigation />
+        <Setting />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <User />
       </SidebarFooter>
     </UiSidebar>
   );

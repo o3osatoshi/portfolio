@@ -7,7 +7,7 @@ import {
 
 import { ThemeToggle } from "./theme-toggle";
 
-export function NavSecondary() {
+export function Setting() {
   return (
     <SidebarGroup>
       <SidebarGroupContent>
