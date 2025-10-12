@@ -9,7 +9,6 @@ const meta = {
     type: "number",
   },
   component: AmountInput,
-  tags: ["autodocs"],
   title: "UI/Case/AmountInput",
 } satisfies Meta<typeof AmountInput>;
 

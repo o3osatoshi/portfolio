@@ -12,7 +12,6 @@ import {
 
 const meta = {
   component: Collapsible,
-  tags: ["autodocs"],
   title: "UI/Collapsible",
 } satisfies Meta<typeof Collapsible>;
 

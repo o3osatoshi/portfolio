@@ -20,7 +20,6 @@ const meta = {
     },
   },
   component: Heading,
-  tags: ["autodocs"],
   title: "UI/Base/Heading",
 } satisfies Meta<typeof Heading>;
 

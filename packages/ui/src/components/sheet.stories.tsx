@@ -14,7 +14,6 @@ import {
 
 const meta = {
   component: Sheet,
-  tags: ["autodocs"],
   title: "UI/Sheet",
 } satisfies Meta<typeof Sheet>;
 

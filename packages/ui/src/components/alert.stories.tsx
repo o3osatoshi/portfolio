@@ -10,7 +10,6 @@ const meta = {
     variant: "default",
   },
   component: Alert,
-  tags: ["autodocs"],
   title: "UI/Alert",
 } satisfies Meta<typeof Alert>;
 

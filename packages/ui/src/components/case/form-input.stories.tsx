@@ -11,7 +11,6 @@ const meta = {
     type: "email",
   },
   component: FormInput,
-  tags: ["autodocs"],
   title: "UI/Case/FormInput",
 } satisfies Meta<typeof FormInput>;
 

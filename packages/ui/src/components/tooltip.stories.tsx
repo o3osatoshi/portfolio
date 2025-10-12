@@ -6,7 +6,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 const meta = {
   component: Tooltip,
-  tags: ["autodocs"],
   title: "UI/Tooltip",
 } satisfies Meta<typeof Tooltip>;
 

@@ -9,7 +9,6 @@ const meta = {
     type: "email",
   },
   component: Input,
-  tags: ["autodocs"],
   title: "UI/Input",
 } satisfies Meta<typeof Input>;
 

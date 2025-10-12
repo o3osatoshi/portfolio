@@ -38,7 +38,6 @@ import {
 
 const meta = {
   component: Sidebar,
-  tags: ["autodocs"],
   title: "UI/Sidebar",
 } satisfies Meta<typeof Sidebar>;
 

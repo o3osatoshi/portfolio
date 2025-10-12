@@ -9,7 +9,6 @@ const meta = {
     variant: "default",
   },
   component: Message,
-  tags: ["autodocs"],
   title: "UI/Base/Message",
 } satisfies Meta<typeof Message>;
 

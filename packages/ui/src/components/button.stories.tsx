@@ -28,8 +28,6 @@ const meta = {
   },
   component: Button,
 
-  tags: ["autodocs"],
-
   title: "UI/Button",
 } satisfies Meta<typeof Button>;
 

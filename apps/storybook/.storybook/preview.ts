@@ -21,6 +21,7 @@ const preview: Preview = {
           values: ["wcag2a", "wcag2aa", "wcag21aa"],
         },
       },
+      test: "error",
     },
     controls: {
       matchers: {

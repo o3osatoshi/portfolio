@@ -9,7 +9,6 @@ const AVATAR_PLACEHOLDER_SRC =
 
 const meta = {
   component: Avatar,
-  tags: ["autodocs"],
   title: "UI/Avatar",
 } satisfies Meta<typeof Avatar>;
 

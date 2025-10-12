@@ -13,7 +13,6 @@ import {
 
 const meta = {
   component: Breadcrumb,
-  tags: ["autodocs"],
   title: "UI/Breadcrumb",
 } satisfies Meta<typeof Breadcrumb>;
 
