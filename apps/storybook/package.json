@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
+    "@storybook/addon-a11y": "^9.1.10",
     "@storybook/addon-coverage": "^2.0.0",
     "@storybook/addon-docs": "^9.1.10",
     "@storybook/addon-links": "^9.1.10",
