@@ -11,7 +11,6 @@ import {
 } from "@o3osatoshi/ui/client";
 
 import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 
@@ -67,7 +66,6 @@ export function Sidebar({ ...props }: React.ComponentProps<typeof UiSidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
         <NavSecondary className="mt-auto" items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
