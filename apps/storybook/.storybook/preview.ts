@@ -16,10 +16,6 @@ const preview: Preview = {
       options: {
         element: "#storybook-root",
         restoreScroll: true,
-        runOnly: {
-          type: "tag",
-          values: ["wcag2a", "wcag2aa", "wcag21aa"],
-        },
       },
       test: "error",
     },
