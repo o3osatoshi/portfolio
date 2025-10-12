@@ -1,6 +1,6 @@
 import DeleteButton from "@/app/(main)/labs/server-crud/_components/delete-button";
 import EditDialog from "@/app/(main)/labs/server-crud/_components/edit-dialog";
-import type { Transaction } from "@/lib/validation";
+import type { Transaction } from "@/utils/validation";
 import {
   Card,
   CardAction,

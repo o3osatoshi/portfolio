@@ -9,9 +9,9 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { updateTransactionSchema } from "@/lib/validation";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPathName, getTag } from "@/utils/handle-nav";
+import { updateTransactionSchema } from "@/utils/validation";
 
 const repo = new PrismaTransactionRepository();
 const usecase = new UpdateTransactionUseCase(repo);

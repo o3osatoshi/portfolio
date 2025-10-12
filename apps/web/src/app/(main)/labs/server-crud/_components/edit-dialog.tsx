@@ -6,9 +6,9 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
-import type { Transaction } from "@/lib/validation";
-import { updateTransactionSchema } from "@/lib/validation";
 import type { ActionState } from "@/utils/action-state";
+import type { Transaction } from "@/utils/validation";
+import { updateTransactionSchema } from "@/utils/validation";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 import {
   Dialog,
