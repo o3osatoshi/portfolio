@@ -1,16 +1,10 @@
-import { redirect } from "next/navigation";
-
 import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
 import { getTransactions } from "@/app/(main)/labs/_services/get-transactions";
 import { auth } from "@/lib/auth";
-import { getPathName } from "@/utils/handle-nav";
 
 export default async function Page() {
   const session = await auth();
   const userId = session?.user?.id;
-  if (userId === undefined) {
-    redirect(getPathName("signin"));
-  }
 
   const result = await getTransactions({ userId });
   if (result.isErr()) {

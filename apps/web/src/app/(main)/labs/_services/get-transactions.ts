@@ -6,7 +6,7 @@ import type { Transactions } from "@/utils/validation";
 import { transactionsSchema } from "@/utils/validation";
 
 interface Props {
-  userId?: string;
+  userId?: string | undefined;
 }
 
 export async function getTransactions({

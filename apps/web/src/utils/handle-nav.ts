@@ -19,8 +19,7 @@ type WebAlias =
   | "labs"
   | "portfolio-about"
   | "portfolio-blog"
-  | "portfolio"
-  | "signin";
+  | "portfolio";
 
 interface WebNav {
   alias: WebAlias;
@@ -34,15 +33,6 @@ interface WebNav {
 }
 
 const navs: Nav[] = [
-  {
-    alias: "signin",
-    data: {
-      hierarchy: 1,
-      label: "Signin",
-    },
-    pathName: "/signin",
-    type: "web",
-  },
   {
     alias: "portfolio",
     data: {
