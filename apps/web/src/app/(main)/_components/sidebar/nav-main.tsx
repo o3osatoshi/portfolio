@@ -1,5 +1,12 @@
-import { ChevronRight, Construction, type LucideIcon } from "lucide-react";
+import {
+  ChevronRight,
+  Construction,
+  FlaskConical,
+  type LucideIcon,
+  User,
+} from "lucide-react";
 
+import { getLabel, getPathName } from "@/utils/handle-nav";
 import {
   Collapsible,
   CollapsibleContent,
@@ -16,25 +23,65 @@ import {
 
 import { SidebarLink } from "./sidebar-link";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    icon: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      isWIP?: boolean;
-      title: string;
-      url: string;
-    }[];
+type NavMain = {
+  icon: LucideIcon;
+  isActive?: boolean;
+  items?: {
+    isWIP?: boolean;
     title: string;
     url: string;
   }[];
-}) {
+  title: string;
+  url: string;
+}[];
+
+const data: { navMain: NavMain } = {
+  navMain: [
+    {
+      icon: User,
+      isActive: true,
+      items: [
+        {
+          title: getLabel("portfolio-about"),
+          url: getPathName("portfolio-about"),
+        },
+        {
+          title: getLabel("portfolio-blog"),
+          url: getPathName("portfolio-blog"),
+        },
+      ],
+      title: getLabel("portfolio"),
+      url: "#",
+    },
+    {
+      icon: FlaskConical,
+      isActive: true,
+      items: [
+        {
+          title: getLabel("labs-server-crud"),
+          url: getPathName("labs-server-crud"),
+        },
+        {
+          title: getLabel("labs-limited-read"),
+          url: getPathName("labs-limited-read"),
+        },
+        {
+          isWIP: true,
+          title: getLabel("labs-web3-crud"),
+          url: getPathName("labs-web3-crud"),
+        },
+      ],
+      title: getLabel("labs"),
+      url: "#",
+    },
+  ],
+};
+
+export function NavMain() {
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
+        {data.navMain.map((item) => (
           <Collapsible
             key={item.title}
             asChild
