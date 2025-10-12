@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
@@ -11,7 +12,6 @@ import {
 
 const meta = {
   component: Collapsible,
-  tags: ["autodocs"],
   title: "UI/Collapsible",
 } satisfies Meta<typeof Collapsible>;
 
@@ -21,6 +21,25 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     defaultOpen: false,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole("button", { name: "Toggle" });
+    const initialContent = canvas.queryByText("Error: Something went wrong", {
+      exact: false,
+    });
+
+    expect(initialContent).toBeNull();
+
+    await userEvent.click(toggle);
+
+    const content = await canvas.findByText("Error: Something went wrong", {
+      exact: false,
+    });
+
+    await waitFor(() => {
+      expect(content).toBeVisible();
+    });
   },
   render: (args) => (
     <Collapsible className="w-full max-w-md space-y-2" {...args}>
@@ -42,6 +61,31 @@ export const Default: Story = {
 };
 
 export const Controlled: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole("button", { name: "Debug log" });
+    const initialContent = canvas.queryByText(
+      "POST /api/authenticate 401 (Unauthorized)",
+      {
+        exact: false,
+      },
+    );
+
+    expect(initialContent).toBeNull();
+
+    await userEvent.click(toggle);
+
+    const content = await canvas.findByText(
+      "POST /api/authenticate 401 (Unauthorized)",
+      {
+        exact: false,
+      },
+    );
+
+    await waitFor(() => {
+      expect(content).toBeVisible();
+    });
+  },
   render: (args) => {
     const [open, setOpen] = React.useState(false);
 

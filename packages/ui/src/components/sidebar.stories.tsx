@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "@storybook/test";
 import {
   BarChart4,
   FolderKanban,
@@ -37,7 +38,6 @@ import {
 
 const meta = {
   component: Sidebar,
-  tags: ["autodocs"],
   title: "UI/Sidebar",
 } satisfies Meta<typeof Sidebar>;
 
@@ -45,6 +45,27 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    const triggers = await body.findAllByRole("button", {
+      name: /toggle sidebar/i,
+    });
+    const trigger = triggers.find(
+      (element) => element.getAttribute("data-slot") === "sidebar-trigger",
+    );
+
+    if (!trigger) {
+      throw new Error("Sidebar trigger button not found");
+    }
+
+    expect(trigger).toBeVisible();
+    expect(canvas.getByPlaceholderText("Search projects")).toBeEnabled();
+    expect(
+      canvas.getByRole("heading", { name: "Overview", level: 1 }),
+    ).toBeVisible();
+  },
   render: () => (
     <SidebarProvider defaultOpen>
       <div className="flex min-h-[32rem] w-full gap-6 bg-muted/30 p-6">

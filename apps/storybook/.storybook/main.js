@@ -6,8 +6,12 @@ function getAbsolutePath(value) {
 
 const config = {
   addons: [
-    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-coverage"),
     getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@storybook/addon-vitest"),
   ],
 
   core: {},

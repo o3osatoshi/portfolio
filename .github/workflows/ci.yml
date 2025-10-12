@@ -41,15 +41,33 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Restore caches (.cache/*)
+      - name: Determine playwright version
+        id: pw
+        run: |
+          set -euo pipefail
+          version=$(pnpm --filter @repo/storybook exec node -p "require('playwright/package.json').version")
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      - name: Install playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm -F @repo/storybook exec playwright install chromium
+
+      - name: Restore caches
         uses: actions/cache@v4
         with:
           path: |
             **/.cache/eslint
             **/.cache/tsbuildinfo
-          key: cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-${{ hashFiles('**/tsconfig*.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '22' }}-${{ hashFiles('**/tsconfig*.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '20' }}-
+            cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '22' }}-
             cache-${{ runner.os }}-
 
       - name: Run biome, eslint and pkg

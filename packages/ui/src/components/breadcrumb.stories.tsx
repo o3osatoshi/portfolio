@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "@storybook/test";
 
 import {
   Breadcrumb,
@@ -12,7 +13,6 @@ import {
 
 const meta = {
   component: Breadcrumb,
-  tags: ["autodocs"],
   title: "UI/Breadcrumb",
 } satisfies Meta<typeof Breadcrumb>;
 
@@ -20,6 +20,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const nav = canvas.getByRole("navigation", { name: "breadcrumb" });
+
+    expect(nav).toBeVisible();
+
+    const current = canvas.getByText("Components");
+
+    expect(current).toHaveAttribute("aria-current", "page");
+  },
   render: () => (
     <Breadcrumb>
       <BreadcrumbList>
@@ -44,6 +54,16 @@ export const Default: Story = {
 };
 
 export const Collapsed: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ellipsis = canvas.getByText("More", { exact: false });
+
+    expect(ellipsis).toBeInTheDocument();
+
+    const current = canvas.getByText("Storybook");
+
+    expect(current).toHaveAttribute("aria-current", "page");
+  },
   render: () => (
     <Breadcrumb>
       <BreadcrumbList>

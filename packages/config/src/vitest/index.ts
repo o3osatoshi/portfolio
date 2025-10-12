@@ -1,4 +1,9 @@
-import { defineConfig, type ViteUserConfig } from "vitest/config";
+import {
+  defineConfig,
+  type TestProjectConfiguration,
+  type TestProjectInlineConfiguration,
+  type ViteUserConfig,
+} from "vitest/config";
 import type { InlineConfig } from "vitest/node";
 
 /**
@@ -100,4 +105,96 @@ export function browserTestPreset(opts: Options = {}) {
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
   });
+}
+
+/**
+ * Creates a Storybook-aware Vitest configuration that enables browser projects by default.
+ *
+ * @remarks
+ * Mirrors the base preset merge behaviour while ensuring Storybook projects run in Playwright-powered
+ * Chromium. Any InlineConfig projects passed through `opts.test?.projects` are converted into inline
+ * configurations with the Storybook defaults applied, while non-inline entries remain untouched.
+ * Coverage retains the shared defaults unless fully redefined via `opts.test?.coverage`. Additional
+ * Vite/Vitest plugins cascade through `opts.plugins`.
+ *
+ * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
+ * @returns Vitest configuration produced via `defineConfig`.
+ * @public
+ */
+export function storybookTestPreset(opts: Options = {}) {
+  const cvrg = opts.test?.coverage;
+  return defineConfig({
+    ...(opts.plugins ? { plugins: opts.plugins } : {}),
+    test: {
+      ...(opts.test?.projects
+        ? {
+            projects: opts.test.projects.map((p) => {
+              if (!checkIfTestProjectInlineConfiguration(p)) return p;
+              return {
+                extends: true,
+                ...(p.plugins ? { plugins: p.plugins } : {}),
+                test: {
+                  name: "storybook",
+                  browser: {
+                    provider: "playwright",
+                    enabled: true,
+                    headless: true,
+                    instances: [
+                      {
+                        browser: "chromium",
+                      },
+                    ],
+                  },
+                  ...(p.test?.setupFiles
+                    ? { setupFiles: p.test.setupFiles }
+                    : {}),
+                },
+              };
+            }),
+          }
+        : {}),
+      coverage: {
+        provider: "v8",
+        enabled: cvrg?.enabled ?? false,
+        exclude: [
+          "**/*.d.ts",
+          "dist/**",
+          "coverage/**",
+          "**/index.{ts,js}",
+          ...(cvrg?.exclude ?? []),
+        ],
+        reporter: ["text-summary", "lcov", "html"],
+        reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
+      },
+      outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
+    },
+  });
+}
+
+/**
+ * Narrows a Vitest project configuration to inline objects suitable for Storybook overrides.
+ *
+ * Filters out project entries that are strings, config factories, or async workspace configs so only
+ * inline configuration objects return true, enabling safe augmentation inside {@link storybookTestPreset}.
+ *
+ * @param config - The project configuration entry to inspect.
+ * @returns Whether the configuration is an inline project object.
+ */
+function checkIfTestProjectInlineConfiguration(
+  config: TestProjectConfiguration,
+): config is TestProjectInlineConfiguration {
+  // string
+  if (typeof config === "string") return false;
+  // UserProjectConfigFn
+  if (typeof config === "function") return false;
+  // Promise<UserWorkspaceConfig>
+  if (
+    "then" in config &&
+    typeof config.then === "function" &&
+    "catch" in config &&
+    typeof config.catch === "function"
+  )
+    return false;
+  // TestProjectInlineConfiguration
+  return true;
 }

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 
 import { Button } from "./button";
 import {
@@ -14,7 +15,6 @@ import { Input } from "./input";
 
 const meta = {
   component: Dialog,
-  tags: ["autodocs"],
   title: "UI/Dialog",
 } satisfies Meta<typeof Dialog>;
 
@@ -22,6 +22,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open dialog" }));
+
+    const title = await body.findByRole("heading", {
+      name: "Edit profile",
+      level: 2,
+    });
+
+    await waitFor(() => {
+      expect(title).toBeVisible();
+    });
+
+    await waitFor(() => {
+      expect(body.getByLabelText("Display name")).toHaveValue("o3osatoshi");
+    });
+  },
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
@@ -51,6 +70,26 @@ export const Default: Story = {
 };
 
 export const WithLongContent: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Show release notes" }),
+    );
+
+    const title = await body.findByRole("heading", {
+      name: "What's new",
+      level: 2,
+    });
+
+    await waitFor(() => {
+      expect(title).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(body.getByText("Version 2.4.0")).toBeVisible();
+    });
+  },
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
