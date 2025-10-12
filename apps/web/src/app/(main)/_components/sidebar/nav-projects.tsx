@@ -8,7 +8,6 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +21,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@o3osatoshi/ui/client";
+
+import { SidebarLink } from "./sidebar-link";
 
 export function NavProjects({
   projects,

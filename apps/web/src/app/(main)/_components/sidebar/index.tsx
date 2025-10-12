@@ -1,21 +1,22 @@
 import { FlaskConical, User } from "lucide-react";
 import type * as React from "react";
 
-import { NavMain } from "@/app/(main)/_components/nav-main";
-import { NavProjects } from "@/app/(main)/_components/nav-projects";
-import { NavSecondary } from "@/app/(main)/_components/nav-secondary";
-import { NavUser } from "@/app/(main)/_components/nav-user";
-import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
 import { getLabel, getPathName } from "@/utils/handle-nav";
 import {
-  Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  Sidebar as UiSidebar,
 } from "@o3osatoshi/ui/client";
+
+import { NavMain } from "./nav-main";
+import { NavProjects } from "./nav-projects";
+import { NavSecondary } from "./nav-secondary";
+import { NavUser } from "./nav-user";
+import { SidebarLink } from "./sidebar-link";
 
 const data = {
   navMain: [
@@ -61,9 +62,9 @@ const data = {
   projects: [],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function Sidebar({ ...props }: React.ComponentProps<typeof UiSidebar>) {
   return (
-    <Sidebar variant="inset" {...props}>
+    <UiSidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -85,6 +86,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
-    </Sidebar>
+    </UiSidebar>
   );
 }
