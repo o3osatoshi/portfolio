@@ -1,4 +1,4 @@
-import { getQueryingPathName, type Search } from "@/utils/fetch-client";
+import { getQueryingPathName, type Search } from "@/utils/next-fetch";
 
 type Alias = ApiAlias | WebAlias;
 

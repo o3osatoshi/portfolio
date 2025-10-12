@@ -26,7 +26,12 @@ interface Props {
   tags?: string[];
 }
 
-export async function fetchClient({
+export function getQueryingPathName(pathName: string, search?: Search) {
+  const params = new URLSearchParams(search);
+  return search === undefined ? pathName : `${pathName}?${params.toString()}`;
+}
+
+export async function nextFetch({
   revalidate,
   cache,
   pathName,
@@ -59,9 +64,4 @@ export async function fetchClient({
     }
     throw new Error("unknown error");
   }
-}
-
-export function getQueryingPathName(pathName: string, search?: Search) {
-  const params = new URLSearchParams(search);
-  return search === undefined ? pathName : `${pathName}?${params.toString()}`;
 }
