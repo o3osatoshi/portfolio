@@ -13,7 +13,6 @@ interface ApiNav {
 type Nav = ApiNav | WebNav;
 
 type WebAlias =
-  | "labs-limited-read"
   | "labs-server-crud"
   | "labs-web3-crud"
   | "labs"
@@ -79,16 +78,6 @@ const navs: Nav[] = [
       parentAlias: "labs",
     },
     pathName: "/labs/server-crud",
-    type: "web",
-  },
-  {
-    alias: "labs-limited-read",
-    data: {
-      hierarchy: 2,
-      label: "Limited Read",
-      parentAlias: "labs",
-    },
-    pathName: "/labs/limited-read",
     type: "web",
   },
   {

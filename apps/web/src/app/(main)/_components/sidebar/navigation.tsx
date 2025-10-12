@@ -61,10 +61,6 @@ const navigateOptions: NavigateOption[] = [
         url: getPathName("labs-server-crud"),
       },
       {
-        title: getLabel("labs-limited-read"),
-        url: getPathName("labs-limited-read"),
-      },
-      {
         isWIP: true,
         title: getLabel("labs-web3-crud"),
         url: getPathName("labs-web3-crud"),
