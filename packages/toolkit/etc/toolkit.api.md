@@ -11,6 +11,25 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export type FetchRequest = {
+    method?: string;
+    url?: string;
+};
+
+// @public
+export type FetchResponse = {
+    status?: number;
+    statusText?: string;
+    url?: string;
+};
+
+// @public
+export function formatFetchTarget({ request, response, }: {
+    request?: FetchRequest | undefined;
+    response?: FetchResponse | undefined;
+}): string | undefined;
+
+// @public
 export function isZodError(e: unknown): e is ZodError;
 
 // @public
@@ -29,6 +48,20 @@ export type NewError = {
 
 // @public
 export function newError(params: NewError): Error;
+
+// @public
+export type NewFetchError = {
+    action?: string;
+    cause?: unknown;
+    hint?: string;
+    impact?: string;
+    request?: FetchRequest | undefined;
+    resource?: string;
+    response?: FetchResponse | undefined;
+};
+
+// @public
+export function newFetchError({ action, cause, hint, impact, request, resource, response, }: NewFetchError): Error;
 
 // @public
 export type NewZodError = {
