@@ -21,70 +21,67 @@ type NextFetchSuccess = {
 
 type Props = {
   cache?: "force-cache" | "no-store";
-  pathName: string;
+  path: string;
   revalidate?: 0 | false | number;
   search?: Search;
   tags?: string[];
 };
 
-export function getQueryingPathName(pathName: string, search?: Search) {
+export function getQueryPath(path: string, search?: Search) {
   const params = new URLSearchParams(search);
-  return search === undefined ? pathName : `${pathName}?${params.toString()}`;
+  return search === undefined ? path : `${path}?${params.toString()}`;
 }
 
 export function nextFetch({
   revalidate,
   cache,
-  pathName,
+  path,
   search,
   tags,
 }: Props): ResultAsync<NextFetchSuccess, Error> {
-  const queryingPathName = getQueryingPathName(pathName, search);
-  const url = new URL(queryingPathName, base);
-  const effectiveTags =
-    tags === undefined ? [queryingPathName] : [...tags, queryingPathName];
-  const action = `Fetch ${queryingPathName}`;
+  const queryPath = getQueryPath(path, search);
+
+  const url = new URL(queryPath, base);
+
+  const _tags = tags === undefined ? [queryPath] : [...tags, queryPath];
+
+  const newNextFetchError = (e: unknown) => {
+    return newFetchError({
+      action: `Fetch ${queryPath}`,
+      cause: e,
+      request: {
+        method: "GET",
+        url: url.href,
+      },
+    });
+  };
 
   return ResultAsync.fromPromise(
     fetch(url, {
-      ...(cache !== undefined && { cache }),
+      ...(cache !== undefined ? { cache } : {}),
       next: {
-        ...(revalidate !== undefined && { revalidate }),
-        tags: effectiveTags,
+        ...(revalidate !== undefined ? { revalidate } : {}),
+        tags: _tags,
       },
     }),
-    (e) =>
-      newFetchError({
-        action,
-        cause: e,
-        request: {
-          method: "GET",
-          url: url.href,
-        },
-      }),
+    newNextFetchError,
   ).andThen((res) =>
-    ResultAsync.fromPromise(parseJsonBody(res), toError).map((body) => ({
+    ResultAsync.fromPromise(parseBody(res), newNextFetchError).map((body) => ({
       body,
       status: res.status,
     })),
   );
 }
 
-async function parseJsonBody(res: Response): Promise<unknown> {
-  if (!shouldParseJson(res)) return undefined;
-
-  return res.json();
-}
-
-function shouldParseJson(res: Response) {
+function isParsableBody(res: Response) {
   if (res.status === 204 || res.status === 205 || res.status === 304) {
     return false;
   }
 
   const contentLength = res.headers.get("content-length");
   if (contentLength !== null) {
-    const numericLength = Number(contentLength);
-    if (!Number.isNaN(numericLength) && numericLength === 0) {
+    const length = Number(contentLength);
+    if (!Number.isNaN(length) && length === 0) {
       return false;
     }
   }
@@ -95,9 +92,8 @@ function shouldParseJson(res: Response) {
   return contentType.toLowerCase().includes("json");
 }
 
-function toError(input: unknown): Error {
-  if (input instanceof Error) return input;
-  return new Error(
-    typeof input === "string" ? input : "Failed to parse response JSON",
-  );
+async function parseBody(res: Response): Promise<unknown> {
+  if (!isParsableBody(res)) return undefined;
+
+  return res.json();
 }
