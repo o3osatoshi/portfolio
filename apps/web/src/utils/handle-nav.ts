@@ -1,4 +1,4 @@
-import { getQueryingPathName, type Search } from "@/utils/next-fetch";
+import { getQueryPath, type Search } from "@/utils/next-fetch";
 
 type Alias = ApiAlias | WebAlias;
 
@@ -121,13 +121,13 @@ export function getLabel(alias: WebAlias): string {
   return _nav.data.label;
 }
 
-export function getPathName(alias: Alias): string {
+export function getPath(alias: Alias): string {
   const _nav = navs.find((n) => n.alias === alias);
   if (_nav === undefined) throw new Error("alias not found");
   return _nav.pathName;
 }
 
 export function getTag(alias: ApiAlias, search?: Search) {
-  const _path = getPathName(alias);
-  return getQueryingPathName(_path, search);
+  const _path = getPath(alias);
+  return getQueryPath(_path, search);
 }

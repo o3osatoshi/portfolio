@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getPathName } from "@/utils/handle-nav";
+import { getPath } from "@/utils/handle-nav";
 
 export const metadata: Metadata = {
   description:
@@ -37,7 +37,7 @@ export default function Page() {
               <li>Project history and experience</li>
             </ul>
             <Link
-              href={getPathName("portfolio-about")}
+              href={getPath("portfolio-about")}
               className="inline-block rounded border px-4 py-2 underline"
             >
               View Portfolio
@@ -55,7 +55,7 @@ export default function Page() {
               <li>Latest technology validation and implementation</li>
             </ul>
             <Link
-              href={getPathName("labs-server-crud")}
+              href={getPath("labs-server-crud")}
               className="inline-block rounded border px-4 py-2 underline"
             >
               Explore Labs

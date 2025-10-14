@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { getPathName } from "@/utils/handle-nav";
+import { getPath } from "@/utils/handle-nav";
 import { nextFetch } from "@/utils/next-fetch";
 import type { Transactions } from "@/utils/validation";
 import { transactionsSchema } from "@/utils/validation";
@@ -14,7 +14,7 @@ export async function getTransactions({
 }: Props | undefined = {}): Promise<Result<Transactions, Error>> {
   const search = userId === undefined ? undefined : { userId };
   return nextFetch({
-    pathName: getPathName("labs-transactions"),
+    path: getPath("labs-transactions"),
     search,
   }).andThen(({ body, status }) => {
     if (status < 200 || status >= 300) {

@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
-import { getPathName, getTag } from "@/utils/handle-nav";
+import { getPath, getTag } from "@/utils/handle-nav";
 import { deleteTransactionSchema } from "@/utils/validation";
 
 const repo = new PrismaTransactionRepository();
@@ -47,7 +47,7 @@ export const deleteTransaction = async (
       return err(executeResult.error);
     }
 
-    revalidateTag(getPathName("labs-transactions"));
+    revalidateTag(getPath("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));
   } catch (error: unknown) {
     console.error(error);
@@ -57,5 +57,5 @@ export const deleteTransaction = async (
     return err("Failed to delete the transaction. Please try again later.");
   }
 
-  redirect(getPathName("labs-server-crud"));
+  redirect(getPath("labs-server-crud"));
 };

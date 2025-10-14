@@ -6,7 +6,7 @@ import {
   User,
 } from "lucide-react";
 
-import { getLabel, getPathName } from "@/utils/handle-nav";
+import { getLabel, getPath } from "@/utils/handle-nav";
 import {
   Collapsible,
   CollapsibleContent,
@@ -42,11 +42,11 @@ const navigateOptions: NavigateOption[] = [
     items: [
       {
         title: getLabel("portfolio-about"),
-        url: getPathName("portfolio-about"),
+        url: getPath("portfolio-about"),
       },
       {
         title: getLabel("portfolio-blog"),
-        url: getPathName("portfolio-blog"),
+        url: getPath("portfolio-blog"),
       },
     ],
     title: getLabel("portfolio"),
@@ -58,12 +58,12 @@ const navigateOptions: NavigateOption[] = [
     items: [
       {
         title: getLabel("labs-server-crud"),
-        url: getPathName("labs-server-crud"),
+        url: getPath("labs-server-crud"),
       },
       {
         isWIP: true,
         title: getLabel("labs-web3-crud"),
-        url: getPathName("labs-web3-crud"),
+        url: getPath("labs-web3-crud"),
       },
     ],
     title: getLabel("labs"),
