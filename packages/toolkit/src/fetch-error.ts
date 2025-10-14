@@ -9,19 +9,9 @@ export type FetchRequest = {
   url?: string;
 };
 
-/** Minimal response metadata captured when a fetch call resolves with an error status.
- *
- * @public
- */
-export type FetchResponse = {
-  status?: number;
-  statusText?: string;
-  url?: string;
-};
-
 /**
  * Payload accepted by {@link newFetchError} before shaping a toolkit error.
- * Mirrors {@link NewError} while adding fetch-specific request/response context.
+ * Mirrors {@link NewError} while adding fetch-specific request context.
  *
  * @public
  */
@@ -31,12 +21,6 @@ export type NewFetchError = {
   hint?: string;
   impact?: string;
   request?: FetchRequest | undefined;
-  /**
-   * Custom label for the remote resource (falls back to {@link FetchRequest} / {@link FetchResponse}).
-   * Useful when the underlying request data is redacted or derived (e.g. Next.js route aliases).
-   */
-  resource?: string;
-  response?: FetchResponse | undefined;
 };
 
 type Classification = {
@@ -47,19 +31,17 @@ type Classification = {
 
 type Kind = NewError["kind"];
 
-/** Derives a concise `METHOD URL` label from request/response metadata.
+/** Derives a concise `METHOD URL` label from request metadata.
  *
  * @public
  */
 export function formatFetchTarget({
   request,
-  response,
 }: {
   request?: FetchRequest | undefined;
-  response?: FetchResponse | undefined;
 }): string | undefined {
   const method = request?.method?.trim();
-  const url = request?.url ?? response?.url;
+  const url = request?.url;
   if (method && url) return `${method.toUpperCase()} ${url}`;
   if (url) return url;
   return method?.toUpperCase();
@@ -69,7 +51,6 @@ export function formatFetchTarget({
  * Builds an Error describing a failed fetch request using a consistent toolkit shape.
  *
  * Classification rules:
- * - HTTP 4xx/5xx responses map to semantic kinds (e.g. 401 → Unauthorized, 429 → RateLimit, 503 → Unavailable).
  * - Aborted/timeout signals map to `Timeout`.
  * - Network-level failures (DNS, connection refused, etc.) map to `Unavailable`.
  * - Unknown situations fall back to `Unknown`.
@@ -85,21 +66,15 @@ export function newFetchError({
   hint,
   impact,
   request,
-  resource,
-  response,
 }: NewFetchError): Error {
   const classification = classifyFetchFailure({
     cause,
     request,
-    response,
   });
 
-  const target =
-    resource ??
-    formatFetchTarget({
-      request,
-      response,
-    });
+  const target = formatFetchTarget({
+    request,
+  });
   const reason = target
     ? `${target} ${classification.problem}`
     : classification.problem;
@@ -118,17 +93,10 @@ export function newFetchError({
 function classifyFetchFailure({
   cause,
   request,
-  response,
 }: {
   cause?: unknown;
   request?: FetchRequest | undefined;
-  response?: FetchResponse | undefined;
 }): Classification {
-  const status = response?.status;
-  if (typeof status === "number" && Number.isFinite(status) && status >= 100) {
-    return classifyFromStatus(status, response?.statusText);
-  }
-
   const causeClassification = classifyFromCause(cause);
   if (causeClassification) return causeClassification;
 
@@ -190,134 +158,16 @@ function classifyFromCause(cause: unknown): Classification | undefined {
   return undefined;
 }
 
-function classifyFromStatus(
-  status: number,
-  statusText: string | undefined,
-): Classification {
-  const label = statusText ? `${status} ${statusText}` : `HTTP ${status}`;
-  const problem = `responded with ${label}`;
-
-  switch (status) {
-    case 400:
-    case 406:
-    case 413:
-    case 415:
-    case 422:
-    case 431:
-      return {
-        defaultHint: "Adjust the request payload or headers.",
-        kind: "Validation",
-        problem,
-      };
-    case 401:
-      return {
-        defaultHint: "Refresh credentials or login again.",
-        kind: "Unauthorized",
-        problem,
-      };
-    case 402:
-    case 403:
-    case 451:
-      return {
-        defaultHint: "Verify the caller has permission to access the resource.",
-        kind: "Forbidden",
-        problem,
-      };
-    case 404:
-    case 410:
-      return {
-        defaultHint: "Verify the resource identifier or endpoint path.",
-        kind: "NotFound",
-        problem,
-      };
-    case 405:
-    case 426:
-    case 428:
-      return {
-        defaultHint:
-          "Check that the HTTP method and prerequisites are correct.",
-        kind: "Config",
-        problem,
-      };
-    case 408:
-    case 499:
-      return {
-        defaultHint:
-          "Retry with a longer timeout or ensure the request is not aborted.",
-        kind: "Timeout",
-        problem,
-      };
-    case 409:
-    case 412:
-      return {
-        defaultHint: "Resolve the conflicting state before retrying.",
-        kind: "Conflict",
-        problem,
-      };
-    case 423:
-      return {
-        defaultHint: "Ensure the resource is unlocked before retrying.",
-        kind: "Conflict",
-        problem,
-      };
-    case 429:
-      return {
-        defaultHint: "Slow down requests or increase the rate limit.",
-        kind: "RateLimit",
-        problem,
-      };
-    case 500:
-      return {
-        kind: "Unknown",
-        problem,
-      };
-    case 502:
-    case 503:
-    case 507:
-    case 508:
-    case 509:
-      return {
-        defaultHint: "Retry later; the upstream service is unavailable.",
-        kind: "Unavailable",
-        problem,
-      };
-    case 504:
-      return {
-        defaultHint:
-          "Retry with a longer timeout or investigate upstream latency.",
-        kind: "Timeout",
-        problem,
-      };
-    default:
-      if (status >= 500 && status < 600) {
-        return {
-          kind: "Unavailable",
-          problem,
-        };
-      }
-      if (status >= 400 && status < 500) {
-        return {
-          kind: "Unknown",
-          problem,
-        };
-      }
-      return {
-        kind: "Unknown",
-        problem,
-      };
-  }
-}
-
 function extractMessage(cause: unknown): string | undefined {
   if (!cause) return;
-  if (cause instanceof Error) return cause.message;
-  if (typeof cause === "string") return cause;
+  if (cause instanceof Error) return truncate(cause.message);
+  if (typeof cause === "string") return truncate(cause);
   if (
     typeof cause === "object" &&
     "message" in (cause as Record<string, unknown>)
   ) {
     const message = (cause as { message?: unknown }).message;
-    return typeof message === "string" ? message : undefined;
+    return typeof message === "string" ? truncate(message) : undefined;
   }
   return undefined;
 }
@@ -341,4 +191,8 @@ function isAbortError(cause: unknown): boolean {
   if (!message) return false;
 
   return /\babort(ed)?\b/.test(message) || /\babortcontroller\b/.test(message);
+}
+
+function truncate(value: string, max = 200): string {
+  return value.length > max ? `${value.slice(0, max)}…` : value;
 }

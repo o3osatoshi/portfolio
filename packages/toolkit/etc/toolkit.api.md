@@ -17,16 +17,8 @@ export type FetchRequest = {
 };
 
 // @public
-export type FetchResponse = {
-    status?: number;
-    statusText?: string;
-    url?: string;
-};
-
-// @public
-export function formatFetchTarget({ request, response, }: {
+export function formatFetchTarget({ request, }: {
     request?: FetchRequest | undefined;
-    response?: FetchResponse | undefined;
 }): string | undefined;
 
 // @public
@@ -56,12 +48,10 @@ export type NewFetchError = {
     hint?: string;
     impact?: string;
     request?: FetchRequest | undefined;
-    resource?: string;
-    response?: FetchResponse | undefined;
 };
 
 // @public
-export function newFetchError({ action, cause, hint, impact, request, resource, response, }: NewFetchError): Error;
+export function newFetchError({ action, cause, hint, impact, request, }: NewFetchError): Error;
 
 // @public
 export type NewZodError = {

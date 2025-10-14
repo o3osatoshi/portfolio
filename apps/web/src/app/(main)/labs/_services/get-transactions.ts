@@ -1,4 +1,4 @@
-import { err, ok, type Result, ResultAsync } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { getPathName } from "@/utils/handle-nav";
 import { nextFetch } from "@/utils/next-fetch";
@@ -13,19 +13,16 @@ export async function getTransactions({
   userId,
 }: Props | undefined = {}): Promise<Result<Transactions, Error>> {
   const search = userId === undefined ? undefined : { userId };
-  return ResultAsync.fromPromise(
-    nextFetch({
-      pathName: getPathName("labs-transactions"),
-      search,
-    }),
-    (error: unknown) => {
-      if (error instanceof Error) {
-        return error;
-      }
-      return new Error("unknown error");
-    },
-  ).andThen((data) => {
-    const result = transactionsSchema.safeParse(data);
+  return nextFetch({
+    pathName: getPathName("labs-transactions"),
+    search,
+  }).andThen(({ body, status }) => {
+    if (status < 200 || status >= 300) {
+      console.error("getTransactions unexpected status", status);
+      return err(new Error(`Unexpected status: ${status}`));
+    }
+
+    const result = transactionsSchema.safeParse(body);
     if (!result.success) {
       console.error(result.error);
       return err(result.error);
