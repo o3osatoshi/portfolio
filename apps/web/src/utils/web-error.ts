@@ -1,4 +1,4 @@
-import { newError as baseNewError } from "@o3osatoshi/toolkit";
+import { newError } from "@o3osatoshi/toolkit";
 
 /**
  * Shape used to describe a UI-layer failure when constructing a structured {@link Error}.
@@ -38,7 +38,7 @@ export function newWebError({
   kind,
   reason,
 }: NewWebError): Error {
-  return baseNewError({
+  return newError({
     action,
     cause,
     hint,

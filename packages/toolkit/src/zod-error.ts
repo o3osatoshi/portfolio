@@ -1,6 +1,6 @@
 import { z, type ZodError, type ZodIssue } from "zod";
 
-import { newError as baseNewError } from "./error";
+import { newError } from "./error";
 
 /**
  * Architectural layer used to contextualize validation errors.
@@ -85,7 +85,7 @@ export function newZodError(options: NewZodError): Error {
   const effectiveHint =
     hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
 
-  return baseNewError({
+  return newError({
     action,
     cause,
     hint: effectiveHint,

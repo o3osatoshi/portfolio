@@ -1,4 +1,4 @@
-import { newError as baseNewError, type NewError } from "./error";
+import { newError, type NewError } from "./error";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
 
 /** Minimal request metadata used to contextualize fetch failures.
@@ -85,7 +85,7 @@ export function newFetchError({
     ? `${target} ${classification.problem}`
     : classification.problem;
 
-  return baseNewError({
+  return newError({
     action,
     cause,
     hint: hint ?? classification.hint,

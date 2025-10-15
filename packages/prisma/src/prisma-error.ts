@@ -1,4 +1,4 @@
-import { newError as newBaseError } from "@o3osatoshi/toolkit";
+import { newError } from "@o3osatoshi/toolkit";
 
 import { Prisma } from "./prisma-client";
 
@@ -52,7 +52,7 @@ export function newPrismaError({
         // Value too long for column
         const meta = cause.meta as { column_name?: string } | undefined;
         const column = meta?.column_name;
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint: hint ?? "Shorten value or alter schema.",
@@ -68,7 +68,7 @@ export function newPrismaError({
         const target = Array.isArray(meta?.target)
           ? meta?.target.join(", ")
           : meta?.target;
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint: hint ?? "Use a different value for unique fields.",
@@ -82,7 +82,7 @@ export function newPrismaError({
       }
       case "P2003": {
         // Foreign key constraint failed
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint: hint ?? "Ensure related records exist before linking.",
@@ -95,7 +95,7 @@ export function newPrismaError({
       case "P2005": // Value out of range for the type
       case "P2006": {
         // Invalid value
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint: hint ?? "Check data types and constraints.",
@@ -108,7 +108,7 @@ export function newPrismaError({
       case "P2021": // Table does not exist
       case "P2022": {
         // Column does not exist
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint: hint ?? "Run migrations or verify schema.",
@@ -122,7 +122,7 @@ export function newPrismaError({
       case "P2025": {
         // Record not found
         const m = metaString(cause.meta, "cause");
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint: hint ?? "Verify where conditions or record id.",
@@ -133,7 +133,7 @@ export function newPrismaError({
         });
       }
       default: {
-        return newBaseError({
+        return newError({
           action,
           cause,
           hint,
@@ -147,7 +147,7 @@ export function newPrismaError({
   }
 
   if (isValidationError(cause)) {
-    return newBaseError({
+    return newError({
       action,
       cause,
       hint: hint ?? "Check schema types and provided data.",
@@ -179,7 +179,7 @@ export function newPrismaError({
               ? "Forbidden"
               : "Unknown";
 
-    return newBaseError({
+    return newError({
       action,
       cause,
       hint:
@@ -197,7 +197,7 @@ export function newPrismaError({
   }
 
   if (isRustPanicError(cause)) {
-    return newBaseError({
+    return newError({
       action,
       cause,
       hint: hint ?? "Inspect logs; restart the process.",
@@ -217,7 +217,7 @@ export function newPrismaError({
           lower.includes("serialization failure")
         ? "Serialization"
         : "Unknown";
-    return newBaseError({
+    return newError({
       action,
       cause,
       hint,
@@ -229,7 +229,7 @@ export function newPrismaError({
   }
 
   // Fallback for non-Prisma errors: delegate to base newError with a sensible default.
-  return newBaseError({
+  return newError({
     action,
     cause,
     hint,
