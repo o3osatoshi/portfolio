@@ -45,17 +45,6 @@ export function nextFetch({
 
   const _tags = tags === undefined ? [queryPath] : [...tags, queryPath];
 
-  const newNextFetchError = (e: unknown) => {
-    return newFetchError({
-      action: `Fetch ${queryPath}`,
-      cause: e,
-      request: {
-        method: "GET",
-        url: url.href,
-      },
-    });
-  };
-
   return ResultAsync.fromPromise(
     fetch(url, {
       ...(cache !== undefined ? { cache } : {}),
@@ -64,16 +53,40 @@ export function nextFetch({
         tags: _tags,
       },
     }),
-    newNextFetchError,
+    (e) =>
+      newFetchError({
+        action: `Fetch ${queryPath}`,
+        cause: e,
+        request: {
+          method: "GET",
+          url: url.href,
+        },
+      }),
   ).andThen((res) =>
-    ResultAsync.fromPromise(parseBody(res), newNextFetchError).map((body) => ({
+    ResultAsync.fromPromise(deserializeBody(res), (e) =>
+      newFetchError({
+        action: `Deserialize body for ${queryPath}`,
+        cause: e,
+        kind: "Serialization",
+        request: {
+          method: "GET",
+          url: url.href,
+        },
+      }),
+    ).map((body) => ({
       body,
       status: res.status,
     })),
   );
 }
 
-function isParsableBody(res: Response) {
+async function deserializeBody(res: Response): Promise<unknown> {
+  if (!isDeserializableBody(res)) return undefined;
+
+  return res.json();
+}
+
+function isDeserializableBody(res: Response) {
   if (res.status === 204 || res.status === 205 || res.status === 304) {
     return false;
   }
@@ -90,10 +103,4 @@ function isParsableBody(res: Response) {
   if (!contentType) return false;
 
   return contentType.toLowerCase().includes("json");
-}
-
-async function parseBody(res: Response): Promise<unknown> {
-  if (!isParsableBody(res)) return undefined;
-
-  return res.json();
 }
