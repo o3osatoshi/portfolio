@@ -57,4 +57,18 @@ describe("toolkit newFetchError helper", () => {
     expect(err.name).toBe("ExternalUnknownError");
     expect(err.message).toContain("because /proxy/users/123 failed with boom");
   });
+
+  it("allows overriding the classification kind when provided", () => {
+    const err = newFetchError({
+      action: "SubmitForm",
+      cause: new Error("invalid credentials"),
+      kind: "Forbidden",
+      request: { method: "POST", url: "/api/login" },
+    });
+
+    expect(err.name).toBe("ExternalForbiddenError");
+    expect(err.message).toContain(
+      "because POST /api/login failed with invalid credentials",
+    );
+  });
 });

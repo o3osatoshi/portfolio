@@ -39,7 +39,7 @@ export type NewError = {
     cause?: undefined | unknown;
     hint?: string | undefined;
     impact?: string | undefined;
-    kind: Kind;
+    kind: Kind$1;
     layer: Layer$1;
     reason?: string | undefined;
 };
@@ -53,11 +53,12 @@ export type NewFetchError = {
     cause?: unknown;
     hint?: string;
     impact?: string;
+    kind?: Kind;
     request?: FetchRequest | undefined;
 };
 
 // @public
-export function newFetchError({ action, cause, hint, impact, request, }: NewFetchError): Error;
+export function newFetchError({ action, cause, hint, impact, kind, request, }: NewFetchError): Error;
 
 // @public
 export type NewZodError = {
@@ -95,8 +96,9 @@ export function truncate(value: string, max?: number): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:20:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:20:5 - (ae-forgotten-export) The symbol "Kind$1" needs to be exported by the entry point index.d.ts
 // dist/index.d.ts:22:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:138:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

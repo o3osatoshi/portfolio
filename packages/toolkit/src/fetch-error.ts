@@ -13,6 +13,8 @@ export type FetchRequest = {
 /**
  * Payload accepted by {@link newFetchError} before shaping a toolkit error.
  * Mirrors {@link NewError} while adding fetch-specific request context.
+ * When `kind` is omitted, the helper falls back to the classification derived
+ * from the request metadata or underlying cause.
  *
  * @public
  */
@@ -21,6 +23,7 @@ export type NewFetchError = {
   cause?: unknown;
   hint?: string;
   impact?: string;
+  kind?: Kind;
   request?: FetchRequest | undefined;
 };
 
@@ -58,6 +61,7 @@ export function formatFetchTarget({
  *
  * The resulting `Error` is tagged with `layer: "External"` and a descriptive message that includes
  * the HTTP method/URL when available.
+ * Providing `kind` allows overriding the inferred classification when callers have stronger context.
  *
  * @public
  */
@@ -66,6 +70,7 @@ export function newFetchError({
   cause,
   hint,
   impact,
+  kind,
   request,
 }: NewFetchError): Error {
   const classification = classifyFetchFailure({
@@ -85,7 +90,7 @@ export function newFetchError({
     cause,
     hint: hint ?? classification.hint,
     impact,
-    kind: classification.kind,
+    kind: kind ?? classification.kind,
     layer: "External",
     reason,
   });
