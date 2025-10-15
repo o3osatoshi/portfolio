@@ -14,10 +14,9 @@ export type Search =
   | undefined
   | URLSearchParams;
 
-type NextFetchSuccess = {
+type NextFetchResponse = {
   body: unknown;
-  status: number;
-};
+} & Pick<Response, "ok" | "redirected" | "status" | "statusText" | "url">;
 
 type Props = {
   cache?: "force-cache" | "no-store";
@@ -38,7 +37,7 @@ export function nextFetch({
   path,
   search,
   tags,
-}: Props): ResultAsync<NextFetchSuccess, Error> {
+}: Props): ResultAsync<NextFetchResponse, Error> {
   const queryPath = getQueryPath(path, search);
 
   const url = new URL(queryPath, base);
@@ -75,7 +74,11 @@ export function nextFetch({
       }),
     ).map((body) => ({
       body,
+      ok: res.ok,
+      redirected: res.redirected,
       status: res.status,
+      statusText: res.statusText,
+      url: res.url,
     })),
   );
 }
