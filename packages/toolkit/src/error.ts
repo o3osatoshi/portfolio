@@ -1,3 +1,6 @@
+import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import { truncate } from "./truncate";
+
 /**
  * Structured descriptor passed into {@link newError}, exported for consumers
  * that want to build wrappers or share strongly typed error payloads.
@@ -155,16 +158,25 @@ export function newError(params: NewError): Error {
 /** Convert an unknown cause into a safe string (prioritize `Error.message`). */
 function summarizeCause(cause: unknown, max = 300): string | undefined {
   if (cause == null) return;
-  if (cause instanceof Error) return truncate(cause.message, max);
-  if (typeof cause === "string") return truncate(cause, max);
-  try {
-    return truncate(JSON.stringify(cause), max);
-  } catch {
-    return String(cause);
-  }
-}
 
-/** Truncate a string to avoid overly large messages. */
-function truncate(s: string, max: number): string {
-  return s.length > max ? `${s.slice(0, max)}…` : s;
+  const name = extractErrorName(cause);
+  const message = extractErrorMessage(cause);
+  if (typeof message === "string") {
+    if (typeof name === "string" && name.length > 0 && name !== "Error") {
+      return truncate(`${name}: ${message}`, max);
+    }
+    return truncate(message, max);
+  }
+  if (typeof name === "string" && name.length > 0) {
+    return truncate(name, max);
+  }
+
+  try {
+    const serialized = JSON.stringify(cause);
+    if (!serialized) return;
+    return truncate(serialized, max);
+  } catch {
+    const fallback = String(cause);
+    return fallback ? truncate(fallback, max) : undefined;
+  }
 }

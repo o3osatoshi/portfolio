@@ -11,6 +11,12 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export function extractErrorMessage(cause: unknown): string | undefined;
+
+// @public
+export function extractErrorName(cause: unknown): string | undefined;
+
+// @public
 export type FetchRequest = {
     method?: string;
     url?: string;
@@ -83,6 +89,9 @@ export function summarizeZodError(err: ZodError): string;
 
 // @public
 export function summarizeZodIssue(issue: ZodIssue): string;
+
+// @public
+export function truncate(value: string, max?: number): string;
 
 // Warnings were encountered during analysis:
 //
