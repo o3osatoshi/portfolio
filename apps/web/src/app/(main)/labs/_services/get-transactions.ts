@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "neverthrow";
+import { err, ok, type ResultAsync } from "neverthrow";
 
 import { getPath } from "@/utils/handle-nav";
 import { nextFetch } from "@/utils/next-fetch";
@@ -9,20 +9,21 @@ interface Props {
   userId?: string | undefined;
 }
 
-export async function getTransactions({
+export function getTransactions({
   userId,
-}: Props | undefined = {}): Promise<Result<Transactions, Error>> {
+}: Props): ResultAsync<Transactions, Error> {
   const search = userId === undefined ? undefined : { userId };
+
   return nextFetch({
     path: getPath("labs-transactions"),
     search,
-  }).andThen(({ body, status }) => {
-    if (status < 200 || status >= 300) {
-      console.error("getTransactions unexpected status", status);
-      return err(new Error(`Unexpected status: ${status}`));
+  }).andThen((res) => {
+    if (res.status < 200 || res.status >= 300) {
+      console.error("getTransactions unexpected status", res.status);
+      return err(new Error(`Unexpected status: ${res.status}`));
     }
 
-    const result = transactionsSchema.safeParse(body);
+    const result = transactionsSchema.safeParse(res.body);
     if (!result.success) {
       console.error(result.error);
       return err(result.error);
