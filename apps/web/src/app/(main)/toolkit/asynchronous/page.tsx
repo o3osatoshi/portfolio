@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SleepDemoCard } from "@/app/(main)/toolkit/asynchronous/_components/sleep-demo";
-import { getPathName } from "@/utils/handle-nav";
+import { getPath } from "@/utils/handle-nav";
 
 export const metadata: Metadata = {
   description:
@@ -33,7 +33,7 @@ export default function Page() {
       </section>
 
       <footer className="text-neutral-600 text-sm">
-        <Link href={getPathName("toolkit")} className="underline">
+        <Link href={getPath("toolkit")} className="underline">
           Back to Toolkit index
         </Link>
       </footer>

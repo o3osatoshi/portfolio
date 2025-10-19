@@ -3,6 +3,7 @@ import {
   Construction,
   FlaskConical,
   type LucideIcon,
+  PocketKnife,
   User,
 } from "lucide-react";
 
@@ -67,6 +68,18 @@ const navigateOptions: NavigateOption[] = [
       },
     ],
     title: getLabel("labs"),
+    url: "#",
+  },
+  {
+    icon: PocketKnife,
+    isActive: true,
+    items: [
+      {
+        title: getLabel("toolkit-asynchronous"),
+        url: getPath("toolkit-asynchronous"),
+      },
+    ],
+    title: getLabel("toolkit"),
     url: "#",
   },
 ];

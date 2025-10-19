@@ -106,7 +106,7 @@ export function truncate(value: string, max?: number): string;
 //
 // dist/index.d.ts:47:5 - (ae-forgotten-export) The symbol "Kind$1" needs to be exported by the entry point index.d.ts
 // dist/index.d.ts:49:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
-// dist/index.d.ts:138:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:165:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
