@@ -1,8 +1,16 @@
 import { newError } from "./error";
 
-/** Configuration object for {@link sleep}. */
-type SleepOptions = {
-  /** Optional AbortSignal to cancel the pending timeout. */
+/**
+ * Options accepted by {@link sleep}.
+ *
+ * @public
+ */
+export type SleepOptions = {
+  /**
+   * Optional signal used to cancel the pending timeout before it resolves.
+   * Pass `AbortController.signal` to interrupt the sleep and receive an
+   * `InfraCanceledError`.
+   */
   signal?: AbortSignal;
 };
 

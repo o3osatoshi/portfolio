@@ -55,10 +55,13 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     layer?: Layer;
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
-// Warning: (ae-forgotten-export) The symbol "SleepOptions" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function sleep(ms: number, { signal }?: SleepOptions): Promise<void>;
+
+// @public
+export type SleepOptions = {
+    signal?: AbortSignal;
+};
 
 // @public
 export function summarizeZodError(err: ZodError): string;
@@ -68,8 +71,8 @@ export function summarizeZodIssue(issue: ZodIssue): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:39:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
-// dist/index.d.ts:41:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:47:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:49:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
