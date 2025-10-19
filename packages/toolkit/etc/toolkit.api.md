@@ -86,6 +86,14 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
 // @public
+export function sleep(ms: number, { signal }?: SleepOptions): Promise<void>;
+
+// @public
+export type SleepOptions = {
+    signal?: AbortSignal;
+};
+
+// @public
 export function summarizeZodError(err: ZodError): string;
 
 // @public
@@ -96,8 +104,8 @@ export function truncate(value: string, max?: number): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:20:5 - (ae-forgotten-export) The symbol "Kind$1" needs to be exported by the entry point index.d.ts
-// dist/index.d.ts:22:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:47:5 - (ae-forgotten-export) The symbol "Kind$1" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:49:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
 // dist/index.d.ts:138:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
