@@ -1,4 +1,4 @@
-import { FlaskConical, User } from "lucide-react";
+import { FlaskConical, PocketKnife, User } from "lucide-react";
 import type * as React from "react";
 
 import { NavMain } from "@/app/(main)/_components/nav-main";
@@ -54,6 +54,18 @@ const data = {
         },
       ],
       title: getLabel("labs"),
+      url: "#",
+    },
+    {
+      icon: PocketKnife,
+      isActive: true,
+      items: [
+        {
+          title: getLabel("toolkit-asynchronous"),
+          url: getPathName("toolkit-asynchronous"),
+        },
+      ],
+      title: getLabel("toolkit"),
       url: "#",
     },
   ],
