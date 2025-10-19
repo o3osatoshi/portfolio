@@ -26,6 +26,7 @@ export type NewError = {
  * @internal
  */
 type Kind =
+  | "Canceled"
   | "Config"
   | "Conflict"
   | "Deadlock"
