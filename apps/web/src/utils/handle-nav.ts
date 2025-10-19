@@ -20,7 +20,9 @@ type WebAlias =
   | "portfolio-about"
   | "portfolio-blog"
   | "portfolio"
-  | "signin";
+  | "signin"
+  | "toolkit-asynchronous"
+  | "toolkit";
 
 interface WebNav {
   alias: WebAlias;
@@ -114,6 +116,25 @@ const navs: Nav[] = [
       parentAlias: "labs",
     },
     pathName: "/labs/web3-crud",
+    type: "web",
+  },
+  {
+    alias: "toolkit",
+    data: {
+      hierarchy: 1,
+      label: "Toolkit",
+    },
+    pathName: "/toolkit",
+    type: "web",
+  },
+  {
+    alias: "toolkit-asynchronous",
+    data: {
+      hierarchy: 2,
+      label: "Asynchronous",
+      parentAlias: "toolkit",
+    },
+    pathName: "/toolkit/asynchronous",
     type: "web",
   },
 ];
