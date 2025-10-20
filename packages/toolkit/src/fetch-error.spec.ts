@@ -71,4 +71,29 @@ describe("toolkit newFetchError helper", () => {
       "because POST /api/login failed with invalid credentials",
     );
   });
+
+  it("treats timeout phrases as ExternalTimeoutError with inferred hint", () => {
+    const err = newFetchError({
+      action: "UploadAsset",
+      cause: new Error("Request timed out after 10s"),
+      request: { method: "POST", url: "/api/assets" },
+    });
+
+    expect(err.name).toBe("ExternalTimeoutError");
+    expect(err.message).toContain("because POST /api/assets timed out");
+    expect(err.message).toContain(
+      "Hint: Retry with a longer timeout or inspect upstream latency.",
+    );
+  });
+
+  it("formats method-only requests when URL is missing", () => {
+    const err = newFetchError({
+      action: "Ping",
+      cause: new Error("bad gateway"),
+      request: { method: "head" },
+    });
+
+    expect(err.name).toBe("ExternalUnavailableError");
+    expect(err.message).toContain("because HEAD failed with bad gateway");
+  });
 });
