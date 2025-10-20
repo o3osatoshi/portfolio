@@ -11,7 +11,27 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export function extractErrorMessage(cause: unknown): string | undefined;
+
+// @public
+export function extractErrorName(cause: unknown): string | undefined;
+
+// @public
+export type FetchRequest = {
+    method?: string;
+    url?: string;
+};
+
+// @public
+export function formatFetchTarget({ request, }: {
+    request?: FetchRequest | undefined;
+}): string | undefined;
+
+// @public
 export function isZodError(e: unknown): e is ZodError;
+
+// @public
+export type Kind = "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Validation";
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
@@ -23,12 +43,25 @@ export type NewError = {
     hint?: string | undefined;
     impact?: string | undefined;
     kind: Kind;
-    layer: Layer$1;
+    layer: Layer;
     reason?: string | undefined;
 };
 
 // @public
 export function newError(params: NewError): Error;
+
+// @public
+export type NewFetchError = {
+    action?: string;
+    cause?: unknown;
+    hint?: string;
+    impact?: string;
+    kind?: Kind;
+    request?: FetchRequest | undefined;
+};
+
+// @public
+export function newFetchError({ action, cause, hint, impact, kind, request, }: NewFetchError): Error;
 
 // @public
 export type NewZodError = {
@@ -69,10 +102,8 @@ export function summarizeZodError(err: ZodError): string;
 // @public
 export function summarizeZodIssue(issue: ZodIssue): string;
 
-// Warnings were encountered during analysis:
-//
-// dist/index.d.ts:47:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
-// dist/index.d.ts:49:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
+// @public
+export function truncate(value: string, max?: number): string;
 
 // (No @packageDocumentation comment for this package)
 

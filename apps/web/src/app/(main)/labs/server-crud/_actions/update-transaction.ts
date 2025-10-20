@@ -9,9 +9,9 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { updateTransactionSchema } from "@/lib/validation";
 import { type ActionState, err } from "@/utils/action-state";
-import { getPathName, getTag } from "@/utils/handle-nav";
+import { getPath, getTag } from "@/utils/handle-nav";
+import { updateTransactionSchema } from "@/utils/validation";
 
 const repo = new PrismaTransactionRepository();
 const usecase = new UpdateTransactionUseCase(repo);
@@ -43,7 +43,7 @@ export const updateTransaction = async (
       return err(executeResult.error);
     }
 
-    revalidateTag(getPathName("labs-transactions"));
+    revalidateTag(getPath("labs-transactions"));
     revalidateTag(getTag("labs-transactions", { userId }));
   } catch (error: unknown) {
     console.error(error);
@@ -53,5 +53,5 @@ export const updateTransaction = async (
     return err("Failed to update the transaction. Please try again later.");
   }
 
-  redirect(getPathName("labs-server-crud"));
+  redirect(getPath("labs-server-crud"));
 };

@@ -8,7 +8,7 @@ import type {
 import { newTransaction } from "@repo/domain";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
-import { newError as baseError } from "@o3osatoshi/toolkit";
+import { newError } from "@o3osatoshi/toolkit";
 
 import {
   Prisma,
@@ -53,7 +53,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
       res.count === 1
         ? ok<void>(undefined)
         : err(
-            baseError({
+            newError({
               action: "DeleteTransaction",
               kind: "NotFound",
               layer: "DB",
@@ -108,7 +108,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
       res.count === 1
         ? ok<void>(undefined)
         : err(
-            baseError({
+            newError({
               action: "UpdateTransaction",
               kind: "NotFound",
               layer: "DB",

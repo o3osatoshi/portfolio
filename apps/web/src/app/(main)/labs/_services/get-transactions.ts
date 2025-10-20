@@ -1,31 +1,29 @@
-import { err, ok, type Result, ResultAsync } from "neverthrow";
+import { err, ok, type ResultAsync } from "neverthrow";
 
-import type { Transactions } from "@/lib/validation";
-import { transactionsSchema } from "@/lib/validation";
-import { fetchClient } from "@/utils/fetch-client";
-import { getPathName } from "@/utils/handle-nav";
+import { getPath } from "@/utils/handle-nav";
+import { nextFetch } from "@/utils/next-fetch";
+import type { Transactions } from "@/utils/validation";
+import { transactionsSchema } from "@/utils/validation";
 
 interface Props {
-  userId?: string;
+  userId?: string | undefined;
 }
 
-export async function getTransactions({
+export function getTransactions({
   userId,
-}: Props | undefined = {}): Promise<Result<Transactions, Error>> {
+}: Props): ResultAsync<Transactions, Error> {
   const search = userId === undefined ? undefined : { userId };
-  return ResultAsync.fromPromise(
-    fetchClient({
-      pathName: getPathName("labs-transactions"),
-      search,
-    }),
-    (error: unknown) => {
-      if (error instanceof Error) {
-        return error;
-      }
-      return new Error("unknown error");
-    },
-  ).andThen((data) => {
-    const result = transactionsSchema.safeParse(data);
+
+  return nextFetch({
+    path: getPath("labs-transactions"),
+    search,
+  }).andThen((res) => {
+    if (res.status < 200 || res.status >= 300) {
+      console.error("getTransactions unexpected status", res.status);
+      return err(new Error(`Unexpected status: ${res.status}`));
+    }
+
+    const result = transactionsSchema.safeParse(res.body);
     if (!result.success) {
       console.error(result.error);
       return err(result.error);

@@ -15,148 +15,127 @@
 
 # o3osatoshi portfolio
 
-This is the personal portfolio website of **Satoshi Ogura**, showcasing my professional experience, technical skills, and ongoing experiments in software engineering and Web3 technologies.
+Personal portfolio and experimentation platform for **Satoshi Ogura**. The codebase demonstrates clean architecture layering, modular React UI, and modern tooling across web, serverless, and blockchain integrations.
 
-🌐 **Live Site**: [https://o3osatoshi.engr.work](https://o3osatoshi.engr.work)
+- 🌐 **Live site**: [https://o3osatoshi.engr.work](https://o3osatoshi.engr.work)
+- 📝 **Technical notes**: [https://blog.o3osatoshi.engr.work/archives/#tag-coding](https://blog.o3osatoshi.engr.work/archives/#tag-coding)
 
 ## Purpose
+- **Self introduction**: Showcase experience in full-stack engineering, developer tooling, and Web3.
+- **Technical lab**: Trial latest Next.js releases, clean architecture patterns, and contract integrations in a real project.
 
-This portfolio serves two main purposes:
+## Architecture at a Glance
 
-### Self-Introduction
-- **Professional Background**: Experience in software engineering, blockchain development, and system architecture
-- **Core Expertise**: Full-stack development, Web3 integration, cloud infrastructure, and developer tooling
-- **Current Focus**: Exploring emerging technologies in AI, blockchain, and modern web development patterns
-- **Blog & Content**: Technical writing and insights into software engineering practices ([Technical Blog](https://blog.o3osatoshi.engr.work/archives/#tag-coding))
+### Clean architecture layers
+- **Domain (`@repo/domain`)** – Entities, value objects, and repository ports implemented with `neverthrow`.
+- **Application (`@repo/application`)** – DTO validation (Zod + toolkit) and use cases that depend only on domain ports.
+- **Infrastructure (`@repo/prisma`)** – Prisma-based adapters that fulfill domain ports and expose a shared client.
+- **Delivery (`apps/web`, `apps/functions`)** – Next.js route handlers and Firebase Functions that inject infrastructure adapters into use cases.
+- **Presentation (`@o3osatoshi/ui`, `apps/storybook`)** – Published UI library and Storybook documentation without domain coupling.
+- **Shared tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)** – Build presets, lint configs, and error utilities consumed everywhere.
 
-### Technical Experimentation
-This codebase serves as a living laboratory for:
-- **Modern Web Technologies**: Next.js 15, React 19, TypeScript, Tailwind CSS
-- **Web3 Integration**: RainbowKit, Wagmi, Viem for Ethereum interaction
-- **Architecture Patterns**: Monorepo structure, modular design, serverless functions
-- **Development Practices**: Code quality tools, CI/CD, testing strategies
-
-**Technical Notes**: Detailed verification notes and implementation insights are documented on my [technical blog](https://blog.o3osatoshi.engr.work/archives/#tag-coding), while the actual source code implementations remain in this repository.
-
-## Repository as Portfolio
-
-This source code itself demonstrates:
-- **Code Quality**: Consistent TypeScript usage, comprehensive linting/formatting
-- **Architecture Design**: Clean separation of concerns, scalable monorepo structure
-- **Modern Tooling**: Latest frameworks, build tools, and development workflows
-- **Operational Excellence**: Automated deployments, environment management, monitoring
-
-## Technology Stack
-
-### Core Technologies
-- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
-- **Authentication**: NextAuth.js with Prisma adapter
-- **Database**: Prisma ORM with multi-environment support
-- **Web3**: RainbowKit, Wagmi, Viem for Ethereum integration
-- **Backend**: Firebase Cloud Functions
-- **Monorepo**: Turborepo with pnpm workspaces
-
-### Development Tools
-- **Code Quality**: Biome for linting and formatting
-- **Package Manager**: pnpm with workspace configuration
-- **Runtime**: Node.js >= 22
-- **CI/CD**: Automated build and deployment pipelines
-
-## Monorepo Structure
-
+### Monorepo layout
 ```
-portfolio/
-├── apps/
-│   ├── web/              # Next.js portfolio application
-│   ├── functions/        # Firebase Cloud Functions
-│   └── storybook/        # Component library documentation
-├── packages/
-│   ├── @repo/prisma/   # Prisma ORM setup and utilities
-│   ├── @o3osatoshi/ui/         # Shared React components (Tailwind + shadcn/ui)
-│   ├── @repo/ethereum/   # Web3/Ethereum integration utilities
-│   └── @o3osatoshi/config/  # Shared TypeScript configurations
-└── turbo.json           # Turborepo task orchestration
+⏺ root/
+  ├── 📁 apps/
+  │   ├── 📁 web/              # Next.js 15 portfolio app (React 19, App Router)
+  │   ├── 📁 functions/        # Firebase Cloud Functions delivery layer
+  │   └── 📁 storybook/        # Vite Storybook for @o3osatoshi/ui
+  ├── 📁 packages/
+  │   ├── 📁 domain/           # Core entities, value objects, ports
+  │   ├── 📁 application/      # DTOs + use cases orchestrating domain logic
+  │   ├── 📁 prisma/           # Prisma schema, adapters, and DB utilities
+  │   ├── 📁 ui/               # Shared React component library (server/client splits)
+  │   ├── 📁 toolkit/          # Zod/Neverthrow helpers and error builders
+  │   ├── 📁 config/           # Shared tsconfig, Biome, ESLint, tsup presets
+  │   ├── 📁 eth/              # Wagmi CLI generated contract types & hooks
+  │   └── 📁 supabase/         # Supabase CLI config (non-workspace)
+  ├── 📄 package.json          # Turborepo + workspace scripts
+  ├── 📄 turbo.json            # Task graph / caching strategy
+  ├── 📄 pnpm-workspace.yaml   # Workspace + dependency catalog
+  └── 📄 AGENTS.md             # Working guidelines (keep in sync!)
 ```
 
-## Quick Start
+## Tooling & Scripts
 
 ### Prerequisites
-- Node.js >= 22
-- pnpm package manager
-- Docker (for local database)
+- Node.js **>= 22**
+- pnpm **>= 10** (workspace-aware)
+- Docker (for Prisma Testcontainers flows)
 
-### Local Development
-
-1. **Clone and install dependencies**:
+### Setup
 ```bash
 git clone https://github.com/o3osatoshi/portfolio.git
 cd portfolio
 pnpm install
 ```
 
-2. **Start development servers**:
-```bash
-pnpm dev
-```
+### Workspace commands
+- `pnpm dev` – Run all dev targets via Turbo (web, Storybook, functions watch, etc.).
+- `pnpm build` – Build every package/app respecting task dependencies.
+- `pnpm check` – Run type-checks and tests (`check:type` + `check:test`).
+- `pnpm check:type` – Workspace-wide TypeScript compilation with `noEmit`.
+- `pnpm check:test` / `pnpm check:test:cvrg` – Execute package `test` scripts (Vitest) with optional coverage.
+- `pnpm style` – Package sort → ESLint (fix) → Biome (write).
+- `pnpm clean` – Remove build artifacts across packages.
+- `pnpm docs` – Generate API docs via TypeDoc.
+- `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
+- `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.
 
-This starts all applications in development mode:
-- Portfolio site: `http://localhost:3000`
-- Storybook: `http://localhost:6006`
+### App and package targets
+- Web app: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
+- Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
+- Firebase functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
+- UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
+- Domain/Application/Toolkit/Config: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
 
-### Key Scripts
+## Database workflow (Prisma)
+- Development migrate: `pnpm -C packages/prisma migrate:dev`
+- Production deploy: `pnpm -C packages/prisma migrate:deploy`
+- Push schema without migrations: `pnpm -C packages/prisma db:push`
+- Seed data: `pnpm -C packages/prisma seed`
+- Inspect status: `pnpm -C packages/prisma migrate:status`
+- Prisma Studio: `pnpm -C packages/prisma studio`
 
-```bash
-# Development
-pnpm dev              # Start all development servers
-pnpm build           # Build all apps and packages
+Environment files:
+- `packages/prisma/.env.development.local`
+- `packages/prisma/.env.production.local`
 
-# Code Quality
-pnpm check           # Run Biome linting and formatting checks
-pnpm check:fix       # Auto-fix Biome issues
+All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.local` file exists before running them.
 
-# Database Operations
-pnpm db:migrate:dev     # Run development migrations
-pnpm db:migrate:deploy  # Deploy migrations to production
-pnpm db:push           # Push schema changes without migrations
-pnpm db:seed           # Seed database with test data
+## Code generation
+- Prisma client (runs on `postinstall`): `pnpm -C packages/prisma generate`
+- Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
+- Run every declared `generate` script: `pnpm -r run generate`
 
-# Deployment
-pnpm deploy:functions   # Build and deploy Firebase functions
-```
+## Testing
+- Primary framework: **Vitest** with colocated `*.spec.ts(x)` files.
+- Workspace: `pnpm check:test` orchestrates all package `test` scripts via Turbo.
+- Per package: `pnpm -C packages/domain test`, `pnpm -C packages/ui test`, etc.
+- Coverage: `pnpm -C <package> test:cvrg`
 
-## Deployment & Hosting
+## Technology stack
+- **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.
+- **Backend**: Firebase Functions (Node 22) calling application use cases.
+- **Database**: Prisma ORM on PostgreSQL (adapter-pg).
+- **Web3**: Wagmi, RainbowKit, Viem with generated contract hooks.
+- **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`.
+- **Tooling**: Turborepo, pnpm workspaces, Biome, ESLint (flat config), TypeDoc.
 
-### Production Environment
-- **Frontend**: Deployed on modern hosting platform with automatic deployments
-- **Backend**: Firebase Cloud Functions for serverless API endpoints
-- **Database**: Production database with automated backups and monitoring
-- **Domain**: Custom domain with SSL/TLS encryption
+## Deployment & hosting
+- Frontend served from modern edge-ready hosting (Vercel-like setup).
+- Serverless APIs via Firebase Cloud Functions (`pnpm deploy:functions`).
+- Database managed separately; migrations deployed through Prisma scripts.
+- Monitoring/logs accessible through Firebase CLI (`pnpm -C apps/functions logs`).
 
-### Environment Variables
-Key environment variables required for deployment:
-- Database connection strings
-- Authentication provider credentials
-- Web3 provider endpoints
-- Firebase project configuration
+## Environment variables
+- `apps/web`: `.env.local` (Next.js runtime + NextAuth, database client, Web3 providers).
+- `packages/prisma`: `.env.development.local`, `.env.production.local` (database connection strings).
+- `packages/eth`: `.env.local` for Wagmi code generation.
+- Ensure secrets never leave local `.env.*` files; they are gitignored by default.
 
-## Development Highlights
+## Contact
+- **LinkedIn**: [Satoshi Ogura](https://www.linkedin.com/in/satoshi-ogura-189479135)
+- **X (Twitter)**: [@o3osatoshi](https://x.com/o3osatoshi)
 
-This project showcases modern development practices:
-
-- **Type Safety**: 100% TypeScript with strict type checking
-- **Component Architecture**: Reusable UI components with Storybook documentation
-- **Database Design**: Normalized schema with efficient query patterns
-- **Web3 Integration**: Secure wallet connections and blockchain interactions
-- **Performance**: Optimized builds, code splitting, and caching strategies
-- **Testing**: Comprehensive test coverage with modern testing frameworks
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Contact & Connect
-
-Prefer to connect via social media:
-
-- **LinkedIn**: [Satoshi Ogura](https://www.linkedin.com/in/satoshi-ogura-189479135) - Professional networking and career discussions
-- **X (Twitter)**: [@o3osatoshi](https://x.com/o3osatoshi) - Technical discussions and updates
+Feel free to reach out for collaboration, technical discussions, or feedback on the architecture and tooling choices in this repository.

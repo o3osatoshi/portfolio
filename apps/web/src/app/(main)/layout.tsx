@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/app/(main)/_components/app-sidebar";
 import BreadcrumbHeader from "@/app/(main)/_components/breadcrumb-header";
+import { Sidebar } from "@/app/(main)/_components/sidebar";
 import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/client";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 export default function Layout({ children }: Props) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <Sidebar />
       <SidebarInset>
         <BreadcrumbHeader />
         <div className="p-4 pt-0">{children}</div>

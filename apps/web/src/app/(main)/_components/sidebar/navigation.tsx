@@ -1,6 +1,13 @@
-import { ChevronRight, Construction, type LucideIcon } from "lucide-react";
+import {
+  ChevronRight,
+  Construction,
+  FlaskConical,
+  type LucideIcon,
+  PocketKnife,
+  User,
+} from "lucide-react";
 
-import { SidebarLink } from "@/app/(main)/_components/sidebar-link";
+import { getLabel, getPath } from "@/utils/handle-nav";
 import {
   Collapsible,
   CollapsibleContent,
@@ -15,38 +22,86 @@ import {
   SidebarMenuSubItem,
 } from "@o3osatoshi/ui/client";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    icon: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      isWIP?: boolean;
-      title: string;
-      url: string;
-    }[];
+import { SidebarLink } from "./sidebar-link";
+
+type NavigateOption = {
+  icon: LucideIcon;
+  isActive?: boolean;
+  items?: {
+    isWIP?: boolean;
     title: string;
     url: string;
   }[];
-}) {
+  title: string;
+  url: string;
+};
+
+const navigateOptions: NavigateOption[] = [
+  {
+    icon: User,
+    isActive: true,
+    items: [
+      {
+        title: getLabel("portfolio-about"),
+        url: getPath("portfolio-about"),
+      },
+      {
+        title: getLabel("portfolio-blog"),
+        url: getPath("portfolio-blog"),
+      },
+    ],
+    title: getLabel("portfolio"),
+    url: "#",
+  },
+  {
+    icon: FlaskConical,
+    isActive: true,
+    items: [
+      {
+        title: getLabel("labs-server-crud"),
+        url: getPath("labs-server-crud"),
+      },
+      {
+        isWIP: true,
+        title: getLabel("labs-web3-crud"),
+        url: getPath("labs-web3-crud"),
+      },
+    ],
+    title: getLabel("labs"),
+    url: "#",
+  },
+  {
+    icon: PocketKnife,
+    isActive: true,
+    items: [
+      {
+        title: getLabel("toolkit-asynchronous"),
+        url: getPath("toolkit-asynchronous"),
+      },
+    ],
+    title: getLabel("toolkit"),
+    url: "#",
+  },
+];
+
+export function Navigation() {
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
+        {navigateOptions.map((opt) => (
           <Collapsible
-            key={item.title}
+            key={opt.title}
             asChild
-            defaultOpen={item.isActive === true}
+            defaultOpen={opt.isActive === true}
           >
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
+              <SidebarMenuButton asChild tooltip={opt.title}>
+                <a href={opt.url}>
+                  <opt.icon />
+                  <span>{opt.title}</span>
                 </a>
               </SidebarMenuButton>
-              {item.items?.length ? (
+              {opt.items?.length ? (
                 <>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">
@@ -56,7 +111,7 @@ export function NavMain({
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
+                      {opt.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           {subItem.isWIP ? (
                             <SidebarMenuSubButton aria-disabled="true">

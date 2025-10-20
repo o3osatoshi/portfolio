@@ -3,7 +3,8 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@o3osatoshi/toolkit": ["../../packages/toolkit/src"]
     }
   },
   "exclude": ["node_modules"],

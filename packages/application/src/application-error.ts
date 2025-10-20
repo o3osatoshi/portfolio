@@ -1,4 +1,4 @@
-import { newError as baseNewError } from "@o3osatoshi/toolkit";
+import { newError } from "@o3osatoshi/toolkit";
 
 /**
  * Enumerates normalized error categories produced by the application layer.
@@ -40,7 +40,7 @@ export function newApplicationError({
   kind,
   reason,
 }: NewApplicationError): Error {
-  return baseNewError({
+  return newError({
     action,
     cause,
     hint,

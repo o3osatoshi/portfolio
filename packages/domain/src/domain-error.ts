@@ -1,4 +1,4 @@
-import { newError as baseNewError } from "@o3osatoshi/toolkit";
+import { newError } from "@o3osatoshi/toolkit";
 
 /**
  * Supported error categories emitted from the domain layer.
@@ -39,7 +39,7 @@ export function newDomainError({
   kind,
   reason,
 }: NewDomainError): Error {
-  return baseNewError({
+  return newError({
     action,
     cause,
     hint,

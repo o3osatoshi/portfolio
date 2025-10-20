@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getPathName } from "@/utils/handle-nav";
+import { getPath } from "@/utils/handle-nav";
 
 export const metadata: Metadata = {
   description:
@@ -25,10 +25,7 @@ export default function Page() {
         <h2 className="font-semibold text-xl">Available demos</h2>
         <ul className="list-disc space-y-2 pl-5 text-neutral-600">
           <li>
-            <Link
-              href={getPathName("toolkit-asynchronous")}
-              className="underline"
-            >
+            <Link href={getPath("toolkit-asynchronous")} className="underline">
               Asynchronous utilities: cancellable sleep helper
             </Link>
           </li>

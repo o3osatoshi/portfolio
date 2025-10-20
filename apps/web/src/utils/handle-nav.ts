@@ -1,4 +1,4 @@
-import { getQueryingPathName, type Search } from "@/utils/fetch-client";
+import { getQueryPath, type Search } from "@/utils/next-fetch";
 
 type Alias = ApiAlias | WebAlias;
 
@@ -13,14 +13,12 @@ interface ApiNav {
 type Nav = ApiNav | WebNav;
 
 type WebAlias =
-  | "labs-limited-read"
   | "labs-server-crud"
   | "labs-web3-crud"
   | "labs"
   | "portfolio-about"
   | "portfolio-blog"
   | "portfolio"
-  | "signin"
   | "toolkit-asynchronous"
   | "toolkit";
 
@@ -36,15 +34,6 @@ interface WebNav {
 }
 
 const navs: Nav[] = [
-  {
-    alias: "signin",
-    data: {
-      hierarchy: 1,
-      label: "Signin",
-    },
-    pathName: "/signin",
-    type: "web",
-  },
   {
     alias: "portfolio",
     data: {
@@ -91,16 +80,6 @@ const navs: Nav[] = [
       parentAlias: "labs",
     },
     pathName: "/labs/server-crud",
-    type: "web",
-  },
-  {
-    alias: "labs-limited-read",
-    data: {
-      hierarchy: 2,
-      label: "Limited Read",
-      parentAlias: "labs",
-    },
-    pathName: "/labs/limited-read",
     type: "web",
   },
   {
@@ -163,13 +142,13 @@ export function getLabel(alias: WebAlias): string {
   return _nav.data.label;
 }
 
-export function getPathName(alias: Alias): string {
+export function getPath(alias: Alias): string {
   const _nav = navs.find((n) => n.alias === alias);
   if (_nav === undefined) throw new Error("alias not found");
   return _nav.pathName;
 }
 
 export function getTag(alias: ApiAlias, search?: Search) {
-  const _path = getPathName(alias);
-  return getQueryingPathName(_path, search);
+  const _path = getPath(alias);
+  return getQueryPath(_path, search);
 }

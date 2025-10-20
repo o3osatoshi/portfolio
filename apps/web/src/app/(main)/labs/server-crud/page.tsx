@@ -1,6 +1,7 @@
 import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
 import { getTransactions } from "@/app/(main)/labs/_services/get-transactions";
 import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
+import { auth } from "@/lib/auth";
 
 // const getTransactions: () => Promise<(Transaction & { author: Pick<User, "name"> })[]> =
 //   cache(async () => {
@@ -19,9 +20,11 @@ import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
 //   });
 
 export default async function Page() {
-  const result = await getTransactions();
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const result = await getTransactions({ userId });
   if (result.isErr()) {
-    // TODO: handle error
     return null;
   }
   const transactions = result.value;

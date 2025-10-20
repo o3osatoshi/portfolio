@@ -1,20 +1,13 @@
 import { z, type ZodError, type ZodIssue } from "zod";
 
-import { newError as baseNewError } from "./error";
+import { type Layer, newError } from "./error";
 
 /**
- * Architectural layer used to contextualize validation errors.
+ * Architectural layer values used across toolkit helpers, re-exported for convenience.
  *
  * @public
  */
-export type Layer =
-  | "Application"
-  | "Auth"
-  | "DB"
-  | "Domain"
-  | "External"
-  | "Infra"
-  | "UI";
+export type { Layer } from "./error";
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.
@@ -85,7 +78,7 @@ export function newZodError(options: NewZodError): Error {
   const effectiveHint =
     hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
 
-  return baseNewError({
+  return newError({
     action,
     cause,
     hint: effectiveHint,

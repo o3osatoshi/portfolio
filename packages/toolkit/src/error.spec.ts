@@ -27,4 +27,58 @@ describe("newError", () => {
     expect("cause" in err).toBe(true);
     expect(err.cause).toBe(cause);
   });
+
+  it("falls back when Error options are unsupported, keeping cause non-enumerable", () => {
+    const originalError = globalThis.Error;
+    class LegacyError extends originalError {
+      constructor(message?: string, options?: { cause?: unknown }) {
+        if (options && "cause" in options) {
+          throw new originalError("Legacy runtime ignores cause options");
+        }
+        super(message);
+      }
+    }
+    globalThis.Error = LegacyError as unknown as ErrorConstructor;
+
+    const cause = { detail: "legacy failure" };
+    try {
+      const err = newError({
+        action: "LegacyOp",
+        cause,
+        kind: "Unknown",
+        layer: "Domain",
+      });
+
+      expect(err).toBeInstanceOf(LegacyError);
+      expect(err.name).toBe("DomainUnknownError");
+      expect(err.message).toContain('Cause: {"detail":"legacy failure"}.');
+
+      const descriptor = Object.getOwnPropertyDescriptor(err, "cause");
+      expect(descriptor?.enumerable).toBe(false);
+      expect(err.cause).toBe(cause);
+    } finally {
+      globalThis.Error = originalError;
+    }
+  });
+
+  it("summarizes non-error causes using name or string fallbacks", () => {
+    const namedCause = { name: "WidgetFailure" };
+    const namedErr = newError({
+      action: "ProcessWidget",
+      cause: namedCause,
+      kind: "Unknown",
+      layer: "Application",
+    });
+    expect(namedErr.message).toContain("Cause: WidgetFailure.");
+
+    const circular: { self?: unknown } = {};
+    circular.self = circular;
+    const circularErr = newError({
+      action: "SerializeData",
+      cause: circular,
+      kind: "Unknown",
+      layer: "Infra",
+    });
+    expect(circularErr.message).toContain("Cause: [object Object].");
+  });
 });

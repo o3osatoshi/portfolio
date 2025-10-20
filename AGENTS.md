@@ -1,76 +1,80 @@
 # Repository Guidelines (Current Implementation)
 
-This document reflects the current, actual state of the repository. All commands listed are taken from the existing package.json files.
+This document reflects the current state of the repository. Commands listed below come directly from existing `package.json` files, so please keep them in sync after making changes.
+
+## Architecture Overview
+- **Domain (`@repo/domain`)**: Value objects, entities, and ports. Only depends on `@o3osatoshi/toolkit`.
+- **Application (`@repo/application`)**: DTO validation and use cases. Depends on the domain ports/value objects.
+- **Infrastructure (`@repo/prisma`)**: Prisma-backed implementations of domain ports plus DB client utilities.
+- **Delivery (`apps/web`, `apps/functions`)**: HTTP entry points that inject infrastructure adapters into application use cases.
+- **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: Reusable UI library and documentation surface that stay free from domain concerns.
+- **Shared Tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)**: Build presets, lint configs, and error-handling utilities consumed across the stack.
 
 ## Project Structure
-- `apps/web`: Next.js 15 portfolio app.
-- `apps/functions`: Firebase Cloud Functions (built with `tsup`, Node 22).
-- `apps/storybook`: Storybook for UI review and documentation (Vite-based).
-- `packages/ui`: Shared React UI components (separate server/client exports).
-- `packages/domain`, `packages/application`: Domain and application layers (Vitest).
-- `packages/prisma`: Prisma schema, client, and DB scripts.
-- `packages/eth`: Contract types/hooks generated via Wagmi CLI.
-- `packages/toolkit`: Utilities built around `zod`/`neverthrow`.
+- `apps/web`: Next.js 15 portfolio app (React 19, server actions, API routes).
+- `apps/functions`: Firebase Cloud Functions bundled via `tsup` (Node 22 runtime).
+- `apps/storybook`: Vite-powered Storybook for UI review and visual testing.
+- `packages/domain`, `packages/application`: Clean architecture core (Vitest).
+- `packages/prisma`: Prisma schema, adapters, and DB scripts.
+- `packages/ui`: Published React component library with split server/client builds.
+- `packages/toolkit`: Zod/Neverthrow helpers for consistent error handling.
+- `packages/eth`: Wagmi CLI generated contract types/hooks (requires local `.env`).
 - `packages/config`: Shared tsconfig/biome/eslint/tsup presets.
-- `packages/supabase`: Supabase config directory (not a workspace package).
+- `packages/supabase`: Supabase CLI configuration (not a workspace package).
 
-## Setup, Build, Run
-- Install: `pnpm install` (Node >= 22)
-- Dev (all): `pnpm dev` (Turbo runs each package’s `dev`)
-- Build (all): `pnpm build`
+## Setup & Root Scripts
+- Install dependencies: `pnpm install` (requires Node >= 22).
+- Start all dev targets: `pnpm dev`.
+- Build all packages/apps: `pnpm build`.
+- Type-check the workspace: `pnpm check:type`.
+- Run all tests: `pnpm check:test`.
+- Lint/format/package sorting: `pnpm style`.
+- Clean build artifacts: `pnpm clean`.
+- Generate docs: `pnpm docs`.
+- Deploy Firebase functions: `pnpm deploy:functions`.
 
-Per app/package (examples)
-- Web: `pnpm dev:web` or `pnpm -C apps/web dev` (prod: `pnpm -C apps/web start`)
-- Storybook: `pnpm dev:storybook` or `pnpm -C apps/storybook dev` (build: `pnpm -C apps/storybook build`)
-- Functions: code watch `pnpm -C apps/functions dev` / emulator `pnpm -C apps/functions serve` (deploy: `pnpm deploy:functions`)
+## Per-App / Package Commands
+- Web: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
+- Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
+- Functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
+- Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma seed`, `pnpm -C packages/prisma studio`.
+- Eth codegen: `pnpm -C packages/eth generate` (requires `packages/eth/.env.local`).
+- UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
+- Toolkit/config/domain/application: `pnpm -C <package> test`, `pnpm -C <package> typecheck`.
 
-Code generation
-- Prisma client: `pnpm -C packages/prisma generate`
-- ETH codegen: `pnpm -C packages/eth generate` (requires `packages/eth/.env.local`)
-- Run all generate scripts: `pnpm -r run generate` (runs in packages that define it)
+## Code Generation
+- Prisma client: `pnpm -C packages/prisma generate` (also runs on package postinstall).
+- Wagmi/ETH hooks: `pnpm -C packages/eth generate`.
+- Run every available `generate` script: `pnpm -r run generate` (only executes where defined).
 
 ## Database (Prisma)
-All commands run under `packages/prisma`.
-- Dev migrate: `pnpm -C packages/prisma migrate:dev`
-- Deploy migrations: `pnpm -C packages/prisma migrate:deploy`
-- Push schema (no migrations): `pnpm -C packages/prisma db:push`
-- Seed: `pnpm -C packages/prisma seed`
-- Status: `pnpm -C packages/prisma migrate:status`
-- Studio: `pnpm -C packages/prisma studio`
-
-Environment files: `packages/prisma/.env.development.local` and `.env.production.local` (loaded via `dotenv-cli`).
-
-## Coding Style & Conventions
-- Lint/format: `pnpm style` (runs `style:pkg`, `style:eslint`, and `style:biome`)
-  - Biome only: `pnpm style:biome`
-  - Biome aggressive fix: `pnpm style:biome:fix`
-- Indentation: spaces; Strings: double quotes (Biome)
-- Imports: auto-organized (Biome + perfectionist)
-- Language: TypeScript preferred (Next.js file-based routing conventions in `apps/web` and `packages/ui`)
-- Naming: files=kebab-case, components=PascalCase, variables/functions=camelCase
+- Environment files: `packages/prisma/.env.development.local`, `.env.production.local` (loaded through `dotenv-cli` scripts).
+- Use the `packages/prisma` scripts for all schema/migration/seed tasks (see commands above). There are no root-level DB scripts.
 
 ## Testing
-- Framework: Vitest (co-located tests `*.test.ts(x)`)
-- Run all: `pnpm -r run test` or `pnpm check:test`
-- Per package example: `pnpm -C packages/domain vitest run`
-- Prisma integration tests: `pnpm -C packages/prisma test:int` (uses Testcontainers; Docker required)
+- Framework: Vitest with colocated `*.spec.ts(x)` tests.
+- Workspace: `pnpm check:test` (Turbo fans out to package-level `test` scripts).
+- Package scoped example: `pnpm -C packages/domain test`.
+- Coverage: `pnpm -C <package> test:cvrg`.
 
-## Commit & PR Guidelines
-- Commits: Conventional Commits with scopes
-  - Examples: `feat(web): add project grid`
-             `refactor(application-use-case): simplify actor flows`
-             `fix(prisma): correct schema relation`
-- PRs: clear summary, link issues, attach UI screenshots/GIFs, call out env/DB changes, ensure `pnpm build` and `pnpm style` pass.
+## Coding Style & Conventions
+- Run `pnpm style` to execute package sort + ESLint + Biome in sequence.
+- Biome only: `pnpm style:biome` (write) or `pnpm style:biome:pure` (check).
+- ESLint only: `pnpm style:eslint` (fix) or `pnpm style:eslint:pure` (cache-only).
+- Imports are auto-organized via Biome + `eslint-plugin-perfectionist`.
+- Strings: double quotes; indentation: spaces (Biome enforced).
+- Naming: files = kebab-case, components = PascalCase, code symbols = camelCase.
+- TypeScript preferred everywhere (Next.js routing conventions in `apps/web` and `packages/ui`).
 
-## Security & Config
-- Env vars: use `.env.*` files in `apps/web` and `packages/prisma` (never commit secrets)
-  - `apps/web`: Next.js `.env.local`, etc.
-  - `packages/prisma`: `.env.development.local` / `.env.production.local`
-  - `packages/eth`: `.env.local` required for `wagmi generate`
-- Firebase: deploy functions via `pnpm deploy:functions`; logs via `pnpm -C apps/functions logs`
-- Node: >= 22 (note: `apps/functions` has `engines.node: 22`)
+## Security & Configuration
+- Environment variables live in `.env.*` within consuming apps/packages.
+  - `apps/web`: `.env.local` (Next.js).
+  - `packages/prisma`: `.env.development.local` / `.env.production.local`.
+  - `packages/eth`: `.env.local` for Wagmi CLI.
+- Firebase CLI commands assume you are authenticated (`pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`).
+- Minimum Node version is 22 for every workspace; `apps/functions` pins `engines.node` to `22`.
 
 ## Notes
-- There are no root `db:*` or `generate` scripts. Run codegen/DB commands inside the respective packages (see above).
-- `packages/ui` publishes separate server/client bundles. Use `@o3osatoshi/ui/client` from client components.
-- `packages/supabase` is a configuration directory, not a workspace package.
+- `packages/ui` publishes split server/client bundles; import `@o3osatoshi/ui/client` inside React client components.
+- `packages/supabase` is configuration only and excluded from pnpm workspaces.
+- Keep this document updated whenever scripts, package names, or architecture boundaries change.

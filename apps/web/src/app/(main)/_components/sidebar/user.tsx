@@ -17,7 +17,7 @@ import {
   useSidebar,
 } from "@o3osatoshi/ui/client";
 
-export function NavUser() {
+export function User() {
   const { isMobile } = useSidebar();
   const { data } = useSession();
   const user = data?.user;
