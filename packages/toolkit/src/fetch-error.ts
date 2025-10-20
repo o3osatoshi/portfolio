@@ -130,7 +130,7 @@ function classifyFromCause(cause: unknown): Classification | undefined {
   if (!message) return;
   const lowerMessage = message.toLowerCase();
 
-  if (/\btimeout|timed out\b/.test(lowerMessage)) {
+  if (/\b(?:timeout|timed out)\b/.test(lowerMessage)) {
     return {
       hint: "Retry with a longer timeout or inspect upstream latency.",
       kind: "Timeout",
