@@ -11,6 +11,9 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export function deserializeError(input: unknown): Error;
+
+// @public
 export function extractErrorMessage(cause: unknown): string | undefined;
 
 // @public
@@ -26,6 +29,9 @@ export type FetchRequest = {
 export function formatFetchTarget({ request, }: {
     request?: FetchRequest | undefined;
 }): string | undefined;
+
+// @public
+export function isSerializedError(v: unknown): v is SerializedError;
 
 // @public
 export function isZodError(e: unknown): e is ZodError;
@@ -87,6 +93,27 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
 }): (input: unknown) => Result<z.infer<T>, Error>;
+
+// @public
+export type SerializedCause = SerializedError | string;
+
+// @public
+export interface SerializedError {
+    cause?: SerializedCause | undefined;
+    message: string;
+    name: string;
+    stack?: string | undefined;
+}
+
+// @public
+export function serializeError(error: unknown, opts?: SerializeOptions): SerializedError;
+
+// @public
+export type SerializeOptions = {
+    depth?: number | undefined;
+    includeStack?: boolean | undefined;
+    maxLen?: number | undefined;
+};
 
 // @public
 export function sleep(ms: number, { signal }?: SleepOptions): ResultAsync<void, Error>;
