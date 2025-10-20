@@ -31,6 +31,9 @@ export function formatFetchTarget({ request, }: {
 export function isZodError(e: unknown): e is ZodError;
 
 // @public
+export type Kind = "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Validation";
+
+// @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
 
 // @public
@@ -39,8 +42,8 @@ export type NewError = {
     cause?: undefined | unknown;
     hint?: string | undefined;
     impact?: string | undefined;
-    kind: Kind$1;
-    layer: Layer$1;
+    kind: Kind;
+    layer: Layer;
     reason?: string | undefined;
 };
 
@@ -101,12 +104,6 @@ export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
 export function truncate(value: string, max?: number): string;
-
-// Warnings were encountered during analysis:
-//
-// dist/index.d.ts:47:5 - (ae-forgotten-export) The symbol "Kind$1" needs to be exported by the entry point index.d.ts
-// dist/index.d.ts:49:5 - (ae-forgotten-export) The symbol "Layer$1" needs to be exported by the entry point index.d.ts
-// dist/index.d.ts:165:5 - (ae-forgotten-export) The symbol "Kind" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

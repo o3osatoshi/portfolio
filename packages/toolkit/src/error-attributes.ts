@@ -7,6 +7,7 @@ import { truncate } from "./truncate";
  * objects that expose a `message` field. Returned strings are truncated to avoid
  * leaking unbounded payloads in logs or telemetry.
  *
+ * @public
  * @param cause - Value supplied as an error `cause`.
  * @returns A trimmed and truncated message when detectable, otherwise `undefined`.
  */
@@ -28,6 +29,7 @@ export function extractErrorMessage(cause: unknown): string | undefined {
  * detecting coarse error categories (e.g. `AbortError`) even when the error instance is wrapped
  * or proxied.
  *
+ * @public
  * @param cause - Value supplied as an error `cause`.
  * @returns Detected error name or `undefined` when the value lacks an appropriate field.
  */

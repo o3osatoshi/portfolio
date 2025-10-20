@@ -2,6 +2,41 @@ import { extractErrorMessage, extractErrorName } from "./error-attributes";
 import { truncate } from "./truncate";
 
 /**
+ * Generic error classifications shared across application layers.
+ *
+ * @public
+ */
+export type Kind =
+  | "Canceled"
+  | "Config"
+  | "Conflict"
+  | "Deadlock"
+  | "Forbidden"
+  | "Integrity"
+  | "NotFound"
+  | "RateLimit"
+  | "Serialization"
+  | "Timeout"
+  | "Unauthorized"
+  | "Unavailable"
+  | "Unknown"
+  | "Validation";
+
+/**
+ * Architectural layer where the error originated.
+ *
+ * @public
+ */
+export type Layer =
+  | "Application"
+  | "Auth"
+  | "DB"
+  | "Domain"
+  | "External"
+  | "Infra"
+  | "UI";
+
+/**
  * Structured descriptor passed into {@link newError}, exported for consumers
  * that want to build wrappers or share strongly typed error payloads.
  *
@@ -23,39 +58,6 @@ export type NewError = {
   /** Short explanation of why the operation failed. */
   reason?: string | undefined;
 };
-
-/**
- * Generic error classifications shared across application layers.
- * @internal
- */
-type Kind =
-  | "Canceled"
-  | "Config"
-  | "Conflict"
-  | "Deadlock"
-  | "Forbidden"
-  | "Integrity"
-  | "NotFound"
-  | "RateLimit"
-  | "Serialization"
-  | "Timeout"
-  | "Unauthorized"
-  | "Unavailable"
-  | "Unknown"
-  | "Validation";
-
-/**
- * Architectural layer where the error originated.
- * @internal
- */
-type Layer =
-  | "Application"
-  | "Auth"
-  | "DB"
-  | "Domain"
-  | "External"
-  | "Infra"
-  | "UI";
 
 /**
  * Creates a structured Error object with a consistent `name` and `message`.

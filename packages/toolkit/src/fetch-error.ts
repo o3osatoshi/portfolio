@@ -1,4 +1,4 @@
-import { newError, type NewError } from "./error";
+import { type Kind, newError, type NewError } from "./error";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
 
 /** Minimal request metadata used to contextualize fetch failures.
@@ -32,8 +32,6 @@ type Classification = {
   kind: Kind;
   problem: string;
 };
-
-type Kind = NewError["kind"];
 
 /** Derives a concise `METHOD URL` label from request metadata.
  *
