@@ -89,7 +89,7 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
 // @public
-export function sleep(ms: number, { signal }?: SleepOptions): Promise<void>;
+export function sleep(ms: number, { signal }?: SleepOptions): ResultAsync<void, Error>;
 
 // @public
 export type SleepOptions = {

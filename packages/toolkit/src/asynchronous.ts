@@ -1,3 +1,5 @@
+import { ResultAsync } from "neverthrow";
+
 import { newError } from "./error";
 
 /**
@@ -23,42 +25,59 @@ export type SleepOptions = {
  *
  * @param ms - Milliseconds to wait before resolving.
  * @param options - Optional abort configuration; pass `AbortController.signal`.
- * @returns Promise that resolves after `ms` milliseconds or rejects if aborted.
+ * @returns ResultAsync that resolves after `ms` milliseconds or yields an error
+ *          when aborted.
  * @public
  */
 export function sleep(
   ms: number,
   { signal }: SleepOptions = {},
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(resolve, ms);
+): ResultAsync<void, Error> {
+  return ResultAsync.fromPromise(
+    new Promise<void>((resolve, reject) => {
+      let timeout: ReturnType<typeof setTimeout> | undefined;
 
-    if (!signal) {
-      return;
-    }
+      if (!signal) {
+        timeout = setTimeout(resolve, ms);
+        return;
+      }
 
-    const abortError = () =>
-      newError({
-        action: "Sleep",
-        cause: signal.reason,
-        kind: "Canceled",
-        layer: "Infra",
-        reason: "operation aborted by AbortSignal",
-      });
+      const onAbort = () => {
+        if (timeout !== undefined) {
+          clearTimeout(timeout);
+        }
+        reject(
+          newError({
+            action: "Sleep",
+            cause: signal.reason,
+            kind: "Canceled",
+            layer: "Infra",
+            reason: "operation aborted by AbortSignal",
+          }),
+        );
+      };
 
-    if (signal.aborted) {
-      clearTimeout(timeout);
-      reject(abortError());
-      return;
-    }
+      if (signal.aborted) {
+        onAbort();
+        return;
+      }
 
-    signal.addEventListener(
-      "abort",
-      () => {
-        clearTimeout(timeout);
-        reject(abortError());
-      },
-      { once: true },
-    );
-  });
+      timeout = setTimeout(() => {
+        signal.removeEventListener("abort", onAbort);
+        resolve();
+      }, ms);
+
+      signal.addEventListener("abort", onAbort, { once: true });
+    }),
+    (err) =>
+      err instanceof Error
+        ? err
+        : newError({
+            action: "Sleep",
+            cause: err,
+            kind: "Unknown",
+            layer: "Infra",
+            reason: "sleep rejected with non-error value",
+          }),
+  );
 }
