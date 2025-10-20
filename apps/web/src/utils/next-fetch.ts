@@ -4,7 +4,7 @@ import { newFetchError } from "@o3osatoshi/toolkit";
 
 const base = process.env["NEXT_PUBLIC_API_BASE_URL"];
 if (base === undefined) {
-  throw new Error("API_BASE_URL is undefined");
+  throw new Error("NEXT_PUBLIC_API_BASE_URL is undefined");
 }
 
 export type Search =
