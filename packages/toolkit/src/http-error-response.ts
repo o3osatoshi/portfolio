@@ -1,9 +1,9 @@
 /**
  * HTTP response helpers for converting server-side Errors into
- * frontend‑friendly payloads.
+ * frontend-friendly payloads.
  *
  * The main export is {@link toHttpErrorResponse}, which:
- * - Serializes the provided `Error` into a stable, JSON‑safe structure using
+ * - Serializes the provided `Error` into a stable, JSON-safe structure using
  *   {@link serializeError}, suitable for logs, workers, or API responses.
  * - Infers the most appropriate HTTP status code from the error `name` when no
  *   explicit status is provided. Errors produced via {@link newError} use the
@@ -19,15 +19,15 @@
  * - `RateLimit` → 429
  * - `Timeout` → 504
  * - `Unavailable` → 503
- * - `Canceled` → 499 (非標準だが、プロキシ環境で一般的。必要に応じて上書き可能)
+ * - `Canceled` → 499 (non-standard but commonly used; override if needed)
  * - `Serialization` / `Config` / `Unknown` → 500
  *
- * 追加のヒューリスティクス:
- * - `ZodError` は 400（Validation）として扱います。
- * - `AbortError` は 499（Canceled）として扱います。
+ * Additional heuristics:
+ * - `ZodError` is treated as 400 (Validation).
+ * - `AbortError` is treated as 499 (Canceled).
  *
- * セキュリティ: 既定では `serializeError` は development でのみ stack を含めます。
- * 本番で stack を含めたい／除外したい場合は `options.includeStack` を明示してください。
+ * Security: by default, `serializeError` includes stacks only in development.
+ * To include or exclude stacks explicitly, pass `options.includeStack`.
  *
  * @module http-error-response
  */
@@ -66,10 +66,10 @@ const KIND_TO_STATUS: Record<Kind, number> = {
 };
 
 /**
- * Convert an `Error` into an HTTP‑friendly `{ body, status }` pair.
+ * Convert an `Error` into an HTTP-friendly `{ body, status }` pair.
  *
- * - `body` は {@link serializeError} により安定した JSON 形式に変換されます。
- * - `status` は第2引数で明示が無い場合、`error.name` から推定します。
+ * - `body` is produced via {@link serializeError}.
+ * - `status` is inferred from `error.name` unless overridden.
  *
  * @example
  * ```ts
@@ -118,8 +118,8 @@ function deriveStatusFromError(e: Error): number {
 /**
  * Detect a {@link Kind} value from an error `name`.
  *
- * - `newError` による名前付け（`"${Layer}${Kind}Error"`）を優先して判定します。
- * - 外部エラーとして `ZodError` と `AbortError` を特別扱いします。
+ * - Prioritizes names produced by {@link newError}: `"${Layer}${Kind}Error"`.
+ * - Special-cases external errors: `ZodError` and `AbortError`.
  */
 function detectKindFromName(name: string): Kind | undefined {
   for (const kind of Object.keys(KIND_TO_STATUS) as Kind[]) {
