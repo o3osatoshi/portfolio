@@ -13,7 +13,7 @@ import { ZodIssue } from 'zod';
 // @public
 export function deserializeError(input: unknown): Error;
 
-// @public (undocumented)
+// @public
 export type ErrorHttpResponse = {
     body: SerializedError;
     status: number;
