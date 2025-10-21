@@ -33,51 +33,54 @@ export function sleep(
   ms: number,
   { signal }: SleepOptions = {},
 ): ResultAsync<void, Error> {
+  const mapErr = (err: unknown): Error =>
+    err instanceof Error
+      ? err
+      : newError({
+          action: "Sleep",
+          cause: err,
+          kind: "Unknown",
+          layer: "Infra",
+          reason: "sleep rejected with non-error value",
+        });
+
+  if (!signal) {
+    return ResultAsync.fromPromise(
+      new Promise<void>((resolve) => {
+        setTimeout(resolve, ms);
+      }),
+      mapErr,
+    );
+  }
+
   return ResultAsync.fromPromise(
     new Promise<void>((resolve, reject) => {
-      let timeout: ReturnType<typeof setTimeout> | undefined;
-
-      if (!signal) {
-        timeout = setTimeout(resolve, ms);
-        return;
-      }
-
-      const onAbort = () => {
-        if (timeout !== undefined) {
-          clearTimeout(timeout);
-        }
-        reject(
-          newError({
-            action: "Sleep",
-            cause: signal.reason,
-            kind: "Canceled",
-            layer: "Infra",
-            reason: "operation aborted by AbortSignal",
-          }),
-        );
+      const newCanceledError = () => {
+        return newError({
+          action: "Sleep",
+          cause: signal.reason,
+          kind: "Canceled",
+          layer: "Infra",
+          reason: "operation aborted by AbortSignal",
+        });
       };
 
       if (signal.aborted) {
-        onAbort();
-        return;
+        return reject(newCanceledError());
       }
 
-      timeout = setTimeout(() => {
+      const timeout = setTimeout(() => {
         signal.removeEventListener("abort", onAbort);
         resolve();
       }, ms);
 
+      const onAbort = () => {
+        clearTimeout(timeout);
+        reject(newCanceledError());
+      };
+
       signal.addEventListener("abort", onAbort, { once: true });
     }),
-    (err) =>
-      err instanceof Error
-        ? err
-        : newError({
-            action: "Sleep",
-            cause: err,
-            kind: "Unknown",
-            layer: "Infra",
-            reason: "sleep rejected with non-error value",
-          }),
+    mapErr,
   );
 }
