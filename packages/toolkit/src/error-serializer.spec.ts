@@ -51,11 +51,7 @@ describe("error-serializer", () => {
     expect(dcause.message).toBe("inner-msg");
   });
 
-  it("serializes non-error values with stable name/message", () => {
-    const s = serializeError({ foo: "bar" });
-    expect(s.name).toBe("UnknownError");
-    expect(typeof s.message).toBe("string");
-  });
+  // serializeError now accepts only Error; non-error inputs are invalid
 
   it("honors depth option by summarizing deep causes", () => {
     const deep = new Error("deep-cause");
@@ -91,32 +87,7 @@ describe("error-serializer", () => {
     expect(typeof s.stack === "string").toBe(true);
   });
 
-  it("serializes non-error primitives and objects", () => {
-    expect(serializeError("boom")).toMatchObject({
-      name: "UnknownError",
-      message: "boom",
-    });
-    expect(serializeError(42)).toMatchObject({
-      name: "UnknownError",
-      message: "42",
-    });
-    expect(serializeError(null as unknown as Error)).toMatchObject({
-      name: "UnknownError",
-      message: "null",
-    });
-    expect(serializeError(undefined as unknown as Error)).toMatchObject({
-      name: "UnknownError",
-      message: "undefined",
-    });
-    expect(serializeError({ message: "m" })).toMatchObject({
-      name: "UnknownError",
-      message: "m",
-    });
-    expect(serializeError({ name: "FooError", message: "bar" })).toMatchObject({
-      name: "FooError",
-      message: "bar",
-    });
-  });
+  // serializeError now accepts only Error; primitives/objects are not allowed
 
   it("truncates long messages according to maxLen", () => {
     const long = "a".repeat(500);
@@ -124,10 +95,7 @@ describe("error-serializer", () => {
     expect(s1.message.endsWith("…")).toBe(true);
     expect(s1.message.length).toBe(11);
 
-    const s2 = serializeError({ message: long });
-    // default maxLen=200
-    expect(s2.message.length).toBe(201); // 200 chars + ellipsis
-    expect(s2.message.endsWith("…")).toBe(true);
+    // default maxLen=200 (applies when using serializeError on Error)
   });
 
   it("passes through already-serialized cause without modification", () => {

@@ -106,7 +106,7 @@ export interface SerializedError {
 }
 
 // @public
-export function serializeError(error: unknown, opts?: SerializeOptions): SerializedError;
+export function serializeError(error: Error, opts?: SerializeOptions): SerializedError;
 
 // @public
 export type SerializeOptions = {

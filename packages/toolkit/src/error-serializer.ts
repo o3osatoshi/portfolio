@@ -62,6 +62,7 @@ export type SerializeOptions = {
 export function deserializeError(input: unknown): Error {
   // If input is already an Error instance, return it as-is
   if (input instanceof Error) return input;
+
   const parsed = SerializedErrorSchema.safeParse(input);
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
@@ -121,25 +122,24 @@ export function isSerializedError(v: unknown): v is SerializedError {
 }
 
 /**
- * Convert any thrown value into a {@link SerializedError}.
+ * Convert an `Error` into a {@link SerializedError}.
  *
  * Behavior:
  * - Preserves `name` and a truncated `message`.
  * - Optionally includes `stack` (dev-only by default).
  * - Serializes nested `cause` recursively up to `depth`.
- * - Non-`Error` inputs are normalized using `extractErrorName`/`extractErrorMessage`.
  *
  * @example
  * const s = serializeError(err); // send to worker or log store
  * const e = deserializeError(s); // rehydrate in another process
  *
  * @public
- * @param error - Unknown thrown value or `Error`.
+ * @param error - Error instance to serialize.
  * @param opts - Serialization options (depth, stack inclusion, truncation).
  * @returns A JSON-friendly error object suitable for transport or storage.
  */
 export function serializeError(
-  error: unknown,
+  error: Error,
   opts: SerializeOptions = {},
 ): SerializedError {
   const includeStack =
@@ -147,22 +147,16 @@ export function serializeError(
   const maxLen = opts.maxLen ?? 200;
   const depth = Math.max(0, opts.depth ?? 2);
 
-  if (error instanceof Error) {
-    return {
-      name: error.name,
-      cause: serializeCause(error.cause, {
-        depth: depth - 1,
-        includeStack,
-        maxLen,
-      }),
-      message: truncate(error.message, maxLen),
-      stack: includeStack ? error.stack : undefined,
-    };
-  }
-
-  const name = extractErrorName(error) ?? "UnknownError";
-  const message = extractErrorMessage(error) ?? truncate(String(error), maxLen);
-  return { name, message };
+  return {
+    name: error.name,
+    cause: serializeCause(error.cause, {
+      depth: depth - 1,
+      includeStack,
+      maxLen,
+    }),
+    message: truncate(error.message, maxLen),
+    stack: includeStack ? error.stack : undefined,
+  };
 }
 
 /**
