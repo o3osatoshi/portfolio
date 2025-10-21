@@ -13,6 +13,12 @@ import { ZodIssue } from 'zod';
 // @public
 export function deserializeError(input: unknown): Error;
 
+// @public (undocumented)
+export type ErrorHttpResponse = {
+    body: SerializedError;
+    status: number;
+};
+
 // @public
 export function extractErrorMessage(cause: unknown): string | undefined;
 
@@ -128,6 +134,9 @@ export function summarizeZodError(err: ZodError): string;
 
 // @public
 export function summarizeZodIssue(issue: ZodIssue): string;
+
+// @public
+export function toHttpErrorResponse(error: Error, status?: number, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
 export function truncate(value: string, max?: number): string;
