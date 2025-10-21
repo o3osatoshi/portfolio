@@ -5,29 +5,24 @@ import {
 import { PrismaTransactionRepository } from "@repo/prisma";
 import type { NextRequest } from "next/server";
 
+import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
+
 const repo = new PrismaTransactionRepository();
 const usecase = new GetTransactionsUseCase(repo);
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const userId = searchParams.get("userId");
-  const _userId = userId === null ? undefined : userId;
-  console.log(
-    `[GET /labs/transactions] called with userId=${userId ?? "none"}`,
-  );
-  if (_userId === undefined) {
-    return Response.json([]);
-  }
+  const userId = request.nextUrl.searchParams.get("userId") ?? undefined;
+  if (userId === undefined) return Response.json([]);
 
-  const res = parseGetTransactionsRequest({ userId: _userId });
-  if (res.isErr()) {
-    return new Response("Invalid request", { status: 400 });
-  }
-  const result = await usecase.execute(res.value);
-  if (result.isErr()) {
-    return new Response(result.error.message, { status: 500 });
-  }
-  const transactions = result.value;
-
-  return Response.json(transactions);
+  return parseGetTransactionsRequest({ userId })
+    .asyncAndThen((dto) => usecase.execute(dto))
+    .map((transactions) => Response.json(transactions))
+    .mapErr((err) => {
+      const { body, status } = toHttpErrorResponse(err);
+      return Response.json(body, { status });
+    })
+    .match(
+      (okRes) => okRes,
+      (errRes) => errRes,
+    );
 }

@@ -78,29 +78,31 @@ export function SleepDemoCard() {
     setErrorMessage(null);
     startTicker();
 
-    try {
-      await sleep(DURATION_MS, { signal: controller.signal });
+    const result = await sleep(DURATION_MS, { signal: controller.signal });
+
+    if (result.isOk()) {
       setStatus("completed");
-    } catch (err) {
-      if (err instanceof Error && err.name === "InfraCanceledError") {
+    } else {
+      const error = result.error;
+      if (error instanceof Error && error.name === "InfraCanceledError") {
         setStatus("canceled");
-        setErrorMessage(err.message);
-      } else if (err instanceof Error) {
+        setErrorMessage(error.message);
+      } else if (error instanceof Error) {
         setStatus("error");
-        setErrorMessage(err.message);
+        setErrorMessage(error.message);
       } else {
         setStatus("error");
-        setErrorMessage(String(err));
+        setErrorMessage(String(error));
       }
-    } finally {
-      clearTicker();
-      setElapsedMs((elapsed) => {
-        const startedAt = startedAtRef.current;
-        return startedAt === null ? elapsed : Date.now() - startedAt;
-      });
-      abortControllerRef.current = null;
-      startedAtRef.current = null;
     }
+
+    clearTicker();
+    setElapsedMs((elapsed) => {
+      const startedAt = startedAtRef.current;
+      return startedAt === null ? elapsed : Date.now() - startedAt;
+    });
+    abortControllerRef.current = null;
+    startedAtRef.current = null;
   }, [clearTicker, startTicker, status]);
 
   const handleCancel = useCallback(() => {

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
-import { createTransaction } from "@/app/(main)/labs/server-crud/_actions/create-transaction";
+import { createTransaction } from "@/actions/create-transaction";
 import type { ActionState } from "@/utils/action-state";
 import { createTransactionSchema } from "@/utils/validation";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
