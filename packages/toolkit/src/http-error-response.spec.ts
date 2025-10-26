@@ -13,29 +13,26 @@ describe("toHttpErrorResponse", () => {
   });
 
   it("infers status from error kind in name", () => {
-    const notFound = newError({ kind: "NotFound", layer: "Application" });
-    const r1 = toHttpErrorResponse(notFound);
-    expect(r1.status).toBe(404);
+    const cases = [
+      { kind: "Validation", layer: "Application", status: 400 },
+      { kind: "NotFound", layer: "Application", status: 404 },
+      { kind: "Forbidden", layer: "Auth", status: 403 },
+      { kind: "Unauthorized", layer: "Auth", status: 401 },
+      { kind: "BadRequest", layer: "Application", status: 400 },
+      { kind: "Conflict", layer: "Domain", status: 409 },
+      { kind: "RateLimit", layer: "External", status: 429 },
+      { kind: "MethodNotAllowed", layer: "Application", status: 405 },
+      { kind: "Timeout", layer: "Infra", status: 504 },
+      { kind: "Unavailable", layer: "Infra", status: 503 },
+      { kind: "Unprocessable", layer: "Application", status: 422 },
+      { kind: "BadGateway", layer: "Infra", status: 502 },
+    ] as const;
 
-    const forbidden = newError({ kind: "Forbidden", layer: "Auth" });
-    const r2 = toHttpErrorResponse(forbidden);
-    expect(r2.status).toBe(403);
-
-    const conflict = newError({ kind: "Conflict", layer: "Domain" });
-    const r3 = toHttpErrorResponse(conflict);
-    expect(r3.status).toBe(409);
-
-    const rateLimit = newError({ kind: "RateLimit", layer: "External" });
-    const r4 = toHttpErrorResponse(rateLimit);
-    expect(r4.status).toBe(429);
-
-    const timeout = newError({ kind: "Timeout", layer: "Infra" });
-    const r5 = toHttpErrorResponse(timeout);
-    expect(r5.status).toBe(504);
-
-    const unavailable = newError({ kind: "Unavailable", layer: "Infra" });
-    const r6 = toHttpErrorResponse(unavailable);
-    expect(r6.status).toBe(503);
+    for (const { kind, layer, status } of cases) {
+      const err = newError({ kind, layer });
+      const res = toHttpErrorResponse(err);
+      expect(res.status).toBe(status);
+    }
   });
 
   it("maps canceled to 499 (client closed request)", () => {

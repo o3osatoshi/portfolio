@@ -43,7 +43,7 @@ export function isSerializedError(v: unknown): v is SerializedError;
 export function isZodError(e: unknown): e is ZodError;
 
 // @public
-export type Kind = "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Validation";
+export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";

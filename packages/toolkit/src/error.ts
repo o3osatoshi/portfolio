@@ -7,12 +7,15 @@ import { truncate } from "./truncate";
  * @public
  */
 export type Kind =
+  | "BadGateway"
+  | "BadRequest"
   | "Canceled"
   | "Config"
   | "Conflict"
   | "Deadlock"
   | "Forbidden"
   | "Integrity"
+  | "MethodNotAllowed"
   | "NotFound"
   | "RateLimit"
   | "Serialization"
@@ -20,6 +23,7 @@ export type Kind =
   | "Unauthorized"
   | "Unavailable"
   | "Unknown"
+  | "Unprocessable"
   | "Validation";
 
 /**

@@ -11,16 +11,19 @@
  *   status as described below.
  *
  * Status mapping (Kind → HTTP status):
- * - `Validation` → 400
+ * - `BadRequest` / `Validation` → 400
  * - `Unauthorized` → 401
  * - `Forbidden` → 403
  * - `NotFound` → 404
+ * - `MethodNotAllowed` → 405
  * - `Conflict` / `Integrity` / `Deadlock` → 409
+ * - `Unprocessable` → 422
  * - `RateLimit` → 429
- * - `Timeout` → 504
- * - `Unavailable` → 503
  * - `Canceled` → 499 (non-standard but commonly used; override if needed)
  * - `Serialization` / `Config` / `Unknown` → 500
+ * - `BadGateway` → 502
+ * - `Unavailable` → 503
+ * - `Timeout` → 504
  *
  * Additional heuristics:
  * - `ZodError` is treated as 400 (Validation).
@@ -51,11 +54,14 @@ export type ErrorHttpResponse = {
 const KIND_TO_STATUS: Record<Kind, number> = {
   Forbidden: 403,
   Validation: 400,
+  BadGateway: 502,
+  BadRequest: 400,
   Canceled: 499, // Client Closed Request (non-standard, widely used)
   Config: 500,
   Conflict: 409,
   Deadlock: 409,
   Integrity: 409,
+  MethodNotAllowed: 405,
   NotFound: 404,
   RateLimit: 429,
   Serialization: 500,
@@ -63,6 +69,7 @@ const KIND_TO_STATUS: Record<Kind, number> = {
   Unauthorized: 401,
   Unavailable: 503,
   Unknown: 500,
+  Unprocessable: 422,
 };
 
 /**
