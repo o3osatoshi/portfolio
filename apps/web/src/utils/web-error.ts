@@ -1,4 +1,4 @@
-import { newError } from "@o3osatoshi/toolkit";
+import { type Kind, newError } from "@o3osatoshi/toolkit";
 
 /**
  * Shape used to describe a UI-layer failure when constructing a structured {@link Error}.
@@ -15,7 +15,8 @@ export type NewWebError = {
 /**
  * Enumerates normalized error categories for the web (UI) layer.
  */
-export type WebKind =
+export type WebKind = Extract<
+  Kind,
   | "Conflict"
   | "Forbidden"
   | "NotFound"
@@ -24,7 +25,8 @@ export type WebKind =
   | "Unauthorized"
   | "Unavailable"
   | "Unknown"
-  | "Validation";
+  | "Validation"
+>;
 
 /**
  * Web/UI-layer error constructor wrapping @o3osatoshi/toolkit with layer "UI".

@@ -1,9 +1,10 @@
-import { newError } from "@o3osatoshi/toolkit";
+import { type Kind, newError } from "@o3osatoshi/toolkit";
 
 /**
  * Enumerates normalized error categories produced by the application layer.
  */
-export type ApplicationKind =
+export type ApplicationKind = Extract<
+  Kind,
   | "Conflict"
   | "Forbidden"
   | "NotFound"
@@ -12,7 +13,8 @@ export type ApplicationKind =
   | "Unauthorized"
   | "Unavailable"
   | "Unknown"
-  | "Validation";
+  | "Validation"
+>;
 
 /**
  * Shape used to describe an application-layer failure when constructing a

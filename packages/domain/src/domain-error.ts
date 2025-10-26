@@ -1,9 +1,10 @@
-import { newError } from "@o3osatoshi/toolkit";
+import { type Kind, newError } from "@o3osatoshi/toolkit";
 
 /**
  * Supported error categories emitted from the domain layer.
  */
-export type DomainKind =
+export type DomainKind = Extract<
+  Kind,
   | "Conflict"
   | "Forbidden"
   | "NotFound"
@@ -12,7 +13,8 @@ export type DomainKind =
   | "Unauthorized"
   | "Unavailable"
   | "Unknown"
-  | "Validation";
+  | "Validation"
+>;
 
 /**
  * Payload describing a domain error when calling {@link newDomainError}.
