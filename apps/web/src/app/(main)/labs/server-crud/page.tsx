@@ -1,4 +1,4 @@
-import { auth } from "@repo/auth";
+import { getUserId } from "@repo/auth";
 
 import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
 import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
@@ -21,8 +21,7 @@ import { getTransactions } from "@/services/get-transactions";
 //   });
 
 export default async function Page() {
-  const session = await auth();
-  const userId = session?.user?.id;
+  const userId = await getUserId();
 
   const result = await getTransactions({ userId });
   if (result.isErr()) {

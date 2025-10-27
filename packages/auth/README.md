@@ -1,32 +1,38 @@
 # @repo/auth
 
-Shared NextAuth v5 (beta) configuration and server helpers for the monorepo. This package separates the Node runtime auth (with PrismaAdapter) from an Edge‑safe middleware entry.
+Shared NextAuth v5 (beta) configuration and helpers for the monorepo. This package clearly separates the Node runtime auth (PrismaAdapter) from an Edge‑safe middleware entry, and exposes thin React helpers for client usage.
 
 ## Goals
 - Decouple auth setup/logic from `apps/web` and make it reusable.
 - Keep Prisma‑backed Node auth and Edge middleware clearly separated.
-- Allow apps to consume NextAuth by importing `@repo/auth`.
+- Centralize NextAuth dependency so apps only import `@repo/auth`.
 
 ## Requirements
 - Node: `>=22`
-- dependencies:
+- Dependencies:
   - `next-auth@5.0.0-beta.27`
   - `@auth/prisma-adapter@^2.10.0`
   - `@repo/prisma` (provides Prisma Client)
-- Environment variables (set in the consuming app’s `.env.*`):
+- Environment variables (runtime for `apps/web`):
   - `AUTH_SECRET`
   - `AUTH_GOOGLE_ID`
   - `AUTH_GOOGLE_SECRET`
   - `DATABASE_URL`
 
+Notes:
+- Next.js loads runtime envs from `apps/web/.env.local`.
+- Prisma CLI scripts read from `packages/prisma/.env.*.local` via `dotenv-cli`. At runtime, `DATABASE_URL` must still be available to the Next.js server (e.g., in `apps/web/.env.local`).
+
 ## Exports
-- Root: `@repo/auth`
-  - `auth`: server helper to get the current session (`await auth()`).
+- `@repo/auth`
+  - `getUserId`: Server helper to get the current user's id (`await getUserId()`).
   - `handlers`: NextAuth API route handlers (`GET`, `POST`).
-- Middleware: `@repo/auth/middleware`
+- `@repo/auth/middleware`
   - `middleware`: Edge‑compatible middleware using the shared config.
-- Config: `@repo/auth/config`
-  - `authConfig`: shared provider/callback configuration (Edge‑safe, no DB access).
+- `@repo/auth/react`
+  - `AuthProvider`, `useUser`, `signIn`, `signOut`.
+
+The internal shared config lives at `src/config.ts` and is not exported as a public entrypoint.
 
 ## Usage (Next.js 15, App Router)
 
@@ -43,19 +49,32 @@ Middleware (`apps/web/src/middleware.ts`):
 export { middleware } from "@repo/auth/middleware";
 ```
 
-Server actions/server components:
+Server actions / server components:
 
 ```ts
-import { auth } from "@repo/auth";
+import { getUserId } from "@repo/auth";
 
-const session = await auth();
-const userId = session?.user?.id;
+const userId = await getUserId();
 ```
 
-Client code can now import from `@repo/auth/react` (re‑exporting `next-auth/react`):
+Client code should use `@repo/auth/react` abstractions:
 
 ```tsx
-import { SessionProvider, signIn, signOut, useSession } from "@repo/auth/react";
+import { AuthProvider, useUser, signIn, signOut } from "@repo/auth/react";
+```
+
+Example:
+
+```tsx
+function App({ children }: { children: React.ReactNode }) {
+  return <AuthProvider>{children}</AuthProvider>;
+}
+
+function Menu() {
+  const user = useUser();
+  if (!user) return <button onClick={() => signIn("google", { redirectTo: "/" })}>Sign in</button>;
+  return <button onClick={() => signOut()}>Sign out</button>;
+}
 ```
 
 This removes direct `next-auth` imports from apps while centralizing the dependency in `@repo/auth`.
