@@ -35,6 +35,7 @@
  * @module http-error-response
  */
 import type { Kind } from "./error";
+import { parseErrorName } from "./error-format";
 import type { SerializeOptions } from "./error-serializer";
 import { type SerializedError, serializeError } from "./error-serializer";
 
@@ -129,9 +130,8 @@ function deriveStatusFromError(e: Error): number {
  * - Special-cases external errors: `ZodError` and `AbortError`.
  */
 function detectKindFromName(name: string): Kind | undefined {
-  for (const kind of Object.keys(KIND_TO_STATUS) as Kind[]) {
-    if (name.endsWith(`${kind}Error`)) return kind;
-  }
+  const { kind } = parseErrorName(name);
+  if (kind) return kind;
   if (name === "ZodError") return "Validation";
   if (name === "AbortError") return "Canceled";
   return undefined;
