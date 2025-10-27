@@ -55,18 +55,20 @@ describe("prisma newPrismaError override", () => {
     });
     const err = newPrismaError({ action: "SavePost", cause });
     expect(err.name).toBe("DBValidationError");
-    expect(err.message).toContain("SavePost failed");
-    expect(err.message).toContain("Value too long for description");
-    expect(err.message).toContain("Hint: Shorten value or alter schema.");
+    const message = err.message;
+    expect(message).toContain("SavePost failed");
+    expect(message).toContain("Value too long for description");
+    expect(message).toContain("Shorten value or alter schema.");
   });
 
   it("maps P2002 to DBIntegrityError with target", () => {
     const cause = fabricateKnownRequestError("P2002", { target: ["email"] });
     const err = newPrismaError({ action: "CreateUser", cause });
     expect(err.name).toBe("DBIntegrityError");
-    expect(err.message).toContain("CreateUser failed");
-    expect(err.message).toContain("Unique constraint violation");
-    expect(err.message).toContain("email");
+    const message = err.message;
+    expect(message).toContain("CreateUser failed");
+    expect(message).toContain("Unique constraint violation on email");
+    expect(message).toContain("Use a different value for unique fields.");
   });
 
   it("maps P2025 to DBNotFoundError and uses meta.cause if present", () => {
@@ -75,16 +77,17 @@ describe("prisma newPrismaError override", () => {
     });
     const err = newPrismaError({ action: "UpdateTransaction", cause });
     expect(err.name).toBe("DBNotFoundError");
-    expect(err.message).toContain(
-      "because No record found for where condition",
-    );
+    const message = err.message;
+    expect(message).toContain("UpdateTransaction failed");
+    expect(message).toContain("No record found for where condition");
+    expect(message).toContain("Verify where conditions or record id.");
   });
 
   it("falls back to a default reason when meta.cause is not a string", () => {
     const cause = fabricateKnownRequestError("P2025", { cause: 42 });
     const err = newPrismaError({ action: "RemoveRecord", cause });
     expect(err.name).toBe("DBNotFoundError");
-    expect(err.message).toContain("because Record not found");
+    expect(err.message).toContain("Record not found");
   });
 
   it("maps foreign key and invalid value errors appropriately", () => {
@@ -123,7 +126,7 @@ describe("prisma newPrismaError override", () => {
     });
     expect(unavailableErr.name).toBe("DBUnavailableError");
     expect(unavailableErr.message).toContain(
-      "Hint: Ensure database is reachable and running.",
+      "Ensure database is reachable and running.",
     );
 
     const timeout = fabricateInitializationError(
@@ -132,7 +135,7 @@ describe("prisma newPrismaError override", () => {
     const timeoutErr = newPrismaError({ action: "Init", cause: timeout });
     expect(timeoutErr.name).toBe("DBTimeoutError");
     expect(timeoutErr.message).toContain(
-      "Hint: Check database connectivity and network.",
+      "Check database connectivity and network.",
     );
 
     const unauthorized = fabricateInitializationError(
@@ -167,8 +170,9 @@ describe("prisma newPrismaError override", () => {
     const cause = fabricateRustPanicError();
     const err = newPrismaError({ action: "Execute", cause });
     expect(err.name).toBe("DBUnknownError");
-    expect(err.message).toContain("Prisma engine panic");
-    expect(err.message).toContain("Hint: Inspect logs; restart the process.");
+    const message = err.message;
+    expect(message).toContain("Prisma engine panic");
+    expect(message).toContain("Inspect logs; restart the process.");
   });
 
   it("falls back to DBUnknownError for non-Prisma causes", () => {
@@ -179,6 +183,6 @@ describe("prisma newPrismaError override", () => {
     });
     expect(err.name).toBe("DBUnknownError");
     expect(err.message).toContain("Unexpected error");
-    expect(err.message).toContain("Hint: Check logs");
+    expect(err.message).toContain("Check logs");
   });
 });

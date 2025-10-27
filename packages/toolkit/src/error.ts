@@ -1,4 +1,5 @@
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import { composeErrorMessage, composeErrorName } from "./error-format";
 import { truncate } from "./truncate";
 
 /**
@@ -141,17 +142,16 @@ export type NewError = {
  */
 export function newError(params: NewError): Error {
   const { action, cause, hint, impact, kind, layer, reason } = params;
-  const name = `${layer}${kind}Error`;
+  const name = composeErrorName(layer, kind);
 
   const causeText = summarizeCause(cause);
-  const messages = [
-    action ? `${action} failed` : "Operation failed",
-    reason ? `because ${reason}` : undefined,
-    impact ? `Impact: ${impact}.` : undefined,
-    hint ? `Hint: ${hint}.` : undefined,
-    causeText ? `Cause: ${causeText}.` : undefined,
-  ].filter(Boolean);
-  const message = messages.join(" ");
+  const message = composeErrorMessage({
+    action,
+    causeText,
+    hint,
+    impact,
+    reason,
+  });
 
   // Try to attach native `cause` (ErrorOptions) when available
   let err: Error;

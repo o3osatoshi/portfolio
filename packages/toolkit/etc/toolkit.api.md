@@ -11,6 +11,12 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export function composeErrorMessage(parts: ErrorMessageParts): string;
+
+// @public
+export function composeErrorName(layer: Layer, kind: Kind): string;
+
+// @public
 export function deserializeError(input: unknown): Error;
 
 // @public
@@ -18,6 +24,21 @@ export type ErrorHttpResponse = {
     body: SerializedError;
     status: number;
 };
+
+// @public
+export type ErrorMessageParts = {
+    action?: string | undefined;
+    causeText?: string | undefined;
+    hint?: string | undefined;
+    impact?: string | undefined;
+    reason?: string | undefined;
+};
+
+// @public
+export type ErrorMessagePayload = {
+    summary: string;
+    version: typeof MESSAGE_FORMAT_VERSION;
+} & ErrorMessageParts;
 
 // @public
 export function extractErrorMessage(cause: unknown): string | undefined;
@@ -95,6 +116,15 @@ export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => ResultAsync<z.infer<T>, Error>;
 
 // @public
+export function parseErrorMessage(message: string | undefined): ErrorMessageParts;
+
+// @public
+export function parseErrorName(name: string | undefined): {
+    kind?: Kind;
+    layer?: Layer;
+};
+
+// @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
@@ -140,6 +170,10 @@ export function toHttpErrorResponse(error: Error, status?: number, options?: Ser
 
 // @public
 export function truncate(value: string, max?: number): string;
+
+// Warnings were encountered during analysis:
+//
+// dist/index.d.ts:189:5 - (ae-forgotten-export) The symbol "MESSAGE_FORMAT_VERSION" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

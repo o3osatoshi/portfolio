@@ -21,13 +21,10 @@ describe("zod-parse: parseWith", () => {
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("ApplicationValidationError");
-      expect(res.error.message).toContain("ParseUser failed");
-      expect(res.error.message).toContain(
-        "name: Expected string, received number",
-      );
-      expect(res.error.message).toContain(
-        "age: Expected number, received string",
-      );
+      const message = res.error.message;
+      expect(message).toContain("ParseUser failed");
+      expect(message).toContain("name: Expected string, received number");
+      expect(message).toContain("age: Expected number, received string");
     }
   });
 
@@ -38,8 +35,9 @@ describe("zod-parse: parseWith", () => {
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("UIValidationError");
-      expect(res.error.message).toContain("ParseForm failed");
-      expect(res.error.message).toContain("email: Invalid string (email)");
+      const message = res.error.message;
+      expect(message).toContain("ParseForm failed");
+      expect(message).toContain("email: Invalid string (email)");
     }
   });
 });
@@ -73,8 +71,9 @@ describe("zod-parse: parseAsyncWith", () => {
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("AuthValidationError");
-      expect(res.error.message).toContain("ParseToken failed");
-      expect(res.error.message).toContain("token: bad token");
+      const message = res.error.message;
+      expect(message).toContain("ParseToken failed");
+      expect(message).toContain("token: bad token");
     }
   });
 });

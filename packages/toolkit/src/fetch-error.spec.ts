@@ -14,10 +14,12 @@ describe("toolkit newFetchError helper", () => {
     });
 
     expect(err.name).toBe("ExternalTimeoutError");
-    expect(err.message).toContain("StreamFeed failed");
-    expect(err.message).toContain(
-      "because GET https://api.example.com/feed was aborted before completing",
+    const message = err.message;
+    expect(message).toContain("StreamFeed failed");
+    expect(message).toContain(
+      "GET https://api.example.com/feed was aborted before completing",
     );
+    expect(message).toContain("AbortError: signal aborted");
   });
 
   it("treats network failures as ExternalUnavailableError with a connectivity hint", () => {
@@ -28,12 +30,13 @@ describe("toolkit newFetchError helper", () => {
     });
 
     expect(err.name).toBe("ExternalUnavailableError");
-    expect(err.message).toContain("FetchWidget failed");
-    expect(err.message).toContain(
-      "because GET /api/widgets/123 failed due to a network error",
+    const message = err.message;
+    expect(message).toContain("FetchWidget failed");
+    expect(message).toContain(
+      "GET /api/widgets/123 failed due to a network error",
     );
-    expect(err.message).toContain(
-      "Hint: Verify network connectivity or upstream availability.",
+    expect(message).toContain(
+      "Verify network connectivity or upstream availability.",
     );
   });
 
@@ -44,7 +47,7 @@ describe("toolkit newFetchError helper", () => {
 
     expect(err.name).toBe("ExternalUnknownError");
     expect(err.message).toContain("DoSomething failed");
-    expect(err.message).toContain("because encountered an unexpected error");
+    expect(err.message).toContain("encountered an unexpected error");
   });
 
   it("formats the target when only URL metadata is available", () => {
@@ -55,7 +58,7 @@ describe("toolkit newFetchError helper", () => {
     });
 
     expect(err.name).toBe("ExternalUnknownError");
-    expect(err.message).toContain("because /proxy/users/123 failed with boom");
+    expect(err.message).toContain("/proxy/users/123 failed with boom");
   });
 
   it("allows overriding the classification kind when provided", () => {
@@ -68,7 +71,7 @@ describe("toolkit newFetchError helper", () => {
 
     expect(err.name).toBe("ExternalForbiddenError");
     expect(err.message).toContain(
-      "because POST /api/login failed with invalid credentials",
+      "POST /api/login failed with invalid credentials",
     );
   });
 
@@ -80,10 +83,12 @@ describe("toolkit newFetchError helper", () => {
     });
 
     expect(err.name).toBe("ExternalTimeoutError");
-    expect(err.message).toContain("because POST /api/assets timed out");
-    expect(err.message).toContain(
-      "Hint: Retry with a longer timeout or inspect upstream latency.",
+    const message = err.message;
+    expect(message).toContain("POST /api/assets timed out");
+    expect(message).toContain(
+      "Retry with a longer timeout or inspect upstream latency.",
     );
+    expect(message).toContain("Request timed out after 10s");
   });
 
   it("formats method-only requests when URL is missing", () => {
@@ -94,6 +99,6 @@ describe("toolkit newFetchError helper", () => {
     });
 
     expect(err.name).toBe("ExternalUnavailableError");
-    expect(err.message).toContain("because HEAD failed with bad gateway");
+    expect(err.message).toContain("HEAD failed with bad gateway");
   });
 });

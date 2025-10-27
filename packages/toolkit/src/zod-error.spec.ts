@@ -74,11 +74,10 @@ describe("zod-error helpers (with real Zod)", () => {
     if (res.success) throw new Error("Expected failure");
     const err = newZodError({ action: "ParseUser", cause: res.error });
     expect(err.name).toBe("ApplicationValidationError");
-    expect(err.message).toContain("ParseUser failed");
-    expect(err.message).toContain(
-      "because name: Expected string, received number",
-    );
-    expect(err.message).toContain("Hint: Check field types match the schema.");
+    const message = err.message;
+    expect(message).toContain("ParseUser failed");
+    expect(message).toContain("name: Expected string, received number");
+    expect(message).toContain("Check field types match the schema.");
   });
 
   it("newZodError supports custom layer and issues without cause (unrecognized_keys)", () => {
@@ -91,18 +90,17 @@ describe("zod-error helpers (with real Zod)", () => {
       layer: "UI",
     });
     expect(err.name).toBe("UIValidationError");
-    expect(err.message).toContain("ValidateForm failed");
-    expect(err.message).toContain("Unrecognized keys:");
-    expect(err.message).toContain(
-      "Hint: Remove unknown fields from the payload.",
-    );
+    const message = err.message;
+    expect(message).toContain("ValidateForm failed");
+    expect(message).toContain("Unrecognized keys:");
+    expect(message).toContain("Remove unknown fields from the payload.");
   });
 
   it("newZodError falls back to generic reason when no issues", () => {
     const err = newZodError({ action: "Parse", cause: { message: "x" } });
     expect(err.name).toBe("ApplicationValidationError");
     expect(err.message).toContain("Parse failed");
-    expect(err.message).toContain("because Invalid request payload");
+    expect(err.message).toContain("Invalid request payload");
   });
 
   it("covers more codes: too_big, invalid_string(email), not_multiple_of, invalid_date, union", () => {
