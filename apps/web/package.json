@@ -19,6 +19,7 @@
     "@o3osatoshi/ui": "workspace:*",
     "@rainbow-me/rainbowkit": "^2.2.5",
     "@repo/application": "workspace:*",
+    "@repo/auth": "workspace:*",
     "@repo/domain": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@tanstack/react-query": "^5.76.1",

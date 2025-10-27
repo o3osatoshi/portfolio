@@ -2,7 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@repo/prisma";
 import NextAuth from "next-auth";
 
-import { authConfig } from "@/lib/auth.config";
+import { authConfig } from "./config";
 
 const result = NextAuth({
   adapter: PrismaAdapter(prisma),

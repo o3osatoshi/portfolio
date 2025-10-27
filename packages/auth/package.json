@@ -1,0 +1,33 @@
+{
+  "name": "@repo/auth",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./middleware": "./src/middleware.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:cvrg": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@repo/prisma": "workspace:*"
+  },
+  "devDependencies": {
+    "@o3osatoshi/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
+    "next-auth": "5.0.0-beta.27"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
