@@ -5,7 +5,7 @@ import { Pencil } from "lucide-react";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
-import { updateTransaction } from "@/app/(main)/labs/server-crud/_actions/update-transaction";
+import { updateTransaction } from "@/actions/update-transaction";
 import type { ActionState } from "@/utils/action-state";
 import type { Transaction } from "@/utils/validation";
 import { updateTransactionSchema } from "@/utils/validation";

@@ -1,9 +1,10 @@
-import { err, ok, type ResultAsync } from "neverthrow";
+import { errAsync, type ResultAsync } from "neverthrow";
 
 import { getPath } from "@/utils/handle-nav";
 import { nextFetch } from "@/utils/next-fetch";
 import type { Transactions } from "@/utils/validation";
 import { transactionsSchema } from "@/utils/validation";
+import { deserializeError, parseWith } from "@o3osatoshi/toolkit";
 
 interface Props {
   userId?: string | undefined;
@@ -18,16 +19,13 @@ export function getTransactions({
     path: getPath("labs-transactions"),
     search,
   }).andThen((res) => {
-    if (res.status < 200 || res.status >= 300) {
-      console.error("getTransactions unexpected status", res.status);
-      return err(new Error(`Unexpected status: ${res.status}`));
+    if (!res.ok) {
+      const err = deserializeError(res.body);
+      return errAsync(err);
     }
-
-    const result = transactionsSchema.safeParse(res.body);
-    if (!result.success) {
-      console.error(result.error);
-      return err(result.error);
-    }
-    return ok(result.data);
+    return parseWith(transactionsSchema, {
+      action: "ParseTransactionsResponse",
+      layer: "UI",
+    })(res.body);
   });
 }

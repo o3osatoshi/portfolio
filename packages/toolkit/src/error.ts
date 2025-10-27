@@ -1,18 +1,42 @@
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import { composeErrorMessage, composeErrorName } from "./error-format";
 import { truncate } from "./truncate";
 
 /**
  * Generic error classifications shared across application layers.
  *
+ * Recommended meanings (and default HTTP mappings used by `toHttpErrorResponse()`):
+ * - `"BadGateway"` → upstream dependency returned an invalid/5xx response (502).
+ * - `"BadRequest"` → malformed payload or invalid query before validation (400).
+ * - `"Canceled"` → caller canceled or aborted the request (499).
+ * - `"Config"` → server-side misconfiguration detected (500).
+ * - `"Conflict"` → state/version mismatch such as optimistic locking (409).
+ * - `"Deadlock"` → concurrency deadlock detected by the data store (409).
+ * - `"Forbidden"` → authenticated caller lacks permission (403).
+ * - `"Integrity"` → constraint violations such as unique/index failures (409).
+ * - `"MethodNotAllowed"` → HTTP verb not supported for the resource (405).
+ * - `"NotFound"` → entity or route missing (404).
+ * - `"RateLimit"` → throttling or quota exceeded (429).
+ * - `"Serialization"` → encode/decode failures (500).
+ * - `"Timeout"` → upstream or local job timed out (504).
+ * - `"Unauthorized"` → authentication missing or invalid (401).
+ * - `"Unavailable"` → dependency or subsystem temporarily down (503).
+ * - `"Unknown"` → fallback for uncategorized errors (500).
+ * - `"Unprocessable"` → semantically invalid input even though syntactically valid (422).
+ * - `"Validation"` → domain/application validation error (400).
+ *
  * @public
  */
 export type Kind =
+  | "BadGateway"
+  | "BadRequest"
   | "Canceled"
   | "Config"
   | "Conflict"
   | "Deadlock"
   | "Forbidden"
   | "Integrity"
+  | "MethodNotAllowed"
   | "NotFound"
   | "RateLimit"
   | "Serialization"
@@ -20,6 +44,7 @@ export type Kind =
   | "Unauthorized"
   | "Unavailable"
   | "Unknown"
+  | "Unprocessable"
   | "Validation";
 
 /**
@@ -117,17 +142,16 @@ export type NewError = {
  */
 export function newError(params: NewError): Error {
   const { action, cause, hint, impact, kind, layer, reason } = params;
-  const name = `${layer}${kind}Error`;
+  const name = composeErrorName(layer, kind);
 
   const causeText = summarizeCause(cause);
-  const messages = [
-    action ? `${action} failed` : "Operation failed",
-    reason ? `because ${reason}` : undefined,
-    impact ? `Impact: ${impact}.` : undefined,
-    hint ? `Hint: ${hint}.` : undefined,
-    causeText ? `Cause: ${causeText}.` : undefined,
-  ].filter(Boolean);
-  const message = messages.join(" ");
+  const message = composeErrorMessage({
+    action,
+    causeText,
+    hint,
+    impact,
+    reason,
+  });
 
   // Try to attach native `cause` (ErrorOptions) when available
   let err: Error;

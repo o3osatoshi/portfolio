@@ -323,6 +323,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.1.9(@types/react@19.1.12)
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
       pino-pretty:
         specifier: ^13.0.0
         version: 13.1.1
@@ -335,6 +338,12 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
+      vite-tsconfig-paths:
+        specifier: 'catalog:'
+        version: 5.1.4(typescript@5.9.2)(vite@6.3.5(@types/node@22.18.1)(jiti@2.6.0)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.8.1))
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.1)(@vitest/browser@3.2.4)(jiti@2.6.0)(jsdom@27.0.0(bufferutil@4.0.9)(postcss@8.5.6)(utf-8-validate@5.0.10))(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.8.1)
 
   packages/application:
     dependencies:

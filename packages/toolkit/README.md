@@ -52,6 +52,33 @@ try {
 }
 ```
 
+### Error kinds
+
+`newError` expects a `kind` that conveys how callers or HTTP layers should react. The defaults below are what `toHttpErrorResponse` uses when translating errors into status codes (override as needed):
+
+| Kind             | Default HTTP status | Description |
+| ---------------- | ------------------- | ----------- |
+| `BadRequest`     | 400                 | Malformed payload or transport-level input issue caught before validation. |
+| `Validation`     | 400                 | Domain/application validation failure (e.g., Zod, business rules). |
+| `Unauthorized`   | 401                 | Authentication missing, expired, or invalid. |
+| `Forbidden`      | 403                 | Authenticated caller lacks permission. |
+| `NotFound`       | 404                 | Entity, route, or resource is missing. |
+| `MethodNotAllowed` | 405               | HTTP verb is not supported for the requested resource. |
+| `Conflict`       | 409                 | Version/state conflict such as optimistic locking. |
+| `Integrity`      | 409                 | Constraint violation (unique/index/foreign key). |
+| `Deadlock`       | 409                 | Database or concurrency deadlock detected by the engine. |
+| `Unprocessable`  | 422                 | Semantically invalid request despite being well-formed. |
+| `RateLimit`      | 429                 | Quota exceeded or throttling triggered. |
+| `Canceled`       | 499†                | Caller aborted or connection closed mid-flight. |
+| `Config`         | 500                 | Server-side misconfiguration or missing secrets. |
+| `Serialization`  | 500                 | Encode/decode failure when handling data. |
+| `Unknown`        | 500                 | Fallback when no other kind matches. |
+| `BadGateway`     | 502                 | Upstream dependency returned an invalid or 5xx response. |
+| `Unavailable`    | 503                 | Dependency temporarily offline or service paused. |
+| `Timeout`        | 504                 | Operation exceeded configured timeout. |
+
+† `499` represents "Client Closed Request", a non-standard code that many gateways use; feel free to override if your platform reserves a different response.
+
 ## API
 
 - `newError(opts)`

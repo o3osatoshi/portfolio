@@ -11,6 +11,36 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export function composeErrorMessage(parts: ErrorMessageParts): string;
+
+// @public
+export function composeErrorName(layer: Layer, kind: Kind): string;
+
+// @public
+export function deserializeError(input: unknown): Error;
+
+// @public
+export type ErrorHttpResponse = {
+    body: SerializedError;
+    status: number;
+};
+
+// @public
+export type ErrorMessageParts = {
+    action?: string | undefined;
+    causeText?: string | undefined;
+    hint?: string | undefined;
+    impact?: string | undefined;
+    reason?: string | undefined;
+};
+
+// @public
+export type ErrorMessagePayload = {
+    summary: string;
+    version: typeof MESSAGE_FORMAT_VERSION;
+} & ErrorMessageParts;
+
+// @public
 export function extractErrorMessage(cause: unknown): string | undefined;
 
 // @public
@@ -28,10 +58,13 @@ export function formatFetchTarget({ request, }: {
 }): string | undefined;
 
 // @public
+export function isSerializedError(v: unknown): v is SerializedError;
+
+// @public
 export function isZodError(e: unknown): e is ZodError;
 
 // @public
-export type Kind = "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Validation";
+export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
@@ -83,13 +116,43 @@ export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => ResultAsync<z.infer<T>, Error>;
 
 // @public
+export function parseErrorMessage(message: string | undefined): ErrorMessageParts;
+
+// @public
+export function parseErrorName(name: string | undefined): {
+    kind?: Kind;
+    layer?: Layer;
+};
+
+// @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
 // @public
-export function sleep(ms: number, { signal }?: SleepOptions): Promise<void>;
+export type SerializedCause = SerializedError | string;
+
+// @public
+export interface SerializedError {
+    cause?: SerializedCause | undefined;
+    message: string;
+    name: string;
+    stack?: string | undefined;
+}
+
+// @public
+export function serializeError(error: Error, opts?: SerializeOptions): SerializedError;
+
+// @public
+export type SerializeOptions = {
+    depth?: number | undefined;
+    includeStack?: boolean | undefined;
+    maxLen?: number | undefined;
+};
+
+// @public
+export function sleep(ms: number, { signal }?: SleepOptions): ResultAsync<void, Error>;
 
 // @public
 export type SleepOptions = {
@@ -103,7 +166,14 @@ export function summarizeZodError(err: ZodError): string;
 export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
+export function toHttpErrorResponse(error: Error, status?: number, options?: SerializeOptions): ErrorHttpResponse;
+
+// @public
 export function truncate(value: string, max?: number): string;
+
+// Warnings were encountered during analysis:
+//
+// dist/index.d.ts:189:5 - (ae-forgotten-export) The symbol "MESSAGE_FORMAT_VERSION" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

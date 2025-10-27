@@ -15,14 +15,12 @@ describe("newError", () => {
       reason: "dependency unavailable",
     });
 
-    // Name
     expect(err.name).toBe("InfraTimeoutError");
-    // Message order pieces exist
     expect(err.message).toContain("FetchUser failed");
-    expect(err.message).toContain("because dependency unavailable");
-    expect(err.message).toContain("Impact: no data returned.");
-    expect(err.message).toContain("Hint: retry with backoff.");
-    expect(err.message).toContain("Cause: DB timeout.");
+    expect(err.message).toContain("DB timeout");
+    expect(err.message).toContain("retry with backoff");
+    expect(err.message).toContain("no data returned");
+    expect(err.message).toContain("dependency unavailable");
     // Cause attached (native ErrorOptions or fallback defineProperty)
     expect("cause" in err).toBe(true);
     expect(err.cause).toBe(cause);
@@ -51,7 +49,7 @@ describe("newError", () => {
 
       expect(err).toBeInstanceOf(LegacyError);
       expect(err.name).toBe("DomainUnknownError");
-      expect(err.message).toContain('Cause: {"detail":"legacy failure"}.');
+      expect(err.message).toContain("legacy failure");
 
       const descriptor = Object.getOwnPropertyDescriptor(err, "cause");
       expect(descriptor?.enumerable).toBe(false);
@@ -69,7 +67,7 @@ describe("newError", () => {
       kind: "Unknown",
       layer: "Application",
     });
-    expect(namedErr.message).toContain("Cause: WidgetFailure.");
+    expect(namedErr.message).toContain("WidgetFailure");
 
     const circular: { self?: unknown } = {};
     circular.self = circular;
@@ -79,6 +77,6 @@ describe("newError", () => {
       kind: "Unknown",
       layer: "Infra",
     });
-    expect(circularErr.message).toContain("Cause: [object Object].");
+    expect(circularErr.message).toContain("[object Object]");
   });
 });
