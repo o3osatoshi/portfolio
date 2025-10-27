@@ -12,7 +12,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.10.0",
     "@hookform/resolvers": "^5.0.1",
     "@next/third-parties": "^15.5.4",
     "@o3osatoshi/toolkit": "workspace:*",
@@ -27,7 +26,6 @@
     "lucide-react": "catalog:",
     "neverthrow": "catalog:",
     "next": "^15.3.1",
-    "next-auth": "5.0.0-beta.27",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

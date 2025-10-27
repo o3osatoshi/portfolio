@@ -1,7 +1,7 @@
 "use client";
 
+import { signIn, signOut, useSession } from "@repo/auth/react";
 import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 import {
   Avatar,

@@ -9,10 +9,9 @@ Shared NextAuth v5 (beta) configuration and server helpers for the monorepo. Thi
 
 ## Requirements
 - Node: `>=22`
-- peerDependencies:
+- dependencies:
   - `next-auth@5.0.0-beta.27`
   - `@auth/prisma-adapter@^2.10.0`
-- dependencies:
   - `@repo/prisma` (provides Prisma Client)
 - Environment variables (set in the consuming app’s `.env.*`):
   - `AUTH_SECRET`
@@ -53,13 +52,13 @@ const session = await auth();
 const userId = session?.user?.id;
 ```
 
-Client code should continue to import from `next-auth/react` directly:
+Client code can now import from `@repo/auth/react` (re‑exporting `next-auth/react`):
 
 ```tsx
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
+import { SessionProvider, signIn, signOut, useSession } from "@repo/auth/react";
 ```
 
-If desired, we can add a `@repo/auth/client` re‑export in the future.
+This removes direct `next-auth` imports from apps while centralizing the dependency in `@repo/auth`.
 
 ## Type Augmentation (Session.user.id)
 This package declares a module augmentation for `Session['user'].id?: string` in `src/next-auth.d.ts`.

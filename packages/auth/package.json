@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./middleware": "./src/middleware.ts"
+    "./middleware": "./src/middleware.ts",
+    "./react": "./src/react.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -14,7 +15,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@repo/prisma": "workspace:*"
+    "@auth/prisma-adapter": "^2.10.0",
+    "@repo/prisma": "workspace:*",
+    "next-auth": "5.0.0-beta.27"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
@@ -23,10 +26,7 @@
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "peerDependencies": {
-    "@auth/prisma-adapter": "^2.10.0",
-    "next-auth": "5.0.0-beta.27"
-  },
+  "peerDependencies": {},
   "engines": {
     "node": ">=22"
   }
