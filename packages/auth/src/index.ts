@@ -11,9 +11,8 @@ const result = NextAuth({
 });
 
 export const { handlers } = result;
-const auth: typeof result.auth = result.auth;
 
 export async function getUserId(): Promise<string | undefined> {
-  const session = await auth();
+  const session = await result.auth();
   return session?.user?.id;
 }
