@@ -1,7 +1,7 @@
 "use client";
 
+import { signIn, signOut, useUser } from "@repo/auth/react";
 import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 import {
   Avatar,
@@ -19,8 +19,7 @@ import {
 
 export function User() {
   const { isMobile } = useSidebar();
-  const { data } = useSession();
-  const user = data?.user;
+  const user = useUser();
 
   return (
     <SidebarMenu>

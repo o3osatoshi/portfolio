@@ -35,15 +35,20 @@ describe("getTransactions", () => {
       },
     ];
 
+    type NextResponseShape = {
+      body: unknown;
+    } & Pick<Response, "ok" | "redirected" | "status" | "statusText" | "url">;
+
+    const okResponse: NextResponseShape = {
+      body,
+      ok: true,
+      redirected: false,
+      status: 200,
+      statusText: "OK",
+      url: "http://test/api",
+    };
     mockedNextFetch.mockReturnValue(
-      okAsync({
-        body,
-        ok: true,
-        redirected: false,
-        status: 200,
-        statusText: "OK",
-        url: "http://test/api",
-      } as any),
+      okAsync<NextResponseShape, Error>(okResponse),
     );
 
     const res = await getTransactions({ userId: "u1" });
@@ -57,15 +62,19 @@ describe("getTransactions", () => {
 
   it("returns Err with deserialized Error when response is non-2xx", async () => {
     const body = { name: "ApplicationNotFoundError", message: "not found" };
+    type NextResponseShape = {
+      body: unknown;
+    } & Pick<Response, "ok" | "redirected" | "status" | "statusText" | "url">;
+    const notOkResponse: NextResponseShape = {
+      body,
+      ok: false,
+      redirected: false,
+      status: 404,
+      statusText: "Not Found",
+      url: "http://test/api",
+    };
     mockedNextFetch.mockReturnValue(
-      okAsync({
-        body,
-        ok: false,
-        redirected: false,
-        status: 404,
-        statusText: "Not Found",
-        url: "http://test/api",
-      } as any),
+      okAsync<NextResponseShape, Error>(notOkResponse),
     );
 
     const res = await getTransactions({ userId: "u1" });
@@ -77,7 +86,12 @@ describe("getTransactions", () => {
   });
 
   it("propagates Err from nextFetch failures", async () => {
-    mockedNextFetch.mockReturnValue(errAsync(new Error("network")) as any);
+    type NextResponseShape = {
+      body: unknown;
+    } & Pick<Response, "ok" | "redirected" | "status" | "statusText" | "url">;
+    mockedNextFetch.mockReturnValue(
+      errAsync<NextResponseShape, Error>(new Error("network")),
+    );
 
     const res = await getTransactions({ userId: "u1" });
     expect(res.isErr()).toBe(true);

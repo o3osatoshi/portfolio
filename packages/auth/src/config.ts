@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 
-// https://authjs.dev/guides/edge-compatibilitye
+// Shared NextAuth configuration (Edge-safe: no DB/adapter access here)
 export const authConfig: NextAuthConfig = {
   providers: [Google],
   callbacks: {
@@ -13,6 +13,7 @@ export const authConfig: NextAuthConfig = {
     },
     async session({ session, token }) {
       if (session.user !== undefined && typeof token["id"] === "string") {
+        // Attach the user id to the session for server actions
         session.user.id = token["id"];
       }
       return session;

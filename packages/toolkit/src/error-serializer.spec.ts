@@ -21,17 +21,17 @@ describe("error-serializer", () => {
 
   it("handles string cause", () => {
     const e = new Error("top");
-    (e as any).cause = "inner";
+    e.cause = "inner";
     const s = serializeError(e, { includeStack: false });
     expect(s.cause).toBe("inner");
     const d = deserializeError(s);
-    expect((d as any).cause).toBe("inner");
+    expect(d.cause).toBe("inner");
   });
 
   it("handles nested Error cause recursively", () => {
     const inner = new Error("inner-msg");
     inner.name = "InnerError";
-    const outer = new (Error as any)("outer-msg", { cause: inner });
+    const outer = new Error("outer-msg", { cause: inner });
     outer.name = "OuterError";
 
     const s = serializeError(outer, { includeStack: false });
@@ -45,8 +45,8 @@ describe("error-serializer", () => {
     const d = deserializeError(s);
     expect(d.name).toBe("OuterError");
     expect(d.message).toBe("outer-msg");
-    const dcause = (d as any).cause as Error;
-    expect(dcause).toBeInstanceOf(Error);
+    expect(d.cause instanceof Error).toBe(true);
+    const dcause = d.cause as Error;
     expect(dcause.name).toBe("InnerError");
     expect(dcause.message).toBe("inner-msg");
   });
@@ -55,8 +55,8 @@ describe("error-serializer", () => {
 
   it("honors depth option by summarizing deep causes", () => {
     const deep = new Error("deep-cause");
-    const mid = new (Error as any)("mid", { cause: deep });
-    const top = new (Error as any)("top", { cause: mid });
+    const mid = new Error("mid", { cause: deep });
+    const top = new Error("top", { cause: mid });
 
     const s = serializeError(top, { depth: 1, includeStack: false });
     // depth:1 => cause is summarized as string (not a structured object)
@@ -101,15 +101,15 @@ describe("error-serializer", () => {
   it("passes through already-serialized cause without modification", () => {
     const inner: SerializedError = { name: "Inner", message: "m" };
     const top = new Error("top");
-    (top as any).cause = inner;
+    top.cause = inner;
     const s = serializeError(top);
     expect(s.cause).toEqual(inner);
   });
 
   it("controls structured depth of cause chain", () => {
     const inner = new Error("inner");
-    const mid = new (Error as any)("mid", { cause: inner });
-    const top = new (Error as any)("top", { cause: mid });
+    const mid = new Error("mid", { cause: inner });
+    const top = new Error("top", { cause: mid });
 
     // default depth=2 → top.cause structured, mid.cause summarized string
     const sDefault = serializeError(top);
@@ -132,7 +132,7 @@ describe("error-serializer", () => {
 
   it("propagates includeStack option to nested causes", () => {
     const inner = new Error("inner");
-    const top = new (Error as any)("top", { cause: inner });
+    const top = new Error("top", { cause: inner });
 
     const withStack = serializeError(top, { includeStack: true });
     const innerWith = withStack.cause as SerializedError;
@@ -148,7 +148,7 @@ describe("error-serializer", () => {
   it("keeps string cause as-is without truncation", () => {
     const long = "x".repeat(300);
     const e = new Error("msg");
-    (e as any).cause = long;
+    e.cause = long;
     const s = serializeError(e); // default depth>0 preserves string causes
     expect(typeof s.cause).toBe("string");
     expect((s.cause as string).length).toBe(300);
@@ -163,7 +163,7 @@ describe("error-serializer", () => {
     const err = deserializeError(payload);
     expect(err.name).toBe("Top");
     expect(err.message).toBe("M");
-    expect((err as any).cause).toBe("S");
+    expect(err.cause).toBe("S");
   });
 
   it("fallback path truncates long primitive inputs to default maxLen", () => {
@@ -176,15 +176,15 @@ describe("error-serializer", () => {
 
   it("normalizes negative depth to 0 (summarize)", () => {
     const inner = new Error("inner");
-    const top = new (Error as any)("top", { cause: inner });
+    const top = new Error("top", { cause: inner });
     const s = serializeError(top, { depth: -1 });
     expect(typeof s.cause).toBe("string");
   });
 
   it("with depth=3 keeps second-level cause summarized string", () => {
     const inner = new Error("inner");
-    const mid = new (Error as any)("mid", { cause: inner });
-    const top = new (Error as any)("top", { cause: mid });
+    const mid = new Error("mid", { cause: inner });
+    const top = new Error("top", { cause: mid });
     const s = serializeError(top, { depth: 3 });
     expect(isSerializedError(s.cause)).toBe(true);
     const midSer = s.cause as SerializedError;
@@ -201,17 +201,17 @@ describe("error-serializer", () => {
   });
 
   it("deserializes from unknown input with schema validation (success)", () => {
-    const payload = {
+    const payload: unknown = {
       name: "X",
       cause: { name: "A", message: "B" },
       extra: 1,
       message: "Y",
-    } as any;
+    };
     const e = deserializeError(payload);
     expect(e.name).toBe("X");
     expect(e.message).toBe("Y");
-    const c = (e as any).cause as Error;
-    expect(c).toBeInstanceOf(Error);
+    expect(e.cause instanceof Error).toBe(true);
+    const c = e.cause as Error;
     expect(c.name).toBe("A");
     expect(c.message).toBe("B");
   });

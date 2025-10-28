@@ -57,7 +57,7 @@ describe("toHttpErrorResponse", () => {
 
   it("includes serialized cause and respects includeStack option", () => {
     const cause = new Error("inner");
-    const top = new (Error as any)("top", { cause });
+    const top = new Error("top", { cause });
     const withStack = toHttpErrorResponse(top, undefined, {
       includeStack: true,
     });

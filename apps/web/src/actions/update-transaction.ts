@@ -4,11 +4,11 @@ import {
   parseUpdateTransactionRequest,
   UpdateTransactionUseCase,
 } from "@repo/application";
+import { getUserId } from "@repo/auth";
 import { PrismaTransactionRepository } from "@repo/prisma";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPath, getTag } from "@/utils/handle-nav";
 import { updateTransactionSchema } from "@/utils/validation";
@@ -28,8 +28,7 @@ export const updateTransaction = async (
       return err("validation error");
     }
 
-    const session = await auth();
-    const userId = session?.user?.id;
+    const userId = await getUserId();
     if (userId === undefined) {
       return err("You must be logged in to update a transaction.");
     }
