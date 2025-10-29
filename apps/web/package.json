@@ -6,6 +6,7 @@
     "build": "next build",
     "clean": "rimraf .next out",
     "dev": "next dev",
+    "pull:env": "doppler secrets download --project portfolio-web --config dev --no-file --format env > ./.env.local",
     "start": "next start",
     "test": "vitest run",
     "test:cvrg": "vitest run --coverage",

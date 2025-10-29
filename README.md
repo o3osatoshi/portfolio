@@ -78,6 +78,7 @@ pnpm install
 - `pnpm check:test` / `pnpm check:test:cvrg` – Execute package `test` scripts (Vitest) with optional coverage.
 - `pnpm style` – Package sort → ESLint (fix) → Biome (write).
 - `pnpm clean` – Remove build artifacts across packages.
+- `pnpm pull:env` – Run `pull:env` scripts only in packages/apps that define them (updates local `.env*` files).
 - `pnpm docs` – Generate API docs via TypeDoc.
 - `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
 - `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.

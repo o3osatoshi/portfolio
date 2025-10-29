@@ -19,6 +19,7 @@
     "dev:storybook": "turbo run dev --filter=@repo/storybook...",
     "dev:web": "turbo run dev --filter=@repo/web...",
     "docs": "typedoc",
+    "pull:env": "turbo run pull:env",
     "refine": "run-s style build check api:extract",
     "release": "changeset publish",
     "release:log": "changeset",
