@@ -37,6 +37,8 @@
     },
     "pull:env": {
       "cache": false,
+      "inputs": [],
+      "outputLogs": "new-only",
       "outputs": []
     },
     "test": {
