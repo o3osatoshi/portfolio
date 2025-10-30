@@ -42,8 +42,7 @@
     "@prisma/adapter-pg": "^6.16.2",
     "@prisma/client": "^6.16.2",
     "@repo/domain": "workspace:*",
-    "neverthrow": "catalog:",
-    "npm-run-all": "catalog:"
+    "neverthrow": "catalog:"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
@@ -51,6 +50,7 @@
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "dotenv-cli": "catalog:",
+    "npm-run-all": "catalog:",
     "prisma": "^6.16.2",
     "testcontainers": "^11.5.1",
     "tsx": "catalog:",

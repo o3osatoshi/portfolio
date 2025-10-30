@@ -519,9 +519,6 @@ importers:
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
-      npm-run-all:
-        specifier: 'catalog:'
-        version: 4.1.5
     devDependencies:
       '@o3osatoshi/config':
         specifier: workspace:*
@@ -538,6 +535,9 @@ importers:
       dotenv-cli:
         specifier: 'catalog:'
         version: 8.0.0
+      npm-run-all:
+        specifier: 'catalog:'
+        version: 4.1.5
       prisma:
         specifier: ^6.16.2
         version: 6.16.2(magicast@0.3.5)(typescript@5.9.2)
