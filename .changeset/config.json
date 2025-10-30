@@ -6,7 +6,6 @@
     "@changesets/changelog-github",
     { "repo": "o3osatoshi/portfolio" }
   ],
-  "commit": true,
   "commitMessage": "chore(release): version packages",
   "fixed": [],
   "ignore": [
