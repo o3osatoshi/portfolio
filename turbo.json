@@ -13,11 +13,13 @@
     "build": {
       "dependsOn": ["^build"],
       "env": [
-        "ETHERSCAN_API_KEY",
-        "DATABASE_URL",
-        "AUTH_SECRET",
         "AUTH_GOOGLE_ID",
-        "AUTH_GOOGLE_SECRET"
+        "AUTH_GOOGLE_SECRET",
+        "AUTH_SECRET",
+        "DATABASE_URL",
+        "ETHERSCAN_API_KEY",
+        "NEXT_PUBLIC_API_BASE_URL",
+        "NEXT_PUBLIC_RAINBOW_PROJECT_ID"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [
