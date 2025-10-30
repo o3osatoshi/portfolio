@@ -519,6 +519,9 @@ importers:
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
+      npm-run-all:
+        specifier: 'catalog:'
+        version: 4.1.5
     devDependencies:
       '@o3osatoshi/config':
         specifier: workspace:*
