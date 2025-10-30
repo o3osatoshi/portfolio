@@ -78,6 +78,7 @@ pnpm install
 - `pnpm check:test` / `pnpm check:test:cvrg` – Execute package `test` scripts (Vitest) with optional coverage.
 - `pnpm style` – Package sort → ESLint (fix) → Biome (write).
 - `pnpm clean` – Remove build artifacts across packages.
+- `pnpm pull:env` – Run `pull:env` scripts only in packages/apps that define them (updates local `.env*` files).
 - `pnpm docs` – Generate API docs via TypeDoc.
 - `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
 - `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.
@@ -133,6 +134,17 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 - `packages/prisma`: `.env.development.local`, `.env.production.local` (database connection strings).
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
+
+## Secrets management (Doppler)
+- This repository uses the Doppler CLI to manage environment variables and materialize local `.env.*` files used by scripts.
+- Authenticate with Doppler before pulling secrets: run `doppler login` (or set a `DOPPLER_TOKEN`).
+- Update env files from Doppler:
+  - Workspace convenience: `pnpm pull:env` (executes only in packages/apps that define `pull:env`).
+  - Prisma package:
+    - `pnpm -C packages/prisma pull:env:dev` → writes `packages/prisma/.env.development.local`
+    - `pnpm -C packages/prisma pull:env:lcl` → writes `packages/prisma/.env.test.local`
+    - `pnpm -C packages/prisma pull:env:prd` → writes `packages/prisma/.env.production.local`
+- Current Doppler setup for Prisma uses project `portfolio-prisma` with configs `dev`, `lcl`, and `prd`.
 
 ## Contact
 - **LinkedIn**: [Satoshi Ogura](https://www.linkedin.com/in/satoshi-ogura-189479135)

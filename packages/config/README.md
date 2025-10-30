@@ -57,7 +57,7 @@ Notes
 
 Defaults (high-level)
 - `browserBundlePreset`: ESM, platform `browser`, React/Next external, `dts` off by default.
-- `publicDualBundlePreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prod, off in dev.
+- `publicDualBundlePreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prd, off in dev.
 - `functionsBundlePreset`: ESM, platform `node`, `target: node22`, sourcemap enabled.
 
 ## tsconfig bases

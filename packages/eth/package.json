@@ -46,6 +46,7 @@
     "dev": "tsup --watch",
     "generate": "dotenv -e .env.local -- wagmi generate",
     "prepublishOnly": "pnpm clean && pnpm generate && pnpm typecheck && NODE_ENV=production pnpm build",
+    "pull:env": "doppler secrets download --project portfolio-eth --config prd --no-file --format env > ./.env.local",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {},

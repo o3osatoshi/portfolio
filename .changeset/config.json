@@ -11,10 +11,11 @@
   "fixed": [],
   "ignore": [
     "@repo/application",
+    "@repo/auth",
     "@repo/domain",
-    "@repo/prisma",
     "@repo/eth",
     "@repo/functions",
+    "@repo/prisma",
     "@repo/storybook",
     "@repo/web"
   ],
