@@ -135,6 +135,17 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
 
+## Secrets management (Doppler)
+- This repository uses the Doppler CLI to manage environment variables and materialize local `.env.*` files used by scripts.
+- Authenticate with Doppler before pulling secrets: run `doppler login` (or set a `DOPPLER_TOKEN`).
+- Update env files from Doppler:
+  - Workspace convenience: `pnpm pull:env` (executes only in packages/apps that define `pull:env`).
+  - Prisma package:
+    - `pnpm -C packages/prisma pull:env:dev` → writes `packages/prisma/.env.development.local`
+    - `pnpm -C packages/prisma pull:env:lcl` → writes `packages/prisma/.env.test.local`
+    - `pnpm -C packages/prisma pull:env:prd` → writes `packages/prisma/.env.production.local`
+- Current Doppler setup for Prisma uses project `portfolio-prisma` with configs `dev`, `lcl`, and `prd`.
+
 ## Contact
 - **LinkedIn**: [Satoshi Ogura](https://www.linkedin.com/in/satoshi-ogura-189479135)
 - **X (Twitter)**: [@o3osatoshi](https://x.com/o3osatoshi)
