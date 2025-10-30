@@ -77,6 +77,7 @@ jobs:
         run: pnpm build
         env:
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          NEXT_PUBLIC_RAINBOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_RAINBOW_PROJECT_ID }}
 
       - name: Run typecheck
         run: pnpm check:type
