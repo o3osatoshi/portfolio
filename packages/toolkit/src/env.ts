@@ -1,6 +1,24 @@
 import { z } from "zod";
 
 /**
+ * Options for {@link createEnv}.
+ *
+ * @public
+ */
+export type CreateEnvOptions = {
+  /**
+   * Optional label used in error messages for clarity, e.g. "web" →
+   * `Invalid web env: ...`. If omitted, messages use just `env`.
+   */
+  name?: string;
+  /**
+   * Optional source object to read from. Defaults to `process.env`.
+   * Useful for testing or SSR environments where a custom map is preferred.
+   */
+  source?: Record<string, string | undefined>;
+};
+
+/**
  * Utility type that maps an {@link EnvSchema} to the inferred runtime types
  * produced by each Zod validator.
  *
@@ -21,24 +39,6 @@ export type EnvOf<T extends EnvSchema> = {
 export type EnvSchema = Record<string, z.ZodTypeAny>;
 
 /**
- * Options for {@link createEnv}.
- *
- * @internal
- */
-type CreateEnvOptions = {
-  /**
-   * Optional label used in error messages for clarity, e.g. "web" →
-   * `Invalid web env: ...`. If omitted, messages use just `env`.
-   */
-  name?: string;
-  /**
-   * Optional source object to read from. Defaults to `process.env`.
-   * Useful for testing or SSR environments where a custom map is preferred.
-   */
-  source?: Record<string, string | undefined>;
-};
-
-/**
  * Validates environment variables with Zod and returns a fully typed object.
  *
  * - Reads from `opts.source` when provided, otherwise `process.env`.
@@ -53,24 +53,18 @@ type CreateEnvOptions = {
  *
  * @example
  * // Basic usage with defaults
- * const env = createEnv({
- *   NODE_ENV: z.enum(["development", "test", "production"]),
- *   PORT: z.coerce.number().int().positive().default(3000),
- * });
+ * ```ts
+ * const env = createEnv({ PORT: z.coerce.number().int().positive().default(3000) });
+ * ```
  *
  * @example
  * // Add a label for clearer errors and pass a custom source (e.g. tests)
+ * ```ts
  * const env = createEnv(
- *   {
- *     API_URL: z.url(),
- *     FEATURE_X: z
- *       .string()
- *       .optional()
- *       .transform((v) => v === "1")
- *       .pipe(z.boolean()),
- *   },
- *   { name: "web", source: { API_URL: "https://example.com", FEATURE_X: "1" } },
+ *   { API_URL: z.url() },
+ *   { name: "web", source: { API_URL: "https://example.com" } },
  * );
+ * ```
  *
  * @public
  */

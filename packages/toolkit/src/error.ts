@@ -90,7 +90,7 @@ export type NewError = {
  * more context than a plain `new Error(...)`.
  *
  * ## Error name
- * - Computed as `"\{Layer\}\{Kind\}Error"` (for example `DomainValidationError`).
+ * - Computed as `Layer + Kind + "Error"` (for example `DomainValidationError`).
  * - Useful for quick classification or HTTP mapping.
  *
  * ## Error message

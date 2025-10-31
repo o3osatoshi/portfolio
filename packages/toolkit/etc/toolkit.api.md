@@ -16,10 +16,14 @@ export function composeErrorMessage(parts: ErrorMessageParts): string;
 // @public
 export function composeErrorName(layer: Layer, kind: Kind): string;
 
-// Warning: (ae-forgotten-export) The symbol "CreateEnvOptions" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function createEnv<T extends EnvSchema>(schema: T, opts?: CreateEnvOptions): EnvOf<T>;
+
+// @public
+export type CreateEnvOptions = {
+    name?: string;
+    source?: Record<string, string | undefined>;
+};
 
 // @public
 export function deserializeError(input: unknown): Error;
@@ -186,7 +190,7 @@ export function truncate(value: string, max?: number): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:262:5 - (ae-forgotten-export) The symbol "MESSAGE_FORMAT_VERSION" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:256:5 - (ae-forgotten-export) The symbol "MESSAGE_FORMAT_VERSION" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
