@@ -2,15 +2,12 @@ import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { http } from "wagmi";
 import { holesky } from "wagmi/chains";
 
-const projectId = process.env["NEXT_PUBLIC_RAINBOW_PROJECT_ID"];
-if (projectId === undefined) {
-  throw new Error("NEXT_PUBLIC_RAINBOW_PROJECT_ID is undefined");
-}
+import { env } from "@/env/client";
 
 export const config = getDefaultConfig({
   appName: "RainbowKit demo",
   chains: [holesky],
-  projectId,
+  projectId: env.NEXT_PUBLIC_RAINBOW_PROJECT_ID,
   ssr: true,
   transports: {
     [holesky.id]: http(),

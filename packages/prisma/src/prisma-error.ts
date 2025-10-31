@@ -1,6 +1,6 @@
 import { newError } from "@o3osatoshi/toolkit";
 
-import { Prisma } from "./prisma-client";
+import { Prisma } from "../generated/prisma/client";
 
 /**
  * Context passed to {@link newPrismaError} before classifying the Prisma error.

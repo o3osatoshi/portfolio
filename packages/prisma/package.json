@@ -42,7 +42,8 @@
     "@prisma/adapter-pg": "^6.16.2",
     "@prisma/client": "^6.16.2",
     "@repo/domain": "workspace:*",
-    "neverthrow": "catalog:"
+    "neverthrow": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
