@@ -47,19 +47,25 @@
     "generate": "dotenv -e .env.local -- wagmi generate",
     "prepublishOnly": "pnpm clean && pnpm generate && pnpm typecheck && NODE_ENV=production pnpm build",
     "pull:env": "doppler secrets download --project portfolio-eth --config prd --no-file --format env > ./.env.local",
+    "test": "vitest run",
+    "test:cvrg": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {},
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
+    "@o3osatoshi/toolkit": "workspace:*",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "@wagmi/cli": "^2.3.1",
     "dotenv-cli": "catalog:",
     "rimraf": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "viem": "catalog:",
-    "wagmi": "catalog:"
+    "vitest": "catalog:",
+    "wagmi": "catalog:",
+    "zod": "catalog:"
   },
   "engines": {
     "node": ">=22"

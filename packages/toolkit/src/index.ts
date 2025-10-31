@@ -1,5 +1,6 @@
 /** Toolkit utilities for structured errors and Zod helpers. */
 export * from "./asynchronous";
+export * from "./env";
 export * from "./error";
 export * from "./error-attributes";
 export * from "./error-format";

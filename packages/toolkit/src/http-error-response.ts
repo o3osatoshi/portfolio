@@ -6,9 +6,9 @@
  * - Serializes the provided `Error` into a stable, JSON-safe structure using
  *   {@link serializeError}, suitable for logs, workers, or API responses.
  * - Infers the most appropriate HTTP status code from the error `name` when no
- *   explicit status is provided. Errors produced via {@link newError} use the
- *   convention `"${Layer}${Kind}Error"`, and the `Kind` maps to an HTTP
- *   status as described below.
+ *   explicit status is provided. Errors produced via {@link newError} use a
+ *   computed name of the form `Layer + Kind + "Error"` (for example
+ *   `DomainValidationError`), and the `Kind` maps to an HTTP status as described below.
  *
  * Status mapping (Kind → HTTP status):
  * - `BadRequest` / `Validation` → 400
@@ -74,7 +74,7 @@ const KIND_TO_STATUS: Record<Kind, number> = {
 };
 
 /**
- * Convert an `Error` into an HTTP-friendly `{ body, status }` pair.
+ * Convert an `Error` into an HTTP-friendly object with keys `body` and `status`.
  *
  * - `body` is produced via {@link serializeError}.
  * - `status` is inferred from `error.name` unless overridden.
@@ -126,7 +126,8 @@ function deriveStatusFromError(e: Error): number {
 /**
  * Detect a {@link Kind} value from an error `name`.
  *
- * - Prioritizes names produced by {@link newError}: `"${Layer}${Kind}Error"`.
+ * - Prioritizes names produced by {@link newError}, whose names are built as
+ *   `Layer + Kind + "Error"` (e.g. `DomainValidationError`).
  * - Special-cases external errors: `ZodError` and `AbortError`.
  */
 function detectKindFromName(name: string): Kind | undefined {

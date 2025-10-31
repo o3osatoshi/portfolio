@@ -3,10 +3,7 @@ import { etherscan } from "@wagmi/cli/plugins";
 import { erc20Abi } from "viem";
 import { mainnet } from "wagmi/chains";
 
-const apiKey = process.env.ETHERSCAN_API_KEY;
-if (apiKey === undefined) {
-  throw new Error("ETHERSCAN_API_KEY is not set");
-}
+import { env } from "./src/env";
 
 export default defineConfig({
   contracts: [
@@ -18,7 +15,7 @@ export default defineConfig({
   out: "src/generated.ts",
   plugins: [
     etherscan({
-      apiKey,
+      apiKey: env.ETHERSCAN_API_KEY,
       chainId: mainnet.id,
       contracts: [
         {

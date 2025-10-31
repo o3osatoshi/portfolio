@@ -1,11 +1,7 @@
 import { ResultAsync } from "neverthrow";
 
+import { env } from "@/env/client";
 import { newFetchError } from "@o3osatoshi/toolkit";
-
-const base = process.env["NEXT_PUBLIC_API_BASE_URL"];
-if (base === undefined) {
-  throw new Error("NEXT_PUBLIC_API_BASE_URL is undefined");
-}
 
 export type Search =
   | Record<string, string>
@@ -40,7 +36,7 @@ export function nextFetch({
 }: Props): ResultAsync<NextFetchResponse, Error> {
   const queryPath = getQueryPath(path, search);
 
-  const url = new URL(queryPath, base);
+  const url = new URL(queryPath, env.NEXT_PUBLIC_API_BASE_URL);
 
   const _tags = tags === undefined ? [queryPath] : [...tags, queryPath];
 
