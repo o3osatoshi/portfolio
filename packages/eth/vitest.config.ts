@@ -1,3 +1,9 @@
 import { baseTestPreset } from "@o3osatoshi/config/vitest";
 
-export default baseTestPreset();
+export default baseTestPreset({
+  test: {
+    coverage: {
+      exclude: ["generated.ts"],
+    },
+  },
+});
