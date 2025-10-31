@@ -3,7 +3,7 @@ import { baseTestPreset } from "@o3osatoshi/config/vitest";
 export default baseTestPreset({
   test: {
     coverage: {
-      exclude: ["generated.ts"],
+      exclude: ["src/generated.ts"],
     },
   },
 });
