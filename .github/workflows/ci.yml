@@ -59,17 +59,6 @@ jobs:
         if: steps.pw-cache.outputs.cache-hit != 'true'
         run: pnpm -F @repo/storybook exec playwright install chromium
 
-      - name: Restore caches
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/.cache/eslint
-            **/.cache/tsbuildinfo
-          key: cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '22' }}-${{ hashFiles('**/tsconfig*.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            cache-${{ runner.os }}-node${{ steps.node.outputs.node-version || '22' }}-
-            cache-${{ runner.os }}-
-
       - name: Run biome, eslint and pkg
         run: pnpm style:pure
 
