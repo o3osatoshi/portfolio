@@ -1,0 +1,12 @@
+{
+  // Wrangler v4 configuration for the Edge worker
+  // Mirrors the previous wrangler.toml (name, main, compatibility_date, minify)
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/configuration/schema.json",
+  // Pin to a known-good Workers runtime version
+  "compatibility_date": "2025-11-02",
+  // Entry module (ESM). Wrangler will bundle TypeScript via esbuild.
+  "main": "src/index.ts",
+  // Keep the bundle small in production
+  "minify": true,
+  "name": "edge"
+}
