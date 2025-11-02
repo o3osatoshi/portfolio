@@ -8,5 +8,5 @@
   "main": "src/index.ts",
   // Keep the bundle small in production
   "minify": true,
-  "name": "edge"
+  "name": "portfolio-edge"
 }
