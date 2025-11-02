@@ -45,6 +45,7 @@ jobs:
         env:
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
           NEXT_PUBLIC_RAINBOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_RAINBOW_PROJECT_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Creating .npmrc
         run: |
