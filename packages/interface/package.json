@@ -8,13 +8,14 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/http/node/dev.ts",
     "test": "vitest run",
     "test:cvrg": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.6",
+    "@hono/zod-validator": "^0.7.4",
     "@o3osatoshi/toolkit": "workspace:*",
     "hono": "^4.10.4",
     "neverthrow": "catalog:",
