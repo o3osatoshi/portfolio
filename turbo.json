@@ -46,7 +46,7 @@
     "test": {
       "cache": true,
       "dependsOn": ["^build", "^test"],
-      "outputs": [".reports/**"]
+      "outputs": []
     },
     "test:cvrg": {
       "cache": true,
