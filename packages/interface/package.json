@@ -5,7 +5,15 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    "./http/node": {
+      "import": "./src/http/node/index.ts"
+    },
+    "./http/edge": {
+      "import": "./src/http/edge/index.ts"
+    },
+    "./rpc-client": {
+      "import": "./src/rpc-client/index.ts"
+    }
   },
   "scripts": {
     "dev": "tsx watch src/http/node/dev.ts",
