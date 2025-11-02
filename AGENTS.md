@@ -33,11 +33,14 @@ This document reflects the current state of the repository. Commands listed belo
 - Update env files (runs only where `pull:env` script exists): `pnpm pull:env`.
 - Generate docs: `pnpm docs`.
 - Deploy Firebase functions: `pnpm deploy:functions`.
+- Deploy Edge (prod): `pnpm deploy:edge`.
+- Deploy Edge (prv): `pnpm deploy:edge:prv`.
 
 ## Per-App / Package Commands
 - Web: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
 - Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
 - Functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
+- Edge: `pnpm -C apps/edge dev`, `pnpm -C apps/edge build`, `pnpm -C apps/edge deploy`, `pnpm -C apps/edge deploy:prv`.
 - Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma seed`, `pnpm -C packages/prisma studio`.
 - Eth codegen: `pnpm -C packages/eth generate` (requires `packages/eth/.env.local`).
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.

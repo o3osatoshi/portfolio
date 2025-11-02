@@ -15,6 +15,7 @@
     "check:type": "turbo run typecheck",
     "clean": "turbo run clean --parallel",
     "deploy:edge": "pnpm -C apps/edge deploy",
+    "deploy:edge:prv": "pnpm -C apps/edge deploy:prv",
     "deploy:functions": "firebase deploy --only functions",
     "dev": "turbo run dev",
     "dev:edge": "turbo run dev --filter=@repo/edge...",
