@@ -281,6 +281,9 @@ importers:
       '@repo/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@repo/interface':
+        specifier: workspace:*
+        version: link:../../packages/interface
       '@repo/prisma':
         specifier: workspace:*
         version: link:../../packages/prisma

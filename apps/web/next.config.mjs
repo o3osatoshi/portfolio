@@ -3,7 +3,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  transpilePackages: ["@repo/prisma", "@repo/application", "@repo/domain"],
+  transpilePackages: [
+    "@repo/interface",
+    "@repo/prisma",
+    "@repo/application",
+    "@repo/domain",
+  ],
 };
 
 export default nextConfig;
