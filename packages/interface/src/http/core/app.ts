@@ -6,6 +6,12 @@ import { toHttpError } from "./errors";
 import { loggerMiddleware, requestIdMiddleware } from "./middlewares";
 
 /**
+ * Server application type representing the Hono routes in this module.
+ * Used by typed clients (e.g. `hono/client`).
+ */
+export type AppType = ReturnType<typeof buildApp>;
+
+/**
  * Runtime-specific dependencies the HTTP app expects.
  * Implementations are provided by each delivery/runtime layer.
  */
