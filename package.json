@@ -50,6 +50,7 @@
     "eslint-plugin-perfectionist": "^4.15.0",
     "eslint-plugin-storybook": "^9.1.10",
     "eslint-plugin-vitest": "^0.5.4",
+    "firebase-tools": "^14.23.0",
     "jsonc-eslint-parser": "^2.4.0",
     "npm-run-all": "catalog:",
     "sort-package-json": "^3.4.0",
