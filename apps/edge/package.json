@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "wrangler deploy --dry-run --outdir dist",
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev"
+    "deploy:prv": "wrangler versions upload",
+    "dev": "wrangler dev",
+    "sync:env": "doppler secrets --json --project portfolio-edge --config prd | jq -c 'with_entries(.value = .value.computed)' | wrangler secret bulk"
   },
   "dependencies": {
     "@repo/interface": "workspace:*"
