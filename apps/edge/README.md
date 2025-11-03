@@ -6,7 +6,7 @@ This package contains the Cloudflare Worker that exposes the public HTTP API for
 - Runtime: Cloudflare Workers (Wrangler v4)
 - Entry: `src/index.ts` → exports the Hono app from `@repo/interface/http/edge`
 - Config: `wrangler.jsonc` (name, main, compatibility_date, minify)
-- Base path: `/api` (provided by the shared interface app)
+- Base path: `/edge` (provided by the shared interface app)
 
 ## Prerequisites
 - Node.js >= 22 and pnpm installed
@@ -80,9 +80,9 @@ pnpm -C apps/edge dev
 
 Hit the API:
 ```bash
-curl -i http://localhost:8787/api/healthz
-curl -s http://localhost:8787/api/todos | jq
-curl -s -X POST http://localhost:8787/api/todos \
+curl -i http://localhost:8787/edge/healthz
+curl -s http://localhost:8787/edge/todos | jq
+curl -s -X POST http://localhost:8787/edge/todos \
   -H 'content-type: application/json' \
   -d '{"title":"Write docs"}' | jq
 ```
@@ -97,10 +97,10 @@ pnpm -C apps/edge sync:env
 ```
 
 ## API surface
-The shared interface app mounts these routes under `/api`:
-- `GET /api/healthz` → `{ ok: true }`
-- `GET /api/todos` → `Array<{ id: string; title: string }>`
-- `POST /api/todos` with JSON `{ "title": string }` → `201 Created` and the created todo
+The shared interface app mounts these routes under `/edge`:
+- `GET /edge/healthz` → `{ ok: true }`
+- `GET /edge/todos` → `Array<{ id: string; title: string }>`
+- `POST /edge/todos` with JSON `{ "title": string }` → `201 Created` and the created todo
 
 ## Troubleshooting
 - Error 10214 (“latest version isn't currently deployed”):
@@ -111,4 +111,3 @@ The shared interface app mounts these routes under `/api`:
   - Ensure `doppler configure` is complete or a service token is set.
 - Secret name validation:
   - Ensure keys match `^[A-Z0-9_]+$`; transform with `jq` if needed.
-

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { NotFoundError } from "../core/errors";
 import { buildApp, type Deps } from "./app";
-import { NotFoundError } from "./errors";
 
 function makeDeps(overrides: Partial<Deps> = {}): Deps {
   return {
@@ -18,7 +18,7 @@ function makeDeps(overrides: Partial<Deps> = {}): Deps {
   } satisfies Deps;
 }
 
-describe("http/core/app", () => {
+describe("http/node/app", () => {
   it("serves health check", async () => {
     const app = buildApp(makeDeps());
     const res = await app.request("/api/healthz");

@@ -1,4 +1,4 @@
-import type { Deps } from "../core/app";
+import type { Deps } from "./app";
 
 /**
  * Create Node.js runtime dependencies for the HTTP app.
