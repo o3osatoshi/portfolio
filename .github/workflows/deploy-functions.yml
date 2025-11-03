@@ -40,4 +40,9 @@ jobs:
         run: pnpm build:functions
 
       - name: Deploy functions
-        run: pnpm deploy:functions
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          printf '%s' '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}' > "$HOME/credentials.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/credentials.json"
+          pnpm deploy:functions --project "$FIREBASE_PROJECT_ID"
