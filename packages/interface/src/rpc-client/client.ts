@@ -1,6 +1,7 @@
 import { hc } from "hono/client";
 
-import type { AppType } from "../http/core/app";
+import type { EdgeAppType } from "../http/edge/app";
+import type { AppType } from "../http/node/app";
 
 /**
  * Create a typed RPC client for the interface HTTP API.
@@ -13,4 +14,13 @@ import type { AppType } from "../http/core/app";
  */
 export function createInterfaceClient(baseURL: string) {
   return hc<AppType>(baseURL);
+}
+
+/**
+ * Create a typed RPC client for the Edge HTTP API.
+ *
+ * Routes are mounted under `/edge`.
+ */
+export function createInterfaceClientEdge(baseURL: string) {
+  return hc<EdgeAppType>(baseURL);
 }

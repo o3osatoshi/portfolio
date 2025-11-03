@@ -11,31 +11,41 @@ This package provides the reusable HTTP interface (Hono app) for the portfolio, 
 Subpath exports are declared in `package.json`:
 
 ```ts
-// Edge runtime (Cloudflare Workers)
-import app from "@repo/interface/http/edge";
+// Edge runtime (Cloudflare Workers / Next.js Edge)
+import app from "@repo/interface/http/edge"; // Cloudflare Workers default export
+import { GET, POST } from "@repo/interface/http/edge"; // Next.js Edge handlers
 
 // Node runtime (Next.js API route, Vercel, etc.)
 import { app, GET, POST } from "@repo/interface/http/node";
 
 // Typed RPC client for browsers/servers
-import { createInterfaceClient } from "@repo/interface/rpc-client";
+import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interface/rpc-client";
 ```
 
 ## HTTP API
-The app is mounted under `/api` and exposes:
-- `GET /api/healthz` → `{ ok: true }`
-- `GET /api/todos` → `Array<{ id: string; title: string }>`
-- `POST /api/todos` with JSON `{ "title": string }` → `201 Created` and the created todo
+ランタイムごとにベースパスを分離しています（用途の独立性を高めるため）。
+
+- Node.js（Next.js API / Firebase Functions など）: ベースパス `/api`
+  - `GET /api/healthz` → `{ ok: true }`
+  - `GET /api/todos` → `Array<{ id: string; title: string }>`
+  - `POST /api/todos` with JSON `{ "title": string }` → `201 Created`
+
+- Edge（Cloudflare Workers / Next.js Edge）: ベースパス `/edge`
+  - `GET /edge/healthz`
+  - `GET /edge/todos`
+  - `POST /edge/todos`
 
 Validation uses `zod` and `@hono/zod-validator`. Errors are normalized and serialized by the shared toolkit.
 
 ## How it’s structured
-- `src/http/core/app.ts` — builds the Hono app with routes and middlewares.
-- `src/http/core/middlewares.ts` — request id, structured logging.
-- `src/http/edge/index.ts` — minimal `Deps` implementation for Edge runtimes.
-- `src/http/node/{index.ts,deps.ts}` — Node runtime wiring and helpers.
-- `src/http/node/adapter-firebase.ts` — adapter to expose the Hono app as a Firebase HTTPS function handler.
-- `src/rpc-client/client.ts` — typed client creator bound to the app’s route types.
+- `src/http/core/{dto.ts,errors.ts,middlewares.ts}` — shared primitives.
+- `src/http/node/app.ts` — Node 用ビルダー（basePath: `/api`）。
+- `src/http/node/{index.ts,deps.ts}` — Node ランタイム配線と依存。
+- `src/http/node/adapter-firebase.ts` — Firebase HTTPS function アダプタ。
+- `src/http/edge/app.ts` — Edge 用ビルダー（basePath: `/edge`）。
+- `src/http/edge/deps.ts` — Edge ランタイム依存の生成。
+- `src/http/edge/index.ts` — Edge ランタイム配線。
+- `src/rpc-client/client.ts` — Node/Edge 向けの型付きクライアント作成関数。
 
 ## Usage examples
 
@@ -44,6 +54,17 @@ Edge (Cloudflare Workers):
 // apps/edge/src/index.ts
 import app from "@repo/interface/http/edge";
 export default app;
+```
+
+Next.js (Vercel Edge):
+```ts
+// apps/web/src/app/api/[...route]/route.ts
+export const runtime = "nodejs";
+export { GET, POST } from "@repo/interface/http/node";
+
+// apps/web/src/app/edge/[...route]/route.ts
+export const runtime = "edge";
+export { GET, POST } from "@repo/interface/http/edge";
 ```
 
 Firebase Functions (Node runtime):
@@ -57,12 +78,15 @@ export const api = createFirebaseHandler(app);
 
 Typed client (browser/server):
 ```ts
-import { createInterfaceClient } from "@repo/interface/rpc-client";
+import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interface/rpc-client";
 
-const client = createInterfaceClient("https://your-edge-domain.example");
-const health = await client.api.healthz.$get();
-const todos = await client.api.todos.$get();
-const created = await client.api.todos.$post({ json: { title: "Buy milk" } });
+// Node API at /api
+const clientNode = createInterfaceClient("https://your-domain.example");
+await clientNode.api.healthz.$get();
+
+// Edge API at /edge
+const clientEdge = createInterfaceClientEdge("https://your-domain.example");
+await clientEdge.edge.healthz.$get();
 ```
 
 ## Development
@@ -85,7 +109,7 @@ pnpm -C packages/interface typecheck
 The HTTP app expects a small `Deps` object. Delivery layers can replace the in-memory demo implementation with real infrastructure (databases, external services):
 
 ```ts
-import { buildApp, type Deps } from "@repo/interface/src/http/core/app";
+import { buildApp, type Deps } from "@repo/interface/src/http/node/app";
 
 const deps: Deps = {
   async createTodo(input) {
@@ -101,4 +125,3 @@ export const app = buildApp(deps);
 ```
 
 This keeps transport concerns and domain/application logic decoupled while enabling different delivery targets to share the same API surface.
-

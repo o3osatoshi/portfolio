@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
 
-import { buildApp } from "../core/app";
+import { buildApp } from "./app";
 import { makeNodeDeps } from "./deps";
 
 /**

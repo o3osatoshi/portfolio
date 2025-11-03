@@ -1,20 +1,19 @@
 import { handle } from "hono/vercel";
 
-import { buildApp } from "../core/app";
+import { buildApp } from "./app";
 import { makeNodeDeps } from "./deps";
 
 /**
- * Hono application instance wired with Node runtime dependencies.
+ * Runtime wiring for Node environments (Next.js API, Firebase, etc.).
+ * - Base path: `/api`
  */
 const app = buildApp(makeNodeDeps());
+
 /**
- * Next.js/Vercel-compatible GET handler.
- * Delegates to the Hono app through `handle`.
+ * Next.js/Vercel-compatible handlers.
  */
 export const GET = handle(app);
-/**
- * Next.js/Vercel-compatible POST handler.
- * Delegates to the Hono app through `handle`.
- */
 export const POST = handle(app);
+
 export { app };
+export default app;

@@ -1,47 +1,43 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 
-import { CreateTodoInput, Todo, TodoList } from "./dto";
-import { toHttpError } from "./errors";
-import { loggerMiddleware, requestIdMiddleware } from "./middlewares";
+import { CreateTodoInput, Todo, TodoList } from "../core/dto";
+import { toHttpError } from "../core/errors";
+import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
 
 /**
- * Server application type representing the Hono routes in this module.
- * Used by typed clients (e.g. `hono/client`).
+ * Concrete Hono app type for the Node HTTP interface.
+ *
+ * Useful for deriving a typed RPC client via `hono/client`.
  */
 export type AppType = ReturnType<typeof buildApp>;
 
 /**
- * Runtime-specific dependencies the HTTP app expects.
- * Implementations are provided by each delivery/runtime layer.
+ * Dependencies required by {@link buildApp}.
+ *
+ * Provide infrastructure-backed implementations in production (e.g. DB).
  */
 export type Deps = {
-  /**
-   * Create a new todo item.
-   * @param input Object containing the todo title.
-   * @returns A promise that resolves to the created todo with an id.
-   */
+  /** Persist a new todo and return the created resource. */
   createTodo: (input: {
     title: string;
   }) => Promise<{ id: string; title: string }>;
-  /**
-   * Retrieve all todo items.
-   * @returns A promise that resolves to an array of todos.
-   */
+  /** Retrieve all todos visible to the caller. */
   listTodos: () => Promise<Array<{ id: string; title: string }>>;
 };
 
 /**
- * Build and configure the Hono application.
+ * Build the Node HTTP application.
  *
- * The app is mounted under the `/api` base path and exposes:
- * - GET `/api/healthz`: Liveness probe.
- * - GET `/api/todos`: Return the current todo list.
- * - POST `/api/todos`: Create a new todo (validated by zod).
+ * Routes (mounted under `/api`):
+ * - GET `/healthz` — Liveness probe.
+ * - GET `/todos` — List todos.
+ * - POST `/todos` — Create a todo (validated by {@link CreateTodoInput}).
  *
- * Common middlewares are applied to all routes: request id and logging.
+ * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
+ * Errors: domain errors are serialized via {@link toHttpError}.
  *
- * @param deps Injected runtime dependencies implementing data access.
+ * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
  */
 export function buildApp(deps: Deps) {
@@ -51,7 +47,6 @@ export function buildApp(deps: Deps) {
 
   app.get("/healthz", (c) => c.json({ ok: true }));
 
-  // GET /api/todos
   app.get("/todos", async (c) => {
     try {
       const todos = await deps.listTodos();
@@ -63,7 +58,6 @@ export function buildApp(deps: Deps) {
     }
   });
 
-  // POST /api/todos
   app.post("/todos", zValidator("json", CreateTodoInput), async (c) => {
     try {
       const input = c.req.valid("json");
