@@ -2,7 +2,14 @@ import { Hono } from "hono";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("firebase-functions/v2/https", () => ({
-  onRequest: vi.fn((cb: (req: unknown, res: unknown) => Promise<void>) => cb),
+  // Support both signatures: onRequest(cb) and onRequest(options, cb)
+  onRequest: vi.fn((...args: unknown[]) => {
+    const cb = (args.length === 1 ? args[0] : args[1]) as (
+      req: unknown,
+      res: unknown,
+    ) => Promise<void>;
+    return cb;
+  }),
 }));
 
 import { onRequest } from "firebase-functions/v2/https";
@@ -30,11 +37,7 @@ describe("node/adapter-firebase", () => {
       method: string;
       url: string;
     };
-    const req: TestReq = {
-      headers: {},
-      method: "GET",
-      url: "http://localhost/t",
-    };
+    const req: TestReq = { headers: {}, method: "GET", url: "/t" };
 
     type TestRes = {
       body: Buffer;
