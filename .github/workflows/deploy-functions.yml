@@ -10,6 +10,9 @@ concurrency:
   group: deploy-functions-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
