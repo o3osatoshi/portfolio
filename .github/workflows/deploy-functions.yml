@@ -48,7 +48,7 @@ jobs:
         with:
           create_credentials_file: true
           workload_identity_provider: projects/563258569866/locations/global/workloadIdentityPools/github/providers/github
-          service_account: github-action-961821538@portfolio-bd22d.iam.gserviceaccount.com
+          service_account: github-actions@portfolio-bd22d.iam.gserviceaccount.com
 
       - name: gcloud auth login
         run: gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
