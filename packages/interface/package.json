@@ -25,13 +25,13 @@
     "@hono/node-server": "^1.19.6",
     "@hono/zod-validator": "^0.7.4",
     "@o3osatoshi/toolkit": "workspace:*",
-    "firebase-functions": "^6.4.0",
     "hono": "^4.10.4",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
+    "@types/express": "^4.17.21",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "tsx": "catalog:",

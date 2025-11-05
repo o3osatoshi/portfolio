@@ -41,7 +41,7 @@ Validation uses `zod` and `@hono/zod-validator`. Errors are normalized and seria
 - `src/http/core/{dto.ts,errors.ts,middlewares.ts}` — shared primitives.
 - `src/http/node/app.ts` — Node 用ビルダー（basePath: `/api`）。
 - `src/http/node/{index.ts,deps.ts}` — Node ランタイム配線と依存。
-- `src/http/node/adapter-firebase.ts` — Firebase HTTPS function アダプタ。
+- `src/http/node/adapter-express.ts` — Express 互換アダプタ（Firebase Functions などの Node ランタイムで使用）。
 - `src/http/edge/app.ts` — Edge 用ビルダー（basePath: `/edge`）。
 - `src/http/edge/deps.ts` — Edge ランタイム依存の生成。
 - `src/http/edge/index.ts` — Edge ランタイム配線。
@@ -70,10 +70,10 @@ export { GET, POST } from "@repo/interface/http/edge";
 Firebase Functions (Node runtime):
 ```ts
 // apps/functions/src/api.ts
-import { createFirebaseHandler } from "@repo/interface/http/node/adapter-firebase";
-import { app } from "@repo/interface/http/node";
+import { onRequest } from "firebase-functions/v2/https";
+import { app, createExpressRequestHandler } from "@repo/interface/http/node";
 
-export const api = createFirebaseHandler(app);
+export const api = onRequest(createExpressRequestHandler(app));
 ```
 
 Typed client (browser/server):

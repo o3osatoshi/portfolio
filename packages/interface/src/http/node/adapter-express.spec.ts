@@ -1,22 +1,9 @@
 import { Hono } from "hono";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-vi.mock("firebase-functions/v2/https", () => ({
-  // Support both signatures: onRequest(cb) and onRequest(options, cb)
-  onRequest: vi.fn((...args: unknown[]) => {
-    const cb = (args.length === 1 ? args[0] : args[1]) as (
-      req: unknown,
-      res: unknown,
-    ) => Promise<void>;
-    return cb;
-  }),
-}));
+import { createExpressRequestHandler } from "./adapter-express";
 
-import { onRequest } from "firebase-functions/v2/https";
-
-import { createFirebaseHandler } from "./adapter-firebase";
-
-describe("node/adapter-firebase", () => {
+describe("node/adapter-express", () => {
   it("bridges hono app to firebase request/response", async () => {
     const app = new Hono();
     app.get("/t", (c) => c.text("pong"));
@@ -40,12 +27,11 @@ describe("node/adapter-firebase", () => {
       statusCode?: number;
     };
 
-    const handler = createFirebaseHandler(app) as unknown as (
+    const handler = createExpressRequestHandler(app) as unknown as (
       req: TestReq,
       res: TestRes,
     ) => Promise<void>;
 
-    // The mocked onRequest returns the callback; ensure it's a function
     expect(typeof handler).toBe("function");
 
     const req: TestReq = {
@@ -75,12 +61,8 @@ describe("node/adapter-firebase", () => {
 
     await handler(req, res);
 
-    // The adapter currently sends text responses via res.send without
-    // forwarding headers or status from the Hono response.
     expect(res.jsonBody).toBeUndefined();
     expect(res.bodyText).toBe("pong");
-
-    expect(onRequest).toHaveBeenCalledTimes(1);
   });
 
   it("forwards response headers to firebase response", async () => {
@@ -111,7 +93,7 @@ describe("node/adapter-firebase", () => {
       statusCode?: number;
     };
 
-    const handler = createFirebaseHandler(app) as unknown as (
+    const handler = createExpressRequestHandler(app) as unknown as (
       req: TestReq,
       res: TestRes,
     ) => Promise<void>;
