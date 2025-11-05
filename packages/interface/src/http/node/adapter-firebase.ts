@@ -11,7 +11,12 @@ export function createFirebaseHandler(app: Hono) {
     const headers = new Headers();
 
     Object.keys(req.headers).forEach((k) => {
-      headers.set(k, req.headers[k] as string);
+      const v = req.headers[k];
+      if (Array.isArray(v)) {
+        v.forEach((value) => headers.append(k, value));
+      } else if (typeof v === "string") {
+        headers.set(k, v);
+      }
     });
     const body = req.body;
 
