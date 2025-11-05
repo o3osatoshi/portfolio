@@ -26,9 +26,14 @@ export function createFirebaseHandler(app: Hono) {
           method: req.method,
         })
       : new Request(url, {
-          body: Buffer.from(
-            typeof body === "string" ? body : JSON.stringify(body || {}),
-          ),
+          body:
+            typeof body === "string"
+              ? Buffer.from(body)
+              : body instanceof Uint8Array
+              ? Buffer.from(body)
+              : body instanceof ArrayBuffer
+              ? Buffer.from(new Uint8Array(body))
+              : Buffer.from(JSON.stringify(body || {})),
           headers,
           method: req.method,
         });
