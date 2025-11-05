@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { createExpressRequestHandler } from "./adapter-express";
 
 describe("node/adapter-express", () => {
-  it("bridges hono app to firebase request/response", async () => {
+  it("bridges hono app to express request/response", async () => {
     const app = new Hono();
     app.get("/t", (c) => c.text("pong"));
 
@@ -65,7 +65,7 @@ describe("node/adapter-express", () => {
     expect(res.bodyText).toBe("pong");
   });
 
-  it("forwards response headers to firebase response", async () => {
+  it("forwards response headers to express response", async () => {
     const app = new Hono();
     app.get("/h", (c) => {
       c.header("cache-control", "public, max-age=60");
