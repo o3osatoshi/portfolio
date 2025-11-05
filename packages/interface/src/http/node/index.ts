@@ -17,3 +17,5 @@ export const POST = handle(app);
 
 export { app };
 export default app;
+
+export { createExpressRequestHandler } from "./adapter-express";
