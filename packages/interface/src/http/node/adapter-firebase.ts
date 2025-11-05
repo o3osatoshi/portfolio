@@ -13,7 +13,9 @@ export function createFirebaseHandler(app: Hono) {
     Object.keys(req.headers).forEach((k) => {
       const v = req.headers[k];
       if (Array.isArray(v)) {
-        v.forEach((value) => headers.append(k, value));
+        for (const value of v) {
+          headers.append(k, value);
+        }
       } else if (typeof v === "string") {
         headers.set(k, v);
       }
@@ -30,22 +32,36 @@ export function createFirebaseHandler(app: Hono) {
             typeof body === "string"
               ? Buffer.from(body)
               : body instanceof Uint8Array
-              ? Buffer.from(body)
-              : body instanceof ArrayBuffer
-              ? Buffer.from(new Uint8Array(body))
-              : Buffer.from(JSON.stringify(body || {})),
+                ? Buffer.from(body)
+                : body instanceof ArrayBuffer
+                  ? Buffer.from(new Uint8Array(body))
+                  : Buffer.from(JSON.stringify(body || {})),
           headers,
           method: req.method,
         });
     const _res = await app.fetch(newRequest);
 
+    res.status(_res.status);
+
+    const aggregated = new Map<string, string[]>();
+    _res.headers.forEach((value, key) => {
+      const k = key.toLowerCase();
+      if (k === "content-length") return;
+      const list = aggregated.get(k) ?? [];
+      list.push(value);
+      aggregated.set(k, list);
+    });
+
+    for (const [key, values] of aggregated) {
+      // biome-ignore lint/style/noNonNullAssertion: The preceding logic guarantees the array has at least one element.
+      res.setHeader(key, values.length > 1 ? values : values[0]!);
+    }
+
     const contentType = _res.headers.get("content-type");
 
     if (contentType?.includes("application/json")) {
-      res.status(_res.status);
       res.json(await _res.json());
     } else {
-      res.status(_res.status);
       res.send(await _res.text());
     }
   });
