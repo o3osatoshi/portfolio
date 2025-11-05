@@ -42,8 +42,10 @@ export function createFirebaseHandler(app: Hono) {
     const contentType = _res.headers.get("content-type");
 
     if (contentType?.includes("application/json")) {
+      res.status(_res.status);
       res.json(await _res.json());
     } else {
+      res.status(_res.status);
       res.send(await _res.text());
     }
   });
