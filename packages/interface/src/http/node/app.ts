@@ -30,6 +30,7 @@ export type Deps = {
  *
  * Routes (mounted under `/api`):
  * - GET `/healthz` — Liveness probe.
+ * - GET `/labs/transactions?userId=...` — Returns `Transaction[]` for the user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
  * Errors: domain errors are serialized via {@link toHttpError}.

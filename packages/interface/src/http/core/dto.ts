@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 /**
- * Schema for the request payload to create a todo via HTTP.
+ * Example DTOs used in documentation and tests.
+ * These are not wired to the current public routes.
  *
- * Fields:
- * - title: Non-empty string.
+ * CreateTodoInput — minimal example input schema with a single `title` field.
  */
 export const CreateTodoInput = z.object({
   title: z.string().min(1),
@@ -13,7 +13,7 @@ export const CreateTodoInput = z.object({
 export type CreateTodoInput = z.infer<typeof CreateTodoInput>;
 
 /**
- * Schema representing a todo resource returned from the API.
+ * Example schema representing a todo resource.
  */
 export const Todo = z.object({
   id: z.string(),
@@ -22,7 +22,7 @@ export const Todo = z.object({
 /** Inferred TypeScript type for {@link Todo} schema. */
 export type Todo = z.infer<typeof Todo>;
 
-/** Schema representing a list of todos. */
+/** Example schema representing a list of todos. */
 export const TodoList = z.array(Todo);
 /** Inferred TypeScript type for {@link TodoList} schema. */
 export type TodoList = z.infer<typeof TodoList>;
