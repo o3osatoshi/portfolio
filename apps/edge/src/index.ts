@@ -1,3 +1,5 @@
-import app from "@repo/interface/http/edge";
+import { buildEdgeApp } from "@repo/interface/http/edge";
+
+const app = buildEdgeApp({});
 
 export default app;

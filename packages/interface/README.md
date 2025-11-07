@@ -89,14 +89,6 @@ const clientEdge = createInterfaceClientEdge("https://your-domain.example");
 await clientEdge.edge.healthz.$get();
 ```
 
-## Development
-Run a Node-based dev server for quick iteration:
-
-```bash
-pnpm -C packages/interface dev
-# prints http://localhost:8787
-```
-
 Testing and types:
 
 ```bash
@@ -106,7 +98,7 @@ pnpm -C packages/interface typecheck
 ```
 
 ## Extending the runtime dependencies
-The HTTP app expects a small `Deps` object. Delivery layers can replace the in-memory demo implementation with real infrastructure (databases, external services):
+The HTTP app expects a small `Deps` object. Delivery layers should inject real infrastructure-backed implementations (databases, external services):
 
 ```ts
 import { buildApp, type Deps } from "@repo/interface/src/http/node/app";

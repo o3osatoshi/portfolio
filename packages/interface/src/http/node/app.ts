@@ -1,7 +1,10 @@
-import { zValidator } from "@hono/zod-validator";
+import {
+  GetTransactionsUseCase,
+  parseGetTransactionsRequest,
+} from "@repo/application";
+import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 
-import { CreateTodoInput, Todo, TodoList } from "../core/dto";
 import { toHttpError } from "../core/errors";
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
 
@@ -18,12 +21,8 @@ export type AppType = ReturnType<typeof buildApp>;
  * Provide infrastructure-backed implementations in production (e.g. DB).
  */
 export type Deps = {
-  /** Persist a new todo and return the created resource. */
-  createTodo: (input: {
-    title: string;
-  }) => Promise<{ id: string; title: string }>;
-  /** Retrieve all todos visible to the caller. */
-  listTodos: () => Promise<Array<{ id: string; title: string }>>;
+  /** Repository required by transaction use cases. */
+  transactionRepo: TransactionRepository;
 };
 
 /**
@@ -31,8 +30,6 @@ export type Deps = {
  *
  * Routes (mounted under `/api`):
  * - GET `/healthz` — Liveness probe.
- * - GET `/todos` — List todos.
- * - POST `/todos` — Create a todo (validated by {@link CreateTodoInput}).
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
  * Errors: domain errors are serialized via {@link toHttpError}.
@@ -47,26 +44,26 @@ export function buildApp(deps: Deps) {
 
   app.get("/healthz", (c) => c.json({ ok: true }));
 
-  app.get("/todos", async (c) => {
+  // Labs: Transactions
+  app.get("/labs/transactions", async (c) => {
     try {
-      const todos = await deps.listTodos();
-      const parsed = TodoList.parse(todos);
-      return c.json(parsed, 200);
-    } catch (err) {
-      const { body } = toHttpError(err);
-      return c.json(body, 500);
-    }
-  });
+      const userId = c.req.query("userId");
+      if (!userId) return c.json([], 200);
 
-  app.post("/todos", zValidator("json", CreateTodoInput), async (c) => {
-    try {
-      const input = c.req.valid("json");
-      const created = await deps.createTodo(input);
-      const parsed = Todo.parse(created);
-      return c.json(parsed, 201);
+      const usecase = new GetTransactionsUseCase(deps.transactionRepo);
+      const result = await parseGetTransactionsRequest({ userId })
+        .asyncAndThen((dto) => usecase.execute(dto))
+        .match(
+          (ok) => ok,
+          (e) => {
+            throw e;
+          },
+        );
+      return c.json(result, 200);
     } catch (err) {
-      const { body } = toHttpError(err);
-      return c.json(body, 500);
+      const { body, status } = toHttpError(err);
+      type ErrorStatus = 400 | 401 | 403 | 404 | 500;
+      return c.json(body, status as ErrorStatus);
     }
   });
 

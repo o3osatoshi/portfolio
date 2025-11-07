@@ -1,21 +1,14 @@
 import { handle } from "hono/vercel";
 
-import { buildApp } from "./app";
-import { makeNodeDeps } from "./deps";
-
-/**
- * Runtime wiring for Node environments (Next.js API, Firebase, etc.).
- * - Base path: `/api`
- */
-const app = buildApp(makeNodeDeps());
-
-/**
- * Next.js/Vercel-compatible handlers.
- */
-export const GET = handle(app);
-export const POST = handle(app);
-
-export { app };
-export default app;
+import { buildApp, type Deps } from "./app";
 
 export { createExpressRequestHandler } from "./adapter-express";
+
+export function buildHandler(deps: Deps) {
+  const app = buildApp(deps);
+  const GET = handle(app);
+  const POST = handle(app);
+  return { GET, POST };
+}
+
+export { buildApp } from "./app";

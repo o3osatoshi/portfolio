@@ -1,6 +1,12 @@
-import { app, createExpressRequestHandler } from "@repo/interface/http/node";
+import {
+  buildApp,
+  createExpressRequestHandler,
+} from "@repo/interface/http/node";
+import { PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
-// Expose the interface-driven API on Firebase Functions.
-// Base path is `/api` as defined by the interface's Node app.
+const repo = new PrismaTransactionRepository();
+
+const app = buildApp({ transactionRepo: repo });
+
 export const api = onRequest(createExpressRequestHandler(app));
