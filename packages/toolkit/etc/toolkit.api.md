@@ -39,7 +39,7 @@ export type EnvSchema = Record<string, z.ZodTypeAny>;
 // @public
 export type ErrorHttpResponse = {
     body: SerializedError;
-    status: number;
+    status: ErrorStatus;
 };
 
 // @public
@@ -56,6 +56,9 @@ export type ErrorMessagePayload = {
     summary: string;
     version: typeof MESSAGE_FORMAT_VERSION;
 } & ErrorMessageParts;
+
+// @public
+export type ErrorStatus = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
 
 // @public
 export function extractErrorMessage(cause: unknown): string | undefined;
@@ -183,7 +186,7 @@ export function summarizeZodError(err: ZodError): string;
 export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
-export function toHttpErrorResponse(error: Error, status?: number, options?: SerializeOptions): ErrorHttpResponse;
+export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
 export function truncate(value: string, max?: number): string;

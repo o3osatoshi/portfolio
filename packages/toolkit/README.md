@@ -69,7 +69,7 @@ try {
 | `Deadlock`       | 409                 | Database or concurrency deadlock detected by the engine. |
 | `Unprocessable`  | 422                 | Semantically invalid request despite being well-formed. |
 | `RateLimit`      | 429                 | Quota exceeded or throttling triggered. |
-| `Canceled`       | 499†                | Caller aborted or connection closed mid-flight. |
+| `Canceled`       | 408                 | Caller aborted or connection closed mid-flight. |
 | `Config`         | 500                 | Server-side misconfiguration or missing secrets. |
 | `Serialization`  | 500                 | Encode/decode failure when handling data. |
 | `Unknown`        | 500                 | Fallback when no other kind matches. |
@@ -77,7 +77,7 @@ try {
 | `Unavailable`    | 503                 | Dependency temporarily offline or service paused. |
 | `Timeout`        | 504                 | Operation exceeded configured timeout. |
 
-† `499` represents "Client Closed Request", a non-standard code that many gateways use; feel free to override if your platform reserves a different response.
+Note: Some gateways use non‑standard 499 (Client Closed Request). The default mapping here uses 408 for broader compatibility.
 
 ## API
 
