@@ -48,6 +48,7 @@ yarn-error.log*
 
 # jetbrains
 .idea/
+http-client.private.env.json
 
 
 # firebase
