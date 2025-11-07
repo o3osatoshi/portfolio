@@ -9,6 +9,4 @@ describe("http/edge/index", () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
   });
-
-  // /edge/todos routes were removed; corresponding tests deleted.
 });

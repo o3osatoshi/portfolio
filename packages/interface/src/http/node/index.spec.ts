@@ -14,7 +14,8 @@ const noopRepo = {
 
 describe("node/index", () => {
   it("builds an app that serves /api/healthz", async () => {
-    const app = buildApp({ transactionRepo: noopRepo } as any);
+    // @ts-expect-error
+    const app = buildApp({ transactionRepo: noopRepo });
     const res = await app.request("/api/healthz");
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
@@ -26,6 +27,4 @@ describe("node/index", () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
   });
-
-  // /api/todos routes were removed; POST handler test deleted.
 });

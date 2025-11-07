@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildApp, type Deps } from "./app";
+import { buildApp } from "./app";
 
 const noopRepo = {
   create: async () => {
@@ -12,20 +12,12 @@ const noopRepo = {
   update: async () => undefined,
 };
 
-function makeDeps(overrides: Partial<Deps> = {}): Deps {
-  return {
-    transactionRepo: noopRepo,
-    ...(overrides as Deps),
-  } as Deps;
-}
-
 describe("http/node/app", () => {
   it("serves health check", async () => {
-    const app = buildApp(makeDeps());
+    // @ts-expect-error
+    const app = buildApp({ transactionRepo: noopRepo });
     const res = await app.request("/api/healthz");
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
   });
-
-  // /todos routes were removed; corresponding tests deleted.
 });
