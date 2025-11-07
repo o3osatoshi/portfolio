@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 
-import { toHttpError } from "../core/errors";
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
 
 /**
@@ -22,7 +21,6 @@ export type EdgeDeps = Record<string, never>;
  * - GET `/healthz` — Liveness probe.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
- * Errors: domain errors are serialized via {@link toHttpError}.
  *
  * @param _deps Implementations of {@link EdgeDeps}.
  * @returns Configured Hono app instance.
