@@ -8,6 +8,7 @@ import { Hono } from "hono";
 import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
+import { respond } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -34,7 +35,7 @@ export type Deps = {
  * - GET `/labs/transactions?userId=...` — Returns `Transaction[]` for the user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
- * Errors: domain errors are serialized via {@link toHttpError}.
+ * Errors: normalized via {@link toHttpErrorResponse}.
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
@@ -46,23 +47,14 @@ export function buildApp(deps: Deps) {
 
   app.get("/healthz", (c) => c.json({ ok: true }));
 
-  app.get("/labs/transactions", async (c) => {
-    const userId = c.req.query("userId");
-    return await parseGetTransactionsRequest({ userId })
-      .asyncAndThen((dto) => {
-        const usecase = new GetTransactionsUseCase(deps.transactionRepo);
-        return usecase.execute(dto);
-      })
-      .match(
-        (res) => {
-          return c.json(res, 200);
-        },
-        (err) => {
-          const { body, status } = toHttpErrorResponse(err);
-          return c.json(body, { status });
-        },
-      );
-  });
+  const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
+  app.get("/labs/transactions", (c) =>
+    respond(c)(
+      parseGetTransactionsRequest({
+        userId: c.req.query("userId"),
+      }).asyncAndThen((dto) => getTransactions.execute(dto)),
+    ),
+  );
 
   return app;
 }
