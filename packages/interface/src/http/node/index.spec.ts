@@ -22,7 +22,8 @@ describe("node/index", () => {
   });
 
   it("GET handler responds to healthz", async () => {
-    const { GET } = buildHandler({ transactionRepo: noopRepo } as any);
+    // @ts-expect-error
+    const { GET } = buildHandler({ transactionRepo: noopRepo });
     const res = await GET(new Request("http://test.local/api/healthz"));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
