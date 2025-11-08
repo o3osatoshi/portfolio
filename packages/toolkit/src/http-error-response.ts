@@ -99,6 +99,7 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatus> = {
  *
  * @example
  * // Next.js Route Handler
+ * ```ts
  * export async function GET() {
  *   try {
  *     // ...
@@ -107,17 +108,20 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatus> = {
  *     return Response.json(body, { status });
  *   }
  * }
+ * ```
  *
  * @example
  * // Express middleware
+ * ```ts
  * app.use((err, _req, res, _next) => {
  *   const { body, status } = toHttpErrorResponse(err);
  *   res.status(status).json(body);
  * });
+ * ```
  *
- * @param error Error instance to convert.
- * @param status Optional HTTP status override. If provided, it takes precedence.
- * @param options Serialization options (depth, includeStack, maxLen).
+ * @param error - Error instance to convert.
+ * @param status - Optional HTTP status override. If provided, it takes precedence.
+ * @param options - Serialization options (depth, includeStack, maxLen).
  * @returns A pair of `body` and `status` suitable for HTTP responses.
  * @public
  */

@@ -90,6 +90,9 @@ export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Confli
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
 
 // @public
+export const MESSAGE_FORMAT_VERSION = 1;
+
+// @public
 export type NewError = {
     action?: string | undefined;
     cause?: undefined | unknown;
@@ -190,10 +193,6 @@ export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?
 
 // @public
 export function truncate(value: string, max?: number): string;
-
-// Warnings were encountered during analysis:
-//
-// dist/index.d.ts:256:5 - (ae-forgotten-export) The symbol "MESSAGE_FORMAT_VERSION" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
