@@ -1,2 +1,5 @@
+import { buildEdgeHandler } from "@repo/interface/http/edge";
+
 export const runtime = "edge";
-export { GET, POST } from "@repo/interface/http/edge";
+
+export const { GET, POST } = buildEdgeHandler({});

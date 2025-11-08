@@ -1,132 +1,75 @@
+import { okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
 
-import { NotFoundError } from "../core/errors";
-import { buildApp, type Deps } from "./app";
+import { buildApp, buildHandler } from "./app";
 
-function makeDeps(overrides: Partial<Deps> = {}): Deps {
-  return {
-    async createTodo(input) {
-      return { id: "todo-xyz", title: input.title };
-    },
-    async listTodos() {
-      return [
-        { id: "todo-1", title: "Buy milk" },
-        { id: "todo-2", title: "Write tests" },
-      ];
-    },
-    ...overrides,
-  } satisfies Deps;
-}
+const noopRepo = {
+  create: async () => {
+    throw new Error("not implemented");
+  },
+  delete: async () => undefined,
+  findById: async () => null,
+  findByUserId: async () => [],
+  update: async () => undefined,
+};
 
 describe("http/node/app", () => {
   it("serves health check", async () => {
-    const app = buildApp(makeDeps());
+    // @ts-expect-error
+    const app = buildApp({ transactionRepo: noopRepo });
     const res = await app.request("/api/healthz");
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
   });
 
-  it("lists todos", async () => {
-    const app = buildApp(makeDeps());
-    const res = await app.request("/api/todos");
+  it("GET handler responds to healthz", async () => {
+    // @ts-expect-error
+    const { GET } = buildHandler({ transactionRepo: noopRepo });
+    const res = await GET(new Request("http://test.local/api/healthz"));
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual([
-      { id: "todo-1", title: "Buy milk" },
-      { id: "todo-2", title: "Write tests" },
-    ]);
+    expect(await res.json()).toEqual({ ok: true });
   });
 
-  it("lists empty todos successfully", async () => {
-    const app = buildApp(
-      makeDeps({
-        async listTodos() {
-          return [];
-        },
-      }),
-    );
-    const res = await app.request("/api/todos");
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual([]);
-  });
+  it("lists transactions for a valid user", async () => {
+    const now = new Date();
+    const tx = {
+      id: "tx-1",
+      amount: "1.23",
+      createdAt: now,
+      currency: "USD",
+      datetime: now,
+      fee: "0.01",
+      feeCurrency: "USD",
+      price: "100.00",
+      profitLoss: "0",
+      type: "BUY",
+      updatedAt: now,
+      userId: "u-1",
+    } as const;
 
-  it("creates todo (valid)", async () => {
-    const app = buildApp(makeDeps());
-    const res = await app.request("/api/todos", {
-      body: JSON.stringify({ title: "New" }),
-      headers: { "content-type": "application/json" },
-      method: "POST",
-    });
-    expect(res.status).toBe(201);
-    expect(await res.json()).toEqual({ id: "todo-xyz", title: "New" });
-  });
-
-  it("rejects invalid create payload with 400", async () => {
-    const app = buildApp(makeDeps());
-    const res = await app.request("/api/todos", {
-      body: JSON.stringify({ title: "" }),
-      headers: { "content-type": "application/json" },
-      method: "POST",
-    });
-    expect(res.status).toBe(400);
-  });
-
-  it("creates todo sets x-request-id when provided", async () => {
-    const app = buildApp(makeDeps());
-    const res = await app.request("/api/todos", {
-      body: JSON.stringify({ title: "New" }),
-      headers: {
-        "x-request-id": "rid-123",
-        "content-type": "application/json",
+    const app = buildApp({
+      transactionRepo: {
+        // @ts-expect-error
+        findByUserId: () => okAsync([tx]),
       },
-      method: "POST",
     });
-    expect(res.status).toBe(201);
-    expect(res.headers.get("x-request-id")).toBe("rid-123");
+
+    const res = await app.request("/api/labs/transactions?userId=u-1");
+    expect(res.status).toBe(200);
+    const list = (await res.json()) as unknown[];
+    expect(Array.isArray(list)).toBe(true);
+    expect(list.length).toBe(1);
+    expect(list[0]).toMatchObject({ id: "tx-1", type: "BUY", userId: "u-1" });
   });
 
-  it("creates todo sets generated x-request-id when missing", async () => {
-    const app = buildApp(makeDeps());
-    const res = await app.request("/api/todos", {
-      body: JSON.stringify({ title: "New" }),
-      headers: { "content-type": "application/json" },
-      method: "POST",
-    });
-    const rid = res.headers.get("x-request-id");
-    expect(res.status).toBe(201);
-    expect(typeof rid).toBe("string");
-    expect((rid ?? "").length).toBeGreaterThan(0);
-  });
+  it("returns 400 when userId is missing or blank", async () => {
+    // @ts-expect-error
+    const app = buildApp({ transactionRepo: noopRepo });
 
-  it("serializes known errors in body for create (status stays 500)", async () => {
-    const app = buildApp(
-      makeDeps({
-        async createTodo() {
-          throw new NotFoundError("missing create");
-        },
-      }),
-    );
-    const res = await app.request("/api/todos", {
-      body: JSON.stringify({ title: "New" }),
-      headers: { "content-type": "application/json" },
-      method: "POST",
-    });
-    expect(res.status).toBe(500);
-    expect(await res.json()).toEqual({
-      code: "NOT_FOUND",
-      message: "missing create",
-    });
-  });
+    const res1 = await app.request("/api/labs/transactions");
+    expect(res1.status).toBe(400);
 
-  it("serializes known errors in body (status stays 500)", async () => {
-    const app = buildApp(
-      makeDeps({
-        async listTodos() {
-          throw new NotFoundError("missing");
-        },
-      }),
-    );
-    const res = await app.request("/api/todos");
-    expect(res.status).toBe(500);
-    expect(await res.json()).toEqual({ code: "NOT_FOUND", message: "missing" });
+    const res2 = await app.request("/api/labs/transactions?userId=%20%20%20");
+    expect(res2.status).toBe(400);
   });
 });

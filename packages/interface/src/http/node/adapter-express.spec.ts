@@ -130,4 +130,138 @@ describe("node/adapter-express", () => {
     expect(res.headers["x-request-id"]).toBe("req-123");
     expect(res.headers["x-custom"]).toBe("abc");
   });
+
+  it("sends JSON via res.json when content-type is application/json", async () => {
+    const app = new Hono();
+    app.post("/echo", async (c) => {
+      const body = await c.req.json();
+      return c.json({ echoed: body });
+    });
+
+    type TestReq = {
+      body?: unknown;
+      headers: Record<string, string>;
+      hostname: string;
+      method: string;
+      protocol: string;
+      url: string;
+    };
+    type TestRes = {
+      bodyText?: string;
+      headers: Record<string, string | string[]>;
+      json: (data: unknown) => void;
+      jsonBody?: unknown;
+      send: (content: unknown) => void;
+      setHeader: (key: string, value: string | string[]) => void;
+      status: (code: number) => TestRes;
+      statusCode?: number;
+    };
+
+    const handler = createExpressRequestHandler(app) as unknown as (
+      req: TestReq,
+      res: TestRes,
+    ) => Promise<void>;
+
+    const req: TestReq = {
+      hostname: "localhost",
+      body: { a: 1 },
+      headers: { "content-type": "application/json" },
+      method: "POST",
+      protocol: "http",
+      url: "/echo",
+    };
+
+    const res: TestRes = {
+      headers: {},
+      json(this: TestRes, data: unknown) {
+        this.jsonBody = data;
+      },
+      send(this: TestRes, content: unknown) {
+        this.bodyText = String(content);
+      },
+      setHeader(this: TestRes, key: string, value: string | string[]) {
+        this.headers[key.toLowerCase()] = value;
+      },
+      status(this: TestRes, code: number) {
+        this.statusCode = code;
+        return this;
+      },
+    };
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.jsonBody).toEqual({ echoed: { a: 1 } });
+    expect(res.bodyText).toBeUndefined();
+  });
+
+  it("omits content-length and preserves duplicate headers like set-cookie", async () => {
+    const app = new Hono();
+    app.get("/h", (c) => {
+      // Ensure content-length is present on the fetch Response
+      c.header("content-length", "999");
+      // Append multiple Set-Cookie headers
+      c.header("set-cookie", "a=1; Path=/; HttpOnly", { append: true });
+      c.header("set-cookie", "b=2; Path=/; HttpOnly", { append: true });
+      return c.text("ok");
+    });
+
+    type TestReq = {
+      body?: unknown;
+      headers: Record<string, string>;
+      hostname: string;
+      method: string;
+      protocol: string;
+      url: string;
+    };
+    type TestRes = {
+      bodyText?: string;
+      headers: Record<string, string | string[]>;
+      json: (data: unknown) => void;
+      jsonBody?: unknown;
+      send: (content: unknown) => void;
+      setHeader: (key: string, value: string | string[]) => void;
+      status: (code: number) => TestRes;
+      statusCode?: number;
+    };
+
+    const handler = createExpressRequestHandler(app) as unknown as (
+      req: TestReq,
+      res: TestRes,
+    ) => Promise<void>;
+
+    const req: TestReq = {
+      hostname: "localhost",
+      headers: {},
+      method: "GET",
+      protocol: "http",
+      url: "/h",
+    };
+
+    const res: TestRes = {
+      headers: {},
+      json(this: TestRes, data: unknown) {
+        this.jsonBody = data;
+      },
+      send(this: TestRes, content: unknown) {
+        this.bodyText = String(content);
+      },
+      setHeader(this: TestRes, key: string, value: string | string[]) {
+        this.headers[key.toLowerCase()] = value;
+      },
+      status(this: TestRes, code: number) {
+        this.statusCode = code;
+        return this;
+      },
+    };
+
+    await handler(req, res);
+
+    expect(res.headers["content-length"]).toBeUndefined();
+    const setCookie = res.headers["set-cookie"] as string[];
+    expect(Array.isArray(setCookie)).toBe(true);
+    expect(setCookie?.length).toBe(2);
+    expect(setCookie?.[0]).toContain("a=1");
+    expect(setCookie?.[1]).toContain("b=2");
+  });
 });

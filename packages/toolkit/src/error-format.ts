@@ -41,7 +41,12 @@ const KIND_VALUES = [
   "Validation",
 ] as const satisfies readonly Kind[];
 
-const MESSAGE_FORMAT_VERSION = 1;
+/**
+ * Current schema version used by {@link ErrorMessagePayload}.
+ *
+ * @public
+ */
+export const MESSAGE_FORMAT_VERSION = 1;
 const SUMMARY_FALLBACK = "Operation failed";
 const ACTION_SUMMARY_SUFFIX = " failed";
 

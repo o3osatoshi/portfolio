@@ -1,9 +1,15 @@
-import { zValidator } from "@hono/zod-validator";
+import {
+  GetTransactionsUseCase,
+  parseGetTransactionsRequest,
+} from "@repo/application";
+import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
+import { handle } from "hono/vercel";
 
-import { CreateTodoInput, Todo, TodoList } from "../core/dto";
-import { toHttpError } from "../core/errors";
+import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
+
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
+import { respond } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -18,12 +24,8 @@ export type AppType = ReturnType<typeof buildApp>;
  * Provide infrastructure-backed implementations in production (e.g. DB).
  */
 export type Deps = {
-  /** Persist a new todo and return the created resource. */
-  createTodo: (input: {
-    title: string;
-  }) => Promise<{ id: string; title: string }>;
-  /** Retrieve all todos visible to the caller. */
-  listTodos: () => Promise<Array<{ id: string; title: string }>>;
+  /** Repository required by transaction use cases. */
+  transactionRepo: TransactionRepository;
 };
 
 /**
@@ -31,11 +33,10 @@ export type Deps = {
  *
  * Routes (mounted under `/api`):
  * - GET `/healthz` — Liveness probe.
- * - GET `/todos` — List todos.
- * - POST `/todos` — Create a todo (validated by {@link CreateTodoInput}).
+ * - GET `/labs/transactions?userId=...` — Returns `Transaction[]` for the user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
- * Errors: domain errors are serialized via {@link toHttpError}.
+ * Errors: normalized via {@link toHttpErrorResponse}.
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
@@ -47,28 +48,35 @@ export function buildApp(deps: Deps) {
 
   app.get("/healthz", (c) => c.json({ ok: true }));
 
-  app.get("/todos", async (c) => {
-    try {
-      const todos = await deps.listTodos();
-      const parsed = TodoList.parse(todos);
-      return c.json(parsed, 200);
-    } catch (err) {
-      const { body } = toHttpError(err);
-      return c.json(body, 500);
-    }
-  });
-
-  app.post("/todos", zValidator("json", CreateTodoInput), async (c) => {
-    try {
-      const input = c.req.valid("json");
-      const created = await deps.createTodo(input);
-      const parsed = Todo.parse(created);
-      return c.json(parsed, 201);
-    } catch (err) {
-      const { body } = toHttpError(err);
-      return c.json(body, 500);
-    }
-  });
+  const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
+  app.get("/labs/transactions", (c) =>
+    respond(c)(
+      parseGetTransactionsRequest({
+        userId: c.req.query("userId"),
+      }).asyncAndThen((dto) => getTransactions.execute(dto)),
+    ),
+  );
 
   return app;
+}
+
+/**
+ * Build Next.js/Vercel-compatible handlers for the Node runtime.
+ *
+ * Usage (Next.js App Router):
+ * ```ts
+ * // app/api/[...route]/route.ts
+ * import { buildHandler } from "@repo/interface/http/node";
+ * import { PrismaTransactionRepository } from "@repo/prisma";
+ * export const runtime = "nodejs";
+ * export const { GET, POST } = buildHandler({
+ *   transactionRepo: new PrismaTransactionRepository(),
+ * });
+ * ```
+ */
+export function buildHandler(deps: Deps) {
+  const app = buildApp(deps);
+  const GET = handle(app);
+  const POST = handle(app);
+  return { GET, POST };
 }

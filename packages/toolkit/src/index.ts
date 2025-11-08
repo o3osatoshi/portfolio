@@ -1,4 +1,7 @@
-/** Toolkit utilities for structured errors and Zod helpers. */
+/**
+ * @packageDocumentation
+ * Toolkit utilities for structured errors and Zod helpers.
+ */
 export * from "./asynchronous";
 export * from "./env";
 export * from "./error";

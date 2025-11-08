@@ -7,8 +7,8 @@ import { toHttpErrorResponse } from "./http-error-response";
 describe("toHttpErrorResponse", () => {
   it("uses provided status when specified", () => {
     const err = newError({ kind: "Validation", layer: "Application" });
-    const res = toHttpErrorResponse(err, 418);
-    expect(res.status).toBe(418);
+    const res = toHttpErrorResponse(err, 405);
+    expect(res.status).toBe(405);
     expect(res.body).toEqual(serializeError(err));
   });
 
@@ -35,10 +35,10 @@ describe("toHttpErrorResponse", () => {
     }
   });
 
-  it("maps canceled to 499 (client closed request)", () => {
+  it("maps canceled to 408 (client closed request)", () => {
     const canceled = newError({ kind: "Canceled", layer: "Infra" });
     const res = toHttpErrorResponse(canceled);
-    expect(res.status).toBe(499);
+    expect(res.status).toBe(408);
   });
 
   it("defaults to 500 for unknown names", () => {

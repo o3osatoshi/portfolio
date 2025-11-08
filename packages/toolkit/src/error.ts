@@ -8,7 +8,7 @@ import { truncate } from "./truncate";
  * Recommended meanings (and default HTTP mappings used by `toHttpErrorResponse()`):
  * - `"BadGateway"` → upstream dependency returned an invalid/5xx response (502).
  * - `"BadRequest"` → malformed payload or invalid query before validation (400).
- * - `"Canceled"` → caller canceled or aborted the request (499).
+ * - `"Canceled"` → caller canceled or aborted the request (408).
  * - `"Config"` → server-side misconfiguration detected (500).
  * - `"Conflict"` → state/version mismatch such as optimistic locking (409).
  * - `"Deadlock"` → concurrency deadlock detected by the data store (409).
