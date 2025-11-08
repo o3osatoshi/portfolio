@@ -4,6 +4,7 @@ import {
 } from "@repo/application";
 import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
+import { handle } from "hono/vercel";
 
 import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
 
@@ -57,4 +58,25 @@ export function buildApp(deps: Deps) {
   );
 
   return app;
+}
+
+/**
+ * Build Next.js/Vercel-compatible handlers for the Node runtime.
+ *
+ * Usage (Next.js App Router):
+ * ```ts
+ * // app/api/[...route]/route.ts
+ * import { buildHandler } from "@repo/interface/http/node";
+ * import { PrismaTransactionRepository } from "@repo/prisma";
+ * export const runtime = "nodejs";
+ * export const { GET, POST } = buildHandler({
+ *   transactionRepo: new PrismaTransactionRepository(),
+ * });
+ * ```
+ */
+export function buildHandler(deps: Deps) {
+  const app = buildApp(deps);
+  const GET = handle(app);
+  const POST = handle(app);
+  return { GET, POST };
 }
