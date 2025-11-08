@@ -4,4 +4,9 @@ import { browserTestPreset } from "@o3osatoshi/config/vitest";
 
 export default browserTestPreset({
   plugins: [tsconfigPaths()],
+  test: {
+    coverage: {
+      exclude: ["next.config.mjs", "postcss.config.mjs"],
+    },
+  },
 });
