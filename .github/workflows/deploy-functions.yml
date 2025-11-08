@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
     steps:
       - name: Checkout
@@ -38,6 +38,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Export .env
+        run: |
+          printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" > apps/functions/.env
+
       - name: Build functions
         run: pnpm build:functions
 
@@ -50,5 +54,3 @@ jobs:
 
       - name: Deploy functions
         run: pnpm deploy:functions
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
