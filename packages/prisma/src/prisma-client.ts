@@ -1,20 +1,33 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 
-import { PrismaClient } from "../generated/prisma/client";
-import { env } from "./env";
-
-const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+import { type Prisma, PrismaClient } from "../generated/prisma/client";
 
 /**
- * Singleton Prisma client using the `@prisma/adapter-pg` adapter. Reuses the
- * instance on subsequent imports during development to avoid exhausting
- * database connections.
+ * Create a new PrismaClient using the `@prisma/adapter-pg` adapter.
+ * Callers must manage the client's lifecycle (reuse/disconnect) as appropriate
+ * for their runtime (serverless vs long-lived server).
  */
-export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+export function createPrismaClient(options: {
+  connectionString: string;
+  log?: Prisma.LogLevel[];
+}): PrismaClient {
+  const adapter = new PrismaPg({ connectionString: options.connectionString });
+  const clientOptions: Prisma.PrismaClientOptions = {
+    adapter,
+    ...(options.log ? { log: options.log } : {}),
+  };
+  return new PrismaClient(clientOptions);
+}
 
-if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+/**
+ * Convenience helper to run a callback inside a transaction.
+ */
+export function withTransaction<T>(
+  client: PrismaClient,
+  fn: (tx: Prisma.TransactionClient) => Promise<T>,
+): Promise<T> {
+  return client.$transaction(fn);
+}
 
 /** Re-export generated Prisma types for downstream packages. */
 export * from "../generated/prisma/client";
