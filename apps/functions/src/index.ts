@@ -3,17 +3,23 @@ import {
   createExpressRequestHandler,
 } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-import { defineSecret } from "firebase-functions/params";
 import { onRequest } from "firebase-functions/v2/https";
+import { z } from "zod";
 
-const databaseUrl = defineSecret("DATABASE_URL");
+import { createEnv } from "@o3osatoshi/toolkit";
 
 let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
 
-export const api = onRequest({ secrets: [databaseUrl] }, async (req, res) => {
+export const api = onRequest(async (req, res) => {
   if (!handler) {
+    const env = createEnv(
+      {
+        DATABASE_URL: z.string().min(1),
+      },
+      { name: "functions" },
+    );
     const client = createPrismaClient({
-      connectionString: databaseUrl.value(),
+      connectionString: env.DATABASE_URL,
     });
     const repo = new PrismaTransactionRepository(client);
     const app = buildApp({ transactionRepo: repo });
