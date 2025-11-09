@@ -1,6 +1,6 @@
 # @repo/auth
 
-Shared NextAuth v5 (beta) configuration and helpers for the monorepo. This package clearly separates the Node runtime auth (PrismaAdapter) from an Edge‑safe middleware entry, and exposes thin React helpers for client usage.
+Shared NextAuth v5 (beta) configuration and helpers for the monorepo. This package exposes a factory to compose Node runtime auth (PrismaAdapter) in the app, provides an Edge‑safe middleware entry, and thin React helpers for client usage.
 
 ## Goals
 - Decouple auth setup/logic from `apps/web` and make it reusable.
@@ -25,8 +25,9 @@ Notes:
 
 ## Exports
 - `@repo/auth`
-  - `getUserId`: Server helper to get the current user's id (`await getUserId()`).
-  - `handlers`: NextAuth API route handlers (`GET`, `POST`).
+  - `createAuth(options)`: Factory that composes NextAuth with PrismaAdapter.
+    - `options`: `{ prisma: PrismaClient } | { connectionString: string }`
+    - Returns: `{ handlers, auth, getUserId }`
 - `@repo/auth/middleware`
   - `middleware`: Edge‑compatible middleware using the shared config.
 - `@repo/auth/react`
@@ -36,10 +37,22 @@ The internal shared config lives at `src/config.ts` and is not exported as a pub
 
 ## Usage (Next.js 15, App Router)
 
+App wiring (Node, once at startup):
+
+```ts
+// apps/web/src/lib/auth.ts
+import { createAuth } from "@repo/auth";
+import { createPrismaClient } from "@repo/prisma";
+import { env } from "@/env/server";
+
+const prisma = createPrismaClient({ connectionString: env.DATABASE_URL });
+export const { handlers, auth, getUserId } = createAuth({ prisma });
+```
+
 API route (`apps/web/src/app/api/auth/[...nextauth]/route.ts`):
 
 ```ts
-import { handlers } from "@repo/auth";
+import { handlers } from "@/lib/auth";
 export const { GET, POST } = handlers;
 ```
 
@@ -52,7 +65,7 @@ export { middleware } from "@repo/auth/middleware";
 Server actions / server components:
 
 ```ts
-import { getUserId } from "@repo/auth";
+import { getUserId } from "@/lib/auth";
 
 const userId = await getUserId();
 ```
@@ -101,7 +114,7 @@ Unit tests (Vitest) cover the pure callback logic in `authConfig`.
 - Coverage: `pnpm -C packages/auth test:cvrg`
 
 ## Implementation Notes
-- Node runtime (PrismaAdapter): `src/index.ts`
+- Node runtime factory (PrismaAdapter): `src/index.ts`
 - Edge runtime (no DB access): `src/middleware.ts`
 - Shared configuration (providers/callbacks): `src/config.ts`
 

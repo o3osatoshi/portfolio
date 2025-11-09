@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
-    "@repo/prisma": "workspace:*",
     "next-auth": "5.0.0-beta.27"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
+    "@repo/prisma": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",

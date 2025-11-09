@@ -1,9 +1,9 @@
-### Health (Node)
-GET {{web_base_url}}/api/healthz
-Accept: application/json
-
 ### Health (Edge)
 GET {{web_base_url}}/edge/healthz
+Accept: application/json
+
+### Health (Node)
+GET {{web_base_url}}/api/healthz
 Accept: application/json
 
 ### List Transactions (Node, labs)

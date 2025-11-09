@@ -153,6 +153,9 @@ importers:
       firebase-functions:
         specifier: ^6.0.1
         version: 6.4.0(firebase-admin@12.7.0(encoding@0.1.13))
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@types/node':
         specifier: ^22.15.12
@@ -400,9 +403,6 @@ importers:
       '@auth/prisma-adapter':
         specifier: ^2.10.0
         version: 2.10.0(@prisma/client@6.18.0(prisma@6.18.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3))
-      '@repo/prisma':
-        specifier: workspace:*
-        version: link:../prisma
       next-auth:
         specifier: 5.0.0-beta.27
         version: 5.0.0-beta.27(next@15.5.2(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
@@ -410,6 +410,9 @@ importers:
       '@o3osatoshi/config':
         specifier: workspace:*
         version: link:../config
+      '@repo/prisma':
+        specifier: workspace:*
+        version: link:../prisma
       '@types/node':
         specifier: 'catalog:'
         version: 22.18.1

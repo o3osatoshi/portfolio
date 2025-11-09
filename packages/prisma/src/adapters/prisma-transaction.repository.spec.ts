@@ -34,7 +34,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { PrismaTransactionRepository } from "./prisma-transaction.repository";
 
 let container: StartedPostgreSqlContainer | undefined;
-let prisma: typeof import("../prisma-client")["prisma"] | undefined;
+let prisma: import("../prisma-client").PrismaClient | undefined;
 let repo: PrismaTransactionRepository | undefined;
 
 const pkgRoot = path.resolve(
@@ -73,11 +73,14 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       stdio: "inherit",
     });
 
-    prisma = (await import("../prisma-client")).prisma;
+    const { createPrismaClient } = await import("../prisma-client");
+    prisma = createPrismaClient({
+      connectionString: process.env["DATABASE_URL"],
+    });
     const { PrismaTransactionRepository } = await import(
       "./prisma-transaction.repository"
     );
-    repo = new PrismaTransactionRepository();
+    repo = new PrismaTransactionRepository(prisma);
 
     // Seed an existing user for ownership tests
     await prisma.user.create({

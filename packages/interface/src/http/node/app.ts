@@ -67,10 +67,12 @@ export function buildApp(deps: Deps) {
  * ```ts
  * // app/api/[...route]/route.ts
  * import { buildHandler } from "@repo/interface/http/node";
- * import { PrismaTransactionRepository } from "@repo/prisma";
+ * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
  * export const runtime = "nodejs";
  * export const { GET, POST } = buildHandler({
- *   transactionRepo: new PrismaTransactionRepository(),
+ *   transactionRepo: new PrismaTransactionRepository(
+ *     createPrismaClient({ connectionString: process.env.DATABASE_URL! }),
+ *   ),
  * });
  * ```
  */

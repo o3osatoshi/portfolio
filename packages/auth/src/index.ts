@@ -1,18 +1,26 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@repo/prisma";
-import NextAuth from "next-auth";
+import type { PrismaClient } from "@repo/prisma";
+import NextAuth, { type NextAuthConfig } from "next-auth";
 
 import { authConfig } from "./config";
 
-const result = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
-  ...authConfig,
-});
+export type CreateAuthOptions = {
+  config?: Partial<NextAuthConfig>;
+  prisma: PrismaClient;
+};
 
-export const { handlers } = result;
+export function createAuth(options: CreateAuthOptions) {
+  const result = NextAuth({
+    adapter: PrismaAdapter(options.prisma),
+    session: { strategy: "jwt" },
+    ...authConfig,
+    ...(options.config ?? {}),
+  });
 
-export async function getUserId(): Promise<string | undefined> {
-  const session = await result.auth();
-  return session?.user?.id;
+  async function getUserId(): Promise<string | undefined> {
+    const session = await result.auth();
+    return session?.user?.id;
+  }
+
+  return { ...result, getUserId };
 }
