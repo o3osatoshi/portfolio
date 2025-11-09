@@ -51,3 +51,5 @@ jobs:
 
       - name: Deploy functions
         run: pnpm deploy:functions
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
