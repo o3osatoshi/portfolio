@@ -38,10 +38,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Export .env
-        run: |
-          printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" > apps/functions/.env
-
       - name: Build functions
         run: pnpm build:functions
 
