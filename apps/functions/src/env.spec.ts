@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const SERVER_PATH = "./server";
+const ENV_PATH = "./env";
 
-describe("apps/web env (server)", () => {
+describe("apps/functions env", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllEnvs();
@@ -13,7 +13,7 @@ describe("apps/web env (server)", () => {
       "DATABASE_URL",
       "postgresql://postgres:postgres@localhost:54329/postgres?schema=public",
     );
-    const mod = await import(SERVER_PATH);
+    const mod = await import(ENV_PATH);
     expect(mod.env.DATABASE_URL).toBe(
       "postgresql://postgres:postgres@localhost:54329/postgres?schema=public",
     );

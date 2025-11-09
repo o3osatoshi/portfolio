@@ -26,7 +26,8 @@ export default {
 2) Import
 
 ```ts
-import { prisma } from "@repo/prisma"; // exported via src/index.ts
+import { createPrismaClient } from "@repo/prisma";
+const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
 ```
 
 ## Prisma Setup

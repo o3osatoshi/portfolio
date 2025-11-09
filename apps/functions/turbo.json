@@ -2,11 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "@repo/application#build",
-        "@repo/interface#build",
-        "@repo/prisma#build"
-      ]
+      "dependsOn": ["@o3osatoshi/config#build", "@o3osatoshi/toolkit#build"]
     }
   }
 }

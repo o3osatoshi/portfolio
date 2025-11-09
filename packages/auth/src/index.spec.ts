@@ -23,7 +23,7 @@ const h = vi.hoisted(() => {
 });
 
 vi.mock("@auth/prisma-adapter", () => ({ PrismaAdapter: h.PrismaAdapterMock }));
-vi.mock("@repo/prisma", () => ({ prisma: h.prismaMock }));
+vi.mock("@repo/prisma", () => ({ createPrismaClient: () => h.prismaMock }));
 vi.mock("next-auth", () => ({ default: h.NextAuthMock }));
 
 import { authConfig } from "./config";

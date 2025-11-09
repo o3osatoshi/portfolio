@@ -2,10 +2,13 @@ import {
   buildApp,
   createExpressRequestHandler,
 } from "@repo/interface/http/node";
-import { PrismaTransactionRepository } from "@repo/prisma";
+import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
-const repo = new PrismaTransactionRepository();
+import { env } from "./env";
+
+const client = createPrismaClient({ connectionString: env.DATABASE_URL });
+const repo = new PrismaTransactionRepository(client);
 
 const app = buildApp({ transactionRepo: repo });
 

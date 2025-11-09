@@ -6,5 +6,5 @@ export const env = createEnv(
   {
     DATABASE_URL: z.string().min(1),
   },
-  { name: "web:server" },
+  { name: "functions" },
 );

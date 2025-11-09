@@ -56,9 +56,11 @@ Next.js (Vercel Edge):
 // apps/web/src/app/api/[...route]/route.ts
 export const runtime = "nodejs";
 import { buildHandler } from "@repo/interface/http/node";
-import { PrismaTransactionRepository } from "@repo/prisma";
+import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 export const { GET, POST } = buildHandler({
-  transactionRepo: new PrismaTransactionRepository(),
+  transactionRepo: new PrismaTransactionRepository(
+    createPrismaClient({ connectionString: process.env.DATABASE_URL! })
+  ),
 });
 
 // apps/web/src/app/edge/[...route]/route.ts

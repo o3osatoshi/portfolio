@@ -12,7 +12,7 @@ import { newError } from "@o3osatoshi/toolkit";
 
 import {
   Prisma,
-  prisma,
+  type PrismaClient,
   type Transaction as PrismaTransaction,
 } from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
@@ -22,10 +22,12 @@ import { newPrismaError } from "../prisma-error";
  * Maps domain value objects to Prisma primitives and normalizes errors.
  */
 export class PrismaTransactionRepository implements TransactionRepository {
+  constructor(private readonly db: Prisma.TransactionClient | PrismaClient) {}
+
   /** @inheritdoc */
   create(tx: CreateTransaction): ResultAsync<Transaction, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.create({
+      this.db.transaction.create({
         data: toCreateData(tx),
       }),
       (e) =>
@@ -40,7 +42,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   /** @inheritdoc */
   delete(id: TransactionId, userId: UserId): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.deleteMany({
+      this.db.transaction.deleteMany({
         where: { id, userId },
       }),
       (e) =>
@@ -66,7 +68,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   /** @inheritdoc */
   findById(id: TransactionId): ResultAsync<null | Transaction, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.findUnique({
+      this.db.transaction.findUnique({
         where: { id },
       }),
       (e) =>
@@ -80,7 +82,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   /** @inheritdoc */
   findByUserId(userId: UserId): ResultAsync<Transaction[], Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.findMany({
+      this.db.transaction.findMany({
         where: { userId },
       }),
       (e) =>
@@ -94,7 +96,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   /** @inheritdoc */
   update(tx: Transaction): ResultAsync<void, Error> {
     return ResultAsync.fromPromise(
-      prisma.transaction.updateMany({
+      this.db.transaction.updateMany({
         data: toUpdateData(tx),
         where: { id: tx.id, userId: tx.userId },
       }),
