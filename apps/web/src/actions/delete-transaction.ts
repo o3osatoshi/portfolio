@@ -4,12 +4,12 @@ import {
   DeleteTransactionUseCase,
   parseDeleteTransactionRequest,
 } from "@repo/application";
-import { getUserId } from "@repo/auth";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
+import { getUserId } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPath, getTag } from "@/utils/handle-nav";
 import { deleteTransactionSchema } from "@/utils/validation";
