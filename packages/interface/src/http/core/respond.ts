@@ -11,7 +11,7 @@ import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
 export function respond<T>(c: Context) {
   return (ra: ResultAsync<T, Error>) =>
     ra.match(
-      (ok) => c.json(ok),
+      (ok) => c.json<T>(ok),
       (err) => {
         const { body, status } = toHttpErrorResponse(err);
         return c.json(body, { status });

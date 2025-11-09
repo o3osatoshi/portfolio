@@ -1,7 +1,9 @@
+import { zValidator } from "@hono/zod-validator";
 import {
+  getTransactionsRequestSchema,
   GetTransactionsUseCase,
-  parseGetTransactionsRequest,
 } from "@repo/application";
+import type { GetTransactionsResponse } from "@repo/application";
 import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
@@ -49,12 +51,13 @@ export function buildApp(deps: Deps) {
   app.get("/healthz", (c) => c.json({ ok: true }));
 
   const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-  app.get("/labs/transactions", (c) =>
-    respond(c)(
-      parseGetTransactionsRequest({
-        userId: c.req.query("userId"),
-      }).asyncAndThen((dto) => getTransactions.execute(dto)),
-    ),
+  app.get(
+    "/labs/transactions",
+    zValidator("query", getTransactionsRequestSchema),
+    (c) =>
+      respond<GetTransactionsResponse>(c)(
+        getTransactions.execute(c.req.valid("query")),
+      ),
   );
 
   return app;

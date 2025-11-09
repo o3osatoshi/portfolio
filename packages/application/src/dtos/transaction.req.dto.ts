@@ -66,7 +66,7 @@ const updateTransactionRequestSchema = z.object({
 /**
  * Schema describing the payload to list transactions for a user.
  */
-const getTransactionsRequestSchema = z.object({
+export const getTransactionsRequestSchema = z.object({
   userId: z.string().min(1, "UserId is required"),
 });
 
