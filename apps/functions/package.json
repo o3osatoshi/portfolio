@@ -10,28 +10,21 @@
     "deploy": "firebase deploy --only functions",
     "dev": "tsup --watch",
     "logs": "firebase functions:log",
-    "pull:env": "doppler secrets download --project portfolio-functions --config dev --no-file --format env > ./.env",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "test": "vitest run",
-    "test:cvrg": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1",
-    "zod": "catalog:"
+    "firebase-functions": "^6.0.1"
   },
   "devDependencies": {
     "@types/node": "^22.15.12",
-    "@vitest/coverage-v8": "catalog:",
     "firebase-functions-test": "^3.1.0",
     "rimraf": "^6.0.1",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.3",
-    "vite-tsconfig-paths": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": "22"
