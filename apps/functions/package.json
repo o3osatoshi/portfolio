@@ -10,7 +10,6 @@
     "deploy": "firebase deploy --only functions",
     "dev": "tsup --watch",
     "logs": "firebase functions:log",
-    "pull:env": "doppler secrets download --project portfolio-functions --config dev --no-file --format env > ./.env",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
