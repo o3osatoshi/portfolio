@@ -18,14 +18,15 @@ import { truncate } from "./truncate";
  */
 export function extractErrorMessage(
   cause: unknown,
-  maxLen?: null | number,
+  maxLen?: number,
 ): string | undefined {
   if (!cause) return;
-  if (cause instanceof Error) return truncate(cause.message, maxLen);
-  if (typeof cause === "string") return truncate(cause, maxLen);
+  const length = maxLen ?? null;
+  if (cause instanceof Error) return truncate(cause.message, length);
+  if (typeof cause === "string") return truncate(cause, length);
   if (typeof cause === "object" && "message" in cause) {
     const message = cause["message"];
-    return typeof message === "string" ? truncate(message, maxLen) : undefined;
+    return typeof message === "string" ? truncate(message, length) : undefined;
   }
   return undefined;
 }
