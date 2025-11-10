@@ -94,8 +94,6 @@ describe("error-serializer", () => {
     const s1 = serializeError(new Error(long), { maxLen: 10 });
     expect(s1.message.endsWith("…")).toBe(true);
     expect(s1.message.length).toBe(11);
-
-    // default maxLen=200 (applies when using serializeError on Error)
   });
 
   it("passes through already-serialized cause without modification", () => {
@@ -166,11 +164,19 @@ describe("error-serializer", () => {
     expect(err.cause).toBe("S");
   });
 
-  it("fallback path truncates long primitive inputs to default maxLen", () => {
+  it("fallback path does not truncate by default", () => {
     const long = "a".repeat(500);
     const err = deserializeError(long);
     expect(err.name).toBe("UnknownError");
-    expect(err.message.length).toBe(201); // 200 + ellipsis
+    // extractErrorMessage defaults to no truncation when maxLen is undefined
+    expect(err.message.length).toBe(500);
+    expect(err.message.endsWith("…")).toBe(false);
+  });
+
+  it("fallback path truncates when maxLen is provided", () => {
+    const long = "a".repeat(500);
+    const err = deserializeError(long, { maxLen: 50 });
+    expect(err.message.length).toBe(51);
     expect(err.message.endsWith("…")).toBe(true);
   });
 
@@ -220,7 +226,8 @@ describe("error-serializer", () => {
     const e1 = deserializeError(42);
     expect(e1).toBeInstanceOf(Error);
     expect(e1.name).toBe("UnknownError");
-    expect(e1.message).toBe("42");
+    // Non-string primitive yields no extracted message → empty string
+    expect(e1.message).toBe("");
 
     const e2 = deserializeError({ foo: "bar" });
     expect(e2).toBeInstanceOf(Error);
