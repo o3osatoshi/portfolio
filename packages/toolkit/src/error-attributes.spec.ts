@@ -4,16 +4,24 @@ import { extractErrorMessage, extractErrorName } from "./error-attributes";
 
 describe("error attribute helpers", () => {
   describe("extractErrorMessage", () => {
-    it("returns truncated messages from Error instances", () => {
+    it("returns full messages by default (no truncation)", () => {
       const err = new Error("a".repeat(210));
       const message = extractErrorMessage(err);
 
+      expect(message).toBe("a".repeat(210));
+    });
+
+    it("respects maxLen when provided", () => {
+      const err = new Error("a".repeat(210));
+      const message = extractErrorMessage(err, 200);
       expect(message).toBe(`${"a".repeat(200)}…`);
     });
 
-    it("returns strings unchanged and truncated when the cause is a string", () => {
+    it("returns strings unchanged by default and truncates when maxLen is set", () => {
       expect(extractErrorMessage("short message")).toBe("short message");
-      expect(extractErrorMessage("x".repeat(205))).toBe(`${"x".repeat(200)}…`);
+      expect(extractErrorMessage("x".repeat(205), 200)).toBe(
+        `${"x".repeat(200)}…`,
+      );
     });
 
     it("reads message fields from plain objects", () => {
