@@ -17,6 +17,13 @@ describe("error attribute helpers", () => {
       expect(message).toBe(`${"a".repeat(200)}…`);
     });
 
+    it("accepts null to disable truncation explicitly", () => {
+      const long = "x".repeat(205);
+      expect(extractErrorMessage(long, null)).toBe(long);
+      const err = new Error(long);
+      expect(extractErrorMessage(err, null)).toBe(long);
+    });
+
     it("returns strings unchanged by default and truncates when maxLen is set", () => {
       expect(extractErrorMessage("short message")).toBe("short message");
       expect(extractErrorMessage("x".repeat(205), 200)).toBe(

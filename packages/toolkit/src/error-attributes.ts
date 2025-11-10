@@ -4,26 +4,28 @@ import { truncate } from "./truncate";
  * Extracts a concise error message string from an unknown cause when possible.
  *
  * The function prefers `Error` instances but gracefully handles plain strings and
- * objects that expose a `message` field. When `maxLen` is provided, the
- * returned string is truncated to avoid leaking unbounded payloads. If omitted,
- * no truncation is applied by default.
+ * objects that expose a `message` field.
+ *
+ * Truncation semantics for `maxLen`:
+ * - number: truncate to the specified length.
+ * - undefined: no truncation is applied by default.
+ * - null: explicitly disable truncation (same as undefined).
  *
  * @public
  * @param cause - Value supplied as an error `cause`.
- * @param maxLen - Optional maximum length for truncation. When omitted, no truncation.
+ * @param maxLen - Maximum length for truncation; `null` disables truncation.
  * @returns A trimmed and truncated message when detectable, otherwise `undefined`.
  */
 export function extractErrorMessage(
   cause: unknown,
-  maxLen?: number,
+  maxLen?: null | number,
 ): string | undefined {
   if (!cause) return;
-  const len = maxLen ?? null;
-  if (cause instanceof Error) return truncate(cause.message, len);
-  if (typeof cause === "string") return truncate(cause, len);
+  if (cause instanceof Error) return truncate(cause.message, maxLen);
+  if (typeof cause === "string") return truncate(cause, maxLen);
   if (typeof cause === "object" && "message" in cause) {
     const message = cause["message"];
-    return typeof message === "string" ? truncate(message, len) : undefined;
+    return typeof message === "string" ? truncate(message, maxLen) : undefined;
   }
   return undefined;
 }
