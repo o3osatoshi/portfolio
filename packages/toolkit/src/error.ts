@@ -103,8 +103,9 @@ export type NewError = {
  * - If `cause` is an `Error`, its `.message` is extracted and appended as `Cause: ...`.
  * - If `cause` is a string, it is used directly.
  * - If `cause` is any other object, it is JSON stringified when possible.
- * - Note: the original `cause` is NOT attached to the returned `Error`; it is
- *   only summarized into the message.
+ * - The original `cause` is also attached to the returned `Error` using native
+ *   `ErrorOptions` when available or a non‑enumerable `cause` property as a
+ *   fallback, so downstream code can inspect `err.cause`.
  *
  * ## Recommended usage
  * - Use `layer` and `kind` to categorize error origin (`Domain`, `Application`, `Infra`, `Auth`, `UI`, `DB`, `External`) and type (`Validation`, `Timeout`, `Unavailable`, `Integrity`, `Deadlock`, `Serialization`, etc.).
