@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import type { ResultAsync } from "neverthrow";
 
-import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
+import { newZodError, toHttpErrorResponse } from "@o3osatoshi/toolkit";
 
 /**
  * Railway-style responder: map ResultAsync to a JSON response.
@@ -17,4 +17,13 @@ export function respond<T>(c: Context) {
         return c.json(body, { status });
       },
     );
+}
+
+export function respondZodError(result, c) {
+  if (!result.success) {
+    const { body, status } = toHttpErrorResponse(
+      newZodError({ cause: result.error }),
+    );
+    return c.json(body, { status });
+  }
 }

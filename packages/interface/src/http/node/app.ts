@@ -8,10 +8,8 @@ import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
-
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respond } from "../core/respond";
+import { respond, respondZodError } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -53,7 +51,7 @@ export function buildApp(deps: Deps) {
   const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
   app.get(
     "/labs/transactions",
-    zValidator("query", getTransactionsRequestSchema),
+    zValidator("query", getTransactionsRequestSchema, respondZodError),
     (c) =>
       respond<GetTransactionsResponse>(c)(
         getTransactions.execute(c.req.valid("query")),
