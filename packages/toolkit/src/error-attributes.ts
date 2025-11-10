@@ -9,25 +9,27 @@ import { truncate } from "./truncate";
  * Truncation semantics for `maxLen`:
  * - number: truncate to the specified length.
  * - undefined: no truncation is applied by default.
- * - null: explicitly disable truncation (same as undefined).
  *
  * @public
  * @param cause - Value supplied as an error `cause`.
- * @param maxLen - Maximum length for truncation; `null` disables truncation.
+ * @param maxLen - Maximum length for truncation; when omitted, truncation is disabled.
  * @returns A trimmed and truncated message when detectable, otherwise `undefined`.
  */
 export function extractErrorMessage(
   cause: unknown,
-  maxLen?: number,
+  maxLen?: null | number,
 ): string | undefined {
   if (!cause) return;
+
   const length = maxLen ?? null;
+
   if (cause instanceof Error) return truncate(cause.message, length);
   if (typeof cause === "string") return truncate(cause, length);
   if (typeof cause === "object" && "message" in cause) {
     const message = cause["message"];
     return typeof message === "string" ? truncate(message, length) : undefined;
   }
+
   return undefined;
 }
 
@@ -44,10 +46,12 @@ export function extractErrorMessage(
  */
 export function extractErrorName(cause: unknown): string | undefined {
   if (!cause) return;
+
   if (cause instanceof Error) return cause.name;
   if (typeof cause === "object" && "name" in cause) {
     const name = cause.name;
     return typeof name === "string" ? name : undefined;
   }
+
   return undefined;
 }
