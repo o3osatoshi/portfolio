@@ -4,6 +4,19 @@ import { extractErrorMessage, extractErrorName } from "./error-attributes";
 import { truncate } from "./truncate";
 
 /**
+ * Options for {@link deserializeError}.
+ *
+ * @public
+ */
+export type DeserializeOptions = {
+  /**
+   * Truncate the fallback message length when input is not a valid serialized error.
+   * When omitted, no truncation is applied by default.
+   */
+  maxLen?: null | number | undefined;
+};
+
+/**
  * Union used to represent an error's `cause` in serialized form.
  *
  * - A primitive `string` is preserved as-is.
@@ -24,7 +37,7 @@ export type SerializedCause = SerializedError | string;
 export interface SerializedError {
   /** Optional cause; can be a string or another serialized error. */
   cause?: SerializedCause | undefined;
-  /** Error message, truncated to a reasonable length by default. */
+  /** Error message. */
   message: string;
   /** Original error name (e.g. `TypeError`, `DomainValidationError`). */
   name: string;
@@ -42,8 +55,15 @@ export type SerializeOptions = {
   depth?: number | undefined;
   /** Include `stack` in output (default: true in development, false otherwise). */
   includeStack?: boolean | undefined;
-  /** Truncate message length to avoid unbounded payloads (default: 200). */
-  maxLen?: number | undefined;
+  /**
+   * Truncate message length to avoid unbounded payloads.
+   *
+   * Semantics:
+   * - number: truncate to the specified length.
+   * - undefined: use the default length (200) for truncation.
+   * - null: explicitly disable truncation.
+   */
+  maxLen?: null | number | undefined;
 };
 
 /**
@@ -57,9 +77,13 @@ export type SerializeOptions = {
  *
  * @public
  * @param input - Unknown value expected to represent a serialized error.
+ * @param opts - Deserialization options (max message length).
  * @returns Rehydrated `Error` with best-effort `cause` restoration.
  */
-export function deserializeError(input: unknown): Error {
+export function deserializeError(
+  input: unknown,
+  opts: DeserializeOptions = {},
+): Error {
   // If input is already an Error instance, return it as-is
   if (input instanceof Error) return input;
 
@@ -67,7 +91,7 @@ export function deserializeError(input: unknown): Error {
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
     const name = extractErrorName(input) ?? "UnknownError";
-    const message = extractErrorMessage(input) ?? truncate(String(input), 200);
+    const message = extractErrorMessage(input, opts.maxLen ?? undefined);
     const e = new Error(message);
     e.name = name;
     return e;
@@ -79,7 +103,7 @@ export function deserializeError(input: unknown): Error {
     typeof nested === "string"
       ? nested
       : nested
-        ? deserializeError(nested)
+        ? deserializeError(nested, opts)
         : undefined;
 
   let error: Error;
@@ -125,7 +149,10 @@ export function isSerializedError(v: unknown): v is SerializedError {
  * Convert an `Error` into a {@link SerializedError}.
  *
  * Behavior:
- * - Preserves `name` and a truncated `message`.
+ * - Preserves `name` and `message`.
+ * - Truncates `message` by default to 200 characters (see {@link truncate});
+ *   pass `maxLen: null` to disable truncation entirely, or pass a number to
+ *   cap the length explicitly.
  * - Optionally includes `stack` (dev-only by default).
  * - Serializes nested `cause` recursively up to `depth`.
  *
@@ -144,7 +171,6 @@ export function serializeError(
 ): SerializedError {
   const includeStack =
     opts.includeStack ?? process.env["NODE_ENV"] === "development";
-  const maxLen = opts.maxLen ?? 200;
   const depth = Math.max(0, opts.depth ?? 2);
 
   return {
@@ -152,9 +178,9 @@ export function serializeError(
     cause: serializeCause(error.cause, {
       depth: depth - 1,
       includeStack,
-      maxLen,
+      maxLen: opts.maxLen,
     }),
-    message: truncate(error.message, maxLen),
+    message: truncate(error.message, opts.maxLen ?? null),
     stack: includeStack ? error.stack : undefined,
   };
 }
@@ -174,12 +200,11 @@ function serializeCause(
   opts: SerializeOptions,
 ): SerializedCause | undefined {
   if (cause == null) return undefined;
-  const maxLen = opts.maxLen ?? 200;
   const depth = Math.max(0, opts.depth ?? 2);
 
   // Depth limit reached: return a summarized string
   if (depth === 0) {
-    return extractErrorMessage(cause) ?? truncate(String(cause), maxLen);
+    return extractErrorMessage(cause, opts.maxLen);
   }
 
   // Preserve primitive string causes as-is for compatibility
@@ -190,7 +215,7 @@ function serializeCause(
     return serializeError(cause, {
       depth: depth - 1,
       includeStack: opts.includeStack,
-      maxLen,
+      maxLen: opts.maxLen,
     });
   }
 
@@ -199,11 +224,12 @@ function serializeCause(
 
   // Non-error causes: coerce into a minimal SerializedError
   const name = extractErrorName(cause) ?? "Error";
-  const message = extractErrorMessage(cause) ?? String(cause);
-  return {
-    name,
-    message: truncate(message, maxLen),
-  };
+  const message = extractErrorMessage(cause, opts.maxLen);
+  if (message) {
+    return { name, message };
+  } else {
+    return name;
+  }
 }
 
 // Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
