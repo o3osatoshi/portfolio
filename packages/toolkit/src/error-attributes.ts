@@ -6,13 +6,14 @@ import { truncate } from "./truncate";
  * The function prefers `Error` instances but gracefully handles plain strings and
  * objects that expose a `message` field.
  *
- * Truncation semantics for `maxLen`:
+ * Truncation semantics for `maxLen` in this helper:
  * - number: truncate to the specified length.
- * - undefined: no truncation is applied by default.
+ * - undefined: no truncation is applied by default in this helper.
+ * - null: explicitly disable truncation (equivalent to undefined for this helper).
  *
  * @public
  * @param cause - Value supplied as an error `cause`.
- * @param maxLen - Maximum length for truncation; when omitted, truncation is disabled.
+ * @param maxLen - Maximum length for truncation; `null` disables truncation.
  * @returns A trimmed and truncated message when detectable, otherwise `undefined`.
  */
 export function extractErrorMessage(
