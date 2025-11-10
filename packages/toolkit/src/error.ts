@@ -183,27 +183,32 @@ export function newError(params: NewError): Error {
 }
 
 /** Convert an unknown cause into a safe string (prioritize `Error.message`). */
-function summarizeCause(cause: unknown, max = 300): string | undefined {
+function summarizeCause(
+  cause: unknown,
+  maxLen?: null | number,
+): string | undefined {
   if (cause == null) return;
 
+  const length = maxLen ?? null;
+
   const name = extractErrorName(cause);
-  const message = extractErrorMessage(cause);
+  const message = extractErrorMessage(cause, length);
   if (typeof message === "string") {
     if (typeof name === "string" && name.length > 0 && name !== "Error") {
-      return truncate(`${name}: ${message}`, max);
+      return truncate(`${name}: ${message}`, length);
     }
-    return truncate(message, max);
+    return truncate(message, length);
   }
   if (typeof name === "string" && name.length > 0) {
-    return truncate(name, max);
+    return truncate(name, length);
   }
 
   try {
     const serialized = JSON.stringify(cause);
     if (!serialized) return;
-    return truncate(serialized, max);
+    return truncate(serialized, length);
   } catch {
     const fallback = String(cause);
-    return fallback ? truncate(fallback, max) : undefined;
+    return fallback ? truncate(fallback, length) : undefined;
   }
 }
