@@ -26,7 +26,12 @@ export type CreateEnvOptions = {
 };
 
 // @public
-export function deserializeError(input: unknown): Error;
+export function deserializeError(input: unknown, opts?: DeserializeOptions): Error;
+
+// @public
+export type DeserializeOptions = {
+    maxLen?: null | number | undefined;
+};
 
 // @public
 export type EnvOf<T extends EnvSchema> = {
@@ -61,7 +66,7 @@ export type ErrorMessagePayload = {
 export type ErrorStatus = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
 
 // @public
-export function extractErrorMessage(cause: unknown): string | undefined;
+export function extractErrorMessage(cause: unknown, maxLen?: null | number): string | undefined;
 
 // @public
 export function extractErrorName(cause: unknown): string | undefined;
@@ -171,7 +176,7 @@ export function serializeError(error: Error, opts?: SerializeOptions): Serialize
 export type SerializeOptions = {
     depth?: number | undefined;
     includeStack?: boolean | undefined;
-    maxLen?: number | undefined;
+    maxLen?: null | number | undefined;
 };
 
 // @public
@@ -192,7 +197,7 @@ export function summarizeZodIssue(issue: ZodIssue): string;
 export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
-export function truncate(value: string, max?: number): string;
+export function truncate(value: string, maxLen?: null | number): string;
 
 // (No @packageDocumentation comment for this package)
 

@@ -19,11 +19,39 @@ export function respond<T>(c: Context) {
     );
 }
 
-export function respondZodError(result, c) {
+/**
+ * zValidator hook that maps Zod validation failures to normalized JSON errors.
+ *
+ * Usage with Hono + @hono/zod-validator:
+ * - Provide this as the 3rd argument to `zValidator`.
+ * - On `result.success === false` it returns a JSON response built from
+ *   `toHttpErrorResponse(newZodError({ cause: result.error }))`.
+ * - When validation succeeds, it returns `undefined` to continue the pipeline.
+ *
+ * @example
+ * app.get(
+ *   "/route",
+ *   zValidator("query", schema, respondZodError),
+ *   (c) => c.json({ ok: true }),
+ * );
+ *
+ * @param result - Result passed by `zValidator` containing success flag and optional ZodError.
+ * @param c - Hono context used to create the JSON response.
+ * @returns A JSON Response when validation fails, otherwise `undefined`.
+ * @public
+ */
+export function respondZodError(
+  result: {
+    error?: unknown;
+    success: boolean;
+  },
+  c: Context,
+): Response | undefined {
   if (!result.success) {
     const { body, status } = toHttpErrorResponse(
       newZodError({ cause: result.error }),
     );
     return c.json(body, { status });
   }
+  return undefined;
 }

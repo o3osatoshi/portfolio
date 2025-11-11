@@ -23,10 +23,7 @@ export default async function Page() {
   const userId = await getUserId();
 
   const result = await getTransactions({ userId });
-  if (result.isErr()) {
-    return null;
-  }
-  const transactions = result.value;
+  const transactions = result.isErr() ? [] : result.value;
 
   return (
     <div className="flex flex-col gap-6">
