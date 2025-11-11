@@ -42,6 +42,35 @@ describe("http/core/respond", () => {
     expect(typeof body.message).toBe("string");
   });
 
+  it("maps AbortError to 408 Canceled", async () => {
+    const app = new Hono();
+    app.get("/aborted", (c) =>
+      respond<never>(c)(
+        errAsync(
+          (() => {
+            const e = new Error("aborted");
+            // Simulate a DOM-style AbortError without depending on DOMException
+            e.name = "AbortError";
+            return e;
+          })(),
+        ),
+      ),
+    );
+
+    const res = await app.request("/aborted");
+    expect(res.status).toBe(408);
+    const body = await res.json();
+    // @ts-expect-error serialized error has message
+    expect(typeof body.message).toBe("string");
+  });
+
+  it("defaults unknown errors to 500", async () => {
+    const app = new Hono();
+    app.get("/unknown", (c) => respond<never>(c)(errAsync(new Error("boom"))));
+    const res = await app.request("/unknown");
+    expect(res.status).toBe(500);
+  });
+
   it("responds with 400 and serialized error when zValidator fails", async () => {
     const app = new Hono();
     const schema = z.object({ q: z.string().min(2) });

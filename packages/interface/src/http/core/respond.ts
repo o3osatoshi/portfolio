@@ -4,9 +4,14 @@ import type { ResultAsync } from "neverthrow";
 import { newZodError, toHttpErrorResponse } from "@o3osatoshi/toolkit";
 
 /**
- * Railway-style responder: map ResultAsync to a JSON response.
+ * Railway-style responder: map a `ResultAsync` into a JSON HTTP response.
  *
- * Success → 200 JSON by default. Failure → normalized error JSON with mapped status.
+ * - Success → returns a 200 JSON response with the value.
+ * - Failure → converts the error via {@link toHttpErrorResponse} and returns
+ *   a normalized JSON error with an appropriate status code.
+ *
+ * @returns A function that accepts a `ResultAsync<T, Error>` and yields a
+ * `Promise<Response>` suitable for Hono route handlers.
  */
 export function respond<T>(c: Context) {
   return (ra: ResultAsync<T, Error>) =>
@@ -37,7 +42,8 @@ export function respond<T>(c: Context) {
  *
  * @param result - Result passed by `zValidator` containing success flag and optional ZodError.
  * @param c - Hono context used to create the JSON response.
- * @returns A JSON Response when validation fails, otherwise `undefined`.
+ * @returns A JSON `Response` when validation fails, otherwise `undefined` to
+ * allow request processing to continue.
  * @public
  */
 export function respondZodError(
