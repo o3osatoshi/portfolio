@@ -41,12 +41,6 @@ const KIND_VALUES = [
   "Validation",
 ] as const satisfies readonly Kind[];
 
-/**
- * Current schema version used by {@link ErrorMessagePayload}.
- *
- * @public
- */
-export const MESSAGE_FORMAT_VERSION = 1;
 const SUMMARY_FALLBACK = "Operation failed";
 const ACTION_SUMMARY_SUFFIX = " failed";
 
@@ -70,7 +64,6 @@ export type ErrorMessageParts = {
  */
 export type ErrorMessagePayload = {
   summary: string;
-  version: typeof MESSAGE_FORMAT_VERSION;
 } & ErrorMessageParts;
 
 /**
@@ -84,10 +77,7 @@ export function composeErrorMessage(parts: ErrorMessageParts): string {
       ? `${parts.action.trim()}${ACTION_SUMMARY_SUFFIX}`
       : SUMMARY_FALLBACK;
 
-  const payload: ErrorMessagePayload = {
-    summary,
-    version: MESSAGE_FORMAT_VERSION,
-  };
+  const payload: ErrorMessagePayload = { summary };
 
   if (parts.action) payload.action = parts.action;
   if (parts.reason) payload.reason = parts.reason;
@@ -167,8 +157,6 @@ function parsePayload(
     return undefined;
   }
   if (!isJsonRecord(data)) return undefined;
-  const version = data["version"];
-  if (version !== MESSAGE_FORMAT_VERSION) return undefined;
   const summary = data["summary"];
   if (!isString(summary)) return undefined;
   return data as ErrorMessagePayload;

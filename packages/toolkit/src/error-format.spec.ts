@@ -41,7 +41,6 @@ describe("error-format message helpers", () => {
     expect(payload["impact"]).toBe("no data returned");
     expect(payload["reason"]).toBe("dependency unavailable");
     expect(payload["summary"]).toBe("Operation failed");
-    expect(payload["version"]).toBe(1);
     expect(payload["action"]).toBeUndefined();
   });
 

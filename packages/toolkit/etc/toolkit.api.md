@@ -54,7 +54,6 @@ export type ErrorMessageParts = {
 // @public
 export type ErrorMessagePayload = {
     summary: string;
-    version: typeof MESSAGE_FORMAT_VERSION;
 } & ErrorMessageParts;
 
 // @public
@@ -88,9 +87,6 @@ export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Confli
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
-
-// @public
-export const MESSAGE_FORMAT_VERSION = 1;
 
 // @public
 export type NewError = {
