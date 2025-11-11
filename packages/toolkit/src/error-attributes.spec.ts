@@ -11,32 +11,15 @@ describe("error attribute helpers", () => {
       expect(message).toBe("a".repeat(210));
     });
 
-    it("respects maxLen when provided", () => {
-      const err = new Error("a".repeat(210));
-      const message = extractErrorMessage(err, 200);
-      expect(message).toBe(`${"a".repeat(200)}…`);
-    });
-
-    it("does not truncate when maxLen is undefined (default)", () => {
+    it("does not truncate strings by default", () => {
       const long = "x".repeat(205);
-      // default (undefined) → no truncation
       expect(extractErrorMessage(long)).toBe(long);
       const err = new Error(long);
       expect(extractErrorMessage(err)).toBe(long);
     });
 
-    it("accepts null to disable truncation explicitly", () => {
-      const long = "x".repeat(205);
-      expect(extractErrorMessage(long, null)).toBe(long);
-      const err = new Error(long);
-      expect(extractErrorMessage(err, null)).toBe(long);
-    });
-
-    it("returns strings unchanged by default and truncates when maxLen is set", () => {
+    it("returns strings unchanged by default", () => {
       expect(extractErrorMessage("short message")).toBe("short message");
-      expect(extractErrorMessage("x".repeat(205), 200)).toBe(
-        `${"x".repeat(200)}…`,
-      );
     });
 
     it("reads message fields from plain objects", () => {

@@ -1,6 +1,5 @@
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
 import { composeErrorMessage, composeErrorName } from "./error-format";
-import { truncate } from "./truncate";
 
 /**
  * Generic error classifications shared across application layers.
@@ -184,32 +183,27 @@ export function newError(params: NewError): Error {
 }
 
 /** Convert an unknown cause into a safe string (prioritize `Error.message`). */
-function summarizeCause(
-  cause: unknown,
-  maxLen?: null | number,
-): string | undefined {
+function summarizeCause(cause: unknown): string | undefined {
   if (cause == null) return;
 
-  const length = maxLen ?? null;
-
   const name = extractErrorName(cause);
-  const message = extractErrorMessage(cause, length);
+  const message = extractErrorMessage(cause);
   if (typeof message === "string") {
     if (typeof name === "string" && name.length > 0 && name !== "Error") {
-      return truncate(`${name}: ${message}`, length);
+      return `${name}: ${message}`;
     }
-    return truncate(message, length);
+    return message;
   }
   if (typeof name === "string" && name.length > 0) {
-    return truncate(name, length);
+    return name;
   }
 
   try {
     const serialized = JSON.stringify(cause);
     if (!serialized) return;
-    return truncate(serialized, length);
+    return serialized;
   } catch {
     const fallback = String(cause);
-    return fallback ? truncate(fallback, length) : undefined;
+    return fallback || undefined;
   }
 }

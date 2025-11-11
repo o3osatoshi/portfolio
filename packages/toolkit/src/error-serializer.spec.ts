@@ -89,13 +89,6 @@ describe("error-serializer", () => {
 
   // serializeError now accepts only Error; primitives/objects are not allowed
 
-  it("truncates long messages according to maxLen", () => {
-    const long = "a".repeat(500);
-    const s1 = serializeError(new Error(long), { maxLen: 10 });
-    expect(s1.message.endsWith("…")).toBe(true);
-    expect(s1.message.length).toBe(11);
-  });
-
   it("passes through already-serialized cause without modification", () => {
     const inner: SerializedError = { name: "Inner", message: "m" };
     const top = new Error("top");
@@ -162,22 +155,6 @@ describe("error-serializer", () => {
     expect(err.name).toBe("Top");
     expect(err.message).toBe("M");
     expect(err.cause).toBe("S");
-  });
-
-  it("fallback path does not truncate by default", () => {
-    const long = "a".repeat(500);
-    const err = deserializeError(long);
-    expect(err.name).toBe("UnknownError");
-    // extractErrorMessage defaults to no truncation when maxLen is undefined
-    expect(err.message.length).toBe(500);
-    expect(err.message.endsWith("…")).toBe(false);
-  });
-
-  it("fallback path truncates when maxLen is provided", () => {
-    const long = "a".repeat(500);
-    const err = deserializeError(long, { maxLen: 50 });
-    expect(err.message.length).toBe(51);
-    expect(err.message.endsWith("…")).toBe(true);
   });
 
   it("normalizes negative depth to 0 (summarize)", () => {
