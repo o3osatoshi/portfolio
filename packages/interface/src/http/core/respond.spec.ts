@@ -38,7 +38,6 @@ describe("http/core/respond", () => {
     const body = await res.json();
     // Basic shape from serializeError
     expect(body).toHaveProperty("name", "DomainNotFoundError");
-    // @ts-expect-error
     expect(typeof body.message).toBe("string");
   });
 
@@ -60,7 +59,6 @@ describe("http/core/respond", () => {
     const res = await app.request("/aborted");
     expect(res.status).toBe(408);
     const body = await res.json();
-    // @ts-expect-error serialized error has message
     expect(typeof body.message).toBe("string");
   });
 
@@ -82,7 +80,6 @@ describe("http/core/respond", () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body).toHaveProperty("name", "ApplicationValidationError");
-    // @ts-expect-error
     expect(typeof body.message).toBe("string");
   });
 

@@ -1,7 +1,12 @@
-import { zValidator } from "@hono/zod-validator";
 import {
-  getTransactionsRequestSchema,
+  type AuthConfig,
+  authHandler,
+  initAuthConfig,
+  verifyAuth,
+} from "@hono/auth-js";
+import {
   GetTransactionsUseCase,
+  parseGetTransactionsRequest,
 } from "@repo/application";
 import type { GetTransactionsResponse } from "@repo/application";
 import type { TransactionRepository } from "@repo/domain";
@@ -9,7 +14,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respond, respondZodError } from "../core/respond";
+import { respond } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -24,6 +29,7 @@ export type AppType = ReturnType<typeof buildApp>;
  * Provide infrastructure-backed implementations in production (e.g. DB).
  */
 export type Deps = {
+  authConfig: AuthConfig;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -33,7 +39,7 @@ export type Deps = {
  *
  * Routes (mounted under `/api`):
  * - GET `/healthz` — Liveness probe.
- * - GET `/labs/transactions?userId=...` — Returns `Transaction[]` for the user.
+ * - GET `/labs/transactions` — Returns `Transaction[]` for the authenticated user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
  * Errors: normalized via {@link toHttpErrorResponse}. Zod validation failures
@@ -47,16 +53,24 @@ export function buildApp(deps: Deps) {
 
   app.use("*", requestIdMiddleware, loggerMiddleware);
 
+  app.use(
+    "*",
+    initAuthConfig(() => deps.authConfig),
+  );
+
+  app.use("/auth/*", authHandler());
+
+  app.use("/*", verifyAuth());
+
   app.get("/healthz", (c) => c.json({ ok: true }));
 
   const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-  app.get(
-    "/labs/transactions",
-    zValidator("query", getTransactionsRequestSchema, respondZodError),
-    (c) =>
-      respond<GetTransactionsResponse>(c)(
-        getTransactions.execute(c.req.valid("query")),
-      ),
+  app.get("/labs/transactions", (c) =>
+    respond<GetTransactionsResponse>(c)(
+      parseGetTransactionsRequest({
+        userId: c.get("authUser").user?.id,
+      }).andThen((res) => getTransactions.execute(res)),
+    ),
   );
 
   return app;

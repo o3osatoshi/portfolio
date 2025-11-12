@@ -1,11 +1,11 @@
 "use client";
 
-import { AuthProvider } from "@repo/auth/react";
+import { SessionProvider } from "@hono/auth-js/react";
 import { ThemeProvider } from "next-themes";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
+    <SessionProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -15,6 +15,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
       >
         {children}
       </ThemeProvider>
-    </AuthProvider>
+    </SessionProvider>
   );
 }

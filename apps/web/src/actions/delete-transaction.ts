@@ -1,5 +1,6 @@
 "use server";
 
+import { getSession } from "@hono/auth-js/react";
 import {
   DeleteTransactionUseCase,
   parseDeleteTransactionRequest,
@@ -9,7 +10,6 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
-import { getUserId } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPath, getTag } from "@/utils/handle-nav";
 import { deleteTransactionSchema } from "@/utils/validation";
@@ -31,7 +31,8 @@ export const deleteTransaction = async (
     }
     const { id } = result.data;
 
-    const userId = await getUserId();
+    const session = await getSession();
+    const userId = session?.user?.id;
     if (userId === undefined) {
       return err("You must be logged in to delete a transaction.");
     }

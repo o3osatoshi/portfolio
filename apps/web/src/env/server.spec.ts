@@ -9,6 +9,9 @@ describe("apps/web env (server)", () => {
   });
 
   it("accepts valid DATABASE_URL values", async () => {
+    vi.stubEnv("AUTH_GOOGLE_ID", "test-google-id");
+    vi.stubEnv("AUTH_GOOGLE_SECRET", "test-google-secret");
+    vi.stubEnv("AUTH_SECRET", "test-auth-secret");
     vi.stubEnv(
       "DATABASE_URL",
       "postgresql://postgres:postgres@localhost:54329/postgres?schema=public",
