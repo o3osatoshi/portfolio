@@ -1,14 +1,10 @@
 import {
-  type AuthConfig,
-  authHandler,
-  initAuthConfig,
-  verifyAuth,
-} from "@hono/auth-js";
-import {
   GetTransactionsUseCase,
   parseGetTransactionsRequest,
 } from "@repo/application";
 import type { GetTransactionsResponse } from "@repo/application";
+import type { AuthConfig } from "@repo/auth";
+import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";

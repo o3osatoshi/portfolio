@@ -1,10 +1,10 @@
 "use server";
 
-import { getSession } from "@hono/auth-js/react";
 import {
   DeleteTransactionUseCase,
   parseDeleteTransactionRequest,
 } from "@repo/application";
+import { getUserId } from "@repo/auth/react";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -31,8 +31,7 @@ export const deleteTransaction = async (
     }
     const { id } = result.data;
 
-    const session = await getSession();
-    const userId = session?.user?.id;
+    const userId = await getUserId();
     if (userId === undefined) {
       return err("You must be logged in to delete a transaction.");
     }

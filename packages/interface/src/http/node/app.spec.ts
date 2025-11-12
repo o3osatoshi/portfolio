@@ -1,4 +1,4 @@
-import type { AuthConfig } from "@hono/auth-js";
+import type { AuthConfig } from "@repo/auth";
 import { describe, expect, it } from "vitest";
 
 import { buildApp, buildHandler } from "./app";

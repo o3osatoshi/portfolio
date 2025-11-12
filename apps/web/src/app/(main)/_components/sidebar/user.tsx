@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn, signOut, useSession } from "@hono/auth-js/react";
+import { signIn, signOut, useUser } from "@repo/auth/react";
 import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
 
 import {
@@ -19,8 +19,7 @@ import {
 
 export function User() {
   const { isMobile } = useSidebar();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const user = useUser();
 
   return (
     <SidebarMenu>

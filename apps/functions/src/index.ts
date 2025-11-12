@@ -1,3 +1,4 @@
+import { createAuthConfig } from "@repo/auth";
 import {
   buildApp,
   createExpressRequestHandler,
@@ -14,6 +15,9 @@ export const api = onRequest(async (req, res) => {
   if (!handler) {
     const env = createEnv(
       {
+        AUTH_GOOGLE_ID: z.string().min(1),
+        AUTH_GOOGLE_SECRET: z.string().min(1),
+        AUTH_SECRET: z.string().min(1),
         DATABASE_URL: z.string().min(1),
       },
       { name: "functions" },
@@ -21,8 +25,18 @@ export const api = onRequest(async (req, res) => {
     const client = createPrismaClient({
       connectionString: env.DATABASE_URL,
     });
+    const authConfig = createAuthConfig({
+      providers: {
+        google: {
+          clientId: env.AUTH_GOOGLE_ID,
+          clientSecret: env.AUTH_GOOGLE_SECRET,
+        },
+      },
+      prismaClient: client,
+      secret: env.AUTH_SECRET,
+    });
     const repo = new PrismaTransactionRepository(client);
-    const app = buildApp({ transactionRepo: repo });
+    const app = buildApp({ authConfig, transactionRepo: repo });
     handler = createExpressRequestHandler(app);
   }
   await handler(req, res);
