@@ -12,6 +12,7 @@
     "@repo/application",
     "@repo/auth",
     "@repo/domain",
+    "@repo/edge",
     "@repo/eth",
     "@repo/functions",
     "@repo/interface",
