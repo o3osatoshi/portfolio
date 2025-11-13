@@ -19,7 +19,7 @@ import { getTransactions } from "@/services/get-transactions";
 //   });
 
 export default async function Page() {
-  const result = await getTransactions({});
+  const result = await getTransactions();
   const transactions = result.isErr() ? [] : result.value;
 
   return (
