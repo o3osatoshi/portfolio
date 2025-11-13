@@ -15,6 +15,7 @@ export type CreateAuthConfigOptions = {
     };
   };
   secret: string;
+  session?: { strategy?: "database" | "jwt" };
 };
 
 export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
@@ -28,6 +29,7 @@ export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
     adapter: PrismaAdapter(options.prismaClient),
     basePath: options.basePath ?? "/api/auth",
     secret: options.secret,
+    session: { strategy: options?.session?.strategy ?? "jwt" },
   };
 }
 
