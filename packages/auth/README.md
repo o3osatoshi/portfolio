@@ -24,14 +24,23 @@ Notes:
 - Prisma CLI scripts read from `packages/prisma/.env.*.local` via `dotenv-cli`. At runtime, `DATABASE_URL` must still be available to the Next.js server (e.g., in `apps/web/.env.local`).
 
 ## Exports
-- `@repo/auth`
+- `@repo/auth` (NextAuth)
   - `createAuth(options)`: Factory that composes NextAuth with PrismaAdapter.
     - `options`: `{ prisma: PrismaClient } | { connectionString: string }`
     - Returns: `{ handlers, auth, getUserId }`
-- `@repo/auth/middleware`
+- `@repo/auth/middleware` (NextAuth)
   - `middleware`: Edge‑compatible middleware using the shared config.
-- `@repo/auth/react`
+- `@repo/auth/react` (NextAuth)
   - `AuthProvider`, `useUser`, `signIn`, `signOut`.
+- `@repo/auth/hono` (Hono + Auth.js)
+  - `createHonoAuth(options)`: Compose Auth.js config for Hono.
+    - `options`: `{ providers, secret, basePath?, prisma?, adapter?, overrides? }`
+    - Returns: `{ config, getUserId }`
+- `@repo/auth/hono/middleware`
+  - `initAuthConfig`, `authHandler`, `verifyAuth` re‑exports
+  - `withAuth(app, getConfig)` helper to wire all at once
+- `@repo/auth/hono/react`
+  - `SessionProvider`/`AuthProvider`, `useSession`, `useUser`, `getSession`, `signIn`, `signOut`.
 
 The internal shared config lives at `src/config.ts` and is not exported as a public entrypoint.
 
@@ -119,3 +128,47 @@ Unit tests (Vitest) cover the pure callback logic in `authConfig`.
 - Shared configuration (providers/callbacks): `src/config.ts`
 
 Extend providers, callbacks, or add client re‑exports here as needed.
+
+## Usage (Hono + Auth.js via `@hono/auth-js`)
+
+API wiring (Node, once at startup):
+
+```ts
+// apps/web/src/app/api/[...route]/route.ts
+import Google from "@auth/core/providers/google";
+import { createHonoAuth } from "@repo/auth/hono";
+import { buildHandler } from "@repo/interface/http/node";
+import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+
+const client = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
+const repo = new PrismaTransactionRepository(client);
+
+const { config } = createHonoAuth({
+  prisma: client,
+  secret: process.env.AUTH_SECRET!,
+  providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
+  ],
+});
+
+export const { GET, POST } = buildHandler({ authConfig: config, transactionRepo: repo });
+```
+
+Middleware wiring helper (if using a raw Hono app):
+
+```ts
+import { withAuth } from "@repo/auth/hono/middleware";
+import { Hono } from "hono";
+
+const app = new Hono().basePath("/api");
+withAuth(app, () => config);
+```
+
+Client code should use `@repo/auth/hono/react` abstractions:
+
+```tsx
+import { AuthProvider, useUser, signIn, signOut } from "@repo/auth/hono/react";
+```

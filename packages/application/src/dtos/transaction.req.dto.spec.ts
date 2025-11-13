@@ -41,8 +41,8 @@ describe("application/dtos: transaction.req.dto parsers", () => {
     expect(res.isOk()).toBe(true);
   });
 
-  it("parseGetTransactionsRequest err on empty userId", () => {
-    const res = parseGetTransactionsRequest({ userId: "" });
+  it("parseGetTransactionsRequest err on empty userId", async () => {
+    const res = await parseGetTransactionsRequest({ userId: "" });
     expect(res.isErr()).toBe(true);
   });
 

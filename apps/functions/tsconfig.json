@@ -4,6 +4,7 @@
     "paths": {
       "@o3osatoshi/config": ["../../packages/config/src"],
       "@o3osatoshi/toolkit": ["../../packages/toolkit/src"],
+      "@repo/auth": ["../../packages/auth/src"],
       "@repo/interface/*": ["../../packages/interface/src/*"],
       "@repo/prisma": ["../../packages/prisma/src"]
     }

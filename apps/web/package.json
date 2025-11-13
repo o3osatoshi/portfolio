@@ -13,6 +13,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@auth/core": "^0.34.3",
     "@hookform/resolvers": "^5.2.2",
     "@next/third-parties": "^15.5.4",
     "@o3osatoshi/toolkit": "workspace:*",

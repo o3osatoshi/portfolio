@@ -16,4 +16,9 @@ describe("truncate", () => {
 
     expect(truncate(value)).toBe(`${"x".repeat(200)}…`);
   });
+
+  it("does not truncate when max is null", () => {
+    const value = "x".repeat(205);
+    expect(truncate(value, null)).toBe(value);
+  });
 });

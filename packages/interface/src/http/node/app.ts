@@ -2,11 +2,12 @@ import {
   GetTransactionsUseCase,
   parseGetTransactionsRequest,
 } from "@repo/application";
+import type { GetTransactionsResponse } from "@repo/application";
+import type { AuthConfig } from "@repo/auth";
+import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-
-import { toHttpErrorResponse } from "@o3osatoshi/toolkit";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
 import { respond } from "../core/respond";
@@ -24,6 +25,7 @@ export type AppType = ReturnType<typeof buildApp>;
  * Provide infrastructure-backed implementations in production (e.g. DB).
  */
 export type Deps = {
+  authConfig: AuthConfig;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -33,10 +35,11 @@ export type Deps = {
  *
  * Routes (mounted under `/api`):
  * - GET `/healthz` — Liveness probe.
- * - GET `/labs/transactions?userId=...` — Returns `Transaction[]` for the user.
+ * - GET `/labs/transactions` — Returns `Transaction[]` for the authenticated user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
- * Errors: normalized via {@link toHttpErrorResponse}.
+ * Errors: normalized via {@link toHttpErrorResponse}. Zod validation failures
+ * are handled by {@link respondZodError}.
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
@@ -46,14 +49,23 @@ export function buildApp(deps: Deps) {
 
   app.use("*", requestIdMiddleware, loggerMiddleware);
 
+  app.use(
+    "*",
+    initAuthConfig(() => deps.authConfig),
+  );
+
+  app.use("/auth/*", authHandler());
+
+  app.use("/*", verifyAuth());
+
   app.get("/healthz", (c) => c.json({ ok: true }));
 
   const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
   app.get("/labs/transactions", (c) =>
-    respond(c)(
+    respond<GetTransactionsResponse>(c)(
       parseGetTransactionsRequest({
-        userId: c.req.query("userId"),
-      }).asyncAndThen((dto) => getTransactions.execute(dto)),
+        userId: c.get("authUser").user?.id,
+      }).andThen((res) => getTransactions.execute(res)),
     ),
   );
 
@@ -62,6 +74,10 @@ export function buildApp(deps: Deps) {
 
 /**
  * Build Next.js/Vercel-compatible handlers for the Node runtime.
+ *
+ * Notes:
+ * - Both `GET` and `POST` are bound to the same underlying Hono app via
+ *   `handle(app)`. Unimplemented methods for a route will return 404.
  *
  * Usage (Next.js App Router):
  * ```ts

@@ -1,4 +1,4 @@
-import { okAsync } from "neverthrow";
+import type { AuthConfig } from "@repo/auth";
 import { describe, expect, it } from "vitest";
 
 import { buildApp, buildHandler } from "./app";
@@ -13,63 +13,41 @@ const noopRepo = {
   update: async () => undefined,
 };
 
+const testAuthConfig: AuthConfig = {
+  providers: [],
+  // Minimal config for tests; no providers means all requests are unauthenticated
+  basePath: "/api/auth",
+  secret: "test-secret",
+};
+
 describe("http/node/app", () => {
-  it("serves health check", async () => {
-    // @ts-expect-error
-    const app = buildApp({ transactionRepo: noopRepo });
-    const res = await app.request("/api/healthz");
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ ok: true });
-  });
-
-  it("GET handler responds to healthz", async () => {
-    // @ts-expect-error
-    const { GET } = buildHandler({ transactionRepo: noopRepo });
-    const res = await GET(new Request("http://test.local/api/healthz"));
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ ok: true });
-  });
-
-  it("lists transactions for a valid user", async () => {
-    const now = new Date();
-    const tx = {
-      id: "tx-1",
-      amount: "1.23",
-      createdAt: now,
-      currency: "USD",
-      datetime: now,
-      fee: "0.01",
-      feeCurrency: "USD",
-      price: "100.00",
-      profitLoss: "0",
-      type: "BUY",
-      updatedAt: now,
-      userId: "u-1",
-    } as const;
-
+  it("healthz is protected without auth (401)", async () => {
     const app = buildApp({
-      transactionRepo: {
-        // @ts-expect-error
-        findByUserId: () => okAsync([tx]),
-      },
+      authConfig: testAuthConfig,
+      // @ts-expect-error
+      transactionRepo: noopRepo,
     });
-
-    const res = await app.request("/api/labs/transactions?userId=u-1");
-    expect(res.status).toBe(200);
-    const list = (await res.json()) as unknown[];
-    expect(Array.isArray(list)).toBe(true);
-    expect(list.length).toBe(1);
-    expect(list[0]).toMatchObject({ id: "tx-1", type: "BUY", userId: "u-1" });
+    const res = await app.request("/api/healthz");
+    expect(res.status).toBe(401);
   });
 
-  it("returns 400 when userId is missing or blank", async () => {
-    // @ts-expect-error
-    const app = buildApp({ transactionRepo: noopRepo });
+  it("GET handler enforces auth for healthz", async () => {
+    const { GET } = buildHandler({
+      authConfig: testAuthConfig,
+      // @ts-expect-error
+      transactionRepo: noopRepo,
+    });
+    const res = await GET(new Request("http://test.local/api/healthz"));
+    expect(res.status).toBe(401);
+  });
 
-    const res1 = await app.request("/api/labs/transactions");
-    expect(res1.status).toBe(400);
-
-    const res2 = await app.request("/api/labs/transactions?userId=%20%20%20");
-    expect(res2.status).toBe(400);
+  it("transactions route returns 401 when unauthenticated", async () => {
+    const app = buildApp({
+      authConfig: testAuthConfig,
+      // @ts-expect-error
+      transactionRepo: noopRepo,
+    });
+    const res = await app.request("/api/labs/transactions");
+    expect(res.status).toBe(401);
   });
 });

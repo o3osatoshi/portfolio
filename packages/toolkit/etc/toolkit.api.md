@@ -54,7 +54,6 @@ export type ErrorMessageParts = {
 // @public
 export type ErrorMessagePayload = {
     summary: string;
-    version: typeof MESSAGE_FORMAT_VERSION;
 } & ErrorMessageParts;
 
 // @public
@@ -88,9 +87,6 @@ export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Confli
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
-
-// @public
-export const MESSAGE_FORMAT_VERSION = 1;
 
 // @public
 export type NewError = {
@@ -171,7 +167,6 @@ export function serializeError(error: Error, opts?: SerializeOptions): Serialize
 export type SerializeOptions = {
     depth?: number | undefined;
     includeStack?: boolean | undefined;
-    maxLen?: number | undefined;
 };
 
 // @public
@@ -192,7 +187,7 @@ export function summarizeZodIssue(issue: ZodIssue): string;
 export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
-export function truncate(value: string, max?: number): string;
+export function truncate(value: string, maxLen?: null | number): string;
 
 // (No @packageDocumentation comment for this package)
 

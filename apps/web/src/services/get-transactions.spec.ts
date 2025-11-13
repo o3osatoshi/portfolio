@@ -2,9 +2,15 @@ import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MockedFunction } from "vitest";
 
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(),
+}));
+
 vi.mock("@/utils/next-fetch", () => ({
   nextFetch: vi.fn(),
 }));
+
+import { cookies } from "next/headers";
 
 import { nextFetch } from "@/utils/next-fetch";
 
@@ -13,10 +19,14 @@ import { getTransactions } from "./get-transactions";
 const mockedNextFetch = nextFetch as unknown as MockedFunction<
   typeof nextFetch
 >;
+const mockedCookies = cookies as unknown as MockedFunction<typeof cookies>;
 
 describe("getTransactions", () => {
   beforeEach(() => {
     mockedNextFetch.mockReset();
+    mockedCookies.mockReset();
+    // biome-ignore lint/suspicious/noExplicitAny: allow any for mocked return
+    mockedCookies.mockResolvedValue({ toString: () => "sid=test" } as any);
   });
 
   it("returns Ok with parsed transactions when response is 2xx", async () => {
@@ -51,7 +61,7 @@ describe("getTransactions", () => {
       okAsync<NextResponseShape, Error>(okResponse),
     );
 
-    const res = await getTransactions({ userId: "u1" });
+    const res = await getTransactions();
     expect(res.isOk()).toBe(true);
     if (!res.isOk()) return;
     expect(Array.isArray(res.value)).toBe(true);
@@ -77,7 +87,7 @@ describe("getTransactions", () => {
       okAsync<NextResponseShape, Error>(notOkResponse),
     );
 
-    const res = await getTransactions({ userId: "u1" });
+    const res = await getTransactions();
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
     expect(res.error).toBeInstanceOf(Error);
@@ -93,7 +103,7 @@ describe("getTransactions", () => {
       errAsync<NextResponseShape, Error>(new Error("network")),
     );
 
-    const res = await getTransactions({ userId: "u1" });
+    const res = await getTransactions();
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
     expect(res.error.message).toContain("network");

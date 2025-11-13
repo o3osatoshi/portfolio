@@ -89,15 +89,6 @@ describe("error-serializer", () => {
 
   // serializeError now accepts only Error; primitives/objects are not allowed
 
-  it("truncates long messages according to maxLen", () => {
-    const long = "a".repeat(500);
-    const s1 = serializeError(new Error(long), { maxLen: 10 });
-    expect(s1.message.endsWith("…")).toBe(true);
-    expect(s1.message.length).toBe(11);
-
-    // default maxLen=200 (applies when using serializeError on Error)
-  });
-
   it("passes through already-serialized cause without modification", () => {
     const inner: SerializedError = { name: "Inner", message: "m" };
     const top = new Error("top");
@@ -166,14 +157,6 @@ describe("error-serializer", () => {
     expect(err.cause).toBe("S");
   });
 
-  it("fallback path truncates long primitive inputs to default maxLen", () => {
-    const long = "a".repeat(500);
-    const err = deserializeError(long);
-    expect(err.name).toBe("UnknownError");
-    expect(err.message.length).toBe(201); // 200 + ellipsis
-    expect(err.message.endsWith("…")).toBe(true);
-  });
-
   it("normalizes negative depth to 0 (summarize)", () => {
     const inner = new Error("inner");
     const top = new Error("top", { cause: inner });
@@ -220,7 +203,8 @@ describe("error-serializer", () => {
     const e1 = deserializeError(42);
     expect(e1).toBeInstanceOf(Error);
     expect(e1.name).toBe("UnknownError");
-    expect(e1.message).toBe("42");
+    // Non-string primitive yields no extracted message → empty string
+    expect(e1.message).toBe("");
 
     const e2 = deserializeError({ foo: "bar" });
     expect(e2).toBeInstanceOf(Error);

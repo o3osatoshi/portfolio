@@ -16,6 +16,7 @@ type NextFetchResponse = {
 
 type Props = {
   cache?: "force-cache" | "no-store";
+  headers?: HeadersInit;
   path: string;
   revalidate?: 0 | false | number;
   search?: Search;
@@ -30,6 +31,7 @@ export function getQueryPath(path: string, search?: Search) {
 export function nextFetch({
   revalidate,
   cache,
+  headers,
   path,
   search,
   tags,
@@ -43,6 +45,7 @@ export function nextFetch({
   return ResultAsync.fromPromise(
     fetch(url, {
       ...(cache !== undefined ? { cache } : {}),
+      ...(headers !== undefined ? { headers } : {}),
       next: {
         ...(revalidate !== undefined ? { revalidate } : {}),
         tags: _tags,

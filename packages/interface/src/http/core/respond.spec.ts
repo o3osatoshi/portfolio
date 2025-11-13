@@ -1,10 +1,12 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 
 import { newError } from "@o3osatoshi/toolkit";
 
-import { respond } from "./respond";
+import { respond, respondZodError } from "./respond";
 
 describe("http/core/respond", () => {
   it("maps ok ResultAsync to 200 JSON", async () => {
@@ -36,7 +38,60 @@ describe("http/core/respond", () => {
     const body = await res.json();
     // Basic shape from serializeError
     expect(body).toHaveProperty("name", "DomainNotFoundError");
-    // @ts-expect-error
     expect(typeof body.message).toBe("string");
+  });
+
+  it("maps AbortError to 408 Canceled", async () => {
+    const app = new Hono();
+    app.get("/aborted", (c) =>
+      respond<never>(c)(
+        errAsync(
+          (() => {
+            const e = new Error("aborted");
+            // Simulate a DOM-style AbortError without depending on DOMException
+            e.name = "AbortError";
+            return e;
+          })(),
+        ),
+      ),
+    );
+
+    const res = await app.request("/aborted");
+    expect(res.status).toBe(408);
+    const body = await res.json();
+    expect(typeof body.message).toBe("string");
+  });
+
+  it("defaults unknown errors to 500", async () => {
+    const app = new Hono();
+    app.get("/unknown", (c) => respond<never>(c)(errAsync(new Error("boom"))));
+    const res = await app.request("/unknown");
+    expect(res.status).toBe(500);
+  });
+
+  it("responds with 400 and serialized error when zValidator fails", async () => {
+    const app = new Hono();
+    const schema = z.object({ q: z.string().min(2) });
+    app.get("/q", zValidator("query", schema, respondZodError), (c) =>
+      c.json({ ok: true }),
+    );
+
+    const res = await app.request("/q?q=a");
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body).toHaveProperty("name", "ApplicationValidationError");
+    expect(typeof body.message).toBe("string");
+  });
+
+  it("is a no-op when zValidator succeeds", async () => {
+    const app = new Hono();
+    const schema = z.object({ q: z.string().min(2) });
+    app.get("/q2", zValidator("query", schema, respondZodError), (c) =>
+      c.json({ ok: true }),
+    );
+
+    const res = await app.request("/q2?q=ok");
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
   });
 });

@@ -4,12 +4,12 @@ import {
   CreateTransactionUseCase,
   parseCreateTransactionRequest,
 } from "@repo/application";
+import { getUserId } from "@repo/auth/react";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
-import { getUserId } from "@/lib/auth";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPath, getTag } from "@/utils/handle-nav";
 import { createTransactionSchema } from "@/utils/validation";

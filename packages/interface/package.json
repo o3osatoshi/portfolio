@@ -25,6 +25,7 @@
     "@hono/zod-validator": "^0.7.4",
     "@o3osatoshi/toolkit": "workspace:*",
     "@repo/application": "workspace:*",
+    "@repo/auth": "workspace:*",
     "@repo/domain": "workspace:*",
     "hono": "^4.10.4",
     "neverthrow": "catalog:",
