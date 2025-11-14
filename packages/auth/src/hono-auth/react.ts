@@ -8,9 +8,9 @@ import {
 
 import type {
   AuthProviderId,
-  AuthUser,
   SignInOptions,
   SignOutOptions,
+  User,
 } from "./types";
 
 export { HonoSessionProvider as AuthProvider };
@@ -32,7 +32,7 @@ export function signOut(options?: SignOutOptions) {
   });
 }
 
-export function useUser(): AuthUser | undefined {
+export function useUser(): undefined | User {
   const { data } = honoUseSession();
   return data?.user;
 }

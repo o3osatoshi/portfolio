@@ -13,7 +13,6 @@ export const authConfig: NextAuthConfig = {
     },
     async session({ session, token }) {
       if (session.user !== undefined && typeof token["id"] === "string") {
-        // Attach the user id to the session for server actions
         session.user.id = token["id"];
       }
       return session;

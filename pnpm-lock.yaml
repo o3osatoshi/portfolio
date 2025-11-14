@@ -137,9 +137,18 @@ importers:
 
   apps/edge:
     dependencies:
+      '@o3osatoshi/toolkit':
+        specifier: workspace:*
+        version: link:../../packages/toolkit
+      '@repo/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@repo/interface':
         specifier: workspace:*
         version: link:../../packages/interface
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.12
     devDependencies:
       wrangler:
         specifier: ^4.45.3

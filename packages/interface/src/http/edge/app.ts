@@ -1,3 +1,5 @@
+import type { AuthConfig, AuthUser } from "@repo/auth";
+import { initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -13,7 +15,9 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
 /**
  * Dependencies required by {@link buildEdgeApp}.
  */
-export type EdgeDeps = Record<string, never>;
+export type EdgeDeps = {
+  authConfig: AuthConfig;
+};
 
 /**
  * Build the Edge-ready HTTP application.
@@ -23,15 +27,27 @@ export type EdgeDeps = Record<string, never>;
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
  *
- * @param _deps Implementations of {@link EdgeDeps}.
+ * @param deps Implementations of {@link EdgeDeps}.
  * @returns Configured Hono app instance.
  */
-export function buildEdgeApp(_deps: EdgeDeps) {
+export function buildEdgeApp(deps: EdgeDeps) {
   const app = new Hono().basePath("/edge");
 
   app.use("*", requestIdMiddleware, loggerMiddleware);
 
+  app.use(
+    "*",
+    initAuthConfig(() => deps.authConfig),
+  );
+
+  app.use("/*", verifyAuth());
+
   app.get("/healthz", (c) => c.json({ ok: true }));
+
+  app.get("/me", (c) => {
+    const { session }: AuthUser = c.get("authUser");
+    return c.json({ ...session.user });
+  });
 
   return app;
 }
