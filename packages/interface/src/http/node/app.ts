@@ -117,7 +117,7 @@ function buildPrivateRoutes(deps: Deps) {
   app.get("/labs/transactions", (c) =>
     respond<GetTransactionsResponse>(c)(
       parseGetTransactionsRequest({
-        userId: c.get("authUser").user?.id,
+        userId: c.get("authUser").session.user?.id,
       }).andThen((res) => getTransactions.execute(res)),
     ),
   );
