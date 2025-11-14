@@ -25,6 +25,7 @@ export type AppType = ReturnType<typeof buildApp>;
  * Provide infrastructure-backed implementations in production (e.g. DB).
  */
 export type Deps = {
+  /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
@@ -82,14 +83,20 @@ export function buildApp(deps: Deps) {
  * Usage (Next.js App Router):
  * ```ts
  * // app/api/[...route]/route.ts
+ * import { createAuthConfig } from "@repo/auth";
  * import { buildHandler } from "@repo/interface/http/node";
  * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
  * export const runtime = "nodejs";
- * export const { GET, POST } = buildHandler({
- *   transactionRepo: new PrismaTransactionRepository(
- *     createPrismaClient({ connectionString: process.env.DATABASE_URL! }),
- *   ),
+ *
+ * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
+ * const transactionRepo = new PrismaTransactionRepository(prisma);
+ * const authConfig = createAuthConfig({
+ *   providers: { google: { clientId: process.env.AUTH_GOOGLE_ID!, clientSecret: process.env.AUTH_GOOGLE_SECRET! } },
+ *   prismaClient: prisma,
+ *   secret: process.env.AUTH_SECRET!,
  * });
+ *
+ * export const { GET, POST } = buildHandler({ authConfig, transactionRepo });
  * ```
  */
 export function buildHandler(deps: Deps) {

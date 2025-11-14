@@ -1,93 +1,91 @@
 # @repo/auth
 
-Shared NextAuth v5 (beta) configuration and helpers for the monorepo. This package exposes a factory to compose Node runtime auth (PrismaAdapter) in the app, provides an Edge‑safe middleware entry, and thin React helpers for client usage.
+Hono + Auth.js configuration and helpers for the monorepo. This package exposes a factory to compose runtime auth configuration (optionally with PrismaAdapter), provides Edge/Node middleware re-exports, and thin React helpers for client usage.
 
 ## Goals
-- Decouple auth setup/logic from `apps/web` and make it reusable.
-- Keep Prisma‑backed Node auth and Edge middleware clearly separated.
-- Centralize NextAuth dependency so apps only import `@repo/auth`.
+- Decouple auth setup/logic from apps and make it reusable.
+- Keep Prisma-backed DB usage opt-in via configuration.
+- Centralize Auth.js setup so apps import only `@repo/auth` entries.
 
 ## Requirements
 - Node: `>=22`
 - Dependencies:
-  - `next-auth@5.0.0-beta.27`
-  - `@auth/prisma-adapter@^2.10.0`
-  - `@repo/prisma` (provides Prisma Client)
-- Environment variables (runtime for `apps/web`):
+  - `@hono/auth-js`
+  - `@auth/core`
+  - `@auth/prisma-adapter` (only if you supply a Prisma client)
+- Environment variables (runtime for apps):
   - `AUTH_SECRET`
   - `AUTH_GOOGLE_ID`
   - `AUTH_GOOGLE_SECRET`
-  - `DATABASE_URL`
 
 Notes:
 - Next.js loads runtime envs from `apps/web/.env.local`.
-- Prisma CLI scripts read from `packages/prisma/.env.*.local` via `dotenv-cli`. At runtime, `DATABASE_URL` must still be available to the Next.js server (e.g., in `apps/web/.env.local`).
+- If you enable Prisma, ensure your app provides a client (e.g., via `@repo/prisma`).
 
 ## Exports
-- `@repo/auth` (NextAuth)
-  - `createAuth(options)`: Factory that composes NextAuth with PrismaAdapter.
-    - `options`: `{ prisma: PrismaClient } | { connectionString: string }`
-    - Returns: `{ handlers, auth, getUserId }`
-- `@repo/auth/middleware` (NextAuth)
-  - `middleware`: Edge‑compatible middleware using the shared config.
-- `@repo/auth/react` (NextAuth)
-  - `AuthProvider`, `useUser`, `signIn`, `signOut`.
-- `@repo/auth/hono` (Hono + Auth.js)
-  - `createHonoAuth(options)`: Compose Auth.js config for Hono.
-    - `options`: `{ providers, secret, basePath?, prisma?, adapter?, overrides? }`
-    - Returns: `{ config, getUserId }`
-- `@repo/auth/hono/middleware`
-  - `initAuthConfig`, `authHandler`, `verifyAuth` re‑exports
-  - `withAuth(app, getConfig)` helper to wire all at once
-- `@repo/auth/hono/react`
-  - `SessionProvider`/`AuthProvider`, `useSession`, `useUser`, `getSession`, `signIn`, `signOut`.
-
-The internal shared config lives at `src/config.ts` and is not exported as a public entrypoint.
+- `@repo/auth`
+  - `createAuthConfig(options)`: Compose Auth.js config for Hono.
+    - `options`: `{ providers, secret, basePath?, prismaClient?, session? }`
+    - Returns: `AuthConfig`
+- `@repo/auth/middleware`
+  - Re-exports `initAuthConfig`, `authHandler`, `verifyAuth` from `@hono/auth-js`.
+- `@repo/auth/react`
+  - `AuthProvider`, `useUser`, `getUserId`, `signIn`, `signOut`.
 
 ## Usage (Next.js 15, App Router)
 
-App wiring (Node, once at startup):
+Node API route:
 
 ```ts
-// apps/web/src/lib/auth.ts
-import { createAuth } from "@repo/auth";
-import { createPrismaClient } from "@repo/prisma";
-import { env } from "@/env/server";
+// apps/web/src/app/api/[...route]/route.ts
+import { createAuthConfig } from "@repo/auth";
+import { buildHandler } from "@repo/interface/http/node";
+import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
-const prisma = createPrismaClient({ connectionString: env.DATABASE_URL });
-export const { handlers, auth, getUserId } = createAuth({ prisma });
+const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
+const transactionRepo = new PrismaTransactionRepository(prisma);
+
+const authConfig = createAuthConfig({
+  providers: {
+    google: {
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    },
+  },
+  prismaClient: prisma,
+  secret: process.env.AUTH_SECRET!,
+});
+
+export const { GET, POST } = buildHandler({ authConfig, transactionRepo });
 ```
 
-API route (`apps/web/src/app/api/auth/[...nextauth]/route.ts`):
+Edge route:
 
 ```ts
-import { handlers } from "@/lib/auth";
-export const { GET, POST } = handlers;
+// apps/web/src/app/edge/[...route]/route.ts
+import { createAuthConfig } from "@repo/auth";
+import { buildEdgeHandler } from "@repo/interface/http/edge";
+
+export const runtime = "edge";
+
+const authConfig = createAuthConfig({
+  providers: {
+    google: {
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    },
+  },
+  secret: process.env.AUTH_SECRET!,
+});
+
+export const { GET, POST } = buildEdgeHandler({ authConfig });
 ```
 
-Middleware (`apps/web/src/middleware.ts`):
-
-```ts
-export { middleware } from "@repo/auth/middleware";
-```
-
-Server actions / server components:
-
-```ts
-import { getUserId } from "@/lib/auth";
-
-const userId = await getUserId();
-```
-
-Client code should use `@repo/auth/react` abstractions:
+Client code:
 
 ```tsx
 import { AuthProvider, useUser, signIn, signOut } from "@repo/auth/react";
-```
 
-Example:
-
-```tsx
 function App({ children }: { children: React.ReactNode }) {
   return <AuthProvider>{children}</AuthProvider>;
 }
@@ -99,76 +97,15 @@ function Menu() {
 }
 ```
 
-This removes direct `next-auth` imports from apps while centralizing the dependency in `@repo/auth`.
-
-## Type Augmentation (Session.user.id)
-This package declares a module augmentation for `Session['user'].id?: string` in `src/next-auth.d.ts`.
-If the app needs stricter typing locally, you can add an equivalent declaration in the app too:
-
-```ts
-// apps/web/src/types/next-auth.d.ts
-import type { DefaultSession } from "next-auth";
-
-declare module "next-auth" {
-  interface Session {
-    user?: DefaultSession["user"] & { id?: string };
-  }
-}
-```
-
 ## Tests
-Unit tests (Vitest) cover the pure callback logic in `authConfig`.
+Unit tests (Vitest) cover the auth config and React shims.
 
 - Run: `pnpm -C packages/auth test`
 - Coverage: `pnpm -C packages/auth test:cvrg`
 
 ## Implementation Notes
-- Node runtime factory (PrismaAdapter): `src/index.ts`
-- Edge runtime (no DB access): `src/middleware.ts`
-- Shared configuration (providers/callbacks): `src/config.ts`
+- Hono + Auth.js configuration: `src/hono-auth/*`
+- Middleware re-exports: `src/hono-auth/middleware.ts` (public at `@repo/auth/middleware`)
+- React shims for `@hono/auth-js`: `src/hono-auth/react.ts` (public at `@repo/auth/react`)
 
-Extend providers, callbacks, or add client re‑exports here as needed.
-
-## Usage (Hono + Auth.js via `@hono/auth-js`)
-
-API wiring (Node, once at startup):
-
-```ts
-// apps/web/src/app/api/[...route]/route.ts
-import Google from "@auth/core/providers/google";
-import { createHonoAuth } from "@repo/auth/hono";
-import { buildHandler } from "@repo/interface/http/node";
-import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-
-const client = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
-const repo = new PrismaTransactionRepository(client);
-
-const { config } = createHonoAuth({
-  prisma: client,
-  secret: process.env.AUTH_SECRET!,
-  providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
-    }),
-  ],
-});
-
-export const { GET, POST } = buildHandler({ authConfig: config, transactionRepo: repo });
-```
-
-Middleware wiring helper (if using a raw Hono app):
-
-```ts
-import { withAuth } from "@repo/auth/hono/middleware";
-import { Hono } from "hono";
-
-const app = new Hono().basePath("/api");
-withAuth(app, () => config);
-```
-
-Client code should use `@repo/auth/hono/react` abstractions:
-
-```tsx
-import { AuthProvider, useUser, signIn, signOut } from "@repo/auth/hono/react";
-```
+The legacy NextAuth integration remains in `src/next-auth/*` for experimentation but is not part of the public exports.

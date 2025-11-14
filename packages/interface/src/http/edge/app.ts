@@ -14,8 +14,11 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
 
 /**
  * Dependencies required by {@link buildEdgeApp}.
+ *
+ * - {@link AuthConfig} can be created via `createAuthConfig` from `@repo/auth`.
  */
 export type EdgeDeps = {
+  /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
 };
 
@@ -24,8 +27,10 @@ export type EdgeDeps = {
  *
  * Routes (mounted under `/edge`):
  * - GET `/healthz` — Liveness probe.
+ * - GET `/me` — Returns the authenticated user info.
  *
- * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
+ * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware},
+ * `initAuthConfig`, `verifyAuth`.
  *
  * @param deps Implementations of {@link EdgeDeps}.
  * @returns Configured Hono app instance.
@@ -58,9 +63,17 @@ export function buildEdgeApp(deps: EdgeDeps) {
  * Usage (Next.js App Router):
  * ```ts
  * // app/edge/[...route]/route.ts
+ * import { createAuthConfig } from "@repo/auth";
  * import { buildEdgeHandler } from "@repo/interface/http/edge";
+ *
  * export const runtime = "edge";
- * export const { GET, POST } = buildEdgeHandler({});
+ *
+ * const authConfig = createAuthConfig({
+ *   providers: { google: { clientId: "...", clientSecret: "..." } },
+ *   secret: "...",
+ * });
+ *
+ * export const { GET, POST } = buildEdgeHandler({ authConfig });
  * ```
  */
 export function buildEdgeHandler(deps: EdgeDeps) {

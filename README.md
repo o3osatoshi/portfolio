@@ -130,7 +130,7 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 - Monitoring/logs accessible through Firebase CLI (`pnpm -C apps/functions logs`).
 
 ## Environment variables
-- `apps/web`: `.env.local` (Next.js runtime + NextAuth, database client, Web3 providers).
+- `apps/web`: `.env.local` (Next.js runtime + Auth.js, database client, Web3 providers).
 - `packages/prisma`: `.env.development.local`, `.env.production.local` (database connection strings).
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
