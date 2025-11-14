@@ -8,7 +8,7 @@ import type { AuthProviderId } from "./types";
 export type CreateAuthConfigOptions = {
   basePath?: string;
   prismaClient?: PrismaClient;
-  providers: {
+  providers?: {
     [key in AuthProviderId]: {
       clientId: string;
       clientSecret: string;
@@ -24,10 +24,14 @@ export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
       adapter: PrismaAdapter(options.prismaClient),
     }),
     providers: [
-      Google({
-        clientId: options.providers.google.clientId,
-        clientSecret: options.providers.google.clientSecret,
-      }),
+      ...(options.providers
+        ? [
+            Google({
+              clientId: options.providers.google.clientId,
+              clientSecret: options.providers.google.clientSecret,
+            }),
+          ]
+        : []),
     ],
     basePath: options.basePath ?? "/api/auth",
     callbacks: {
