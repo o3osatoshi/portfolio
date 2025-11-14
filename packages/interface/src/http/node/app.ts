@@ -35,8 +35,13 @@ export type Deps = {
  * Build the Node HTTP application.
  *
  * Routes (mounted under `/api`):
- * - GET `/healthz` — Liveness probe.
- * - GET `/labs/transactions` — Returns `Transaction[]` for the authenticated user.
+ * - `/auth/*` — Auth.js handlers.
+ * - `/public/*` — Routes that do not require authentication.
+ * - `/private/*` — Routes that require authentication.
+ *
+ * Example:
+ * - GET `/public/healthz` — Liveness probe.
+ * - GET `/private/labs/transactions` — Returns `Transaction[]` for the authenticated user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
  * Errors: normalized via {@link toHttpErrorResponse}. Zod validation failures
@@ -55,20 +60,9 @@ export function buildApp(deps: Deps) {
     initAuthConfig(() => deps.authConfig),
   );
 
-  app.use("/auth/*", authHandler());
-
-  app.use("/*", verifyAuth());
-
-  app.get("/healthz", (c) => c.json({ ok: true }));
-
-  const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-  app.get("/labs/transactions", (c) =>
-    respond<GetTransactionsResponse>(c)(
-      parseGetTransactionsRequest({
-        userId: c.get("authUser").user?.id,
-      }).andThen((res) => getTransactions.execute(res)),
-    ),
-  );
+  app.route("/auth", buildAuthRoutes());
+  app.route("/public", buildPublicRoutes());
+  app.route("/private", buildPrivateRoutes(deps));
 
   return app;
 }
@@ -104,4 +98,37 @@ export function buildHandler(deps: Deps) {
   const GET = handle(app);
   const POST = handle(app);
   return { GET, POST };
+}
+
+function buildAuthRoutes() {
+  const app = new Hono();
+
+  app.use("/*", authHandler());
+
+  return app;
+}
+
+function buildPrivateRoutes(deps: Deps) {
+  const app = new Hono();
+
+  app.use("/*", verifyAuth());
+
+  const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
+  app.get("/labs/transactions", (c) =>
+    respond<GetTransactionsResponse>(c)(
+      parseGetTransactionsRequest({
+        userId: c.get("authUser").user?.id,
+      }).andThen((res) => getTransactions.execute(res)),
+    ),
+  );
+
+  return app;
+}
+
+function buildPublicRoutes() {
+  const app = new Hono();
+
+  app.get("/healthz", (c) => c.json({ ok: true }));
+
+  return app;
 }

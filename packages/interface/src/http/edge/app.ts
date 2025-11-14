@@ -26,8 +26,12 @@ export type EdgeDeps = {
  * Build the Edge-ready HTTP application.
  *
  * Routes (mounted under `/edge`):
- * - GET `/healthz` — Liveness probe.
- * - GET `/me` — Returns the authenticated user info.
+ * - `/public/*` — Routes that do not require authentication.
+ * - `/private/*` — Routes that require authentication.
+ *
+ * Example:
+ * - GET `/private/healthz` — Liveness probe.
+ * - GET `/private/me` — Returns the authenticated user info.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware},
  * `initAuthConfig`, `verifyAuth`.
@@ -45,14 +49,8 @@ export function buildEdgeApp(deps: EdgeDeps) {
     initAuthConfig(() => deps.authConfig),
   );
 
-  app.use("/*", verifyAuth());
-
-  app.get("/healthz", (c) => c.json({ ok: true }));
-
-  app.get("/me", (c) => {
-    const { session }: AuthUser = c.get("authUser");
-    return c.json({ ...session.user });
-  });
+  app.route("/public", buildEdgePublicRoutes());
+  app.route("/private", buildEdgePrivateRoutes());
 
   return app;
 }
@@ -81,4 +79,25 @@ export function buildEdgeHandler(deps: EdgeDeps) {
   const GET = handle(app);
   const POST = handle(app);
   return { GET, POST };
+}
+
+function buildEdgePrivateRoutes() {
+  const app = new Hono();
+
+  app.use("/*", verifyAuth());
+
+  app.get("/me", (c) => {
+    const { session }: AuthUser = c.get("authUser");
+    return c.json({ ...session.user });
+  });
+
+  return app;
+}
+
+function buildEdgePublicRoutes() {
+  const app = new Hono();
+
+  app.get("/healthz", (c) => c.json({ ok: true }));
+
+  return app;
 }
