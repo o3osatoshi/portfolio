@@ -9,19 +9,28 @@ const h = vi.hoisted(() => {
   );
   // By default authorize and set an authUser
   const verifyAuthPass = vi.fn(() => async (c: Context, next: Next) => {
-    // @ts-expect-error
+    // @ts-expect-error - authUser shape is provided by @repo/auth
     c.set("authUser", { session: { user: { id: "u-1", name: "Ada" } } });
     return next();
   });
   const verifyAuthDeny = vi.fn(
     () => async (c: Context) => c.json({ error: "unauthorized" }, 401),
   );
-  return { initAuthConfigMock, verifyAuthDeny, verifyAuthPass };
+  const authHandlerMock = vi.fn(
+    () => async (c: Context) => c.json({ auth: true }),
+  );
+  return {
+    authHandlerMock,
+    initAuthConfigMock,
+    verifyAuthDeny,
+    verifyAuthPass,
+  };
 });
 
 async function loadAppWithVerify(allow: boolean) {
   vi.resetModules();
   vi.doMock("@repo/auth/middleware", () => ({
+    authHandler: h.authHandlerMock,
     initAuthConfig: h.initAuthConfigMock,
     verifyAuth: allow ? h.verifyAuthPass : h.verifyAuthDeny,
   }));
@@ -32,16 +41,16 @@ async function loadAppWithVerify(allow: boolean) {
 describe("http/edge app", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("GET /edge/healthz returns ok when authorized", async () => {
+  it("GET /edge/public/healthz returns ok", async () => {
     const app = await loadAppWithVerify(true);
-    const res = await app.request("/edge/healthz");
+    const res = await app.request("/edge/public/healthz");
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toEqual({ ok: true });
   });
 
-  it("GET /edge/me returns current user when authorized", async () => {
+  it("GET /edge/private/me returns current user when authorized", async () => {
     const app = await loadAppWithVerify(true);
-    const res = await app.request("/edge/me");
+    const res = await app.request("/edge/private/me");
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body).toMatchObject({ id: "u-1", name: "Ada" });
@@ -49,7 +58,7 @@ describe("http/edge app", () => {
 
   it("responds 401 when verifyAuth denies the request", async () => {
     const app = await loadAppWithVerify(false);
-    const res = await app.request("/edge/healthz");
+    const res = await app.request("/edge/private/me");
     expect(res.status).toBe(401);
   });
 });

@@ -1,19 +1,19 @@
 ### edge healthz
-GET {{API_BASE_URL}}/edge/healthz
+GET {{API_BASE_URL}}/edge/public/healthz
 Accept: application/json
 Cookie: {{AUTH_COOKIE}}
 
 ### edge me
-GET {{API_BASE_URL}}/edge/me
+GET {{API_BASE_URL}}/edge/private/me
 Accept: application/json
 Cookie: {{AUTH_COOKIE}}
 
 ### api healthz
-GET {{API_BASE_URL}}/api/healthz
+GET {{API_BASE_URL}}/api/public/healthz
 Accept: application/json
 Cookie: {{AUTH_COOKIE}}
 
 ### api labs/transactions
-GET {{API_BASE_URL}}/api/labs/transactions
+GET {{API_BASE_URL}}/api/private/labs/transactions
 Accept: application/json
 Cookie: {{AUTH_COOKIE}}

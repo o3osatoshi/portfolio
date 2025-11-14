@@ -71,14 +71,14 @@ describe("http/node app", () => {
     return app;
   }
 
-  it("GET /api/healthz returns ok when authorized", async () => {
-    const res = await build().request("/api/healthz");
+  it("GET /api/public/healthz returns ok when authorized", async () => {
+    const res = await build().request("/api/public/healthz");
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toEqual({ ok: true });
   });
 
-  it("GET /api/labs/transactions returns list for authenticated user", async () => {
-    const res = await build().request("/api/labs/transactions");
+  it("GET /api/private/labs/transactions returns list for authenticated user", async () => {
+    const res = await build().request("/api/private/labs/transactions");
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(Array.isArray(body)).toBe(true);
@@ -89,13 +89,13 @@ describe("http/node app", () => {
     });
   });
 
-  it("GET /api/labs/transactions returns validation error when parser fails", async () => {
+  it("GET /api/private/labs/transactions returns validation error when parser fails", async () => {
     // Make parser return Err
     a.parseGetTransactionsRequest.mockImplementationOnce(() =>
       // @ts-expect-error
       errAsync(new Error("bad")),
     );
-    const res = await build().request("/api/labs/transactions");
+    const res = await build().request("/api/private/labs/transactions");
     expect(res.status).toBeGreaterThanOrEqual(400);
   });
 

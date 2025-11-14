@@ -30,7 +30,7 @@ export type EdgeDeps = {
  * - `/private/*` — Routes that require authentication.
  *
  * Example:
- * - GET `/private/healthz` — Liveness probe.
+ * - GET `/public/healthz` — Liveness probe.
  * - GET `/private/me` — Returns the authenticated user info.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware},

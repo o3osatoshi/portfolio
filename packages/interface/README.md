@@ -25,12 +25,12 @@ import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interfac
 ランタイムごとにベースパスを分離しています（用途の独立性を高めるため）。
 
 - Node.js（Next.js API / Firebase Functions など）: ベースパス `/api`
-  - `GET /api/healthz` → `{ ok: true }`
-  - `GET /api/labs/transactions?userId=<id>` → `Transaction[]`（認証済みユーザーとして実行）
+  - `GET /api/public/healthz` → `{ ok: true }`
+  - `GET /api/private/labs/transactions` → `Transaction[]`（認証済みユーザーとして実行）
 
 - Edge（Cloudflare Workers / Next.js Edge）: ベースパス `/edge`
-  - `GET /edge/healthz`
-  - `GET /edge/me` → 認証済みユーザー情報
+  - `GET /edge/public/healthz`
+  - `GET /edge/private/me` → 認証済みユーザー情報
 
 Validation uses `zod` and `@hono/zod-validator`. Errors are normalized and serialized by the shared toolkit.
 
@@ -123,11 +123,11 @@ import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interfac
 
 // Node API at /api
 const clientNode = createInterfaceClient("https://your-domain.example");
-await clientNode.api.healthz.$get();
+await clientNode.api.public.healthz.$get();
 
 // Edge API at /edge
 const clientEdge = createInterfaceClientEdge("https://your-domain.example");
-await clientEdge.edge.healthz.$get();
+await clientEdge.edge.public.healthz.$get();
 ```
 
 Testing and types:

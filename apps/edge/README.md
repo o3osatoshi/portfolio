@@ -80,11 +80,7 @@ pnpm -C apps/edge dev
 
 Hit the API:
 ```bash
-curl -i http://localhost:8787/edge/healthz
-curl -s http://localhost:8787/edge/todos | jq
-curl -s -X POST http://localhost:8787/edge/todos \
-  -H 'content-type: application/json' \
-  -d '{"title":"Write docs"}' | jq
+curl -i http://localhost:8787/edge/public/healthz
 ```
 
 ## Deployment
@@ -98,9 +94,8 @@ pnpm -C apps/edge sync:env
 
 ## API surface
 The shared interface app mounts these routes under `/edge`:
-- `GET /edge/healthz` → `{ ok: true }`
-- `GET /edge/todos` → `Array<{ id: string; title: string }>`
-- `POST /edge/todos` with JSON `{ "title": string }` → `201 Created` and the created todo
+- `GET /edge/public/healthz` → `{ ok: true }`
+- `GET /edge/private/me` → Authenticated user info (requires valid Auth.js session)
 
 ## Troubleshooting
 - Error 10214 (“latest version isn't currently deployed”):
