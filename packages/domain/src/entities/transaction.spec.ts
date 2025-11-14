@@ -54,10 +54,10 @@ describe("entities/transaction", () => {
       expect(tx.type).toBe("BUY");
       expect(tx.currency).toBe("JPY");
       // ensure no id or base fields present
-      // biome-ignore lint/suspicious/noExplicitAny: id is not part of CreateTransaction
-      expect((tx as any).id).toBeUndefined();
-      // biome-ignore lint/suspicious/noExplicitAny: createdAt is not part of CreateTransaction
-      expect((tx as any).createdAt).toBeUndefined();
+      // @ts-expect-error id is not part of CreateTransaction
+      expect(tx.id).toBeUndefined();
+      // @ts-expect-error createdAt is not part of CreateTransaction
+      expect(tx.createdAt).toBeUndefined();
     }
   });
 
