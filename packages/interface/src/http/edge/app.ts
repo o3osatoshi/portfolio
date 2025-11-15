@@ -1,6 +1,6 @@
 import type { AuthConfig, AuthUser } from "@repo/auth";
 import { initAuthConfig, verifyAuth } from "@repo/auth/middleware";
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
@@ -17,10 +17,9 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
  *
  * - {@link AuthConfig} can be created via `createAuthConfig` from `@repo/auth`.
  */
-export type EdgeDeps = {
-  /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
-  authConfig: AuthConfig;
-};
+export type EdgeDeps =
+  | { authConfig: AuthConfig; createAuthConfig?: (c: Context) => AuthConfig }
+  | { authConfig?: AuthConfig; createAuthConfig: (c: Context) => AuthConfig };
 
 /**
  * Build the Edge-ready HTTP application.
@@ -44,10 +43,15 @@ export function buildEdgeApp(deps: EdgeDeps) {
 
   app.use("*", requestIdMiddleware, loggerMiddleware);
 
-  app.use(
-    "*",
-    initAuthConfig(() => deps.authConfig),
-  );
+  const authConfigHandler = (c: Context) => {
+    if (deps.authConfig !== undefined) {
+      return deps.authConfig;
+    } else {
+      // @ts-expect-error
+      return deps.createAuthConfig(c);
+    }
+  };
+  app.use("*", initAuthConfig(authConfigHandler));
 
   app.route("/public", buildEdgePublicRoutes());
   app.route("/private", buildEdgePrivateRoutes());

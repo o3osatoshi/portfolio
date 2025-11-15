@@ -8,6 +8,7 @@
     "deploy": "wrangler deploy",
     "deploy:prv": "wrangler versions upload",
     "dev": "wrangler dev",
+    "pull:env": "doppler secrets download --project portfolio-edge --config dev --no-file --format env > ./.env.local",
     "sync:env": "doppler secrets --json --project portfolio-edge --config prd | jq -c 'with_entries(.value = .value.computed)' | wrangler secret bulk"
   },
   "dependencies": {
