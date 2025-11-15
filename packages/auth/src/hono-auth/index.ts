@@ -49,7 +49,7 @@ export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
       },
     },
     secret: options.secret,
-    session: { strategy: options?.session?.strategy ?? "jwt" },
+    session: { strategy: options.session?.strategy ?? "jwt" },
   };
 }
 
