@@ -1,25 +1,64 @@
-import { describe, expect, it } from "vitest";
+import type { AuthConfig } from "@repo/auth";
+import type { Context, Next } from "hono";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { buildEdgeApp, buildEdgeHandler } from "./app";
+// Mocks for auth middlewares used by the edge app
+const h = vi.hoisted(() => {
+  const initAuthConfigMock = vi.fn(
+    () => async (_c: Context, next: Next) => next(),
+  );
+  // By default authorize and set an authUser
+  const verifyAuthPass = vi.fn(() => async (c: Context, next: Next) => {
+    // @ts-expect-error - authUser shape is provided by @repo/auth
+    c.set("authUser", { session: { user: { id: "u-1", name: "Ada" } } });
+    return next();
+  });
+  const verifyAuthDeny = vi.fn(
+    () => async (c: Context) => c.json({ error: "unauthorized" }, 401),
+  );
+  const authHandlerMock = vi.fn(
+    () => async (c: Context) => c.json({ auth: true }),
+  );
+  return {
+    authHandlerMock,
+    initAuthConfigMock,
+    verifyAuthDeny,
+    verifyAuthPass,
+  };
+});
 
-describe("http/edge/app", () => {
-  it("serves health check", async () => {
-    const app = buildEdgeApp({});
-    const res = await app.request("/edge/healthz");
+async function loadAppWithVerify(allow: boolean) {
+  vi.resetModules();
+  vi.doMock("@repo/auth/middleware", () => ({
+    authHandler: h.authHandlerMock,
+    initAuthConfig: h.initAuthConfigMock,
+    verifyAuth: allow ? h.verifyAuthPass : h.verifyAuthDeny,
+  }));
+  const mod = await import("./app");
+  return mod.buildEdgeApp({ authConfig: {} as AuthConfig });
+}
+
+describe("http/edge app", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("GET /edge/public/healthz returns ok", async () => {
+    const app = await loadAppWithVerify(true);
+    const res = await app.request("/edge/public/healthz");
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ ok: true });
+    await expect(res.json()).resolves.toEqual({ ok: true });
   });
 
-  it("Edge handlers respond to healthz via GET/POST bindings", async () => {
-    const { GET, POST } = buildEdgeHandler({});
-    const r1 = await GET(new Request("http://test.local/edge/healthz"));
-    expect(r1.status).toBe(200);
-    expect(await r1.json()).toEqual({ ok: true });
+  it("GET /edge/private/me returns current user when authorized", async () => {
+    const app = await loadAppWithVerify(true);
+    const res = await app.request("/edge/private/me");
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toMatchObject({ id: "u-1", name: "Ada" });
+  });
 
-    const r2 = await POST(
-      new Request("http://test.local/edge/healthz", { method: "POST" }),
-    );
-    // healthz route only implements GET; POST falls through to 404
-    expect([200, 404]).toContain(r2.status);
+  it("responds 401 when verifyAuth denies the request", async () => {
+    const app = await loadAppWithVerify(false);
+    const res = await app.request("/edge/private/me");
+    expect(res.status).toBe(401);
   });
 });

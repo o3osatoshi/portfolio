@@ -24,3 +24,5 @@ export function createAuth(options: CreateAuthOptions) {
 
   return { ...result, getUserId };
 }
+
+export * from "./types";

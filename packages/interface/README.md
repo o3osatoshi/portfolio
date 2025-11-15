@@ -25,11 +25,12 @@ import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interfac
 ランタイムごとにベースパスを分離しています（用途の独立性を高めるため）。
 
 - Node.js（Next.js API / Firebase Functions など）: ベースパス `/api`
-  - `GET /api/healthz` → `{ ok: true }`
-  - `GET /api/labs/transactions?userId=<id>` → `Transaction[]`
+  - `GET /api/public/healthz` → `{ ok: true }`
+  - `GET /api/private/labs/transactions` → `Transaction[]`（認証済みユーザーとして実行）
 
 - Edge（Cloudflare Workers / Next.js Edge）: ベースパス `/edge`
-  - `GET /edge/healthz`
+  - `GET /edge/public/healthz`
+  - `GET /edge/private/me` → 認証済みユーザー情報
 
 Validation uses `zod` and `@hono/zod-validator`. Errors are normalized and serialized by the shared toolkit.
 
@@ -47,26 +48,62 @@ Validation uses `zod` and `@hono/zod-validator`. Errors are normalized and seria
 Edge (Cloudflare Workers):
 ```ts
 // apps/edge/src/index.ts
+import { createAuthConfig } from "@repo/auth";
 import { buildEdgeApp } from "@repo/interface/http/edge";
-export default buildEdgeApp({});
+import { env } from "./env";
+
+const authConfig = createAuthConfig({
+  providers: {
+    google: {
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
+    },
+  },
+  secret: env.AUTH_SECRET,
+});
+
+export default buildEdgeApp({ authConfig });
 ```
 
 Next.js (Vercel Edge):
 ```ts
 // apps/web/src/app/api/[...route]/route.ts
 export const runtime = "nodejs";
+import { createAuthConfig } from "@repo/auth";
 import { buildHandler } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-export const { GET, POST } = buildHandler({
-  transactionRepo: new PrismaTransactionRepository(
-    createPrismaClient({ connectionString: process.env.DATABASE_URL! })
-  ),
+
+const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
+const transactionRepo = new PrismaTransactionRepository(prisma);
+const authConfig = createAuthConfig({
+  providers: {
+    google: {
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    },
+  },
+  prismaClient: prisma,
+  secret: process.env.AUTH_SECRET!,
 });
+
+export const { GET, POST } = buildHandler({ authConfig, transactionRepo });
 
 // apps/web/src/app/edge/[...route]/route.ts
 export const runtime = "edge";
+import { createAuthConfig } from "@repo/auth";
 import { buildEdgeHandler } from "@repo/interface/http/edge";
-export const { GET, POST } = buildEdgeHandler({});
+
+const authConfig = createAuthConfig({
+  providers: {
+    google: {
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    },
+  },
+  secret: process.env.AUTH_SECRET!,
+});
+
+export const { GET, POST } = buildEdgeHandler({ authConfig });
 ```
 
 Firebase Functions (Node runtime):
@@ -86,11 +123,11 @@ import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interfac
 
 // Node API at /api
 const clientNode = createInterfaceClient("https://your-domain.example");
-await clientNode.api.healthz.$get();
+await clientNode.api.public.healthz.$get();
 
 // Edge API at /edge
 const clientEdge = createInterfaceClientEdge("https://your-domain.example");
-await clientEdge.edge.healthz.$get();
+await clientEdge.edge.public.healthz.$get();
 ```
 
 Testing and types:
@@ -102,13 +139,18 @@ pnpm -C packages/interface typecheck
 ```
 
 ## Extending the runtime dependencies
-The Node HTTP app expects a small `Deps` object. Delivery layers should inject an implementation of `TransactionRepository` (from `@repo/domain`):
+The Node HTTP app expects a small `Deps` object. Delivery layers should inject an Auth.js config and a `TransactionRepository` (from `@repo/domain`):
 
 ```ts
+import { createAuthConfig } from "@repo/auth";
 import { buildApp, type Deps } from "@repo/interface/http/node/app";
 import type { TransactionRepository } from "@repo/domain";
 
 const deps: Deps = {
+  authConfig: createAuthConfig({
+    providers: { google: { clientId: "...", clientSecret: "..." } },
+    secret: "...",
+  }),
   transactionRepo: myTransactionRepo as TransactionRepository,
 };
 

@@ -84,7 +84,7 @@ const navs: Nav[] = [
   },
   {
     alias: "labs-transactions",
-    pathName: "/api/labs/transactions",
+    pathName: "/api/private/labs/transactions",
     type: "api",
   },
   {

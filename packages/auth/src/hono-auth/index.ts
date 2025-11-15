@@ -7,28 +7,51 @@ import type { AuthProviderId } from "./types";
 
 export type CreateAuthConfigOptions = {
   basePath?: string;
-  prismaClient: PrismaClient;
-  providers: {
+  prismaClient?: PrismaClient;
+  providers?: {
     [key in AuthProviderId]: {
       clientId: string;
       clientSecret: string;
     };
   };
   secret: string;
+  session?: { strategy?: "database" | "jwt" };
 };
 
 export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
   return {
+    ...(options.prismaClient && {
+      adapter: PrismaAdapter(options.prismaClient),
+    }),
     providers: [
-      Google({
-        clientId: options.providers.google.clientId,
-        clientSecret: options.providers.google.clientSecret,
-      }),
+      ...(options.providers
+        ? [
+            Google({
+              clientId: options.providers.google.clientId,
+              clientSecret: options.providers.google.clientSecret,
+            }),
+          ]
+        : []),
     ],
-    adapter: PrismaAdapter(options.prismaClient),
     basePath: options.basePath ?? "/api/auth",
+    callbacks: {
+      async jwt({ token, user }) {
+        if (user !== undefined) {
+          token["id"] = user.id;
+        }
+        return token;
+      },
+      async session({ session, token }) {
+        if (session.user !== undefined && typeof token["id"] === "string") {
+          session.user.id = token["id"];
+        }
+        return session;
+      },
+    },
     secret: options.secret,
+    session: { strategy: options.session?.strategy ?? "jwt" },
   };
 }
 
 export type { AuthConfig };
+export * from "./types";

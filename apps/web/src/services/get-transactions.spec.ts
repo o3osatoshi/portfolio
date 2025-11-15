@@ -25,8 +25,8 @@ describe("getTransactions", () => {
   beforeEach(() => {
     mockedNextFetch.mockReset();
     mockedCookies.mockReset();
-    // biome-ignore lint/suspicious/noExplicitAny: allow any for mocked return
-    mockedCookies.mockResolvedValue({ toString: () => "sid=test" } as any);
+    // @ts-expect-error cookie store mock does not implement full interface
+    mockedCookies.mockResolvedValue({ toString: () => "sid=test" });
   });
 
   it("returns Ok with parsed transactions when response is 2xx", async () => {

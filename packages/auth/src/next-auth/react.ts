@@ -7,9 +7,9 @@ import {
 
 import type {
   AuthProviderId,
-  AuthUser,
   SignInOptions,
   SignOutOptions,
+  User,
 } from "./types";
 
 export { NextAuthSessionProvider as AuthProvider };
@@ -22,7 +22,7 @@ export function signOut(options?: SignOutOptions) {
   return nextAuthSignOut(options);
 }
 
-export function useUser(): AuthUser | undefined {
+export function useUser(): undefined | User {
   const { data } = nextAuthUseSession();
   return data?.user;
 }

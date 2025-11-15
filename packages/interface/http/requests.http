@@ -1,11 +1,19 @@
-### Health (Edge)
-GET {{web_base_url}}/edge/healthz
+### edge healthz
+GET {{API_BASE_URL}}/edge/public/healthz
 Accept: application/json
+Cookie: {{AUTH_COOKIE}}
 
-### Health (Node)
-GET {{web_base_url}}/api/healthz
+### edge me
+GET {{API_BASE_URL}}/edge/private/me
 Accept: application/json
+Cookie: {{AUTH_COOKIE}}
 
-### List Transactions (Node, labs)
-GET {{web_base_url}}/api/labs/transactions?userId={{user_id}}
+### api healthz
+GET {{API_BASE_URL}}/api/public/healthz
 Accept: application/json
+Cookie: {{AUTH_COOKIE}}
+
+### api labs/transactions
+GET {{API_BASE_URL}}/api/private/labs/transactions
+Accept: application/json
+Cookie: {{AUTH_COOKIE}}
