@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 concurrency:
   group: deploy-functions-${{ github.ref }}
@@ -50,10 +51,12 @@ jobs:
 
       - name: Export .env
         run: |
-          printf "AUTH_GOOGLE_ID=%s\n" "${{ secrets.AUTH_GOOGLE_ID }}" >> apps/functions/.env
+          printf "AUTH_GOOGLE_ID=%s\n" "${{ secrets.AUTH_GOOGLE_ID }}" > apps/functions/.env
           printf "AUTH_GOOGLE_SECRET=%s\n" "${{ secrets.AUTH_GOOGLE_SECRET }}" >> apps/functions/.env
           printf "AUTH_SECRET=%s\n" "${{ secrets.AUTH_SECRET }}" >> apps/functions/.env
-          printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" > apps/functions/.env
+          printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" >> apps/functions/.env
+          printf "\n[DEBUG] apps/functions/.env contents:\n"
+          cat apps/functions/.env
 
       - name: Deploy functions
         run: pnpm deploy:functions
