@@ -22,16 +22,11 @@ type NextFetchOptions = {
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
  * - forwards the current request cookies as a `Cookie` header
  */
-export async function createClient(
+export function createClient(
   options?: NextFetchOptions,
-): Promise<ReturnType<typeof createRpcClient>> {
+): ReturnType<typeof createRpcClient> {
   const baseURL = env.NEXT_PUBLIC_API_BASE_URL;
-  const headersOption = await createHeadersOption();
-  const baseOptions: ClientOptions = {
-    ...headersOption,
-    ...options,
-  };
-  return createRpcClient(baseURL, baseOptions);
+  return createRpcClient(baseURL, options);
 }
 
 /**
@@ -39,19 +34,16 @@ export async function createClient(
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
  * - forwards the current request cookies as a `Cookie` header
  */
-export async function createEdgeClient(
+export function createEdgeClient(
   options?: NextFetchOptions,
-): Promise<ReturnType<typeof createEdgeRpcClient>> {
+): ReturnType<typeof createEdgeRpcClient> {
   const baseURL = env.NEXT_PUBLIC_API_BASE_URL;
-  const headersOption = await createHeadersOption();
-  const baseOptions: ClientOptions = {
-    ...headersOption,
-    ...options,
-  };
-  return createEdgeRpcClient(baseURL, baseOptions);
+  return createEdgeRpcClient(baseURL, options);
 }
 
-async function createHeadersOption(): Promise<Pick<ClientOptions, "headers">> {
+export async function createHeadersOption(): Promise<
+  Pick<ClientOptions, "headers">
+> {
   const reqCookies = await cookies();
   return {
     headers: () => ({
