@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getPath } from "@/utils/handle-nav";
+import { getPath } from "@/utils/nav-handler";
 
 export const metadata: Metadata = {
   description:

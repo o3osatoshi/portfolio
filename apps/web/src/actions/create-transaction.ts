@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
 import { type ActionState, err } from "@/utils/action-state";
-import { getPath, getTag } from "@/utils/handle-nav";
+import { getPath, getTag } from "@/utils/nav-handler";
 import { createTransactionSchema } from "@/utils/validation";
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
