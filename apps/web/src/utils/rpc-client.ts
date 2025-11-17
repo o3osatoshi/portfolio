@@ -20,7 +20,10 @@ type NextFetchOptions = {
 /**
  * Create a typed RPC client for the Node HTTP API (`/api/*`) that:
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
- * - forwards the current request cookies as a `Cookie` header
+ * - accepts optional Hono client options (headers, fetch, init)
+ *
+ * To forward the current request cookies, combine this with
+ * {@link createHeadersOption} when issuing a request.
  */
 export function createClient(
   options?: NextFetchOptions,
@@ -32,7 +35,10 @@ export function createClient(
 /**
  * Create a typed RPC client for the Edge HTTP API (`/edge/*`) that:
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
- * - forwards the current request cookies as a `Cookie` header
+ * - accepts optional Hono client options (headers, fetch, init)
+ *
+ * To forward the current request cookies, combine this with
+ * {@link createHeadersOption} when issuing a request.
  */
 export function createEdgeClient(
   options?: NextFetchOptions,
