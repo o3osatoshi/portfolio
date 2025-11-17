@@ -3,7 +3,7 @@ import { err, ok } from "neverthrow";
 
 import { getPath } from "@/utils/nav-handler";
 import { createClient, createHeadersOption } from "@/utils/rpc-client";
-import { deserializeError } from "@o3osatoshi/toolkit";
+import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
 
 const client = createClient();
 const $getTransactions = client.api.private.labs.transactions.$get;
@@ -22,6 +22,17 @@ export async function getTransactions() {
       },
     },
   });
+  if (res.status === 401) {
+    return err(
+      newFetchError({
+        kind: "Unauthorized",
+        request: {
+          method: "GET",
+          url: getPath("labs-transactions"),
+        },
+      }),
+    );
+  }
   if (!res.ok) {
     const body = await res.json();
     return err(deserializeError(body));
