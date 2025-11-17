@@ -1,6 +1,6 @@
 import DeleteButton from "@/app/(main)/labs/server-crud/_components/delete-button";
 import EditDialog from "@/app/(main)/labs/server-crud/_components/edit-dialog";
-import type { Transaction } from "@/utils/validation";
+import type { Transaction } from "@/services/get-transactions";
 import {
   Card,
   CardAction,
@@ -22,8 +22,8 @@ export default function TransactionCard({ transaction }: Props) {
         <CardDescription>
           <div className="flex gap-3">
             <div className="flex gap-1.5">
-              <span>{transaction.datetime.toLocaleTimeString()}</span>
-              <span>{transaction.datetime.toLocaleDateString()}</span>
+              <span>{transaction.datetime}</span>
+              <span>{transaction.datetime}</span>
             </div>
           </div>
         </CardDescription>
