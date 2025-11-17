@@ -7,13 +7,23 @@ import { cookies } from "next/headers";
 
 import { env } from "@/env/client";
 
+type NextFetchOptions = {
+  init?: {
+    cache?: "force-cache" | "no-store";
+    next?: {
+      revalidate?: 0 | false | number;
+      tags?: string[];
+    };
+  } & Pick<ClientOptions, "init">;
+} & Omit<ClientOptions, "init">;
+
 /**
  * Create a typed RPC client for the Node HTTP API (`/api/*`) that:
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
  * - forwards the current request cookies as a `Cookie` header
  */
 export async function createClient(
-  options?: ClientOptions,
+  options?: NextFetchOptions,
 ): Promise<ReturnType<typeof createRpcClient>> {
   const baseURL = env.NEXT_PUBLIC_API_BASE_URL;
   const headersOption = await createHeadersOption();
@@ -30,7 +40,7 @@ export async function createClient(
  * - forwards the current request cookies as a `Cookie` header
  */
 export async function createEdgeClient(
-  options?: ClientOptions,
+  options?: NextFetchOptions,
 ): Promise<ReturnType<typeof createEdgeRpcClient>> {
   const baseURL = env.NEXT_PUBLIC_API_BASE_URL;
   const headersOption = await createHeadersOption();
