@@ -1,34 +1,30 @@
-import { errAsync, ResultAsync } from "neverthrow";
-import { cookies } from "next/headers";
+import type { InferResponseType } from "@repo/interface/rpc-client";
+import { err, ok } from "neverthrow";
 
-import { getPath } from "@/utils/handle-nav";
-import { nextFetch } from "@/utils/next-fetch";
-import type { Transactions } from "@/utils/validation";
-import { transactionsSchema } from "@/utils/validation";
-import { webUnknownError } from "@/utils/web-error";
-import { deserializeError, parseWith } from "@o3osatoshi/toolkit";
+import { getPath } from "@/utils/nav-handler";
+import { createClient, createHeadersOption } from "@/utils/rpc-client";
+import { deserializeError } from "@o3osatoshi/toolkit";
 
-export function getTransactions(): ResultAsync<Transactions, Error> {
-  return ResultAsync.fromPromise(cookies(), (cause) =>
-    webUnknownError({
-      action: "ReadCookies",
-      cause,
-      reason: "Failed to read cookies",
-    }),
-  )
-    .andThen((cookies) =>
-      nextFetch({
-        headers: { Cookie: cookies.toString() },
-        path: getPath("labs-transactions"),
-      }),
-    )
-    .andThen((res) => {
-      if (!res.ok) {
-        return errAsync(deserializeError(res.body));
-      }
-      return parseWith(transactionsSchema, {
-        action: "ParseTransactionsResponse",
-        layer: "UI",
-      })(res.body);
-    });
+const client = createClient();
+const $getTransactions = client.api.private.labs.transactions.$get;
+
+export type Transaction = Transactions[number];
+
+export type Transactions = InferResponseType<typeof $getTransactions, 200>;
+
+export async function getTransactions() {
+  const headersOption = await createHeadersOption();
+  const res = await $getTransactions(undefined, {
+    ...headersOption,
+    init: {
+      next: {
+        tags: [getPath("labs-transactions")],
+      },
+    },
+  });
+  if (!res.ok) {
+    const body = await res.json();
+    return err(deserializeError(body));
+  }
+  return ok(await res.json());
 }
