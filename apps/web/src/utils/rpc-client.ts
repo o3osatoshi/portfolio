@@ -14,7 +14,7 @@ type NextFetchOptions = {
       revalidate?: 0 | false | number;
       tags?: string[];
     };
-  } & Pick<ClientOptions, "init">;
+  } & RequestInit;
 } & Omit<ClientOptions, "init">;
 
 /**
