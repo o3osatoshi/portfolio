@@ -33,7 +33,7 @@ export const createTransaction = async (
     const resultMe = await getMe();
     if (resultMe.isErr()) {
       if (resultMe.error.name.includes("Unauthorized")) {
-        return err("You must be logged in to update a transaction.");
+        return err("You must be logged in to create a transaction.");
       }
       return err("An error occurred while retrieving user information.");
     }
