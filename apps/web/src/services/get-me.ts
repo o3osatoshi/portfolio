@@ -5,14 +5,15 @@ import { getPath } from "@/utils/nav-handler";
 import { createEdgeClient, createHeadersOption } from "@/utils/rpc-client";
 import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
 
-const client = createEdgeClient();
-const $getMe = client.edge.private.me.$get;
-
-export type Me = InferResponseType<typeof $getMe, 200>;
+export type Me = InferResponseType<
+  ReturnType<typeof createEdgeClient>["edge"]["private"]["me"]["$get"],
+  200
+>;
 
 export async function getMe() {
+  const client = createEdgeClient();
   const headersOption = await createHeadersOption();
-  const res = await $getMe(undefined, {
+  const res = await client.edge.private.me.$get(undefined, {
     ...headersOption,
     init: {
       next: {

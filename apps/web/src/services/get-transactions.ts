@@ -5,16 +5,19 @@ import { getPath } from "@/utils/nav-handler";
 import { createClient, createHeadersOption } from "@/utils/rpc-client";
 import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
 
-const client = createClient();
-const $getTransactions = client.api.private.labs.transactions.$get;
-
 export type Transaction = Transactions[number];
 
-export type Transactions = InferResponseType<typeof $getTransactions, 200>;
+export type Transactions = InferResponseType<
+  ReturnType<
+    typeof createClient
+  >["api"]["private"]["labs"]["transactions"]["$get"],
+  200
+>;
 
 export async function getTransactions() {
+  const client = createClient();
   const headersOption = await createHeadersOption();
-  const res = await $getTransactions(undefined, {
+  const res = await client.api.private.labs.transactions.$get(undefined, {
     ...headersOption,
     init: {
       next: {
