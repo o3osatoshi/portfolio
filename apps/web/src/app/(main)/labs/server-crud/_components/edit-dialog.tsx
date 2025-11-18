@@ -72,7 +72,9 @@ export default function EditDialog({ transaction }: Props) {
             />
             <FormInput
               id="datetime"
-              defaultValue={transaction.datetime}
+              defaultValue={new Date(transaction.datetime)
+                .toISOString()
+                .slice(0, 16)}
               label="Datetime"
               {...register("datetime")}
               errorMessage={errors.datetime?.message}

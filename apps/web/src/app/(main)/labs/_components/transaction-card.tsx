@@ -22,8 +22,8 @@ export default function TransactionCard({ transaction }: Props) {
         <CardDescription>
           <div className="flex gap-3">
             <div className="flex gap-1.5">
-              <span>{transaction.datetime}</span>
-              <span>{transaction.datetime}</span>
+              <span>{new Date(transaction.datetime).toLocaleTimeString()}</span>
+              <span>{new Date(transaction.datetime).toLocaleDateString()}</span>
             </div>
           </div>
         </CardDescription>
