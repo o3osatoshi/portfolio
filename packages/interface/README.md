@@ -18,7 +18,7 @@ import { buildApp, buildHandler, createExpressRequestHandler } from "@repo/inter
 import { buildEdgeApp, buildEdgeHandler } from "@repo/interface/http/edge";
 
 // Typed RPC client for browsers/servers
-import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interface/rpc-client";
+import { createRpcClient, createEdgeRpcClient } from "@repo/interface/rpc-client";
 ```
 
 ## HTTP API
@@ -119,15 +119,22 @@ export const api = onRequest(createExpressRequestHandler(app));
 
 Typed client (browser/server):
 ```ts
-import { createInterfaceClient, createInterfaceClientEdge } from "@repo/interface/rpc-client";
+import { createRpcClient, createEdgeRpcClient } from "@repo/interface/rpc-client";
 
 // Node API at /api
-const clientNode = createInterfaceClient("https://your-domain.example");
+const clientNode = createRpcClient("https://your-domain.example");
 await clientNode.api.public.healthz.$get();
 
 // Edge API at /edge
-const clientEdge = createInterfaceClientEdge("https://your-domain.example");
+const clientEdge = createEdgeRpcClient("https://your-domain.example");
 await clientEdge.edge.public.healthz.$get();
+
+// With custom options (e.g. shared headers)
+const clientWithHeaders = createRpcClient("https://your-domain.example", {
+  headers: async () => ({
+    Authorization: `Bearer ${await getToken()}`,
+  }),
+});
 ```
 
 Testing and types:

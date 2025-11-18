@@ -39,10 +39,6 @@ export type EdgeDeps =
  * @returns Configured Hono app instance.
  */
 export function buildEdgeApp(deps: EdgeDeps) {
-  const app = new Hono().basePath("/edge");
-
-  app.use("*", requestIdMiddleware, loggerMiddleware);
-
   const authConfigHandler = (c: Context) => {
     if (deps.authConfig !== undefined) {
       return deps.authConfig;
@@ -51,12 +47,12 @@ export function buildEdgeApp(deps: EdgeDeps) {
       return deps.createAuthConfig(c);
     }
   };
-  app.use("*", initAuthConfig(authConfigHandler));
-
-  app.route("/public", buildEdgePublicRoutes());
-  app.route("/private", buildEdgePrivateRoutes());
-
-  return app;
+  return new Hono()
+    .basePath("/edge")
+    .use("*", requestIdMiddleware, loggerMiddleware)
+    .use("*", initAuthConfig(authConfigHandler))
+    .route("/public", buildEdgePublicRoutes())
+    .route("/private", buildEdgePrivateRoutes());
 }
 
 /**
@@ -86,22 +82,12 @@ export function buildEdgeHandler(deps: EdgeDeps) {
 }
 
 function buildEdgePrivateRoutes() {
-  const app = new Hono();
-
-  app.use("/*", verifyAuth());
-
-  app.get("/me", (c) => {
+  return new Hono().use("/*", verifyAuth()).get("/me", (c) => {
     const { session }: AuthUser = c.get("authUser");
     return c.json({ ...session.user });
   });
-
-  return app;
 }
 
 function buildEdgePublicRoutes() {
-  const app = new Hono();
-
-  app.get("/healthz", (c) => c.json({ ok: true }));
-
-  return app;
+  return new Hono().get("/healthz", (c) => c.json({ ok: true }));
 }

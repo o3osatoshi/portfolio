@@ -7,7 +7,7 @@ import {
   User,
 } from "lucide-react";
 
-import { getLabel, getPath } from "@/utils/handle-nav";
+import { getLabel, getPath } from "@/utils/nav-handler";
 import {
   Collapsible,
   CollapsibleContent,

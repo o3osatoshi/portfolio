@@ -2,26 +2,22 @@ import type { InferResponseType } from "@repo/interface/rpc-client";
 import { err, ok } from "neverthrow";
 
 import { getPath } from "@/utils/nav-handler";
-import { createClient, createHeadersOption } from "@/utils/rpc-client";
+import { createEdgeClient, createHeadersOption } from "@/utils/rpc-client";
 import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
 
-export type Transaction = Transactions[number];
-
-export type Transactions = InferResponseType<
-  ReturnType<
-    typeof createClient
-  >["api"]["private"]["labs"]["transactions"]["$get"],
+export type Me = InferResponseType<
+  ReturnType<typeof createEdgeClient>["edge"]["private"]["me"]["$get"],
   200
 >;
 
-export async function getTransactions() {
-  const client = createClient();
+export async function getMe() {
+  const client = createEdgeClient();
   const headersOption = await createHeadersOption();
-  const res = await client.api.private.labs.transactions.$get(undefined, {
+  const res = await client.edge.private.me.$get(undefined, {
     ...headersOption,
     init: {
       next: {
-        tags: [getPath("labs-transactions")],
+        tags: [getPath("me")],
       },
     },
   });
@@ -31,7 +27,7 @@ export async function getTransactions() {
         kind: "Unauthorized",
         request: {
           method: "GET",
-          url: getPath("labs-transactions"),
+          url: getPath("me"),
         },
       }),
     );

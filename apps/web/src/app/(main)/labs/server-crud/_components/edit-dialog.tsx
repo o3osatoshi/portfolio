@@ -6,8 +6,8 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/actions/update-transaction";
+import type { Transaction } from "@/services/get-transactions";
 import type { ActionState } from "@/utils/action-state";
-import type { Transaction } from "@/utils/validation";
 import { updateTransactionSchema } from "@/utils/validation";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 import {
@@ -72,7 +72,9 @@ export default function EditDialog({ transaction }: Props) {
             />
             <FormInput
               id="datetime"
-              defaultValue={transaction.datetime.toISOString().slice(0, 16)}
+              defaultValue={new Date(transaction.datetime)
+                .toISOString()
+                .slice(0, 16)}
               label="Datetime"
               {...register("datetime")}
               errorMessage={errors.datetime?.message}

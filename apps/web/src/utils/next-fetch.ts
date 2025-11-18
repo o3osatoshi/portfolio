@@ -3,6 +3,12 @@ import { ResultAsync } from "neverthrow";
 import { env } from "@/env/client";
 import { newFetchError } from "@o3osatoshi/toolkit";
 
+/**
+ * Query string shape for external HTTP services.
+ *
+ * Internal API calls (e.g. `/api/*`, `/edge/*`) should go through
+ * the typed Hono RPC client instead of this helper.
+ */
 export type Search =
   | Record<string, string>
   | string
@@ -17,6 +23,12 @@ type NextFetchResponse = {
 type Props = {
   cache?: "force-cache" | "no-store";
   headers?: HeadersInit;
+  /**
+   * Absolute or relative path for an external HTTP service.
+   *
+   * When combined with {@link env.NEXT_PUBLIC_API_BASE_URL} this yields the
+   * full URL used for the underlying fetch.
+   */
   path: string;
   revalidate?: 0 | false | number;
   search?: Search;
@@ -28,6 +40,14 @@ export function getQueryPath(path: string, search?: Search) {
   return search === undefined ? path : `${path}?${params.toString()}`;
 }
 
+/**
+ * Thin wrapper around `fetch` for external HTTP services with:
+ * - Next.js `next` options (cache, tags, revalidate)
+ * - structured `Error` via `newFetchError`
+ *
+ * Note: for the portfolio's own interface API, prefer the Hono RPC client
+ * (`@repo/interface/rpc-client`) instead of this helper.
+ */
 export function nextFetch({
   revalidate,
   cache,

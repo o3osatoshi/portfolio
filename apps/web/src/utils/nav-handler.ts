@@ -2,7 +2,7 @@ import { getQueryPath, type Search } from "@/utils/next-fetch";
 
 type Alias = ApiAlias | WebAlias;
 
-type ApiAlias = "labs-transactions";
+type ApiAlias = "labs-transactions" | "me";
 
 interface ApiNav {
   alias: ApiAlias;
@@ -85,6 +85,11 @@ const navs: Nav[] = [
   {
     alias: "labs-transactions",
     pathName: "/api/private/labs/transactions",
+    type: "api",
+  },
+  {
+    alias: "me",
+    pathName: "/edge/private/me",
     type: "api",
   },
   {

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { createInterfaceClient, createInterfaceClientEdge } from "./client";
+import { createEdgeRpcClient, createRpcClient } from "./client";
 
 describe("rpc-client/client", () => {
   afterEach(() => {
@@ -15,7 +15,7 @@ describe("rpc-client/client", () => {
       }),
     );
 
-    const client = createInterfaceClient("http://localhost");
+    const client = createRpcClient("http://localhost");
     const res = await (
       client as unknown as {
         api: { public: { healthz: { $get: () => Promise<Response> } } };
@@ -44,7 +44,7 @@ describe("rpc-client/client-edge", () => {
       }),
     );
 
-    const client = createInterfaceClientEdge("http://localhost");
+    const client = createEdgeRpcClient("http://localhost");
     const res = await (
       client as unknown as {
         edge: { public: { healthz: { $get: () => Promise<Response> } } };

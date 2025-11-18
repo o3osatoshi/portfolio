@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import React from "react";
 
-import { findNavs } from "@/utils/handle-nav";
+import { findNavs } from "@/utils/nav-handler";
 import {
   Breadcrumb,
   BreadcrumbItem,

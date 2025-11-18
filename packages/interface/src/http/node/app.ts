@@ -51,20 +51,16 @@ export type Deps = {
  * @returns Configured Hono app instance.
  */
 export function buildApp(deps: Deps) {
-  const app = new Hono().basePath("/api");
-
-  app.use("*", requestIdMiddleware, loggerMiddleware);
-
-  app.use(
-    "*",
-    initAuthConfig(() => deps.authConfig),
-  );
-
-  app.route("/auth", buildAuthRoutes());
-  app.route("/public", buildPublicRoutes());
-  app.route("/private", buildPrivateRoutes(deps));
-
-  return app;
+  return new Hono()
+    .basePath("/api")
+    .use("*", requestIdMiddleware, loggerMiddleware)
+    .use(
+      "*",
+      initAuthConfig(() => deps.authConfig),
+    )
+    .route("/auth", buildAuthRoutes())
+    .route("/public", buildPublicRoutes())
+    .route("/private", buildPrivateRoutes(deps));
 }
 
 /**
@@ -101,34 +97,20 @@ export function buildHandler(deps: Deps) {
 }
 
 function buildAuthRoutes() {
-  const app = new Hono();
-
-  app.use("/*", authHandler());
-
-  return app;
+  return new Hono().use("/*", authHandler());
 }
 
 function buildPrivateRoutes(deps: Deps) {
-  const app = new Hono();
-
-  app.use("/*", verifyAuth());
-
   const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-  app.get("/labs/transactions", (c) =>
+  return new Hono().use("/*", verifyAuth()).get("/labs/transactions", (c) =>
     respond<GetTransactionsResponse>(c)(
       parseGetTransactionsRequest({
         userId: c.get("authUser").session.user?.id,
       }).andThen((res) => getTransactions.execute(res)),
     ),
   );
-
-  return app;
 }
 
 function buildPublicRoutes() {
-  const app = new Hono();
-
-  app.get("/healthz", (c) => c.json({ ok: true }));
-
-  return app;
+  return new Hono().get("/healthz", (c) => c.json({ ok: true }));
 }
