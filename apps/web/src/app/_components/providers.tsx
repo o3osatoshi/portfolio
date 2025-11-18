@@ -2,8 +2,9 @@
 
 import { AuthProvider } from "@repo/auth/react";
 import { ThemeProvider } from "next-themes";
+import type { ReactNode } from "react";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
       <ThemeProvider
