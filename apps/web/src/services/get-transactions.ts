@@ -16,23 +16,24 @@ export type Transactions = InferResponseType<
 
 export async function getTransactions() {
   const client = createClient();
-  const headersOption = await createHeadersOption();
+  const headersResult = await createHeadersOption();
+  if (headersResult.isErr()) {
+    return err(headersResult.error);
+  }
+  const headersOption = headersResult.value;
+
+  const url = getPath("labs-transactions");
+  const method = "GET";
+
   const res = await client.api.private.labs.transactions.$get(undefined, {
     ...headersOption,
-    init: {
-      next: {
-        tags: [getPath("labs-transactions")],
-      },
-    },
+    init: { next: { tags: [url] } },
   });
   if (res.status === 401) {
     return err(
       newFetchError({
         kind: "Unauthorized",
-        request: {
-          method: "GET",
-          url: getPath("labs-transactions"),
-        },
+        request: { method, url },
       }),
     );
   }
