@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SleepDemoCard } from "@/app/(main)/toolkit/asynchronous/_components/sleep-demo";
+import SleepDemoCard from "@/app/(main)/toolkit/asynchronous/_components/sleep-demo";
 import { getPath } from "@/utils/nav-handler";
 
 export const metadata: Metadata = {

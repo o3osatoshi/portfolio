@@ -12,7 +12,7 @@ import {
   useSidebar,
 } from "@o3osatoshi/ui/client";
 
-export function ThemeToggle() {
+export default function ThemeToggle() {
   const { setTheme } = useTheme();
   const { isMobile } = useSidebar();
 

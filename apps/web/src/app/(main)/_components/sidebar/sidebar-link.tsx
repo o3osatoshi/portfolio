@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import type { ComponentProps } from "react";
+import type { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
 import { useSidebar } from "@o3osatoshi/ui/client";
 
 interface SidebarLinkProps extends ComponentProps<typeof Link> {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export function SidebarLink({ children, ...props }: SidebarLinkProps) {
+export default function SidebarLink({ children, ...props }: SidebarLinkProps) {
   const { isMobile, setOpenMobile } = useSidebar();
 
-  const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+  const handleClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
     if (isMobile) {
       setOpenMobile(false);
     }

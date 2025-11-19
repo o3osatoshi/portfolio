@@ -17,7 +17,7 @@ import {
   useSidebar,
 } from "@o3osatoshi/ui/client";
 
-export function User() {
+export default function User() {
   const { isMobile } = useSidebar();
   const user = useUser();
 

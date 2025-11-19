@@ -4,9 +4,9 @@ import {
   SidebarMenuItem,
 } from "@o3osatoshi/ui/client";
 
-import { SidebarLink } from "./sidebar-link";
+import SidebarLink from "./sidebar-link";
 
-export function ServiceLogo() {
+export default function ServiceLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>

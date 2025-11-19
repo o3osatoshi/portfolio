@@ -22,7 +22,7 @@ import {
   SidebarMenuSubItem,
 } from "@o3osatoshi/ui/client";
 
-import { SidebarLink } from "./sidebar-link";
+import SidebarLink from "./sidebar-link";
 
 type NavigateOption = {
   icon: LucideIcon;
@@ -84,7 +84,7 @@ const navigateOptions: NavigateOption[] = [
   },
 ];
 
-export function Navigation() {
+export default function Navigation() {
   return (
     <SidebarGroup>
       <SidebarMenu>

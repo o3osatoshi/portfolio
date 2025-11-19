@@ -16,7 +16,7 @@ type DemoStatus = "canceled" | "completed" | "error" | "idle" | "running";
 
 const DURATION_MS = 3000;
 
-export function SleepDemoCard() {
+export default function SleepDemoCard() {
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [elapsedMs, setElapsedMs] = useState(0);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);

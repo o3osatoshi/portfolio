@@ -5,9 +5,9 @@ import {
   SidebarMenuItem,
 } from "@o3osatoshi/ui/client";
 
-import { ThemeToggle } from "./theme-toggle";
+import ThemeToggle from "./theme-toggle";
 
-export function Setting() {
+export default function Setting() {
   return (
     <SidebarGroup>
       <SidebarGroupContent>
