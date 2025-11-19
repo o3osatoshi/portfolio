@@ -13,7 +13,7 @@ interface Props {
 
 export default function DeleteButton({ id }: Props) {
   const [_, dispatch, isPending] = useActionState<
-    ActionState<never> | undefined,
+    ActionState | undefined,
     FormData
   >(deleteTransaction, undefined);
 

@@ -26,7 +26,7 @@ interface Props {
 
 export default function EditDialog({ transaction }: Props) {
   const [state, dispatch, isPending] = useActionState<
-    ActionState<never> | undefined,
+    ActionState | undefined,
     FormData
   >(updateTransaction, undefined);
 

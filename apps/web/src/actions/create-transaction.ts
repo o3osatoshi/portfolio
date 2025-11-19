@@ -12,57 +12,41 @@ import { env } from "@/env/server";
 import { getMe } from "@/services/get-me";
 import { type ActionState, err } from "@/utils/action-state";
 import { getPath, getTag } from "@/utils/nav-handler";
-import { createTransactionSchema } from "@/utils/validation";
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
 const usecase = new CreateTransactionUseCase(repo);
 
 export const createTransaction = async (
-  _: ActionState<never> | undefined,
+  _: ActionState | undefined,
   formData: FormData,
-): Promise<ActionState<never>> => {
-  try {
-    const result = createTransactionSchema.safeParse(
-      Object.fromEntries(formData),
-    );
-    if (!result.success) {
-      return err("validation error");
-    }
-
-    const resultMe = await getMe();
-    if (resultMe.isErr()) {
-      if (resultMe.error.name.includes("Unauthorized")) {
-        return err("You must be logged in to create a transaction.");
-      }
-      return err("An error occurred while retrieving user information.");
-    }
-    const userId = resultMe.value.id;
-    if (userId === undefined) {
+): Promise<ActionState> => {
+  const res = await getMe();
+  if (res.isErr()) {
+    if (res.error.name.includes("Unauthorized")) {
       return err("You must be logged in to create a transaction.");
     }
-
-    const res = parseCreateTransactionRequest({
-      ...result.data,
-      userId,
-    });
-    if (res.isErr()) {
-      return err("validation error");
-    }
-    const executeResult = await usecase.execute(res.value);
-    if (executeResult.isErr()) {
-      return err(executeResult.error);
-    }
-
-    revalidateTag(getPath("labs-transactions"));
-    revalidateTag(getTag("labs-transactions", { userId }));
-  } catch (error: unknown) {
-    console.error(error);
-    if (error instanceof Error) {
-      return err(error);
-    }
-    return err("Failed to create the transaction. Please try again later.");
+    return err("An error occurred while retrieving user information.");
   }
+  const userId = res.value.id;
+  if (userId === undefined) {
+    return err("You must be logged in to create a transaction.");
+  }
+
+  const result = parseCreateTransactionRequest({
+    ...Object.fromEntries(formData),
+    userId: res.value.id,
+  });
+  if (result.isErr()) {
+    return err("validation error");
+  }
+  const executeResult = await usecase.execute(result.value);
+  if (executeResult.isErr()) {
+    return err(executeResult.error);
+  }
+
+  revalidateTag(getPath("labs-transactions"));
+  revalidateTag(getTag("labs-transactions", { userId }));
 
   redirect(getPath("labs-server-crud"));
 };

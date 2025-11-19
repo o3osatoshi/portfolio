@@ -11,7 +11,7 @@ import { Button, FormInput, Message } from "@o3osatoshi/ui";
 
 export default function CreateForm() {
   const [state, dispatch, isPending] = useActionState<
-    ActionState<never> | undefined,
+    ActionState | undefined,
     FormData
   >(createTransaction, undefined);
 

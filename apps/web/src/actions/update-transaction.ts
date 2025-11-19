@@ -19,9 +19,9 @@ const repo = new PrismaTransactionRepository(client);
 const usecase = new UpdateTransactionUseCase(repo);
 
 export const updateTransaction = async (
-  _: ActionState<never> | undefined,
+  _: ActionState | undefined,
   formData: FormData,
-): Promise<ActionState<never>> => {
+): Promise<ActionState> => {
   try {
     const result = updateTransactionSchema.safeParse(
       Object.fromEntries(formData),

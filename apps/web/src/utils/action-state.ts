@@ -18,13 +18,13 @@ type Object = Record<string, unknown>;
 
 export function err<E extends Error>(
   error: ActionError | E | string,
-): ActionState<never, ActionError> {
+): ActionState {
   return {
     error:
       typeof error === "string"
-        ? newError(error)
+        ? newActionError(error)
         : error instanceof Error
-          ? newError(error.name, error.message)
+          ? newActionError(error.name, error.message)
           : error,
     ok: false,
   };
@@ -34,7 +34,7 @@ export function ok<T extends ActionData>(data: T): ActionState<T, never> {
   return { data, ok: true };
 }
 
-function newError(message: string, name?: string): ActionError {
+function newActionError(message: string, name?: string): ActionError {
   return {
     name: name || "ActionError",
     message: message || "",

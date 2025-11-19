@@ -19,9 +19,9 @@ const repo = new PrismaTransactionRepository(client);
 const usecase = new DeleteTransactionUseCase(repo);
 
 export const deleteTransaction = async (
-  _: ActionState<never> | undefined,
+  _: ActionState | undefined,
   formData: FormData,
-): Promise<ActionState<never>> => {
+): Promise<ActionState> => {
   try {
     const result = deleteTransactionSchema.safeParse(
       Object.fromEntries(formData),
