@@ -3,9 +3,11 @@ import {
   createEdgeRpcClient,
   createRpcClient,
 } from "@repo/interface/rpc-client";
+import { ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
 import { env } from "@/env/client";
+import { newError } from "@o3osatoshi/toolkit";
 
 type NextFetchOptions = {
   init?: {
@@ -47,13 +49,20 @@ export function createEdgeClient(
   return createEdgeRpcClient(baseURL, options);
 }
 
-export async function createHeadersOption(): Promise<
-  Pick<ClientOptions, "headers">
+export function createHeadersOption(): ResultAsync<
+  Pick<ClientOptions, "headers">,
+  Error
 > {
-  const reqCookies = await cookies();
-  return {
+  return ResultAsync.fromPromise(cookies(), (cause) =>
+    newError({
+      action: "Call cookies",
+      cause,
+      kind: "Unknown",
+      layer: "Infra",
+    }),
+  ).map((reqCookies) => ({
     headers: () => ({
       Cookie: reqCookies.toString(),
     }),
-  };
+  }));
 }

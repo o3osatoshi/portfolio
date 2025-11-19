@@ -1,5 +1,5 @@
 import type { InferResponseType } from "@repo/interface/rpc-client";
-import { err, ok } from "neverthrow";
+import { errAsync, ResultAsync } from "neverthrow";
 
 import { getPath } from "@/utils/nav-handler";
 import { createEdgeClient, createHeadersOption } from "@/utils/rpc-client";
@@ -10,31 +10,43 @@ export type Me = InferResponseType<
   200
 >;
 
-export async function getMe() {
+export function getMe(): ResultAsync<Me, Error> {
   const client = createEdgeClient();
-  const headersOption = await createHeadersOption();
-  const res = await client.edge.private.me.$get(undefined, {
-    ...headersOption,
-    init: {
-      next: {
-        tags: [getPath("me")],
-      },
-    },
-  });
-  if (res.status === 401) {
-    return err(
-      newFetchError({
-        kind: "Unauthorized",
-        request: {
-          method: "GET",
-          url: getPath("me"),
-        },
-      }),
-    );
-  }
-  if (!res.ok) {
-    const body = await res.json();
-    return err(deserializeError(body));
-  }
-  return ok(await res.json());
+  const request = { method: "GET", url: getPath("me") };
+
+  return createHeadersOption()
+    .andThen((headersOption) =>
+      ResultAsync.fromPromise(
+        client.edge.private.me.$get(undefined, {
+          ...headersOption,
+          init: { next: { tags: [getPath("me")] } },
+        }),
+        (cause) => newFetchError({ action: "Fetch me", cause, request }),
+      ),
+    )
+    .andThen((res) => {
+      if (res.status === 401) {
+        return errAsync(newFetchError({ kind: "Unauthorized", request }));
+      }
+
+      if (!res.ok) {
+        return ResultAsync.fromPromise(res.json(), (cause) =>
+          newFetchError({
+            action: "Deserialize error body for getMe",
+            cause,
+            kind: "Serialization",
+            request,
+          }),
+        ).andThen((body) => errAsync(deserializeError(body)));
+      }
+
+      return ResultAsync.fromPromise(res.json(), (cause) =>
+        newFetchError({
+          action: "Deserialize body for getMe",
+          cause,
+          kind: "Serialization",
+          request,
+        }),
+      );
+    });
 }
