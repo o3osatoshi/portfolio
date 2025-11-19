@@ -1,13 +1,6 @@
 import { z, type ZodError, type ZodIssue } from "zod";
 
-import { type Layer, newError } from "./error";
-
-/**
- * Architectural layer values used across toolkit helpers, re-exported for convenience.
- *
- * @public
- */
-export type { Layer } from "./error";
+import { type Layer, newError } from "../error";
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.

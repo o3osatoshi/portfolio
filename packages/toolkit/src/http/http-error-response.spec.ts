@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { newError } from "./error";
-import { deserializeError, serializeError } from "./error-serializer";
+import { deserializeError, newError, serializeError } from "../error";
 import { toHttpErrorResponse } from "./http-error-response";
 
 describe("toHttpErrorResponse", () => {

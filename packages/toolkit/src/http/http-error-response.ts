@@ -28,10 +28,13 @@
  * Security: in development, {@link serializeError} may include stack traces.
  * Control this via the `includeStack` option.
  */
-import type { Kind } from "./error";
-import { parseErrorName } from "./error-format";
-import type { SerializeOptions } from "./error-serializer";
-import { type SerializedError, serializeError } from "./error-serializer";
+import {
+  type Kind,
+  parseErrorName,
+  type SerializedError,
+  serializeError,
+  type SerializeOptions,
+} from "../error";
 
 /**
  * HTTP‑friendly error response.
