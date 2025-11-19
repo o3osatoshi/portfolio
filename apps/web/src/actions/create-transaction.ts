@@ -22,27 +22,19 @@ export const createTransaction = async (
   formData: FormData,
 ): Promise<ActionState> => {
   return getMe()
-    .mapErr((error) =>
-      error.name.includes("Unauthorized")
-        ? "You must be logged in to create a transaction."
-        : "An error occurred while retrieving user information.",
-    )
-    .andThen((me) => {
-      return parseCreateTransactionRequest({
+    .andThen((me) =>
+      parseCreateTransactionRequest({
         ...Object.fromEntries(formData),
         userId: me.id,
-      }).mapErr(() => "validation error");
-    })
-    .match(
-      (req) =>
-        usecase.execute(req).match<ActionState>(
-          () => {
-            revalidateTag(getPath("labs-transactions"));
-            revalidateTag(getTag("labs-transactions", { userId: req.userId }));
-            redirect(getPath("labs-server-crud"));
-          },
-          (error) => err(error),
-        ),
-      (message) => err(message),
+      }),
+    )
+    .andThen((req) => usecase.execute(req))
+    .match<ActionState>(
+      (res) => {
+        revalidateTag(getPath("labs-transactions"));
+        revalidateTag(getTag("labs-transactions", { userId: res.userId }));
+        redirect(getPath("labs-server-crud"));
+      },
+      (error) => err(error),
     );
 };
