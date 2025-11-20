@@ -10,6 +10,26 @@ import { z } from 'zod';
 import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
+// Warning: (ae-forgotten-export) The symbol "Object$1" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type ActionData<T extends Object$1 = Object$1> = never | null | T | undefined;
+
+// @public
+export type ActionError = {
+    message: string;
+    name: string;
+};
+
+// @public
+export type ActionState<T extends ActionData = Object$1, E extends ActionError = ActionError> = {
+    data: T;
+    ok: true;
+} | {
+    error: E;
+    ok: false;
+};
+
 // @public
 export function composeErrorMessage(parts: ErrorMessageParts): string;
 
@@ -37,6 +57,9 @@ export type EnvOf<T extends EnvSchema> = {
 export type EnvSchema = Record<string, z.ZodTypeAny>;
 
 // @public
+export function err<E extends Error>(error: ActionError | E | string): ActionState;
+
+// @public
 export type ErrorHttpResponse = {
     body: SerializedError;
     status: ErrorStatus;
@@ -55,6 +78,12 @@ export type ErrorMessageParts = {
 export type ErrorMessagePayload = {
     summary: string;
 } & ErrorMessageParts;
+
+// @public
+export type ErrorNameParts = {
+    kind?: Kind;
+    layer?: Layer;
+};
 
 // @public
 export type ErrorStatus = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
@@ -129,6 +158,9 @@ export type NewZodError = {
 export function newZodError(options: NewZodError): Error;
 
 // @public
+export function ok<T extends ActionData>(data: T): ActionState<T, never>;
+
+// @public
 export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
@@ -138,10 +170,7 @@ export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
 export function parseErrorMessage(message: string | undefined): ErrorMessageParts;
 
 // @public
-export function parseErrorName(name: string | undefined): {
-    kind?: Kind;
-    layer?: Layer;
-};
+export function parseErrorName(name: string | undefined): ErrorNameParts;
 
 // @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
@@ -188,6 +217,9 @@ export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?
 
 // @public
 export function truncate(value: string, maxLen?: null | number): string;
+
+// @public
+export function userMessageFromError(error: Error): string;
 
 // (No @packageDocumentation comment for this package)
 

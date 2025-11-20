@@ -67,6 +67,16 @@ export type ErrorMessagePayload = {
 } & ErrorMessageParts;
 
 /**
+ * JSON payload shape produced by {@link composeErrorName}.
+ *
+ * @public
+ */
+export type ErrorNameParts = {
+  kind?: Kind;
+  layer?: Layer;
+};
+
+/**
  * Compose a JSON-based error message to simplify parsing by consumers.
  *
  * @public
@@ -123,10 +133,7 @@ export function parseErrorMessage(
  *
  * @public
  */
-export function parseErrorName(name: string | undefined): {
-  kind?: Kind;
-  layer?: Layer;
-} {
+export function parseErrorName(name: string | undefined): ErrorNameParts {
   if (!name || !name.endsWith("Error")) return {};
   const withoutSuffix = name.slice(0, -5);
   const layer = LAYER_VALUES.find((candidate) =>

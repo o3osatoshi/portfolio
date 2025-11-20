@@ -5,8 +5,8 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { createTransaction } from "@/actions/create-transaction";
-import type { ActionState } from "@/utils/action-state";
 import { createTransactionSchema } from "@/utils/validation";
+import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 
 export default function CreateForm() {

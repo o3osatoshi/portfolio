@@ -91,6 +91,38 @@ Note: Some gateways use non‑standard 499 (Client Closed Request). The default 
   - Wraps a `ZodError` (or issues array) into a structured `Error` via `newError`.
 - `parseWith(schema, ctx)` / `parseAsyncWith(schema, ctx)`
   - Create functions returning `neverthrow` `Result` / `ResultAsync` from a Zod schema. Errors are normalized via `newZodError`.
+- `@o3osatoshi/toolkit/next`
+  - Helpers for Next.js Server Actions. See below.
+
+## Next.js helpers (`@o3osatoshi/toolkit/next`)
+
+Lightweight utilities for `useActionState` and Server Actions.
+
+```ts
+import {
+  err,
+  ok,
+  type ActionState,
+  userMessageFromError,
+} from "@o3osatoshi/toolkit/next";
+
+// Server Action example
+export const createItem = async (
+  _prev: ActionState | undefined,
+  formData: FormData,
+): Promise<ActionState> => {
+  try {
+    const data = await doSomething(formData);
+    return ok(data);
+  } catch (e) {
+    return err(e as Error); // user-facing message derived from toolkit error metadata
+  }
+};
+```
+
+- `err(error)` – accepts `Error | ActionError | string` and returns `{ ok: false, error }` with a user-friendly message derived from `@o3osatoshi/toolkit` errors (`kind`, `reason`, `hint`, `impact` are considered). Falls back to a generic safe message.
+- `ok(data)` – wraps success payload as `{ ok: true, data }`.
+- `userMessageFromError(error)` – converts an `Error` (ideally produced by `newError`) into user-facing copy, using kind-based defaults and any structured message fields.
 
 ## Notes
 

@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useActionState } from "react";
 
 import { deleteTransaction } from "@/actions/delete-transaction";
-import type { ActionState } from "@/utils/action-state";
+import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button } from "@o3osatoshi/ui";
 
 interface Props {
