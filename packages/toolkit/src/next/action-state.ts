@@ -35,7 +35,15 @@ export type ActionState<
   E extends ActionError = ActionError,
 > = { data: T; ok: true } | { error: E; ok: false };
 
-type Object = Record<string, unknown>;
+/**
+ * Default object-shaped payload used by {@link ActionData} and {@link ActionState}.
+ *
+ * @public
+ * @remarks
+ * - This narrows the built-in `Object` type to a simple `Record<string, unknown>`.
+ * - Prefer supplying a more specific type parameter where your action has a known shape.
+ */
+export type Object = Record<string, unknown>;
 
 /**
  * Build a failure {@link ActionState} with a user-facing error message.

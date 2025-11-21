@@ -10,10 +10,8 @@ import { z } from 'zod';
 import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
-// Warning: (ae-forgotten-export) The symbol "Object$1" needs to be exported by the entry point index.d.ts
-//
 // @public
-export type ActionData<T extends Object$1 = Object$1> = never | null | T | undefined;
+export type ActionData<T extends Object_2 = Object_2> = never | null | T | undefined;
 
 // @public
 export type ActionError = {
@@ -22,7 +20,7 @@ export type ActionError = {
 };
 
 // @public
-export type ActionState<T extends ActionData = Object$1, E extends ActionError = ActionError> = {
+export type ActionState<T extends ActionData = Object_2, E extends ActionError = ActionError> = {
     data: T;
     ok: true;
 } | {
@@ -156,6 +154,10 @@ export type NewZodError = {
 
 // @public
 export function newZodError(options: NewZodError): Error;
+
+// @public
+type Object_2 = Record<string, unknown>;
+export { Object_2 as Object }
 
 // @public
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
