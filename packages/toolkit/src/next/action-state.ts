@@ -25,15 +25,18 @@ export type ActionError = {
 /**
  * Success/failure envelope compatible with React `useActionState`.
  *
+ * @typeParam T - Data payload type; defaults to {@link Object}.
+ * @typeParam E - Error payload type; defaults to {@link ActionError}.
  * @public
  * @remarks
  * - The success shape is `{ ok: true, data }`.
  * - The failure shape is `{ ok: false, error }`.
+ * - In some generic compositions this type can collapse to `never` to represent an impossible branch; at runtime you only handle the success and failure shapes.
  */
 export type ActionState<
   T extends ActionData = Object,
   E extends ActionError = ActionError,
-> = { data: T; ok: true } | { error: E; ok: false };
+> = { data: T; ok: true } | { error: E; ok: false } | never;
 
 /**
  * Default object-shaped payload used by {@link ActionData} and {@link ActionState}.
