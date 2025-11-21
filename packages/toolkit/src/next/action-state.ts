@@ -4,13 +4,13 @@ import { userMessageFromError } from "./error-message";
  * Data payload accepted by {@link ActionState}. Matches the shape that React
  * `useActionState` prefers for server actions.
  *
+ * @typeParam T - Base (non-null) data payload type; defaults to {@link Object}.
  * @public
+ * @remarks
+ * - The full payload type is a union of `T | null | undefined`.
+ * - `null` / `undefined` can be used to represent "no result yet" or an intentionally empty payload.
  */
-export type ActionData<T extends Object = Object> =
-  | never
-  | null
-  | T
-  | undefined;
+export type ActionData<T extends Object = Object> = null | T | undefined;
 
 /**
  * Minimal error shape delivered to the client side; keeps stack/cause out of the response.

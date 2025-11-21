@@ -11,7 +11,7 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
-export type ActionData<T extends Object_2 = Object_2> = never | null | T | undefined;
+export type ActionData<T extends Object_2 = Object_2> = null | T | undefined;
 
 // @public
 export type ActionError = {
@@ -26,7 +26,7 @@ export type ActionState<T extends ActionData = Object_2, E extends ActionError =
 } | {
     error: E;
     ok: false;
-};
+} | never;
 
 // @public
 export function composeErrorMessage(parts: ErrorMessageParts): string;
