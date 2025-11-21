@@ -1,5 +1,4 @@
 /**
- * @packageDocumentation
  * Helpers for converting server-side `Error`s into HTTP-ready payloads.
  *
  * The primary entry point is {@link toHttpErrorResponse}, which returns a
