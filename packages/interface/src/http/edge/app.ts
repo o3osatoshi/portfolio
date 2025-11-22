@@ -1,9 +1,13 @@
-import type { AuthConfig, AuthUser } from "@repo/auth";
+import type { AuthConfig, User } from "@repo/auth";
+import { userSchema } from "@repo/auth";
 import { initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import { type Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 
+import { parseWith } from "@o3osatoshi/toolkit";
+
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
+import { respond } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Edge HTTP interface.
@@ -82,10 +86,13 @@ export function buildEdgeHandler(deps: EdgeDeps) {
 }
 
 function buildEdgePrivateRoutes() {
-  return new Hono().use("/*", verifyAuth()).get("/me", (c) => {
-    const { session }: AuthUser = c.get("authUser");
-    return c.json({ ...session.user });
-  });
+  return new Hono().use("/*", verifyAuth()).get("/me", (c) =>
+    respond<User>(c)(
+      parseWith<typeof userSchema>(userSchema, {
+        action: "Parse user from session",
+      })(c.get("authUser").session.user ?? {}),
+    ),
+  );
 }
 
 function buildEdgePublicRoutes() {

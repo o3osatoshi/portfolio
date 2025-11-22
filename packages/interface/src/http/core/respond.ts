@@ -1,7 +1,27 @@
 import type { Context } from "hono";
-import type { ResultAsync } from "neverthrow";
+import type { Result, ResultAsync } from "neverthrow";
 
-import { newZodError, toHttpErrorResponse } from "@o3osatoshi/toolkit";
+import {
+  type ErrorStatusCode,
+  newZodError,
+  type SerializedError,
+  toHttpErrorResponse,
+} from "@o3osatoshi/toolkit";
+
+export type SuccessStatusCode = 200 | 201 | 202 | 203 | 206 | 207 | 208 | 226;
+
+export function respond<T>(c: Context) {
+  return (ra: Result<T, Error>) =>
+    ra.match(
+      (ok) => c.json<T, SuccessStatusCode>(ok),
+      (err) => {
+        const { body, statusCode } = toHttpErrorResponse(err);
+        return c.json<SerializedError, ErrorStatusCode>(body, {
+          status: statusCode,
+        });
+      },
+    );
+}
 
 /**
  * Railway-style responder: map a `ResultAsync` into a JSON HTTP response.
@@ -13,13 +33,15 @@ import { newZodError, toHttpErrorResponse } from "@o3osatoshi/toolkit";
  * @returns A function that accepts a `ResultAsync<T, Error>` and yields a
  * `Promise<Response>` suitable for Hono route handlers.
  */
-export function respond<T>(c: Context) {
+export function respondAsync<T>(c: Context) {
   return (ra: ResultAsync<T, Error>) =>
     ra.match(
-      (ok) => c.json<T>(ok),
+      (ok) => c.json<T, SuccessStatusCode>(ok),
       (err) => {
-        const { body, status } = toHttpErrorResponse(err);
-        return c.json(body, { status });
+        const { body, statusCode } = toHttpErrorResponse(err);
+        return c.json<SerializedError, ErrorStatusCode>(body, {
+          status: statusCode,
+        });
       },
     );
 }
@@ -54,10 +76,10 @@ export function respondZodError(
   c: Context,
 ): Response | undefined {
   if (!result.success) {
-    const { body, status } = toHttpErrorResponse(
+    const { body, statusCode } = toHttpErrorResponse(
       newZodError({ cause: result.error }),
     );
-    return c.json(body, { status });
+    return c.json(body, { status: statusCode });
   }
   return undefined;
 }

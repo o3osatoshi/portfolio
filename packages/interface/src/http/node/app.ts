@@ -10,7 +10,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respond } from "../core/respond";
+import { respondAsync } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -103,10 +103,10 @@ function buildAuthRoutes() {
 function buildPrivateRoutes(deps: Deps) {
   const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
   return new Hono().use("/*", verifyAuth()).get("/labs/transactions", (c) =>
-    respond<GetTransactionsResponse>(c)(
+    respondAsync<GetTransactionsResponse>(c)(
       parseGetTransactionsRequest({
         userId: c.get("authUser").session.user?.id,
-      }).andThen((res) => getTransactions.execute(res)),
+      }).asyncAndThen((res) => getTransactions.execute(res)),
     ),
   );
 }
