@@ -11,7 +11,6 @@ import { redirect } from "next/navigation";
 import { env } from "@/env/server";
 import { getMe } from "@/services/get-me";
 import { getPath, getTag } from "@/utils/nav-handler";
-import { deleteTransactionSchema } from "@/utils/validation";
 import { type ActionState, err } from "@o3osatoshi/toolkit";
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
@@ -22,48 +21,19 @@ export const deleteTransaction = async (
   _: ActionState | undefined,
   formData: FormData,
 ): Promise<ActionState> => {
-  try {
-    const result = deleteTransactionSchema.safeParse(
-      Object.fromEntries(formData),
+  return getMe()
+    .andThen((me) =>
+      parseDeleteTransactionRequest({
+        ...Object.fromEntries(formData),
+        userId: me.id,
+      }),
+    )
+    .andThen((req) => usecase.execute(req).map(() => req))
+    .match<ActionState>(
+      (req) => {
+        revalidateTag(getTag("labs-transactions", { userId: req.userId }));
+        redirect(getPath("labs-server-crud"));
+      },
+      (error) => err(error),
     );
-    if (!result.success) {
-      return err("validation error");
-    }
-    const { id } = result.data;
-
-    const resultMe = await getMe();
-    if (resultMe.isErr()) {
-      if (resultMe.error.name.includes("Unauthorized")) {
-        return err("You must be logged in to delete a transaction.");
-      }
-      return err("An error occurred while retrieving user information.");
-    }
-    const userId = resultMe.value.id;
-    if (userId === undefined) {
-      return err("You must be logged in to delete a transaction.");
-    }
-
-    const res = parseDeleteTransactionRequest({
-      id,
-      userId,
-    });
-    if (res.isErr()) {
-      return err("validation error");
-    }
-    const executeResult = await usecase.execute(res.value);
-    if (executeResult.isErr()) {
-      return err(executeResult.error);
-    }
-
-    revalidateTag(getPath("labs-transactions"));
-    revalidateTag(getTag("labs-transactions", { userId }));
-  } catch (error: unknown) {
-    console.error(error);
-    if (error instanceof Error) {
-      return err(error);
-    }
-    return err("Failed to delete the transaction. Please try again later.");
-  }
-
-  redirect(getPath("labs-server-crud"));
 };

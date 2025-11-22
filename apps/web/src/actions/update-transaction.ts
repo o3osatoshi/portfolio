@@ -11,7 +11,6 @@ import { redirect } from "next/navigation";
 import { env } from "@/env/server";
 import { getMe } from "@/services/get-me";
 import { getPath, getTag } from "@/utils/nav-handler";
-import { updateTransactionSchema } from "@/utils/validation";
 import { type ActionState, err } from "@o3osatoshi/toolkit";
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
@@ -22,44 +21,18 @@ export const updateTransaction = async (
   _: ActionState | undefined,
   formData: FormData,
 ): Promise<ActionState> => {
-  try {
-    const result = updateTransactionSchema.safeParse(
-      Object.fromEntries(formData),
+  return getMe()
+    .andThen((me) =>
+      parseUpdateTransactionRequest({
+        ...Object.fromEntries(formData),
+      }).map((req) => ({ me, req })),
+    )
+    .andThen(({ me, req }) => usecase.execute(req, me.id).map(() => me))
+    .match<ActionState>(
+      (me) => {
+        revalidateTag(getTag("labs-transactions", { userId: me.id }));
+        redirect(getPath("labs-server-crud"));
+      },
+      (error) => err(error),
     );
-    if (!result.success) {
-      return err("validation error");
-    }
-
-    const resultMe = await getMe();
-    if (resultMe.isErr()) {
-      if (resultMe.error.name.includes("Unauthorized")) {
-        return err("You must be logged in to update a transaction.");
-      }
-      return err("An error occurred while retrieving user information.");
-    }
-    const userId = resultMe.value.id;
-    if (userId === undefined) {
-      return err("You must be logged in to update a transaction.");
-    }
-
-    const res = parseUpdateTransactionRequest(result.data);
-    if (res.isErr()) {
-      return err("validation error");
-    }
-    const executeResult = await usecase.execute(res.value, userId);
-    if (executeResult.isErr()) {
-      return err(executeResult.error);
-    }
-
-    revalidateTag(getPath("labs-transactions"));
-    revalidateTag(getTag("labs-transactions", { userId }));
-  } catch (error: unknown) {
-    console.error(error);
-    if (error instanceof Error) {
-      return err(error);
-    }
-    return err("Failed to update the transaction. Please try again later.");
-  }
-
-  redirect(getPath("labs-server-crud"));
 };

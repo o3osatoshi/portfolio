@@ -31,7 +31,6 @@ export const createTransaction = async (
     .andThen((req) => usecase.execute(req))
     .match<ActionState>(
       (res) => {
-        revalidateTag(getPath("labs-transactions"));
         revalidateTag(getTag("labs-transactions", { userId: res.userId }));
         redirect(getPath("labs-server-crud"));
       },

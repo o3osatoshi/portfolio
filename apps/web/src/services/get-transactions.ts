@@ -1,7 +1,8 @@
 import type { InferResponseType } from "@repo/interface/rpc-client";
-import { err, ok } from "neverthrow";
+import { errAsync, ResultAsync } from "neverthrow";
 
-import { getPath } from "@/utils/nav-handler";
+import { getMe } from "@/services/get-me";
+import { getPath, getTag } from "@/utils/nav-handler";
 import { createClient, createHeadersOption } from "@/utils/rpc-client";
 import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
 
@@ -14,32 +15,51 @@ export type Transactions = InferResponseType<
   200
 >;
 
-export async function getTransactions() {
+export function getTransactions(): ResultAsync<Transactions, Error> {
   const client = createClient();
-  const headersResult = await createHeadersOption();
-  if (headersResult.isErr()) {
-    return err(headersResult.error);
-  }
-  const headersOption = headersResult.value;
+  const request = { method: "GET", url: getPath("labs-transactions") };
 
-  const url = getPath("labs-transactions");
-  const method = "GET";
+  return getMe()
+    .andThen((me) =>
+      createHeadersOption().map((headersOption) => ({
+        headersOption,
+        me,
+      })),
+    )
+    .andThen(({ headersOption, me }) =>
+      ResultAsync.fromPromise(
+        client.api.private.labs.transactions.$get(undefined, {
+          ...headersOption,
+          init: {
+            next: { tags: [getTag("labs-transactions", { userId: me.id })] },
+          },
+        }),
+        (cause) => newFetchError({ action: "Fetch me", cause, request }),
+      ),
+    )
+    .andThen((res) => {
+      if (res.status === 401) {
+        return errAsync(newFetchError({ kind: "Unauthorized", request }));
+      }
 
-  const res = await client.api.private.labs.transactions.$get(undefined, {
-    ...headersOption,
-    init: { next: { tags: [url] } },
-  });
-  if (res.status === 401) {
-    return err(
-      newFetchError({
-        kind: "Unauthorized",
-        request: { method, url },
-      }),
-    );
-  }
-  if (!res.ok) {
-    const body = await res.json();
-    return err(deserializeError(body));
-  }
-  return ok(await res.json());
+      if (!res.ok) {
+        return ResultAsync.fromPromise(res.json(), (cause) =>
+          newFetchError({
+            action: "Deserialize error body for getMe",
+            cause,
+            kind: "Serialization",
+            request,
+          }),
+        ).andThen((body) => errAsync(deserializeError(body)));
+      }
+
+      return ResultAsync.fromPromise(res.json(), (cause) =>
+        newFetchError({
+          action: "Deserialize body for getMe",
+          cause,
+          kind: "Serialization",
+          request,
+        }),
+      );
+    });
 }
