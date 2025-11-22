@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { parseAsyncWith, parseWith } from "@o3osatoshi/toolkit";
+import { parseWith } from "@o3osatoshi/toolkit";
 
 const DecimalStringSchema = z.string().refine(
   (val) => {
@@ -125,7 +125,7 @@ export const parseUpdateTransactionRequest = parseWith(
 /**
  * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
  */
-export const parseGetTransactionsRequest = parseAsyncWith(
+export const parseGetTransactionsRequest = parseWith(
   getTransactionsRequestSchema,
   {
     action: "ParseGetTransactionsRequest",
