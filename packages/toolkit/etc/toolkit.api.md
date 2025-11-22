@@ -60,7 +60,7 @@ export function err<E extends Error>(error: ActionError | E | string): ActionSta
 // @public
 export type ErrorHttpResponse = {
     body: SerializedError;
-    status: ErrorStatus;
+    statusCode: ErrorStatusCode;
 };
 
 // @public
@@ -84,7 +84,7 @@ export type ErrorNameParts = {
 };
 
 // @public
-export type ErrorStatus = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
+export type ErrorStatusCode = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
 
 // @public
 export function extractErrorMessage(cause: unknown): string | undefined;
@@ -215,7 +215,7 @@ export function summarizeZodError(err: ZodError): string;
 export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
-export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?: SerializeOptions): ErrorHttpResponse;
+export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
 export function truncate(value: string, maxLen?: null | number): string;
