@@ -6,11 +6,12 @@ import {
   useSession as honoUseSession,
 } from "@hono/auth-js/react";
 
-import type {
-  AuthProviderId,
-  SignInOptions,
-  SignOutOptions,
-  User,
+import {
+  type AuthProviderId,
+  type SignInOptions,
+  type SignOutOptions,
+  type User,
+  userSchema,
 } from "./types";
 
 export { HonoSessionProvider as AuthProvider };
@@ -34,5 +35,10 @@ export function signOut(options?: SignOutOptions) {
 
 export function useUser(): undefined | User {
   const { data } = honoUseSession();
-  return data?.user;
+  if (data?.user === undefined) return undefined;
+
+  const result = userSchema.safeParse(data.user);
+  if (!result.success) return undefined;
+
+  return result.data;
 }

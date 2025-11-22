@@ -38,11 +38,14 @@ describe("hono-auth/react shims", () => {
     h.getSessionMock.mockResolvedValueOnce({ user: { id: "u-1" } });
     await expect(getUserId()).resolves.toBe("u-1");
 
+    h.getSessionMock.mockResolvedValueOnce({});
+    await expect(getUserId()).resolves.toBeUndefined();
+
     h.getSessionMock.mockResolvedValueOnce(undefined);
     await expect(getUserId()).resolves.toBeUndefined();
   });
 
-  it("signIn maps redirectTo to callbackUrl", async () => {
+  it("signIn maps redirectTo to callbackUrl when provided", async () => {
     h.signInMock.mockResolvedValueOnce("ok");
     const out = await signIn("google", { redirectTo: "/home" });
     expect(h.signInMock).toHaveBeenCalledWith("google", {
@@ -51,16 +54,46 @@ describe("hono-auth/react shims", () => {
     expect(out).toBe("ok");
   });
 
-  it("signOut maps redirectTo to callbackUrl", async () => {
+  it("signIn forwards provider with empty options when redirectTo is not provided", async () => {
+    h.signInMock.mockResolvedValueOnce("ok");
+    const out = await signIn("google");
+    expect(h.signInMock).toHaveBeenCalledWith("google", {});
+    expect(out).toBe("ok");
+  });
+
+  it("signOut maps redirectTo to callbackUrl when provided", async () => {
     h.signOutMock.mockResolvedValueOnce("bye");
     const out = await signOut({ redirectTo: "/bye" });
     expect(h.signOutMock).toHaveBeenCalledWith({ callbackUrl: "/bye" });
     expect(out).toBe("bye");
   });
 
-  it("useUser returns session.user when available", () => {
-    const user = { id: "u-1" };
+  it("signOut calls underlying signOut with empty options when redirectTo is not provided", async () => {
+    h.signOutMock.mockResolvedValueOnce("bye");
+    const out = await signOut();
+    expect(h.signOutMock).toHaveBeenCalledWith({});
+    expect(out).toBe("bye");
+  });
+
+  it("useUser returns validated user when session contains a valid user", () => {
+    const user = { id: "u-1", name: "Alice" };
     h.useSessionMock.mockReturnValueOnce({ data: { user } });
-    expect(useUser()).toBe(user);
+    expect(useUser()).toEqual(user);
+  });
+
+  it("useUser returns undefined when there is no session data", () => {
+    h.useSessionMock.mockReturnValueOnce({});
+    expect(useUser()).toBeUndefined();
+  });
+
+  it("useUser returns undefined when session has no user", () => {
+    h.useSessionMock.mockReturnValueOnce({ data: {} });
+    expect(useUser()).toBeUndefined();
+  });
+
+  it("useUser returns undefined when user fails schema validation", () => {
+    const invalidUser = { id: 123 };
+    h.useSessionMock.mockReturnValueOnce({ data: { user: invalidUser } });
+    expect(useUser()).toBeUndefined();
   });
 });
