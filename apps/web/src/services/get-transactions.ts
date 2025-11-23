@@ -46,3 +46,29 @@ export function getTransactions(): ResultAsync<Transactions, Error> {
       }),
     );
 }
+
+// NOTE: next-fetch example
+// export function getTransactions(): ResultAsync<Transactions, Error> {
+//   return ResultAsync.fromPromise(cookies(), (cause) =>
+//     webUnknownError({
+//       action: "ReadCookies",
+//       cause,
+//       reason: "Failed to read cookies",
+//     }),
+//   )
+//     .andThen((cookies) =>
+//       nextFetch({
+//         headers: { Cookie: cookies.toString() },
+//         path: getPath("labs-transactions"),
+//       }),
+//     )
+//     .andThen((res) => {
+//       if (!res.ok) {
+//         return errAsync(deserializeError(res.body));
+//       }
+//       return parseWith(transactionsSchema, {
+//         action: "ParseTransactionsResponse",
+//         layer: "UI",
+//       })(res.body);
+//     });
+// }
