@@ -35,7 +35,8 @@ export function getTransactions(): ResultAsync<Transactions, Error> {
             next: { tags: [getTag("labs-transactions", { userId: me.id })] },
           },
         }),
-        (cause) => newFetchError({ action: "Fetch me", cause, request }),
+        (cause) =>
+          newFetchError({ action: "Fetch transactions", cause, request }),
       ),
     )
     .andThen((res) =>
