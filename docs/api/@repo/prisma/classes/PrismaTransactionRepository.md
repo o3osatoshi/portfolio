@@ -6,7 +6,7 @@
 
 # Class: PrismaTransactionRepository
 
-Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:24](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/prisma/src/adapters/prisma-transaction.repository.ts#L24)
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:24](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L24)
 
 Prisma-backed implementation of the [TransactionRepository](../../domain/interfaces/TransactionRepository.md) port.
 Maps domain value objects to Prisma primitives and normalizes errors.
@@ -19,7 +19,15 @@ Maps domain value objects to Prisma primitives and normalizes errors.
 
 ### Constructor
 
-> **new PrismaTransactionRepository**(): `PrismaTransactionRepository`
+> **new PrismaTransactionRepository**(`db`): `PrismaTransactionRepository`
+
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:25](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L25)
+
+#### Parameters
+
+##### db
+
+[`PrismaClient`](../type-aliases/PrismaClient.md) | [`TransactionClient`](../namespaces/Prisma/type-aliases/TransactionClient.md)
 
 #### Returns
 
@@ -31,7 +39,7 @@ Maps domain value objects to Prisma primitives and normalizes errors.
 
 > **create**(`tx`): `ResultAsync`\<[`Transaction`](../../domain/type-aliases/Transaction.md), `Error`\>
 
-Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:26](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/prisma/src/adapters/prisma-transaction.repository.ts#L26)
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:28](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L28)
 
 Persist a newly created transaction and return the stored entity.
 
@@ -55,7 +63,7 @@ Persist a newly created transaction and return the stored entity.
 
 > **delete**(`id`, `userId`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:41](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/prisma/src/adapters/prisma-transaction.repository.ts#L41)
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:43](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L43)
 
 Remove a transaction if it belongs to the provided user.
 
@@ -83,7 +91,7 @@ Remove a transaction if it belongs to the provided user.
 
 > **findById**(`id`): `ResultAsync`\<`null` \| [`Transaction`](../../domain/type-aliases/Transaction.md), `Error`\>
 
-Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:67](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/prisma/src/adapters/prisma-transaction.repository.ts#L67)
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:69](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L69)
 
 Lookup a transaction by its identifier.
 
@@ -107,7 +115,7 @@ Lookup a transaction by its identifier.
 
 > **findByUserId**(`userId`): `ResultAsync`\<[`Transaction`](../../domain/type-aliases/Transaction.md)[], `Error`\>
 
-Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:81](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/prisma/src/adapters/prisma-transaction.repository.ts#L81)
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:83](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L83)
 
 List all transactions associated with a user.
 
@@ -131,7 +139,7 @@ List all transactions associated with a user.
 
 > **update**(`tx`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:95](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/prisma/src/adapters/prisma-transaction.repository.ts#L95)
+Defined in: [packages/prisma/src/adapters/prisma-transaction.repository.ts:97](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/prisma/src/adapters/prisma-transaction.repository.ts#L97)
 
 Apply updates to an existing transaction.
 

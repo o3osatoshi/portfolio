@@ -8,7 +8,7 @@
 
 > **SheetTitle**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sheet.tsx:149](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sheet.tsx#L149)
+Defined in: [packages/ui/src/components/sheet.tsx:149](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/ui/src/components/sheet.tsx#L149)
 
 Large heading rendered at the top of the sheet.
 

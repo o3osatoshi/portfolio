@@ -6,7 +6,7 @@
 
 # Class: GetTransactionsUseCase
 
-Defined in: [packages/application/src/use-cases/user/get-transactions.ts:15](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/use-cases/user/get-transactions.ts#L15)
+Defined in: [packages/application/src/use-cases/user/get-transactions.ts:15](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/application/src/use-cases/user/get-transactions.ts#L15)
 
 Use case that fetches all transactions for a given user while enforcing
 ownership validation.
@@ -17,7 +17,7 @@ ownership validation.
 
 > **new GetTransactionsUseCase**(`repo`): `GetTransactionsUseCase`
 
-Defined in: [packages/application/src/use-cases/user/get-transactions.ts:16](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/use-cases/user/get-transactions.ts#L16)
+Defined in: [packages/application/src/use-cases/user/get-transactions.ts:16](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/application/src/use-cases/user/get-transactions.ts#L16)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [packages/application/src/use-cases/user/get-transactions.ts:16](htt
 
 > **execute**(`req`): `ResultAsync`\<[`GetTransactionsResponse`](../type-aliases/GetTransactionsResponse.md), `Error`\>
 
-Defined in: [packages/application/src/use-cases/user/get-transactions.ts:24](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/use-cases/user/get-transactions.ts#L24)
+Defined in: [packages/application/src/use-cases/user/get-transactions.ts:24](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/application/src/use-cases/user/get-transactions.ts#L24)
 
 Validate the user identifier and load transactions from the repository.
 

@@ -8,7 +8,7 @@
 
 > **parseWith**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod-parse.ts:48](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-parse.ts#L48)
+Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/zod/zod-parse.ts#L55)
 
 Creates a synchronous Result-returning parser from a Zod schema.
 
@@ -63,6 +63,6 @@ A function that yields a neverthrow `Result` containing the inferred schema outp
 
 ```ts
 const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
-const res = parseUser({ name: "alice" }); // `Result<User, Error\>`
-@public
+const res = parseUser(someInput);
+// Result of parsed type
 ```

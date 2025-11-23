@@ -563,7 +563,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderFields
 
-`OrderFields` *extends* `"createdAt"` \| `"updatedAt"` \| `"type"` \| `"userId"` \| `"provider"` \| `"providerAccountId"` \| `"refresh_token"` \| `"access_token"` \| `"expires_at"` \| `"token_type"` \| `"scope"` \| `"id_token"` \| `"session_state"`
+`OrderFields` *extends* `"type"` \| `"createdAt"` \| `"updatedAt"` \| `"userId"` \| `"provider"` \| `"providerAccountId"` \| `"refresh_token"` \| `"access_token"` \| `"expires_at"` \| `"token_type"` \| `"scope"` \| `"id_token"` \| `"session_state"`
 
 ##### ByFields
 

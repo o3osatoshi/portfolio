@@ -8,7 +8,7 @@
 
 > `const` **NullTypes**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:109
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:111
 
 ## Type Declaration
 

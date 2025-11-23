@@ -8,7 +8,7 @@
 
 > **summarizeZodIssue**(`issue`): `string`
 
-Defined in: [zod-error.ts:111](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L111)
+Defined in: [zod/zod-error.ts:97](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/zod/zod-error.ts#L97)
 
 Serializes one Zod issue into the "path: message" format used by the toolkit.
 

@@ -8,14 +8,14 @@
 
 > **newError**(`params`): `Error`
 
-Defined in: [error.ts:112](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/error.ts#L112)
+Defined in: [error/error.ts:143](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/error/error.ts#L143)
 
 Creates a structured Error object with a consistent `name` and `message`.
 Intended for use in Domain/Application/Infra/Auth/UI layers where you want
 more context than a plain `new Error(...)`.
 
 ## Error name
-- Computed as `"\{Layer\}\{Kind\}Error"` (for example `DomainValidationError`).
+- Computed as `Layer + Kind + "Error"` (for example `DomainValidationError`).
 - Useful for quick classification or HTTP mapping.
 
 ## Error message
@@ -28,8 +28,9 @@ more context than a plain `new Error(...)`.
 - If `cause` is an `Error`, its `.message` is extracted and appended as `Cause: ...`.
 - If `cause` is a string, it is used directly.
 - If `cause` is any other object, it is JSON stringified when possible.
-- Note: the original `cause` is NOT attached to the returned `Error`; it is
-  only summarized into the message.
+- The original `cause` is also attached to the returned `Error` using native
+  `ErrorOptions` when available or a non‑enumerable `cause` property as a
+  fallback, so downstream code can inspect `err.cause`.
 
 ## Recommended usage
 - Use `layer` and `kind` to categorize error origin (`Domain`, `Application`, `Infra`, `Auth`, `UI`, `DB`, `External`) and type (`Validation`, `Timeout`, `Unavailable`, `Integrity`, `Deadlock`, `Serialization`, etc.).

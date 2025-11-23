@@ -8,7 +8,7 @@
 
 > **browserTestPreset**(`opts`): `UserConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:73](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/config/src/vitest/index.ts#L73)
+Defined in: [packages/config/src/vitest/index.ts:84](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/config/src/vitest/index.ts#L84)
 
 Creates a browser-oriented Vitest configuration with CSS support and shared setup defaults.
 
@@ -18,7 +18,7 @@ Creates a browser-oriented Vitest configuration with CSS support and shared setu
 
 [`Options`](../type-aliases/Options.md) = `{}`
 
-Inline overrides for coverage behaviour, CSS handling, setup files, or plugins.
+Optional InlineConfig details and plugin registrations to merge into the preset.
 
 ## Returns
 
@@ -28,9 +28,12 @@ Vitest configuration produced via `defineConfig`.
 
 ## Remarks
 
-Mirrors the shared coverage configuration from [baseTestPreset](baseTestPreset.md), defaulting to the `v8` provider
-and staying disabled unless `opts.coverage?.enabled` is truthy. Additional behaviour:
-- CSS processing is enabled unless explicitly turned off through `opts.css`.
-- Any `opts.setupFiles` value is forwarded directly so packages fully control their setup pipeline.
-- Any `opts.plugins` array is forwarded to `defineConfig` to register extra Vite/Vitest plugins.
-As with the base preset, other [Options](../type-aliases/Options.md) fields are currently ignored.
+Shares the merge behaviour of [baseTestPreset](baseTestPreset.md) while tailoring defaults for browser tests.
+- Spreads `opts.test` first, then reapplies the shared defaults so coverage, environment, and CSS
+  handling stay aligned across packages.
+- Coverage falls back to the same `v8`-based defaults unless `opts.test?.coverage` is supplied. When
+  overriding coverage, include every field you need because the preset rebuilds the object.
+- CSS handling is enabled (`true`) by default and can be disabled by setting `opts.test?.css`.
+- The environment defaults to `jsdom`, though any fields supplied via `opts.test` override the
+  preset after defaults are applied.
+- Additional Vite/Vitest plugins can be registered through `opts.plugins`.

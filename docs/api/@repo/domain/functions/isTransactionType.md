@@ -8,7 +8,7 @@
 
 > **isTransactionType**(`v`): `v is TransactionType`
 
-Defined in: [value-objects/transaction-type.ts:12](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/value-objects/transaction-type.ts#L12)
+Defined in: [value-objects/transaction-type.ts:12](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/domain/src/value-objects/transaction-type.ts#L12)
 
 Type guard ensuring the value is a [TransactionType](../type-aliases/TransactionType.md).
 

@@ -6,17 +6,27 @@
 
 # Type Alias: Options
 
-> **Options** = `object` & `InlineConfig`
+> **Options** = `object`
 
-Defined in: [packages/config/src/vitest/index.ts:12](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/config/src/vitest/index.ts#L12)
+Defined in: [packages/config/src/vitest/index.ts:17](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/config/src/vitest/index.ts#L17)
 
 Supported overrides for the shared Vitest presets.
 
-Combines `InlineConfig` so consumers can forward common Vitest options while exposing a
-`plugins` property mirroring `ViteUserConfig["plugins"]` for Vite/Vitest plugin registration.
+Provides a thin wrapper allowing consumers to forward a `test` InlineConfig from `vitest/node` alongside
+optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]`.
 
-## Type Declaration
+## Properties
 
 ### plugins?
 
 > `optional` **plugins**: `ViteUserConfig`\[`"plugins"`\]
+
+Defined in: [packages/config/src/vitest/index.ts:18](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/config/src/vitest/index.ts#L18)
+
+***
+
+### test?
+
+> `optional` **test**: `InlineConfig`
+
+Defined in: [packages/config/src/vitest/index.ts:19](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/config/src/vitest/index.ts#L19)
