@@ -28,7 +28,3 @@ export const updateTransactionSchema = z.object({
   profitLoss: decimalString.optional(),
   type: z.string().optional(),
 });
-
-export const deleteTransactionSchema = z.object({
-  id: z.string(),
-});
