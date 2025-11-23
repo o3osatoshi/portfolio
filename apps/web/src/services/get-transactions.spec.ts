@@ -249,6 +249,6 @@ describe("getTransactions", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalUnavailableError");
-    expect(res.error.message).toContain("Fetch me failed");
+    expect(res.error.message).toContain("Fetch transactions failed");
   });
 });
