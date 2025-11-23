@@ -4,7 +4,7 @@ import { Label } from "@/components/index.client";
 import { Input, Message } from "@/components/index.server";
 import { cn } from "@/lib/utils";
 
-type Props = {
+export type FormInputProps = {
   errorMessage?: string | undefined;
   label: string;
 } & React.ComponentProps<"input">;
@@ -24,7 +24,7 @@ export function FormInput({
   label,
   type,
   ...props
-}: Props) {
+}: FormInputProps) {
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-right" htmlFor={id}>

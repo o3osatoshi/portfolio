@@ -70,6 +70,22 @@ export type NewTransactionInput = {
 export type Transaction = Base & TransactionCore;
 
 /**
+ * Internal representation shared by create/update flows.
+ */
+export interface TransactionCore {
+  amount: Amount;
+  currency: CurrencyCode;
+  datetime: DateTime;
+  fee?: Fee | undefined;
+  feeCurrency?: CurrencyCode | undefined;
+  id: TransactionId;
+  price: Price;
+  profitLoss?: ProfitLoss | undefined;
+  type: TransactionType;
+  userId: UserId;
+}
+
+/**
  * Untyped patch payload accepted by {@link updateTransaction}.
  */
 export type UpdateTransactionInput = {
@@ -83,22 +99,6 @@ export type UpdateTransactionInput = {
   profitLoss?: unknown;
   type?: unknown;
 };
-
-/**
- * Internal representation shared by create/update flows.
- */
-interface TransactionCore {
-  amount: Amount;
-  currency: CurrencyCode;
-  datetime: DateTime;
-  fee?: Fee | undefined;
-  feeCurrency?: CurrencyCode | undefined;
-  id: TransactionId;
-  price: Price;
-  profitLoss?: ProfitLoss | undefined;
-  type: TransactionType;
-  userId: UserId;
-}
 /**
  * Validate raw input collected from external layers into a transaction ready to
  * be persisted. Aggregates validation errors using `neverthrow.Result`.

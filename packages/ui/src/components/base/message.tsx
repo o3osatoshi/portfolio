@@ -2,7 +2,7 @@ import { AlertCircle } from "lucide-react";
 
 import { Alert, AlertTitle } from "@/components/index.server";
 
-interface Props {
+export interface MessageProps {
   children: React.ReactNode | undefined;
   variant?: "default" | "destructive";
 }
@@ -12,7 +12,7 @@ interface Props {
  *
  * @public
  */
-export function Message({ children, variant }: Props) {
+export function Message({ children, variant }: MessageProps) {
   if (children === undefined) return null;
 
   return (

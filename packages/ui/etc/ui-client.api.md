@@ -158,6 +158,17 @@ export function Sidebar({ side, children, className, collapsible, variant, ...pr
 // @public
 export function SidebarContent({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
+// @public (undocumented)
+export type SidebarContextProps = {
+    isMobile: boolean;
+    open: boolean;
+    openMobile: boolean;
+    setOpen: (open: boolean) => void;
+    setOpenMobile: (open: boolean) => void;
+    state: "collapsed" | "expanded";
+    toggleSidebar: () => void;
+};
+
 // @public
 export function SidebarFooter({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
@@ -260,8 +271,6 @@ export function TooltipProvider({ delayDuration, ...props }: React$1.ComponentPr
 // @public
 export function TooltipTrigger({ ...props }: React$1.ComponentProps<typeof TooltipPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "SidebarContextProps" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function useSidebar(): SidebarContextProps;
 
