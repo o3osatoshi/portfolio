@@ -4,8 +4,12 @@
   "entryPointStrategy": "packages",
   "entryPoints": [
     "packages/application",
+    "packages/auth",
     "packages/config",
     "packages/domain",
+    "packages/interface/http/node",
+    "packages/interface/http/edge",
+    "packages/interface/rpc-client",
     "packages/prisma",
     "packages/toolkit",
     "packages/ui"

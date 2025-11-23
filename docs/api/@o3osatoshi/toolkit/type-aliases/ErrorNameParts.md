@@ -8,7 +8,7 @@
 
 > **ErrorNameParts** = `object`
 
-Defined in: [error/error-format.ts:74](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/error/error-format.ts#L74)
+Defined in: [error/error-format.ts:74](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-format.ts#L74)
 
 JSON payload shape produced by [composeErrorName](../functions/composeErrorName.md).
 
@@ -18,7 +18,7 @@ JSON payload shape produced by [composeErrorName](../functions/composeErrorName.
 
 > `optional` **kind**: [`Kind`](Kind.md)
 
-Defined in: [error/error-format.ts:75](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/error/error-format.ts#L75)
+Defined in: [error/error-format.ts:75](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-format.ts#L75)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [error/error-format.ts:75](https://github.com/o3osatoshi/experiment/
 
 > `optional` **layer**: [`Layer`](Layer.md)
 
-Defined in: [error/error-format.ts:76](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/error/error-format.ts#L76)
+Defined in: [error/error-format.ts:76](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-format.ts#L76)

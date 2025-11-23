@@ -8,7 +8,7 @@
 
 > **extractErrorMessage**(`cause`): `undefined` \| `string`
 
-Defined in: [error/error-attributes.ts:11](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/error/error-attributes.ts#L11)
+Defined in: [error/error-attributes.ts:11](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-attributes.ts#L11)
 
 Extracts a concise error message string from an unknown cause when possible.
 

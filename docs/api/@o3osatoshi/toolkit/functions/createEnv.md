@@ -8,7 +8,7 @@
 
 > **createEnv**\<`T`\>(`schema`, `opts`): [`EnvOf`](../type-aliases/EnvOf.md)\<`T`\>
 
-Defined in: [env.ts:71](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/env.ts#L71)
+Defined in: [env.ts:71](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/env.ts#L71)
 
 Validates environment variables with Zod and returns a fully typed object.
 

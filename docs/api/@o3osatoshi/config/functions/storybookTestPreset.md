@@ -8,7 +8,7 @@
 
 > **storybookTestPreset**(`opts`): `UserConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:124](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/config/src/vitest/index.ts#L124)
+Defined in: [packages/config/src/vitest/index.ts:124](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/config/src/vitest/index.ts#L124)
 
 Creates a Storybook-aware Vitest configuration that enables browser projects by default.
 

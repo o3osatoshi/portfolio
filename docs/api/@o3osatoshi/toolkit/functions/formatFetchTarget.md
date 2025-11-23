@@ -8,7 +8,7 @@
 
 > **formatFetchTarget**(`__namedParameters`): `undefined` \| `string`
 
-Defined in: [http/fetch-error.ts:45](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/toolkit/src/http/fetch-error.ts#L45)
+Defined in: [http/fetch-error.ts:45](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/http/fetch-error.ts#L45)
 
 Derives a concise `METHOD URL` label from request metadata.
 

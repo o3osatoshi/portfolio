@@ -6,7 +6,7 @@
 
 # Class: UpdateTransactionUseCase
 
-Defined in: [packages/application/src/use-cases/user/update-transaction.ts:15](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/application/src/use-cases/user/update-transaction.ts#L15)
+Defined in: [packages/application/src/use-cases/user/update-transaction.ts:15](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/application/src/use-cases/user/update-transaction.ts#L15)
 
 Use case that coordinates ownership checks and domain validation before
 applying updates to an existing transaction.
@@ -17,7 +17,7 @@ applying updates to an existing transaction.
 
 > **new UpdateTransactionUseCase**(`repo`): `UpdateTransactionUseCase`
 
-Defined in: [packages/application/src/use-cases/user/update-transaction.ts:16](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/application/src/use-cases/user/update-transaction.ts#L16)
+Defined in: [packages/application/src/use-cases/user/update-transaction.ts:16](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/application/src/use-cases/user/update-transaction.ts#L16)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [packages/application/src/use-cases/user/update-transaction.ts:16](h
 
 > **execute**(`req`, `userId`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [packages/application/src/use-cases/user/update-transaction.ts:26](https://github.com/o3osatoshi/experiment/blob/17b936c4e1e126fcc250189262f9067740a67220/packages/application/src/use-cases/user/update-transaction.ts#L26)
+Defined in: [packages/application/src/use-cases/user/update-transaction.ts:26](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/application/src/use-cases/user/update-transaction.ts#L26)
 
 Validate identifiers, ensure ownership, apply domain updates, and persist
 the patched transaction entity.
