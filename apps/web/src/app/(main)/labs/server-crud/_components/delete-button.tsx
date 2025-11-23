@@ -4,12 +4,16 @@ import { Trash2 } from "lucide-react";
 import { useActionState } from "react";
 
 import { deleteTransaction } from "@/actions/delete-transaction";
-import type { ActionState } from "@/utils/action-state";
+import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button } from "@o3osatoshi/ui";
 
-export default function DeleteButton({ id }: { id: string }) {
+interface Props {
+  id: string;
+}
+
+export default function DeleteButton({ id }: Props) {
   const [_, dispatch, isPending] = useActionState<
-    ActionState<never> | undefined,
+    ActionState | undefined,
     FormData
   >(deleteTransaction, undefined);
 

@@ -1,5 +1,10 @@
-import { type Kind, newError, type NewError } from "./error";
-import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import {
+  extractErrorMessage,
+  extractErrorName,
+  type Kind,
+  newError,
+  type NewError,
+} from "../error";
 
 /** Minimal request metadata used to contextualize fetch failures.
  *

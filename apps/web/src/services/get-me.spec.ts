@@ -3,19 +3,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => {
   return {
-    createClientMock: vi.fn(),
+    createEdgeClientMock: vi.fn(),
     createHeadersMock: vi.fn(),
-    getMeMock: vi.fn(),
-    getTransactionsRequestMock: vi.fn(),
+    getMeRequestMock: vi.fn(),
   };
 });
 
-vi.mock("@/services/get-me", () => ({
-  getMe: h.getMeMock,
-}));
-
 vi.mock("@/utils/rpc-client", () => ({
-  createClient: h.createClientMock,
+  createEdgeClient: h.createEdgeClientMock,
   createHeaders: h.createHeadersMock,
 }));
 
@@ -26,46 +21,32 @@ vi.mock("@/env/client", () => ({
   },
 }));
 
-import { getTag } from "@/utils/nav-handler";
+import { getPath } from "@/utils/nav-handler";
 
-import { getTransactions } from "./get-transactions";
+import { getMe } from "./get-me";
 
-describe("getTransactions", () => {
+describe("getMe", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    h.getTransactionsRequestMock.mockReset();
-    h.createClientMock.mockReturnValue({
-      api: {
+    h.getMeRequestMock.mockReset();
+    h.createEdgeClientMock.mockReturnValue({
+      edge: {
         private: {
-          labs: {
-            transactions: {
-              $get: h.getTransactionsRequestMock,
-            },
+          me: {
+            $get: h.getMeRequestMock,
           },
         },
       },
     });
   });
 
-  it("returns Ok with parsed transactions when getMe, headers and request succeed", async () => {
-    const now = new Date();
-    const me = { id: "u1" };
-    const body = [
-      {
-        id: "t1",
-        amount: "1.0",
-        createdAt: now.toISOString(),
-        currency: "USD",
-        datetime: now.toISOString(),
-        price: "100.0",
-        type: "BUY",
-        updatedAt: now.toISOString(),
-        userId: "u1",
-      },
-    ];
+  it("returns Ok with parsed me when headers and request succeed", async () => {
+    const body = {
+      id: "u1",
+      name: "Alice",
+    };
 
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
     h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({ Cookie: "sid=test" }),
@@ -73,24 +54,22 @@ describe("getTransactions", () => {
     );
 
     const json = vi.fn().mockResolvedValueOnce(body);
-    h.getTransactionsRequestMock.mockResolvedValueOnce({
+    h.getMeRequestMock.mockResolvedValueOnce({
       json,
       ok: true,
       status: 200,
     });
 
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isOk()).toBe(true);
     if (!res.isOk()) return;
 
-    expect(Array.isArray(res.value)).toBe(true);
-    expect(res.value[0]?.id).toBe("t1");
-    expect(res.value[0]?.createdAt).toBe(body[0]?.createdAt);
-    expect(res.value[0]?.datetime).toBe(body[0]?.datetime);
+    expect(res.value.id).toBe(body.id);
+    expect(res.value.name).toBe(body.name);
 
-    const expectedTag = getTag("labs-transactions", { userId: me.id });
-    expect(h.getTransactionsRequestMock).toHaveBeenCalledWith(
+    const expectedTag = getPath("me");
+    expect(h.getMeRequestMock).toHaveBeenCalledWith(
       undefined,
       expect.objectContaining({
         init: {
@@ -100,42 +79,33 @@ describe("getTransactions", () => {
     );
   });
 
-  it("returns Err when getMe fails", async () => {
-    const authError = new Error("not authenticated");
-    h.getMeMock.mockReturnValueOnce(errAsync(authError));
+  it("returns Err when createHeaders fails", async () => {
+    const headersError = new Error("failed to create headers");
+    h.createHeadersMock.mockReturnValueOnce(errAsync(headersError));
 
-    h.createHeadersMock.mockReturnValueOnce(
-      okAsync({
-        headers: () => ({}),
-      }),
-    );
-
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
-    expect(res.error).toBe(authError);
-    expect(h.createHeadersMock).not.toHaveBeenCalled();
-    expect(h.getTransactionsRequestMock).not.toHaveBeenCalled();
+    expect(res.error).toBe(headersError);
+    expect(h.getMeRequestMock).not.toHaveBeenCalled();
   });
 
   it("returns Err Unauthorized when response status is 401", async () => {
-    const me = { id: "u1" };
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
     h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
     );
 
-    h.getTransactionsRequestMock.mockResolvedValueOnce({
+    h.getMeRequestMock.mockResolvedValueOnce({
       json: vi.fn(),
       ok: false,
       status: 401,
     });
 
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
@@ -144,10 +114,8 @@ describe("getTransactions", () => {
   });
 
   it("returns Err with deserialized remote error when response is non-2xx", async () => {
-    const me = { id: "u1" };
     const body = { name: "ApplicationNotFoundError", message: "not found" };
 
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
     h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
@@ -155,13 +123,13 @@ describe("getTransactions", () => {
     );
 
     const json = vi.fn().mockResolvedValueOnce(body);
-    h.getTransactionsRequestMock.mockResolvedValueOnce({
+    h.getMeRequestMock.mockResolvedValueOnce({
       json,
       ok: false,
       status: 404,
     });
 
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
@@ -172,9 +140,6 @@ describe("getTransactions", () => {
   });
 
   it("returns Err when remote error body cannot be deserialized", async () => {
-    const me = { id: "u1" };
-
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
     h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
@@ -183,28 +148,23 @@ describe("getTransactions", () => {
 
     const jsonError = new Error("invalid json");
     const json = vi.fn().mockRejectedValueOnce(jsonError);
-    h.getTransactionsRequestMock.mockResolvedValueOnce({
+    h.getMeRequestMock.mockResolvedValueOnce({
       json,
       ok: false,
       status: 500,
     });
 
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain(
-      "Deserialize error body for getTransactions",
-    );
+    expect(res.error.message).toContain("Deserialize error body for getMe");
   });
 
   it("returns Err when response body JSON parse fails on success status", async () => {
-    const me = { id: "u1" };
-
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
     h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
@@ -213,26 +173,23 @@ describe("getTransactions", () => {
 
     const jsonError = new Error("invalid json");
     const json = vi.fn().mockRejectedValueOnce(jsonError);
-    h.getTransactionsRequestMock.mockResolvedValueOnce({
+    h.getMeRequestMock.mockResolvedValueOnce({
       json,
       ok: true,
       status: 200,
     });
 
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain("Deserialize body for getTransactions");
+    expect(res.error.message).toContain("Deserialize body for getMe");
   });
 
   it("returns Err when underlying request rejects (network failure)", async () => {
-    const me = { id: "u1" };
-
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
     h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
@@ -240,15 +197,15 @@ describe("getTransactions", () => {
     );
 
     const networkError = new Error("network failure");
-    h.getTransactionsRequestMock.mockRejectedValueOnce(networkError);
+    h.getMeRequestMock.mockRejectedValueOnce(networkError);
 
-    const res = await getTransactions();
+    const res = await getMe();
 
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalUnavailableError");
-    expect(res.error.message).toContain("Fetch transactions failed");
+    expect(res.error.message).toContain("Fetch me failed");
   });
 });

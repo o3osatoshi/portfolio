@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
+
 import BreadcrumbHeader from "@/app/(main)/_components/breadcrumb-header";
-import { Sidebar } from "@/app/(main)/_components/sidebar";
+import Sidebar from "@/app/(main)/_components/sidebar";
 import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/client";
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function Layout({ children }: Props) {

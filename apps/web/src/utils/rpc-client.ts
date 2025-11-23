@@ -3,9 +3,11 @@ import {
   createEdgeRpcClient,
   createRpcClient,
 } from "@repo/interface/rpc-client";
+import { ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
 import { env } from "@/env/client";
+import { newError } from "@o3osatoshi/toolkit";
 
 type NextFetchOptions = {
   init?: {
@@ -23,7 +25,7 @@ type NextFetchOptions = {
  * - accepts optional Hono client options (headers, fetch, init)
  *
  * To forward the current request cookies, combine this with
- * {@link createHeadersOption} when issuing a request.
+ * {@link createHeaders} when issuing a request.
  */
 export function createClient(
   options?: NextFetchOptions,
@@ -38,7 +40,7 @@ export function createClient(
  * - accepts optional Hono client options (headers, fetch, init)
  *
  * To forward the current request cookies, combine this with
- * {@link createHeadersOption} when issuing a request.
+ * {@link createHeaders} when issuing a request.
  */
 export function createEdgeClient(
   options?: NextFetchOptions,
@@ -47,13 +49,20 @@ export function createEdgeClient(
   return createEdgeRpcClient(baseURL, options);
 }
 
-export async function createHeadersOption(): Promise<
-  Pick<ClientOptions, "headers">
+export function createHeaders(): ResultAsync<
+  Pick<ClientOptions, "headers">,
+  Error
 > {
-  const reqCookies = await cookies();
-  return {
+  return ResultAsync.fromPromise(cookies(), (cause) =>
+    newError({
+      action: "Call cookies",
+      cause,
+      kind: "Unknown",
+      layer: "Infra",
+    }),
+  ).map((reqCookies) => ({
     headers: () => ({
       Cookie: reqCookies.toString(),
     }),
-  };
+  }));
 }

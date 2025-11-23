@@ -3,8 +3,9 @@ import "@o3osatoshi/ui/globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
-import { Providers } from "@/app/_components/providers";
+import Providers from "@/app/_components/providers";
 import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 
 export const metadata: Metadata = {
@@ -41,11 +42,11 @@ export const metadata: Metadata = {
   title: "o3osatoshi",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+interface Props {
+  children: ReactNode;
+}
+
+export default function Layout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
       <GoogleAnalytics gaId="G-QFX9PV6BLQ" />

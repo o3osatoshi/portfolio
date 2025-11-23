@@ -9,7 +9,6 @@ export const env = createEnv(
   },
   {
     name: "web:client",
-    // Narrow read to public variables only to avoid leaking private envs
     source: {
       NEXT_PUBLIC_API_BASE_URL: process.env["NEXT_PUBLIC_API_BASE_URL"],
       NEXT_PUBLIC_RAINBOW_PROJECT_ID:

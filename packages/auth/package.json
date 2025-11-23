@@ -18,7 +18,8 @@
     "@auth/core": "^0.34.3",
     "@auth/prisma-adapter": "^2.10.0",
     "@hono/auth-js": "^1.1.0",
-    "next-auth": "5.0.0-beta.27"
+    "next-auth": "5.0.0-beta.27",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",

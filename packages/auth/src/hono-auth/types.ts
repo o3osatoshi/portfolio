@@ -1,45 +1,55 @@
-export interface AdapterUser extends User {
-  email: string;
-  emailVerified: Date | null;
-  id: string;
-}
+import { z } from "zod";
 
-export type AuthProviderId = "google";
+export const isoDateStringSchema = z.string();
+export type ISODateString = z.infer<typeof isoDateStringSchema>;
 
-export interface AuthUser {
-  session: Session;
-  token?: JWT;
-  user?: AdapterUser;
-}
+export const userSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  image: z.string().nullable().optional(),
+});
+export type User = z.infer<typeof userSchema>;
 
-export interface JWT {
-  email?: null | string;
-  exp?: number;
-  iat?: number;
-  jti?: string;
-  name?: null | string;
-  picture?: null | string;
-  sub?: string;
-}
+export const adapterUserSchema = userSchema.extend({
+  email: z.string(),
+  emailVerified: z.date().nullable(),
+});
+export type AdapterUser = z.infer<typeof adapterUserSchema>;
 
-export interface Session {
-  expires: ISODateString;
-  user?: User;
-}
+export const jwtSchema = z.object({
+  name: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  exp: z.number().optional(),
+  iat: z.number().optional(),
+  jti: z.string().optional(),
+  picture: z.string().nullable().optional(),
+  sub: z.string().optional(),
+});
+export type JWT = z.infer<typeof jwtSchema>;
 
-export interface SignInOptions {
-  redirectTo?: string;
-}
+export const sessionSchema = z.object({
+  expires: isoDateStringSchema,
+  user: userSchema.optional(),
+});
+export type Session = z.infer<typeof sessionSchema>;
 
-export interface SignOutOptions {
-  redirectTo?: string;
-}
+export const authUserSchema = z.object({
+  session: sessionSchema,
+  token: jwtSchema.optional(),
+  user: adapterUserSchema.optional(),
+});
+export type AuthUser = z.infer<typeof authUserSchema>;
 
-export interface User {
-  email?: null | string;
-  id?: string;
-  image?: null | string;
-  name?: null | string;
-}
+export const signInOptionsSchema = z.object({
+  redirectTo: z.string().optional(),
+});
+export type SignInOptions = z.infer<typeof signInOptionsSchema>;
 
-type ISODateString = string;
+export const signOutOptionsSchema = z.object({
+  redirectTo: z.string().optional(),
+});
+export type SignOutOptions = z.infer<typeof signOutOptionsSchema>;
+
+export const authProviderIdSchema = z.enum(["google"]);
+export type AuthProviderId = z.infer<typeof authProviderIdSchema>;

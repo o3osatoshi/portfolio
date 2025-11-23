@@ -430,6 +430,9 @@ importers:
       react:
         specifier: ^18 || ^19
         version: 19.1.1
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.12
     devDependencies:
       '@o3osatoshi/config':
         specifier: workspace:*

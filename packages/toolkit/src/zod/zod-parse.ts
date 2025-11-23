@@ -1,7 +1,8 @@
 import { Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import { type Layer, newZodError } from "./zod-error";
+import type { Layer } from "../error";
+import { newZodError } from "./zod-error";
 
 /**
  * Creates an async Result-returning parser from a Zod schema.

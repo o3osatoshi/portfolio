@@ -1,5 +1,4 @@
 /**
- * @packageDocumentation
  * Helpers for converting server-side `Error`s into HTTP-ready payloads.
  *
  * The primary entry point is {@link toHttpErrorResponse}, which returns a
@@ -28,10 +27,13 @@
  * Security: in development, {@link serializeError} may include stack traces.
  * Control this via the `includeStack` option.
  */
-import type { Kind } from "./error";
-import { parseErrorName } from "./error-format";
-import type { SerializeOptions } from "./error-serializer";
-import { type SerializedError, serializeError } from "./error-serializer";
+import {
+  type Kind,
+  parseErrorName,
+  type SerializedError,
+  serializeError,
+  type SerializeOptions,
+} from "../error";
 
 /**
  * HTTP‑friendly error response.
@@ -42,7 +44,7 @@ export type ErrorHttpResponse = {
   /** Serialized, JSON‑safe error payload produced by {@link serializeError}. */
   body: SerializedError;
   /** HTTP status code associated with the error. */
-  status: ErrorStatus;
+  statusCode: ErrorStatusCode;
 };
 
 /**
@@ -53,7 +55,7 @@ export type ErrorHttpResponse = {
  *
  * @public
  */
-export type ErrorStatus =
+export type ErrorStatusCode =
   | 400
   | 401
   | 403
@@ -69,7 +71,7 @@ export type ErrorStatus =
   | 504;
 
 /** @internal Internal mapping from error Kind to HTTP status. */
-const KIND_TO_STATUS: Record<Kind, ErrorStatus> = {
+const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
   Forbidden: 403,
   Validation: 400,
   BadGateway: 502,
@@ -127,15 +129,15 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatus> = {
  */
 export function toHttpErrorResponse(
   error: Error,
-  status?: ErrorStatus,
+  status?: ErrorStatusCode,
   options?: SerializeOptions,
 ): ErrorHttpResponse {
   const body = serializeError(error, options);
-  return { body, status: status ?? deriveStatusFromError(error) };
+  return { body, statusCode: status ?? deriveStatusFromError(error) };
 }
 
 /** @internal Derive HTTP status from an Error name (Kind heuristic). */
-function deriveStatusFromError(e: Error): ErrorStatus {
+function deriveStatusFromError(e: Error): ErrorStatusCode {
   const kind = detectKindFromName(e.name);
   if (kind) return KIND_TO_STATUS[kind];
   return 500;

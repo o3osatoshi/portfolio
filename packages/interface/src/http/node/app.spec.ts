@@ -1,7 +1,8 @@
+import type { GetTransactionsRequest } from "@repo/application";
 import type { AuthConfig } from "@repo/auth";
 import type { TransactionRepository } from "@repo/domain";
 import type { Context, Next } from "hono";
-import { errAsync, okAsync } from "neverthrow";
+import { err, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Stub auth middlewares for Node app
@@ -31,7 +32,10 @@ vi.mock("@repo/auth/middleware", () => ({
 
 // Mock application layer for deterministic behavior
 const a = vi.hoisted(() => {
-  const parseGetTransactionsRequest = vi.fn((input: unknown) => okAsync(input));
+  const parseGetTransactionsRequest = vi.fn(
+    (input: GetTransactionsRequest): Result<GetTransactionsRequest, Error> =>
+      ok(input),
+  );
   class GetTransactionsUseCase {
     execute() {
       return okAsync([
@@ -92,8 +96,7 @@ describe("http/node app", () => {
   it("GET /api/private/labs/transactions returns validation error when parser fails", async () => {
     // Make parser return Err
     a.parseGetTransactionsRequest.mockImplementationOnce(() =>
-      // @ts-expect-error
-      errAsync(new Error("bad")),
+      err<GetTransactionsRequest, Error>(new Error("bad")),
     );
     const res = await build().request("/api/private/labs/transactions");
     expect(res.status).toBeGreaterThanOrEqual(400);

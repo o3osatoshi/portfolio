@@ -7,8 +7,8 @@ import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/actions/update-transaction";
 import type { Transaction } from "@/services/get-transactions";
-import type { ActionState } from "@/utils/action-state";
 import { updateTransactionSchema } from "@/utils/validation";
+import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 import {
   Dialog,
@@ -26,7 +26,7 @@ interface Props {
 
 export default function EditDialog({ transaction }: Props) {
   const [state, dispatch, isPending] = useActionState<
-    ActionState<never> | undefined,
+    ActionState | undefined,
     FormData
   >(updateTransaction, undefined);
 

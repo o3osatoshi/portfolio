@@ -1,14 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { newError } from "./error";
-import { deserializeError, serializeError } from "./error-serializer";
+import { deserializeError, newError, serializeError } from "../error";
 import { toHttpErrorResponse } from "./http-error-response";
 
 describe("toHttpErrorResponse", () => {
   it("uses provided status when specified", () => {
     const err = newError({ kind: "Validation", layer: "Application" });
     const res = toHttpErrorResponse(err, 405);
-    expect(res.status).toBe(405);
+    expect(res.statusCode).toBe(405);
     expect(res.body).toEqual(serializeError(err));
   });
 
@@ -31,28 +30,28 @@ describe("toHttpErrorResponse", () => {
     for (const { kind, layer, status } of cases) {
       const err = newError({ kind, layer });
       const res = toHttpErrorResponse(err);
-      expect(res.status).toBe(status);
+      expect(res.statusCode).toBe(status);
     }
   });
 
   it("maps canceled to 408 (client closed request)", () => {
     const canceled = newError({ kind: "Canceled", layer: "Infra" });
     const res = toHttpErrorResponse(canceled);
-    expect(res.status).toBe(408);
+    expect(res.statusCode).toBe(408);
   });
 
   it("defaults to 500 for unknown names", () => {
     const e = new Error("boom");
     e.name = "TotallyCustomName";
     const res = toHttpErrorResponse(e);
-    expect(res.status).toBe(500);
+    expect(res.statusCode).toBe(500);
   });
 
   it("treats ZodError as validation (400)", () => {
     const payload = { name: "ZodError", message: "invalid" };
     const e = deserializeError(payload);
     const res = toHttpErrorResponse(e);
-    expect(res.status).toBe(400);
+    expect(res.statusCode).toBe(400);
   });
 
   it("includes serialized cause and respects includeStack option", () => {

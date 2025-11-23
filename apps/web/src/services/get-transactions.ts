@@ -1,9 +1,11 @@
 import type { InferResponseType } from "@repo/interface/rpc-client";
-import { err, ok } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 
-import { getPath } from "@/utils/nav-handler";
-import { createClient, createHeadersOption } from "@/utils/rpc-client";
-import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
+import { getMe } from "@/services/get-me";
+import { handleResponse } from "@/utils/handle-response";
+import { getPath, getTag } from "@/utils/nav-handler";
+import { createClient, createHeaders } from "@/utils/rpc-client";
+import { newFetchError } from "@o3osatoshi/toolkit";
 
 export type Transaction = Transactions[number];
 
@@ -14,31 +16,33 @@ export type Transactions = InferResponseType<
   200
 >;
 
-export async function getTransactions() {
+export function getTransactions(): ResultAsync<Transactions, Error> {
   const client = createClient();
-  const headersOption = await createHeadersOption();
-  const res = await client.api.private.labs.transactions.$get(undefined, {
-    ...headersOption,
-    init: {
-      next: {
-        tags: [getPath("labs-transactions")],
-      },
-    },
-  });
-  if (res.status === 401) {
-    return err(
-      newFetchError({
-        kind: "Unauthorized",
-        request: {
-          method: "GET",
-          url: getPath("labs-transactions"),
-        },
+  const request = { method: "GET", url: getPath("labs-transactions") };
+
+  return getMe()
+    .andThen((me) =>
+      createHeaders().map((headers) => ({
+        headers,
+        me,
+      })),
+    )
+    .andThen(({ headers, me }) =>
+      ResultAsync.fromPromise(
+        client.api.private.labs.transactions.$get(undefined, {
+          ...headers,
+          init: {
+            next: { tags: [getTag("labs-transactions", { userId: me.id })] },
+          },
+        }),
+        (cause) =>
+          newFetchError({ action: "Fetch transactions", cause, request }),
+      ),
+    )
+    .andThen((res) =>
+      handleResponse<Transactions>(res, {
+        context: "getTransactions",
+        request,
       }),
     );
-  }
-  if (!res.ok) {
-    const body = await res.json();
-    return err(deserializeError(body));
-  }
-  return ok(await res.json());
 }

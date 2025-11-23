@@ -11,6 +11,24 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
+export type ActionData<T extends Object_2 = Object_2> = null | T | undefined;
+
+// @public
+export type ActionError = {
+    message: string;
+    name: string;
+};
+
+// @public
+export type ActionState<T extends ActionData = Object_2, E extends ActionError = ActionError> = {
+    data: T;
+    ok: true;
+} | {
+    error: E;
+    ok: false;
+} | never;
+
+// @public
 export function composeErrorMessage(parts: ErrorMessageParts): string;
 
 // @public
@@ -37,9 +55,12 @@ export type EnvOf<T extends EnvSchema> = {
 export type EnvSchema = Record<string, z.ZodTypeAny>;
 
 // @public
+export function err<E extends Error>(error: ActionError | E | string): ActionState;
+
+// @public
 export type ErrorHttpResponse = {
     body: SerializedError;
-    status: ErrorStatus;
+    statusCode: ErrorStatusCode;
 };
 
 // @public
@@ -57,7 +78,13 @@ export type ErrorMessagePayload = {
 } & ErrorMessageParts;
 
 // @public
-export type ErrorStatus = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
+export type ErrorNameParts = {
+    kind?: Kind;
+    layer?: Layer;
+};
+
+// @public
+export type ErrorStatusCode = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
 
 // @public
 export function extractErrorMessage(cause: unknown): string | undefined;
@@ -129,6 +156,13 @@ export type NewZodError = {
 export function newZodError(options: NewZodError): Error;
 
 // @public
+type Object_2 = Record<string, unknown>;
+export { Object_2 as Object }
+
+// @public
+export function ok<T extends ActionData>(data: T): ActionState<T, never>;
+
+// @public
 export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
@@ -138,10 +172,7 @@ export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
 export function parseErrorMessage(message: string | undefined): ErrorMessageParts;
 
 // @public
-export function parseErrorName(name: string | undefined): {
-    kind?: Kind;
-    layer?: Layer;
-};
+export function parseErrorName(name: string | undefined): ErrorNameParts;
 
 // @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
@@ -184,10 +215,13 @@ export function summarizeZodError(err: ZodError): string;
 export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
-export function toHttpErrorResponse(error: Error, status?: ErrorStatus, options?: SerializeOptions): ErrorHttpResponse;
+export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
 export function truncate(value: string, maxLen?: null | number): string;
+
+// @public
+export function userMessageFromError(error: Error): string;
 
 // (No @packageDocumentation comment for this package)
 

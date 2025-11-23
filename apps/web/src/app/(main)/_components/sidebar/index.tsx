@@ -1,4 +1,4 @@
-import { ServiceLogo } from "@/app/(main)/_components/sidebar/service-logo";
+import ServiceLogo from "@/app/(main)/_components/sidebar/service-logo";
 import {
   SidebarContent,
   SidebarFooter,
@@ -6,11 +6,11 @@ import {
   Sidebar as UiSidebar,
 } from "@o3osatoshi/ui/client";
 
-import { Navigation } from "./navigation";
-import { Setting } from "./setting";
-import { User } from "./user";
+import Navigation from "./navigation";
+import Setting from "./setting";
+import User from "./user";
 
-export function Sidebar() {
+export default function Sidebar() {
   return (
     <UiSidebar variant="inset">
       <SidebarHeader>
