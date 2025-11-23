@@ -8,7 +8,7 @@
 
 > **extractErrorName**(`cause`): `undefined` \| `string`
 
-Defined in: [error/error-attributes.ts:35](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-attributes.ts#L35)
+Defined in: [error/error-attributes.ts:35](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-attributes.ts#L35)
 
 Extracts an error name from an unknown cause when possible.
 

@@ -8,7 +8,7 @@
 
 > **ActionError** = `object`
 
-Defined in: [next/action-state.ts:20](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/next/action-state.ts#L20)
+Defined in: [next/action-state.ts:20](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/next/action-state.ts#L20)
 
 Minimal error shape delivered to the client side; keeps stack/cause out of the response.
 
@@ -18,7 +18,7 @@ Minimal error shape delivered to the client side; keeps stack/cause out of the r
 
 > **message**: `string`
 
-Defined in: [next/action-state.ts:21](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/next/action-state.ts#L21)
+Defined in: [next/action-state.ts:21](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/next/action-state.ts#L21)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [next/action-state.ts:21](https://github.com/o3osatoshi/experiment/b
 
 > **name**: `string`
 
-Defined in: [next/action-state.ts:22](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/next/action-state.ts#L22)
+Defined in: [next/action-state.ts:22](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/next/action-state.ts#L22)

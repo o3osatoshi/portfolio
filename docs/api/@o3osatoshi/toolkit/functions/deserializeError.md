@@ -8,7 +8,7 @@
 
 > **deserializeError**(`input`): `Error`
 
-Defined in: [error/error-serializer.ts:59](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L59)
+Defined in: [error/error-serializer.ts:59](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L59)
 
 Reconstruct an `Error` instance from unknown input.
 

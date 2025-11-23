@@ -8,6 +8,6 @@
 
 > **GetTransactionsRequest** = `z.infer`\<*typeof* [`getTransactionsRequestSchema`](../variables/getTransactionsRequestSchema.md)\>
 
-Defined in: [packages/application/src/dtos/transaction.req.dto.ts:96](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/application/src/dtos/transaction.req.dto.ts#L96)
+Defined in: [packages/application/src/dtos/transaction.req.dto.ts:96](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/application/src/dtos/transaction.req.dto.ts#L96)
 
 Validated shape of a get-transactions request after Zod parsing.

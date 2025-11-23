@@ -8,7 +8,7 @@
 
 > **browserBundlePreset**(`opts`): `Promise`\<`Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>\>
 
-Defined in: [packages/config/src/tsup/index.ts:31](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/config/src/tsup/index.ts#L31)
+Defined in: [packages/config/src/tsup/index.ts:31](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/config/src/tsup/index.ts#L31)
 
 Creates a tsup configuration preset tailored for browser-facing React bundles.
 

@@ -6,6 +6,10 @@
 
 # index.client
 
+## Type Aliases
+
+- [SidebarContextProps](type-aliases/SidebarContextProps.md)
+
 ## Functions
 
 - [Avatar](functions/Avatar.md)

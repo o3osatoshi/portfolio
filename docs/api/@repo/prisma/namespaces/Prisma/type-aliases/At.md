@@ -18,7 +18,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:273
 
 ### K
 
-`K` *extends* `Key`
+`K` *extends* [`Key`](Key.md)
 
 ### strict
 

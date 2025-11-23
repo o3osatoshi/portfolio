@@ -539,7 +539,7 @@ const account = await prisma.account.findUniqueOrThrow({
 
 ### groupBy()
 
-> **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetAccountGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
+> **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? [`GetAccountGroupByPayload`](../type-aliases/GetAccountGroupByPayload.md)\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
 Defined in: packages/prisma/generated/prisma/models/Account.ts:1151
 
@@ -599,7 +599,7 @@ Group by arguments.
 
 #### Returns
 
-`object` *extends* `InputErrors` ? `GetAccountGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
+`object` *extends* `InputErrors` ? [`GetAccountGroupByPayload`](../type-aliases/GetAccountGroupByPayload.md)\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
 #### Example
 

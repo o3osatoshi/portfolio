@@ -22,6 +22,6 @@ Subset
 
 `U`
 
-## Desc
+## Remarks
 
 From `T` pick properties that exist in `U`. Simple version of Intersection

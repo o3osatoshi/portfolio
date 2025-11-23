@@ -8,7 +8,7 @@
 
 > **parseWith**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/zod/zod-parse.ts#L55)
+Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/zod/zod-parse.ts#L55)
 
 Creates a synchronous Result-returning parser from a Zod schema.
 

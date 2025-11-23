@@ -8,7 +8,7 @@
 
 > **Options** = `object`
 
-Defined in: [packages/config/src/vitest/index.ts:17](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/config/src/vitest/index.ts#L17)
+Defined in: [packages/config/src/vitest/index.ts:17](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/config/src/vitest/index.ts#L17)
 
 Supported overrides for the shared Vitest presets.
 
@@ -21,7 +21,7 @@ optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]`.
 
 > `optional` **plugins**: `ViteUserConfig`\[`"plugins"`\]
 
-Defined in: [packages/config/src/vitest/index.ts:18](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/config/src/vitest/index.ts#L18)
+Defined in: [packages/config/src/vitest/index.ts:18](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/config/src/vitest/index.ts#L18)
 
 ***
 
@@ -29,4 +29,4 @@ Defined in: [packages/config/src/vitest/index.ts:18](https://github.com/o3osatos
 
 > `optional` **test**: `InlineConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:19](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/config/src/vitest/index.ts#L19)
+Defined in: [packages/config/src/vitest/index.ts:19](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/config/src/vitest/index.ts#L19)

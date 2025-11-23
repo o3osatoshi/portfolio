@@ -6,8 +6,8 @@
 
 # Type Alias: Transaction
 
-> **Transaction** = [`Base`](../interfaces/Base.md) & `TransactionCore`
+> **Transaction** = [`Base`](../interfaces/Base.md) & [`TransactionCore`](../interfaces/TransactionCore.md)
 
-Defined in: [entities/transaction.ts:70](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/domain/src/entities/transaction.ts#L70)
+Defined in: [entities/transaction.ts:70](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/domain/src/entities/transaction.ts#L70)
 
 Fully validated transaction entity consisting of base metadata and core fields.

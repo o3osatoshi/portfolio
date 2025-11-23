@@ -12,4 +12,5 @@
 - [@repo/application](@repo/application/README.md)
 - [@repo/auth](@repo/auth/README.md)
 - [@repo/domain](@repo/domain/README.md)
+- [@repo/interface](@repo/interface/README.md)
 - [@repo/prisma](@repo/prisma/README.md)

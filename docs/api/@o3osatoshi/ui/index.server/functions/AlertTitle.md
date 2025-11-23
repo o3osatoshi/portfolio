@@ -8,7 +8,7 @@
 
 > **AlertTitle**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/alert.tsx:74](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/ui/src/components/alert.tsx#L74)
+Defined in: [packages/ui/src/components/alert.tsx:74](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/alert.tsx#L74)
 
 Bold heading displayed on the first row of an [Alert](Alert.md).
 

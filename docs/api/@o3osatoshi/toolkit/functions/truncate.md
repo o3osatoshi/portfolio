@@ -8,7 +8,7 @@
 
 > **truncate**(`value`, `maxLen?`): `string`
 
-Defined in: [truncate.ts:22](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/truncate.ts#L22)
+Defined in: [truncate.ts:22](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/truncate.ts#L22)
 
 Returns a truncated copy of `value` when it exceeds `maxLen` characters.
 

@@ -6,12 +6,12 @@
 
 # Function: useSidebar()
 
-> **useSidebar**(): `SidebarContextProps`
+> **useSidebar**(): [`SidebarContextProps`](../type-aliases/SidebarContextProps.md)
 
-Defined in: [packages/ui/src/components/sidebar.tsx:537](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/ui/src/components/sidebar.tsx#L537)
+Defined in: [packages/ui/src/components/sidebar.tsx:537](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/sidebar.tsx#L537)
 
 Hook exposing the sidebar context; throws when used outside provider.
 
 ## Returns
 
-`SidebarContextProps`
+[`SidebarContextProps`](../type-aliases/SidebarContextProps.md)

@@ -6,8 +6,8 @@
 
 # Type Alias: DeleteTransactionRequest
 
-> **DeleteTransactionRequest** = `z.infer`\<*typeof* `deleteTransactionRequestSchema`\>
+> **DeleteTransactionRequest** = `z.infer`\<*typeof* [`deleteTransactionRequestSchema`](../variables/deleteTransactionRequestSchema.md)\>
 
-Defined in: [packages/application/src/dtos/transaction.req.dto.ts:90](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/application/src/dtos/transaction.req.dto.ts#L90)
+Defined in: [packages/application/src/dtos/transaction.req.dto.ts:90](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/application/src/dtos/transaction.req.dto.ts#L90)
 
 Validated shape of a delete-transaction request after Zod parsing.

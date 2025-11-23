@@ -8,7 +8,7 @@
 
 > **createPrismaClient**(`options`): [`PrismaClient`](../type-aliases/PrismaClient.md)
 
-Defined in: [packages/prisma/src/prisma-client.ts:10](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/prisma/src/prisma-client.ts#L10)
+Defined in: [packages/prisma/src/prisma-client.ts:10](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/prisma/src/prisma-client.ts#L10)
 
 Create a new PrismaClient using the `@prisma/adapter-pg` adapter.
 Callers must manage the client's lifecycle (reuse/disconnect) as appropriate

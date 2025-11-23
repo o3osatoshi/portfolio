@@ -6,7 +6,7 @@
 
 # Interface: SerializedError
 
-Defined in: [error/error-serializer.ts:23](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L23)
+Defined in: [error/error-serializer.ts:23](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L23)
 
 JSON-friendly representation of an `Error` instance.
 
@@ -19,7 +19,7 @@ payloads bounded and safe by default.
 
 > `optional` **cause**: [`SerializedCause`](../type-aliases/SerializedCause.md)
 
-Defined in: [error/error-serializer.ts:25](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L25)
+Defined in: [error/error-serializer.ts:25](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L25)
 
 Optional cause; can be a string or another serialized error.
 
@@ -29,7 +29,7 @@ Optional cause; can be a string or another serialized error.
 
 > **message**: `string`
 
-Defined in: [error/error-serializer.ts:27](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L27)
+Defined in: [error/error-serializer.ts:27](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L27)
 
 Error message.
 
@@ -39,7 +39,7 @@ Error message.
 
 > **name**: `string`
 
-Defined in: [error/error-serializer.ts:29](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L29)
+Defined in: [error/error-serializer.ts:29](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L29)
 
 Original error name (e.g. `TypeError`, `DomainValidationError`).
 
@@ -49,6 +49,6 @@ Original error name (e.g. `TypeError`, `DomainValidationError`).
 
 > `optional` **stack**: `string`
 
-Defined in: [error/error-serializer.ts:31](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L31)
+Defined in: [error/error-serializer.ts:31](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L31)
 
 Optional stack trace (included only when `includeStack` is true).

@@ -8,7 +8,7 @@
 
 > **SerializeOptions** = `object`
 
-Defined in: [error/error-serializer.ts:39](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L39)
+Defined in: [error/error-serializer.ts:39](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L39)
 
 Tuning knobs for [serializeError](../functions/serializeError.md).
 
@@ -18,7 +18,7 @@ Tuning knobs for [serializeError](../functions/serializeError.md).
 
 > `optional` **depth**: `number`
 
-Defined in: [error/error-serializer.ts:41](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L41)
+Defined in: [error/error-serializer.ts:41](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L41)
 
 Maximum depth of `cause` chain to serialize (default: 2).
 
@@ -28,6 +28,6 @@ Maximum depth of `cause` chain to serialize (default: 2).
 
 > `optional` **includeStack**: `boolean`
 
-Defined in: [error/error-serializer.ts:43](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error-serializer.ts#L43)
+Defined in: [error/error-serializer.ts:43](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L43)
 
 Include `stack` in output (default: true in development, false otherwise).

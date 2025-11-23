@@ -2,15 +2,13 @@
 
 ***
 
-[Documentation](../../../../../README.md) / [@repo/prisma](../../../README.md) / [Prisma](../README.md) / Merge
+[Documentation](../../../../../README.md) / [@repo/prisma](../../../README.md) / [Prisma](../README.md) / \_Merge
 
-# Type Alias: Merge\<U\>
+# Type Alias: \_Merge\<U\>
 
-> **Merge**\<`U`\> = [`ComputeRaw`](ComputeRaw.md)\<`_Merge`\<[`Strict`](Strict.md)\<`U`\>\>\>
+> **\_Merge**\<`U`\> = [`IntersectOf`](IntersectOf.md)\<[`Overwrite`](Overwrite.md)\<`U`, `{ [K in keyof U]-?: At<U, K> }`\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:305
-
-End Helper Types for "Merge" *
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:266
 
 ## Type Parameters
 

@@ -6,6 +6,16 @@
 
 # index.server
 
+## Interfaces
+
+- [AmountInputProps](interfaces/AmountInputProps.md)
+- [MessageProps](interfaces/MessageProps.md)
+
+## Type Aliases
+
+- [FormInputProps](type-aliases/FormInputProps.md)
+- [HeadingProps](type-aliases/HeadingProps.md)
+
 ## Variables
 
 - [buttonVariants](variables/buttonVariants.md)

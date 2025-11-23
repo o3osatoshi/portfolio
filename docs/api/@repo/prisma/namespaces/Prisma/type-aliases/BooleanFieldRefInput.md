@@ -6,7 +6,7 @@
 
 # Type Alias: BooleanFieldRefInput\<$PrismaModel\>
 
-> **BooleanFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Boolean"`\>
+> **BooleanFieldRefInput**\<`$PrismaModel`\> = [`FieldRefInputType`](FieldRefInputType.md)\<`$PrismaModel`, `"Boolean"`\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1073
 

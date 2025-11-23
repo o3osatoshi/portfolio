@@ -539,7 +539,7 @@ const verificationToken = await prisma.verificationToken.findUniqueOrThrow({
 
 ### groupBy()
 
-> **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetVerificationTokenGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
+> **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? [`GetVerificationTokenGroupByPayload`](../type-aliases/GetVerificationTokenGroupByPayload.md)\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
 Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:626
 
@@ -599,7 +599,7 @@ Group by arguments.
 
 #### Returns
 
-`object` *extends* `InputErrors` ? `GetVerificationTokenGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
+`object` *extends* `InputErrors` ? [`GetVerificationTokenGroupByPayload`](../type-aliases/GetVerificationTokenGroupByPayload.md)\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
 #### Example
 

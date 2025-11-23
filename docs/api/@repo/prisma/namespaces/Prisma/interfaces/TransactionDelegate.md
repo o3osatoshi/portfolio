@@ -539,7 +539,7 @@ const transaction = await prisma.transaction.findUniqueOrThrow({
 
 ### groupBy()
 
-> **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetTransactionGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
+> **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? [`GetTransactionGroupByPayload`](../type-aliases/GetTransactionGroupByPayload.md)\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
 Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1149
 
@@ -599,7 +599,7 @@ Group by arguments.
 
 #### Returns
 
-`object` *extends* `InputErrors` ? `GetTransactionGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
+`object` *extends* `InputErrors` ? [`GetTransactionGroupByPayload`](../type-aliases/GetTransactionGroupByPayload.md)\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
 #### Example
 

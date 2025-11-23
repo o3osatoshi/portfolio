@@ -8,7 +8,7 @@
 
 > **DropdownMenuSeparator**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/dropdown-menu.tsx:200](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/ui/src/components/dropdown-menu.tsx#L200)
+Defined in: [packages/ui/src/components/dropdown-menu.tsx:200](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/dropdown-menu.tsx#L200)
 
 Horizontal rule separating logical sections inside the menu.
 

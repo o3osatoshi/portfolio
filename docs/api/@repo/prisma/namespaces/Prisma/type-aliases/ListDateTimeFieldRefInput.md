@@ -6,7 +6,7 @@
 
 # Type Alias: ListDateTimeFieldRefInput\<$PrismaModel\>
 
-> **ListDateTimeFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"DateTime[]"`\>
+> **ListDateTimeFieldRefInput**\<`$PrismaModel`\> = [`FieldRefInputType`](FieldRefInputType.md)\<`$PrismaModel`, `"DateTime[]"`\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1038
 

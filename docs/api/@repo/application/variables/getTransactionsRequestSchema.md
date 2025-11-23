@@ -8,6 +8,6 @@
 
 > `const` **getTransactionsRequestSchema**: `ZodObject`\<\{ `userId`: `ZodString`; \}, `$strip`\>
 
-Defined in: [packages/application/src/dtos/transaction.req.dto.ts:69](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/application/src/dtos/transaction.req.dto.ts#L69)
+Defined in: [packages/application/src/dtos/transaction.req.dto.ts:69](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/application/src/dtos/transaction.req.dto.ts#L69)
 
 Schema describing the payload to list transactions for a user.

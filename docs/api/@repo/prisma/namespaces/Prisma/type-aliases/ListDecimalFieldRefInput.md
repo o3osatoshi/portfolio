@@ -6,7 +6,7 @@
 
 # Type Alias: ListDecimalFieldRefInput\<$PrismaModel\>
 
-> **ListDecimalFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Decimal[]"`\>
+> **ListDecimalFieldRefInput**\<`$PrismaModel`\> = [`FieldRefInputType`](FieldRefInputType.md)\<`$PrismaModel`, `"Decimal[]"`\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1052
 

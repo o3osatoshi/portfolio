@@ -6,7 +6,7 @@
 
 # Type Alias: PickEnumerable\<T, K\>
 
-> **PickEnumerable**\<`T`, `K`\> = `Prisma__Pick`\<`T`, [`MaybeTupleToUnion`](MaybeTupleToUnion.md)\<`K`\>\>
+> **PickEnumerable**\<`T`, `K`\> = [`Prisma__Pick`](Prisma__Pick.md)\<`T`, [`MaybeTupleToUnion`](MaybeTupleToUnion.md)\<`K`\>\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:378
 

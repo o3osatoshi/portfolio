@@ -8,7 +8,7 @@
 
 > **ErrorHttpResponse** = `object`
 
-Defined in: [http/http-error-response.ts:43](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/http/http-error-response.ts#L43)
+Defined in: [http/http-error-response.ts:43](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/http-error-response.ts#L43)
 
 HTTP‑friendly error response.
 
@@ -18,7 +18,7 @@ HTTP‑friendly error response.
 
 > **body**: [`SerializedError`](../interfaces/SerializedError.md)
 
-Defined in: [http/http-error-response.ts:45](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/http/http-error-response.ts#L45)
+Defined in: [http/http-error-response.ts:45](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/http-error-response.ts#L45)
 
 Serialized, JSON‑safe error payload produced by [serializeError](../functions/serializeError.md).
 
@@ -28,6 +28,6 @@ Serialized, JSON‑safe error payload produced by [serializeError](../functions/
 
 > **statusCode**: [`ErrorStatusCode`](ErrorStatusCode.md)
 
-Defined in: [http/http-error-response.ts:47](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/http/http-error-response.ts#L47)
+Defined in: [http/http-error-response.ts:47](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/http-error-response.ts#L47)
 
 HTTP status code associated with the error.

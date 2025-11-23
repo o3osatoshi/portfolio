@@ -8,7 +8,7 @@
 
 > **NewError** = `object`
 
-Defined in: [error/error.ts:69](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L69)
+Defined in: [error/error.ts:69](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L69)
 
 Structured descriptor passed into [newError](../functions/newError.md), exported for consumers
 that want to build wrappers or share strongly typed error payloads.
@@ -19,7 +19,7 @@ that want to build wrappers or share strongly typed error payloads.
 
 > `optional` **action**: `string`
 
-Defined in: [error/error.ts:71](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L71)
+Defined in: [error/error.ts:71](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L71)
 
 Logical operation being performed when the error occurred.
 
@@ -29,7 +29,7 @@ Logical operation being performed when the error occurred.
 
 > `optional` **cause**: `unknown`
 
-Defined in: [error/error.ts:73](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L73)
+Defined in: [error/error.ts:73](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L73)
 
 Original cause (any type) captured for diagnostic context.
 
@@ -39,7 +39,7 @@ Original cause (any type) captured for diagnostic context.
 
 > `optional` **hint**: `string`
 
-Defined in: [error/error.ts:75](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L75)
+Defined in: [error/error.ts:75](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L75)
 
 Suggested follow-up or remediation for the caller.
 
@@ -49,7 +49,7 @@ Suggested follow-up or remediation for the caller.
 
 > `optional` **impact**: `string`
 
-Defined in: [error/error.ts:77](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L77)
+Defined in: [error/error.ts:77](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L77)
 
 Description of the resulting effect or blast radius.
 
@@ -59,7 +59,7 @@ Description of the resulting effect or blast radius.
 
 > **kind**: [`Kind`](Kind.md)
 
-Defined in: [error/error.ts:79](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L79)
+Defined in: [error/error.ts:79](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L79)
 
 High-level error classification shared across layers.
 
@@ -69,7 +69,7 @@ High-level error classification shared across layers.
 
 > **layer**: [`Layer`](Layer.md)
 
-Defined in: [error/error.ts:81](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L81)
+Defined in: [error/error.ts:81](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L81)
 
 Architectural layer where the failure originated.
 
@@ -79,6 +79,6 @@ Architectural layer where the failure originated.
 
 > `optional` **reason**: `string`
 
-Defined in: [error/error.ts:83](https://github.com/o3osatoshi/experiment/blob/6295717650ecb2542562c12c20f9540051db6a22/packages/toolkit/src/error/error.ts#L83)
+Defined in: [error/error.ts:83](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error.ts#L83)
 
 Short explanation of why the operation failed.
