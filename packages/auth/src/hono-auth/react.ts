@@ -38,7 +38,10 @@ export function useUser(): undefined | User {
   if (data?.user === undefined) return undefined;
 
   const result = userSchema.safeParse(data.user);
-  if (!result.success) return undefined;
+  if (!result.success) {
+    console.error("Invalid user data:", result.error);
+    return undefined;
+  }
 
   return result.data;
 }
