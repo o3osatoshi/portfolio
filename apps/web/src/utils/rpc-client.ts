@@ -25,7 +25,7 @@ type NextFetchOptions = {
  * - accepts optional Hono client options (headers, fetch, init)
  *
  * To forward the current request cookies, combine this with
- * {@link createHeadersOption} when issuing a request.
+ * {@link createHeaders} when issuing a request.
  */
 export function createClient(
   options?: NextFetchOptions,
@@ -40,7 +40,7 @@ export function createClient(
  * - accepts optional Hono client options (headers, fetch, init)
  *
  * To forward the current request cookies, combine this with
- * {@link createHeadersOption} when issuing a request.
+ * {@link createHeaders} when issuing a request.
  */
 export function createEdgeClient(
   options?: NextFetchOptions,
@@ -49,7 +49,7 @@ export function createEdgeClient(
   return createEdgeRpcClient(baseURL, options);
 }
 
-export function createHeadersOption(): ResultAsync<
+export function createHeaders(): ResultAsync<
   Pick<ClientOptions, "headers">,
   Error
 > {

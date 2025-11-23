@@ -1,10 +1,11 @@
 import type { InferResponseType } from "@repo/interface/rpc-client";
-import { errAsync, ResultAsync } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 
 import { getMe } from "@/services/get-me";
+import { handleResponse } from "@/services/handle-response";
 import { getPath, getTag } from "@/utils/nav-handler";
-import { createClient, createHeadersOption } from "@/utils/rpc-client";
-import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
+import { createClient, createHeaders } from "@/utils/rpc-client";
+import { newFetchError } from "@o3osatoshi/toolkit";
 
 export type Transaction = Transactions[number];
 
@@ -21,15 +22,15 @@ export function getTransactions(): ResultAsync<Transactions, Error> {
 
   return getMe()
     .andThen((me) =>
-      createHeadersOption().map((headersOption) => ({
-        headersOption,
+      createHeaders().map((headers) => ({
+        headers,
         me,
       })),
     )
-    .andThen(({ headersOption, me }) =>
+    .andThen(({ headers, me }) =>
       ResultAsync.fromPromise(
         client.api.private.labs.transactions.$get(undefined, {
-          ...headersOption,
+          ...headers,
           init: {
             next: { tags: [getTag("labs-transactions", { userId: me.id })] },
           },
@@ -37,29 +38,10 @@ export function getTransactions(): ResultAsync<Transactions, Error> {
         (cause) => newFetchError({ action: "Fetch me", cause, request }),
       ),
     )
-    .andThen((res) => {
-      if (res.status === 401) {
-        return errAsync(newFetchError({ kind: "Unauthorized", request }));
-      }
-
-      if (!res.ok) {
-        return ResultAsync.fromPromise(res.json(), (cause) =>
-          newFetchError({
-            action: "Deserialize error body for getMe",
-            cause,
-            kind: "Serialization",
-            request,
-          }),
-        ).andThen((body) => errAsync(deserializeError(body)));
-      }
-
-      return ResultAsync.fromPromise(res.json(), (cause) =>
-        newFetchError({
-          action: "Deserialize body for getMe",
-          cause,
-          kind: "Serialization",
-          request,
-        }),
-      );
-    });
+    .andThen((res) =>
+      handleResponse<Transactions>(res, {
+        context: "getTransactions",
+        request,
+      }),
+    );
 }

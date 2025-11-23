@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const h = vi.hoisted(() => {
   return {
     createClientMock: vi.fn(),
-    createHeadersOptionMock: vi.fn(),
+    createHeadersMock: vi.fn(),
     getMeMock: vi.fn(),
     getTransactionsRequestMock: vi.fn(),
   };
@@ -16,7 +16,7 @@ vi.mock("@/services/get-me", () => ({
 
 vi.mock("@/utils/rpc-client", () => ({
   createClient: h.createClientMock,
-  createHeadersOption: h.createHeadersOptionMock,
+  createHeaders: h.createHeadersMock,
 }));
 
 vi.mock("@/env/client", () => ({
@@ -66,7 +66,7 @@ describe("getTransactions", () => {
     ];
 
     h.getMeMock.mockReturnValueOnce(okAsync(me));
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({ Cookie: "sid=test" }),
       }),
@@ -104,7 +104,7 @@ describe("getTransactions", () => {
     const authError = new Error("not authenticated");
     h.getMeMock.mockReturnValueOnce(errAsync(authError));
 
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
@@ -116,14 +116,14 @@ describe("getTransactions", () => {
     if (!res.isErr()) return;
 
     expect(res.error).toBe(authError);
-    expect(h.createHeadersOptionMock).not.toHaveBeenCalled();
+    expect(h.createHeadersMock).not.toHaveBeenCalled();
     expect(h.getTransactionsRequestMock).not.toHaveBeenCalled();
   });
 
   it("returns Err Unauthorized when response status is 401", async () => {
     const me = { id: "u1" };
     h.getMeMock.mockReturnValueOnce(okAsync(me));
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
@@ -148,7 +148,7 @@ describe("getTransactions", () => {
     const body = { name: "ApplicationNotFoundError", message: "not found" };
 
     h.getMeMock.mockReturnValueOnce(okAsync(me));
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
@@ -175,7 +175,7 @@ describe("getTransactions", () => {
     const me = { id: "u1" };
 
     h.getMeMock.mockReturnValueOnce(okAsync(me));
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
@@ -196,14 +196,16 @@ describe("getTransactions", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain("Deserialize error body for getMe");
+    expect(res.error.message).toContain(
+      "Deserialize error body for getTransactions",
+    );
   });
 
   it("returns Err when response body JSON parse fails on success status", async () => {
     const me = { id: "u1" };
 
     h.getMeMock.mockReturnValueOnce(okAsync(me));
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
@@ -224,14 +226,14 @@ describe("getTransactions", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain("Deserialize body for getMe");
+    expect(res.error.message).toContain("Deserialize body for getTransactions");
   });
 
   it("returns Err when underlying request rejects (network failure)", async () => {
     const me = { id: "u1" };
 
     h.getMeMock.mockReturnValueOnce(okAsync(me));
-    h.createHeadersOptionMock.mockReturnValueOnce(
+    h.createHeadersMock.mockReturnValueOnce(
       okAsync({
         headers: () => ({}),
       }),
