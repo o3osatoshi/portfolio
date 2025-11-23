@@ -1,7 +1,7 @@
 import type { InferResponseType } from "@repo/interface/rpc-client";
 import { ResultAsync } from "neverthrow";
 
-import { handleResponse } from "@/services/handle-response";
+import { handleResponse } from "@/utils/handle-response";
 import { getPath } from "@/utils/nav-handler";
 import { createEdgeClient, createHeaders } from "@/utils/rpc-client";
 import { newFetchError } from "@o3osatoshi/toolkit";
