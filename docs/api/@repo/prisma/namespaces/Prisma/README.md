@@ -204,6 +204,7 @@
 - [BoolFieldUpdateOperationsInput](type-aliases/BoolFieldUpdateOperationsInput.md)
 - [BoolFilter](type-aliases/BoolFilter.md)
 - [BoolWithAggregatesFilter](type-aliases/BoolWithAggregatesFilter.md)
+- [Bytes](type-aliases/Bytes.md)
 - [CheckIsLogLevel](type-aliases/CheckIsLogLevel.md)
 - [ComputeRaw](type-aliases/ComputeRaw.md)
 - [Datasource](type-aliases/Datasource.md)

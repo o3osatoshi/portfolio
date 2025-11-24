@@ -8,7 +8,7 @@
 
 > **AmountInput**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/case/amount-input.tsx:15](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/case/amount-input.tsx#L15)
+Defined in: [packages/ui/src/components/case/amount-input.tsx:19](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/case/amount-input.tsx#L19)
 
 Numeric input tailored for currency-style amounts.
 
@@ -19,7 +19,7 @@ the default number input spinner for a cleaner look.
 
 ### \_\_namedParameters
 
-`Props`
+[`AmountInputProps`](../interfaces/AmountInputProps.md)
 
 ## Returns
 

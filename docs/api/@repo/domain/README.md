@@ -75,6 +75,7 @@ Everything is re‑exported from `src/index.ts`.
 ## Interfaces
 
 - [Base](interfaces/Base.md)
+- [TransactionCore](interfaces/TransactionCore.md)
 - [TransactionRepository](interfaces/TransactionRepository.md)
 
 ## Type Aliases
@@ -85,6 +86,7 @@ Everything is re‑exported from `src/index.ts`.
 - [CreateTransactionInput](type-aliases/CreateTransactionInput.md)
 - [CurrencyCode](type-aliases/CurrencyCode.md)
 - [DateTime](type-aliases/DateTime.md)
+- [DecimalString](type-aliases/DecimalString.md)
 - [Fee](type-aliases/Fee.md)
 - [NewBaseInput](type-aliases/NewBaseInput.md)
 - [NewTransactionInput](type-aliases/NewTransactionInput.md)
@@ -102,6 +104,7 @@ Everything is re‑exported from `src/index.ts`.
 - [isAmount](functions/isAmount.md)
 - [isCurrencyCode](functions/isCurrencyCode.md)
 - [isDateTime](functions/isDateTime.md)
+- [isDecimal](functions/isDecimal.md)
 - [isFee](functions/isFee.md)
 - [isPrice](functions/isPrice.md)
 - [isProfitLoss](functions/isProfitLoss.md)
@@ -112,6 +115,7 @@ Everything is re‑exported from `src/index.ts`.
 - [newBase](functions/newBase.md)
 - [newCurrencyCode](functions/newCurrencyCode.md)
 - [newDateTime](functions/newDateTime.md)
+- [newDecimal](functions/newDecimal.md)
 - [newFee](functions/newFee.md)
 - [newPrice](functions/newPrice.md)
 - [newProfitLoss](functions/newProfitLoss.md)

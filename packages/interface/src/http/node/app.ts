@@ -44,8 +44,8 @@ export type Deps = {
  * - GET `/private/labs/transactions` — Returns `Transaction[]` for the authenticated user.
  *
  * Middlewares: {@link requestIdMiddleware}, {@link loggerMiddleware}
- * Errors: normalized via {@link toHttpErrorResponse}. Zod validation failures
- * are handled by {@link respondZodError}.
+ * Errors: normalized via `toHttpErrorResponse` from `@o3osatoshi/toolkit`. Zod
+ * validation failures are handled by {@link respondZodError}.
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.

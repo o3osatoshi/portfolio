@@ -22,7 +22,6 @@
     "dev:functions": "turbo run dev --filter=@repo/functions...",
     "dev:storybook": "turbo run dev --filter=@repo/storybook...",
     "dev:web": "turbo run dev --filter=@repo/web...",
-    "docs": "typedoc",
     "pull:env": "turbo run pull:env",
     "refine": "run-s style build check api:extract",
     "release": "changeset publish",
@@ -55,7 +54,7 @@
     "npm-run-all": "catalog:",
     "sort-package-json": "^3.4.0",
     "tsx": "catalog:",
-    "turbo": "^2.5.2",
+    "turbo": "^2.5.6",
     "typedoc": "^0.28.13",
     "typedoc-plugin-markdown": "^4.9.0"
   },

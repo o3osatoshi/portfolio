@@ -8,7 +8,7 @@
 
 > **isFee**(`v`): `v is never`
 
-Defined in: [value-objects/numeric.ts:21](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/value-objects/numeric.ts#L21)
+Defined in: [value-objects/numeric.ts:21](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/value-objects/numeric.ts#L21)
 
 Type guard verifying the value is a [Fee](../type-aliases/Fee.md).
 

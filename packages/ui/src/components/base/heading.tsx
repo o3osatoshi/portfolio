@@ -29,7 +29,11 @@ const headingVariants = cva("font-bold tracking-tight", {
   },
 });
 
-type Props = React.HTMLAttributes<HTMLHeadingElement> &
+/** Props for {@link Heading}.
+ *
+ * @public
+ */
+export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> &
   VariantProps<typeof headingVariants>;
 
 /**
@@ -47,7 +51,7 @@ function Heading({
   className,
   level = "h2",
   ...props
-}: Props) {
+}: HeadingProps) {
   const classes = cn(headingVariants({ align, className, level }));
 
   switch (level) {

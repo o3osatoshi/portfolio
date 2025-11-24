@@ -109,3 +109,8 @@ Unit tests (Vitest) cover the auth config and React shims.
 - React shims for `@hono/auth-js`: `src/hono-auth/react.ts` (public at `@repo/auth/react`)
 
 The legacy NextAuth integration remains in `src/next-auth/*` for experimentation but is not part of the public exports.
+
+## Quality
+
+- Tests: `pnpm -C packages/auth test` / `pnpm -C packages/auth test:cvrg`
+- Coverage: [![Coverage: @repo/auth](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=auth)](https://app.codecov.io/github/o3osatoshi/portfolio?component=auth)

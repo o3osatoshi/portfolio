@@ -21,10 +21,18 @@ export function AlertDescription({ className, ...props }: React$1.ComponentProps
 // @public
 export function AlertTitle({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "Props$1" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function AmountInput({ disabled, placeholder, type, }: Props$1): react_jsx_runtime.JSX.Element;
+export function AmountInput({ disabled, placeholder, type, }: AmountInputProps): react_jsx_runtime.JSX.Element;
+
+// @public
+export interface AmountInputProps {
+    // (undocumented)
+    disabled?: boolean;
+    // (undocumented)
+    placeholder?: string;
+    // (undocumented)
+    type?: "number" | "text";
+}
 
 // @public
 export function Breadcrumb({ ...props }: React$1.ComponentProps<"nav">): react_jsx_runtime.JSX.Element;
@@ -84,15 +92,20 @@ export function CardTitle({ className, ...props }: React$1.ComponentProps<"div">
 // @public
 export function cn(...inputs: ClassValue[]): string;
 
-// Warning: (ae-forgotten-export) The symbol "Props" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function FormInput({ id, className, errorMessage, label, type, ...props }: Props): react_jsx_runtime.JSX.Element;
+export function FormInput({ id, className, errorMessage, label, type, ...props }: FormInputProps): react_jsx_runtime.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "Props$3" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function Heading({ align, children, className, level, ...props }: Props$3): react_jsx_runtime.JSX.Element;
+export type FormInputProps = {
+    errorMessage?: string | undefined;
+    label: string;
+} & React$1.ComponentProps<"input">;
+
+// @public
+export function Heading({ align, children, className, level, ...props }: HeadingProps): react_jsx_runtime.JSX.Element;
+
+// @public
+export type HeadingProps = React$1.HTMLAttributes<HTMLHeadingElement> & VariantProps<typeof headingVariants>;
 
 // @public
 export const headingVariants: (props?: ({
@@ -103,10 +116,16 @@ export const headingVariants: (props?: ({
 // @public
 export function Input({ className, type, ...props }: React$1.ComponentProps<"input">): react_jsx_runtime.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "Props$2" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function Message({ children, variant }: Props$2): react_jsx_runtime.JSX.Element | null;
+export function Message({ children, variant }: MessageProps): react_jsx_runtime.JSX.Element | null;
+
+// @public
+export interface MessageProps {
+    // (undocumented)
+    children: React.ReactNode | undefined;
+    // (undocumented)
+    variant?: "default" | "destructive";
+}
 
 // @public
 export function Skeleton({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;

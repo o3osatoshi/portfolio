@@ -8,6 +8,6 @@
 
 > **Layer** = `"Application"` \| `"Auth"` \| `"DB"` \| `"Domain"` \| `"External"` \| `"Infra"` \| `"UI"`
 
-Defined in: [zod-error.ts:10](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L10)
+Defined in: [error/error.ts:54](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error.ts#L54)
 
-Architectural layer used to contextualize validation errors.
+Architectural layer where the error originated.

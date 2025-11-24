@@ -8,7 +8,7 @@
 
 > **baseTestPreset**(`opts`): `UserConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:34](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/config/src/vitest/index.ts#L34)
+Defined in: [packages/config/src/vitest/index.ts:41](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/vitest/index.ts#L41)
 
 Creates the shared Vitest configuration for workspace packages with consistent reporting defaults.
 
@@ -18,7 +18,7 @@ Creates the shared Vitest configuration for workspace packages with consistent r
 
 [`Options`](../type-aliases/Options.md) = `{}`
 
-Inline overrides for coverage behaviour, plugin registration, or report locations.
+Optional InlineConfig details and plugin registrations to merge into the preset.
 
 ## Returns
 
@@ -28,12 +28,13 @@ Vitest configuration produced via `defineConfig`.
 
 ## Remarks
 
-Applies workspace defaults for coverage and reporting while allowing consumers to forward
-frequently customised [InlineConfig](https://vitest.dev/config) fields.
-- Coverage defaults to the `v8` provider and remains disabled unless `opts.coverage?.enabled` is set.
-- Core exclusions are enforced, with any additional `opts.coverage?.exclude` entries appended, and
-  reports write to `.reports/coverage` unless overridden.
-- Provide `opts.outputFile` to change the default JUnit destination (`.reports/junit.xml`).
-- Any `opts.plugins` array is passed directly to `defineConfig` for additional Vite/Vitest plugins.
-Fields beyond those listed above currently have no effect but remain type-compatible through
-[Options](../type-aliases/Options.md).
+Spreads any user-provided InlineConfig through `opts.test` before re-applying the shared defaults for
+coverage, environment, and reporting paths so the baseline remains consistent.
+- Coverage uses the `v8` provider, stays disabled by default, and emits text-summary, LCOV, and HTML
+  reports under `.reports/coverage`. Supply `opts.test?.coverage` to adjust the baseline—because the
+  preset rebuilds the coverage object, specify all desired fields when overriding.
+- The test environment defaults to `node`, and the JUnit reporter writes to `.reports/junit.xml`
+  unless `opts.test?.environment` or `opts.test?.outputFile` override those values.
+- Any Vite/Vitest `opts.plugins` values are forwarded directly to `defineConfig`.
+Additional InlineConfig fields provided via `opts.test` remain untouched unless they collide with the
+enforced defaults above.

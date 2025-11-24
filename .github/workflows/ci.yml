@@ -21,10 +21,15 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+      TURBO_SCM_HEAD: ${{ github.sha }}
+      TURBO_TELEMETRY_DISABLED: 1
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -63,7 +68,7 @@ jobs:
         run: pnpm style:pure
 
       - name: Build packages
-        run: pnpm build
+        run: pnpm turbo run build --affected
         env:
           AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
           AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
@@ -73,7 +78,7 @@ jobs:
           NEXT_PUBLIC_RAINBOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_RAINBOW_PROJECT_ID }}
 
       - name: Run typecheck
-        run: pnpm check:type
+        run: pnpm turbo run typecheck --affected
 
       - name: Setup testcontainers cloud client
         uses: atomicjar/testcontainers-cloud-setup-action@v1
@@ -81,7 +86,7 @@ jobs:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Run test
-        run: pnpm check:test:cvrg -- --reporter=junit
+        run: pnpm turbo run test:cvrg --affected -- --reporter=junit
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5
@@ -98,8 +103,89 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload test coverage
+        if: ${{ hashFiles('**/.reports/coverage/lcov.info') != '' }}
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
           files: "**/.reports/coverage/lcov.info"
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (domain)
+        if: ${{ hashFiles('packages/domain/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/domain/.reports/coverage/lcov.info"
+          flags: domain
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (application)
+        if: ${{ hashFiles('packages/application/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/application/.reports/coverage/lcov.info"
+          flags: application
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (interface)
+        if: ${{ hashFiles('packages/interface/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/interface/.reports/coverage/lcov.info"
+          flags: interface
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (prisma)
+        if: ${{ hashFiles('packages/prisma/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/prisma/.reports/coverage/lcov.info"
+          flags: prisma
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (auth)
+        if: ${{ hashFiles('packages/auth/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/auth/.reports/coverage/lcov.info"
+          flags: auth
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (toolkit)
+        if: ${{ hashFiles('packages/toolkit/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/toolkit/.reports/coverage/lcov.info"
+          flags: toolkit
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (ui)
+        if: ${{ hashFiles('packages/ui/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/ui/.reports/coverage/lcov.info"
+          flags: ui
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (eth)
+        if: ${{ hashFiles('packages/eth/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/eth/.reports/coverage/lcov.info"
+          flags: eth
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (web)
+        if: ${{ hashFiles('apps/web/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "apps/web/.reports/coverage/lcov.info"
+          flags: web
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test coverage (storybook)
+        if: ${{ hashFiles('apps/storybook/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "apps/storybook/.reports/coverage/lcov.info"
+          flags: storybook
           token: ${{ secrets.CODECOV_TOKEN }}

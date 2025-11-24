@@ -15,6 +15,9 @@
 
 # o3osatoshi portfolio
 
+[![CI](https://github.com/o3osatoshi/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/o3osatoshi/portfolio/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg)](https://app.codecov.io/github/o3osatoshi/portfolio)
+
 Personal portfolio and experimentation platform for **Satoshi Ogura**. The codebase demonstrates clean architecture layering, modular React UI, and modern tooling across web, serverless, and blockchain integrations.
 
 - 🌐 **Live site**: [https://o3osatoshi.engr.work](https://o3osatoshi.engr.work)
@@ -79,7 +82,7 @@ pnpm install
 - `pnpm style` – Package sort → ESLint (fix) → Biome (write).
 - `pnpm clean` – Remove build artifacts across packages.
 - `pnpm pull:env` – Run `pull:env` scripts only in packages/apps that define them (updates local `.env*` files).
-- `pnpm docs` – Generate API docs via TypeDoc.
+- Docs: To update API docs, run `npx typedoc`.
 - `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
 - `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.
 
@@ -88,7 +91,7 @@ pnpm install
 - Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
 - Firebase functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
-- Domain/Application/Toolkit/Config: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
+- Domain/Application/Toolkit: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
 
 ## Database workflow (Prisma)
 - Development migrate: `pnpm -C packages/prisma migrate:dev`
@@ -109,11 +112,14 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 - Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
 - Run every declared `generate` script: `pnpm -r run generate`
 
-## Testing
+## Testing & Quality
+
 - Primary framework: **Vitest** with colocated `*.spec.ts(x)` files.
-- Workspace: `pnpm check:test` orchestrates all package `test` scripts via Turbo.
-- Per package: `pnpm -C packages/domain test`, `pnpm -C packages/ui test`, etc.
-- Coverage: `pnpm -C <package> test:cvrg`
+- CI (`.github/workflows/ci.yml`) runs `pnpm check:test:cvrg` on each push/PR and uploads JUnit + coverage reports to Codecov (see CI/Coverage badges at the top of this README).
+- Coverage is tracked with Codecov, including per-package components and flags; see `docs/quality/README.md` for detailed tables and SVG graphs.
+- Quick commands:
+  - Workspace tests: `pnpm check:test` / `pnpm check:test:cvrg`
+  - Package tests: `pnpm -C packages/<name> test` / `pnpm -C packages/<name> test:cvrg`
 
 ## Technology stack
 - **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.

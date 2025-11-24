@@ -563,7 +563,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderFields
 
-`OrderFields` *extends* `"createdAt"` \| `"updatedAt"` \| `"id"` \| `"amount"` \| `"currency"` \| `"datetime"` \| `"fee"` \| `"feeCurrency"` \| `"price"` \| `"profitLoss"` \| `"type"` \| `"userId"`
+`OrderFields` *extends* `"type"` \| `"id"` \| `"createdAt"` \| `"updatedAt"` \| `"amount"` \| `"currency"` \| `"datetime"` \| `"fee"` \| `"feeCurrency"` \| `"price"` \| `"profitLoss"` \| `"userId"`
 
 ##### ByFields
 

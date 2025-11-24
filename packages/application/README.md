@@ -32,7 +32,11 @@ import { someUseCase } from "@repo/application"; // exported via src/index.ts
 - `pnpm -C packages/application typecheck` — Typecheck only (no build)
 - `pnpm -C packages/application test` — Run unit tests
 
+## Quality
+
+- Tests: `pnpm -C packages/application test` / `pnpm -C packages/application test:cvrg`
+- Coverage: [![Coverage: @repo/application](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=application)](https://app.codecov.io/github/o3osatoshi/portfolio?component=application)
+
 ## Notes
 - Source‑first: this package does not ship a dist build. Apps transpile TypeScript from this package directly (via Next's `transpilePackages`).
 - Errors: application‑level errors are shaped via `newApplicationError` wrapping the shared toolkit.
-

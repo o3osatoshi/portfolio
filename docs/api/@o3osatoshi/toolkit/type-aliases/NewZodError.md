@@ -8,7 +8,7 @@
 
 > **NewZodError** = `object`
 
-Defined in: [zod-error.ts:25](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L25)
+Defined in: [zod/zod-error.ts:11](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L11)
 
 Options accepted by [newZodError](../functions/newZodError.md) when normalizing validation issues.
 Designed to mirror [NewError](NewError.md) while providing Zod-specific hooks.
@@ -19,7 +19,7 @@ Designed to mirror [NewError](NewError.md) while providing Zod-specific hooks.
 
 > `optional` **action**: `string`
 
-Defined in: [zod-error.ts:27](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L27)
+Defined in: [zod/zod-error.ts:13](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L13)
 
 Logical operation being validated when the failure occurred.
 
@@ -29,7 +29,7 @@ Logical operation being validated when the failure occurred.
 
 > `optional` **cause**: `unknown`
 
-Defined in: [zod-error.ts:32](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L32)
+Defined in: [zod/zod-error.ts:18](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L18)
 
 Original throwable (ideally a `ZodError`) used to derive issues.
 Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
@@ -40,7 +40,7 @@ Defaults to `undefined` when a raw issue list is supplied via the `issues` optio
 
 > `optional` **hint**: `string`
 
-Defined in: [zod-error.ts:34](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L34)
+Defined in: [zod/zod-error.ts:20](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L20)
 
 Suggested remediation; falls back to an inferred hint when omitted.
 
@@ -50,7 +50,7 @@ Suggested remediation; falls back to an inferred hint when omitted.
 
 > `optional` **impact**: `string`
 
-Defined in: [zod-error.ts:36](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L36)
+Defined in: [zod/zod-error.ts:22](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L22)
 
 Description of the effect of the validation failure.
 
@@ -60,7 +60,7 @@ Description of the effect of the validation failure.
 
 > `optional` **issues**: `ZodIssue`[]
 
-Defined in: [zod-error.ts:38](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L38)
+Defined in: [zod/zod-error.ts:24](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L24)
 
 Explicit Zod issues list; inferred from the `cause` when absent.
 
@@ -70,6 +70,6 @@ Explicit Zod issues list; inferred from the `cause` when absent.
 
 > `optional` **layer**: [`Layer`](Layer.md)
 
-Defined in: [zod-error.ts:40](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L40)
+Defined in: [zod/zod-error.ts:26](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L26)
 
 Architectural layer responsible for validation (default `"Application"`).

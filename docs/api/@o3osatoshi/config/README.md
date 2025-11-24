@@ -214,3 +214,4 @@ Entry point for the shared configuration package. Currently exposes tsup presets
 - [browserTestPreset](functions/browserTestPreset.md)
 - [functionsBundlePreset](functions/functionsBundlePreset.md)
 - [publicDualBundlePreset](functions/publicDualBundlePreset.md)
+- [storybookTestPreset](functions/storybookTestPreset.md)

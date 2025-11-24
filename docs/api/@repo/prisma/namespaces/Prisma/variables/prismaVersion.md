@@ -10,5 +10,5 @@
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:93
 
-Prisma Client JS version: 6.16.2
-Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
+Prisma Client JS version: 6.18.0
+Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f

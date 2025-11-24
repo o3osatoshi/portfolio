@@ -8,7 +8,7 @@
 
 > **Sidebar**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:51](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L51)
+Defined in: [packages/ui/src/components/sidebar.tsx:55](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L55)
 
 Responsive navigation container that collapses into a sheet on mobile.
 

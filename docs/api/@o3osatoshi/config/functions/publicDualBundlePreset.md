@@ -8,7 +8,7 @@
 
 > **publicDualBundlePreset**(`opts`): `Promise`\<`Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>\>
 
-Defined in: [packages/config/src/tsup/index.ts:98](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/config/src/tsup/index.ts#L98)
+Defined in: [packages/config/src/tsup/index.ts:98](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/tsup/index.ts#L98)
 
 Creates a tsup configuration preset for public libraries that need dual ESM/CJS outputs.
 

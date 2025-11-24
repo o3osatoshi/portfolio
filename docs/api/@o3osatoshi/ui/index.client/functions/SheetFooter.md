@@ -8,7 +8,7 @@
 
 > **SheetFooter**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sheet.tsx:91](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sheet.tsx#L91)
+Defined in: [packages/ui/src/components/sheet.tsx:91](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sheet.tsx#L91)
 
 Sticky footer area for actions placed at the bottom of the sheet.
 

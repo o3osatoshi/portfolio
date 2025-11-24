@@ -53,6 +53,11 @@ const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! 
 - Unit tests: `pnpm -C packages/prisma test:run` (excludes `**/*.int.spec.ts` by default)
 - Integration tests: `pnpm -C packages/prisma test:run:int` (uses Testcontainers to run a DB)
 
+## Quality
+
+- Tests: `pnpm -C packages/prisma test` / `pnpm -C packages/prisma test:cvrg`
+- Coverage: [![Coverage: @repo/prisma](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=prisma)](https://app.codecov.io/github/o3osatoshi/portfolio?component=prisma)
+
 ## Troubleshooting
 - “Prisma Client not found”
   - Run `pnpm -C packages/prisma generate` and rebuild the app.
