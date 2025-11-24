@@ -20,10 +20,15 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      TURBO_SCM_BASE: ${{ github.event.before }}
+      TURBO_SCM_HEAD: ${{ github.sha }}
+      TURBO_TELEMETRY_DISABLED: 1
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -41,7 +46,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm build
+        run: pnpm turbo run build --affected
         env:
           AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
           AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
