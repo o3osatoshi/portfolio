@@ -19,7 +19,7 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
 /**
  * Dependencies required by {@link buildEdgeApp}.
  *
- * - {@link AuthConfig} can be created via `createAuthConfig` from `@repo/auth`.
+ * - `AuthConfig` can be created via `createAuthConfig` from `@repo/auth`.
  */
 export type EdgeDeps =
   | { authConfig: AuthConfig; createAuthConfig?: (c: Context) => AuthConfig }

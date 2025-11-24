@@ -8,7 +8,7 @@
 
 > **Message**(`__namedParameters`): `null` \| `Element`
 
-Defined in: [packages/ui/src/components/base/message.tsx:15](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/base/message.tsx#L15)
+Defined in: [packages/ui/src/components/base/message.tsx:19](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/base/message.tsx#L19)
 
 Helper that lifts alert styling into forms by rendering an inline [Alert](Alert.md).
 
@@ -16,7 +16,7 @@ Helper that lifts alert styling into forms by rendering an inline [Alert](Alert.
 
 ### \_\_namedParameters
 
-`Props`
+[`MessageProps`](../interfaces/MessageProps.md)
 
 ## Returns
 

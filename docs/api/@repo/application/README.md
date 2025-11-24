@@ -61,10 +61,14 @@ import { someUseCase } from "@repo/application"; // exported via src/index.ts
 
 ## Variables
 
+- [createTransactionRequestSchema](variables/createTransactionRequestSchema.md)
+- [deleteTransactionRequestSchema](variables/deleteTransactionRequestSchema.md)
+- [getTransactionsRequestSchema](variables/getTransactionsRequestSchema.md)
 - [parseCreateTransactionRequest](variables/parseCreateTransactionRequest.md)
 - [parseDeleteTransactionRequest](variables/parseDeleteTransactionRequest.md)
 - [parseGetTransactionsRequest](variables/parseGetTransactionsRequest.md)
 - [parseUpdateTransactionRequest](variables/parseUpdateTransactionRequest.md)
+- [updateTransactionRequestSchema](variables/updateTransactionRequestSchema.md)
 
 ## Functions
 

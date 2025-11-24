@@ -8,4 +8,4 @@
 
 > **JsonArray** = `runtime.JsonArray`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:103
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:104

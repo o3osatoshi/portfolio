@@ -8,7 +8,7 @@
 
 > **parseAsyncWith**\<`T`\>(`schema`, `ctx`): (`input`) => `ResultAsync`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod-parse.ts:21](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-parse.ts#L21)
+Defined in: [zod/zod-parse.ts:25](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-parse.ts#L25)
 
 Creates an async Result-returning parser from a Zod schema.
 
@@ -63,6 +63,6 @@ A function that yields a neverthrow `ResultAsync` containing the inferred schema
 
 ```ts
 const parseToken = parseAsyncWith(tokenSchema, { action: "ParseToken", layer: "Auth" });
-const res = await parseToken({ token: "ok" }); // `ResultAsync<Token, Error\>`
-@public
+const res = await parseToken(someInput);
+// ResultAsync of parsed type
 ```

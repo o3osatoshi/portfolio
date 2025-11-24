@@ -8,4 +8,4 @@
 
 > **InputJsonValue** = `runtime.InputJsonValue`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:107
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:108

@@ -8,7 +8,7 @@
 
 > **FormInput**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/case/form-input.tsx:20](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/case/form-input.tsx#L20)
+Defined in: [packages/ui/src/components/case/form-input.tsx:24](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/case/form-input.tsx#L24)
 
 Input field paired with a label and optional validation message.
 
@@ -19,7 +19,7 @@ and error feedback are vertically stacked.
 
 ### \_\_namedParameters
 
-`Props`
+[`FormInputProps`](../type-aliases/FormInputProps.md)
 
 ## Returns
 

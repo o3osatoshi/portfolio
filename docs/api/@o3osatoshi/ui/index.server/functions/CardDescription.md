@@ -8,7 +8,7 @@
 
 > **CardDescription**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/card.tsx:58](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/card.tsx#L58)
+Defined in: [packages/ui/src/components/card.tsx:58](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/card.tsx#L58)
 
 Muted supporting text rendered below the title.
 

@@ -27,7 +27,7 @@ const NonNegativeDecimalSchema = DecimalStringSchema.refine(
 /**
  * Schema describing the payload required to create a transaction from the API.
  */
-const createTransactionRequestSchema = z.object({
+export const createTransactionRequestSchema = z.object({
   amount: PositiveDecimalSchema,
   currency: z.string().regex(/^[A-Z]{3}$/, "Must be a 3-letter currency code"),
   datetime: z.coerce.date(),
@@ -45,7 +45,7 @@ const createTransactionRequestSchema = z.object({
 /**
  * Schema describing partial updates allowed on an existing transaction.
  */
-const updateTransactionRequestSchema = z.object({
+export const updateTransactionRequestSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   amount: PositiveDecimalSchema.optional(),
   currency: z
@@ -73,7 +73,7 @@ export const getTransactionsRequestSchema = z.object({
 /**
  * Schema describing the payload to delete a transaction owned by a user.
  */
-const deleteTransactionRequestSchema = z.object({
+export const deleteTransactionRequestSchema = z.object({
   id: z.string().min(1, "Transaction ID is required"),
   userId: z.string().min(1, "UserId is required"),
 });
@@ -105,7 +105,7 @@ export type UpdateTransactionRequest = z.infer<
 
 /**
  * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
- * Wraps {@link parseWith} to return a `Result` with typed error metadata.
+ * Wraps `parseWith` to return a `Result` with typed error metadata.
  */
 export const parseCreateTransactionRequest = parseWith(
   createTransactionRequestSchema,

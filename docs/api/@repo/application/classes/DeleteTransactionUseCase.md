@@ -6,7 +6,7 @@
 
 # Class: DeleteTransactionUseCase
 
-Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:10](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/use-cases/user/delete-transaction.ts#L10)
+Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:10](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/application/src/use-cases/user/delete-transaction.ts#L10)
 
 Use case encapsulating the deletion of a transaction for a given user.
 
@@ -16,7 +16,7 @@ Use case encapsulating the deletion of a transaction for a given user.
 
 > **new DeleteTransactionUseCase**(`repo`): `DeleteTransactionUseCase`
 
-Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:11](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/use-cases/user/delete-transaction.ts#L11)
+Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:11](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/application/src/use-cases/user/delete-transaction.ts#L11)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:11](h
 
 > **execute**(`req`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:19](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/application/src/use-cases/user/delete-transaction.ts#L19)
+Defined in: [packages/application/src/use-cases/user/delete-transaction.ts:19](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/application/src/use-cases/user/delete-transaction.ts#L19)
 
 Validate identifiers and delegate deletion to the persistence layer.
 

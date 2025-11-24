@@ -8,7 +8,7 @@
 
 > **SidebarProvider**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:357](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/sidebar.tsx#L357)
+Defined in: [packages/ui/src/components/sidebar.tsx:361](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L361)
 
 Context provider that manages open/collapsed state and keyboard shortcuts.
 

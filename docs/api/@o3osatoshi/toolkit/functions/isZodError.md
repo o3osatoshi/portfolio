@@ -8,7 +8,7 @@
 
 > **isZodError**(`e`): `e is ZodError<unknown>`
 
-Defined in: [zod-error.ts:48](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L48)
+Defined in: [zod/zod-error.ts:34](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L34)
 
 Determines whether a value came from Zod validation.
 

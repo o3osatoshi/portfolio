@@ -28,7 +28,11 @@ const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
-type SidebarContextProps = {
+/** Props returned from {@link useSidebar} and shared through the sidebar context.
+ *
+ * @public
+ */
+export type SidebarContextProps = {
   isMobile: boolean;
   open: boolean;
   openMobile: boolean;

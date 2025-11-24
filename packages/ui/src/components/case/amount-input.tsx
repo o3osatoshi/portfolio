@@ -1,4 +1,8 @@
-interface Props {
+/** Props for {@link AmountInput}.
+ *
+ * @public
+ */
+export interface AmountInputProps {
   disabled?: boolean;
   placeholder?: string;
   type?: "number" | "text";
@@ -16,7 +20,7 @@ export function AmountInput({
   disabled = false,
   placeholder = "0.00",
   type = "number",
-}: Props) {
+}: AmountInputProps) {
   return (
     <input
       className="hide-number-input-spinner w-full focus:outline-none"

@@ -4,8 +4,10 @@
   "entryPointStrategy": "packages",
   "entryPoints": [
     "packages/application",
+    "packages/auth",
     "packages/config",
     "packages/domain",
+    "packages/interface",
     "packages/prisma",
     "packages/toolkit",
     "packages/ui"

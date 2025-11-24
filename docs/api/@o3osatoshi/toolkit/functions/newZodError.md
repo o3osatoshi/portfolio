@@ -8,7 +8,7 @@
 
 > **newZodError**(`options`): `Error`
 
-Defined in: [zod-error.ts:65](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/toolkit/src/zod-error.ts#L65)
+Defined in: [zod/zod-error.ts:51](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-error.ts#L51)
 
 Wraps a Zod validation error and returns a structured toolkit error.
 

@@ -8,6 +8,6 @@
 
 > **TransactionType** = [`Brand`](Brand.md)\<`"BUY"` \| `"SELL"`, `"TransactionType"`\>
 
-Defined in: [value-objects/transaction-type.ts:9](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/domain/src/value-objects/transaction-type.ts#L9)
+Defined in: [value-objects/transaction-type.ts:9](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/value-objects/transaction-type.ts#L9)
 
 Enumeration of trade directions represented as a branded string.

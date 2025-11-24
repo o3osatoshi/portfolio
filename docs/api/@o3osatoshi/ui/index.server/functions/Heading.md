@@ -8,7 +8,7 @@
 
 > **Heading**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/base/heading.tsx:44](https://github.com/o3osatoshi/experiment/blob/67ff251451cab829206391b718d971ec20ce4dfb/packages/ui/src/components/base/heading.tsx#L44)
+Defined in: [packages/ui/src/components/base/heading.tsx:48](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/base/heading.tsx#L48)
 
 Typography helper that renders semantic heading levels with gradient sizing.
 
@@ -20,7 +20,7 @@ requiring additional wrappers.
 
 ### \_\_namedParameters
 
-`Props`
+[`HeadingProps`](../type-aliases/HeadingProps.md)
 
 ## Returns
 

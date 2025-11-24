@@ -563,7 +563,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderFields
 
-`OrderFields` *extends* `"createdAt"` \| `"updatedAt"` \| `"id"` \| `"name"` \| `"email"` \| `"emailVerified"` \| `"image"`
+`OrderFields` *extends* `"id"` \| `"name"` \| `"createdAt"` \| `"updatedAt"` \| `"email"` \| `"emailVerified"` \| `"image"`
 
 ##### ByFields
 

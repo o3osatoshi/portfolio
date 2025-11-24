@@ -58,8 +58,7 @@ describe("hono-auth/createAuthConfig", () => {
     });
 
     expect(h.PrismaAdapterMock).toHaveBeenCalledWith(h.prisma);
-    // The adapter instance is attached to config
-    expect(cfg.adapter).toEqual({ client: h.prisma, tag: "adapter" });
+    expect(cfg["adapter"]).toEqual({ client: h.prisma, tag: "adapter" });
   });
 
   it("overrides basePath and session.strategy when provided", () => {
