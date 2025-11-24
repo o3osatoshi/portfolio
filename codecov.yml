@@ -1,0 +1,121 @@
+comment:
+  layout: "header, diff, flags, components"
+  behavior: default
+  require_changes: false
+  require_base: yes
+  require_head: yes
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+      - type: patch
+        target: auto
+        threshold: 1%
+
+flags:
+  application:
+    paths:
+      - packages/application/**
+    carryforward: true
+  auth:
+    paths:
+      - packages/auth/**
+    carryforward: true
+  config:
+    paths:
+      - packages/config/**
+    carryforward: true
+  domain:
+    paths:
+      - packages/domain/**
+    carryforward: true
+  interface:
+    paths:
+      - packages/interface/**
+    carryforward: true
+  prisma:
+    paths:
+      - packages/prisma/**
+    carryforward: true
+  toolkit:
+    paths:
+      - packages/toolkit/**
+    carryforward: true
+  ui:
+    paths:
+      - packages/ui/**
+    carryforward: true
+  eth:
+    paths:
+      - packages/eth/**
+    carryforward: true
+  web:
+    paths:
+      - apps/web/**
+    carryforward: true
+  storybook:
+    paths:
+      - apps/storybook/**
+    carryforward: true
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+  individual_components:
+    - component_id: application
+      name: "@repo/application"
+      paths:
+        - "packages/application/**"
+    - component_id: auth
+      name: "@repo/auth"
+      paths:
+        - "packages/auth/**"
+    - component_id: config
+      name: "@o3osatoshi/config"
+      paths:
+        - "packages/config/**"
+    - component_id: domain
+      name: "@repo/domain"
+      paths:
+        - "packages/domain/**"
+    - component_id: interface
+      name: "@repo/interface"
+      paths:
+        - "packages/interface/**"
+    - component_id: prisma
+      name: "@repo/prisma"
+      paths:
+        - "packages/prisma/**"
+    - component_id: toolkit
+      name: "@o3osatoshi/toolkit"
+      paths:
+        - "packages/toolkit/**"
+    - component_id: ui
+      name: "@o3osatoshi/ui"
+      paths:
+        - "packages/ui/**"
+    - component_id: eth
+      name: "@repo/eth"
+      paths:
+        - "packages/eth/**"
+    - component_id: web
+      name: "apps/web"
+      paths:
+        - "apps/web/**"
+    - component_id: storybook
+      name: "apps/storybook"
+      paths:
+        - "apps/storybook/**"
+

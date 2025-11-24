@@ -13,6 +13,8 @@
 /_/                                         
 ```
 
+[![codecov](https://codecov.io/gh/o3osatoshi/portfolio/graph/badge.svg?token=81A7LOPL47)](https://codecov.io/gh/o3osatoshi/portfolio)
+
 # o3osatoshi portfolio
 
 Personal portfolio and experimentation platform for **Satoshi Ogura**. The codebase demonstrates clean architecture layering, modular React UI, and modern tooling across web, serverless, and blockchain integrations.
@@ -114,6 +116,8 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 - Workspace: `pnpm check:test` orchestrates all package `test` scripts via Turbo.
 - Per package: `pnpm -C packages/domain test`, `pnpm -C packages/ui test`, etc.
 - Coverage: `pnpm -C <package> test:cvrg`
+
+For per-package coverage badges and links to Codecov components/flags, see `docs/quality/README.md`.
 
 ## Technology stack
 - **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.

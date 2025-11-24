@@ -97,9 +97,110 @@ jobs:
           files: "**/.reports/junit.xml"
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Upload test coverage
+      - name: Upload test coverage (aggregate)
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
           files: "**/.reports/coverage/lcov.info"
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name:
+          Upload coverage for @repo/domain (flag: domain)
+        if: ${{ hashFiles('packages/domain/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/domain/.reports/coverage/lcov.info"
+          flags: domain
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @repo/application (flag: application)
+        if: ${{ hashFiles('packages/application/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/application/.reports/coverage/lcov.info"
+          flags: application
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @repo/interface (flag: interface)
+        if: ${{ hashFiles('packages/interface/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/interface/.reports/coverage/lcov.info"
+          flags: interface
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @repo/prisma (flag: prisma)
+        if: ${{ hashFiles('packages/prisma/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/prisma/.reports/coverage/lcov.info"
+          flags: prisma
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @repo/auth (flag: auth)
+        if: ${{ hashFiles('packages/auth/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/auth/.reports/coverage/lcov.info"
+          flags: auth
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @o3osatoshi/toolkit (flag: toolkit)
+        if: ${{ hashFiles('packages/toolkit/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/toolkit/.reports/coverage/lcov.info"
+          flags: toolkit
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @o3osatoshi/ui (flag: ui)
+        if: ${{ hashFiles('packages/ui/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/ui/.reports/coverage/lcov.info"
+          flags: ui
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for @repo/eth (flag: eth)
+        if: ${{ hashFiles('packages/eth/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "packages/eth/.reports/coverage/lcov.info"
+          flags: eth
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for apps/web (flag: web)
+        if: ${{ hashFiles('apps/web/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "apps/web/.reports/coverage/lcov.info"
+          flags: web
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name:
+          Upload coverage for apps/storybook (flag: storybook)
+        if: ${{ hashFiles('apps/storybook/.reports/coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: "apps/storybook/.reports/coverage/lcov.info"
+          flags: storybook
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+    uses:
