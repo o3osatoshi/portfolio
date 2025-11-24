@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           affected=false
-          for pkg in packages/config packages/toolkit packages/ui; do
+          for pkg in @o3osatoshi/config @o3osatoshi/toolkit @o3osatoshi/ui; do
             if ! npx turbo-ignore "$pkg" --task=api:extract; then
               affected=true
               break
