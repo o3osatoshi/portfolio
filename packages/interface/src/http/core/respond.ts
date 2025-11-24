@@ -27,8 +27,9 @@ export function respond<T>(c: Context) {
  * Railway-style responder: map a `ResultAsync` into a JSON HTTP response.
  *
  * - Success → returns a 200 JSON response with the value.
- * - Failure → converts the error via {@link toHttpErrorResponse} and returns
- *   a normalized JSON error with an appropriate status code.
+ * - Failure → converts the error via `toHttpErrorResponse` (from
+ *   `@o3osatoshi/toolkit`) and returns a normalized JSON error with an
+ *   appropriate status code.
  *
  * @returns A function that accepts a `ResultAsync<T, Error>` and yields a
  * `Promise<Response>` suitable for Hono route handlers.

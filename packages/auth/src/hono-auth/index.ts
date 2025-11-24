@@ -18,6 +18,18 @@ export type CreateAuthConfigOptions = {
   session?: { strategy?: "database" | "jwt" };
 };
 
+/**
+ * Compose an Auth.js configuration object for the Hono middleware.
+ *
+ * This helper wires up the Prisma adapter (when provided), configures the
+ * Google OAuth provider, and installs opinionated JWT / session callbacks
+ * that persist a stable `user.id` onto the token.
+ *
+ * @param options High-level options for auth setup (providers, secret, etc.).
+ * @returns Auth configuration object compatible with `@hono/auth-js`.
+ *
+ * @public
+ */
 export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
   return {
     ...(options.prismaClient && {
