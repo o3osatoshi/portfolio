@@ -20,6 +20,8 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      TURBO_SCM_BASE: ${{ github.event.before }}
+      TURBO_SCM_HEAD: ${{ github.sha }}
 
     steps:
       - name: Checkout repository
