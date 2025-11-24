@@ -15,8 +15,30 @@ permissions:
   id-token: write
 
 jobs:
+  detect-affected:
+    runs-on: ubuntu-latest
+    outputs:
+      storybook: ${{ steps.storybook.outputs.affected }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect affected storybook
+        id: storybook
+        run: |
+          if npx turbo-ignore apps/storybook --task=build; then
+            echo "affected=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "affected=true" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
     runs-on: ubuntu-latest
+    needs: detect-affected
+    if: needs.detect-affected.outputs.storybook == 'true'
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -41,6 +63,6 @@ jobs:
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
         with:
           install_command: pnpm install --frozen-lockfile
-          build_command: pnpm run build:storybook
+          build_command: pnpm turbo run build --filter=@repo/storybook... --affected
           path: apps/storybook/storybook-static
           checkout: false

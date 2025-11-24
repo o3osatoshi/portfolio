@@ -4,8 +4,34 @@ on:
   pull_request:
 
 jobs:
+  detect-affected:
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.api.outputs.affected }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect affected API packages
+        id: api
+        run: |
+          set -euo pipefail
+          affected=false
+          for pkg in packages/config packages/toolkit packages/ui; do
+            if ! npx turbo-ignore "$pkg" --task=api:extract; then
+              affected=true
+              break
+            fi
+          done
+          echo "affected=${affected}" >> "$GITHUB_OUTPUT"
+
   report:
     runs-on: ubuntu-latest
+    needs: detect-affected
+    if: needs.detect-affected.outputs.api == 'true'
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -13,6 +39,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -30,7 +58,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: API extract
-        run: pnpm api:extract
+        run: pnpm turbo run api:extract --filter=@o3osatoshi/* --affected
 
       - name: API report
-        run: pnpm api:report
+        run: pnpm turbo run api:report --filter=@o3osatoshi/* --affected

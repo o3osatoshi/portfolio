@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -63,7 +65,7 @@ jobs:
         run: pnpm style:pure
 
       - name: Build packages
-        run: pnpm build
+        run: pnpm turbo run build --affected
         env:
           AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
           AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
@@ -73,7 +75,7 @@ jobs:
           NEXT_PUBLIC_RAINBOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_RAINBOW_PROJECT_ID }}
 
       - name: Run typecheck
-        run: pnpm check:type
+        run: pnpm turbo run typecheck --affected
 
       - name: Setup testcontainers cloud client
         uses: atomicjar/testcontainers-cloud-setup-action@v1
@@ -81,7 +83,7 @@ jobs:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Run test
-        run: pnpm check:test:cvrg -- --reporter=junit
+        run: pnpm turbo run test:cvrg --affected -- --reporter=junit
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5

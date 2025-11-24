@@ -13,8 +13,30 @@ permissions:
   id-token: write
 
 jobs:
+  detect-affected:
+    runs-on: ubuntu-latest
+    outputs:
+      functions: ${{ steps.functions.outputs.affected }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect affected functions
+        id: functions
+        run: |
+          if npx turbo-ignore apps/functions --task=build; then
+            echo "affected=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "affected=true" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
     runs-on: ubuntu-latest
+    needs: detect-affected
+    if: needs.detect-affected.outputs.functions == 'true'
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -39,7 +61,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build functions
-        run: pnpm build:functions
+        run: pnpm turbo run build --filter=@repo/functions... --affected
 
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2
