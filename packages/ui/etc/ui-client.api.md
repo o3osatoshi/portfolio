@@ -158,7 +158,7 @@ export function Sidebar({ side, children, className, collapsible, variant, ...pr
 // @public
 export function SidebarContent({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
-// @public (undocumented)
+// @public
 export type SidebarContextProps = {
     isMobile: boolean;
     open: boolean;

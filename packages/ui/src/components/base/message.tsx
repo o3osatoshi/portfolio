@@ -2,6 +2,10 @@ import { AlertCircle } from "lucide-react";
 
 import { Alert, AlertTitle } from "@/components/index.server";
 
+/** Props for {@link Message}.
+ *
+ * @public
+ */
 export interface MessageProps {
   children: React.ReactNode | undefined;
   variant?: "default" | "destructive";

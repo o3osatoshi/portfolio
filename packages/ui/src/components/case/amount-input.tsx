@@ -1,3 +1,7 @@
+/** Props for {@link AmountInput}.
+ *
+ * @public
+ */
 export interface AmountInputProps {
   disabled?: boolean;
   placeholder?: string;

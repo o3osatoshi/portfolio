@@ -4,6 +4,10 @@ import { Label } from "@/components/index.client";
 import { Input, Message } from "@/components/index.server";
 import { cn } from "@/lib/utils";
 
+/** Props for {@link FormInput}.
+ *
+ * @public
+ */
 export type FormInputProps = {
   errorMessage?: string | undefined;
   label: string;

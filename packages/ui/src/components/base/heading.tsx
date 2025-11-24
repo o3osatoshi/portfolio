@@ -29,6 +29,10 @@ const headingVariants = cva("font-bold tracking-tight", {
   },
 });
 
+/** Props for {@link Heading}.
+ *
+ * @public
+ */
 export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> &
   VariantProps<typeof headingVariants>;
 

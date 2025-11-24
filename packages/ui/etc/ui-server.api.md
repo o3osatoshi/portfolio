@@ -24,7 +24,7 @@ export function AlertTitle({ className, ...props }: React$1.ComponentProps<"div"
 // @public
 export function AmountInput({ disabled, placeholder, type, }: AmountInputProps): react_jsx_runtime.JSX.Element;
 
-// @public (undocumented)
+// @public
 export interface AmountInputProps {
     // (undocumented)
     disabled?: boolean;
@@ -95,7 +95,7 @@ export function cn(...inputs: ClassValue[]): string;
 // @public
 export function FormInput({ id, className, errorMessage, label, type, ...props }: FormInputProps): react_jsx_runtime.JSX.Element;
 
-// @public (undocumented)
+// @public
 export type FormInputProps = {
     errorMessage?: string | undefined;
     label: string;
@@ -104,7 +104,7 @@ export type FormInputProps = {
 // @public
 export function Heading({ align, children, className, level, ...props }: HeadingProps): react_jsx_runtime.JSX.Element;
 
-// @public (undocumented)
+// @public
 export type HeadingProps = React$1.HTMLAttributes<HTMLHeadingElement> & VariantProps<typeof headingVariants>;
 
 // @public
@@ -119,7 +119,7 @@ export function Input({ className, type, ...props }: React$1.ComponentProps<"inp
 // @public
 export function Message({ children, variant }: MessageProps): react_jsx_runtime.JSX.Element | null;
 
-// @public (undocumented)
+// @public
 export interface MessageProps {
     // (undocumented)
     children: React.ReactNode | undefined;
