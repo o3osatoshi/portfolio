@@ -13,9 +13,10 @@
 /_/                                         
 ```
 
-[![codecov](https://codecov.io/gh/o3osatoshi/portfolio/graph/badge.svg?token=81A7LOPL47)](https://codecov.io/gh/o3osatoshi/portfolio)
-
 # o3osatoshi portfolio
+
+[![CI](https://github.com/o3osatoshi/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/o3osatoshi/portfolio/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg)](https://app.codecov.io/github/o3osatoshi/portfolio)
 
 Personal portfolio and experimentation platform for **Satoshi Ogura**. The codebase demonstrates clean architecture layering, modular React UI, and modern tooling across web, serverless, and blockchain integrations.
 
@@ -111,13 +112,14 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 - Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
 - Run every declared `generate` script: `pnpm -r run generate`
 
-## Testing
-- Primary framework: **Vitest** with colocated `*.spec.ts(x)` files.
-- Workspace: `pnpm check:test` orchestrates all package `test` scripts via Turbo.
-- Per package: `pnpm -C packages/domain test`, `pnpm -C packages/ui test`, etc.
-- Coverage: `pnpm -C <package> test:cvrg`
+## Testing & Quality
 
-For per-package coverage badges and links to Codecov components/flags, see `docs/quality/README.md`.
+- Primary framework: **Vitest** with colocated `*.spec.ts(x)` files.
+- CI (`.github/workflows/ci.yml`) runs `pnpm check:test:cvrg` on each push/PR and uploads JUnit + coverage reports to Codecov (see CI/Coverage badges at the top of this README).
+- Coverage is tracked with Codecov, including per-package components and flags; full tablesとSVGグラフは `docs/quality/README.md` を参照してください。
+- Quick commands:
+  - Workspace tests: `pnpm check:test` / `pnpm check:test:cvrg`
+  - Package tests: `pnpm -C packages/<name> test` / `pnpm -C packages/<name> test:cvrg`
 
 ## Technology stack
 - **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.
