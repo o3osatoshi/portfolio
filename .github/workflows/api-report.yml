@@ -58,7 +58,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: API extract
-        run: pnpm turbo run api:extract --filter=@o3osatoshi/* --affected
+        run: pnpm api:extract
 
       - name: API report
-        run: pnpm turbo run api:report --filter=@o3osatoshi/* --affected
+        run: pnpm api:report

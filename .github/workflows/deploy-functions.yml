@@ -61,7 +61,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build functions
-        run: pnpm turbo run build --filter=@repo/functions... --affected
+        run: pnpm build:functions
 
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2
