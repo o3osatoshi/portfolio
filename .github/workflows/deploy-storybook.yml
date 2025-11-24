@@ -17,6 +17,8 @@ permissions:
 jobs:
   detect-affected:
     runs-on: ubuntu-latest
+    env:
+      TURBO_TELEMETRY_DISABLED: 1
     outputs:
       storybook: ${{ steps.storybook.outputs.affected }}
 
@@ -42,6 +44,7 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TELEMETRY_DISABLED: 1
 
     steps:
       - name: Checkout

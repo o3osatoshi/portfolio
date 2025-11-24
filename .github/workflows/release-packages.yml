@@ -22,6 +22,7 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       TURBO_SCM_BASE: ${{ github.event.before }}
       TURBO_SCM_HEAD: ${{ github.sha }}
+      TURBO_TELEMETRY_DISABLED: 1
 
     steps:
       - name: Checkout repository
