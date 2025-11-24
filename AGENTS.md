@@ -43,7 +43,7 @@ This document reflects the current state of the repository. Commands listed belo
 - Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma seed`, `pnpm -C packages/prisma studio`.
 - Eth codegen: `pnpm -C packages/eth generate` (requires `packages/eth/.env.local`).
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
-- Toolkit/config/domain/application: `pnpm -C <package> test`, `pnpm -C <package> typecheck`.
+- Toolkit/domain/application: `pnpm -C <package> test`, `pnpm -C <package> typecheck`.
 
 ## Code Generation
 - Prisma client: `pnpm -C packages/prisma generate` (also runs on package postinstall).

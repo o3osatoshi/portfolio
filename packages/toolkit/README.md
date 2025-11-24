@@ -129,3 +129,8 @@ export const createItem = async (
 - ESM + CJS outputs are provided; typings are included.
 - Target Node >= 22 (see `engines`).
 - When targeting different Zod instances (e.g., multiple versions), `isZodError` uses duck typing to remain resilient.
+
+## Quality
+
+- Tests: `pnpm -C packages/toolkit test` / `pnpm -C packages/toolkit test:cvrg`
+- Coverage: [![Coverage: @o3osatoshi/toolkit](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=toolkit)](https://app.codecov.io/github/o3osatoshi/portfolio?component=toolkit)
