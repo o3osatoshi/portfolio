@@ -31,7 +31,7 @@ jobs:
       - name: Detect affected storybook
         id: storybook
         run: |
-          if npx turbo-ignore @repo/storybook --task=build; then
+          if pnpm turbo-ignore @repo/storybook --task=build; then
             echo "affected=false" >> "$GITHUB_OUTPUT"
           else
             echo "affected=true" >> "$GITHUB_OUTPUT"

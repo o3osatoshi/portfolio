@@ -29,7 +29,7 @@ jobs:
       - name: Detect affected functions
         id: functions
         run: |
-          if npx turbo-ignore @repo/functions --task=build; then
+          if pnpm turbo-ignore @repo/functions --task=build; then
             echo "affected=false" >> "$GITHUB_OUTPUT"
           else
             echo "affected=true" >> "$GITHUB_OUTPUT"
