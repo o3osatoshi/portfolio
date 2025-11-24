@@ -116,7 +116,7 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 
 - Primary framework: **Vitest** with colocated `*.spec.ts(x)` files.
 - CI (`.github/workflows/ci.yml`) runs `pnpm check:test:cvrg` on each push/PR and uploads JUnit + coverage reports to Codecov (see CI/Coverage badges at the top of this README).
-- Coverage is tracked with Codecov, including per-package components and flags; full tablesとSVGグラフは `docs/quality/README.md` を参照してください。
+- Coverage is tracked with Codecov, including per-package components and flags; see `docs/quality/README.md` for detailed tables and SVG graphs.
 - Quick commands:
   - Workspace tests: `pnpm check:test` / `pnpm check:test:cvrg`
   - Package tests: `pnpm -C packages/<name> test` / `pnpm -C packages/<name> test:cvrg`
