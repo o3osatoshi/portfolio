@@ -102,6 +102,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload test coverage
+        if: ${{ hashFiles('**/.reports/coverage/lcov.info') != '' }}
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
