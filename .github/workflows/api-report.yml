@@ -23,7 +23,7 @@ jobs:
           set -euo pipefail
           affected=false
           for pkg in @o3osatoshi/config @o3osatoshi/toolkit @o3osatoshi/ui; do
-            if ! pnpm turbo-ignore "$pkg" --task=api:extract; then
+            if ! npx turbo-ignore "$pkg" --task=api:extract; then
               affected=true
               break
             fi
