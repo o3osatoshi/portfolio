@@ -31,10 +31,6 @@ flags:
     paths:
       - packages/auth/**
     carryforward: true
-  config:
-    paths:
-      - packages/config/**
-    carryforward: true
   domain:
     paths:
       - packages/domain/**
@@ -82,10 +78,6 @@ component_management:
       name: "@repo/auth"
       paths:
         - "packages/auth/**"
-    - component_id: config
-      name: "@o3osatoshi/config"
-      paths:
-        - "packages/config/**"
     - component_id: domain
       name: "@repo/domain"
       paths:
@@ -118,4 +110,3 @@ component_management:
       name: "apps/storybook"
       paths:
         - "apps/storybook/**"
-

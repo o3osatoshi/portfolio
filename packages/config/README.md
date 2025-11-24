@@ -197,8 +197,3 @@ Within this monorepo, the root already extends `@o3osatoshi/config/biome/base.js
 - Publish to npm: `pnpm publish --access public`
 
 The package exposes `tsup` presets, `tsconfig`, `biome`, and `eslint` exports. Install it as a dev dependency and import what you need per project.
-
-## Quality
-
-- Tests: `pnpm -C packages/config test` (when tests are added)
-- Coverage: [![Coverage: @o3osatoshi/config](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=config)](https://app.codecov.io/github/o3osatoshi/portfolio?component=config)

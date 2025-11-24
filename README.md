@@ -91,7 +91,7 @@ pnpm install
 - Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
 - Firebase functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
-- Domain/Application/Toolkit/Config: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
+- Domain/Application/Toolkit: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
 
 ## Database workflow (Prisma)
 - Development migrate: `pnpm -C packages/prisma migrate:dev`
