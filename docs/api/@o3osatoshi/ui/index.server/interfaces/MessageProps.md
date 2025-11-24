@@ -6,7 +6,9 @@
 
 # Interface: MessageProps
 
-Defined in: [packages/ui/src/components/base/message.tsx:5](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/base/message.tsx#L5)
+Defined in: [packages/ui/src/components/base/message.tsx:9](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/base/message.tsx#L9)
+
+Props for [Message](../functions/Message.md).
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [packages/ui/src/components/base/message.tsx:5](https://github.com/o
 
 > **children**: `ReactNode`
 
-Defined in: [packages/ui/src/components/base/message.tsx:6](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/base/message.tsx#L6)
+Defined in: [packages/ui/src/components/base/message.tsx:10](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/base/message.tsx#L10)
 
 ***
 
@@ -22,4 +24,4 @@ Defined in: [packages/ui/src/components/base/message.tsx:6](https://github.com/o
 
 > `optional` **variant**: `"default"` \| `"destructive"`
 
-Defined in: [packages/ui/src/components/base/message.tsx:7](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/base/message.tsx#L7)
+Defined in: [packages/ui/src/components/base/message.tsx:11](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/base/message.tsx#L11)

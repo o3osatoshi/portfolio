@@ -2,20 +2,16 @@
 
 ***
 
-[Documentation](../../../../../README.md) / [@repo/prisma](../../../README.md) / [Prisma](../README.md) / \_Strict
+[Documentation](../../../../../README.md) / [@repo/prisma](../../../README.md) / [Prisma](../README.md) / Strict
 
-# Type Alias: \_Strict\<U, _U\>
+# Type Alias: Strict\<U\>
 
-> **\_Strict**\<`U`, `_U`\> = `U` *extends* `unknown` ? `U` & [`OptionalFlat`](OptionalFlat.md)\<[`_Record`](Record.md)\<`Exclude`\<[`Keys`](Keys.md)\<`_U`\>, keyof `U`\>, `never`\>\> : `never`
+> **Strict**\<`U`\> = [`ComputeRaw`](ComputeRaw.md)\<`_Strict`\<`U`\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:300
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:302
 
 ## Type Parameters
 
 ### U
 
-`U`
-
-### _U
-
-`_U` = `U`
+`U` *extends* `object`

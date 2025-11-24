@@ -8,7 +8,7 @@
 
 > **newAmount**(`v`): `Result`\<`never`, `Error`\>
 
-Defined in: [value-objects/numeric.ts:38](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/domain/src/value-objects/numeric.ts#L38)
+Defined in: [value-objects/numeric.ts:38](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/value-objects/numeric.ts#L38)
 
 Normalize an unknown value into an [Amount](../type-aliases/Amount.md), ensuring it is > 0.
 

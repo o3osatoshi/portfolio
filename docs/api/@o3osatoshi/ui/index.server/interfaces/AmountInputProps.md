@@ -6,7 +6,9 @@
 
 # Interface: AmountInputProps
 
-Defined in: [packages/ui/src/components/case/amount-input.tsx:1](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/case/amount-input.tsx#L1)
+Defined in: [packages/ui/src/components/case/amount-input.tsx:5](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/case/amount-input.tsx#L5)
+
+Props for [AmountInput](../functions/AmountInput.md).
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [packages/ui/src/components/case/amount-input.tsx:1](https://github.
 
 > `optional` **disabled**: `boolean`
 
-Defined in: [packages/ui/src/components/case/amount-input.tsx:2](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/case/amount-input.tsx#L2)
+Defined in: [packages/ui/src/components/case/amount-input.tsx:6](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/case/amount-input.tsx#L6)
 
 ***
 
@@ -22,7 +24,7 @@ Defined in: [packages/ui/src/components/case/amount-input.tsx:2](https://github.
 
 > `optional` **placeholder**: `string`
 
-Defined in: [packages/ui/src/components/case/amount-input.tsx:3](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/case/amount-input.tsx#L3)
+Defined in: [packages/ui/src/components/case/amount-input.tsx:7](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/case/amount-input.tsx#L7)
 
 ***
 
@@ -30,4 +32,4 @@ Defined in: [packages/ui/src/components/case/amount-input.tsx:3](https://github.
 
 > `optional` **type**: `"number"` \| `"text"`
 
-Defined in: [packages/ui/src/components/case/amount-input.tsx:4](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/ui/src/components/case/amount-input.tsx#L4)
+Defined in: [packages/ui/src/components/case/amount-input.tsx:8](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/case/amount-input.tsx#L8)

@@ -2,13 +2,13 @@
 
 ***
 
-[Documentation](../../../../../README.md) / [@repo/prisma](../../../README.md) / [Prisma](../README.md) / \_Either
+[Documentation](../../../../../README.md) / [@repo/prisma](../../../README.md) / [Prisma](../README.md) / Either
 
-# Type Alias: \_Either\<O, K, strict\>
+# Type Alias: Either\<O, K, strict\>
 
-> **\_Either**\<`O`, `K`, `strict`\> = `object`\[`strict`\]
+> **Either**\<`O`, `K`, `strict`\> = `O` *extends* `unknown` ? `_Either`\<`O`, `K`, `strict`\> : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:234
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:243
 
 ## Type Parameters
 
@@ -18,8 +18,8 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:234
 
 ### K
 
-`K` *extends* [`Key`](Key.md)
+`K` *extends* `Key`
 
 ### strict
 
-`strict` *extends* [`Boolean`](Boolean.md)
+`strict` *extends* [`Boolean`](Boolean.md) = `1`

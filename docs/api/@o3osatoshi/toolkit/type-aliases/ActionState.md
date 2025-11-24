@@ -8,7 +8,7 @@
 
 > **ActionState**\<`T`, `E`\> = \{ `data`: `T`; `ok`: `true`; \} \| \{ `error`: `E`; `ok`: `false`; \} \| `never`
 
-Defined in: [next/action-state.ts:36](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/next/action-state.ts#L36)
+Defined in: [next/action-state.ts:36](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/next/action-state.ts#L36)
 
 Success/failure envelope compatible with React `useActionState`.
 

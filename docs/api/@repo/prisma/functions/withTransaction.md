@@ -8,7 +8,7 @@
 
 > **withTransaction**\<`T`\>(`client`, `fn`): `Promise`\<`T`\>
 
-Defined in: [packages/prisma/src/prisma-client.ts:25](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/prisma/src/prisma-client.ts#L25)
+Defined in: [packages/prisma/src/prisma-client.ts:25](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/prisma/src/prisma-client.ts#L25)
 
 Convenience helper to run a callback inside a transaction.
 

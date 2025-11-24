@@ -8,7 +8,7 @@
 
 > **isSerializedError**(`v`): `v is SerializedError`
 
-Defined in: [error/error-serializer.ts:117](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-serializer.ts#L117)
+Defined in: [error/error-serializer.ts:117](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-serializer.ts#L117)
 
 Lightweight structural guard for [SerializedError](../interfaces/SerializedError.md).
 

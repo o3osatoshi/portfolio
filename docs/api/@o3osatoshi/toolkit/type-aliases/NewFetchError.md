@@ -8,7 +8,7 @@
 
 > **NewFetchError** = `object`
 
-Defined in: [http/fetch-error.ts:26](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L26)
+Defined in: [http/fetch-error.ts:26](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L26)
 
 Payload accepted by [newFetchError](../functions/newFetchError.md) before shaping a toolkit error.
 Mirrors [NewError](NewError.md) while adding fetch-specific request context.
@@ -21,7 +21,7 @@ from the request metadata or underlying cause.
 
 > `optional` **action**: `string`
 
-Defined in: [http/fetch-error.ts:27](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L27)
+Defined in: [http/fetch-error.ts:27](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L27)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [http/fetch-error.ts:27](https://github.com/o3osatoshi/experiment/bl
 
 > `optional` **cause**: `unknown`
 
-Defined in: [http/fetch-error.ts:28](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L28)
+Defined in: [http/fetch-error.ts:28](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L28)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [http/fetch-error.ts:28](https://github.com/o3osatoshi/experiment/bl
 
 > `optional` **hint**: `string`
 
-Defined in: [http/fetch-error.ts:29](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L29)
+Defined in: [http/fetch-error.ts:29](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L29)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [http/fetch-error.ts:29](https://github.com/o3osatoshi/experiment/bl
 
 > `optional` **impact**: `string`
 
-Defined in: [http/fetch-error.ts:30](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L30)
+Defined in: [http/fetch-error.ts:30](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L30)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [http/fetch-error.ts:30](https://github.com/o3osatoshi/experiment/bl
 
 > `optional` **kind**: [`Kind`](Kind.md)
 
-Defined in: [http/fetch-error.ts:31](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L31)
+Defined in: [http/fetch-error.ts:31](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L31)
 
 ***
 
@@ -61,4 +61,4 @@ Defined in: [http/fetch-error.ts:31](https://github.com/o3osatoshi/experiment/bl
 
 > `optional` **request**: [`FetchRequest`](FetchRequest.md)
 
-Defined in: [http/fetch-error.ts:32](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/http/fetch-error.ts#L32)
+Defined in: [http/fetch-error.ts:32](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L32)

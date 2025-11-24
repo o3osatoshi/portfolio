@@ -8,7 +8,7 @@
 
 > **composeErrorMessage**(`parts`): `string`
 
-Defined in: [error/error-format.ts:84](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/error/error-format.ts#L84)
+Defined in: [error/error-format.ts:84](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L84)
 
 Compose a JSON-based error message to simplify parsing by consumers.
 

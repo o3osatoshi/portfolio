@@ -6,7 +6,7 @@
 
 # Type Alias: FloatFieldRefInput\<$PrismaModel\>
 
-> **FloatFieldRefInput**\<`$PrismaModel`\> = [`FieldRefInputType`](FieldRefInputType.md)\<`$PrismaModel`, `"Float"`\>
+> **FloatFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Float"`\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1080
 

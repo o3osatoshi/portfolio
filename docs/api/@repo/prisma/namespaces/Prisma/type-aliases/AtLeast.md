@@ -6,7 +6,7 @@
 
 # Type Alias: AtLeast\<O, K\>
 
-> **AtLeast**\<`O`, `K`\> = [`NoExpand`](NoExpand.md)\<`O` *extends* `unknown` ? `K` *extends* keyof `O` ? `{ [P in K]: O[P] }` & `O` : `O` \| `{ [P in keyof O as P extends K ? P : never]-?: O[P] }` & `O` : `never`\>
+> **AtLeast**\<`O`, `K`\> = `NoExpand`\<`O` *extends* `unknown` ? `K` *extends* keyof `O` ? `{ [P in K]: O[P] }` & `O` : `O` \| `{ [P in keyof O as P extends K ? P : never]-?: O[P] }` & `O` : `never`\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:294
 

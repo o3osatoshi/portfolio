@@ -6,7 +6,7 @@
 
 # Type Alias: MaybeTupleToUnion\<T\>
 
-> **MaybeTupleToUnion**\<`T`\> = `T` *extends* `any`[] ? [`TupleToUnion`](TupleToUnion-1.md)\<`T`\> : `T`
+> **MaybeTupleToUnion**\<`T`\> = `T` *extends* `any`[] ? `TupleToUnion`\<`T`\> : `T`
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:373
 

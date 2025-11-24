@@ -6,7 +6,7 @@
 
 # Type Alias: XOR\<T, U\>
 
-> **XOR**\<`T`, `U`\> = `T` *extends* `object` ? `U` *extends* `object` ? [`Without`](Without.md)\<`T`, `U`\> & `U` \| [`Without`](Without.md)\<`U`, `T`\> & `T` : `U` : `T`
+> **XOR**\<`T`, `U`\> = `T` *extends* `object` ? `U` *extends* `object` ? `Without`\<`T`, `U`\> & `U` \| `Without`\<`U`, `T`\> & `T` : `U` : `T`
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:192
 

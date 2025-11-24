@@ -8,7 +8,7 @@
 
 > **CreateAuthConfigOptions** = `object`
 
-Defined in: [packages/auth/src/hono-auth/index.ts:8](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/auth/src/hono-auth/index.ts#L8)
+Defined in: [packages/auth/src/hono-auth/index.ts:8](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/index.ts#L8)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/auth/src/hono-auth/index.ts:8](https://github.com/o3osatos
 
 > `optional` **basePath**: `string`
 
-Defined in: [packages/auth/src/hono-auth/index.ts:9](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/auth/src/hono-auth/index.ts#L9)
+Defined in: [packages/auth/src/hono-auth/index.ts:9](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/index.ts#L9)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/auth/src/hono-auth/index.ts:9](https://github.com/o3osatos
 
 > `optional` **prismaClient**: [`PrismaClient`](../../prisma/type-aliases/PrismaClient.md)
 
-Defined in: [packages/auth/src/hono-auth/index.ts:10](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/auth/src/hono-auth/index.ts#L10)
+Defined in: [packages/auth/src/hono-auth/index.ts:10](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/index.ts#L10)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/auth/src/hono-auth/index.ts:10](https://github.com/o3osato
 
 > `optional` **providers**: `{ [key in AuthProviderId]: { clientId: string; clientSecret: string } }`
 
-Defined in: [packages/auth/src/hono-auth/index.ts:11](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/auth/src/hono-auth/index.ts#L11)
+Defined in: [packages/auth/src/hono-auth/index.ts:11](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/index.ts#L11)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/auth/src/hono-auth/index.ts:11](https://github.com/o3osato
 
 > **secret**: `string`
 
-Defined in: [packages/auth/src/hono-auth/index.ts:17](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/auth/src/hono-auth/index.ts#L17)
+Defined in: [packages/auth/src/hono-auth/index.ts:17](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/index.ts#L17)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/auth/src/hono-auth/index.ts:17](https://github.com/o3osato
 
 > `optional` **session**: `object`
 
-Defined in: [packages/auth/src/hono-auth/index.ts:18](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/auth/src/hono-auth/index.ts#L18)
+Defined in: [packages/auth/src/hono-auth/index.ts:18](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/index.ts#L18)
 
 #### strategy?
 

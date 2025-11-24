@@ -8,7 +8,7 @@
 
 > **Deps** = `object`
 
-Defined in: [packages/interface/src/http/node/app.ts:27](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/interface/src/http/node/app.ts#L27)
+Defined in: [packages/interface/src/http/node/app.ts:27](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/interface/src/http/node/app.ts#L27)
 
 Dependencies required by [buildApp](../functions/buildApp.md).
 
@@ -20,7 +20,7 @@ Provide infrastructure-backed implementations in production (e.g. DB).
 
 > **authConfig**: [`AuthConfig`](../../auth/interfaces/AuthConfig.md)
 
-Defined in: [packages/interface/src/http/node/app.ts:29](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/interface/src/http/node/app.ts#L29)
+Defined in: [packages/interface/src/http/node/app.ts:29](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/interface/src/http/node/app.ts#L29)
 
 Hono Auth.js configuration (see `@repo/auth#createAuthConfig`).
 
@@ -30,6 +30,6 @@ Hono Auth.js configuration (see `@repo/auth#createAuthConfig`).
 
 > **transactionRepo**: [`TransactionRepository`](../../domain/interfaces/TransactionRepository.md)
 
-Defined in: [packages/interface/src/http/node/app.ts:31](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/interface/src/http/node/app.ts#L31)
+Defined in: [packages/interface/src/http/node/app.ts:31](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/interface/src/http/node/app.ts#L31)
 
 Repository required by transaction use cases.

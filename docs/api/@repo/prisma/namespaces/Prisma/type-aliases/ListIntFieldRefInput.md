@@ -6,7 +6,7 @@
 
 # Type Alias: ListIntFieldRefInput\<$PrismaModel\>
 
-> **ListIntFieldRefInput**\<`$PrismaModel`\> = [`FieldRefInputType`](FieldRefInputType.md)\<`$PrismaModel`, `"Int[]"`\>
+> **ListIntFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Int[]"`\>
 
 Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1066
 

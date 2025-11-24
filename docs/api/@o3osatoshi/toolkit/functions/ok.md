@@ -8,7 +8,7 @@
 
 > **ok**\<`T`\>(`data`): [`ActionState`](../type-aliases/ActionState.md)\<`T`, `never`\>
 
-Defined in: [next/action-state.ts:82](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/toolkit/src/next/action-state.ts#L82)
+Defined in: [next/action-state.ts:82](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/next/action-state.ts#L82)
 
 Build a success [ActionState](../type-aliases/ActionState.md).
 

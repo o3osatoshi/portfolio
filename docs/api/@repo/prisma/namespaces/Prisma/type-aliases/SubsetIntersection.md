@@ -26,6 +26,6 @@ Subset + Intersection
 
 `K`
 
-## Remarks
+## Desc
 
 From `T` pick properties that exist in `U` and intersect `K`

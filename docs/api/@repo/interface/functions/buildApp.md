@@ -8,7 +8,7 @@
 
 > **buildApp**(`deps`): `Hono`\<\{ \}, \{ `/api/*`: \{ \}; \} \| `MergeSchemaPath`\<\{ `/*`: \{ \}; \}, `"/api/auth"`\> \| `MergeSchemaPath`\<\{ `/healthz`: \{ `$get`: \{ `input`: \{ \}; `output`: \{ `ok`: `true`; \}; `outputFormat`: `"json"`; `status`: `ContentfulStatusCode`; \}; \}; \}, `"/api/public"`\> \| `MergeSchemaPath`\<`object` & `object`, `"/api/private"`\>, `"/api"`\>
 
-Defined in: [packages/interface/src/http/node/app.ts:53](https://github.com/o3osatoshi/experiment/blob/d6c8f8f8bbccd739e3017abe2f1d5c3425c068d3/packages/interface/src/http/node/app.ts#L53)
+Defined in: [packages/interface/src/http/node/app.ts:53](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/interface/src/http/node/app.ts#L53)
 
 Build the Node HTTP application.
 
@@ -22,8 +22,8 @@ Example:
 - GET `/private/labs/transactions` — Returns `Transaction[]` for the authenticated user.
 
 Middlewares: [requestIdMiddleware](requestIdMiddleware.md), [loggerMiddleware](loggerMiddleware.md)
-Errors: normalized via toHttpErrorResponse. Zod validation failures
-are handled by [respondZodError](respondZodError.md).
+Errors: normalized via `toHttpErrorResponse` from `@o3osatoshi/toolkit`. Zod
+validation failures are handled by [respondZodError](respondZodError.md).
 
 ## Parameters
 
