@@ -6,6 +6,7 @@ export * from "./asynchronous";
 export * from "./env";
 export * from "./error";
 export * from "./http";
+export * from "./json-codec";
 export * from "./next";
 export * from "./redis-cache";
 export * from "./redis-client";
