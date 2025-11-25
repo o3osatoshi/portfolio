@@ -12,7 +12,7 @@ import type { JsonContainer, JsonValue } from "./types";
  * `"Serialization"` from the `"Infra"` layer.
  *
  * @param value - JSON string to parse.
- * @returns A {@link Result} containing a {@link JsonContainer} on success, or a structured {@link Error} on failure.
+ * @returns A {@link Result} containing a {@link JsonContainer} on success, or a structured error on failure.
  * @public
  */
 export function decode(value: string): Result<JsonContainer, Error> {
@@ -42,7 +42,7 @@ export function decode(value: string): Result<JsonContainer, Error> {
  * `"Infra"` layer.
  *
  * @param value - Arbitrary value to serialize.
- * @returns A {@link Result} containing the JSON string on success, or a structured {@link Error} on failure.
+ * @returns A {@link Result} containing the JSON string on success, or a structured error on failure.
  * @internal
  */
 export function encode(value: unknown): Result<string, Error> {

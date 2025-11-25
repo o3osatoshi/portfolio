@@ -43,7 +43,7 @@ export type SetOptions = {
  * @param redis - Upstash Redis client instance.
  * @param key - Cache key (number or string).
  * @param opt - Key construction options (e.g. `prefix`).
- * @returns A {@link ResultAsync} that yields `T | null` on success or a structured {@link Error} on failure.
+ * @returns A ResultAsync that yields `T | null` on success or a structured error on failure.
  * @public
  */
 export function kvGet<T>(
@@ -71,7 +71,7 @@ export function kvGet<T>(
  *
  * The underlying Upstash Redis client is responsible for serialization; this
  * helper simply forwards the value as-is and wraps the operation in a
- * {@link ResultAsync}.
+ * ResultAsync.
  *
  * @typeParam T - Value type to store at the key.
  * @param redis - Upstash Redis client instance.
@@ -79,7 +79,7 @@ export function kvGet<T>(
  * @param value - Value to store.
  * @param options - Conditional and expiration options (NX/XX, PX).
  * @param opt - Key construction options (e.g. `prefix`).
- * @returns A {@link ResultAsync} resolving to `"OK"` on success, or `null` when a condition (NX/XX) prevents the write.
+ * @returns A ResultAsync resolving to `"OK"` on success, or `null` when a condition (NX/XX) prevents the write.
  * @public
  */
 export function kvSet<T>(
