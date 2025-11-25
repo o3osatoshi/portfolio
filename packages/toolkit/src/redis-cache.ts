@@ -79,7 +79,10 @@ export function kvGet<T>(
  * @param value - Value to store.
  * @param options - Conditional and expiration options (NX/XX, PX).
  * @param opt - Key construction options (e.g. `prefix`).
- * @returns A ResultAsync resolving to `"OK"` on success, or `null` when a condition (NX/XX) prevents the write.
+ * @returns A ResultAsync whose success branch resolves to:
+ * - `"OK"` when the underlying Redis `SET` command completes and acknowledges the write.
+ * - `null` when a condition such as `NX` / `XX` prevents the value from being written (e.g. key already exists with `NX`).
+ * - `T` for alternative client implementations that choose to return the stored value itself instead of `"OK"`; with Upstash Redis, this branch is not used and results are always `"OK"` or `null`.
  * @public
  */
 export function kvSet<T>(

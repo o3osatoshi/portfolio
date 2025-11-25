@@ -4,7 +4,7 @@ import { newError } from "./error";
 import type { JsonContainer, JsonValue } from "./types";
 
 /**
- * Parses a JSON string into a {@link JsonContainer}, returning a neverthrow {@link Result}.
+ * Parses a JSON string into a {@link JsonContainer}, returning a neverthrow result.
  *
  * The input must represent a top-level JSON object (`{}`) or array (`[]`).
  * If parsing fails or the decoded value is a JSON primitive
@@ -12,7 +12,7 @@ import type { JsonContainer, JsonValue } from "./types";
  * `"Serialization"` from the `"Infra"` layer.
  *
  * @param value - JSON string to parse.
- * @returns A {@link Result} containing a {@link JsonContainer} on success, or a structured error on failure.
+ * @returns A neverthrow result containing a {@link JsonContainer} on success, or a structured error on failure.
  * @public
  */
 export function decode(value: string): Result<JsonContainer, Error> {
@@ -34,7 +34,7 @@ export function decode(value: string): Result<JsonContainer, Error> {
 }
 
 /**
- * Serializes a value to JSON, returning a neverthrow {@link Result}.
+ * Serializes a value to JSON, returning a neverthrow result.
  *
  * When `JSON.stringify` succeeds, this returns an `ok` result containing
  * the encoded JSON string. If serialization throws (for example, because
@@ -42,7 +42,7 @@ export function decode(value: string): Result<JsonContainer, Error> {
  * `"Infra"` layer.
  *
  * @param value - Arbitrary value to serialize.
- * @returns A {@link Result} containing the JSON string on success, or a structured error on failure.
+ * @returns A neverthrow result containing the JSON string on success, or a structured error on failure.
  * @internal
  */
 export function encode(value: unknown): Result<string, Error> {
