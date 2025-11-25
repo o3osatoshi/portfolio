@@ -4,10 +4,10 @@ import { initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import { type Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { parseWith, sleep } from "@o3osatoshi/toolkit";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respond } from "../core/respond";
+import { respond, respondAsync } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Edge HTTP interface.
@@ -96,5 +96,14 @@ function buildEdgePrivateRoutes() {
 }
 
 function buildEdgePublicRoutes() {
-  return new Hono().get("/healthz", (c) => c.json({ ok: true }));
+  return new Hono()
+    .get("/healthz", (c) => c.json({ ok: true }))
+    .get("/slow-response", (c) =>
+      respondAsync<{ ok: boolean; timestamp: string }>(c)(
+        sleep(3000).map(() => ({
+          ok: true,
+          timestamp: new Date().toISOString(),
+        })),
+      ),
+    );
 }

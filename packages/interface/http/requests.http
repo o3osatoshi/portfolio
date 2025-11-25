@@ -2,6 +2,10 @@
 GET {{API_BASE_URL}}/edge/public/healthz
 Accept: application/json
 
+### edge slow response
+GET {{API_BASE_URL}}/edge/public/slow-response
+Accept: application/json
+
 ### edge me
 GET {{API_BASE_URL}}/edge/private/me
 Accept: application/json
