@@ -14,7 +14,7 @@ Hono + Auth.js configuration and helpers for the monorepo. This package exposes 
 - Centralize Auth.js setup so apps import only `@repo/auth` entries.
 
 ## Requirements
-- Node: `>=22`
+- Node: `22.x`
 - Dependencies:
   - `@hono/auth-js`
   - `@auth/core`

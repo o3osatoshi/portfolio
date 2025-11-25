@@ -98,7 +98,7 @@
     "react-dom": "^18 || ^19"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "publishConfig": {
     "access": "public"
