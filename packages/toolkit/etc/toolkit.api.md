@@ -59,9 +59,7 @@ export function decode(value: string): Result<JsonContainer, Error>;
 // @public
 export function deserializeError(input: unknown): Error;
 
-// Warning: (ae-internal-missing-underscore) The name "encode" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export function encode(value: unknown): Result<string, Error>;
 
 // @public

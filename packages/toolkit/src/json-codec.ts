@@ -43,7 +43,7 @@ export function decode(value: string): Result<JsonContainer, Error> {
  *
  * @param value - Arbitrary value to serialize.
  * @returns A neverthrow result containing the JSON string on success, or a structured error on failure.
- * @internal
+ * @public
  */
 export function encode(value: unknown): Result<string, Error> {
   try {
