@@ -16,6 +16,8 @@ describe("apps/web env (server)", () => {
       "DATABASE_URL",
       "postgresql://postgres:postgres@localhost:54329/postgres?schema=public",
     );
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "test-token");
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "https://example.upstash.io");
     const mod = await import(SERVER_PATH);
     expect(mod.env.DATABASE_URL).toBe(
       "postgresql://postgres:postgres@localhost:54329/postgres?schema=public",
