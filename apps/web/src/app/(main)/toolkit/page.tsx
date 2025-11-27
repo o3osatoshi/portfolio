@@ -29,6 +29,11 @@ export default function Page() {
               Asynchronous utilities: cancellable sleep helper
             </Link>
           </li>
+          <li>
+            <Link href={getPath("toolkit-redis-cache")} className="underline">
+              Redis cache: speeding up a slow API with Upstash
+            </Link>
+          </li>
         </ul>
       </section>
     </div>
