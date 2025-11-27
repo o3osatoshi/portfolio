@@ -21,7 +21,7 @@ type NextFetchOptions = {
  *
  * The client:
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
- * - accepts Hono client options compatible with Next.js `fetch`  
+ * - accepts Hono client options compatible with Next.js `fetch`
  *   (headers, fetch, and an `init` that supports `cache` / `next`).
  *
  * To forward the current request cookies from a server environment, combine
@@ -39,7 +39,7 @@ export function createClient(
  *
  * The client:
  * - targets `env.NEXT_PUBLIC_API_BASE_URL`
- * - accepts Hono client options compatible with Next.js `fetch`  
+ * - accepts Hono client options compatible with Next.js `fetch`
  *   (headers, fetch, and an `init` that supports `cache` / `next`).
  *
  * To forward the current request cookies from a server environment, combine
