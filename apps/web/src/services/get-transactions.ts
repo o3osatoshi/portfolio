@@ -4,7 +4,8 @@ import { ResultAsync } from "neverthrow";
 import { getMe } from "@/services/get-me";
 import { handleResponse } from "@/utils/handle-response";
 import { getPath, getTag } from "@/utils/nav-handler";
-import { createClient, createHeaders } from "@/utils/rpc-client";
+import { createClient } from "@/utils/rpc-client";
+import { createHeaders } from "@/utils/rpc-headers";
 import { newFetchError } from "@o3osatoshi/toolkit";
 
 export type Transaction = Transactions[number];

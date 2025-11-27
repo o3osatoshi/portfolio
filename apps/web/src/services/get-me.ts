@@ -3,7 +3,8 @@ import { ResultAsync } from "neverthrow";
 
 import { handleResponse } from "@/utils/handle-response";
 import { getPath } from "@/utils/nav-handler";
-import { createEdgeClient, createHeaders } from "@/utils/rpc-client";
+import { createEdgeClient } from "@/utils/rpc-client";
+import { createHeaders } from "@/utils/rpc-headers";
 import { newFetchError } from "@o3osatoshi/toolkit";
 
 export type Me = InferResponseType<
