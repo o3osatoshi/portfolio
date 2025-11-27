@@ -1,4 +1,2 @@
-/**
- * Entry point for user-facing application use cases.
- */
+export * from "./toolkit";
 export * from "./user";
