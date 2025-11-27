@@ -1,14 +1,19 @@
 import { Redis } from "@upstash/redis";
+import { Redis as EdgeRedis } from "@upstash/redis/cloudflare";
 
 /**
- * Options for constructing an Upstash `Redis` client.
+ * Connection options for constructing Upstash Redis clients.
+ *
+ * Shared between {@link createRedisClient} (Node.js/Edge) and
+ * {@link createEdgeRedisClient} (Cloudflare Workers and other
+ * Cloudflare-compatible runtimes).
  *
  * Use this to pass configuration from environment variables or other
- * runtime-specific sources into {@link createRedisClient}.
+ * runtime-specific sources into the client factories.
  *
  * @public
  */
-export type CreateRedisClientOptions = {
+export type RedisClientOptions = {
   /**
    * Upstash REST API token.
    *
@@ -26,10 +31,26 @@ export type CreateRedisClientOptions = {
 };
 
 /**
- * Create an Upstash Redis client configured for Node.js / Edge runtimes.
+ * Create an Upstash Redis client for Cloudflare Workers / Edge runtimes.
+ *
+ * This helper is a thin wrapper around `new EdgeRedis(...)` from
+ * `@upstash/redis/cloudflare` that accepts the connection URL and token
+ * via {@link RedisClientOptions}.
+ *
+ * @param options - Connection settings (URL and token) for the Redis client.
+ * @returns A configured Cloudflare-compatible `Redis` client instance.
+ *
+ * @public
+ */
+export function createEdgeRedisClient(options?: RedisClientOptions): EdgeRedis {
+  return new EdgeRedis({ token: options?.token, url: options?.url });
+}
+
+/**
+ * Create an Upstash Redis client configured for Node.js / generic Edge runtimes.
  *
  * This helper is a thin wrapper around `new Redis(...)` that accepts the
- * connection URL and token via {@link CreateRedisClientOptions}. Callers are
+ * connection URL and token via {@link RedisClientOptions}. Callers are
  * responsible for reading configuration (for example, from environment
  * variables) before invoking this function.
  *
@@ -38,8 +59,6 @@ export type CreateRedisClientOptions = {
  *
  * @public
  */
-export function createRedisClient(
-  options: CreateRedisClientOptions = {},
-): Redis {
-  return new Redis({ token: options.token, url: options.url });
+export function createRedisClient(options?: RedisClientOptions): Redis {
+  return new Redis({ token: options?.token, url: options?.url });
 }

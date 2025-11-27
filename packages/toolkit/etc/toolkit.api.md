@@ -4,7 +4,8 @@
 
 ```ts
 
-import { Redis } from '@upstash/redis';
+import { Redis } from '@upstash/redis/cloudflare';
+import { Redis as Redis_2 } from '@upstash/redis';
 import { Result } from 'neverthrow';
 import { ResultAsync } from 'neverthrow';
 import { z } from 'zod';
@@ -36,6 +37,9 @@ export function composeErrorMessage(parts: ErrorMessageParts): string;
 export function composeErrorName(layer: Layer, kind: Kind): string;
 
 // @public
+export function createEdgeRedisClient(options?: RedisClientOptions): Redis;
+
+// @public
 export function createEnv<T extends EnvSchema>(schema: T, opts?: CreateEnvOptions): EnvOf<T>;
 
 // @public
@@ -45,13 +49,7 @@ export type CreateEnvOptions = {
 };
 
 // @public
-export function createRedisClient(options?: CreateRedisClientOptions): Redis;
-
-// @public
-export type CreateRedisClientOptions = {
-    token?: string;
-    url?: string;
-};
+export function createRedisClient(options?: RedisClientOptions): Redis_2;
 
 // @public
 export function decode(value: string): Result<JsonContainer, Error>;
@@ -146,7 +144,7 @@ export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
 
 // @public
-export function kvGet<T>(redis: Redis, key: number | string, opt?: KvOptions): ResultAsync<null | T, Error>;
+export function kvGet<T>(redis: Redis_2, key: number | string, opt?: KvOptions): ResultAsync<null | T, Error>;
 
 // @public
 export type KvOptions = {
@@ -154,7 +152,7 @@ export type KvOptions = {
 };
 
 // @public
-export function kvSet<T>(redis: Redis, key: number | string, value: T, { onlyIfAbsent, onlyIfPresent, ttlMs }?: SetOptions, opt?: KvOptions): ResultAsync<"OK" | null | T, Error>;
+export function kvSet<T>(redis: Redis_2, key: number | string, value: T, { onlyIfAbsent, onlyIfPresent, ttlMs }?: SetOptions, opt?: KvOptions): ResultAsync<"OK" | null | T, Error>;
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
@@ -219,6 +217,12 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
 }): (input: unknown) => Result<z.infer<T>, Error>;
+
+// @public
+export type RedisClientOptions = {
+    token?: string;
+    url?: string;
+};
 
 // @public
 export type SerializedCause = SerializedError | string;
