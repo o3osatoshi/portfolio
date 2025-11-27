@@ -39,7 +39,7 @@ export class HeavyProcessCachedUseCase {
         return ok({ ...value, cached: true });
       }
 
-      return sleep(3000)
+      return sleep(3_000)
         .map(() => ({ timestamp: new Date() }))
         .andThen((heavyProcess) => {
           return kvSet(
