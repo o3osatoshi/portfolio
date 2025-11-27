@@ -16,11 +16,19 @@ export class HeavyProcessCachedUseCase {
   constructor(private readonly redisClient: EdgeRedis | Redis) {}
 
   /**
-   * Validate the inbound request, persist the transaction, and convert the
-   * domain entity into a DTO-friendly response.
+   * Execute a heavy process with Redis-backed caching.
    *
-   * @param req - Normalized request payload from the application layer.
-   * @returns ResultAsync wrapping the created transaction DTO or a structured error.
+   * - Attempts to read a {@link HeavyProcessResponse} from Redis using
+   *   {@link HEAVY_PROCESS_CACHE_KEY}.
+   * - When a cached value exists, it returns the cached payload with
+   *   `cached: true`.
+   * - When no cached value exists, it simulates a heavy computation by
+   *   sleeping for 3 seconds, writes the result to Redis with
+   *   {@link HEAVY_PROCESS_CACHE_TTL_MS}, and returns the payload with
+   *   `cached: false`.
+   *
+   * @returns ResultAsync wrapping a {@link HeavyProcessCachedResponse} or an
+   * {@link Error} if the underlying Redis or sleep operations fail.
    */
   execute(): ResultAsync<HeavyProcessCachedResponse, Error> {
     return kvGet<HeavyProcessResponse>(

@@ -6,11 +6,13 @@ import type { HeavyProcessResponse } from "../../dtos/heavy-process.res.dto";
 
 export class HeavyProcessUseCase {
   /**
-   * Validate the inbound request, persist the transaction, and convert the
-   * domain entity into a DTO-friendly response.
+   * Simulate a heavy synchronous process and return a timestamp-only DTO.
    *
-   * @param req - Normalized request payload from the application layer.
-   * @returns ResultAsync wrapping the created transaction DTO or a structured error.
+   * The implementation currently waits for 3 seconds and then resolves with
+   * the current `Date` wrapped in {@link HeavyProcessResponse}.
+   *
+   * @returns ResultAsync wrapping a {@link HeavyProcessResponse} containing the
+   * current timestamp, or an {@link Error} if the sleep operation fails.
    */
   execute(): ResultAsync<HeavyProcessResponse, Error> {
     return sleep(3_000).map(() => ({ timestamp: new Date() }));
