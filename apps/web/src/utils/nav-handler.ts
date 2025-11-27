@@ -2,7 +2,7 @@ import { getQueryPath, type Search } from "@/utils/next-fetch";
 
 type Alias = ApiAlias | WebAlias;
 
-type ApiAlias = "labs-transactions" | "me";
+type ApiAlias = "heavy-process-cached" | "labs-transactions" | "me";
 
 interface ApiNav {
   alias: ApiAlias;
@@ -20,6 +20,7 @@ type WebAlias =
   | "portfolio-blog"
   | "portfolio"
   | "toolkit-asynchronous"
+  | "toolkit-redis-cache"
   | "toolkit";
 
 interface WebNav {
@@ -93,6 +94,11 @@ const navs: Nav[] = [
     type: "api",
   },
   {
+    alias: "heavy-process-cached",
+    pathName: "/edge/public/heavy/cached",
+    type: "api",
+  },
+  {
     alias: "labs-web3-crud",
     data: {
       hierarchy: 2,
@@ -119,6 +125,16 @@ const navs: Nav[] = [
       parentAlias: "toolkit",
     },
     pathName: "/toolkit/asynchronous",
+    type: "web",
+  },
+  {
+    alias: "toolkit-redis-cache",
+    data: {
+      hierarchy: 2,
+      label: "Redis cache",
+      parentAlias: "toolkit",
+    },
+    pathName: "/toolkit/redis-cache",
     type: "web",
   },
 ];
