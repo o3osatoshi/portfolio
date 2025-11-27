@@ -125,11 +125,11 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
   };
   return new Hono()
     .get("/healthz", (c) => c.json({ ok: true }))
-    .get("/slowres", (c) => {
+    .get("/heavy", (c) => {
       const heavyProcess = new HeavyProcessUseCase();
       return respondAsync<HeavyProcessResponse>(c)(heavyProcess.execute());
     })
-    .get("/slowres/cached", (c) => {
+    .get("/heavy/cached", (c) => {
       const heavyProcessCached = new HeavyProcessCachedUseCase(redisClient(c));
       return respondAsync<HeavyProcessCachedResponse>(c)(
         heavyProcessCached.execute(),
