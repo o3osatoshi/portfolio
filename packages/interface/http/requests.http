@@ -3,7 +3,11 @@ GET {{API_BASE_URL}}/edge/public/healthz
 Accept: application/json
 
 ### edge slow response
-GET {{API_BASE_URL}}/edge/public/slow-response
+GET {{API_BASE_URL}}/edge/public/slowres
+Accept: application/json
+
+### edge slow response cached
+GET {{API_BASE_URL}}/edge/public/slowres/cached
 Accept: application/json
 
 ### edge me

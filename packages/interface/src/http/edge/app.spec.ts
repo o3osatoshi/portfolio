@@ -35,6 +35,7 @@ async function loadAppWithVerify(allow: boolean) {
     verifyAuth: allow ? h.verifyAuthPass : h.verifyAuthDeny,
   }));
   const mod = await import("./app");
+  // @ts-expect-error - buildEdgeApp is exported by the edge app
   return mod.buildEdgeApp({ authConfig: {} as AuthConfig });
 }
 
