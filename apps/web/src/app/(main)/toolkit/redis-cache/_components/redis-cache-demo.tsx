@@ -131,7 +131,7 @@ export default function RedisCacheDemoCard() {
             Fetch via cache
           </Button>
           <Button
-            disabled={status === "loading" || !errorMessage}
+            disabled={status === "loading"}
             onClick={handleReset}
             type="button"
             variant="outline"
