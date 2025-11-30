@@ -19,6 +19,21 @@ describe("action-state ok/err", () => {
     expect(state.error.name).toBe("ActionError");
   });
 
+  it("allows null and undefined as data", () => {
+    const nullState = ok(null);
+    const undefinedState = ok(undefined);
+
+    expect(nullState.ok).toBe(true);
+    if (!nullState.ok) throw new Error("expected success state for null");
+    expect(nullState.data).toBeNull();
+
+    expect(undefinedState.ok).toBe(true);
+    if (!undefinedState.ok)
+      throw new Error("expected success state for undefined");
+    expect("data" in undefinedState).toBe(true);
+    expect(undefinedState.data).toBeUndefined();
+  });
+
   it("passes through ActionError objects", () => {
     const actionError: ActionError = { name: "Custom", message: "broken" };
     const state = err(actionError);

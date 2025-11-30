@@ -11,6 +11,9 @@ const h = vi.hoisted(() => {
 
 vi.mock("@/utils/rpc-client", () => ({
   createEdgeClient: h.createEdgeClientMock,
+}));
+
+vi.mock("@/utils/rpc-headers", () => ({
   createHeaders: h.createHeadersMock,
 }));
 

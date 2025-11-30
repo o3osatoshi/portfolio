@@ -21,11 +21,12 @@
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
     "@types/node": "catalog:",
+    "@upstash/redis": "^1.35.6",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   }
 }

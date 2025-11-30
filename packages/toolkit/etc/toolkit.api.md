@@ -4,6 +4,8 @@
 
 ```ts
 
+import { Redis } from '@upstash/redis/cloudflare';
+import { Redis as Redis_2 } from '@upstash/redis';
 import { Result } from 'neverthrow';
 import { ResultAsync } from 'neverthrow';
 import { z } from 'zod';
@@ -11,7 +13,7 @@ import { ZodError } from 'zod';
 import { ZodIssue } from 'zod';
 
 // @public
-export type ActionData<T extends Object_2 = Object_2> = null | T | undefined;
+export type ActionData<TBase extends UnknownRecord = UnknownRecord> = null | TBase | undefined;
 
 // @public
 export type ActionError = {
@@ -20,7 +22,7 @@ export type ActionError = {
 };
 
 // @public
-export type ActionState<T extends ActionData = Object_2, E extends ActionError = ActionError> = {
+export type ActionState<T extends ActionData = UnknownRecord, E extends ActionError = ActionError> = {
     data: T;
     ok: true;
 } | {
@@ -35,6 +37,9 @@ export function composeErrorMessage(parts: ErrorMessageParts): string;
 export function composeErrorName(layer: Layer, kind: Kind): string;
 
 // @public
+export function createEdgeRedisClient(options?: RedisClientOptions): Redis;
+
+// @public
 export function createEnv<T extends EnvSchema>(schema: T, opts?: CreateEnvOptions): EnvOf<T>;
 
 // @public
@@ -44,7 +49,16 @@ export type CreateEnvOptions = {
 };
 
 // @public
+export function createRedisClient(options?: RedisClientOptions): Redis_2;
+
+// @public
+export function decode(value: string): Result<JsonContainer, Error>;
+
+// @public
 export function deserializeError(input: unknown): Error;
+
+// @public
+export function encode(value: unknown): Result<string, Error>;
 
 // @public
 export type EnvOf<T extends EnvSchema> = {
@@ -110,7 +124,35 @@ export function isSerializedError(v: unknown): v is SerializedError;
 export function isZodError(e: unknown): e is ZodError;
 
 // @public
+export type JsonArray = JsonValue[];
+
+// @public
+export type JsonContainer = JsonArray | JsonObject;
+
+// @public
+export type JsonObject = {
+    [key: string]: JsonValue;
+};
+
+// @public
+export type JsonPrimitive = boolean | null | number | string;
+
+// @public
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
+// @public
 export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
+
+// @public
+export function kvGet<T>(redis: Redis_2, key: number | string, opt?: KvOptions): ResultAsync<null | T, Error>;
+
+// @public
+export type KvOptions = {
+    prefix?: string;
+};
+
+// @public
+export function kvSet<T>(redis: Redis_2, key: number | string, value: T, { onlyIfAbsent, onlyIfPresent, ttlMs }?: SetOptions, opt?: KvOptions): ResultAsync<"OK" | null | T, Error>;
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
@@ -156,10 +198,6 @@ export type NewZodError = {
 export function newZodError(options: NewZodError): Error;
 
 // @public
-type Object_2 = Record<string, unknown>;
-export { Object_2 as Object }
-
-// @public
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 
 // @public
@@ -179,6 +217,12 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
 }): (input: unknown) => Result<z.infer<T>, Error>;
+
+// @public
+export type RedisClientOptions = {
+    token?: string;
+    url?: string;
+};
 
 // @public
 export type SerializedCause = SerializedError | string;
@@ -201,6 +245,13 @@ export type SerializeOptions = {
 };
 
 // @public
+export type SetOptions = {
+    onlyIfAbsent?: boolean;
+    onlyIfPresent?: boolean;
+    ttlMs?: number;
+};
+
+// @public
 export function sleep(ms: number, { signal }?: SleepOptions): ResultAsync<void, Error>;
 
 // @public
@@ -219,6 +270,9 @@ export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, opti
 
 // @public
 export function truncate(value: string, maxLen?: null | number): string;
+
+// @public
+export type UnknownRecord = Record<string, unknown>;
 
 // @public
 export function userMessageFromError(error: Error): string;

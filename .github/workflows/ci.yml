@@ -76,6 +76,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
           NEXT_PUBLIC_RAINBOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_RAINBOW_PROJECT_ID }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
 
       - name: Run typecheck
         run: pnpm turbo run typecheck --affected

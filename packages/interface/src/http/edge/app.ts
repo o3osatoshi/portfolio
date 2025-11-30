@@ -1,13 +1,20 @@
+import {
+  type HeavyProcessCachedResponse,
+  type HeavyProcessResponse,
+  HeavyProcessUseCase,
+} from "@repo/application";
+import { HeavyProcessCachedUseCase } from "@repo/application";
 import type { AuthConfig, User } from "@repo/auth";
 import { userSchema } from "@repo/auth";
 import { initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import { type Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { createEdgeRedisClient, parseWith } from "@o3osatoshi/toolkit";
+import type { RedisClientOptions } from "@o3osatoshi/toolkit";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respond } from "../core/respond";
+import { respond, respondAsync } from "../core/respond";
 
 /**
  * Concrete Hono app type for the Edge HTTP interface.
@@ -21,9 +28,21 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
  *
  * - `AuthConfig` can be created via `createAuthConfig` from `@repo/auth`.
  */
-export type EdgeDeps =
+export type EdgeDeps = EdgeDepsAuth & EdgeDepsRedis;
+
+export type EdgeDepsAuth =
   | { authConfig: AuthConfig; createAuthConfig?: (c: Context) => AuthConfig }
   | { authConfig?: AuthConfig; createAuthConfig: (c: Context) => AuthConfig };
+
+export type EdgeDepsRedis =
+  | {
+      createRedisClientOptions: (c: Context) => RedisClientOptions;
+      redisClientOptions?: RedisClientOptions;
+    }
+  | {
+      createRedisClientOptions?: (c: Context) => RedisClientOptions;
+      redisClientOptions: RedisClientOptions;
+    };
 
 /**
  * Build the Edge-ready HTTP application.
@@ -55,7 +74,7 @@ export function buildEdgeApp(deps: EdgeDeps) {
     .basePath("/edge")
     .use("*", requestIdMiddleware, loggerMiddleware)
     .use("*", initAuthConfig(authConfigHandler))
-    .route("/public", buildEdgePublicRoutes())
+    .route("/public", buildEdgePublicRoutes(deps))
     .route("/private", buildEdgePrivateRoutes());
 }
 
@@ -95,6 +114,25 @@ function buildEdgePrivateRoutes() {
   );
 }
 
-function buildEdgePublicRoutes() {
-  return new Hono().get("/healthz", (c) => c.json({ ok: true }));
+function buildEdgePublicRoutes(deps: EdgeDeps) {
+  const redisClient = (c: Context) => {
+    if (deps.redisClientOptions !== undefined) {
+      return createEdgeRedisClient(deps.redisClientOptions);
+    } else {
+      // @ts-expect-error
+      return createEdgeRedisClient(deps.createRedisClientOptions(c));
+    }
+  };
+  return new Hono()
+    .get("/healthz", (c) => c.json({ ok: true }))
+    .get("/heavy", (c) => {
+      const heavyProcess = new HeavyProcessUseCase();
+      return respondAsync<HeavyProcessResponse>(c)(heavyProcess.execute());
+    })
+    .get("/heavy/cached", (c) => {
+      const heavyProcessCached = new HeavyProcessCachedUseCase(redisClient(c));
+      return respondAsync<HeavyProcessCachedResponse>(c)(
+        heavyProcessCached.execute(),
+      );
+    });
 }

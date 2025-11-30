@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => {
   return {
-    cookiesMock: vi.fn(),
     createEdgeRpcClientMock: vi.fn(),
     createRpcClientMock: vi.fn(),
   };
@@ -13,10 +12,6 @@ vi.mock("@repo/interface/rpc-client", () => ({
   createRpcClient: h.createRpcClientMock,
 }));
 
-vi.mock("next/headers", () => ({
-  cookies: h.cookiesMock,
-}));
-
 vi.mock("@/env/client", () => ({
   env: {
     NEXT_PUBLIC_API_BASE_URL: "https://example.com",
@@ -24,7 +19,7 @@ vi.mock("@/env/client", () => ({
   },
 }));
 
-import { createClient, createEdgeClient, createHeaders } from "./rpc-client";
+import { createClient, createEdgeClient } from "./rpc-client";
 
 describe("utils/rpc-client createClient", () => {
   beforeEach(() => {
@@ -65,6 +60,9 @@ describe("utils/rpc-client createClient", () => {
       options,
     );
     expect(res).toBe(client);
+    expect(options.init?.cache).toBe("no-store");
+    expect(options.init?.next?.revalidate).toBe(60);
+    expect(options.init?.next?.tags).toEqual(["t1"]);
   });
 });
 
@@ -85,43 +83,30 @@ describe("utils/rpc-client createEdgeClient", () => {
     );
     expect(res).toBe(client);
   });
-});
 
-describe("utils/rpc-client createHeaders", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  it("creates Edge RPC client with supplied options", () => {
+    const client = {};
+    h.createEdgeRpcClientMock.mockReturnValueOnce(client);
 
-  it("wraps cookies header in ResultAsync on success", async () => {
-    const cookiesObject = {
-      toString: () => "sid=test",
+    const options = {
+      init: {
+        cache: "force-cache" as const,
+        next: {
+          revalidate: false as const,
+          tags: ["edge-tag"],
+        },
+      },
     };
-    h.cookiesMock.mockReturnValueOnce(Promise.resolve(cookiesObject));
 
-    const res = await createHeaders();
+    const res = createEdgeClient(options);
 
-    expect(h.cookiesMock).toHaveBeenCalledTimes(1);
-    expect(res.isOk()).toBe(true);
-    if (!res.isOk()) return;
-
-    // @ts-expect-error
-    const headers = res.value.headers();
-    expect(headers).toEqual({ Cookie: "sid=test" });
-  });
-
-  it("returns Err with InfraUnknownError when cookies retrieval fails", async () => {
-    const cause = new Error("cookies failed");
-    h.cookiesMock.mockReturnValueOnce(Promise.reject(cause));
-
-    const res = await createHeaders();
-
-    expect(h.cookiesMock).toHaveBeenCalledTimes(1);
-    expect(res.isErr()).toBe(true);
-    if (!res.isErr()) return;
-
-    expect(res.error).toBeInstanceOf(Error);
-    expect(res.error.name).toBe("InfraUnknownError");
-    const payload = JSON.parse(res.error.message);
-    expect(payload.summary).toBe("Call cookies failed");
+    expect(h.createEdgeRpcClientMock).toHaveBeenCalledWith(
+      "https://example.com",
+      options,
+    );
+    expect(res).toBe(client);
+    expect(options.init?.cache).toBe("force-cache");
+    expect(options.init?.next?.revalidate).toBe(false);
+    expect(options.init?.next?.tags).toEqual(["edge-tag"]);
   });
 });

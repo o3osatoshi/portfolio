@@ -48,6 +48,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@upstash/redis": "^1.35.6",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },
@@ -62,7 +63,7 @@
     "vitest": "catalog:"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "publishConfig": {
     "access": "public"

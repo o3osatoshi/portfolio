@@ -5,8 +5,12 @@ import { env } from "@/env/server";
 
 export const runtime = "edge";
 
-const authConfig = createAuthConfig({
-  secret: env.AUTH_SECRET,
+export const { GET, POST } = buildEdgeHandler({
+  authConfig: createAuthConfig({
+    secret: env.AUTH_SECRET,
+  }),
+  redisClientOptions: {
+    token: env.UPSTASH_REDIS_REST_TOKEN,
+    url: env.UPSTASH_REDIS_REST_URL,
+  },
 });
-
-export const { GET, POST } = buildEdgeHandler({ authConfig });

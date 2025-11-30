@@ -16,6 +16,9 @@ vi.mock("@/services/get-me", () => ({
 
 vi.mock("@/utils/rpc-client", () => ({
   createClient: h.createClientMock,
+}));
+
+vi.mock("@/utils/rpc-headers", () => ({
   createHeaders: h.createHeadersMock,
 }));
 

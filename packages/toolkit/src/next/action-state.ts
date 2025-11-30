@@ -1,16 +1,20 @@
+import type { UnknownRecord } from "../types";
 import { userMessageFromError } from "./error-message";
 
 /**
- * Data payload accepted by {@link ActionState}. Matches the shape that React
- * `useActionState` prefers for server actions.
+ * Data payload accepted by {@link ActionState}. Designed to mirror the
+ * "state" slot used by React `useActionState` for server actions.
  *
- * @typeParam T - Base (non-null) data payload type; defaults to {@link Object}.
+ * @typeParam TBase - Base (non-null) data payload type; defaults to {@link UnknownRecord}.
  * @public
  * @remarks
- * - The full payload type is a union of `T | null | undefined`.
+ * - The full payload type is a union of `TBase | null | undefined`.
  * - `null` / `undefined` can be used to represent "no result yet" or an intentionally empty payload.
  */
-export type ActionData<T extends Object = Object> = null | T | undefined;
+export type ActionData<TBase extends UnknownRecord = UnknownRecord> =
+  | null
+  | TBase
+  | undefined;
 
 /**
  * Minimal error shape delivered to the client side; keeps stack/cause out of the response.
@@ -25,7 +29,7 @@ export type ActionError = {
 /**
  * Success/failure envelope compatible with React `useActionState`.
  *
- * @typeParam T - Data payload type; defaults to {@link Object}.
+ * @typeParam T - Type of the `data` field; should usually be an {@link ActionData} union.
  * @typeParam E - Error payload type; defaults to {@link ActionError}.
  * @public
  * @remarks
@@ -34,19 +38,9 @@ export type ActionError = {
  * - In some generic compositions this type can collapse to `never` to represent an impossible branch; at runtime you only handle the success and failure shapes.
  */
 export type ActionState<
-  T extends ActionData = Object,
+  T extends ActionData = UnknownRecord,
   E extends ActionError = ActionError,
 > = { data: T; ok: true } | { error: E; ok: false } | never;
-
-/**
- * Default object-shaped payload used by {@link ActionData} and {@link ActionState}.
- *
- * @public
- * @remarks
- * - This narrows the built-in `Object` type to a simple `Record<string, unknown>`.
- * - Prefer supplying a more specific type parameter where your action has a known shape.
- */
-export type Object = Record<string, unknown>;
 
 /**
  * Build a failure {@link ActionState} with a user-facing error message.
@@ -56,7 +50,7 @@ export type Object = Record<string, unknown>;
  * @returns An {@link ActionState} with `ok: false` and a friendly message derived from the error.
  * @remarks
  * - Strings and pre-shaped {@link ActionError} values are passed through.
- * - Native `Error` instances are converted via {@link userMessageFromError} to keep messages user-friendly.
+ * - Native `Error` instances are converted via {@link userMessageFromError} and wrapped as {@link ActionError} to keep messages user-friendly and serializable.
  */
 export function err<E extends Error>(
   error: ActionError | E | string,
@@ -77,7 +71,7 @@ export function err<E extends Error>(
  *
  * @public
  * @param data - Arbitrary payload you want to return to the caller.
- * @returns An {@link ActionState} with `ok: true` and the supplied data.
+ * @returns An {@link ActionState} with `ok: true` and the supplied data. The returned type uses `E = never` so that the failure branch is impossible when you construct the state via this helper.
  */
 export function ok<T extends ActionData>(data: T): ActionState<T, never> {
   return { data, ok: true };

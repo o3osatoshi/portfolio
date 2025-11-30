@@ -78,6 +78,10 @@ const navigateOptions: NavigateOption[] = [
         title: getLabel("toolkit-asynchronous"),
         url: getPath("toolkit-asynchronous"),
       },
+      {
+        title: getLabel("toolkit-redis-cache"),
+        url: getPath("toolkit-redis-cache"),
+      },
     ],
     title: getLabel("toolkit"),
     url: "#",

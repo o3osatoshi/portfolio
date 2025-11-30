@@ -3,11 +3,8 @@ import {
   createEdgeRpcClient,
   createRpcClient,
 } from "@repo/interface/rpc-client";
-import { ResultAsync } from "neverthrow";
-import { cookies } from "next/headers";
 
 import { env } from "@/env/client";
-import { newError } from "@o3osatoshi/toolkit";
 
 type NextFetchOptions = {
   init?: {
@@ -20,12 +17,15 @@ type NextFetchOptions = {
 } & Omit<ClientOptions, "init">;
 
 /**
- * Create a typed RPC client for the Node HTTP API (`/api/*`) that:
- * - targets `env.NEXT_PUBLIC_API_BASE_URL`
- * - accepts optional Hono client options (headers, fetch, init)
+ * Create a typed RPC client for the interface HTTP API (Node runtime).
  *
- * To forward the current request cookies, combine this with
- * {@link createHeaders} when issuing a request.
+ * The client:
+ * - targets `env.NEXT_PUBLIC_API_BASE_URL`
+ * - accepts Hono client options compatible with Next.js `fetch`
+ *   (headers, fetch, and an `init` that supports `cache` / `next`).
+ *
+ * To forward the current request cookies from a server environment, combine
+ * this with `createHeaders` from `@/utils/rpc-headers` when issuing a request.
  */
 export function createClient(
   options?: NextFetchOptions,
@@ -35,34 +35,19 @@ export function createClient(
 }
 
 /**
- * Create a typed RPC client for the Edge HTTP API (`/edge/*`) that:
- * - targets `env.NEXT_PUBLIC_API_BASE_URL`
- * - accepts optional Hono client options (headers, fetch, init)
+ * Create a typed RPC client for the Edge HTTP API.
  *
- * To forward the current request cookies, combine this with
- * {@link createHeaders} when issuing a request.
+ * The client:
+ * - targets `env.NEXT_PUBLIC_API_BASE_URL`
+ * - accepts Hono client options compatible with Next.js `fetch`
+ *   (headers, fetch, and an `init` that supports `cache` / `next`).
+ *
+ * To forward the current request cookies from a server environment, combine
+ * this with `createHeaders` from `@/utils/rpc-headers` when issuing a request.
  */
 export function createEdgeClient(
   options?: NextFetchOptions,
 ): ReturnType<typeof createEdgeRpcClient> {
   const baseURL = env.NEXT_PUBLIC_API_BASE_URL;
   return createEdgeRpcClient(baseURL, options);
-}
-
-export function createHeaders(): ResultAsync<
-  Pick<ClientOptions, "headers">,
-  Error
-> {
-  return ResultAsync.fromPromise(cookies(), (cause) =>
-    newError({
-      action: "Call cookies",
-      cause,
-      kind: "Unknown",
-      layer: "Infra",
-    }),
-  ).map((reqCookies) => ({
-    headers: () => ({
-      Cookie: reqCookies.toString(),
-    }),
-  }));
 }

@@ -4,7 +4,8 @@ import { ResultAsync } from "neverthrow";
 import { getMe } from "@/services/get-me";
 import { handleResponse } from "@/utils/handle-response";
 import { getPath, getTag } from "@/utils/nav-handler";
-import { createClient, createHeaders } from "@/utils/rpc-client";
+import { createClient } from "@/utils/rpc-client";
+import { createHeaders } from "@/utils/rpc-headers";
 import { newFetchError } from "@o3osatoshi/toolkit";
 
 export type Transaction = Transactions[number];
@@ -46,3 +47,29 @@ export function getTransactions(): ResultAsync<Transactions, Error> {
       }),
     );
 }
+
+// NOTE: next-fetch example
+// export function getTransactions(): ResultAsync<Transactions, Error> {
+//   return ResultAsync.fromPromise(cookies(), (cause) =>
+//     webUnknownError({
+//       action: "ReadCookies",
+//       cause,
+//       reason: "Failed to read cookies",
+//     }),
+//   )
+//     .andThen((cookies) =>
+//       nextFetch({
+//         headers: { Cookie: cookies.toString() },
+//         path: getPath("labs-transactions"),
+//       }),
+//     )
+//     .andThen((res) => {
+//       if (!res.ok) {
+//         return errAsync(deserializeError(res.body));
+//       }
+//       return parseWith(transactionsSchema, {
+//         action: "ParseTransactionsResponse",
+//         layer: "UI",
+//       })(res.body);
+//     });
+// }
