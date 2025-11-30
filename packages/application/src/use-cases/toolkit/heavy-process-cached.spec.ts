@@ -63,7 +63,7 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   it("runs heavy process and caches result when no cached value exists", async () => {
     h.kvGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
 
-    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined as void));
+    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined));
 
     h.kvSetMock.mockReturnValueOnce(
       okAsync<"OK" | { timestamp: Date } | null, Error>("OK"),
@@ -156,7 +156,7 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   it("propagates error when kvSet fails after heavy process", async () => {
     h.kvGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
 
-    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined as void));
+    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined));
 
     const kvSetError = new Error("kvSet failed");
     h.kvSetMock.mockReturnValueOnce(errAsync<"OK" | null, Error>(kvSetError));

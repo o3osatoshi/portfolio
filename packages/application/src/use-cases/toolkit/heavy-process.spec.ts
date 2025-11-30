@@ -21,7 +21,7 @@ describe("application/use-cases: HeavyProcessUseCase", () => {
   });
 
   it("returns Ok with current timestamp when sleep completes", async () => {
-    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined as void));
+    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined));
 
     const useCase = new HeavyProcessUseCase();
     const before = new Date();
