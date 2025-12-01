@@ -9,6 +9,7 @@
     "build:functions": "turbo run build --filter=@repo/functions...",
     "build:storybook": "turbo run build --filter=@repo/storybook...",
     "build:web": "turbo run build --filter=@repo/web...",
+    "catalog:update": "node scripts/update-catalog.js",
     "check": "run-s check:type check:test",
     "check:test": "turbo run test",
     "check:test:cvrg": "turbo run test:cvrg",
