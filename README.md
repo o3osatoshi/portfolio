@@ -82,7 +82,6 @@ pnpm install
 - `pnpm style` – Package sort → ESLint (fix) → Biome (write).
 - `pnpm clean` – Remove build artifacts across packages.
 - `pnpm pull:env` – Run `pull:env` scripts only in packages/apps that define them (updates local `.env*` files).
-- `pnpm catalog:update` – Update versions in the workspace `catalog` (`pnpm-workspace.yaml`). Supports `--major` / `--minor` / `--patch` and prerelease flags `--include-canary`, `--include-beta`, `--include-dev` (pass after `--`, e.g. `pnpm catalog:update -- --minor --include-beta`).
 - Docs: To update API docs, run `npx typedoc`.
 - `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
 - `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.
