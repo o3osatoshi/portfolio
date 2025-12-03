@@ -1,14 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => {
-  const RedisMock = vi.fn((options: unknown) => ({
-    options,
-    tag: "redis",
-  }));
-  const EdgeRedisMock = vi.fn((options: unknown) => ({
-    options,
-    tag: "edge-redis",
-  }));
+  const RedisMock = vi.fn(function RedisMock(
+    this: { options: unknown; tag: string },
+    options: unknown,
+  ) {
+    this.options = options;
+    this.tag = "redis";
+  });
+  const EdgeRedisMock = vi.fn(function EdgeRedisMock(
+    this: { options: unknown; tag: string },
+    options: unknown,
+  ) {
+    this.options = options;
+    this.tag = "edge-redis";
+  });
   return { EdgeRedisMock, RedisMock };
 });
 
