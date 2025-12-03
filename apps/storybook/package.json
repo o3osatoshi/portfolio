@@ -10,8 +10,8 @@
     "clean": "rimraf storybook-static",
     "dev": "storybook dev -p 6006",
     "preview-storybook": "serve storybook-static",
-    "test": "vitest run --project=storybook",
-    "test:cvrg": "vitest run --coverage --project=storybook",
+    "test": "vitest run --browser --project=storybook",
+    "test:cvrg": "vitest run --browser --coverage --project=storybook",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
@@ -32,7 +32,8 @@
     "@tailwindcss/vite": "^4.1.5",
     "@types/node": "catalog:",
     "@vitejs/plugin-react": "^4.4.1",
-    "@vitest/browser": "^3.2.4",
+    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "chromatic": "^13.3.0",
     "eslint-plugin-storybook": "^9.1.10",
