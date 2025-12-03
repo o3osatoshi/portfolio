@@ -7,24 +7,23 @@
 import { CoverageV8Options } from 'vitest/node';
 import { InlineConfig } from 'vitest/node';
 import { Options as Options_2 } from 'tsup';
-import { PluginOption } from 'vite';
-import * as vite from 'vite';
+import { ViteUserConfig } from 'vitest/config';
 
 // @public
-export function baseTestPreset(opts?: Options): vite.UserConfig;
+export function baseTestPreset(opts?: Options): ViteUserConfig;
 
 // @public
 export function browserBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
-export function browserTestPreset(opts?: Options): vite.UserConfig;
+export function browserTestPreset(opts?: Options): ViteUserConfig;
 
 // @public
 export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
 export type Options = {
-    plugins?: PluginOption[];
+    plugins?: ViteUserConfig["plugins"];
     test?: {
         coverage?: CoverageV8Options;
     } & InlineConfig;
@@ -34,7 +33,7 @@ export type Options = {
 export function publicDualBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
-export function storybookTestPreset(opts?: Options): vite.UserConfig;
+export function storybookTestPreset(opts?: Options): ViteUserConfig;
 
 // (No @packageDocumentation comment for this package)
 

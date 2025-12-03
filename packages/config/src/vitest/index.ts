@@ -1,9 +1,9 @@
 import { playwright } from "@vitest/browser-playwright";
-import type { PluginOption } from "vite";
 import {
   defineConfig,
   type TestProjectConfiguration,
   type TestProjectInlineConfiguration,
+  type ViteUserConfig,
 } from "vitest/config";
 import type { CoverageV8Options, InlineConfig } from "vitest/node";
 
@@ -16,7 +16,7 @@ import type { CoverageV8Options, InlineConfig } from "vitest/node";
  * @public
  */
 export type Options = {
-  plugins?: PluginOption[];
+  plugins?: ViteUserConfig["plugins"];
   test?: {
     coverage?: CoverageV8Options;
   } & InlineConfig;
