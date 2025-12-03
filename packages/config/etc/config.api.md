@@ -4,33 +4,38 @@
 
 ```ts
 
+import { CoverageV8Options } from 'vitest/node';
 import { InlineConfig } from 'vitest/node';
 import { Options as Options_2 } from 'tsup';
-import { ViteUserConfig } from 'vitest/config';
+import { PluginOption } from 'vite';
+import * as vite from 'vite';
+import * as vitest_config from 'vitest/config';
 
 // @public
-export function baseTestPreset(opts?: Options): ViteUserConfig;
+export function baseTestPreset(opts?: Options): vite.UserConfig & Promise<vite.UserConfig> & (vitest_config.ViteUserConfigFnObject & (vitest_config.ViteUserConfigFnPromise & vitest_config.ViteUserConfigExport));
 
 // @public
 export function browserBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
-export function browserTestPreset(opts?: Options): ViteUserConfig;
+export function browserTestPreset(opts?: Options): vite.UserConfig & Promise<vite.UserConfig> & (vitest_config.ViteUserConfigFnObject & (vitest_config.ViteUserConfigFnPromise & vitest_config.ViteUserConfigExport));
 
 // @public
 export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
 export type Options = {
-    plugins?: ViteUserConfig["plugins"];
-    test?: InlineConfig;
+    plugins?: PluginOption[];
+    test?: {
+        coverage: CoverageV8Options;
+    } & InlineConfig;
 };
 
 // @public
 export function publicDualBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
 
 // @public
-export function storybookTestPreset(opts?: Options): ViteUserConfig;
+export function storybookTestPreset(opts?: Options): vite.UserConfig & Promise<vite.UserConfig> & (vitest_config.ViteUserConfigFnObject & (vitest_config.ViteUserConfigFnPromise & vitest_config.ViteUserConfigExport));
 
 // (No @packageDocumentation comment for this package)
 

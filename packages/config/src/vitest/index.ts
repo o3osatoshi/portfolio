@@ -1,10 +1,11 @@
+import { playwright } from "@vitest/browser-playwright";
+import type { PluginOption } from "vite";
 import {
   defineConfig,
   type TestProjectConfiguration,
   type TestProjectInlineConfiguration,
-  type ViteUserConfig,
 } from "vitest/config";
-import type { InlineConfig } from "vitest/node";
+import type { CoverageV8Options, InlineConfig } from "vitest/node";
 
 /**
  * Supported overrides for the shared Vitest presets.
@@ -15,8 +16,10 @@ import type { InlineConfig } from "vitest/node";
  * @public
  */
 export type Options = {
-  plugins?: ViteUserConfig["plugins"];
-  test?: InlineConfig;
+  plugins?: PluginOption[];
+  test?: {
+    coverage: CoverageV8Options;
+  } & InlineConfig;
 };
 
 /**
@@ -40,6 +43,7 @@ export type Options = {
  */
 export function baseTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
+  // @ts-expect-error Vitest re-exports Vite v6 PluginOption, but vite-tsconfig-paths expects Vite v7, causing a harmless structural mismatch.
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -54,9 +58,11 @@ export function baseTestPreset(opts: Options = {}) {
           "**/index.{ts,js}",
           ...(cvrg?.exclude ?? []),
         ],
+        include: cvrg?.include ?? ["src/**/*.{ts,tsx,js,jsx}"],
         reporter: ["text-summary", "lcov", "html"],
         reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
+      dir: opts.test?.dir ?? "src",
       environment: "node",
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
@@ -83,6 +89,7 @@ export function baseTestPreset(opts: Options = {}) {
  */
 export function browserTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
+  // @ts-expect-error Vitest re-exports Vite v6 PluginOption, but vite-tsconfig-paths expects Vite v7, causing a harmless structural mismatch.
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -97,10 +104,12 @@ export function browserTestPreset(opts: Options = {}) {
           "**/index.{ts,js}",
           ...(cvrg?.exclude ?? []),
         ],
+        include: cvrg?.include ?? ["src/**/*.{ts,tsx,js,jsx}"],
         reporter: ["text-summary", "lcov", "html"],
         reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
       css: opts.test?.css ?? true,
+      dir: opts.test?.dir ?? "src",
       environment: "jsdom",
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
@@ -123,6 +132,7 @@ export function browserTestPreset(opts: Options = {}) {
  */
 export function storybookTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
+  // @ts-expect-error Vitest re-exports Vite v6 PluginOption, but vite-tsconfig-paths expects Vite v7, causing a harmless structural mismatch.
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -136,12 +146,18 @@ export function storybookTestPreset(opts: Options = {}) {
                 test: {
                   name: "storybook",
                   browser: {
-                    provider: "playwright",
+                    provider: playwright({
+                      launchOptions: {
+                        headless: true,
+                      },
+                    }),
                     enabled: true,
-                    headless: true,
                     instances: [
                       {
                         browser: "chromium",
+                        launch: {
+                          headless: true,
+                        },
                       },
                     ],
                   },
