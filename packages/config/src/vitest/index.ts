@@ -18,7 +18,7 @@ import type { CoverageV8Options, InlineConfig } from "vitest/node";
 export type Options = {
   plugins?: PluginOption[];
   test?: {
-    coverage: CoverageV8Options;
+    coverage?: CoverageV8Options;
   } & InlineConfig;
 };
 
