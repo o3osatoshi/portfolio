@@ -43,7 +43,6 @@ export type Options = {
  */
 export function baseTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
-  // @ts-expect-error Vitest re-exports Vite v6 PluginOption, but vite-tsconfig-paths expects Vite v7, causing a harmless structural mismatch.
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -89,7 +88,6 @@ export function baseTestPreset(opts: Options = {}) {
  */
 export function browserTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
-  // @ts-expect-error Vitest re-exports Vite v6 PluginOption, but vite-tsconfig-paths expects Vite v7, causing a harmless structural mismatch.
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {
@@ -132,7 +130,6 @@ export function browserTestPreset(opts: Options = {}) {
  */
 export function storybookTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
-  // @ts-expect-error Vitest re-exports Vite v6 PluginOption, but vite-tsconfig-paths expects Vite v7, causing a harmless structural mismatch.
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
     test: {

@@ -47,13 +47,13 @@
   },
   "devDependencies": {
     "@o3osatoshi/config": "workspace:*",
-    "@testcontainers/postgresql": "^11.5.1",
+    "@testcontainers/postgresql": "^11.9.0",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "dotenv-cli": "catalog:",
     "npm-run-all": "catalog:",
     "prisma": "^6.18.0",
-    "testcontainers": "^11.5.1",
+    "testcontainers": "^11.9.0",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
