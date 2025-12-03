@@ -146,20 +146,9 @@ export function storybookTestPreset(opts: Options = {}) {
                 test: {
                   name: "storybook",
                   browser: {
-                    provider: playwright({
-                      launchOptions: {
-                        headless: true,
-                      },
-                    }),
+                    provider: playwright({ launchOptions: { headless: true } }),
                     enabled: true,
-                    instances: [
-                      {
-                        browser: "chromium",
-                        launch: {
-                          headless: true,
-                        },
-                      },
-                    ],
+                    instances: [{ browser: "chromium" }],
                   },
                   ...(p.test?.setupFiles
                     ? { setupFiles: p.test.setupFiles }

@@ -27,7 +27,7 @@ export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Opt
 export type Options = {
     plugins?: PluginOption[];
     test?: {
-        coverage: CoverageV8Options;
+        coverage?: CoverageV8Options;
     } & InlineConfig;
 };
 
