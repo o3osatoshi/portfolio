@@ -45,7 +45,6 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       TURBO_TELEMETRY_DISABLED: 1
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Checkout
@@ -67,6 +66,6 @@ jobs:
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
         with:
           install_command: pnpm install --frozen-lockfile
-          build_command: pnpm -C packages/prisma generate && pnpm run build:storybook
+          build_command: pnpm run build:storybook
           path: apps/storybook/storybook-static
           checkout: false

@@ -31,17 +31,19 @@ const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! 
 ```
 
 ## Prisma Setup
-- Environment files: place `.env.development.local` / `.env.production.local` under `packages/prisma`.
+- Environment files:
+  - Main: `packages/prisma/.env` (loaded by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
+  - Local templates: `packages/prisma/.env.development.local` / `.env.production.local`
 - Client generation:
-  - By default, `postinstall` runs `prisma generate` (see package.json).
-  - If it fails, run manually: `pnpm -C packages/prisma generate`.
+  - The Turbo `build` pipeline runs `pnpm -C packages/prisma build`, which calls `prisma generate` automatically.
+  - For local use, prefer `pnpm -C packages/prisma build` so behavior matches CI and deployment.
 
 ## Scripts
+- `pnpm -C packages/prisma build` — Generate Prisma Client (also used by Turbo `build`)
 - `pnpm -C packages/prisma db:push` — Push schema to DB (dev)
 - `pnpm -C packages/prisma migrate:dev` — Create/apply migrations (dev)
 - `pnpm -C packages/prisma migrate:deploy` — Apply migrations to production
 - `pnpm -C packages/prisma studio` — Open Prisma Studio
-- `pnpm -C packages/prisma generate` — Generate Prisma Client
 - `pnpm -C packages/prisma typecheck` — Typecheck only
 
 ## Notes
@@ -60,6 +62,6 @@ const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! 
 
 ## Troubleshooting
 - “Prisma Client not found”
-  - Run `pnpm -C packages/prisma generate` and rebuild the app.
+  - Run `pnpm -C packages/prisma build` and rebuild the app.
 - “TypeScript modules not resolved in apps”
   - Ensure Next `transpilePackages` includes `@repo/prisma`.

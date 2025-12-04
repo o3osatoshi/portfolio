@@ -107,12 +107,14 @@ Environment files (Prisma):
 - `packages/prisma/.env.development.local`
 - `packages/prisma/.env.production.local`
 
-Typically、Doppler などで取得した `*.local` の内容をベースに、作業する環境向けの値を `packages/prisma/.env` に反映してから Prisma コマンドを実行します（少なくとも `DATABASE_URL` が必要です）。
+Typically, you use the values from the `*.local` files (for example, fetched via Doppler) as a template, then copy or merge the desired configuration into `packages/prisma/.env` before running Prisma CLI commands (at minimum, `DATABASE_URL` must be set).
 
 ## Code generation
-- Prisma client: `pnpm -C packages/prisma generate`
-  - Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
-  - Run every declared `generate` script: `pnpm -r run generate`
+- Prisma client:
+  - Local/Manual: `pnpm -C packages/prisma build`
+  - Via Turbo: the `build` pipeline runs `pnpm -C packages/prisma build` as a dependency, which executes `prisma generate`.
+- Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
+- Run every declared `generate` script: `pnpm -r run generate`
 
 ## Testing & Quality
 
@@ -139,7 +141,9 @@ Typically、Doppler などで取得した `*.local` の内容をベースに、�
 
 ## Environment variables
 - `apps/web`: `.env.local` (Next.js runtime + Auth.js, database client, Web3 providers).
-- `packages/prisma`: `.env.development.local`, `.env.production.local` (database connection strings).
+- `packages/prisma`:
+  - `.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
+  - `.env.development.local`, `.env.production.local` (local templates)
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
 

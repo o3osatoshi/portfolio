@@ -8,10 +8,10 @@
     ".": "./src/index.ts"
   },
   "scripts": {
+    "build": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "format": "prisma format",
-    "generate": "prisma generate",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:dev": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset",

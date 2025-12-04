@@ -46,12 +46,15 @@ This document reflects the current state of the repository. Commands listed belo
 - Toolkit/domain/application: `pnpm -C <package> test`, `pnpm -C <package> typecheck`.
 
 ## Code Generation
-- Prisma client: `pnpm -C packages/prisma generate` (also runs on package postinstall).
+- Prisma client: `pnpm -C packages/prisma build`  
+  - Turbo runs this script as part of `build` pipelines, so Prisma Client is generated automatically when building.
 - Wagmi/ETH hooks: `pnpm -C packages/eth generate`.
 - Run every available `generate` script: `pnpm -r run generate` (only executes where defined).
 
 ## Database (Prisma)
-- Environment files: `packages/prisma/.env.development.local`, `.env.production.local` (loaded through `dotenv-cli` scripts).
+- Environment files:
+  - `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
+  - `packages/prisma/.env.development.local`, `.env.production.local` (local templates)
 - Use the `packages/prisma` scripts for all schema/migration/seed tasks (see commands above). There are no root-level DB scripts.
 
 ## Testing

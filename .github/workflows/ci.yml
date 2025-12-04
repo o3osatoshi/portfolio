@@ -67,11 +67,6 @@ jobs:
       - name: Run biome, eslint and pkg
         run: pnpm style:pure
 
-      - name: Generate Prisma client
-        run: pnpm -C packages/prisma generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
       - name: Build packages
         run: pnpm turbo run build --affected
         env:
