@@ -12,7 +12,6 @@
     "db:seed": "prisma db seed",
     "format": "prisma format",
     "generate": "prisma generate",
-    "postinstall": "npm run generate",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:dev": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset",

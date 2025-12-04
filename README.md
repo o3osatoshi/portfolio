@@ -95,22 +95,24 @@ pnpm install
 
 ## Database workflow (Prisma)
 - Development migrate: `pnpm -C packages/prisma migrate:dev`
+- Reset database (dev): `pnpm -C packages/prisma migrate:reset`
 - Production deploy: `pnpm -C packages/prisma migrate:deploy`
 - Push schema without migrations: `pnpm -C packages/prisma db:push`
-- Seed data: `pnpm -C packages/prisma seed`
+- Seed data: `pnpm -C packages/prisma db:seed`
 - Inspect status: `pnpm -C packages/prisma migrate:status`
 - Prisma Studio: `pnpm -C packages/prisma studio`
 
-Environment files:
+Environment files (Prisma):
+- `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
 - `packages/prisma/.env.development.local`
 - `packages/prisma/.env.production.local`
 
-All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.local` file exists before running them.
+Typically、Doppler などで取得した `*.local` の内容をベースに、作業する環境向けの値を `packages/prisma/.env` に反映してから Prisma コマンドを実行します（少なくとも `DATABASE_URL` が必要です）。
 
 ## Code generation
-- Prisma client (runs on `postinstall`): `pnpm -C packages/prisma generate`
-- Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
-- Run every declared `generate` script: `pnpm -r run generate`
+- Prisma client: `pnpm -C packages/prisma generate`
+  - Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
+  - Run every declared `generate` script: `pnpm -r run generate`
 
 ## Testing & Quality
 
