@@ -11,7 +11,7 @@ The codebase enforces a strict dependency rule: **Dependencies point inwards.**
 *   **Application (`@repo/application`)**: Use cases and DTO validation. Orchestrates domain logic. Depends on Domain.
 *   **Infrastructure (`@repo/prisma`)**: Adapters (Prisma) that fulfill domain ports. Depends on Domain and Application.
 *   **Delivery (`apps/web`, `apps/functions`)**: Entry points (Next.js, Firebase Functions). Injects Infrastructure into Application use cases.
-*   **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: Shared UI components and documentation. decoupled from domain logic.
+*   **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: Shared UI components and documentation. Decoupled from domain logic.
 
 ### Key Technologies
 *   **Runtime:** Node.js >= 22
