@@ -167,7 +167,7 @@ export const WithStatus: Story = {
     expect(trigger).toHaveAttribute("data-state", "open");
   },
   render: () => (
-    <DropdownMenu defaultOpen>
+    <DropdownMenu defaultOpen modal={false}>
       <DropdownMenuTrigger asChild>
         <Button className="gap-2" variant="secondary">
           <CheckCircle className="size-4" />

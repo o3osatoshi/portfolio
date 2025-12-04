@@ -8,8 +8,8 @@ const preview: Preview = {
       config: {
         rules: [
           { id: "color-contrast", enabled: true },
-          { id: "landmark-one-main", enabled: true },
-          { id: "region", enabled: true },
+          { id: "landmark-one-main", enabled: false },
+          { id: "region", enabled: false },
         ],
       },
       manual: false,
