@@ -4,6 +4,7 @@
 
 ```ts
 
+import { CoverageV8Options } from 'vitest/node';
 import { InlineConfig } from 'vitest/node';
 import { Options as Options_2 } from 'tsup';
 import { ViteUserConfig } from 'vitest/config';
@@ -23,7 +24,9 @@ export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Opt
 // @public
 export type Options = {
     plugins?: ViteUserConfig["plugins"];
-    test?: InlineConfig;
+    test?: {
+        coverage?: CoverageV8Options;
+    } & InlineConfig;
 };
 
 // @public

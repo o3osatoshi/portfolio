@@ -1,10 +1,11 @@
+import { playwright } from "@vitest/browser-playwright";
 import {
   defineConfig,
   type TestProjectConfiguration,
   type TestProjectInlineConfiguration,
   type ViteUserConfig,
 } from "vitest/config";
-import type { InlineConfig } from "vitest/node";
+import type { CoverageV8Options, InlineConfig } from "vitest/node";
 
 /**
  * Supported overrides for the shared Vitest presets.
@@ -16,7 +17,9 @@ import type { InlineConfig } from "vitest/node";
  */
 export type Options = {
   plugins?: ViteUserConfig["plugins"];
-  test?: InlineConfig;
+  test?: {
+    coverage?: CoverageV8Options;
+  } & InlineConfig;
 };
 
 /**
@@ -54,9 +57,11 @@ export function baseTestPreset(opts: Options = {}) {
           "**/index.{ts,js}",
           ...(cvrg?.exclude ?? []),
         ],
+        include: cvrg?.include ?? ["src/**/*.{ts,tsx,js,jsx}"],
         reporter: ["text-summary", "lcov", "html"],
         reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
+      dir: opts.test?.dir ?? "src",
       environment: "node",
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
@@ -97,10 +102,12 @@ export function browserTestPreset(opts: Options = {}) {
           "**/index.{ts,js}",
           ...(cvrg?.exclude ?? []),
         ],
+        include: cvrg?.include ?? ["src/**/*.{ts,tsx,js,jsx}"],
         reporter: ["text-summary", "lcov", "html"],
         reportsDirectory: cvrg?.reportsDirectory ?? ".reports/coverage",
       },
       css: opts.test?.css ?? true,
+      dir: opts.test?.dir ?? "src",
       environment: "jsdom",
       outputFile: opts.test?.outputFile ?? ".reports/junit.xml",
     },
@@ -136,14 +143,9 @@ export function storybookTestPreset(opts: Options = {}) {
                 test: {
                   name: "storybook",
                   browser: {
-                    provider: "playwright",
+                    provider: playwright({ launchOptions: { headless: true } }),
                     enabled: true,
-                    headless: true,
-                    instances: [
-                      {
-                        browser: "chromium",
-                      },
-                    ],
+                    instances: [{ browser: "chromium" }],
                   },
                   ...(p.test?.setupFiles
                     ? { setupFiles: p.test.setupFiles }

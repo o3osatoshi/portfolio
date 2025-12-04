@@ -26,16 +26,21 @@ vi.mock("@/services/get-me", () => ({
 
 vi.mock("@repo/application", () => ({
   parseUpdateTransactionRequest: h.parseUpdateTransactionRequestMock,
-  UpdateTransactionUseCase: vi.fn().mockImplementation(() => ({
-    execute: h.updateTransactionExecuteMock,
-  })),
+  UpdateTransactionUseCase: vi.fn(function UpdateTransactionUseCaseMock(this: {
+    execute: typeof h.updateTransactionExecuteMock;
+  }) {
+    this.execute = h.updateTransactionExecuteMock;
+  }),
 }));
 
 vi.mock("@repo/prisma", () => ({
   createPrismaClient: h.createPrismaClientMock,
-  PrismaTransactionRepository: vi.fn().mockImplementation((client: unknown) => {
+  PrismaTransactionRepository: vi.fn(function PrismaTransactionRepositoryMock(
+    this: { client?: unknown },
+    client: unknown,
+  ) {
     h.prismaRepoCtorMock(client);
-    return {};
+    this.client = client;
   }),
 }));
 

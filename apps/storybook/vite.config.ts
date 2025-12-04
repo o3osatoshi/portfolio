@@ -34,5 +34,6 @@ export default storybookTestPreset({
         },
       },
     ],
+    testTimeout: 15000,
   },
 });

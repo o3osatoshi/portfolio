@@ -62,7 +62,7 @@ jobs:
 
       - name: Install playwright browsers
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm -F @repo/storybook exec playwright install chromium
+        run: pnpm -F @repo/storybook exec playwright install --with-deps chromium
 
       - name: Run biome, eslint and pkg
         run: pnpm style:pure
@@ -88,7 +88,7 @@ jobs:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Run test
-        run: pnpm turbo run test:cvrg --affected -- --reporter=junit
+        run: pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5
