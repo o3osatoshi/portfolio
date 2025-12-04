@@ -89,6 +89,8 @@ jobs:
 
       - name: Run test
         run: pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5
