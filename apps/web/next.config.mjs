@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
   },
   transpilePackages: [
     "@repo/interface",
