@@ -87,6 +87,12 @@ jobs:
         with:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
 
+      - name: Debug Storybook Vitest (browser)
+        run: pnpm -C apps/storybook vitest run --browser --coverage --project=storybook --reporter=default --logHeapUsage --runInBand
+        continue-on-error: true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: Run test
         run: pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit
         env:
