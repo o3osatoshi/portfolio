@@ -59,13 +59,13 @@ export const Default: Story = {
         </SheetHeader>
         <div className="space-y-4 px-4 pb-4 text-sm">
           <div>
-            <h4 className="font-medium">Appearance</h4>
+            <h3 className="font-medium">Appearance</h3>
             <p className="text-muted-foreground">
               Pick the theme for your dashboard.
             </p>
           </div>
           <div>
-            <h4 className="font-medium">Integrations</h4>
+            <h3 className="font-medium">Integrations</h3>
             <p className="text-muted-foreground">
               Connect Slack, Linear, and GitHub to receive real-time updates.
             </p>

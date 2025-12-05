@@ -1,10 +1,17 @@
+import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-function getAbsolutePath(value) {
+import type { StorybookConfig } from "@storybook/react-vite";
+
+const require = createRequire(import.meta.url);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function getAbsolutePath(value: string): string {
   return dirname(require.resolve(join(value, "package.json")));
 }
 
-const config = {
+const config: StorybookConfig = {
   addons: [
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-a11y"),
@@ -24,12 +31,12 @@ const config = {
   staticDirs: ["../public"],
   stories: ["../../../packages/ui/src/**/*.stories.@(ts|tsx|js|jsx|mdx)"],
 
-  async viteFinal(config, { _configType }) {
+  async viteFinal(baseConfig) {
     // customize the Vite config here
     return {
-      ...config,
+      ...baseConfig,
       build: {
-        ...(config.build ?? {}),
+        ...(baseConfig.build ?? {}),
         chunkSizeWarningLimit: 1500,
       },
       define: { "process.env": {} },

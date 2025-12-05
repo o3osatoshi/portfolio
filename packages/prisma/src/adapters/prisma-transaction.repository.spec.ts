@@ -67,7 +67,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
     }
 
     process.env["DATABASE_URL"] = container.getConnectionUri();
-    execSync("npx prisma db push --skip-generate", {
+    execSync("npx prisma db push", {
       cwd: pkgRoot,
       env: { ...process.env, DATABASE_URL: process.env["DATABASE_URL"] },
       stdio: "inherit",

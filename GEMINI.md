@@ -51,7 +51,7 @@ The codebase enforces a strict dependency rule: **Dependencies point inwards.**
 ### Database (Prisma)
 *   **Migrate Dev:** `pnpm -C packages/prisma migrate:dev`
 *   **Deploy Schema:** `pnpm -C packages/prisma migrate:deploy`
-*   **Generate Client:** `pnpm -C packages/prisma generate`
+*   **Generate Client:** `pnpm -C packages/prisma build`
 *   **Studio:** `pnpm -C packages/prisma studio`
 
 ## Development Conventions

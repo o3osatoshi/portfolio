@@ -95,20 +95,24 @@ pnpm install
 
 ## Database workflow (Prisma)
 - Development migrate: `pnpm -C packages/prisma migrate:dev`
+- Reset database (dev): `pnpm -C packages/prisma migrate:reset`
 - Production deploy: `pnpm -C packages/prisma migrate:deploy`
 - Push schema without migrations: `pnpm -C packages/prisma db:push`
-- Seed data: `pnpm -C packages/prisma seed`
+- Seed data: `pnpm -C packages/prisma db:seed`
 - Inspect status: `pnpm -C packages/prisma migrate:status`
 - Prisma Studio: `pnpm -C packages/prisma studio`
 
-Environment files:
+Environment files (Prisma):
+- `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
 - `packages/prisma/.env.development.local`
 - `packages/prisma/.env.production.local`
 
-All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.local` file exists before running them.
+Typically, you use the values from the `*.local` files (for example, fetched via Doppler) as a template, then copy or merge the desired configuration into `packages/prisma/.env` before running Prisma CLI commands (at minimum, `DATABASE_URL` must be set).
 
 ## Code generation
-- Prisma client (runs on `postinstall`): `pnpm -C packages/prisma generate`
+- Prisma client:
+  - Local/Manual: `pnpm -C packages/prisma build`
+  - Via Turbo: the `build` pipeline runs `pnpm -C packages/prisma build` as a dependency, which executes `prisma generate`.
 - Wagmi/ETH hooks (requires `packages/eth/.env.local`): `pnpm -C packages/eth generate`
 - Run every declared `generate` script: `pnpm -r run generate`
 
@@ -137,7 +141,9 @@ All scripts are wrapped with `dotenv-cli`, so ensure the appropriate `.env.*.loc
 
 ## Environment variables
 - `apps/web`: `.env.local` (Next.js runtime + Auth.js, database client, Web3 providers).
-- `packages/prisma`: `.env.development.local`, `.env.production.local` (database connection strings).
+- `packages/prisma`:
+  - `.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
+  - `.env.development.local`, `.env.production.local` (local templates)
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
 

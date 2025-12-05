@@ -167,7 +167,8 @@ export const WithStatus: Story = {
     expect(trigger).toHaveAttribute("data-state", "open");
   },
   render: () => (
-    <DropdownMenu defaultOpen>
+    // modal={false} is required here to prevent the modal backdrop from interfering with the test's ability to check the trigger state.
+    <DropdownMenu defaultOpen modal={false}>
       <DropdownMenuTrigger asChild>
         <Button className="gap-2" variant="secondary">
           <CheckCircle className="size-4" />

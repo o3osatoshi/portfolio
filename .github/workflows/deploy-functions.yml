@@ -65,6 +65,8 @@ jobs:
 
       - name: Build functions
         run: pnpm build:functions
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2

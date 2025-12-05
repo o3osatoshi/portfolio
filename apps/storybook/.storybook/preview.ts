@@ -8,8 +8,10 @@ const preview: Preview = {
       config: {
         rules: [
           { id: "color-contrast", enabled: true },
-          { id: "landmark-one-main", enabled: true },
-          { id: "region", enabled: true },
+          // The following accessibility rules are disabled because Storybook stories often lack full page structure,
+          // which would cause these rules to produce false positives. See CodeQL rule documentation for details.
+          { id: "landmark-one-main", enabled: false },
+          { id: "region", enabled: false },
         ],
       },
       manual: false,
