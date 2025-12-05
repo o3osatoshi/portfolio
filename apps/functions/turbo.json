@@ -5,7 +5,7 @@
       "dependsOn": [
         "@o3osatoshi/config#build",
         "@o3osatoshi/toolkit#build",
-        "@repo/prisma"
+        "@repo/prisma#build"
       ]
     }
   }
