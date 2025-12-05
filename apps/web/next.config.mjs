@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
   transpilePackages: [
     "@repo/interface",
     "@repo/prisma",
