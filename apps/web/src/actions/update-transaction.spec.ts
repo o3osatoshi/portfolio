@@ -3,12 +3,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => {
   return {
-    revalidateTagMock: vi.fn(),
     createPrismaClientMock: vi.fn(),
     getMeMock: vi.fn(),
     parseUpdateTransactionRequestMock: vi.fn(),
     prismaRepoCtorMock: vi.fn(),
     redirectMock: vi.fn(),
+    updateTagMock: vi.fn(),
     updateTransactionExecuteMock: vi.fn(),
   };
 });
@@ -45,7 +45,7 @@ vi.mock("@repo/prisma", () => ({
 }));
 
 vi.mock("next/cache", () => ({
-  revalidateTag: h.revalidateTagMock,
+  updateTag: h.updateTagMock,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -98,7 +98,7 @@ describe("actions/update-transaction", () => {
     );
 
     const expectedTag = getTag("labs-transactions", { userId: me.id });
-    expect(h.revalidateTagMock).toHaveBeenCalledWith(expectedTag);
+    expect(h.updateTagMock).toHaveBeenCalledWith(expectedTag);
     const expectedPath = getPath("labs-server-crud");
     expect(h.redirectMock).toHaveBeenCalledWith(expectedPath);
   });
@@ -117,7 +117,7 @@ describe("actions/update-transaction", () => {
     expect(state.error.message).toBe("not authenticated");
     expect(h.parseUpdateTransactionRequestMock).not.toHaveBeenCalled();
     expect(h.updateTransactionExecuteMock).not.toHaveBeenCalled();
-    expect(h.revalidateTagMock).not.toHaveBeenCalled();
+    expect(h.updateTagMock).not.toHaveBeenCalled();
     expect(h.redirectMock).not.toHaveBeenCalled();
   });
 
@@ -140,7 +140,7 @@ describe("actions/update-transaction", () => {
     expect(state.error.message).toBe("invalid payload");
     expect(state.error.name).toBe("Error");
     expect(h.updateTransactionExecuteMock).not.toHaveBeenCalled();
-    expect(h.revalidateTagMock).not.toHaveBeenCalled();
+    expect(h.updateTagMock).not.toHaveBeenCalled();
     expect(h.redirectMock).not.toHaveBeenCalled();
   });
 });

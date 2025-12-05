@@ -5,7 +5,7 @@ import {
   UpdateTransactionUseCase,
 } from "@repo/application";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
@@ -30,7 +30,7 @@ export const updateTransaction = async (
     .andThen(({ me, req }) => usecase.execute(req, me.id).map(() => me))
     .match<ActionState>(
       (me) => {
-        revalidateTag(getTag("labs-transactions", { userId: me.id }));
+        updateTag(getTag("labs-transactions", { userId: me.id }));
         redirect(getPath("labs-server-crud"));
       },
       (error) => err(error),

@@ -5,7 +5,7 @@ import {
   parseDeleteTransactionRequest,
 } from "@repo/application";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
@@ -31,7 +31,7 @@ export const deleteTransaction = async (
     .andThen((req) => usecase.execute(req).map(() => req))
     .match<ActionState>(
       (req) => {
-        revalidateTag(getTag("labs-transactions", { userId: req.userId }));
+        updateTag(getTag("labs-transactions", { userId: req.userId }));
         redirect(getPath("labs-server-crud"));
       },
       (error) => err(error),
