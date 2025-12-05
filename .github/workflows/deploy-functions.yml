@@ -40,9 +40,13 @@ jobs:
     needs: detect-affected
     if: needs.detect-affected.outputs.functions == 'true'
     env:
+      # DATABASE_URL must be available for both the explicit "Build functions"
+      # step and the Firebase predeploy hook (`pnpm build:functions` in firebase.json),
+      # because Prisma Config requires DATABASE_URL when running `prisma generate`.
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       TURBO_TELEMETRY_DISABLED: 1
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Checkout
@@ -65,8 +69,6 @@ jobs:
 
       - name: Build functions
         run: pnpm build:functions
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2
