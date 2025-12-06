@@ -6,16 +6,21 @@ This document reflects the current state of the repository. Commands listed belo
 - **Domain (`@repo/domain`)**: Value objects, entities, and ports. Only depends on `@o3osatoshi/toolkit`.
 - **Application (`@repo/application`)**: DTO validation and use cases. Depends on the domain ports/value objects.
 - **Infrastructure (`@repo/prisma`)**: Prisma-backed implementations of domain ports plus DB client utilities.
-- **Delivery (`apps/web`, `apps/functions`)**: HTTP entry points that inject infrastructure adapters into application use cases.
+- **Auth (`@repo/auth`)**: Shared Auth.js/Hono configuration and React helpers consumed by HTTP interface and delivery layers.
+- **HTTP Interface (`@repo/interface`)**: Hono-based HTTP interface (Node/Edge apps and typed client) that wires auth + use cases without owning business logic.
+- **Delivery (`apps/web`, `apps/functions`, `apps/edge`)**: HTTP entry points (Next.js API routes, Firebase Functions, Cloudflare Workers) that inject infrastructure adapters into application use cases.
 - **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: Reusable UI library and documentation surface that stay free from domain concerns.
 - **Shared Tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)**: Build presets, lint configs, and error-handling utilities consumed across the stack.
 
 ## Project Structure
 - `apps/web`: Next.js 15 portfolio app (React 19, server actions, API routes).
 - `apps/functions`: Firebase Cloud Functions bundled via `tsup` (Node 22 runtime).
+- `apps/edge`: Cloudflare Worker (Wrangler v4) exposing the Edge HTTP API via `@repo/interface/http/edge`.
 - `apps/storybook`: Vite-powered Storybook for UI review and visual testing.
 - `packages/domain`, `packages/application`: Clean architecture core (Vitest).
 - `packages/prisma`: Prisma schema, adapters, and DB scripts.
+- `packages/auth`: Auth.js + Hono configuration and React helpers shared across delivery layers.
+- `packages/interface`: Runtime-agnostic HTTP interface (Hono app + typed RPC client) for Node/Edge.
 - `packages/ui`: Published React component library with split server/client builds.
 - `packages/toolkit`: Zod/Neverthrow helpers for consistent error handling.
 - `packages/eth`: Wagmi CLI generated contract types/hooks (requires local `.env`).
@@ -26,14 +31,22 @@ This document reflects the current state of the repository. Commands listed belo
 - Install dependencies: `pnpm install` (requires Node >= 22).
 - Start all dev targets: `pnpm dev`.
 - Build all packages/apps: `pnpm build`.
+- Build scoped targets: `pnpm build:web`, `pnpm build:functions`, `pnpm build:storybook`, `pnpm build:edge`.
 - Type-check the workspace: `pnpm check:type`.
 - Run all tests: `pnpm check:test`.
+- Run tests with coverage: `pnpm check:test:cvrg`.
+- Combined check (types + tests): `pnpm check`.
 - Lint/format/package sorting: `pnpm style`.
 - Clean build artifacts: `pnpm clean`.
 - Update env files (runs only where `pull:env` script exists): `pnpm pull:env`.
 - Deploy Firebase functions: `pnpm deploy:functions`.
 - Deploy Edge (prod): `pnpm deploy:edge`.
 - Deploy Edge (prv): `pnpm deploy:edge:prv`.
+- Refine (style → build → check → API extract): `pnpm refine`.
+- Release workflow helpers (Changesets):
+  - Open interactive changeset editor: `pnpm release:log`.
+  - Apply pending changesets and bump versions: `pnpm release:version`.
+  - Publish packages to npm (usually via CI): `pnpm release`.
 
 ## Per-App / Package Commands
 - Web: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.

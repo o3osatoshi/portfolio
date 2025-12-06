@@ -33,7 +33,9 @@ Personal portfolio and experimentation platform for **Satoshi Ogura**. The codeb
 - **Domain (`@repo/domain`)** – Entities, value objects, and repository ports implemented with `neverthrow`.
 - **Application (`@repo/application`)** – DTO validation (Zod + toolkit) and use cases that depend only on domain ports.
 - **Infrastructure (`@repo/prisma`)** – Prisma-based adapters that fulfill domain ports and expose a shared client.
-- **Delivery (`apps/web`, `apps/functions`)** – Next.js route handlers and Firebase Functions that inject infrastructure adapters into use cases.
+- **Auth (`@repo/auth`)** – Shared Auth.js/Hono configuration and React helpers consumed by HTTP interface and delivery layers.
+- **HTTP Interface (`@repo/interface`)** – Hono-based HTTP interface and typed client for Node/Edge runtimes; wires auth + use cases, but owns no business logic.
+- **Delivery (`apps/web`, `apps/functions`, `apps/edge`)** – Next.js route handlers, Firebase Functions, and a Cloudflare Worker that inject infrastructure adapters into application use cases.
 - **Presentation (`@o3osatoshi/ui`, `apps/storybook`)** – Published UI library and Storybook documentation without domain coupling.
 - **Shared tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)** – Build presets, lint configs, and error utilities consumed everywhere.
 
@@ -42,12 +44,15 @@ Personal portfolio and experimentation platform for **Satoshi Ogura**. The codeb
 ⏺ root/
   ├── 📁 apps/
   │   ├── 📁 web/              # Next.js 15 portfolio app (React 19, App Router)
+  │   ├── 📁 edge/             # Cloudflare Worker (Wrangler) exposing the Edge HTTP API
   │   ├── 📁 functions/        # Firebase Cloud Functions delivery layer
   │   └── 📁 storybook/        # Vite Storybook for @o3osatoshi/ui
   ├── 📁 packages/
   │   ├── 📁 domain/           # Core entities, value objects, ports
   │   ├── 📁 application/      # DTOs + use cases orchestrating domain logic
   │   ├── 📁 prisma/           # Prisma schema, adapters, and DB utilities
+  │   ├── 📁 auth/             # Auth.js + Hono glue (config, middleware, React helpers)
+  │   ├── 📁 interface/        # HTTP interface (Hono app + typed RPC client for Node/Edge)
   │   ├── 📁 ui/               # Shared React component library (server/client splits)
   │   ├── 📁 toolkit/          # Zod/Neverthrow helpers and error builders
   │   ├── 📁 config/           # Shared tsconfig, Biome, ESLint, tsup presets
@@ -90,6 +95,7 @@ pnpm install
 - Web app: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
 - Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
 - Firebase functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
+- Edge Worker: `pnpm dev:edge`, `pnpm build:edge`, `pnpm deploy:edge`, `pnpm deploy:edge:prv`.
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
 - Domain/Application/Toolkit: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
 
@@ -127,20 +133,22 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 
 ## Technology stack
 - **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.
-- **Backend**: Firebase Functions (Node 22) calling application use cases.
+- **Backend**: Hono-based HTTP interface delivered via Next.js route handlers, Firebase Functions (Node 22), and a Cloudflare Worker.
 - **Database**: Prisma ORM on PostgreSQL (adapter-pg).
 - **Web3**: Wagmi, RainbowKit, Viem with generated contract hooks.
-- **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`.
-- **Tooling**: Turborepo, pnpm workspaces, Biome, ESLint (flat config), TypeDoc.
+- **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`, `@repo/auth`, `@repo/interface`.
+- **Tooling**: Turborepo, pnpm workspaces, Biome, ESLint (flat config), TypeDoc, Changesets, Renovate.
 
 ## Deployment & hosting
 - Frontend served from modern edge-ready hosting (Vercel-like setup).
 - Serverless APIs via Firebase Cloud Functions (`pnpm deploy:functions`).
+- Edge HTTP API via Cloudflare Workers (`pnpm deploy:edge` / `pnpm deploy:edge:prv`).
 - Database managed separately; migrations deployed through Prisma scripts.
 - Monitoring/logs accessible through Firebase CLI (`pnpm -C apps/functions logs`).
 
 ## Environment variables
 - `apps/web`: `.env.local` (Next.js runtime + Auth.js, database client, Web3 providers).
+- `apps/edge`: `.env.local` for local Wrangler dev (synced from Doppler); production secrets are managed as Cloudflare Worker secrets (synced via `pnpm -C apps/edge sync:env`).
 - `packages/prisma`:
   - `.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
   - `.env.development.local`, `.env.production.local` (local templates)
@@ -156,7 +164,20 @@ Typically, you use the values from the `*.local` files (for example, fetched via
     - `pnpm -C packages/prisma pull:env:dev` → writes `packages/prisma/.env.development.local`
     - `pnpm -C packages/prisma pull:env:lcl` → writes `packages/prisma/.env.test.local`
     - `pnpm -C packages/prisma pull:env:prd` → writes `packages/prisma/.env.production.local`
-- Current Doppler setup for Prisma uses project `portfolio-prisma` with configs `dev`, `lcl`, and `prd`.
+- Edge Worker:
+  - `pnpm -C apps/edge pull:env` → writes `apps/edge/.env.local` for local Wrangler dev.
+  - `pnpm -C apps/edge sync:env` → syncs secrets from Doppler to Cloudflare Worker via `wrangler secret bulk`.
+- Current Doppler setup includes:
+  - Prisma: project `portfolio-prisma` with configs `dev`, `lcl`, `prd`.
+  - Edge: project `portfolio-edge` with configs such as `dev`, `prd`.
+
+## Releases & dependency updates
+- Package versioning and changelog generation are handled by **Changesets**:
+  - Changeset entries live under `.changeset/*.md`; see `.changeset/README.md` for the recommended Codex + CI workflow.
+  - CI workflow `.github/workflows/release-packages.yml` runs `pnpm release:version` and `pnpm release` to apply changesets and publish packages (or open a release PR if no npm token is configured).
+- Dependency updates are automated via **Renovate**:
+  - Configuration is in `renovate.json` at the repo root.
+  - The Renovate GitHub App is installed on this repository to create upgrade PRs for npm dependencies and GitHub Actions.
 
 ## Contact
 - **LinkedIn**: [Satoshi Ogura](https://www.linkedin.com/in/satoshi-ogura-189479135)
