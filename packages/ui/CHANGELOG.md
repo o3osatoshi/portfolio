@@ -1,11 +1,19 @@
 # @o3osatoshi/ui
 
+## 0.0.5
+
+### Patch Changes
+
+- [#47](https://github.com/o3osatoshi/portfolio/pull/47) [`ff2b6e3`](https://github.com/o3osatoshi/portfolio/commit/ff2b6e3a65ba1cdc8bfec07ff0939aa535fcc44e) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Tidy up UI docs, stories, and type exports while staying API-compatible.
+  - Updated Radix UI, Tailwind utilities, Storybook, and related dev dependencies to current minor/patch versions to keep the component library aligned with the workspace toolchain.
+  - Exported explicit prop types for several components (for example `HeadingProps`, `MessageProps`, `FormInputProps`, `AmountInputProps`, and `SidebarContextProps`) to make reuse in apps and Storybook stories easier without changing any component signatures.
+  - Tweaked a few Storybook stories to avoid modal backdrops interfering with tests and to use more semantic heading levels, and documented test/coverage commands with a Codecov badge in the README.
+
 ## 0.0.4
 
 ### Patch Changes
 
 - [#17](https://github.com/o3osatoshi/portfolio/pull/17) [`cb7dbcc`](https://github.com/o3osatoshi/portfolio/commit/cb7dbcc30b6a260d4a68d91fdd52898d8f37a9ea) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Release summary (since 0.0.3 on Sep 22)
-
   - No public API changes. Upgraded Storybook to v9, consolidated stories into the package, expanded tests and coverage config, integrated API Extractor, and fixed dev/build scripts. Consumers should see identical component APIs with improved type metadata.
 
 ## 0.0.3
