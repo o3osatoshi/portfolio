@@ -8,7 +8,7 @@
 
 > `const` **buttonVariants**: (`props?`) => `string`
 
-Defined in: [packages/ui/src/components/button.tsx:11](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/button.tsx#L11)
+Defined in: [packages/ui/src/components/button.tsx:11](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/button.tsx#L11)
 
 Variant map controlling the visual states for [Button](../functions/Button.md).
 

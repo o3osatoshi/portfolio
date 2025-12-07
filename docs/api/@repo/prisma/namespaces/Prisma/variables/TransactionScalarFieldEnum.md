@@ -8,7 +8,7 @@
 
 > `const` **TransactionScalarFieldEnum**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:900
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:895
 
 ## Type Declaration
 

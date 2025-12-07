@@ -8,4 +8,4 @@
 
 > **Sql** = `runtime.Sql`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:53
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:54

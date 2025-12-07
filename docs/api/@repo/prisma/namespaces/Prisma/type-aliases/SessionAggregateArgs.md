@@ -8,7 +8,7 @@
 
 > **SessionAggregateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:77
+Defined in: packages/prisma/generated/prisma/models/Session.ts:78
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:77
 
 > `optional` **\_count**: `true` \| [`SessionCountAggregateInputType`](SessionCountAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:111
+Defined in: packages/prisma/generated/prisma/models/Session.ts:112
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -34,7 +34,7 @@ Count returned Sessions
 
 > `optional` **\_max**: [`SessionMaxAggregateInputType`](SessionMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:123
+Defined in: packages/prisma/generated/prisma/models/Session.ts:124
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -46,7 +46,7 @@ Select which fields to find the maximum value
 
 > `optional` **\_min**: [`SessionMinAggregateInputType`](SessionMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:117
+Defined in: packages/prisma/generated/prisma/models/Session.ts:118
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -58,7 +58,7 @@ Select which fields to find the minimum value
 
 > `optional` **cursor**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:93
+Defined in: packages/prisma/generated/prisma/models/Session.ts:94
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -70,7 +70,7 @@ Sets the start position
 
 > `optional` **orderBy**: [`SessionOrderByWithRelationInput`](SessionOrderByWithRelationInput.md) \| [`SessionOrderByWithRelationInput`](SessionOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:87
+Defined in: packages/prisma/generated/prisma/models/Session.ts:88
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -82,7 +82,7 @@ Determine the order of Sessions to fetch.
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:105
+Defined in: packages/prisma/generated/prisma/models/Session.ts:106
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -94,7 +94,7 @@ Skip the first `n` Sessions.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:99
+Defined in: packages/prisma/generated/prisma/models/Session.ts:100
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -106,6 +106,6 @@ Take `±n` Sessions from the position of the cursor.
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:81
+Defined in: packages/prisma/generated/prisma/models/Session.ts:82
 
 Filter which Session to aggregate.

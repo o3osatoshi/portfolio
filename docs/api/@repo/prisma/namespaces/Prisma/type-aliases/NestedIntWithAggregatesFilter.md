@@ -8,7 +8,7 @@
 
 > **NestedIntWithAggregatesFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:478
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:479
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:478
 
 > `optional` **\_avg**: [`NestedFloatFilter`](NestedFloatFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:488
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:489
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:488
 
 > `optional` **\_count**: [`NestedIntFilter`](NestedIntFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:487
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:488
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:487
 
 > `optional` **\_max**: [`NestedIntFilter`](NestedIntFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:491
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:492
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:491
 
 > `optional` **\_min**: [`NestedIntFilter`](NestedIntFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:490
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:491
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:490
 
 > `optional` **\_sum**: [`NestedIntFilter`](NestedIntFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:489
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:490
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:489
 
 > `optional` **equals**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:479
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:480
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:479
 
 > `optional` **gt**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:484
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:485
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:484
 
 > `optional` **gte**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:485
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:486
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:485
 
 > `optional` **in**: `number`[] \| [`ListIntFieldRefInput`](ListIntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:480
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:481
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:480
 
 > `optional` **lt**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:482
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:483
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:482
 
 > `optional` **lte**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:483
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:484
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:483
 
 > `optional` **not**: `Prisma.NestedIntWithAggregatesFilter`\<`$PrismaModel`\> \| `number`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:486
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:487
 
 ***
 
@@ -118,4 +118,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:486
 
 > `optional` **notIn**: `number`[] \| [`ListIntFieldRefInput`](ListIntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:481
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:482

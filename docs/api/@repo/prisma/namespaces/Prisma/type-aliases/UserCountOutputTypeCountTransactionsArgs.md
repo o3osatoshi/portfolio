@@ -8,7 +8,7 @@
 
 > **UserCountOutputTypeCountTransactionsArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:769
+Defined in: packages/prisma/generated/prisma/models/User.ts:770
 
 UserCountOutputType without action
 
@@ -24,4 +24,4 @@ UserCountOutputType without action
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:770
+Defined in: packages/prisma/generated/prisma/models/User.ts:771

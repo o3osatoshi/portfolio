@@ -8,7 +8,7 @@
 
 > **AccountListRelationFilter** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:474
+Defined in: packages/prisma/generated/prisma/models/Account.ts:475
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:474
 
 > `optional` **every**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:475
+Defined in: packages/prisma/generated/prisma/models/Account.ts:476
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:475
 
 > `optional` **none**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:477
+Defined in: packages/prisma/generated/prisma/models/Account.ts:478
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:477
 
 > `optional` **some**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:476
+Defined in: packages/prisma/generated/prisma/models/Account.ts:477

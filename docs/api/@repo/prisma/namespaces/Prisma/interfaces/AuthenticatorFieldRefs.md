@@ -6,7 +6,7 @@
 
 # Interface: AuthenticatorFieldRefs
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1086
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1087
 
 Fields of the Authenticator model
 
@@ -16,7 +16,7 @@ Fields of the Authenticator model
 
 > `readonly` **counter**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"Int"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1091
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1092
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1091
 
 > `readonly` **credentialBackedUp**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"Boolean"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1093
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1094
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1093
 
 > `readonly` **credentialDeviceType**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1092
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1093
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1092
 
 > `readonly` **credentialID**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1087
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1088
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1087
 
 > `readonly` **credentialPublicKey**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1090
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1091
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1090
 
 > `readonly` **providerAccountId**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1089
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1090
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1089
 
 > `readonly` **transports**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1094
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1095
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1094
 
 > `readonly` **userId**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Authenticator"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1088
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1089

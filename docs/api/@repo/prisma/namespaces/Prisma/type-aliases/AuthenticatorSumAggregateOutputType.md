@@ -8,7 +8,7 @@
 
 > **AuthenticatorSumAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:32
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:33
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:32
 
 > **counter**: `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:33
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:34

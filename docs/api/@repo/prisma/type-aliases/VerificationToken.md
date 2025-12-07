@@ -8,6 +8,6 @@
 
 > **VerificationToken** = [`VerificationTokenModel`](../namespaces/Prisma/type-aliases/VerificationTokenModel.md)
 
-Defined in: packages/prisma/generated/prisma/client.ts:67
+Defined in: packages/prisma/generated/prisma/client.ts:66
 
 Model VerificationToken

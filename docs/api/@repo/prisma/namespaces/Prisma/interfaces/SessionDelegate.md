@@ -6,7 +6,7 @@
 
 # Interface: SessionDelegate\<ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:510
+Defined in: packages/prisma/generated/prisma/models/Session.ts:511
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:510
 
 > `readonly` **fields**: [`SessionFieldRefs`](SessionFieldRefs.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:882
+Defined in: packages/prisma/generated/prisma/models/Session.ts:883
 
 Fields of the Session model
 
@@ -38,7 +38,7 @@ Fields of the Session model
 
 > **aggregate**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`GetSessionAggregateType`](../type-aliases/GetSessionAggregateType.md)\<`T`\>\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:801
+Defined in: packages/prisma/generated/prisma/models/Session.ts:802
 
 Allows you to perform aggregations operations on a Session.
 Note, that providing `undefined` is treated as the value not being there.
@@ -90,7 +90,7 @@ const aggregations = await prisma.user.aggregate({
 
 > **count**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`T` *extends* `Record_2`\<`"select"`, `any`\> ? `T`\<`T`\>\[`"select"`\] *extends* `true` ? `number` : \{ \[P in string \| number \| symbol\]: P extends keyof SessionCountAggregateOutputType ? SessionCountAggregateOutputType\[P\<P\>\] : never \} : `number`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:767
+Defined in: packages/prisma/generated/prisma/models/Session.ts:768
 
 Count the number of Sessions.
 Note, that providing `undefined` is treated as the value not being there.
@@ -131,7 +131,7 @@ const count = await prisma.session.count({
 
 > **create**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:600
+Defined in: packages/prisma/generated/prisma/models/Session.ts:601
 
 Create a Session.
 
@@ -170,7 +170,7 @@ const Session = await prisma.session.create({
 
 > **createMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:614
+Defined in: packages/prisma/generated/prisma/models/Session.ts:615
 
 Create many Sessions.
 
@@ -209,7 +209,7 @@ const session = await prisma.session.createMany({
 
 > **createManyAndReturn**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:638
+Defined in: packages/prisma/generated/prisma/models/Session.ts:639
 
 Create many Sessions and returns the data saved in the database.
 
@@ -258,7 +258,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **delete**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:652
+Defined in: packages/prisma/generated/prisma/models/Session.ts:653
 
 Delete a Session.
 
@@ -297,7 +297,7 @@ const Session = await prisma.session.delete({
 
 > **deleteMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:683
+Defined in: packages/prisma/generated/prisma/models/Session.ts:684
 
 Delete zero or more Sessions.
 
@@ -334,9 +334,9 @@ const { count } = await prisma.session.deleteMany({
 
 ### findFirst()
 
-> **findFirst**\<`T`\>(`args?`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`null` \| `GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findFirst**\<`T`\>(`args?`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:552
+Defined in: packages/prisma/generated/prisma/models/Session.ts:553
 
 Find the first Session that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -358,7 +358,7 @@ Arguments to find a Session
 
 #### Returns
 
-[`Prisma__SessionClient`](Prisma__SessionClient.md)\<`null` \| `GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -377,7 +377,7 @@ const session = await prisma.session.findFirst({
 
 > **findFirstOrThrow**\<`T`\>(`args?`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:568
+Defined in: packages/prisma/generated/prisma/models/Session.ts:569
 
 Find the first Session that matches the filter or
 throw `PrismaKnownClientError` with `P2025` code if no matches were found.
@@ -419,7 +419,7 @@ const session = await prisma.session.findFirstOrThrow({
 
 > **findMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:586
+Defined in: packages/prisma/generated/prisma/models/Session.ts:587
 
 Find zero or more Sessions that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -460,9 +460,9 @@ const sessionWithSessionTokenOnly = await prisma.session.findMany({ select: { se
 
 ### findUnique()
 
-> **findUnique**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`null` \| `GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findUnique**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:523
+Defined in: packages/prisma/generated/prisma/models/Session.ts:524
 
 Find zero or one Session that matches the filter.
 
@@ -482,7 +482,7 @@ Arguments to find a Session
 
 #### Returns
 
-[`Prisma__SessionClient`](Prisma__SessionClient.md)\<`null` \| `GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -501,7 +501,7 @@ const session = await prisma.session.findUnique({
 
 > **findUniqueOrThrow**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:537
+Defined in: packages/prisma/generated/prisma/models/Session.ts:538
 
 Find one Session that matches the filter or throw an error with `error.code='P2025'`
 if no matches were found.
@@ -541,7 +541,7 @@ const session = await prisma.session.findUniqueOrThrow({
 
 > **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetSessionGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:821
+Defined in: packages/prisma/generated/prisma/models/Session.ts:822
 
 Group by Session.
 Note, that providing `undefined` is treated as the value not being there.
@@ -559,7 +559,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderByArg
 
-`OrderByArg` *extends* \{ `orderBy`: `undefined` \| [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md) \| [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md)[]; \} \| \{ `orderBy?`: [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md) \| [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md)[]; \}
+`OrderByArg` *extends* \{ `orderBy`: [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md) \| [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md)[] \| `undefined`; \} \| \{ `orderBy?`: [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md) \| [`SessionOrderByWithAggregationInput`](../type-aliases/SessionOrderByWithAggregationInput.md)[]; \}
 
 ##### OrderFields
 
@@ -622,7 +622,7 @@ const result = await prisma.user.groupBy({
 
 > **update**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:669
+Defined in: packages/prisma/generated/prisma/models/Session.ts:670
 
 Update one Session.
 
@@ -664,7 +664,7 @@ const session = await prisma.session.update({
 
 > **updateMany**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:702
+Defined in: packages/prisma/generated/prisma/models/Session.ts:703
 
 Update zero or more Sessions.
 Note, that providing `undefined` is treated as the value not being there.
@@ -708,7 +708,7 @@ const session = await prisma.session.updateMany({
 
 > **updateManyAndReturn**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:732
+Defined in: packages/prisma/generated/prisma/models/Session.ts:733
 
 Update zero or more Sessions and returns the data updated in the database.
 
@@ -763,7 +763,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **upsert**\<`T`\>(`args`): [`Prisma__SessionClient`](Prisma__SessionClient.md)\<`GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:751
+Defined in: packages/prisma/generated/prisma/models/Session.ts:752
 
 Create or update one Session.
 

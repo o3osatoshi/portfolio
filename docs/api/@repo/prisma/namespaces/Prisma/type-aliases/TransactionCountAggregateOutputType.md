@@ -8,7 +8,7 @@
 
 > **TransactionCountAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:72
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:73
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:72
 
 > **\_all**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:85
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:86
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:85
 
 > **amount**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:76
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:77
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:76
 
 > **createdAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:83
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:84
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:83
 
 > **currency**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:78
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:79
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:78
 
 > **datetime**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:75
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:76
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:75
 
 > **fee**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:80
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:81
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:80
 
 > **feeCurrency**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:81
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:82
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:81
 
 > **id**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:73
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:74
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:73
 
 > **price**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:77
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:78
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:77
 
 > **profitLoss**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:79
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:80
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:79
 
 > **type**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:74
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:75
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:74
 
 > **updatedAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:84
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:85
 
 ***
 
@@ -112,4 +112,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:84
 
 > **userId**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:82
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:83

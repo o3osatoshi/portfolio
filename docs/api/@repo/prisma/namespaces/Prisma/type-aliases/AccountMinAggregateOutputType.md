@@ -8,7 +8,7 @@
 
 > **AccountMinAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:36
+Defined in: packages/prisma/generated/prisma/models/Account.ts:37
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:36
 
 > **access\_token**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:42
+Defined in: packages/prisma/generated/prisma/models/Account.ts:43
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:42
 
 > **createdAt**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:48
+Defined in: packages/prisma/generated/prisma/models/Account.ts:49
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:48
 
 > **expires\_at**: `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:43
+Defined in: packages/prisma/generated/prisma/models/Account.ts:44
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:43
 
 > **id\_token**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:46
+Defined in: packages/prisma/generated/prisma/models/Account.ts:47
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:46
 
 > **provider**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:39
+Defined in: packages/prisma/generated/prisma/models/Account.ts:40
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:39
 
 > **providerAccountId**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:40
+Defined in: packages/prisma/generated/prisma/models/Account.ts:41
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:40
 
 > **refresh\_token**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:41
+Defined in: packages/prisma/generated/prisma/models/Account.ts:42
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:41
 
 > **scope**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:45
+Defined in: packages/prisma/generated/prisma/models/Account.ts:46
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:45
 
 > **session\_state**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:47
+Defined in: packages/prisma/generated/prisma/models/Account.ts:48
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:47
 
 > **token\_type**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:44
+Defined in: packages/prisma/generated/prisma/models/Account.ts:45
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:44
 
 > **type**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:38
+Defined in: packages/prisma/generated/prisma/models/Account.ts:39
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:38
 
 > **updatedAt**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:49
+Defined in: packages/prisma/generated/prisma/models/Account.ts:50
 
 ***
 
@@ -112,4 +112,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:49
 
 > **userId**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:37
+Defined in: packages/prisma/generated/prisma/models/Account.ts:38

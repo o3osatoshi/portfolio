@@ -8,7 +8,7 @@
 
 > **AuthenticatorMinOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:420
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:421
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:420
 
 > `optional` **counter**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:425
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:426
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:425
 
 > `optional` **credentialBackedUp**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:427
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:428
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:427
 
 > `optional` **credentialDeviceType**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:426
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:427
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:426
 
 > `optional` **credentialID**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:421
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:422
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:421
 
 > `optional` **credentialPublicKey**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:424
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:425
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:424
 
 > `optional` **providerAccountId**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:423
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:424
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:423
 
 > `optional` **transports**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:428
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:429
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:428
 
 > `optional` **userId**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:422
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:423

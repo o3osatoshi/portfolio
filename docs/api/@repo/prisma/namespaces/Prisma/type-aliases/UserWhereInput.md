@@ -8,7 +8,7 @@
 
 > **UserWhereInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:189
+Defined in: packages/prisma/generated/prisma/models/User.ts:190
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:189
 
 > `optional` **accounts**: [`AccountListRelationFilter`](AccountListRelationFilter.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:200
+Defined in: packages/prisma/generated/prisma/models/User.ts:201
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:200
 
 > `optional` **AND**: `Prisma.UserWhereInput` \| `Prisma.UserWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:190
+Defined in: packages/prisma/generated/prisma/models/User.ts:191
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:190
 
 > `optional` **Authenticator**: [`AuthenticatorListRelationFilter`](AuthenticatorListRelationFilter.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:202
+Defined in: packages/prisma/generated/prisma/models/User.ts:203
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:202
 
 > `optional` **createdAt**: [`DateTimeFilter`](DateTimeFilter.md)\<`"User"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:198
+Defined in: packages/prisma/generated/prisma/models/User.ts:199
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:198
 
 > `optional` **email**: [`StringFilter`](StringFilter.md)\<`"User"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:195
+Defined in: packages/prisma/generated/prisma/models/User.ts:196
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:195
 
 > `optional` **emailVerified**: [`DateTimeNullableFilter`](DateTimeNullableFilter.md)\<`"User"`\> \| `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:196
+Defined in: packages/prisma/generated/prisma/models/User.ts:197
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:196
 
 > `optional` **id**: [`StringFilter`](StringFilter.md)\<`"User"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:193
+Defined in: packages/prisma/generated/prisma/models/User.ts:194
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:193
 
 > `optional` **image**: [`StringNullableFilter`](StringNullableFilter.md)\<`"User"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:197
+Defined in: packages/prisma/generated/prisma/models/User.ts:198
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:197
 
 > `optional` **name**: [`StringNullableFilter`](StringNullableFilter.md)\<`"User"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:194
+Defined in: packages/prisma/generated/prisma/models/User.ts:195
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:194
 
 > `optional` **NOT**: `Prisma.UserWhereInput` \| `Prisma.UserWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:192
+Defined in: packages/prisma/generated/prisma/models/User.ts:193
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:192
 
 > `optional` **OR**: `Prisma.UserWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:191
+Defined in: packages/prisma/generated/prisma/models/User.ts:192
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:191
 
 > `optional` **sessions**: [`SessionListRelationFilter`](SessionListRelationFilter.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:201
+Defined in: packages/prisma/generated/prisma/models/User.ts:202
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:201
 
 > `optional` **transactions**: [`TransactionListRelationFilter`](TransactionListRelationFilter.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:203
+Defined in: packages/prisma/generated/prisma/models/User.ts:204
 
 ***
 
@@ -120,4 +120,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:203
 
 > `optional` **updatedAt**: [`DateTimeFilter`](DateTimeFilter.md)\<`"User"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:199
+Defined in: packages/prisma/generated/prisma/models/User.ts:200

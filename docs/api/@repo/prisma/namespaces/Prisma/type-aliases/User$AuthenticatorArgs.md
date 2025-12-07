@@ -8,7 +8,7 @@
 
 > **User$AuthenticatorArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1718
+Defined in: packages/prisma/generated/prisma/models/User.ts:1719
 
 User.Authenticator
 
@@ -24,7 +24,7 @@ User.Authenticator
 
 > `optional` **cursor**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1733
+Defined in: packages/prisma/generated/prisma/models/User.ts:1734
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1733
 
 > `optional` **distinct**: [`AuthenticatorScalarFieldEnum`](AuthenticatorScalarFieldEnum.md) \| [`AuthenticatorScalarFieldEnum`](AuthenticatorScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1736
+Defined in: packages/prisma/generated/prisma/models/User.ts:1737
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1736
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1730
+Defined in: packages/prisma/generated/prisma/models/User.ts:1731
 
 Choose, which related nodes to fetch as well
 
@@ -50,7 +50,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1726
+Defined in: packages/prisma/generated/prisma/models/User.ts:1727
 
 Omit specific fields from the Authenticator
 
@@ -60,7 +60,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **orderBy**: [`AuthenticatorOrderByWithRelationInput`](AuthenticatorOrderByWithRelationInput.md) \| [`AuthenticatorOrderByWithRelationInput`](AuthenticatorOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1732
+Defined in: packages/prisma/generated/prisma/models/User.ts:1733
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1732
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1722
+Defined in: packages/prisma/generated/prisma/models/User.ts:1723
 
 Select specific fields to fetch from the Authenticator
 
@@ -78,7 +78,7 @@ Select specific fields to fetch from the Authenticator
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1735
+Defined in: packages/prisma/generated/prisma/models/User.ts:1736
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1735
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1734
+Defined in: packages/prisma/generated/prisma/models/User.ts:1735
 
 ***
 
@@ -94,4 +94,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1734
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1731
+Defined in: packages/prisma/generated/prisma/models/User.ts:1732

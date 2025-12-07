@@ -8,7 +8,7 @@
 
 > **TransactionOrderByRelationAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:531
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:532
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:531
 
 > `optional` **\_count**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:532
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:533

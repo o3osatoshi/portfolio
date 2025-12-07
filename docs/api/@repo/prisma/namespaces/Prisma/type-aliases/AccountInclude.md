@@ -8,7 +8,7 @@
 
 > **AccountInclude**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:800
+Defined in: packages/prisma/generated/prisma/models/Account.ts:801
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:800
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:801
+Defined in: packages/prisma/generated/prisma/models/Account.ts:802

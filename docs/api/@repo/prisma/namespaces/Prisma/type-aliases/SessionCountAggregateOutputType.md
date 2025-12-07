@@ -8,7 +8,7 @@
 
 > **SessionCountAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:42
+Defined in: packages/prisma/generated/prisma/models/Session.ts:43
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:42
 
 > **\_all**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:48
+Defined in: packages/prisma/generated/prisma/models/Session.ts:49
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:48
 
 > **createdAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:46
+Defined in: packages/prisma/generated/prisma/models/Session.ts:47
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:46
 
 > **expires**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:45
+Defined in: packages/prisma/generated/prisma/models/Session.ts:46
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:45
 
 > **sessionToken**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:43
+Defined in: packages/prisma/generated/prisma/models/Session.ts:44
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:43
 
 > **updatedAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:47
+Defined in: packages/prisma/generated/prisma/models/Session.ts:48
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:47
 
 > **userId**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:44
+Defined in: packages/prisma/generated/prisma/models/Session.ts:45

@@ -8,7 +8,7 @@
 
 > **SubsetIntersection**\<`T`, `U`, `K`\> = `{ [key in keyof T]: key extends keyof U ? T[key] : never }` & `K`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:181
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:176
 
 Subset + Intersection
 

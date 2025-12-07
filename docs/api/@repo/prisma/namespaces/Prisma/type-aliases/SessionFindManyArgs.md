@@ -8,7 +8,7 @@
 
 > **SessionFindManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1083
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1084
 
 Session findMany
 
@@ -24,7 +24,7 @@ Session findMany
 
 > `optional` **cursor**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1111
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1112
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -36,7 +36,7 @@ Sets the position for listing Sessions.
 
 > `optional` **distinct**: [`SessionScalarFieldEnum`](SessionScalarFieldEnum.md) \| [`SessionScalarFieldEnum`](SessionScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1124
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1125
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:1124
 
 > `optional` **include**: [`SessionInclude`](SessionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1095
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1096
 
 Choose, which related nodes to fetch as well
 
@@ -54,7 +54,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1091
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1092
 
 Omit specific fields from the Session
 
@@ -64,7 +64,7 @@ Omit specific fields from the Session
 
 > `optional` **orderBy**: [`SessionOrderByWithRelationInput`](SessionOrderByWithRelationInput.md) \| [`SessionOrderByWithRelationInput`](SessionOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1105
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1106
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -76,7 +76,7 @@ Determine the order of Sessions to fetch.
 
 > `optional` **select**: [`SessionSelect`](SessionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1087
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1088
 
 Select specific fields to fetch from the Session
 
@@ -86,7 +86,7 @@ Select specific fields to fetch from the Session
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1123
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1124
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -98,7 +98,7 @@ Skip the first `n` Sessions.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1117
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1118
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -110,6 +110,6 @@ Take `±n` Sessions from the position of the cursor.
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1099
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1100
 
 Filter, which Sessions to fetch.

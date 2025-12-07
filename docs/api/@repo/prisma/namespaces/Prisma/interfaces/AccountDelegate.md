@@ -6,7 +6,7 @@
 
 # Interface: AccountDelegate\<ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:840
+Defined in: packages/prisma/generated/prisma/models/Account.ts:841
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:840
 
 > `readonly` **fields**: [`AccountFieldRefs`](AccountFieldRefs.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1212
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1213
 
 Fields of the Account model
 
@@ -38,7 +38,7 @@ Fields of the Account model
 
 > **aggregate**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`GetAccountAggregateType`](../type-aliases/GetAccountAggregateType.md)\<`T`\>\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1131
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1132
 
 Allows you to perform aggregations operations on a Account.
 Note, that providing `undefined` is treated as the value not being there.
@@ -90,7 +90,7 @@ const aggregations = await prisma.user.aggregate({
 
 > **count**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`T` *extends* `Record_2`\<`"select"`, `any`\> ? `T`\<`T`\>\[`"select"`\] *extends* `true` ? `number` : \{ \[P in string \| number \| symbol\]: P extends keyof AccountCountAggregateOutputType ? AccountCountAggregateOutputType\[P\<P\>\] : never \} : `number`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1097
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1098
 
 Count the number of Accounts.
 Note, that providing `undefined` is treated as the value not being there.
@@ -131,7 +131,7 @@ const count = await prisma.account.count({
 
 > **create**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:930
+Defined in: packages/prisma/generated/prisma/models/Account.ts:931
 
 Create a Account.
 
@@ -170,7 +170,7 @@ const Account = await prisma.account.create({
 
 > **createMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:944
+Defined in: packages/prisma/generated/prisma/models/Account.ts:945
 
 Create many Accounts.
 
@@ -209,7 +209,7 @@ const account = await prisma.account.createMany({
 
 > **createManyAndReturn**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:968
+Defined in: packages/prisma/generated/prisma/models/Account.ts:969
 
 Create many Accounts and returns the data saved in the database.
 
@@ -258,7 +258,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **delete**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:982
+Defined in: packages/prisma/generated/prisma/models/Account.ts:983
 
 Delete a Account.
 
@@ -297,7 +297,7 @@ const Account = await prisma.account.delete({
 
 > **deleteMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1013
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1014
 
 Delete zero or more Accounts.
 
@@ -334,9 +334,9 @@ const { count } = await prisma.account.deleteMany({
 
 ### findFirst()
 
-> **findFirst**\<`T`\>(`args?`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`null` \| `GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findFirst**\<`T`\>(`args?`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:882
+Defined in: packages/prisma/generated/prisma/models/Account.ts:883
 
 Find the first Account that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -358,7 +358,7 @@ Arguments to find a Account
 
 #### Returns
 
-[`Prisma__AccountClient`](Prisma__AccountClient.md)\<`null` \| `GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -377,7 +377,7 @@ const account = await prisma.account.findFirst({
 
 > **findFirstOrThrow**\<`T`\>(`args?`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:898
+Defined in: packages/prisma/generated/prisma/models/Account.ts:899
 
 Find the first Account that matches the filter or
 throw `PrismaKnownClientError` with `P2025` code if no matches were found.
@@ -419,7 +419,7 @@ const account = await prisma.account.findFirstOrThrow({
 
 > **findMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:916
+Defined in: packages/prisma/generated/prisma/models/Account.ts:917
 
 Find zero or more Accounts that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -460,9 +460,9 @@ const accountWithUserIdOnly = await prisma.account.findMany({ select: { userId: 
 
 ### findUnique()
 
-> **findUnique**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`null` \| `GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findUnique**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:853
+Defined in: packages/prisma/generated/prisma/models/Account.ts:854
 
 Find zero or one Account that matches the filter.
 
@@ -482,7 +482,7 @@ Arguments to find a Account
 
 #### Returns
 
-[`Prisma__AccountClient`](Prisma__AccountClient.md)\<`null` \| `GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -501,7 +501,7 @@ const account = await prisma.account.findUnique({
 
 > **findUniqueOrThrow**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:867
+Defined in: packages/prisma/generated/prisma/models/Account.ts:868
 
 Find one Account that matches the filter or throw an error with `error.code='P2025'`
 if no matches were found.
@@ -541,7 +541,7 @@ const account = await prisma.account.findUniqueOrThrow({
 
 > **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetAccountGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1151
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1152
 
 Group by Account.
 Note, that providing `undefined` is treated as the value not being there.
@@ -559,11 +559,11 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderByArg
 
-`OrderByArg` *extends* \{ `orderBy`: `undefined` \| [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md) \| [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md)[]; \} \| \{ `orderBy?`: [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md) \| [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md)[]; \}
+`OrderByArg` *extends* \{ `orderBy`: [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md) \| [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md)[] \| `undefined`; \} \| \{ `orderBy?`: [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md) \| [`AccountOrderByWithAggregationInput`](../type-aliases/AccountOrderByWithAggregationInput.md)[]; \}
 
 ##### OrderFields
 
-`OrderFields` *extends* `"type"` \| `"createdAt"` \| `"updatedAt"` \| `"userId"` \| `"provider"` \| `"providerAccountId"` \| `"refresh_token"` \| `"access_token"` \| `"expires_at"` \| `"token_type"` \| `"scope"` \| `"id_token"` \| `"session_state"`
+`OrderFields` *extends* `"createdAt"` \| `"updatedAt"` \| `"type"` \| `"userId"` \| `"provider"` \| `"providerAccountId"` \| `"refresh_token"` \| `"access_token"` \| `"expires_at"` \| `"token_type"` \| `"scope"` \| `"id_token"` \| `"session_state"`
 
 ##### ByFields
 
@@ -622,7 +622,7 @@ const result = await prisma.user.groupBy({
 
 > **update**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:999
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1000
 
 Update one Account.
 
@@ -664,7 +664,7 @@ const account = await prisma.account.update({
 
 > **updateMany**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1032
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1033
 
 Update zero or more Accounts.
 Note, that providing `undefined` is treated as the value not being there.
@@ -708,7 +708,7 @@ const account = await prisma.account.updateMany({
 
 > **updateManyAndReturn**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1062
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1063
 
 Update zero or more Accounts and returns the data updated in the database.
 
@@ -763,7 +763,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **upsert**\<`T`\>(`args`): [`Prisma__AccountClient`](Prisma__AccountClient.md)\<`GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1081
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1082
 
 Create or update one Account.
 

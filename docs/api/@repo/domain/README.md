@@ -72,6 +72,11 @@ Everything is re‑exported from `src/index.ts`.
 - `pnpm -C packages/domain test` — Run unit tests
 - `pnpm -C packages/domain test:run` — Run tests in CI mode
 
+## Quality
+
+- Tests: `pnpm -C packages/domain test` / `pnpm -C packages/domain test:cvrg`
+- Coverage: [![Coverage: @repo/domain](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=domain)](https://app.codecov.io/github/o3osatoshi/portfolio?component=domain)
+
 ## Interfaces
 
 - [Base](interfaces/Base.md)

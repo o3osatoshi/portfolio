@@ -8,7 +8,7 @@
 
 > **GetUserAggregateType**\<`T`\> = \{ \[P in keyof T & keyof AggregateUser\]: P extends "\_count" \| "count" ? T\[P\] extends true ? number : GetScalarType\<T\[P\], AggregateUser\[P\]\> : GetScalarType\<T\[P\], AggregateUser\[P\]\> \}
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:138
+Defined in: packages/prisma/generated/prisma/models/User.ts:139
 
 ## Type Parameters
 

@@ -8,7 +8,7 @@
 
 > **IntFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:477
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:478
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:477
 
 > `optional` **decrement**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:480
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:481
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:480
 
 > `optional` **divide**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:482
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:483
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:482
 
 > `optional` **increment**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:479
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:480
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:479
 
 > `optional` **multiply**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:481
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:482
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:481
 
 > `optional` **set**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:478
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:479

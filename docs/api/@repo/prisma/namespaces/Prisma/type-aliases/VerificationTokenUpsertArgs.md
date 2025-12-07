@@ -8,7 +8,7 @@
 
 > **VerificationTokenUpsertArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1026
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1027
 
 VerificationToken upsert
 
@@ -24,7 +24,7 @@ VerificationToken upsert
 
 > **create**: [`XOR`](XOR.md)\<[`VerificationTokenCreateInput`](VerificationTokenCreateInput.md), [`VerificationTokenUncheckedCreateInput`](VerificationTokenUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1042
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1043
 
 In case the VerificationToken found by the `where` argument doesn't exist, create a new VerificationToken with this data.
 
@@ -34,7 +34,7 @@ In case the VerificationToken found by the `where` argument doesn't exist, creat
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1034
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1035
 
 Omit specific fields from the VerificationToken
 
@@ -44,7 +44,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1030
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1031
 
 Select specific fields to fetch from the VerificationToken
 
@@ -54,7 +54,7 @@ Select specific fields to fetch from the VerificationToken
 
 > **update**: [`XOR`](XOR.md)\<[`VerificationTokenUpdateInput`](VerificationTokenUpdateInput.md), [`VerificationTokenUncheckedUpdateInput`](VerificationTokenUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1046
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1047
 
 In case the VerificationToken was found with the provided `where` argument, update it with this data.
 
@@ -64,6 +64,6 @@ In case the VerificationToken was found with the provided `where` argument, upda
 
 > **where**: [`VerificationTokenWhereUniqueInput`](VerificationTokenWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1038
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1039
 
 The filter to search for the VerificationToken to update in case it exists.

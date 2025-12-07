@@ -8,7 +8,7 @@
 
 > **UserCreateNestedOneWithoutSessionsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:416
+Defined in: packages/prisma/generated/prisma/models/User.ts:417
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:416
 
 > `optional` **connect**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:419
+Defined in: packages/prisma/generated/prisma/models/User.ts:420
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:419
 
 > `optional` **connectOrCreate**: [`UserCreateOrConnectWithoutSessionsInput`](UserCreateOrConnectWithoutSessionsInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:418
+Defined in: packages/prisma/generated/prisma/models/User.ts:419
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:418
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutSessionsInput`](UserCreateWithoutSessionsInput.md), [`UserUncheckedCreateWithoutSessionsInput`](UserUncheckedCreateWithoutSessionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:417
+Defined in: packages/prisma/generated/prisma/models/User.ts:418

@@ -8,7 +8,7 @@
 
 > **AccountCreateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1490
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1491
 
 Account createMany
 
@@ -24,7 +24,7 @@ Account createMany
 
 > **data**: [`AccountCreateManyInput`](AccountCreateManyInput.md) \| [`AccountCreateManyInput`](AccountCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1494
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1495
 
 The data used to create many Accounts.
 
@@ -34,4 +34,4 @@ The data used to create many Accounts.
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1495
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1496

@@ -8,7 +8,7 @@
 
 > **SessionWhereInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:175
+Defined in: packages/prisma/generated/prisma/models/Session.ts:176
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:175
 
 > `optional` **AND**: `Prisma.SessionWhereInput` \| `Prisma.SessionWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:176
+Defined in: packages/prisma/generated/prisma/models/Session.ts:177
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:176
 
 > `optional` **createdAt**: [`DateTimeFilter`](DateTimeFilter.md)\<`"Session"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:182
+Defined in: packages/prisma/generated/prisma/models/Session.ts:183
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:182
 
 > `optional` **expires**: [`DateTimeFilter`](DateTimeFilter.md)\<`"Session"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:181
+Defined in: packages/prisma/generated/prisma/models/Session.ts:182
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:181
 
 > `optional` **NOT**: `Prisma.SessionWhereInput` \| `Prisma.SessionWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:178
+Defined in: packages/prisma/generated/prisma/models/Session.ts:179
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:178
 
 > `optional` **OR**: `Prisma.SessionWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:177
+Defined in: packages/prisma/generated/prisma/models/Session.ts:178
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:177
 
 > `optional` **sessionToken**: [`StringFilter`](StringFilter.md)\<`"Session"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:179
+Defined in: packages/prisma/generated/prisma/models/Session.ts:180
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:179
 
 > `optional` **updatedAt**: [`DateTimeFilter`](DateTimeFilter.md)\<`"Session"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:183
+Defined in: packages/prisma/generated/prisma/models/Session.ts:184
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:183
 
 > `optional` **user**: [`XOR`](XOR.md)\<[`UserScalarRelationFilter`](UserScalarRelationFilter.md), [`UserWhereInput`](UserWhereInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:184
+Defined in: packages/prisma/generated/prisma/models/Session.ts:185
 
 ***
 
@@ -80,4 +80,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:184
 
 > `optional` **userId**: [`StringFilter`](StringFilter.md)\<`"Session"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:180
+Defined in: packages/prisma/generated/prisma/models/Session.ts:181

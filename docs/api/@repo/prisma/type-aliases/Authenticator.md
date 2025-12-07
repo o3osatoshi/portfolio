@@ -8,6 +8,6 @@
 
 > **Authenticator** = [`AuthenticatorModel`](../namespaces/Prisma/type-aliases/AuthenticatorModel.md)
 
-Defined in: packages/prisma/generated/prisma/client.ts:72
+Defined in: packages/prisma/generated/prisma/client.ts:71
 
 Model Authenticator

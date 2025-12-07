@@ -8,7 +8,7 @@
 
 > **NullableIntFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:587
+Defined in: packages/prisma/generated/prisma/models/Account.ts:588
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:587
 
 > `optional` **decrement**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:590
+Defined in: packages/prisma/generated/prisma/models/Account.ts:591
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:590
 
 > `optional` **divide**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:592
+Defined in: packages/prisma/generated/prisma/models/Account.ts:593
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:592
 
 > `optional` **increment**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:589
+Defined in: packages/prisma/generated/prisma/models/Account.ts:590
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:589
 
 > `optional` **multiply**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:591
+Defined in: packages/prisma/generated/prisma/models/Account.ts:592
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:591
 
 > `optional` **set**: `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:588
+Defined in: packages/prisma/generated/prisma/models/Account.ts:589

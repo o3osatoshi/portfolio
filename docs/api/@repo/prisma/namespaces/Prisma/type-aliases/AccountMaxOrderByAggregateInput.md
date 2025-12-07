@@ -8,7 +8,7 @@
 
 > **AccountMaxOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:509
+Defined in: packages/prisma/generated/prisma/models/Account.ts:510
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:509
 
 > `optional` **access\_token**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:515
+Defined in: packages/prisma/generated/prisma/models/Account.ts:516
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:515
 
 > `optional` **createdAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:521
+Defined in: packages/prisma/generated/prisma/models/Account.ts:522
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:521
 
 > `optional` **expires\_at**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:516
+Defined in: packages/prisma/generated/prisma/models/Account.ts:517
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:516
 
 > `optional` **id\_token**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:519
+Defined in: packages/prisma/generated/prisma/models/Account.ts:520
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:519
 
 > `optional` **provider**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:512
+Defined in: packages/prisma/generated/prisma/models/Account.ts:513
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:512
 
 > `optional` **providerAccountId**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:513
+Defined in: packages/prisma/generated/prisma/models/Account.ts:514
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:513
 
 > `optional` **refresh\_token**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:514
+Defined in: packages/prisma/generated/prisma/models/Account.ts:515
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:514
 
 > `optional` **scope**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:518
+Defined in: packages/prisma/generated/prisma/models/Account.ts:519
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:518
 
 > `optional` **session\_state**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:520
+Defined in: packages/prisma/generated/prisma/models/Account.ts:521
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:520
 
 > `optional` **token\_type**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:517
+Defined in: packages/prisma/generated/prisma/models/Account.ts:518
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:517
 
 > `optional` **type**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:511
+Defined in: packages/prisma/generated/prisma/models/Account.ts:512
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:511
 
 > `optional` **updatedAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:522
+Defined in: packages/prisma/generated/prisma/models/Account.ts:523
 
 ***
 
@@ -112,4 +112,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:522
 
 > `optional` **userId**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:510
+Defined in: packages/prisma/generated/prisma/models/Account.ts:511

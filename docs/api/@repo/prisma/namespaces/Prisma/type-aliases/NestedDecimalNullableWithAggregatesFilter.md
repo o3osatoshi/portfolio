@@ -8,7 +8,7 @@
 
 > **NestedDecimalNullableWithAggregatesFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:377
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:378
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:377
 
 > `optional` **\_avg**: [`NestedDecimalNullableFilter`](NestedDecimalNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:387
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:388
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:387
 
 > `optional` **\_count**: [`NestedIntNullableFilter`](NestedIntNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:386
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:387
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:386
 
 > `optional` **\_max**: [`NestedDecimalNullableFilter`](NestedDecimalNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:390
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:391
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:390
 
 > `optional` **\_min**: [`NestedDecimalNullableFilter`](NestedDecimalNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:389
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:390
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:389
 
 > `optional` **\_sum**: [`NestedDecimalNullableFilter`](NestedDecimalNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:388
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:389
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:388
 
 > `optional` **equals**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:378
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:379
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:378
 
 > `optional` **gt**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:383
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:384
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:383
 
 > `optional` **gte**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:384
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:385
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:384
 
 > `optional` **in**: `runtime.Decimal`[] \| `runtime.DecimalJsLike`[] \| `number`[] \| `string`[] \| [`ListDecimalFieldRefInput`](ListDecimalFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:379
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:380
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:379
 
 > `optional` **lt**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:381
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:382
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:381
 
 > `optional` **lte**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:382
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:383
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:382
 
 > `optional` **not**: `Prisma.NestedDecimalNullableWithAggregatesFilter`\<`$PrismaModel`\> \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:385
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:386
 
 ***
 
@@ -118,4 +118,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:385
 
 > `optional` **notIn**: `runtime.Decimal`[] \| `runtime.DecimalJsLike`[] \| `number`[] \| `string`[] \| [`ListDecimalFieldRefInput`](ListDecimalFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:380
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:381

@@ -8,7 +8,7 @@
 
 > **UserUpdateToOneWithWhereWithoutAuthenticatorInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:685
+Defined in: packages/prisma/generated/prisma/models/User.ts:686
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:685
 
 > **data**: [`XOR`](XOR.md)\<[`UserUpdateWithoutAuthenticatorInput`](UserUpdateWithoutAuthenticatorInput.md), [`UserUncheckedUpdateWithoutAuthenticatorInput`](UserUncheckedUpdateWithoutAuthenticatorInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:687
+Defined in: packages/prisma/generated/prisma/models/User.ts:688
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:687
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:686
+Defined in: packages/prisma/generated/prisma/models/User.ts:687

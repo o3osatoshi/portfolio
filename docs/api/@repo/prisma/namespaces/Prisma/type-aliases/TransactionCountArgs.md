@@ -8,7 +8,7 @@
 
 > **TransactionCountArgs**\<`ExtArgs`\> = `Omit`\<[`TransactionFindManyArgs`](TransactionFindManyArgs.md), `"select"` \| `"include"` \| `"distinct"` \| `"omit"`\> & `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:833
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:834
 
 ## Type Declaration
 

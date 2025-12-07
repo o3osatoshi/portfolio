@@ -8,7 +8,7 @@
 
 > **BoolWithAggregatesFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:250
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:251
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:250
 
 > `optional` **\_count**: [`NestedIntFilter`](NestedIntFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:253
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:254
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:253
 
 > `optional` **\_max**: [`NestedBoolFilter`](NestedBoolFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:255
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:256
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:255
 
 > `optional` **\_min**: [`NestedBoolFilter`](NestedBoolFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:254
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:255
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:254
 
 > `optional` **equals**: `boolean` \| [`BooleanFieldRefInput`](BooleanFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:251
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:252
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:251
 
 > `optional` **not**: [`NestedBoolWithAggregatesFilter`](NestedBoolWithAggregatesFilter.md)\<`$PrismaModel`\> \| `boolean`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:252
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:253

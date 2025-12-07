@@ -8,7 +8,7 @@
 
 > **AccountCountAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:68
+Defined in: packages/prisma/generated/prisma/models/Account.ts:69
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:68
 
 > **\_all**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:82
+Defined in: packages/prisma/generated/prisma/models/Account.ts:83
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:82
 
 > **access\_token**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:74
+Defined in: packages/prisma/generated/prisma/models/Account.ts:75
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:74
 
 > **createdAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:80
+Defined in: packages/prisma/generated/prisma/models/Account.ts:81
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:80
 
 > **expires\_at**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:75
+Defined in: packages/prisma/generated/prisma/models/Account.ts:76
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:75
 
 > **id\_token**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:78
+Defined in: packages/prisma/generated/prisma/models/Account.ts:79
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:78
 
 > **provider**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:71
+Defined in: packages/prisma/generated/prisma/models/Account.ts:72
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:71
 
 > **providerAccountId**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:72
+Defined in: packages/prisma/generated/prisma/models/Account.ts:73
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:72
 
 > **refresh\_token**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:73
+Defined in: packages/prisma/generated/prisma/models/Account.ts:74
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:73
 
 > **scope**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:77
+Defined in: packages/prisma/generated/prisma/models/Account.ts:78
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:77
 
 > **session\_state**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:79
+Defined in: packages/prisma/generated/prisma/models/Account.ts:80
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:79
 
 > **token\_type**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:76
+Defined in: packages/prisma/generated/prisma/models/Account.ts:77
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:76
 
 > **type**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:70
+Defined in: packages/prisma/generated/prisma/models/Account.ts:71
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:70
 
 > **updatedAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:81
+Defined in: packages/prisma/generated/prisma/models/Account.ts:82
 
 ***
 
@@ -120,4 +120,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:81
 
 > **userId**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:69
+Defined in: packages/prisma/generated/prisma/models/Account.ts:70

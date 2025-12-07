@@ -8,7 +8,7 @@
 
 > **VerificationTokenCountAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:58
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:59
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:58
 
 > `optional` **\_all**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:62
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:63
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:62
 
 > `optional` **expires**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:61
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:62
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:61
 
 > `optional` **identifier**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:59
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:60
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:59
 
 > `optional` **token**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:60
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:61

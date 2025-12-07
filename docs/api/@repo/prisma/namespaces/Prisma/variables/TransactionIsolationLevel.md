@@ -8,7 +8,7 @@
 
 > `const` **TransactionIsolationLevel**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:890
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:885
 
 Enums
 

@@ -8,7 +8,7 @@
 
 > **TransactionUpdateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1565
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1566
 
 Transaction updateManyAndReturn
 
@@ -24,7 +24,7 @@ Transaction updateManyAndReturn
 
 > **data**: [`XOR`](XOR.md)\<[`TransactionUpdateManyMutationInput`](TransactionUpdateManyMutationInput.md), [`TransactionUncheckedUpdateManyInput`](TransactionUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1577
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1578
 
 The data used to update Transactions.
 
@@ -34,7 +34,7 @@ The data used to update Transactions.
 
 > `optional` **include**: [`TransactionIncludeUpdateManyAndReturn`](TransactionIncludeUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1589
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1590
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1585
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1586
 
 Limit how many Transactions to update.
 
@@ -54,7 +54,7 @@ Limit how many Transactions to update.
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1573
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1574
 
 Omit specific fields from the Transaction
 
@@ -64,7 +64,7 @@ Omit specific fields from the Transaction
 
 > `optional` **select**: [`TransactionSelectUpdateManyAndReturn`](TransactionSelectUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1569
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1570
 
 Select specific fields to fetch from the Transaction
 
@@ -74,6 +74,6 @@ Select specific fields to fetch from the Transaction
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1581
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1582
 
 Filter which Transactions to update

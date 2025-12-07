@@ -8,7 +8,7 @@
 
 > **PatchUndefined**\<`O`, `O1`\> = `{ [K in keyof O]: O[K] extends undefined ? At<O1, K> : O[K] }` & `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:251
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:246
 
 ## Type Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: TransactionRepository
 
-Defined in: [ports/transaction.repository.ts:9](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/ports/transaction.repository.ts#L9)
+Defined in: [ports/transaction.repository.ts:9](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/ports/transaction.repository.ts#L9)
 
 Port describing persistence operations required by transaction use cases.
 
@@ -16,7 +16,7 @@ Port describing persistence operations required by transaction use cases.
 
 > **create**(`tx`): `ResultAsync`\<[`Transaction`](../type-aliases/Transaction.md), `Error`\>
 
-Defined in: [ports/transaction.repository.ts:11](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/ports/transaction.repository.ts#L11)
+Defined in: [ports/transaction.repository.ts:11](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/ports/transaction.repository.ts#L11)
 
 Persist a newly created transaction and return the stored entity.
 
@@ -36,7 +36,7 @@ Persist a newly created transaction and return the stored entity.
 
 > **delete**(`id`, `userId`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [ports/transaction.repository.ts:13](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/ports/transaction.repository.ts#L13)
+Defined in: [ports/transaction.repository.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/ports/transaction.repository.ts#L13)
 
 Remove a transaction if it belongs to the provided user.
 
@@ -58,9 +58,9 @@ Remove a transaction if it belongs to the provided user.
 
 ### findById()
 
-> **findById**(`id`): `ResultAsync`\<`null` \| [`Transaction`](../type-aliases/Transaction.md), `Error`\>
+> **findById**(`id`): `ResultAsync`\<[`Transaction`](../type-aliases/Transaction.md) \| `null`, `Error`\>
 
-Defined in: [ports/transaction.repository.ts:15](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/ports/transaction.repository.ts#L15)
+Defined in: [ports/transaction.repository.ts:15](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/ports/transaction.repository.ts#L15)
 
 Lookup a transaction by its identifier.
 
@@ -72,7 +72,7 @@ Lookup a transaction by its identifier.
 
 #### Returns
 
-`ResultAsync`\<`null` \| [`Transaction`](../type-aliases/Transaction.md), `Error`\>
+`ResultAsync`\<[`Transaction`](../type-aliases/Transaction.md) \| `null`, `Error`\>
 
 ***
 
@@ -80,7 +80,7 @@ Lookup a transaction by its identifier.
 
 > **findByUserId**(`userId`): `ResultAsync`\<[`Transaction`](../type-aliases/Transaction.md)[], `Error`\>
 
-Defined in: [ports/transaction.repository.ts:17](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/ports/transaction.repository.ts#L17)
+Defined in: [ports/transaction.repository.ts:17](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/ports/transaction.repository.ts#L17)
 
 List all transactions associated with a user.
 
@@ -100,7 +100,7 @@ List all transactions associated with a user.
 
 > **update**(`tx`): `ResultAsync`\<`void`, `Error`\>
 
-Defined in: [ports/transaction.repository.ts:19](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/ports/transaction.repository.ts#L19)
+Defined in: [ports/transaction.repository.ts:19](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/ports/transaction.repository.ts#L19)
 
 Apply updates to an existing transaction.
 

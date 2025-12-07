@@ -8,7 +8,7 @@
 
 > **TransactionIncludeUpdateManyAndReturn**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:805
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:806
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:805
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:806
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:807

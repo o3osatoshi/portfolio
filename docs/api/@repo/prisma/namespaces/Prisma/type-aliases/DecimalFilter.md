@@ -8,7 +8,7 @@
 
 > **DecimalFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:42
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:43
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:42
 
 > `optional` **equals**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:43
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:44
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:43
 
 > `optional` **gt**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:48
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:49
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:48
 
 > `optional` **gte**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:49
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:50
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:49
 
 > `optional` **in**: `runtime.Decimal`[] \| `runtime.DecimalJsLike`[] \| `number`[] \| `string`[] \| [`ListDecimalFieldRefInput`](ListDecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:44
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:45
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:44
 
 > `optional` **lt**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:46
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:47
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:46
 
 > `optional` **lte**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| [`DecimalFieldRefInput`](DecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:47
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:48
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:47
 
 > `optional` **not**: [`NestedDecimalFilter`](NestedDecimalFilter.md)\<`$PrismaModel`\> \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:50
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:51
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:50
 
 > `optional` **notIn**: `runtime.Decimal`[] \| `runtime.DecimalJsLike`[] \| `number`[] \| `string`[] \| [`ListDecimalFieldRefInput`](ListDecimalFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:45
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:46

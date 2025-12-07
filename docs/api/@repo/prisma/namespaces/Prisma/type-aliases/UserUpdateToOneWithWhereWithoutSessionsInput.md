@@ -8,7 +8,7 @@
 
 > **UserUpdateToOneWithWhereWithoutSessionsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:617
+Defined in: packages/prisma/generated/prisma/models/User.ts:618
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:617
 
 > **data**: [`XOR`](XOR.md)\<[`UserUpdateWithoutSessionsInput`](UserUpdateWithoutSessionsInput.md), [`UserUncheckedUpdateWithoutSessionsInput`](UserUncheckedUpdateWithoutSessionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:619
+Defined in: packages/prisma/generated/prisma/models/User.ts:620
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:619
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:618
+Defined in: packages/prisma/generated/prisma/models/User.ts:619

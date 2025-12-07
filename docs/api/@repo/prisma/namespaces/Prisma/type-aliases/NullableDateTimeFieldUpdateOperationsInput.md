@@ -8,7 +8,7 @@
 
 > **NullableDateTimeFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:398
+Defined in: packages/prisma/generated/prisma/models/User.ts:399
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:398
 
 > `optional` **set**: `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:399
+Defined in: packages/prisma/generated/prisma/models/User.ts:400

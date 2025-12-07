@@ -8,6 +8,6 @@
 
 > **UserModel** = `runtime.Types.Result.DefaultSelection`\<[`$UserPayload`]($UserPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:18
+Defined in: packages/prisma/generated/prisma/models/User.ts:19
 
 Model User

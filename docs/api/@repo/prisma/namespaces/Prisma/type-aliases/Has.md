@@ -8,7 +8,7 @@
 
 > **Has**\<`U`, `U1`\> = [`Not`](Not.md)\<[`Extends`](Extends.md)\<`Exclude`\<`U1`, `U`\>, `U1`\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:324
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:319
 
 ## Type Parameters
 

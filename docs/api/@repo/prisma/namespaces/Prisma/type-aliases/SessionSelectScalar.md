@@ -8,7 +8,7 @@
 
 > **SessionSelectScalar** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:469
+Defined in: packages/prisma/generated/prisma/models/Session.ts:470
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:469
 
 > `optional` **createdAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:473
+Defined in: packages/prisma/generated/prisma/models/Session.ts:474
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:473
 
 > `optional` **expires**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:472
+Defined in: packages/prisma/generated/prisma/models/Session.ts:473
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:472
 
 > `optional` **sessionToken**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:470
+Defined in: packages/prisma/generated/prisma/models/Session.ts:471
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:470
 
 > `optional` **updatedAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:474
+Defined in: packages/prisma/generated/prisma/models/Session.ts:475
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:474
 
 > `optional` **userId**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:471
+Defined in: packages/prisma/generated/prisma/models/Session.ts:472

@@ -8,7 +8,7 @@
 
 > **SessionCreateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1152
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1153
 
 Session createMany
 
@@ -24,7 +24,7 @@ Session createMany
 
 > **data**: [`SessionCreateManyInput`](SessionCreateManyInput.md) \| [`SessionCreateManyInput`](SessionCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1156
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1157
 
 The data used to create many Sessions.
 
@@ -34,4 +34,4 @@ The data used to create many Sessions.
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1157
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1158

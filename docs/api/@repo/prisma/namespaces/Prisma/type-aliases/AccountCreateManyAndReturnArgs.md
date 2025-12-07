@@ -8,7 +8,7 @@
 
 > **AccountCreateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1501
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1502
 
 Account createManyAndReturn
 
@@ -24,7 +24,7 @@ Account createManyAndReturn
 
 > **data**: [`AccountCreateManyInput`](AccountCreateManyInput.md) \| [`AccountCreateManyInput`](AccountCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1513
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1514
 
 The data used to create many Accounts.
 
@@ -34,7 +34,7 @@ The data used to create many Accounts.
 
 > `optional` **include**: [`AccountIncludeCreateManyAndReturn`](AccountIncludeCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1518
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1519
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1509
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1510
 
 Omit specific fields from the Account
 
@@ -54,7 +54,7 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelectCreateManyAndReturn`](AccountSelectCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1505
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1506
 
 Select specific fields to fetch from the Account
 
@@ -64,4 +64,4 @@ Select specific fields to fetch from the Account
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1514
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1515

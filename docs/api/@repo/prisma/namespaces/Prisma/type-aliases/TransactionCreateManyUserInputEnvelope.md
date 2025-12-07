@@ -8,7 +8,7 @@
 
 > **TransactionCreateManyUserInputEnvelope** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:638
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:639
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:638
 
 > **data**: [`TransactionCreateManyUserInput`](TransactionCreateManyUserInput.md) \| [`TransactionCreateManyUserInput`](TransactionCreateManyUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:639
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:640
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:639
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:640
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:641

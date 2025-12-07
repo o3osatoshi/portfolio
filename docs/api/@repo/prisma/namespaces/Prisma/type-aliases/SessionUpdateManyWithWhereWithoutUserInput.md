@@ -8,7 +8,7 @@
 
 > **SessionUpdateManyWithWhereWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:396
+Defined in: packages/prisma/generated/prisma/models/Session.ts:397
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:396
 
 > **data**: [`XOR`](XOR.md)\<[`SessionUpdateManyMutationInput`](SessionUpdateManyMutationInput.md), [`SessionUncheckedUpdateManyWithoutUserInput`](SessionUncheckedUpdateManyWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:398
+Defined in: packages/prisma/generated/prisma/models/Session.ts:399
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:398
 
 > **where**: [`SessionScalarWhereInput`](SessionScalarWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:397
+Defined in: packages/prisma/generated/prisma/models/Session.ts:398

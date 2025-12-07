@@ -8,7 +8,7 @@
 
 > **TransactionCreateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1498
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1499
 
 Transaction createManyAndReturn
 
@@ -24,7 +24,7 @@ Transaction createManyAndReturn
 
 > **data**: [`TransactionCreateManyInput`](TransactionCreateManyInput.md) \| [`TransactionCreateManyInput`](TransactionCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1510
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1511
 
 The data used to create many Transactions.
 
@@ -34,7 +34,7 @@ The data used to create many Transactions.
 
 > `optional` **include**: [`TransactionIncludeCreateManyAndReturn`](TransactionIncludeCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1515
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1516
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1506
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1507
 
 Omit specific fields from the Transaction
 
@@ -54,7 +54,7 @@ Omit specific fields from the Transaction
 
 > `optional` **select**: [`TransactionSelectCreateManyAndReturn`](TransactionSelectCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1502
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1503
 
 Select specific fields to fetch from the Transaction
 
@@ -64,4 +64,4 @@ Select specific fields to fetch from the Transaction
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1511
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1512

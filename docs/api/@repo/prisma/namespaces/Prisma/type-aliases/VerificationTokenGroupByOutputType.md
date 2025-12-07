@@ -8,7 +8,7 @@
 
 > **VerificationTokenGroupByOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:137
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:138
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:137
 
 > **\_count**: [`VerificationTokenCountAggregateOutputType`](VerificationTokenCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:141
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:142
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:141
 
 > **\_max**: [`VerificationTokenMaxAggregateOutputType`](VerificationTokenMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:143
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:144
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:143
 
 > **\_min**: [`VerificationTokenMinAggregateOutputType`](VerificationTokenMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:142
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:143
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:142
 
 > **expires**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:140
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:141
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:140
 
 > **identifier**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:138
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:139
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:138
 
 > **token**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:139
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:140

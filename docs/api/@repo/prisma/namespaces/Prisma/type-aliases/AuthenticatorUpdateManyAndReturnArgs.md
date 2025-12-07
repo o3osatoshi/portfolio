@@ -8,7 +8,7 @@
 
 > **AuthenticatorUpdateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1397
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1398
 
 Authenticator updateManyAndReturn
 
@@ -24,7 +24,7 @@ Authenticator updateManyAndReturn
 
 > **data**: [`XOR`](XOR.md)\<[`AuthenticatorUpdateManyMutationInput`](AuthenticatorUpdateManyMutationInput.md), [`AuthenticatorUncheckedUpdateManyInput`](AuthenticatorUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1409
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1410
 
 The data used to update Authenticators.
 
@@ -34,7 +34,7 @@ The data used to update Authenticators.
 
 > `optional` **include**: [`AuthenticatorIncludeUpdateManyAndReturn`](AuthenticatorIncludeUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1421
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1422
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1417
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1418
 
 Limit how many Authenticators to update.
 
@@ -54,7 +54,7 @@ Limit how many Authenticators to update.
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1405
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1406
 
 Omit specific fields from the Authenticator
 
@@ -64,7 +64,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelectUpdateManyAndReturn`](AuthenticatorSelectUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1401
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1402
 
 Select specific fields to fetch from the Authenticator
 
@@ -74,6 +74,6 @@ Select specific fields to fetch from the Authenticator
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1413
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1414
 
 Filter which Authenticators to update

@@ -8,7 +8,7 @@
 
 > `const` **SessionScalarFieldEnum**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:950
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:945
 
 ## Type Declaration
 

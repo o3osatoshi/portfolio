@@ -6,9 +6,9 @@
 
 # Variable: DbNull
 
-> `const` **DbNull**: `DbNull` = `runtime.objectEnumValues.instances.DbNull`
+> `const` **DbNull**: `DbNullClass` = `runtime.DbNull`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:121
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:114
 
 Helper for filtering JSON entries that have `null` on the database (empty on the db)
 

@@ -8,7 +8,7 @@
 
 > **DateTimeNullableFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:166
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:167
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:166
 
 > `optional` **equals**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:167
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:168
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:167
 
 > `optional` **gt**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:172
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:173
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:172
 
 > `optional` **gte**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:173
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:174
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:173
 
 > `optional` **in**: `Date`[] \| `string`[] \| [`ListDateTimeFieldRefInput`](ListDateTimeFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:168
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:169
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:168
 
 > `optional` **lt**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:170
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:171
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:170
 
 > `optional` **lte**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:171
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:172
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:171
 
 > `optional` **not**: [`NestedDateTimeNullableFilter`](NestedDateTimeNullableFilter.md)\<`$PrismaModel`\> \| `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:174
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:175
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:174
 
 > `optional` **notIn**: `Date`[] \| `string`[] \| [`ListDateTimeFieldRefInput`](ListDateTimeFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:169
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:170

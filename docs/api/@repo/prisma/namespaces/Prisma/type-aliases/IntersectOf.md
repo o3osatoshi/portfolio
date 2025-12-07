@@ -8,7 +8,7 @@
 
 > **IntersectOf**\<`U`\> = `U` *extends* `unknown` ? (`k`) => `void` : `never` *extends* (`k`) => `void` ? `I` : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:256
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:251
 
 Helper Types for "Merge" *
 

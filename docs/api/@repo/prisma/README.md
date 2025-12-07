@@ -38,14 +38,14 @@ const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! 
 
 ## Prisma Setup
 - Environment files:
-  - Main: `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
+  - Main: `packages/prisma/.env` (loaded by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
   - Local templates: `packages/prisma/.env.development.local` / `.env.production.local`
 - Client generation:
   - The Turbo `build` pipeline runs `pnpm -C packages/prisma build`, which calls `prisma generate` automatically.
-  - For local usage, prefer `pnpm -C packages/prisma build` so behavior matches CI and deployment.
+  - For local use, prefer `pnpm -C packages/prisma build` so behavior matches CI and deployment.
 
 ## Scripts
-- `pnpm -C packages/prisma build` — Generate Prisma Client (used by Turbo `build`)
+- `pnpm -C packages/prisma build` — Generate Prisma Client (also used by Turbo `build`)
 - `pnpm -C packages/prisma db:push` — Push schema to DB (dev)
 - `pnpm -C packages/prisma migrate:dev` — Create/apply migrations (dev)
 - `pnpm -C packages/prisma migrate:deploy` — Apply migrations to production
@@ -60,6 +60,11 @@ const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! 
 ## Testing
 - Unit tests: `pnpm -C packages/prisma test:run` (excludes `**/*.int.spec.ts` by default)
 - Integration tests: `pnpm -C packages/prisma test:run:int` (uses Testcontainers to run a DB)
+
+## Quality
+
+- Tests: `pnpm -C packages/prisma test` / `pnpm -C packages/prisma test:cvrg`
+- Coverage: [![Coverage: @repo/prisma](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=prisma)](https://app.codecov.io/github/o3osatoshi/portfolio?component=prisma)
 
 ## Troubleshooting
 - “Prisma Client not found”

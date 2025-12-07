@@ -8,7 +8,7 @@
 
 > **UserUpdateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1534
+Defined in: packages/prisma/generated/prisma/models/User.ts:1535
 
 User update
 
@@ -24,7 +24,7 @@ User update
 
 > **data**: [`XOR`](XOR.md)\<[`UserUpdateInput`](UserUpdateInput.md), [`UserUncheckedUpdateInput`](UserUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1550
+Defined in: packages/prisma/generated/prisma/models/User.ts:1551
 
 The data needed to update a User.
 
@@ -34,7 +34,7 @@ The data needed to update a User.
 
 > `optional` **include**: [`UserInclude`](UserInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1546
+Defined in: packages/prisma/generated/prisma/models/User.ts:1547
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1542
+Defined in: packages/prisma/generated/prisma/models/User.ts:1543
 
 Omit specific fields from the User
 
@@ -54,7 +54,7 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelect`](UserSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1538
+Defined in: packages/prisma/generated/prisma/models/User.ts:1539
 
 Select specific fields to fetch from the User
 
@@ -64,6 +64,6 @@ Select specific fields to fetch from the User
 
 > **where**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1554
+Defined in: packages/prisma/generated/prisma/models/User.ts:1555
 
 Choose, which User to update.

@@ -8,7 +8,7 @@
 
 > **PrismaClient**\<`LogOpts`, `OmitOpts`, `ExtArgs`\> = `$Class.PrismaClient`\<`LogOpts`, `OmitOpts`, `ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/client.ts:37
+Defined in: packages/prisma/generated/prisma/client.ts:38
 
 ## Type Parameters
 
@@ -18,7 +18,7 @@ Defined in: packages/prisma/generated/prisma/client.ts:37
 
 ### OmitOpts
 
-`OmitOpts` *extends* [`PrismaClientOptions`](../namespaces/Prisma/interfaces/PrismaClientOptions.md)\[`"omit"`\] = [`PrismaClientOptions`](../namespaces/Prisma/interfaces/PrismaClientOptions.md)\[`"omit"`\]
+`OmitOpts` *extends* [`PrismaClientOptions`](../namespaces/Prisma/type-aliases/PrismaClientOptions.md)\[`"omit"`\] = [`PrismaClientOptions`](../namespaces/Prisma/type-aliases/PrismaClientOptions.md)\[`"omit"`\]
 
 ### ExtArgs
 

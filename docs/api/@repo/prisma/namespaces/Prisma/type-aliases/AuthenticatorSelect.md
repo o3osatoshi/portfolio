@@ -8,7 +8,7 @@
 
 > **AuthenticatorSelect**\<`ExtArgs`\> = `runtime.Types.Extensions.GetSelect`\<\{ `counter?`: `boolean`; `credentialBackedUp?`: `boolean`; `credentialDeviceType?`: `boolean`; `credentialID?`: `boolean`; `credentialPublicKey?`: `boolean`; `providerAccountId?`: `boolean`; `transports?`: `boolean`; `user?`: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>; `userId?`: `boolean`; \}, `ExtArgs`\[`"result"`\]\[`"authenticator"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:591
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:592
 
 ## Type Parameters
 

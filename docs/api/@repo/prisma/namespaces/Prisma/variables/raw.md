@@ -8,7 +8,7 @@
 
 > `const` **raw**: (`value`) => `Sql` = `runtime.raw`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:52
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:53
 
 Create raw SQL statement.
 

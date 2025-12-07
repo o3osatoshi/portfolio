@@ -8,7 +8,7 @@
 
 > **AuthenticatorCreateNestedManyWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:435
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:436
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:435
 
 > `optional` **connect**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md) \| [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:439
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:440
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:439
 
 > `optional` **connectOrCreate**: [`AuthenticatorCreateOrConnectWithoutUserInput`](AuthenticatorCreateOrConnectWithoutUserInput.md) \| [`AuthenticatorCreateOrConnectWithoutUserInput`](AuthenticatorCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:437
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:438
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:437
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`AuthenticatorCreateWithoutUserInput`](AuthenticatorCreateWithoutUserInput.md), [`AuthenticatorUncheckedCreateWithoutUserInput`](AuthenticatorUncheckedCreateWithoutUserInput.md)\> \| [`AuthenticatorCreateWithoutUserInput`](AuthenticatorCreateWithoutUserInput.md)[] \| [`AuthenticatorUncheckedCreateWithoutUserInput`](AuthenticatorUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:436
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:437
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:436
 
 > `optional` **createMany**: [`AuthenticatorCreateManyUserInputEnvelope`](AuthenticatorCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:438
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:439

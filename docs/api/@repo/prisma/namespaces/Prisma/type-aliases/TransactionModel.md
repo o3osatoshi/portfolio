@@ -8,6 +8,6 @@
 
 > **TransactionModel** = `runtime.Types.Result.DefaultSelection`\<[`$TransactionPayload`]($TransactionPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:18
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:19
 
 Model Transaction

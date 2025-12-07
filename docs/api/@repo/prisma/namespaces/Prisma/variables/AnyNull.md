@@ -6,9 +6,9 @@
 
 # Variable: AnyNull
 
-> `const` **AnyNull**: `AnyNull` = `runtime.objectEnumValues.instances.AnyNull`
+> `const` **AnyNull**: `AnyNullClass` = `runtime.AnyNull`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:133
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:128
 
 Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
 

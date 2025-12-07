@@ -8,7 +8,7 @@
 
 > **AuthenticatorGetPayload**\<`S`\> = `runtime.Types.Result.GetResult`\<[`$AuthenticatorPayload`]($AuthenticatorPayload.md), `S`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:667
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:668
 
 ## Type Parameters
 

@@ -8,7 +8,7 @@
 
 > **AuthenticatorUncheckedUpdateManyWithoutUserNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:463
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:464
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:463
 
 > `optional` **connect**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md) \| [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:471
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:472
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:471
 
 > `optional` **connectOrCreate**: [`AuthenticatorCreateOrConnectWithoutUserInput`](AuthenticatorCreateOrConnectWithoutUserInput.md) \| [`AuthenticatorCreateOrConnectWithoutUserInput`](AuthenticatorCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:465
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:466
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:465
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`AuthenticatorCreateWithoutUserInput`](AuthenticatorCreateWithoutUserInput.md), [`AuthenticatorUncheckedCreateWithoutUserInput`](AuthenticatorUncheckedCreateWithoutUserInput.md)\> \| [`AuthenticatorCreateWithoutUserInput`](AuthenticatorCreateWithoutUserInput.md)[] \| [`AuthenticatorUncheckedCreateWithoutUserInput`](AuthenticatorUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:464
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:465
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:464
 
 > `optional` **createMany**: [`AuthenticatorCreateManyUserInputEnvelope`](AuthenticatorCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:467
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:468
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:467
 
 > `optional` **delete**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md) \| [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:470
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:471
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:470
 
 > `optional` **deleteMany**: [`AuthenticatorScalarWhereInput`](AuthenticatorScalarWhereInput.md) \| [`AuthenticatorScalarWhereInput`](AuthenticatorScalarWhereInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:474
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:475
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:474
 
 > `optional` **disconnect**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md) \| [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:469
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:470
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:469
 
 > `optional` **set**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md) \| [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:468
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:469
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:468
 
 > `optional` **update**: [`AuthenticatorUpdateWithWhereUniqueWithoutUserInput`](AuthenticatorUpdateWithWhereUniqueWithoutUserInput.md) \| [`AuthenticatorUpdateWithWhereUniqueWithoutUserInput`](AuthenticatorUpdateWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:472
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:473
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:472
 
 > `optional` **updateMany**: [`AuthenticatorUpdateManyWithWhereWithoutUserInput`](AuthenticatorUpdateManyWithWhereWithoutUserInput.md) \| [`AuthenticatorUpdateManyWithWhereWithoutUserInput`](AuthenticatorUpdateManyWithWhereWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:473
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:474
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:473
 
 > `optional` **upsert**: [`AuthenticatorUpsertWithWhereUniqueWithoutUserInput`](AuthenticatorUpsertWithWhereUniqueWithoutUserInput.md) \| [`AuthenticatorUpsertWithWhereUniqueWithoutUserInput`](AuthenticatorUpsertWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:466
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:467

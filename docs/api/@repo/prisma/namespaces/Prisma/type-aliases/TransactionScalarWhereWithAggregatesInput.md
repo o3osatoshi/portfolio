@@ -8,7 +8,7 @@
 
 > **TransactionScalarWhereWithAggregatesInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:344
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:345
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:344
 
 > `optional` **amount**: [`DecimalWithAggregatesFilter`](DecimalWithAggregatesFilter.md)\<`"Transaction"`\> \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:351
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:352
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:351
 
 > `optional` **AND**: `Prisma.TransactionScalarWhereWithAggregatesInput` \| `Prisma.TransactionScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:345
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:346
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:345
 
 > `optional` **createdAt**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"Transaction"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:358
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:359
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:358
 
 > `optional` **currency**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Transaction"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:353
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:354
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:353
 
 > `optional` **datetime**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"Transaction"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:350
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:351
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:350
 
 > `optional` **fee**: [`DecimalNullableWithAggregatesFilter`](DecimalNullableWithAggregatesFilter.md)\<`"Transaction"`\> \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:355
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:356
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:355
 
 > `optional` **feeCurrency**: [`StringNullableWithAggregatesFilter`](StringNullableWithAggregatesFilter.md)\<`"Transaction"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:356
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:357
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:356
 
 > `optional` **id**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Transaction"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:348
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:349
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:348
 
 > `optional` **NOT**: `Prisma.TransactionScalarWhereWithAggregatesInput` \| `Prisma.TransactionScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:347
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:348
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:347
 
 > `optional` **OR**: `Prisma.TransactionScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:346
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:347
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:346
 
 > `optional` **price**: [`DecimalWithAggregatesFilter`](DecimalWithAggregatesFilter.md)\<`"Transaction"`\> \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:352
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:353
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:352
 
 > `optional` **profitLoss**: [`DecimalNullableWithAggregatesFilter`](DecimalNullableWithAggregatesFilter.md)\<`"Transaction"`\> \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:354
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:355
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:354
 
 > `optional` **type**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Transaction"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:349
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:350
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:349
 
 > `optional` **updatedAt**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"Transaction"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:359
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:360
 
 ***
 
@@ -128,4 +128,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:359
 
 > `optional` **userId**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Transaction"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:357
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:358

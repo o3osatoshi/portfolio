@@ -8,7 +8,7 @@
 
 > `const` **ModelName**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:391
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:386
 
 ## Type Declaration
 

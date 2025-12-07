@@ -8,7 +8,7 @@
 
 > **$AuthenticatorPayload**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:649
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:650
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:649
 
 > **composites**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:664
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:665
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:664
 
 > **name**: `"Authenticator"`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:650
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:651
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:650
 
 > **objects**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:651
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:652
 
 #### user
 
@@ -50,4 +50,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:651
 
 > **scalars**: `runtime.Types.Extensions.GetPayloadResult`\<\{ `counter`: `number`; `credentialBackedUp`: `boolean`; `credentialDeviceType`: `string`; `credentialID`: `string`; `credentialPublicKey`: `string`; `providerAccountId`: `string`; `transports`: `string` \| `null`; `userId`: `string`; \}, `ExtArgs`\[`"result"`\]\[`"authenticator"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:654
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:655

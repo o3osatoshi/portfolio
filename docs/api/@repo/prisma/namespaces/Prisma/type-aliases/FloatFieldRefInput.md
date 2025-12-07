@@ -8,7 +8,7 @@
 
 > **FloatFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Float"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1080
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1075
 
 Reference to a field of type 'Float'
 

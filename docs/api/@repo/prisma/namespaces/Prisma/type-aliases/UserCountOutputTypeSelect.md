@@ -8,7 +8,7 @@
 
 > **UserCountOutputTypeSelect**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:728
+Defined in: packages/prisma/generated/prisma/models/User.ts:729
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:728
 
 > `optional` **accounts**: `boolean` \| [`UserCountOutputTypeCountAccountsArgs`](UserCountOutputTypeCountAccountsArgs.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:729
+Defined in: packages/prisma/generated/prisma/models/User.ts:730
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:729
 
 > `optional` **Authenticator**: `boolean` \| [`UserCountOutputTypeCountAuthenticatorArgs`](UserCountOutputTypeCountAuthenticatorArgs.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:731
+Defined in: packages/prisma/generated/prisma/models/User.ts:732
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:731
 
 > `optional` **sessions**: `boolean` \| [`UserCountOutputTypeCountSessionsArgs`](UserCountOutputTypeCountSessionsArgs.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:730
+Defined in: packages/prisma/generated/prisma/models/User.ts:731
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:730
 
 > `optional` **transactions**: `boolean` \| [`UserCountOutputTypeCountTransactionsArgs`](UserCountOutputTypeCountTransactionsArgs.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:732
+Defined in: packages/prisma/generated/prisma/models/User.ts:733

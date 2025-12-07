@@ -8,7 +8,7 @@
 
 > **VerificationTokenSelectScalar** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:289
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:290
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:289
 
 > `optional` **expires**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:292
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:293
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:292
 
 > `optional` **identifier**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:290
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:291
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:290
 
 > `optional` **token**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:291
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:292

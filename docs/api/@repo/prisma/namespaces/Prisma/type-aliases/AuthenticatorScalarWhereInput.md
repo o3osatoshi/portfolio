@@ -8,7 +8,7 @@
 
 > **AuthenticatorScalarWhereInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:535
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:536
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:535
 
 > `optional` **AND**: `Prisma.AuthenticatorScalarWhereInput` \| `Prisma.AuthenticatorScalarWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:536
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:537
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:536
 
 > `optional` **counter**: [`IntFilter`](IntFilter.md)\<`"Authenticator"`\> \| `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:543
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:544
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:543
 
 > `optional` **credentialBackedUp**: [`BoolFilter`](BoolFilter.md)\<`"Authenticator"`\> \| `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:545
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:546
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:545
 
 > `optional` **credentialDeviceType**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:544
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:545
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:544
 
 > `optional` **credentialID**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:539
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:540
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:539
 
 > `optional` **credentialPublicKey**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:542
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:543
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:542
 
 > `optional` **NOT**: `Prisma.AuthenticatorScalarWhereInput` \| `Prisma.AuthenticatorScalarWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:538
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:539
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:538
 
 > `optional` **OR**: `Prisma.AuthenticatorScalarWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:537
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:538
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:537
 
 > `optional` **providerAccountId**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:541
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:542
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:541
 
 > `optional` **transports**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Authenticator"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:546
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:547
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:546
 
 > `optional` **userId**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:540
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:541

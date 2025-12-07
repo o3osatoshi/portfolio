@@ -8,7 +8,7 @@
 
 > **UserCountArgs**\<`ExtArgs`\> = `Omit`\<[`UserFindManyArgs`](UserFindManyArgs.md), `"select"` \| `"include"` \| `"distinct"` \| `"omit"`\> & `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:852
+Defined in: packages/prisma/generated/prisma/models/User.ts:853
 
 ## Type Declaration
 

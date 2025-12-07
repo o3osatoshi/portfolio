@@ -8,7 +8,7 @@
 
 > **AuthenticatorScalarWhereWithAggregatesInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:289
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:290
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:289
 
 > `optional` **AND**: `Prisma.AuthenticatorScalarWhereWithAggregatesInput` \| `Prisma.AuthenticatorScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:290
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:291
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:290
 
 > `optional` **counter**: [`IntWithAggregatesFilter`](IntWithAggregatesFilter.md)\<`"Authenticator"`\> \| `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:297
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:298
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:297
 
 > `optional` **credentialBackedUp**: [`BoolWithAggregatesFilter`](BoolWithAggregatesFilter.md)\<`"Authenticator"`\> \| `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:299
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:300
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:299
 
 > `optional` **credentialDeviceType**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:298
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:299
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:298
 
 > `optional` **credentialID**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:293
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:294
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:293
 
 > `optional` **credentialPublicKey**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:296
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:297
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:296
 
 > `optional` **NOT**: `Prisma.AuthenticatorScalarWhereWithAggregatesInput` \| `Prisma.AuthenticatorScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:292
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:293
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:292
 
 > `optional` **OR**: `Prisma.AuthenticatorScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:291
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:292
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:291
 
 > `optional` **providerAccountId**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:295
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:296
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:295
 
 > `optional` **transports**: [`StringNullableWithAggregatesFilter`](StringNullableWithAggregatesFilter.md)\<`"Authenticator"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:300
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:301
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:300
 
 > `optional` **userId**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:294
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:295

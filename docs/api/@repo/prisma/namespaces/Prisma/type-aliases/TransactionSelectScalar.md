@@ -8,7 +8,7 @@
 
 > **TransactionSelectScalar** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:783
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:784
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:783
 
 > `optional` **amount**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:787
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:788
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:787
 
 > `optional` **createdAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:794
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:795
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:794
 
 > `optional` **currency**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:789
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:790
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:789
 
 > `optional` **datetime**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:786
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:787
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:786
 
 > `optional` **fee**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:791
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:792
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:791
 
 > `optional` **feeCurrency**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:792
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:793
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:792
 
 > `optional` **id**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:784
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:785
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:784
 
 > `optional` **price**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:788
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:789
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:788
 
 > `optional` **profitLoss**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:790
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:791
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:790
 
 > `optional` **type**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:785
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:786
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:785
 
 > `optional` **updatedAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:795
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:796
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:795
 
 > `optional` **userId**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:793
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:794

@@ -8,7 +8,7 @@
 
 > **AuthenticatorSumAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:75
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:76
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:75
 
 > `optional` **counter**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:76
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:77

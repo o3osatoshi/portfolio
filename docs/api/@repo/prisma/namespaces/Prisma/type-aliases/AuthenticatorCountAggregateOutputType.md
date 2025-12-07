@@ -8,7 +8,7 @@
 
 > **AuthenticatorCountAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:58
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:59
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:58
 
 > **\_all**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:67
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:68
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:67
 
 > **counter**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:63
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:64
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:63
 
 > **credentialBackedUp**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:65
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:66
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:65
 
 > **credentialDeviceType**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:64
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:65
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:64
 
 > **credentialID**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:59
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:60
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:59
 
 > **credentialPublicKey**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:62
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:63
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:62
 
 > **providerAccountId**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:61
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:62
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:61
 
 > **transports**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:66
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:67
 
 ***
 
@@ -80,4 +80,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:66
 
 > **userId**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:60
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:61

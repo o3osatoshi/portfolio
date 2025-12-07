@@ -8,7 +8,7 @@
 
 > **UserOmit**\<`ExtArgs`\> = `runtime.Types.Extensions.GetOmit`\<`"id"` \| `"name"` \| `"email"` \| `"emailVerified"` \| `"image"` \| `"createdAt"` \| `"updatedAt"`, `ExtArgs`\[`"result"`\]\[`"user"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:819
+Defined in: packages/prisma/generated/prisma/models/User.ts:820
 
 ## Type Parameters
 

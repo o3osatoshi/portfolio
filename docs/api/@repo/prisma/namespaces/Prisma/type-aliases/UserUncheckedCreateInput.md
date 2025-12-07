@@ -8,7 +8,7 @@
 
 > **UserUncheckedCreateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:277
+Defined in: packages/prisma/generated/prisma/models/User.ts:278
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:277
 
 > `optional` **accounts**: [`AccountUncheckedCreateNestedManyWithoutUserInput`](AccountUncheckedCreateNestedManyWithoutUserInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:285
+Defined in: packages/prisma/generated/prisma/models/User.ts:286
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:285
 
 > `optional` **Authenticator**: [`AuthenticatorUncheckedCreateNestedManyWithoutUserInput`](AuthenticatorUncheckedCreateNestedManyWithoutUserInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:287
+Defined in: packages/prisma/generated/prisma/models/User.ts:288
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:287
 
 > `optional` **createdAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:283
+Defined in: packages/prisma/generated/prisma/models/User.ts:284
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:283
 
 > **email**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:280
+Defined in: packages/prisma/generated/prisma/models/User.ts:281
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:280
 
 > `optional` **emailVerified**: `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:281
+Defined in: packages/prisma/generated/prisma/models/User.ts:282
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:281
 
 > `optional` **id**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:278
+Defined in: packages/prisma/generated/prisma/models/User.ts:279
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:278
 
 > `optional` **image**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:282
+Defined in: packages/prisma/generated/prisma/models/User.ts:283
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:282
 
 > `optional` **name**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:279
+Defined in: packages/prisma/generated/prisma/models/User.ts:280
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:279
 
 > `optional` **sessions**: [`SessionUncheckedCreateNestedManyWithoutUserInput`](SessionUncheckedCreateNestedManyWithoutUserInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:286
+Defined in: packages/prisma/generated/prisma/models/User.ts:287
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:286
 
 > `optional` **transactions**: [`TransactionUncheckedCreateNestedManyWithoutUserInput`](TransactionUncheckedCreateNestedManyWithoutUserInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:288
+Defined in: packages/prisma/generated/prisma/models/User.ts:289
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:288
 
 > `optional` **updatedAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:284
+Defined in: packages/prisma/generated/prisma/models/User.ts:285

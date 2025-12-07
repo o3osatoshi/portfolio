@@ -8,7 +8,7 @@
 
 > **CheckIsLogLevel**\<`T`\> = `T` *extends* [`LogLevel`](LogLevel.md) ? `T` : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1192
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1195
 
 ## Type Parameters
 

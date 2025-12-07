@@ -8,7 +8,7 @@
 
 > **ActionState**\<`T`, `E`\> = \{ `data`: `T`; `ok`: `true`; \} \| \{ `error`: `E`; `ok`: `false`; \} \| `never`
 
-Defined in: [next/action-state.ts:36](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/next/action-state.ts#L36)
+Defined in: [next/action-state.ts:40](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/next/action-state.ts#L40)
 
 Success/failure envelope compatible with React `useActionState`.
 
@@ -16,9 +16,9 @@ Success/failure envelope compatible with React `useActionState`.
 
 ### T
 
-`T` *extends* [`ActionData`](ActionData.md) = [`Object`](Object.md)
+`T` *extends* [`ActionData`](ActionData.md) = [`UnknownRecord`](UnknownRecord.md)
 
-Data payload type; defaults to [Object](Object.md).
+Type of the `data` field; should usually be an [ActionData](ActionData.md) union.
 
 ### E
 

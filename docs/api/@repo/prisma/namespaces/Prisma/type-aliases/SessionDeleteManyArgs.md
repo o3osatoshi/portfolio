@@ -8,7 +8,7 @@
 
 > **SessionDeleteManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1312
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1313
 
 Session deleteMany
 
@@ -24,7 +24,7 @@ Session deleteMany
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1320
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1321
 
 Limit how many Sessions to delete.
 
@@ -34,6 +34,6 @@ Limit how many Sessions to delete.
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1316
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1317
 
 Filter which Sessions to delete

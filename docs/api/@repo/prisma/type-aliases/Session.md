@@ -8,6 +8,6 @@
 
 > **Session** = [`SessionModel`](../namespaces/Prisma/type-aliases/SessionModel.md)
 
-Defined in: packages/prisma/generated/prisma/client.ts:62
+Defined in: packages/prisma/generated/prisma/client.ts:61
 
 Model Session

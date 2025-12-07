@@ -8,7 +8,7 @@
 
 > **AccountCreateWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:595
+Defined in: packages/prisma/generated/prisma/models/Account.ts:596
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:595
 
 > `optional` **access\_token**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:600
+Defined in: packages/prisma/generated/prisma/models/Account.ts:601
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:600
 
 > `optional` **createdAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:606
+Defined in: packages/prisma/generated/prisma/models/Account.ts:607
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:606
 
 > `optional` **expires\_at**: `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:601
+Defined in: packages/prisma/generated/prisma/models/Account.ts:602
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:601
 
 > `optional` **id\_token**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:604
+Defined in: packages/prisma/generated/prisma/models/Account.ts:605
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:604
 
 > **provider**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:597
+Defined in: packages/prisma/generated/prisma/models/Account.ts:598
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:597
 
 > **providerAccountId**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:598
+Defined in: packages/prisma/generated/prisma/models/Account.ts:599
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:598
 
 > `optional` **refresh\_token**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:599
+Defined in: packages/prisma/generated/prisma/models/Account.ts:600
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:599
 
 > `optional` **scope**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:603
+Defined in: packages/prisma/generated/prisma/models/Account.ts:604
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:603
 
 > `optional` **session\_state**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:605
+Defined in: packages/prisma/generated/prisma/models/Account.ts:606
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:605
 
 > `optional` **token\_type**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:602
+Defined in: packages/prisma/generated/prisma/models/Account.ts:603
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:602
 
 > **type**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:596
+Defined in: packages/prisma/generated/prisma/models/Account.ts:597
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:596
 
 > `optional` **updatedAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:607
+Defined in: packages/prisma/generated/prisma/models/Account.ts:608

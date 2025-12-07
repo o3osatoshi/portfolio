@@ -8,7 +8,7 @@
 
 > **QueryEvent** = `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1202
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1205
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1202
 
 > **duration**: `number`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1206
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1209
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1206
 
 > **params**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1205
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1208
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1205
 
 > **query**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1204
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1207
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1204
 
 > **target**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1207
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1210
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1207
 
 > **timestamp**: `Date`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1203
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1206

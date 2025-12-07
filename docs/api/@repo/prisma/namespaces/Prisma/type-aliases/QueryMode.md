@@ -8,4 +8,4 @@
 
 > **QueryMode** = *typeof* [`QueryMode`](../variables/QueryMode.md)\[keyof *typeof* [`QueryMode`](../variables/QueryMode.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:992
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:987

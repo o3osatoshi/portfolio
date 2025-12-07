@@ -8,7 +8,7 @@
 
 > **ListIntFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Int[]"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1066
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1061
 
 Reference to a field of type 'Int[]'
 

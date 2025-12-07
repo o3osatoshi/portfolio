@@ -8,7 +8,7 @@
 
 > **AuthenticatorUserIdCredentialIDCompoundUniqueInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:389
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:390
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:389
 
 > **credentialID**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:391
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:392
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:391
 
 > **userId**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:390
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:391

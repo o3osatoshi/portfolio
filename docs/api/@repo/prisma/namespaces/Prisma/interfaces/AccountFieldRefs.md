@@ -6,7 +6,7 @@
 
 # Interface: AccountFieldRefs
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1252
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1253
 
 Fields of the Account model
 
@@ -16,7 +16,7 @@ Fields of the Account model
 
 > `readonly` **access\_token**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1258
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1259
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1258
 
 > `readonly` **createdAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1264
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1265
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1264
 
 > `readonly` **expires\_at**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"Int"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1259
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1260
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1259
 
 > `readonly` **id\_token**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1262
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1263
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1262
 
 > `readonly` **provider**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1255
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1256
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1255
 
 > `readonly` **providerAccountId**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1256
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1257
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1256
 
 > `readonly` **refresh\_token**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1257
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1258
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1257
 
 > `readonly` **scope**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1261
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1262
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1261
 
 > `readonly` **session\_state**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1263
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1264
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1263
 
 > `readonly` **token\_type**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1260
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1261
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1260
 
 > `readonly` **type**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1254
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1255
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1254
 
 > `readonly` **updatedAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1265
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1266
 
 ***
 
@@ -112,4 +112,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1265
 
 > `readonly` **userId**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Account"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1253
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1254

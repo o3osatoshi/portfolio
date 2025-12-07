@@ -8,7 +8,7 @@
 
 > **TransactionAggregateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:149
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:150
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:149
 
 > `optional` **\_avg**: [`TransactionAvgAggregateInputType`](TransactionAvgAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:189
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:190
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -34,7 +34,7 @@ Select which fields to average
 
 > `optional` **\_count**: `true` \| [`TransactionCountAggregateInputType`](TransactionCountAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:183
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:184
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -46,7 +46,7 @@ Count returned Transactions
 
 > `optional` **\_max**: [`TransactionMaxAggregateInputType`](TransactionMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:207
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:208
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -58,7 +58,7 @@ Select which fields to find the maximum value
 
 > `optional` **\_min**: [`TransactionMinAggregateInputType`](TransactionMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:201
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:202
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -70,7 +70,7 @@ Select which fields to find the minimum value
 
 > `optional` **\_sum**: [`TransactionSumAggregateInputType`](TransactionSumAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:195
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:196
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -82,7 +82,7 @@ Select which fields to sum
 
 > `optional` **cursor**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:165
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:166
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -94,7 +94,7 @@ Sets the start position
 
 > `optional` **orderBy**: [`TransactionOrderByWithRelationInput`](TransactionOrderByWithRelationInput.md) \| [`TransactionOrderByWithRelationInput`](TransactionOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:159
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:160
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -106,7 +106,7 @@ Determine the order of Transactions to fetch.
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:177
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:178
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -118,7 +118,7 @@ Skip the first `n` Transactions.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:171
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:172
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -130,6 +130,6 @@ Take `±n` Transactions from the position of the cursor.
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:153
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:154
 
 Filter which Transaction to aggregate.

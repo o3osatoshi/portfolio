@@ -8,7 +8,7 @@
 
 > **AccountCreateManyUserInputEnvelope** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:630
+Defined in: packages/prisma/generated/prisma/models/Account.ts:631
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:630
 
 > **data**: [`AccountCreateManyUserInput`](AccountCreateManyUserInput.md) \| [`AccountCreateManyUserInput`](AccountCreateManyUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:631
+Defined in: packages/prisma/generated/prisma/models/Account.ts:632
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:631
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:632
+Defined in: packages/prisma/generated/prisma/models/Account.ts:633

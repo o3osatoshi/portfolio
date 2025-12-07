@@ -8,7 +8,7 @@
 
 > **UserDeleteManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1656
+Defined in: packages/prisma/generated/prisma/models/User.ts:1657
 
 User deleteMany
 
@@ -24,7 +24,7 @@ User deleteMany
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1664
+Defined in: packages/prisma/generated/prisma/models/User.ts:1665
 
 Limit how many Users to delete.
 
@@ -34,6 +34,6 @@ Limit how many Users to delete.
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1660
+Defined in: packages/prisma/generated/prisma/models/User.ts:1661
 
 Filter which Users to delete

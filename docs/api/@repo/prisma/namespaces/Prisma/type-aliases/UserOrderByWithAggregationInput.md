@@ -8,7 +8,7 @@
 
 > **UserOrderByWithAggregationInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:237
+Defined in: packages/prisma/generated/prisma/models/User.ts:238
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:237
 
 > `optional` **\_count**: [`UserCountOrderByAggregateInput`](UserCountOrderByAggregateInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:245
+Defined in: packages/prisma/generated/prisma/models/User.ts:246
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:245
 
 > `optional` **\_max**: [`UserMaxOrderByAggregateInput`](UserMaxOrderByAggregateInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:246
+Defined in: packages/prisma/generated/prisma/models/User.ts:247
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:246
 
 > `optional` **\_min**: [`UserMinOrderByAggregateInput`](UserMinOrderByAggregateInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:247
+Defined in: packages/prisma/generated/prisma/models/User.ts:248
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:247
 
 > `optional` **createdAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:243
+Defined in: packages/prisma/generated/prisma/models/User.ts:244
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:243
 
 > `optional` **email**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:240
+Defined in: packages/prisma/generated/prisma/models/User.ts:241
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:240
 
 > `optional` **emailVerified**: [`SortOrderInput`](SortOrderInput.md) \| [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:241
+Defined in: packages/prisma/generated/prisma/models/User.ts:242
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:241
 
 > `optional` **id**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:238
+Defined in: packages/prisma/generated/prisma/models/User.ts:239
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:238
 
 > `optional` **image**: [`SortOrderInput`](SortOrderInput.md) \| [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:242
+Defined in: packages/prisma/generated/prisma/models/User.ts:243
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:242
 
 > `optional` **name**: [`SortOrderInput`](SortOrderInput.md) \| [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:239
+Defined in: packages/prisma/generated/prisma/models/User.ts:240
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:239
 
 > `optional` **updatedAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:244
+Defined in: packages/prisma/generated/prisma/models/User.ts:245

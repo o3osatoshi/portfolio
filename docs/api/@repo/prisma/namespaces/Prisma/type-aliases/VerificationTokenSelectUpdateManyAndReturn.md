@@ -8,7 +8,7 @@
 
 > **VerificationTokenSelectUpdateManyAndReturn**\<`ExtArgs`\> = `runtime.Types.Extensions.GetSelect`\<\{ `expires?`: `boolean`; `identifier?`: `boolean`; `token?`: `boolean`; \}, `ExtArgs`\[`"result"`\]\[`"verificationToken"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:283
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:284
 
 ## Type Parameters
 

@@ -8,7 +8,7 @@
 
 > `const` **join**: (`values`, `separator?`, `prefix?`, `suffix?`) => `Sql` = `runtime.join`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:51
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:52
 
 Create a SQL query for a list of values.
 

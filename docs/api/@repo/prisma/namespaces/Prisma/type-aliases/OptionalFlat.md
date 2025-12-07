@@ -8,7 +8,7 @@
 
 > **OptionalFlat**\<`O`\> = `{ [K in keyof O]?: O[K] }` & `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:282
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:277
 
 ## Type Parameters
 

@@ -8,7 +8,7 @@
 
 > **UserDefaultArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1766
+Defined in: packages/prisma/generated/prisma/models/User.ts:1767
 
 User without action
 
@@ -24,7 +24,7 @@ User without action
 
 > `optional` **include**: [`UserInclude`](UserInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1778
+Defined in: packages/prisma/generated/prisma/models/User.ts:1779
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1774
+Defined in: packages/prisma/generated/prisma/models/User.ts:1775
 
 Omit specific fields from the User
 
@@ -44,6 +44,6 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelect`](UserSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1770
+Defined in: packages/prisma/generated/prisma/models/User.ts:1771
 
 Select specific fields to fetch from the User

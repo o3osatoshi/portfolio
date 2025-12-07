@@ -8,7 +8,7 @@
 
 > **TransactionCreateOrConnectWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:633
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:634
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:633
 
 > **create**: [`XOR`](XOR.md)\<[`TransactionCreateWithoutUserInput`](TransactionCreateWithoutUserInput.md), [`TransactionUncheckedCreateWithoutUserInput`](TransactionUncheckedCreateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:635
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:636
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:635
 
 > **where**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:634
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:635

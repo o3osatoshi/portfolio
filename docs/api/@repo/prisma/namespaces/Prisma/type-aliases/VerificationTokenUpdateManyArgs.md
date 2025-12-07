@@ -8,7 +8,7 @@
 
 > **VerificationTokenUpdateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:982
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:983
 
 VerificationToken updateMany
 
@@ -24,7 +24,7 @@ VerificationToken updateMany
 
 > **data**: [`XOR`](XOR.md)\<[`VerificationTokenUpdateManyMutationInput`](VerificationTokenUpdateManyMutationInput.md), [`VerificationTokenUncheckedUpdateManyInput`](VerificationTokenUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:986
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:987
 
 The data used to update VerificationTokens.
 
@@ -34,7 +34,7 @@ The data used to update VerificationTokens.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:994
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:995
 
 Limit how many VerificationTokens to update.
 
@@ -44,6 +44,6 @@ Limit how many VerificationTokens to update.
 
 > `optional` **where**: [`VerificationTokenWhereInput`](VerificationTokenWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:990
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:991
 
 Filter which VerificationTokens to update

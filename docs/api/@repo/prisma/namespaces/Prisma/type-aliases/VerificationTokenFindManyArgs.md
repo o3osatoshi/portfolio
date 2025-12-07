@@ -8,7 +8,7 @@
 
 > **VerificationTokenFindManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:869
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:870
 
 VerificationToken findMany
 
@@ -24,7 +24,7 @@ VerificationToken findMany
 
 > `optional` **cursor**: [`VerificationTokenWhereUniqueInput`](VerificationTokenWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:893
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:894
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -36,7 +36,7 @@ Sets the position for listing VerificationTokens.
 
 > `optional` **distinct**: [`VerificationTokenScalarFieldEnum`](VerificationTokenScalarFieldEnum.md) \| [`VerificationTokenScalarFieldEnum`](VerificationTokenScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:906
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:907
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:906
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:877
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:878
 
 Omit specific fields from the VerificationToken
 
@@ -54,7 +54,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **orderBy**: [`VerificationTokenOrderByWithRelationInput`](VerificationTokenOrderByWithRelationInput.md) \| [`VerificationTokenOrderByWithRelationInput`](VerificationTokenOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:887
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:888
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -66,7 +66,7 @@ Determine the order of VerificationTokens to fetch.
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:873
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:874
 
 Select specific fields to fetch from the VerificationToken
 
@@ -76,7 +76,7 @@ Select specific fields to fetch from the VerificationToken
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:905
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:906
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -88,7 +88,7 @@ Skip the first `n` VerificationTokens.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:899
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:900
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -100,6 +100,6 @@ Take `±n` VerificationTokens from the position of the cursor.
 
 > `optional` **where**: [`VerificationTokenWhereInput`](VerificationTokenWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:881
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:882
 
 Filter, which VerificationTokens to fetch.

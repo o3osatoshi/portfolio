@@ -8,7 +8,7 @@
 
 > **err**\<`E`\>(`error`): [`ActionState`](../type-aliases/ActionState.md)
 
-Defined in: [next/action-state.ts:61](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/next/action-state.ts#L61)
+Defined in: [next/action-state.ts:55](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/next/action-state.ts#L55)
 
 Build a failure [ActionState](../type-aliases/ActionState.md) with a user-facing error message.
 
@@ -35,4 +35,4 @@ An [ActionState](../type-aliases/ActionState.md) with `ok: false` and a friendly
 ## Remarks
 
 - Strings and pre-shaped [ActionError](../type-aliases/ActionError.md) values are passed through.
-- Native `Error` instances are converted via [userMessageFromError](userMessageFromError.md) to keep messages user-friendly.
+- Native `Error` instances are converted via [userMessageFromError](userMessageFromError.md) and wrapped as [ActionError](../type-aliases/ActionError.md) to keep messages user-friendly and serializable.

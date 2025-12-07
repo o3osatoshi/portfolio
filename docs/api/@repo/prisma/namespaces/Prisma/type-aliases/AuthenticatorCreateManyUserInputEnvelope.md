@@ -8,7 +8,7 @@
 
 > **AuthenticatorCreateManyUserInputEnvelope** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:514
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:515
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:514
 
 > **data**: [`AuthenticatorCreateManyUserInput`](AuthenticatorCreateManyUserInput.md) \| [`AuthenticatorCreateManyUserInput`](AuthenticatorCreateManyUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:515
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:516
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:515
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:516
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:517

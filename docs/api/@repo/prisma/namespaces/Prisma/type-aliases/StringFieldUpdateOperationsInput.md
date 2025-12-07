@@ -8,7 +8,7 @@
 
 > **StringFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:535
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:536
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:535
 
 > `optional` **set**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:536
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:537

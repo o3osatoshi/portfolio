@@ -8,7 +8,7 @@
 
 > **AccountUncheckedUpdateManyWithoutUserNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:573
+Defined in: packages/prisma/generated/prisma/models/Account.ts:574
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:573
 
 > `optional` **connect**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md) \| [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:581
+Defined in: packages/prisma/generated/prisma/models/Account.ts:582
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:581
 
 > `optional` **connectOrCreate**: [`AccountCreateOrConnectWithoutUserInput`](AccountCreateOrConnectWithoutUserInput.md) \| [`AccountCreateOrConnectWithoutUserInput`](AccountCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:575
+Defined in: packages/prisma/generated/prisma/models/Account.ts:576
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:575
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`AccountCreateWithoutUserInput`](AccountCreateWithoutUserInput.md), [`AccountUncheckedCreateWithoutUserInput`](AccountUncheckedCreateWithoutUserInput.md)\> \| [`AccountCreateWithoutUserInput`](AccountCreateWithoutUserInput.md)[] \| [`AccountUncheckedCreateWithoutUserInput`](AccountUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:574
+Defined in: packages/prisma/generated/prisma/models/Account.ts:575
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:574
 
 > `optional` **createMany**: [`AccountCreateManyUserInputEnvelope`](AccountCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:577
+Defined in: packages/prisma/generated/prisma/models/Account.ts:578
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:577
 
 > `optional` **delete**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md) \| [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:580
+Defined in: packages/prisma/generated/prisma/models/Account.ts:581
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:580
 
 > `optional` **deleteMany**: [`AccountScalarWhereInput`](AccountScalarWhereInput.md) \| [`AccountScalarWhereInput`](AccountScalarWhereInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:584
+Defined in: packages/prisma/generated/prisma/models/Account.ts:585
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:584
 
 > `optional` **disconnect**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md) \| [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:579
+Defined in: packages/prisma/generated/prisma/models/Account.ts:580
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:579
 
 > `optional` **set**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md) \| [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:578
+Defined in: packages/prisma/generated/prisma/models/Account.ts:579
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:578
 
 > `optional` **update**: [`AccountUpdateWithWhereUniqueWithoutUserInput`](AccountUpdateWithWhereUniqueWithoutUserInput.md) \| [`AccountUpdateWithWhereUniqueWithoutUserInput`](AccountUpdateWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:582
+Defined in: packages/prisma/generated/prisma/models/Account.ts:583
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:582
 
 > `optional` **updateMany**: [`AccountUpdateManyWithWhereWithoutUserInput`](AccountUpdateManyWithWhereWithoutUserInput.md) \| [`AccountUpdateManyWithWhereWithoutUserInput`](AccountUpdateManyWithWhereWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:583
+Defined in: packages/prisma/generated/prisma/models/Account.ts:584
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:583
 
 > `optional` **upsert**: [`AccountUpsertWithWhereUniqueWithoutUserInput`](AccountUpsertWithWhereUniqueWithoutUserInput.md) \| [`AccountUpsertWithWhereUniqueWithoutUserInput`](AccountUpsertWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:576
+Defined in: packages/prisma/generated/prisma/models/Account.ts:577

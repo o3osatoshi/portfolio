@@ -8,7 +8,7 @@
 
 > **Overwrite**\<`O`, `O1`\> = `{ [K in keyof O]: K extends keyof O1 ? O1[K] : O[K] }` & `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:262
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:257
 
 ## Type Parameters
 

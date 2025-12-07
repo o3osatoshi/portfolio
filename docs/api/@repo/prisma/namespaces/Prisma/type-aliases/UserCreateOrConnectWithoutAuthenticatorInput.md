@@ -8,7 +8,7 @@
 
 > **UserCreateOrConnectWithoutAuthenticatorInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:674
+Defined in: packages/prisma/generated/prisma/models/User.ts:675
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:674
 
 > **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutAuthenticatorInput`](UserCreateWithoutAuthenticatorInput.md), [`UserUncheckedCreateWithoutAuthenticatorInput`](UserUncheckedCreateWithoutAuthenticatorInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:676
+Defined in: packages/prisma/generated/prisma/models/User.ts:677
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:676
 
 > **where**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:675
+Defined in: packages/prisma/generated/prisma/models/User.ts:676

@@ -8,4 +8,4 @@
 
 > **TransactionIsolationLevel** = *typeof* [`TransactionIsolationLevel`](../variables/TransactionIsolationLevel.md)\[keyof *typeof* [`TransactionIsolationLevel`](../variables/TransactionIsolationLevel.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:890
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:885

@@ -8,7 +8,7 @@
 
 > **ErrorMessageParts** = `object`
 
-Defined in: [error/error-format.ts:52](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L52)
+Defined in: [error/error-format.ts:52](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L52)
 
 Structured representation of the human-friendly error message fields.
 
@@ -18,7 +18,7 @@ Structured representation of the human-friendly error message fields.
 
 > `optional` **action**: `string`
 
-Defined in: [error/error-format.ts:53](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L53)
+Defined in: [error/error-format.ts:53](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L53)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [error/error-format.ts:53](https://github.com/o3osatoshi/experiment/
 
 > `optional` **causeText**: `string`
 
-Defined in: [error/error-format.ts:54](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L54)
+Defined in: [error/error-format.ts:54](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L54)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [error/error-format.ts:54](https://github.com/o3osatoshi/experiment/
 
 > `optional` **hint**: `string`
 
-Defined in: [error/error-format.ts:55](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L55)
+Defined in: [error/error-format.ts:55](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L55)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [error/error-format.ts:55](https://github.com/o3osatoshi/experiment/
 
 > `optional` **impact**: `string`
 
-Defined in: [error/error-format.ts:56](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L56)
+Defined in: [error/error-format.ts:56](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L56)
 
 ***
 
@@ -50,4 +50,4 @@ Defined in: [error/error-format.ts:56](https://github.com/o3osatoshi/experiment/
 
 > `optional` **reason**: `string`
 
-Defined in: [error/error-format.ts:57](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L57)
+Defined in: [error/error-format.ts:57](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L57)

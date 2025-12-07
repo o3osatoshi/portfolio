@@ -8,7 +8,7 @@
 
 > **UserUpdateToOneWithWhereWithoutTransactionsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:481
+Defined in: packages/prisma/generated/prisma/models/User.ts:482
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:481
 
 > **data**: [`XOR`](XOR.md)\<[`UserUpdateWithoutTransactionsInput`](UserUpdateWithoutTransactionsInput.md), [`UserUncheckedUpdateWithoutTransactionsInput`](UserUncheckedUpdateWithoutTransactionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:483
+Defined in: packages/prisma/generated/prisma/models/User.ts:484
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:483
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:482
+Defined in: packages/prisma/generated/prisma/models/User.ts:483

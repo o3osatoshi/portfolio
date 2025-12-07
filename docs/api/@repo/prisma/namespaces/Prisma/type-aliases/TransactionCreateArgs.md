@@ -8,7 +8,7 @@
 
 > **TransactionCreateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1465
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1466
 
 Transaction create
 
@@ -24,7 +24,7 @@ Transaction create
 
 > **data**: [`XOR`](XOR.md)\<[`TransactionCreateInput`](TransactionCreateInput.md), [`TransactionUncheckedCreateInput`](TransactionUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1481
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1482
 
 The data needed to create a Transaction.
 
@@ -34,7 +34,7 @@ The data needed to create a Transaction.
 
 > `optional` **include**: [`TransactionInclude`](TransactionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1477
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1478
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1473
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1474
 
 Omit specific fields from the Transaction
 
@@ -54,6 +54,6 @@ Omit specific fields from the Transaction
 
 > `optional` **select**: [`TransactionSelect`](TransactionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1469
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1470
 
 Select specific fields to fetch from the Transaction

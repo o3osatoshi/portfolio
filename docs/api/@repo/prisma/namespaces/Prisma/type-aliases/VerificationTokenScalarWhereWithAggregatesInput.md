@@ -8,7 +8,7 @@
 
 > **VerificationTokenScalarWhereWithAggregatesInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:195
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:196
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:195
 
 > `optional` **AND**: `Prisma.VerificationTokenScalarWhereWithAggregatesInput` \| `Prisma.VerificationTokenScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:196
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:197
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:196
 
 > `optional` **expires**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"VerificationToken"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:201
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:202
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:201
 
 > `optional` **identifier**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"VerificationToken"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:199
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:200
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:199
 
 > `optional` **NOT**: `Prisma.VerificationTokenScalarWhereWithAggregatesInput` \| `Prisma.VerificationTokenScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:198
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:199
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:198
 
 > `optional` **OR**: `Prisma.VerificationTokenScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:197
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:198
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:197
 
 > `optional` **token**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"VerificationToken"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:200
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:201

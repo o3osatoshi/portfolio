@@ -8,7 +8,7 @@
 
 > **Payload**\<`T`, `F`\> = `runtime.Types.Public.Payload`\<`T`, `F`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:80
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:73
 
 ## Type Parameters
 

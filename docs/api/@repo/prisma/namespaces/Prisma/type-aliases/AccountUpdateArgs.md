@@ -8,7 +8,7 @@
 
 > **AccountUpdateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1524
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1525
 
 Account update
 
@@ -24,7 +24,7 @@ Account update
 
 > **data**: [`XOR`](XOR.md)\<[`AccountUpdateInput`](AccountUpdateInput.md), [`AccountUncheckedUpdateInput`](AccountUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1540
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1541
 
 The data needed to update a Account.
 
@@ -34,7 +34,7 @@ The data needed to update a Account.
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1536
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1537
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1532
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1533
 
 Omit specific fields from the Account
 
@@ -54,7 +54,7 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1528
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1529
 
 Select specific fields to fetch from the Account
 
@@ -64,6 +64,6 @@ Select specific fields to fetch from the Account
 
 > **where**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1544
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1545
 
 Choose, which Account to update.

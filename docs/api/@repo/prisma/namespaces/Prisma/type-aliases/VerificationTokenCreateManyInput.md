@@ -8,7 +8,7 @@
 
 > **VerificationTokenCreateManyInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:228
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:229
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:228
 
 > **expires**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:231
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:232
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:231
 
 > **identifier**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:229
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:230
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:229
 
 > **token**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:230
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:231

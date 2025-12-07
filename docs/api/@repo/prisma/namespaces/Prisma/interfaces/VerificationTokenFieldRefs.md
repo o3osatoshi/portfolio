@@ -6,7 +6,7 @@
 
 # Interface: VerificationTokenFieldRefs
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:726
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:727
 
 Fields of the VerificationToken model
 
@@ -16,7 +16,7 @@ Fields of the VerificationToken model
 
 > `readonly` **expires**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"VerificationToken"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:729
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:730
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:729
 
 > `readonly` **identifier**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"VerificationToken"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:727
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:728
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:727
 
 > `readonly` **token**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"VerificationToken"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:728
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:729

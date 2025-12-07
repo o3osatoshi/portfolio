@@ -8,7 +8,7 @@
 
 > **SessionListRelationFilter** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:285
+Defined in: packages/prisma/generated/prisma/models/Session.ts:286
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:285
 
 > `optional` **every**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:286
+Defined in: packages/prisma/generated/prisma/models/Session.ts:287
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:286
 
 > `optional` **none**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:288
+Defined in: packages/prisma/generated/prisma/models/Session.ts:289
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:288
 
 > `optional` **some**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:287
+Defined in: packages/prisma/generated/prisma/models/Session.ts:288

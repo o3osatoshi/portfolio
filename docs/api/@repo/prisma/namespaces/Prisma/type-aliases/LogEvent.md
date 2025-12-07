@@ -8,7 +8,7 @@
 
 > **LogEvent** = `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1210
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1213
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1210
 
 > **message**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1212
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1215
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1212
 
 > **target**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1213
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1216
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1213
 
 > **timestamp**: `Date`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1211
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1214

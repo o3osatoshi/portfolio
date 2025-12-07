@@ -8,7 +8,7 @@
 
 > **AuthenticatorFindFirstArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1146
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1147
 
 Authenticator findFirst
 
@@ -24,7 +24,7 @@ Authenticator findFirst
 
 > `optional` **cursor**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1174
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1175
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -36,7 +36,7 @@ Sets the position for searching for Authenticators.
 
 > `optional` **distinct**: [`AuthenticatorScalarFieldEnum`](AuthenticatorScalarFieldEnum.md) \| [`AuthenticatorScalarFieldEnum`](AuthenticatorScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1192
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1193
 
 [Distinct Docs](https://www.prisma.io/docs/concepts/components/prisma-client/distinct)
 
@@ -48,7 +48,7 @@ Filter by unique combinations of Authenticators.
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1158
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1159
 
 Choose, which related nodes to fetch as well
 
@@ -58,7 +58,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1154
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1155
 
 Omit specific fields from the Authenticator
 
@@ -68,7 +68,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **orderBy**: [`AuthenticatorOrderByWithRelationInput`](AuthenticatorOrderByWithRelationInput.md) \| [`AuthenticatorOrderByWithRelationInput`](AuthenticatorOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1168
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1169
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -80,7 +80,7 @@ Determine the order of Authenticators to fetch.
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1150
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1151
 
 Select specific fields to fetch from the Authenticator
 
@@ -90,7 +90,7 @@ Select specific fields to fetch from the Authenticator
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1186
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1187
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -102,7 +102,7 @@ Skip the first `n` Authenticators.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1180
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1181
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -114,6 +114,6 @@ Take `±n` Authenticators from the position of the cursor.
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1162
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1163
 
 Filter, which Authenticator to fetch.

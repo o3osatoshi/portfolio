@@ -8,7 +8,7 @@
 
 > **SessionIncludeCreateManyAndReturn**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:481
+Defined in: packages/prisma/generated/prisma/models/Session.ts:482
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:481
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:482
+Defined in: packages/prisma/generated/prisma/models/Session.ts:483

@@ -8,6 +8,6 @@
 
 > `const` **PrismaClientKnownRequestError**: *typeof* `PrismaClientKnownRequestError` = `runtime.PrismaClientKnownRequestError`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:31
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:32
 
 Prisma Errors

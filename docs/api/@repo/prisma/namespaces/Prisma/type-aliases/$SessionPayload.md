@@ -8,7 +8,7 @@
 
 > **$SessionPayload**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:488
+Defined in: packages/prisma/generated/prisma/models/Session.ts:489
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:488
 
 > **composites**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:500
+Defined in: packages/prisma/generated/prisma/models/Session.ts:501
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:500
 
 > **name**: `"Session"`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:489
+Defined in: packages/prisma/generated/prisma/models/Session.ts:490
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:489
 
 > **objects**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:490
+Defined in: packages/prisma/generated/prisma/models/Session.ts:491
 
 #### user
 
@@ -50,4 +50,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:490
 
 > **scalars**: `runtime.Types.Extensions.GetPayloadResult`\<\{ `createdAt`: `Date`; `expires`: `Date`; `sessionToken`: `string`; `updatedAt`: `Date`; `userId`: `string`; \}, `ExtArgs`\[`"result"`\]\[`"session"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:493
+Defined in: packages/prisma/generated/prisma/models/Session.ts:494

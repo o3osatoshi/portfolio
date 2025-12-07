@@ -8,7 +8,7 @@
 
 > **NestedIntNullableFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:393
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:394
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:393
 
 > `optional` **equals**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:394
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:395
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:394
 
 > `optional` **gt**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:399
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:400
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:399
 
 > `optional` **gte**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:400
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:401
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:400
 
 > `optional` **in**: `number`[] \| [`ListIntFieldRefInput`](ListIntFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:395
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:396
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:395
 
 > `optional` **lt**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:397
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:398
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:397
 
 > `optional` **lte**: `number` \| [`IntFieldRefInput`](IntFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:398
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:399
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:398
 
 > `optional` **not**: `Prisma.NestedIntNullableFilter`\<`$PrismaModel`\> \| `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:401
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:402
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:401
 
 > `optional` **notIn**: `number`[] \| [`ListIntFieldRefInput`](ListIntFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:396
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:397

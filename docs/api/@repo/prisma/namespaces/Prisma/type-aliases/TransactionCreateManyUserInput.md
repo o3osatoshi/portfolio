@@ -8,7 +8,7 @@
 
 > **TransactionCreateManyUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:677
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:678
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:677
 
 > **amount**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:681
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:682
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:681
 
 > `optional` **createdAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:687
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:688
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:687
 
 > **currency**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:683
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:684
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:683
 
 > **datetime**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:680
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:681
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:680
 
 > `optional` **fee**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:685
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:686
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:685
 
 > `optional` **feeCurrency**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:686
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:687
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:686
 
 > `optional` **id**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:678
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:679
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:678
 
 > **price**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:682
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:683
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:682
 
 > `optional` **profitLoss**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:684
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:685
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:684
 
 > **type**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:679
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:680
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:679
 
 > `optional` **updatedAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:688
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:689

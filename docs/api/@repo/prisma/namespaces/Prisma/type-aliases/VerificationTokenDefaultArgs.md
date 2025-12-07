@@ -8,7 +8,7 @@
 
 > **VerificationTokenDefaultArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1084
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1085
 
 VerificationToken without action
 
@@ -24,7 +24,7 @@ VerificationToken without action
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1092
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1093
 
 Omit specific fields from the VerificationToken
 
@@ -34,6 +34,6 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1088
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1089
 
 Select specific fields to fetch from the VerificationToken

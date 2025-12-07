@@ -8,7 +8,7 @@
 
 > **User$transactionsArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1742
+Defined in: packages/prisma/generated/prisma/models/User.ts:1743
 
 User.transactions
 
@@ -24,7 +24,7 @@ User.transactions
 
 > `optional` **cursor**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1757
+Defined in: packages/prisma/generated/prisma/models/User.ts:1758
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1757
 
 > `optional` **distinct**: [`TransactionScalarFieldEnum`](TransactionScalarFieldEnum.md) \| [`TransactionScalarFieldEnum`](TransactionScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1760
+Defined in: packages/prisma/generated/prisma/models/User.ts:1761
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1760
 
 > `optional` **include**: [`TransactionInclude`](TransactionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1754
+Defined in: packages/prisma/generated/prisma/models/User.ts:1755
 
 Choose, which related nodes to fetch as well
 
@@ -50,7 +50,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1750
+Defined in: packages/prisma/generated/prisma/models/User.ts:1751
 
 Omit specific fields from the Transaction
 
@@ -60,7 +60,7 @@ Omit specific fields from the Transaction
 
 > `optional` **orderBy**: [`TransactionOrderByWithRelationInput`](TransactionOrderByWithRelationInput.md) \| [`TransactionOrderByWithRelationInput`](TransactionOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1756
+Defined in: packages/prisma/generated/prisma/models/User.ts:1757
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1756
 
 > `optional` **select**: [`TransactionSelect`](TransactionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1746
+Defined in: packages/prisma/generated/prisma/models/User.ts:1747
 
 Select specific fields to fetch from the Transaction
 
@@ -78,7 +78,7 @@ Select specific fields to fetch from the Transaction
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1759
+Defined in: packages/prisma/generated/prisma/models/User.ts:1760
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1759
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1758
+Defined in: packages/prisma/generated/prisma/models/User.ts:1759
 
 ***
 
@@ -94,4 +94,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1758
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1755
+Defined in: packages/prisma/generated/prisma/models/User.ts:1756

@@ -8,6 +8,6 @@
 
 > **AuthenticatorModel** = `runtime.Types.Result.DefaultSelection`\<[`$AuthenticatorPayload`]($AuthenticatorPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:18
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:19
 
 Model Authenticator

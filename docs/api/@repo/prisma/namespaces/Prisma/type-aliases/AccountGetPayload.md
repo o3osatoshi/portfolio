@@ -8,7 +8,7 @@
 
 > **AccountGetPayload**\<`S`\> = `runtime.Types.Result.GetResult`\<[`$AccountPayload`]($AccountPayload.md), `S`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:833
+Defined in: packages/prisma/generated/prisma/models/Account.ts:834
 
 ## Type Parameters
 

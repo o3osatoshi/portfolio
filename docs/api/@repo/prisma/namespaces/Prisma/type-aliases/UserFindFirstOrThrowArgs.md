@@ -8,7 +8,7 @@
 
 > **UserFindFirstOrThrowArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1383
+Defined in: packages/prisma/generated/prisma/models/User.ts:1384
 
 User findFirstOrThrow
 
@@ -24,7 +24,7 @@ User findFirstOrThrow
 
 > `optional` **cursor**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1411
+Defined in: packages/prisma/generated/prisma/models/User.ts:1412
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -36,7 +36,7 @@ Sets the position for searching for Users.
 
 > `optional` **distinct**: [`UserScalarFieldEnum`](UserScalarFieldEnum.md) \| [`UserScalarFieldEnum`](UserScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1429
+Defined in: packages/prisma/generated/prisma/models/User.ts:1430
 
 [Distinct Docs](https://www.prisma.io/docs/concepts/components/prisma-client/distinct)
 
@@ -48,7 +48,7 @@ Filter by unique combinations of Users.
 
 > `optional` **include**: [`UserInclude`](UserInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1395
+Defined in: packages/prisma/generated/prisma/models/User.ts:1396
 
 Choose, which related nodes to fetch as well
 
@@ -58,7 +58,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1391
+Defined in: packages/prisma/generated/prisma/models/User.ts:1392
 
 Omit specific fields from the User
 
@@ -68,7 +68,7 @@ Omit specific fields from the User
 
 > `optional` **orderBy**: [`UserOrderByWithRelationInput`](UserOrderByWithRelationInput.md) \| [`UserOrderByWithRelationInput`](UserOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1405
+Defined in: packages/prisma/generated/prisma/models/User.ts:1406
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -80,7 +80,7 @@ Determine the order of Users to fetch.
 
 > `optional` **select**: [`UserSelect`](UserSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1387
+Defined in: packages/prisma/generated/prisma/models/User.ts:1388
 
 Select specific fields to fetch from the User
 
@@ -90,7 +90,7 @@ Select specific fields to fetch from the User
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1423
+Defined in: packages/prisma/generated/prisma/models/User.ts:1424
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -102,7 +102,7 @@ Skip the first `n` Users.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1417
+Defined in: packages/prisma/generated/prisma/models/User.ts:1418
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -114,6 +114,6 @@ Take `±n` Users from the position of the cursor.
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1399
+Defined in: packages/prisma/generated/prisma/models/User.ts:1400
 
 Filter, which User to fetch.

@@ -8,7 +8,7 @@
 
 > `const` **prismaVersion**: [`PrismaVersion`](../type-aliases/PrismaVersion.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:93
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:86
 
-Prisma Client JS version: 6.18.0
-Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
+Prisma Client JS version: 7.1.0
+Query Engine version: ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba

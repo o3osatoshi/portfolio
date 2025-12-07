@@ -8,7 +8,7 @@
 
 > **SessionOrderByRelationAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:291
+Defined in: packages/prisma/generated/prisma/models/Session.ts:292
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:291
 
 > `optional` **\_count**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:292
+Defined in: packages/prisma/generated/prisma/models/Session.ts:293

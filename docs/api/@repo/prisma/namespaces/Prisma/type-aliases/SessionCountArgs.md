@@ -8,7 +8,7 @@
 
 > **SessionCountArgs**\<`ExtArgs`\> = `Omit`\<[`SessionFindManyArgs`](SessionFindManyArgs.md), `"select"` \| `"include"` \| `"distinct"` \| `"omit"`\> & `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:505
+Defined in: packages/prisma/generated/prisma/models/Session.ts:506
 
 ## Type Declaration
 

@@ -8,7 +8,7 @@
 
 > **BooleanFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Boolean"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1073
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1068
 
 Reference to a field of type 'Boolean'
 

@@ -8,7 +8,7 @@
 
 > **Result**\<`T`, `A`, `F`\> = `runtime.Types.Public.Result`\<`T`, `A`, `F`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:81
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:74
 
 ## Type Parameters
 

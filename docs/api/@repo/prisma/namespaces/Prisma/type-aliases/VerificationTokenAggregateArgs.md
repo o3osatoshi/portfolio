@@ -8,7 +8,7 @@
 
 > **VerificationTokenAggregateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:65
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:66
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:65
 
 > `optional` **\_count**: `true` \| [`VerificationTokenCountAggregateInputType`](VerificationTokenCountAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:99
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:100
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -34,7 +34,7 @@ Count returned VerificationTokens
 
 > `optional` **\_max**: [`VerificationTokenMaxAggregateInputType`](VerificationTokenMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:111
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:112
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -46,7 +46,7 @@ Select which fields to find the maximum value
 
 > `optional` **\_min**: [`VerificationTokenMinAggregateInputType`](VerificationTokenMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:105
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:106
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -58,7 +58,7 @@ Select which fields to find the minimum value
 
 > `optional` **cursor**: [`VerificationTokenWhereUniqueInput`](VerificationTokenWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:81
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:82
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -70,7 +70,7 @@ Sets the start position
 
 > `optional` **orderBy**: [`VerificationTokenOrderByWithRelationInput`](VerificationTokenOrderByWithRelationInput.md) \| [`VerificationTokenOrderByWithRelationInput`](VerificationTokenOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:75
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:76
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -82,7 +82,7 @@ Determine the order of VerificationTokens to fetch.
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:93
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:94
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -94,7 +94,7 @@ Skip the first `n` VerificationTokens.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:87
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:88
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -106,6 +106,6 @@ Take `±n` VerificationTokens from the position of the cursor.
 
 > `optional` **where**: [`VerificationTokenWhereInput`](VerificationTokenWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:69
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:70
 
 Filter which VerificationToken to aggregate.

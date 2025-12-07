@@ -8,7 +8,7 @@
 
 > **toHttpErrorResponse**(`error`, `status?`, `options?`): [`ErrorHttpResponse`](../type-aliases/ErrorHttpResponse.md)
 
-Defined in: [http/http-error-response.ts:130](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/http-error-response.ts#L130)
+Defined in: [http/http-error-response.ts:130](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/http/http-error-response.ts#L130)
 
 Convert an `Error` into an HTTP response shape.
 

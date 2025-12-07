@@ -6,7 +6,7 @@
 
 # Interface: Prisma\_\_UserClient\<T, Null, ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1238
+Defined in: packages/prisma/generated/prisma/models/User.ts:1239
 
 The delegate class that acts as a "Promise-like" for User.
 Why is this prefixed with `Prisma__`?
@@ -41,7 +41,7 @@ https://github.com/prisma/prisma-client-js/issues/707
 
 > `readonly` **\[toStringTag\]**: `"PrismaPromise"`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1239
+Defined in: packages/prisma/generated/prisma/models/User.ts:1240
 
 #### Overrides
 
@@ -53,7 +53,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1239
 
 > **accounts**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`Null` \| `GetFindResult`\<[`$AccountPayload`](../type-aliases/$AccountPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1240
+Defined in: packages/prisma/generated/prisma/models/User.ts:1241
 
 #### Type Parameters
 
@@ -77,7 +77,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1240
 
 > **Authenticator**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`Null` \| `GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1242
+Defined in: packages/prisma/generated/prisma/models/User.ts:1243
 
 #### Type Parameters
 
@@ -101,7 +101,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1242
 
 > **catch**\<`TResult`\>(`onrejected?`): `Promise`\<`T` \| `TResult`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1256
+Defined in: packages/prisma/generated/prisma/models/User.ts:1257
 
 Attaches a callback for only the rejection of the Promise.
 
@@ -117,7 +117,7 @@ Attaches a callback for only the rejection of the Promise.
 
 The callback to execute when the Promise is rejected.
 
-`null` | (`reason`) => `TResult` \| `PromiseLike`\<`TResult`\>
+(`reason`) => `TResult` \| `PromiseLike`\<`TResult`\> | `null`
 
 #### Returns
 
@@ -135,7 +135,7 @@ A Promise for the completion of the callback.
 
 > **finally**(`onfinally?`): `Promise`\<`T`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1263
+Defined in: packages/prisma/generated/prisma/models/User.ts:1264
 
 Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
 resolved value cannot be modified from the callback.
@@ -146,7 +146,7 @@ resolved value cannot be modified from the callback.
 
 The callback to execute when the Promise is settled (fulfilled or rejected).
 
-`null` | () => `void`
+() => `void` | `null`
 
 #### Returns
 
@@ -164,7 +164,7 @@ A Promise for the completion of the callback.
 
 > **sessions**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`Null` \| `GetFindResult`\<[`$SessionPayload`](../type-aliases/$SessionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1241
+Defined in: packages/prisma/generated/prisma/models/User.ts:1242
 
 #### Type Parameters
 
@@ -188,7 +188,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1241
 
 > **then**\<`TResult1`, `TResult2`\>(`onfulfilled?`, `onrejected?`): `Promise`\<`TResult1` \| `TResult2`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1250
+Defined in: packages/prisma/generated/prisma/models/User.ts:1251
 
 Attaches callbacks for the resolution and/or rejection of the Promise.
 
@@ -208,13 +208,13 @@ Attaches callbacks for the resolution and/or rejection of the Promise.
 
 The callback to execute when the Promise is resolved.
 
-`null` | (`value`) => `TResult1` \| `PromiseLike`\<`TResult1`\>
+(`value`) => `TResult1` \| `PromiseLike`\<`TResult1`\> | `null`
 
 ##### onrejected?
 
 The callback to execute when the Promise is rejected.
 
-`null` | (`reason`) => `TResult2` \| `PromiseLike`\<`TResult2`\>
+(`reason`) => `TResult2` \| `PromiseLike`\<`TResult2`\> | `null`
 
 #### Returns
 
@@ -232,7 +232,7 @@ A Promise for the completion of which ever callback is executed.
 
 > **transactions**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`Null` \| `GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1243
+Defined in: packages/prisma/generated/prisma/models/User.ts:1244
 
 #### Type Parameters
 

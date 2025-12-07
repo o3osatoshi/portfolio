@@ -8,7 +8,7 @@
 
 > **TransactionDeleteManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1647
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1648
 
 Transaction deleteMany
 
@@ -24,7 +24,7 @@ Transaction deleteMany
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1655
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1656
 
 Limit how many Transactions to delete.
 
@@ -34,6 +34,6 @@ Limit how many Transactions to delete.
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1651
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1652
 
 Filter which Transactions to delete

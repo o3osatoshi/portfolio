@@ -8,7 +8,7 @@
 
 > **TransactionDeleteArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1625
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1626
 
 Transaction delete
 
@@ -24,7 +24,7 @@ Transaction delete
 
 > `optional` **include**: [`TransactionInclude`](TransactionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1637
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1638
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1633
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1634
 
 Omit specific fields from the Transaction
 
@@ -44,7 +44,7 @@ Omit specific fields from the Transaction
 
 > `optional` **select**: [`TransactionSelect`](TransactionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1629
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1630
 
 Select specific fields to fetch from the Transaction
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Transaction
 
 > **where**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1641
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1642
 
 Filter which Transaction to delete.

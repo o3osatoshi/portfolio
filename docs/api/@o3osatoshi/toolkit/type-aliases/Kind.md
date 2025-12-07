@@ -8,7 +8,7 @@
 
 > **Kind** = `"BadGateway"` \| `"BadRequest"` \| `"Canceled"` \| `"Config"` \| `"Conflict"` \| `"Deadlock"` \| `"Forbidden"` \| `"Integrity"` \| `"MethodNotAllowed"` \| `"NotFound"` \| `"RateLimit"` \| `"Serialization"` \| `"Timeout"` \| `"Unauthorized"` \| `"Unavailable"` \| `"Unknown"` \| `"Unprocessable"` \| `"Validation"`
 
-Defined in: [error/error.ts:29](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error.ts#L29)
+Defined in: [error/error.ts:29](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error.ts#L29)
 
 Generic error classifications shared across application layers.
 

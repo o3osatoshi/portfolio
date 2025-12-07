@@ -8,7 +8,7 @@
 
 > **UserInclude**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:820
+Defined in: packages/prisma/generated/prisma/models/User.ts:821
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:820
 
 > `optional` **\_count**: `boolean` \| [`UserCountOutputTypeDefaultArgs`](UserCountOutputTypeDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:825
+Defined in: packages/prisma/generated/prisma/models/User.ts:826
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:825
 
 > `optional` **accounts**: `boolean` \| [`User$accountsArgs`](User$accountsArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:821
+Defined in: packages/prisma/generated/prisma/models/User.ts:822
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:821
 
 > `optional` **Authenticator**: `boolean` \| [`User$AuthenticatorArgs`](User$AuthenticatorArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:823
+Defined in: packages/prisma/generated/prisma/models/User.ts:824
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:823
 
 > `optional` **sessions**: `boolean` \| [`User$sessionsArgs`](User$sessionsArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:822
+Defined in: packages/prisma/generated/prisma/models/User.ts:823
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:822
 
 > `optional` **transactions**: `boolean` \| [`User$transactionsArgs`](User$transactionsArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:824
+Defined in: packages/prisma/generated/prisma/models/User.ts:825

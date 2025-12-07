@@ -8,7 +8,7 @@
 
 > **AccountScalarWhereInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:651
+Defined in: packages/prisma/generated/prisma/models/Account.ts:652
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:651
 
 > `optional` **access\_token**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Account"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:660
+Defined in: packages/prisma/generated/prisma/models/Account.ts:661
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:660
 
 > `optional` **AND**: `Prisma.AccountScalarWhereInput` \| `Prisma.AccountScalarWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:652
+Defined in: packages/prisma/generated/prisma/models/Account.ts:653
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:652
 
 > `optional` **createdAt**: [`DateTimeFilter`](DateTimeFilter.md)\<`"Account"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:666
+Defined in: packages/prisma/generated/prisma/models/Account.ts:667
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:666
 
 > `optional` **expires\_at**: [`IntNullableFilter`](IntNullableFilter.md)\<`"Account"`\> \| `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:661
+Defined in: packages/prisma/generated/prisma/models/Account.ts:662
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:661
 
 > `optional` **id\_token**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Account"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:664
+Defined in: packages/prisma/generated/prisma/models/Account.ts:665
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:664
 
 > `optional` **NOT**: `Prisma.AccountScalarWhereInput` \| `Prisma.AccountScalarWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:654
+Defined in: packages/prisma/generated/prisma/models/Account.ts:655
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:654
 
 > `optional` **OR**: `Prisma.AccountScalarWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:653
+Defined in: packages/prisma/generated/prisma/models/Account.ts:654
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:653
 
 > `optional` **provider**: [`StringFilter`](StringFilter.md)\<`"Account"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:657
+Defined in: packages/prisma/generated/prisma/models/Account.ts:658
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:657
 
 > `optional` **providerAccountId**: [`StringFilter`](StringFilter.md)\<`"Account"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:658
+Defined in: packages/prisma/generated/prisma/models/Account.ts:659
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:658
 
 > `optional` **refresh\_token**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Account"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:659
+Defined in: packages/prisma/generated/prisma/models/Account.ts:660
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:659
 
 > `optional` **scope**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Account"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:663
+Defined in: packages/prisma/generated/prisma/models/Account.ts:664
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:663
 
 > `optional` **session\_state**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Account"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:665
+Defined in: packages/prisma/generated/prisma/models/Account.ts:666
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:665
 
 > `optional` **token\_type**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Account"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:662
+Defined in: packages/prisma/generated/prisma/models/Account.ts:663
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:662
 
 > `optional` **type**: [`StringFilter`](StringFilter.md)\<`"Account"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:656
+Defined in: packages/prisma/generated/prisma/models/Account.ts:657
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:656
 
 > `optional` **updatedAt**: [`DateTimeFilter`](DateTimeFilter.md)\<`"Account"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:667
+Defined in: packages/prisma/generated/prisma/models/Account.ts:668
 
 ***
 
@@ -136,4 +136,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:667
 
 > `optional` **userId**: [`StringFilter`](StringFilter.md)\<`"Account"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:655
+Defined in: packages/prisma/generated/prisma/models/Account.ts:656

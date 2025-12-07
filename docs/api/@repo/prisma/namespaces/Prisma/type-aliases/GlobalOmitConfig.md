@@ -8,7 +8,7 @@
 
 > **GlobalOmitConfig** = `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1176
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1179
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1176
 
 > `optional` **account**: [`AccountOmit`](AccountOmit.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1179
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1182
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1179
 
 > `optional` **authenticator**: [`AuthenticatorOmit`](AuthenticatorOmit.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1182
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1185
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1182
 
 > `optional` **session**: [`SessionOmit`](SessionOmit.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1180
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1183
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1180
 
 > `optional` **transaction**: [`TransactionOmit`](TransactionOmit.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1177
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1180
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1177
 
 > `optional` **user**: [`UserOmit`](UserOmit.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1178
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1181
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1178
 
 > `optional` **verificationToken**: [`VerificationTokenOmit`](VerificationTokenOmit.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1181
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1184

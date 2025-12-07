@@ -8,7 +8,7 @@
 
 > **TransactionInclude**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:799
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:800
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:799
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:800
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:801

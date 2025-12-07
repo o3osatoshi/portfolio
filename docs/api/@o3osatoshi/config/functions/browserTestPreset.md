@@ -8,7 +8,7 @@
 
 > **browserTestPreset**(`opts`): `UserConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:84](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/vitest/index.ts#L84)
+Defined in: [packages/config/src/vitest/index.ts:89](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/vitest/index.ts#L89)
 
 Creates a browser-oriented Vitest configuration with CSS support and shared setup defaults.
 

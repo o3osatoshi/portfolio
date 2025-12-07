@@ -6,7 +6,7 @@
 
 # Interface: SessionFieldRefs
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:922
+Defined in: packages/prisma/generated/prisma/models/Session.ts:923
 
 Fields of the Session model
 
@@ -16,7 +16,7 @@ Fields of the Session model
 
 > `readonly` **createdAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Session"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:926
+Defined in: packages/prisma/generated/prisma/models/Session.ts:927
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:926
 
 > `readonly` **expires**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Session"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:925
+Defined in: packages/prisma/generated/prisma/models/Session.ts:926
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:925
 
 > `readonly` **sessionToken**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Session"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:923
+Defined in: packages/prisma/generated/prisma/models/Session.ts:924
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:923
 
 > `readonly` **updatedAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Session"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:927
+Defined in: packages/prisma/generated/prisma/models/Session.ts:928
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:927
 
 > `readonly` **userId**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Session"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:924
+Defined in: packages/prisma/generated/prisma/models/Session.ts:925

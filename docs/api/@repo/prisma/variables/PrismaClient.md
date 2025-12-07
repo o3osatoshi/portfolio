@@ -8,7 +8,7 @@
 
 > `const` **PrismaClient**: `PrismaClientConstructor`
 
-Defined in: packages/prisma/generated/prisma/client.ts:37
+Defined in: packages/prisma/generated/prisma/client.ts:38
 
 ## Prisma Client
 
@@ -22,4 +22,4 @@ const prisma = new PrismaClient()
 const transactions = await prisma.transaction.findMany()
 ```
 
-Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+Read more in our [docs](https://pris.ly/d/client).

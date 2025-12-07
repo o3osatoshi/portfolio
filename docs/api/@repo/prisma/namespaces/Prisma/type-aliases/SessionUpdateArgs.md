@@ -8,7 +8,7 @@
 
 > **SessionUpdateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1186
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1187
 
 Session update
 
@@ -24,7 +24,7 @@ Session update
 
 > **data**: [`XOR`](XOR.md)\<[`SessionUpdateInput`](SessionUpdateInput.md), [`SessionUncheckedUpdateInput`](SessionUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1202
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1203
 
 The data needed to update a Session.
 
@@ -34,7 +34,7 @@ The data needed to update a Session.
 
 > `optional` **include**: [`SessionInclude`](SessionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1198
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1199
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1194
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1195
 
 Omit specific fields from the Session
 
@@ -54,7 +54,7 @@ Omit specific fields from the Session
 
 > `optional` **select**: [`SessionSelect`](SessionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1190
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1191
 
 Select specific fields to fetch from the Session
 
@@ -64,6 +64,6 @@ Select specific fields to fetch from the Session
 
 > **where**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1206
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1207
 
 Choose, which Session to update.

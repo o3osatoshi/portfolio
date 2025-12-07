@@ -8,7 +8,7 @@
 
 > **UserUpsertWithoutTransactionsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:475
+Defined in: packages/prisma/generated/prisma/models/User.ts:476
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:475
 
 > **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutTransactionsInput`](UserCreateWithoutTransactionsInput.md), [`UserUncheckedCreateWithoutTransactionsInput`](UserUncheckedCreateWithoutTransactionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:477
+Defined in: packages/prisma/generated/prisma/models/User.ts:478
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:477
 
 > **update**: [`XOR`](XOR.md)\<[`UserUpdateWithoutTransactionsInput`](UserUpdateWithoutTransactionsInput.md), [`UserUncheckedUpdateWithoutTransactionsInput`](UserUncheckedUpdateWithoutTransactionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:476
+Defined in: packages/prisma/generated/prisma/models/User.ts:477
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:476
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:478
+Defined in: packages/prisma/generated/prisma/models/User.ts:479

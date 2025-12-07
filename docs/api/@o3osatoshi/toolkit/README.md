@@ -136,6 +136,11 @@ export const createItem = async (
 - Target Node >= 22 (see `engines`).
 - When targeting different Zod instances (e.g., multiple versions), `isZodError` uses duck typing to remain resilient.
 
+## Quality
+
+- Tests: `pnpm -C packages/toolkit test` / `pnpm -C packages/toolkit test:cvrg`
+- Coverage: [![Coverage: @o3osatoshi/toolkit](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=toolkit)](https://app.codecov.io/github/o3osatoshi/portfolio?component=toolkit)
+
 Toolkit utilities for structured errors and Zod helpers.
 
 ## Interfaces
@@ -156,28 +161,42 @@ Toolkit utilities for structured errors and Zod helpers.
 - [ErrorNameParts](type-aliases/ErrorNameParts.md)
 - [ErrorStatusCode](type-aliases/ErrorStatusCode.md)
 - [FetchRequest](type-aliases/FetchRequest.md)
+- [JsonArray](type-aliases/JsonArray.md)
+- [JsonContainer](type-aliases/JsonContainer.md)
+- [JsonObject](type-aliases/JsonObject.md)
+- [JsonPrimitive](type-aliases/JsonPrimitive.md)
+- [JsonValue](type-aliases/JsonValue.md)
 - [Kind](type-aliases/Kind.md)
+- [KvOptions](type-aliases/KvOptions.md)
 - [Layer](type-aliases/Layer.md)
 - [NewError](type-aliases/NewError.md)
 - [NewFetchError](type-aliases/NewFetchError.md)
 - [NewZodError](type-aliases/NewZodError.md)
-- [Object](type-aliases/Object.md)
+- [RedisClientOptions](type-aliases/RedisClientOptions.md)
 - [SerializedCause](type-aliases/SerializedCause.md)
 - [SerializeOptions](type-aliases/SerializeOptions.md)
+- [SetOptions](type-aliases/SetOptions.md)
 - [SleepOptions](type-aliases/SleepOptions.md)
+- [UnknownRecord](type-aliases/UnknownRecord.md)
 
 ## Functions
 
 - [composeErrorMessage](functions/composeErrorMessage.md)
 - [composeErrorName](functions/composeErrorName.md)
+- [createEdgeRedisClient](functions/createEdgeRedisClient.md)
 - [createEnv](functions/createEnv.md)
+- [createRedisClient](functions/createRedisClient.md)
+- [decode](functions/decode.md)
 - [deserializeError](functions/deserializeError.md)
+- [encode](functions/encode.md)
 - [err](functions/err.md)
 - [extractErrorMessage](functions/extractErrorMessage.md)
 - [extractErrorName](functions/extractErrorName.md)
 - [formatFetchTarget](functions/formatFetchTarget.md)
 - [isSerializedError](functions/isSerializedError.md)
 - [isZodError](functions/isZodError.md)
+- [kvGet](functions/kvGet.md)
+- [kvSet](functions/kvSet.md)
 - [newError](functions/newError.md)
 - [newFetchError](functions/newFetchError.md)
 - [newZodError](functions/newZodError.md)

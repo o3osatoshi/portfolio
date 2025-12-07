@@ -8,7 +8,7 @@
 
 > **UserScalarRelationFilter** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:349
+Defined in: packages/prisma/generated/prisma/models/User.ts:350
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:349
 
 > `optional` **is**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:350
+Defined in: packages/prisma/generated/prisma/models/User.ts:351
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:350
 
 > `optional` **isNot**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:351
+Defined in: packages/prisma/generated/prisma/models/User.ts:352

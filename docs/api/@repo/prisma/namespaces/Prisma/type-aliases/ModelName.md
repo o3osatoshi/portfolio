@@ -8,4 +8,4 @@
 
 > **ModelName** = *typeof* [`ModelName`](../variables/ModelName.md)\[keyof *typeof* [`ModelName`](../variables/ModelName.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:391
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:386

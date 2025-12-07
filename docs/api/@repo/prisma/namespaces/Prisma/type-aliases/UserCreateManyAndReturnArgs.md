@@ -8,7 +8,7 @@
 
 > **UserCreateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1515
+Defined in: packages/prisma/generated/prisma/models/User.ts:1516
 
 User createManyAndReturn
 
@@ -24,7 +24,7 @@ User createManyAndReturn
 
 > **data**: [`UserCreateManyInput`](UserCreateManyInput.md) \| [`UserCreateManyInput`](UserCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1527
+Defined in: packages/prisma/generated/prisma/models/User.ts:1528
 
 The data used to create many Users.
 
@@ -34,7 +34,7 @@ The data used to create many Users.
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1523
+Defined in: packages/prisma/generated/prisma/models/User.ts:1524
 
 Omit specific fields from the User
 
@@ -44,7 +44,7 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelectCreateManyAndReturn`](UserSelectCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1519
+Defined in: packages/prisma/generated/prisma/models/User.ts:1520
 
 Select specific fields to fetch from the User
 
@@ -54,4 +54,4 @@ Select specific fields to fetch from the User
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1528
+Defined in: packages/prisma/generated/prisma/models/User.ts:1529

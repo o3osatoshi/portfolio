@@ -8,7 +8,7 @@
 
 > **AccountSelectScalar** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:783
+Defined in: packages/prisma/generated/prisma/models/Account.ts:784
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:783
 
 > `optional` **access\_token**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:789
+Defined in: packages/prisma/generated/prisma/models/Account.ts:790
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:789
 
 > `optional` **createdAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:795
+Defined in: packages/prisma/generated/prisma/models/Account.ts:796
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:795
 
 > `optional` **expires\_at**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:790
+Defined in: packages/prisma/generated/prisma/models/Account.ts:791
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:790
 
 > `optional` **id\_token**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:793
+Defined in: packages/prisma/generated/prisma/models/Account.ts:794
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:793
 
 > `optional` **provider**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:786
+Defined in: packages/prisma/generated/prisma/models/Account.ts:787
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:786
 
 > `optional` **providerAccountId**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:787
+Defined in: packages/prisma/generated/prisma/models/Account.ts:788
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:787
 
 > `optional` **refresh\_token**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:788
+Defined in: packages/prisma/generated/prisma/models/Account.ts:789
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:788
 
 > `optional` **scope**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:792
+Defined in: packages/prisma/generated/prisma/models/Account.ts:793
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:792
 
 > `optional` **session\_state**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:794
+Defined in: packages/prisma/generated/prisma/models/Account.ts:795
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:794
 
 > `optional` **token\_type**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:791
+Defined in: packages/prisma/generated/prisma/models/Account.ts:792
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:791
 
 > `optional` **type**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:785
+Defined in: packages/prisma/generated/prisma/models/Account.ts:786
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:785
 
 > `optional` **updatedAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:796
+Defined in: packages/prisma/generated/prisma/models/Account.ts:797
 
 ***
 
@@ -112,4 +112,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:796
 
 > `optional` **userId**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:784
+Defined in: packages/prisma/generated/prisma/models/Account.ts:785

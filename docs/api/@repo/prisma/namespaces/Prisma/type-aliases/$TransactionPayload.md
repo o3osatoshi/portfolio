@@ -8,7 +8,7 @@
 
 > **$TransactionPayload**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:809
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:810
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:809
 
 > **composites**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:828
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:829
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:828
 
 > **name**: `"Transaction"`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:810
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:811
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:810
 
 > **objects**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:811
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:812
 
 #### user
 
@@ -50,4 +50,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:811
 
 > **scalars**: `runtime.Types.Extensions.GetPayloadResult`\<\{ `amount`: `runtime.Decimal`; `createdAt`: `Date`; `currency`: `string`; `datetime`: `Date`; `fee`: `runtime.Decimal` \| `null`; `feeCurrency`: `string` \| `null`; `id`: `string`; `price`: `runtime.Decimal`; `profitLoss`: `runtime.Decimal` \| `null`; `type`: `string`; `updatedAt`: `Date`; `userId`: `string`; \}, `ExtArgs`\[`"result"`\]\[`"transaction"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:814
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:815

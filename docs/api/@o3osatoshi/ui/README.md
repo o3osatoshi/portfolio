@@ -130,6 +130,11 @@ Prefer the compiled entry; use subpaths mainly for local Storybook/workspace flo
 **License**
 - MIT
 
+## Quality
+
+- Tests: `pnpm -C packages/ui test` / `pnpm -C packages/ui test:cvrg`
+- Coverage: [![Coverage: @o3osatoshi/ui](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=ui)](https://app.codecov.io/github/o3osatoshi/portfolio?component=ui)
+
 ## Modules
 
 - [index.client](index.client/README.md)

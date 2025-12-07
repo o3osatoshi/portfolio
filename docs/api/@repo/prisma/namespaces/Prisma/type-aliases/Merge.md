@@ -8,7 +8,7 @@
 
 > **Merge**\<`U`\> = [`ComputeRaw`](ComputeRaw.md)\<`_Merge`\<[`Strict`](Strict.md)\<`U`\>\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:305
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:300
 
 End Helper Types for "Merge" *
 

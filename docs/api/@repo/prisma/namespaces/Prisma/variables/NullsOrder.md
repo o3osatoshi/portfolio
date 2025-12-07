@@ -8,7 +8,7 @@
 
 > `const` **NullsOrder**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1000
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:995
 
 ## Type Declaration
 

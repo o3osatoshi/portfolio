@@ -8,7 +8,7 @@
 
 > **AuthenticatorDeleteManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1479
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1480
 
 Authenticator deleteMany
 
@@ -24,7 +24,7 @@ Authenticator deleteMany
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1487
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1488
 
 Limit how many Authenticators to delete.
 
@@ -34,6 +34,6 @@ Limit how many Authenticators to delete.
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1483
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1484
 
 Filter which Authenticators to delete

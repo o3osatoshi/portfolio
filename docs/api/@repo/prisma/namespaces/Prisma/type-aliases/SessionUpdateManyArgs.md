@@ -8,7 +8,7 @@
 
 > **SessionUpdateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1212
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1213
 
 Session updateMany
 
@@ -24,7 +24,7 @@ Session updateMany
 
 > **data**: [`XOR`](XOR.md)\<[`SessionUpdateManyMutationInput`](SessionUpdateManyMutationInput.md), [`SessionUncheckedUpdateManyInput`](SessionUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1216
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1217
 
 The data used to update Sessions.
 
@@ -34,7 +34,7 @@ The data used to update Sessions.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1224
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1225
 
 Limit how many Sessions to update.
 
@@ -44,6 +44,6 @@ Limit how many Sessions to update.
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1220
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1221
 
 Filter which Sessions to update

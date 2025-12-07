@@ -8,7 +8,7 @@
 
 > **SessionGroupByOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:149
+Defined in: packages/prisma/generated/prisma/models/Session.ts:150
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:149
 
 > **\_count**: [`SessionCountAggregateOutputType`](SessionCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:155
+Defined in: packages/prisma/generated/prisma/models/Session.ts:156
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:155
 
 > **\_max**: [`SessionMaxAggregateOutputType`](SessionMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:157
+Defined in: packages/prisma/generated/prisma/models/Session.ts:158
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:157
 
 > **\_min**: [`SessionMinAggregateOutputType`](SessionMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:156
+Defined in: packages/prisma/generated/prisma/models/Session.ts:157
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:156
 
 > **createdAt**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:153
+Defined in: packages/prisma/generated/prisma/models/Session.ts:154
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:153
 
 > **expires**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:152
+Defined in: packages/prisma/generated/prisma/models/Session.ts:153
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:152
 
 > **sessionToken**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:150
+Defined in: packages/prisma/generated/prisma/models/Session.ts:151
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:150
 
 > **updatedAt**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:154
+Defined in: packages/prisma/generated/prisma/models/Session.ts:155
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:154
 
 > **userId**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:151
+Defined in: packages/prisma/generated/prisma/models/Session.ts:152

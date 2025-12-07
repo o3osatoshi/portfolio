@@ -8,7 +8,7 @@
 
 > **SessionUncheckedUpdateManyWithoutUserNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:347
+Defined in: packages/prisma/generated/prisma/models/Session.ts:348
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:347
 
 > `optional` **connect**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md) \| [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:355
+Defined in: packages/prisma/generated/prisma/models/Session.ts:356
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:355
 
 > `optional` **connectOrCreate**: [`SessionCreateOrConnectWithoutUserInput`](SessionCreateOrConnectWithoutUserInput.md) \| [`SessionCreateOrConnectWithoutUserInput`](SessionCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:349
+Defined in: packages/prisma/generated/prisma/models/Session.ts:350
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:349
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`SessionCreateWithoutUserInput`](SessionCreateWithoutUserInput.md), [`SessionUncheckedCreateWithoutUserInput`](SessionUncheckedCreateWithoutUserInput.md)\> \| [`SessionCreateWithoutUserInput`](SessionCreateWithoutUserInput.md)[] \| [`SessionUncheckedCreateWithoutUserInput`](SessionUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:348
+Defined in: packages/prisma/generated/prisma/models/Session.ts:349
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:348
 
 > `optional` **createMany**: [`SessionCreateManyUserInputEnvelope`](SessionCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:351
+Defined in: packages/prisma/generated/prisma/models/Session.ts:352
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:351
 
 > `optional` **delete**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md) \| [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:354
+Defined in: packages/prisma/generated/prisma/models/Session.ts:355
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:354
 
 > `optional` **deleteMany**: [`SessionScalarWhereInput`](SessionScalarWhereInput.md) \| [`SessionScalarWhereInput`](SessionScalarWhereInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:358
+Defined in: packages/prisma/generated/prisma/models/Session.ts:359
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:358
 
 > `optional` **disconnect**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md) \| [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:353
+Defined in: packages/prisma/generated/prisma/models/Session.ts:354
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:353
 
 > `optional` **set**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md) \| [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:352
+Defined in: packages/prisma/generated/prisma/models/Session.ts:353
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:352
 
 > `optional` **update**: [`SessionUpdateWithWhereUniqueWithoutUserInput`](SessionUpdateWithWhereUniqueWithoutUserInput.md) \| [`SessionUpdateWithWhereUniqueWithoutUserInput`](SessionUpdateWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:356
+Defined in: packages/prisma/generated/prisma/models/Session.ts:357
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:356
 
 > `optional` **updateMany**: [`SessionUpdateManyWithWhereWithoutUserInput`](SessionUpdateManyWithWhereWithoutUserInput.md) \| [`SessionUpdateManyWithWhereWithoutUserInput`](SessionUpdateManyWithWhereWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:357
+Defined in: packages/prisma/generated/prisma/models/Session.ts:358
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:357
 
 > `optional` **upsert**: [`SessionUpsertWithWhereUniqueWithoutUserInput`](SessionUpsertWithWhereUniqueWithoutUserInput.md) \| [`SessionUpsertWithWhereUniqueWithoutUserInput`](SessionUpsertWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:350
+Defined in: packages/prisma/generated/prisma/models/Session.ts:351

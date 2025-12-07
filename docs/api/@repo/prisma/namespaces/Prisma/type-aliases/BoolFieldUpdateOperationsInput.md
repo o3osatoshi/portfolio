@@ -8,7 +8,7 @@
 
 > **BoolFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:485
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:486
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:485
 
 > `optional` **set**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:486
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:487

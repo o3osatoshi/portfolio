@@ -8,7 +8,7 @@
 
 > **NestedDateTimeNullableWithAggregatesFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:432
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:433
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:432
 
 > `optional` **\_count**: [`NestedIntNullableFilter`](NestedIntNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:441
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:442
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:441
 
 > `optional` **\_max**: [`NestedDateTimeNullableFilter`](NestedDateTimeNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:443
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:444
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:443
 
 > `optional` **\_min**: [`NestedDateTimeNullableFilter`](NestedDateTimeNullableFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:442
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:443
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:442
 
 > `optional` **equals**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:433
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:434
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:433
 
 > `optional` **gt**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:438
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:439
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:438
 
 > `optional` **gte**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:439
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:440
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:439
 
 > `optional` **in**: `Date`[] \| `string`[] \| [`ListDateTimeFieldRefInput`](ListDateTimeFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:434
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:435
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:434
 
 > `optional` **lt**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:436
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:437
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:436
 
 > `optional` **lte**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:437
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:438
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:437
 
 > `optional` **not**: `Prisma.NestedDateTimeNullableWithAggregatesFilter`\<`$PrismaModel`\> \| `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:440
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:441
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:440
 
 > `optional` **notIn**: `Date`[] \| `string`[] \| [`ListDateTimeFieldRefInput`](ListDateTimeFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:435
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:436

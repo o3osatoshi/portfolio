@@ -8,7 +8,7 @@
 
 > **TypeMap**\<`ExtArgs`, `GlobalOmitOptions`\> = `object` & `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:408
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:403
 
 ## Type Declaration
 

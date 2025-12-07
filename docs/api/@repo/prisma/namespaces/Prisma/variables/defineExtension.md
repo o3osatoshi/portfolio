@@ -8,4 +8,4 @@
 
 > `const` **defineExtension**: `ExtendsHook`\<`"define"`, [`TypeMapCb`](../interfaces/TypeMapCb.md)\<\{ \}\>, `DefaultArgs`, [`TypeMap`](../type-aliases/TypeMap.md)\<`InternalArgs` & `DefaultArgs`, \{ \}\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1105
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1092

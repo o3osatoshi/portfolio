@@ -8,7 +8,7 @@
 
 > **VerificationTokenCreateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:930
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:931
 
 VerificationToken createMany
 
@@ -24,7 +24,7 @@ VerificationToken createMany
 
 > **data**: [`VerificationTokenCreateManyInput`](VerificationTokenCreateManyInput.md) \| [`VerificationTokenCreateManyInput`](VerificationTokenCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:934
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:935
 
 The data used to create many VerificationTokens.
 
@@ -34,4 +34,4 @@ The data used to create many VerificationTokens.
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:935
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:936

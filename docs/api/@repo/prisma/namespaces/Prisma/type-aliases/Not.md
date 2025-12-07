@@ -8,7 +8,7 @@
 
 > **Not**\<`B`\> = `object`\[`B`\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:313
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:308
 
 ## Type Parameters
 

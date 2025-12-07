@@ -8,7 +8,7 @@
 
 > **AccountGroupByArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:215
+Defined in: packages/prisma/generated/prisma/models/Account.ts:216
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:215
 
 > `optional` **\_avg**: [`AccountAvgAggregateInputType`](AccountAvgAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:223
+Defined in: packages/prisma/generated/prisma/models/Account.ts:224
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:223
 
 > `optional` **\_count**: [`AccountCountAggregateInputType`](AccountCountAggregateInputType.md) \| `true`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:222
+Defined in: packages/prisma/generated/prisma/models/Account.ts:223
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:222
 
 > `optional` **\_max**: [`AccountMaxAggregateInputType`](AccountMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:226
+Defined in: packages/prisma/generated/prisma/models/Account.ts:227
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:226
 
 > `optional` **\_min**: [`AccountMinAggregateInputType`](AccountMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:225
+Defined in: packages/prisma/generated/prisma/models/Account.ts:226
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:225
 
 > `optional` **\_sum**: [`AccountSumAggregateInputType`](AccountSumAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:224
+Defined in: packages/prisma/generated/prisma/models/Account.ts:225
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:224
 
 > **by**: [`AccountScalarFieldEnum`](AccountScalarFieldEnum.md)[] \| [`AccountScalarFieldEnum`](AccountScalarFieldEnum.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:218
+Defined in: packages/prisma/generated/prisma/models/Account.ts:219
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:218
 
 > `optional` **having**: [`AccountScalarWhereWithAggregatesInput`](AccountScalarWhereWithAggregatesInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:219
+Defined in: packages/prisma/generated/prisma/models/Account.ts:220
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:219
 
 > `optional` **orderBy**: [`AccountOrderByWithAggregationInput`](AccountOrderByWithAggregationInput.md) \| [`AccountOrderByWithAggregationInput`](AccountOrderByWithAggregationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:217
+Defined in: packages/prisma/generated/prisma/models/Account.ts:218
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:217
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:221
+Defined in: packages/prisma/generated/prisma/models/Account.ts:222
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:221
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:220
+Defined in: packages/prisma/generated/prisma/models/Account.ts:221
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:220
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:216
+Defined in: packages/prisma/generated/prisma/models/Account.ts:217

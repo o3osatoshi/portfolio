@@ -8,7 +8,7 @@
 
 > **AccountProviderProviderAccountIdCompoundUniqueInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:484
+Defined in: packages/prisma/generated/prisma/models/Account.ts:485
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:484
 
 > **provider**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:485
+Defined in: packages/prisma/generated/prisma/models/Account.ts:486
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:485
 
 > **providerAccountId**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:486
+Defined in: packages/prisma/generated/prisma/models/Account.ts:487

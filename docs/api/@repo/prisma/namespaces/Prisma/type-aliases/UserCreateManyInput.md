@@ -8,7 +8,7 @@
 
 > **UserCreateManyInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:319
+Defined in: packages/prisma/generated/prisma/models/User.ts:320
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:319
 
 > `optional` **createdAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:325
+Defined in: packages/prisma/generated/prisma/models/User.ts:326
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:325
 
 > **email**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:322
+Defined in: packages/prisma/generated/prisma/models/User.ts:323
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:322
 
 > `optional` **emailVerified**: `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:323
+Defined in: packages/prisma/generated/prisma/models/User.ts:324
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:323
 
 > `optional` **id**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:320
+Defined in: packages/prisma/generated/prisma/models/User.ts:321
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:320
 
 > `optional` **image**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:324
+Defined in: packages/prisma/generated/prisma/models/User.ts:325
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:324
 
 > `optional` **name**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:321
+Defined in: packages/prisma/generated/prisma/models/User.ts:322
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:321
 
 > `optional` **updatedAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:326
+Defined in: packages/prisma/generated/prisma/models/User.ts:327

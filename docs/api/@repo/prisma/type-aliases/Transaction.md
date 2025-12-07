@@ -8,6 +8,6 @@
 
 > **Transaction** = [`TransactionModel`](../namespaces/Prisma/type-aliases/TransactionModel.md)
 
-Defined in: packages/prisma/generated/prisma/client.ts:47
+Defined in: packages/prisma/generated/prisma/client.ts:46
 
 Model Transaction

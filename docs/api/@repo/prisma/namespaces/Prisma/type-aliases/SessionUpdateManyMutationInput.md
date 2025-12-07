@@ -8,7 +8,7 @@
 
 > **SessionUpdateManyMutationInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:270
+Defined in: packages/prisma/generated/prisma/models/Session.ts:271
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:270
 
 > `optional` **createdAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:273
+Defined in: packages/prisma/generated/prisma/models/Session.ts:274
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:273
 
 > `optional` **expires**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:272
+Defined in: packages/prisma/generated/prisma/models/Session.ts:273
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:272
 
 > `optional` **sessionToken**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:271
+Defined in: packages/prisma/generated/prisma/models/Session.ts:272
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:271
 
 > `optional` **updatedAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:274
+Defined in: packages/prisma/generated/prisma/models/Session.ts:275

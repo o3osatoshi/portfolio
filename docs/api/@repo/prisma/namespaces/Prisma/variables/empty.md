@@ -8,4 +8,4 @@
 
 > `const` **empty**: `Sql` = `runtime.empty`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:50
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:51

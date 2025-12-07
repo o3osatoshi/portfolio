@@ -8,7 +8,7 @@
 
 > **TransactionUpdateWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:649
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:650
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:649
 
 > **data**: [`XOR`](XOR.md)\<[`TransactionUpdateWithoutUserInput`](TransactionUpdateWithoutUserInput.md), [`TransactionUncheckedUpdateWithoutUserInput`](TransactionUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:651
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:652
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:651
 
 > **where**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:650
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:651

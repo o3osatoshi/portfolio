@@ -8,7 +8,7 @@
 
 > **Enumerable**\<`T`\> = `T` \| `T`[]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:153
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:148
 
 ## Type Parameters
 

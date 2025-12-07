@@ -8,7 +8,7 @@
 
 > **UserCountAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:78
+Defined in: packages/prisma/generated/prisma/models/User.ts:79
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:78
 
 > `optional` **\_all**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:86
+Defined in: packages/prisma/generated/prisma/models/User.ts:87
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:86
 
 > `optional` **createdAt**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:84
+Defined in: packages/prisma/generated/prisma/models/User.ts:85
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:84
 
 > `optional` **email**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:81
+Defined in: packages/prisma/generated/prisma/models/User.ts:82
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:81
 
 > `optional` **emailVerified**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:82
+Defined in: packages/prisma/generated/prisma/models/User.ts:83
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:82
 
 > `optional` **id**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:79
+Defined in: packages/prisma/generated/prisma/models/User.ts:80
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:79
 
 > `optional` **image**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:83
+Defined in: packages/prisma/generated/prisma/models/User.ts:84
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:83
 
 > `optional` **name**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:80
+Defined in: packages/prisma/generated/prisma/models/User.ts:81
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:80
 
 > `optional` **updatedAt**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:85
+Defined in: packages/prisma/generated/prisma/models/User.ts:86

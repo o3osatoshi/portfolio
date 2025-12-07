@@ -8,4 +8,4 @@
 
 > `const` **userSchema**: `ZodObject`\<\{ `email`: `ZodOptional`\<`ZodNullable`\<`ZodString`\>\>; `id`: `ZodString`; `image`: `ZodOptional`\<`ZodNullable`\<`ZodString`\>\>; `name`: `ZodOptional`\<`ZodNullable`\<`ZodString`\>\>; \}, `$strip`\>
 
-Defined in: [packages/auth/src/hono-auth/types.ts:6](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/auth/src/hono-auth/types.ts#L6)
+Defined in: [packages/auth/src/hono-auth/types.ts:6](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/auth/src/hono-auth/types.ts#L6)

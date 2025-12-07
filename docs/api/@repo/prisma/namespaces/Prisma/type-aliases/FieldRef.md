@@ -8,7 +8,7 @@
 
 > **FieldRef**\<`Model`, `FieldType`\> = `runtime.FieldRef`\<`Model`, `FieldType`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:386
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:381
 
 ## Type Parameters
 

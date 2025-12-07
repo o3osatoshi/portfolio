@@ -8,7 +8,7 @@
 
 > **StringFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:16
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:17
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:16
 
 > `optional` **contains**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:24
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:25
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:24
 
 > `optional` **endsWith**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:26
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:27
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:26
 
 > `optional` **equals**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:17
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:18
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:17
 
 > `optional` **gt**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:22
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:23
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:22
 
 > `optional` **gte**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:23
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:24
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:23
 
 > `optional` **in**: `string`[] \| [`ListStringFieldRefInput`](ListStringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:18
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:19
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:18
 
 > `optional` **lt**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:20
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:21
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:20
 
 > `optional` **lte**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:21
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:22
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:21
 
 > `optional` **mode**: [`QueryMode`](QueryMode.md)
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:27
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:28
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:27
 
 > `optional` **not**: [`NestedStringFilter`](NestedStringFilter.md)\<`$PrismaModel`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:28
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:29
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:28
 
 > `optional` **notIn**: `string`[] \| [`ListStringFieldRefInput`](ListStringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:19
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:20
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:19
 
 > `optional` **startsWith**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:25
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:26

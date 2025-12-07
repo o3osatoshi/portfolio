@@ -8,6 +8,6 @@
 
 > **AccountModel** = `runtime.Types.Result.DefaultSelection`\<[`$AccountPayload`]($AccountPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:18
+Defined in: packages/prisma/generated/prisma/models/Account.ts:19
 
 Model Account

@@ -8,7 +8,7 @@
 
 > **VerificationTokenCountArgs**\<`ExtArgs`\> = `Omit`\<[`VerificationTokenFindManyArgs`](VerificationTokenFindManyArgs.md), `"select"` \| `"include"` \| `"distinct"` \| `"omit"`\> & `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:310
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:311
 
 ## Type Declaration
 

@@ -8,6 +8,6 @@
 
 > **Extension** = `runtime.Types.Extensions.UserArgs`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:77
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:70
 
 Extensions

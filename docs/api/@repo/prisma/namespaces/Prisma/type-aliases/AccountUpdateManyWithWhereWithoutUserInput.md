@@ -8,7 +8,7 @@
 
 > **AccountUpdateManyWithWhereWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:646
+Defined in: packages/prisma/generated/prisma/models/Account.ts:647
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:646
 
 > **data**: [`XOR`](XOR.md)\<[`AccountUpdateManyMutationInput`](AccountUpdateManyMutationInput.md), [`AccountUncheckedUpdateManyWithoutUserInput`](AccountUncheckedUpdateManyWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:648
+Defined in: packages/prisma/generated/prisma/models/Account.ts:649
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:648
 
 > **where**: [`AccountScalarWhereInput`](AccountScalarWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:647
+Defined in: packages/prisma/generated/prisma/models/Account.ts:648

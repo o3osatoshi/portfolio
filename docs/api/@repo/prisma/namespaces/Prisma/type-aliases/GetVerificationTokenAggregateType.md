@@ -8,7 +8,7 @@
 
 > **GetVerificationTokenAggregateType**\<`T`\> = \{ \[P in keyof T & keyof AggregateVerificationToken\]: P extends "\_count" \| "count" ? T\[P\] extends true ? number : GetScalarType\<T\[P\], AggregateVerificationToken\[P\]\> : GetScalarType\<T\[P\], AggregateVerificationToken\[P\]\> \}
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:114
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:115
 
 ## Type Parameters
 

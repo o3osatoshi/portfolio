@@ -8,7 +8,7 @@
 
 > **IntFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Int"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1059
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1054
 
 Reference to a field of type 'Int'
 

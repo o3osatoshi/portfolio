@@ -6,9 +6,9 @@
 
 # Function: buildEdgeApp()
 
-> **buildEdgeApp**(`deps`): `Hono`\<\{ \}, \{ `/edge/*`: \{ \}; \} \| `MergeSchemaPath`\<\{ `/healthz`: \{ `$get`: \{ `input`: \{ \}; `output`: \{ `ok`: `true`; \}; `outputFormat`: `"json"`; `status`: `ContentfulStatusCode`; \}; \}; \}, `"/edge/public"`\> \| `MergeSchemaPath`\<`object` & `object`, `"/edge/private"`\>, `"/edge"`\>
+> **buildEdgeApp**(`deps`): `Hono`\<\{ \}, \{ `/edge/*`: \{ \}; \} \| `MergeSchemaPath`\<`object` & `object` & `object`, `"/edge/public"`\> \| `MergeSchemaPath`\<`object` & `object`, `"/edge/private"`\>, `"/edge"`\>
 
-Defined in: [packages/interface/src/http/edge/app.ts:45](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/interface/src/http/edge/app.ts#L45)
+Defined in: [packages/interface/src/http/edge/app.ts:64](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/interface/src/http/edge/app.ts#L64)
 
 Build the Edge-ready HTTP application.
 
@@ -33,6 +33,6 @@ Implementations of [EdgeDeps](../type-aliases/EdgeDeps.md).
 
 ## Returns
 
-`Hono`\<\{ \}, \{ `/edge/*`: \{ \}; \} \| `MergeSchemaPath`\<\{ `/healthz`: \{ `$get`: \{ `input`: \{ \}; `output`: \{ `ok`: `true`; \}; `outputFormat`: `"json"`; `status`: `ContentfulStatusCode`; \}; \}; \}, `"/edge/public"`\> \| `MergeSchemaPath`\<`object` & `object`, `"/edge/private"`\>, `"/edge"`\>
+`Hono`\<\{ \}, \{ `/edge/*`: \{ \}; \} \| `MergeSchemaPath`\<`object` & `object` & `object`, `"/edge/public"`\> \| `MergeSchemaPath`\<`object` & `object`, `"/edge/private"`\>, `"/edge"`\>
 
 Configured Hono app instance.

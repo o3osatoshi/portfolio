@@ -8,7 +8,7 @@
 
 > **$AccountPayload**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:810
+Defined in: packages/prisma/generated/prisma/models/Account.ts:811
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:810
 
 > **composites**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:830
+Defined in: packages/prisma/generated/prisma/models/Account.ts:831
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:830
 
 > **name**: `"Account"`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:811
+Defined in: packages/prisma/generated/prisma/models/Account.ts:812
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:811
 
 > **objects**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:812
+Defined in: packages/prisma/generated/prisma/models/Account.ts:813
 
 #### user
 
@@ -50,4 +50,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:812
 
 > **scalars**: `runtime.Types.Extensions.GetPayloadResult`\<\{ `access_token`: `string` \| `null`; `createdAt`: `Date`; `expires_at`: `number` \| `null`; `id_token`: `string` \| `null`; `provider`: `string`; `providerAccountId`: `string`; `refresh_token`: `string` \| `null`; `scope`: `string` \| `null`; `session_state`: `string` \| `null`; `token_type`: `string` \| `null`; `type`: `string`; `updatedAt`: `Date`; `userId`: `string`; \}, `ExtArgs`\[`"result"`\]\[`"account"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:815
+Defined in: packages/prisma/generated/prisma/models/Account.ts:816

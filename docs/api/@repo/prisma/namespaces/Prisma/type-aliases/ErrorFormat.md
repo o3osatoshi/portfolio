@@ -8,4 +8,4 @@
 
 > **ErrorFormat** = `"pretty"` \| `"colorless"` \| `"minimal"`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1107
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1094

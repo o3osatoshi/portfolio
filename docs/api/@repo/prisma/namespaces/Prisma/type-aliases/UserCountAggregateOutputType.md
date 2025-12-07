@@ -8,7 +8,7 @@
 
 > **UserCountAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:46
+Defined in: packages/prisma/generated/prisma/models/User.ts:47
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:46
 
 > **\_all**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:54
+Defined in: packages/prisma/generated/prisma/models/User.ts:55
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:54
 
 > **createdAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:52
+Defined in: packages/prisma/generated/prisma/models/User.ts:53
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:52
 
 > **email**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:49
+Defined in: packages/prisma/generated/prisma/models/User.ts:50
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:49
 
 > **emailVerified**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:50
+Defined in: packages/prisma/generated/prisma/models/User.ts:51
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:50
 
 > **id**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:47
+Defined in: packages/prisma/generated/prisma/models/User.ts:48
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:47
 
 > **image**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:51
+Defined in: packages/prisma/generated/prisma/models/User.ts:52
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:51
 
 > **name**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:48
+Defined in: packages/prisma/generated/prisma/models/User.ts:49
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:48
 
 > **updatedAt**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:53
+Defined in: packages/prisma/generated/prisma/models/User.ts:54

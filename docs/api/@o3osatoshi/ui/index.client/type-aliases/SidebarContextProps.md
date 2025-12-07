@@ -8,7 +8,7 @@
 
 > **SidebarContextProps** = `object`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:35](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L35)
+Defined in: [packages/ui/src/components/sidebar.tsx:35](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L35)
 
 Props returned from [useSidebar](../functions/useSidebar.md) and shared through the sidebar context.
 
@@ -18,7 +18,7 @@ Props returned from [useSidebar](../functions/useSidebar.md) and shared through 
 
 > **isMobile**: `boolean`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:36](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L36)
+Defined in: [packages/ui/src/components/sidebar.tsx:36](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L36)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/ui/src/components/sidebar.tsx:36](https://github.com/o3osa
 
 > **open**: `boolean`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:37](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L37)
+Defined in: [packages/ui/src/components/sidebar.tsx:37](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L37)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/ui/src/components/sidebar.tsx:37](https://github.com/o3osa
 
 > **openMobile**: `boolean`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:38](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L38)
+Defined in: [packages/ui/src/components/sidebar.tsx:38](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L38)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/ui/src/components/sidebar.tsx:38](https://github.com/o3osa
 
 > **setOpen**: (`open`) => `void`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:39](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L39)
+Defined in: [packages/ui/src/components/sidebar.tsx:39](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L39)
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Defined in: [packages/ui/src/components/sidebar.tsx:39](https://github.com/o3osa
 
 > **setOpenMobile**: (`open`) => `void`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:40](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L40)
+Defined in: [packages/ui/src/components/sidebar.tsx:40](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L40)
 
 #### Parameters
 
@@ -78,7 +78,7 @@ Defined in: [packages/ui/src/components/sidebar.tsx:40](https://github.com/o3osa
 
 > **state**: `"collapsed"` \| `"expanded"`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:41](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L41)
+Defined in: [packages/ui/src/components/sidebar.tsx:41](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L41)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [packages/ui/src/components/sidebar.tsx:41](https://github.com/o3osa
 
 > **toggleSidebar**: () => `void`
 
-Defined in: [packages/ui/src/components/sidebar.tsx:42](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/sidebar.tsx#L42)
+Defined in: [packages/ui/src/components/sidebar.tsx:42](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/sidebar.tsx#L42)
 
 #### Returns
 

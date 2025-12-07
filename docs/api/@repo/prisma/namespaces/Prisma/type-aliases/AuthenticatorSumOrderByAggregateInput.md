@@ -8,7 +8,7 @@
 
 > **AuthenticatorSumOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:431
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:432
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:431
 
 > `optional` **counter**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:432
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:433

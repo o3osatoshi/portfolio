@@ -8,7 +8,7 @@
 
 > **TransactionUpsertArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1595
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1596
 
 Transaction upsert
 
@@ -24,7 +24,7 @@ Transaction upsert
 
 > **create**: [`XOR`](XOR.md)\<[`TransactionCreateInput`](TransactionCreateInput.md), [`TransactionUncheckedCreateInput`](TransactionUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1615
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1616
 
 In case the Transaction found by the `where` argument doesn't exist, create a new Transaction with this data.
 
@@ -34,7 +34,7 @@ In case the Transaction found by the `where` argument doesn't exist, create a ne
 
 > `optional` **include**: [`TransactionInclude`](TransactionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1607
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1608
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1603
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1604
 
 Omit specific fields from the Transaction
 
@@ -54,7 +54,7 @@ Omit specific fields from the Transaction
 
 > `optional` **select**: [`TransactionSelect`](TransactionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1599
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1600
 
 Select specific fields to fetch from the Transaction
 
@@ -64,7 +64,7 @@ Select specific fields to fetch from the Transaction
 
 > **update**: [`XOR`](XOR.md)\<[`TransactionUpdateInput`](TransactionUpdateInput.md), [`TransactionUncheckedUpdateInput`](TransactionUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1619
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1620
 
 In case the Transaction was found with the provided `where` argument, update it with this data.
 
@@ -74,6 +74,6 @@ In case the Transaction was found with the provided `where` argument, update it 
 
 > **where**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1611
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1612
 
 The filter to search for the Transaction to update in case it exists.

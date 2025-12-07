@@ -8,7 +8,7 @@
 
 > **SessionFindUniqueArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:935
+Defined in: packages/prisma/generated/prisma/models/Session.ts:936
 
 Session findUnique
 
@@ -24,7 +24,7 @@ Session findUnique
 
 > `optional` **include**: [`SessionInclude`](SessionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:947
+Defined in: packages/prisma/generated/prisma/models/Session.ts:948
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:943
+Defined in: packages/prisma/generated/prisma/models/Session.ts:944
 
 Omit specific fields from the Session
 
@@ -44,7 +44,7 @@ Omit specific fields from the Session
 
 > `optional` **select**: [`SessionSelect`](SessionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:939
+Defined in: packages/prisma/generated/prisma/models/Session.ts:940
 
 Select specific fields to fetch from the Session
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Session
 
 > **where**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:951
+Defined in: packages/prisma/generated/prisma/models/Session.ts:952
 
 Filter, which Session to fetch.

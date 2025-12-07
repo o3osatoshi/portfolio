@@ -8,7 +8,7 @@
 
 > **AggregateSession** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:20
+Defined in: packages/prisma/generated/prisma/models/Session.ts:21
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:20
 
 > **\_count**: [`SessionCountAggregateOutputType`](SessionCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:21
+Defined in: packages/prisma/generated/prisma/models/Session.ts:22
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:21
 
 > **\_max**: [`SessionMaxAggregateOutputType`](SessionMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:23
+Defined in: packages/prisma/generated/prisma/models/Session.ts:24
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:23
 
 > **\_min**: [`SessionMinAggregateOutputType`](SessionMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:22
+Defined in: packages/prisma/generated/prisma/models/Session.ts:23

@@ -8,7 +8,7 @@
 
 > **InferResponseType**\<`T`, `U`\> = `InferResponseTypeFromEndpoint`\<`InferEndpointType`\<`T`\>, `U`\>
 
-Defined in: node\_modules/.pnpm/hono@4.10.4/node\_modules/hono/dist/types/client/types.d.ts:85
+Defined in: node\_modules/.pnpm/hono@4.10.7/node\_modules/hono/dist/types/client/types.d.ts:85
 
 ## Type Parameters
 

@@ -8,7 +8,7 @@
 
 > **VerificationTokenOmit**\<`ExtArgs`\> = `runtime.Types.Extensions.GetOmit`\<`"identifier"` \| `"token"` \| `"expires"`, `ExtArgs`\[`"result"`\]\[`"verificationToken"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:295
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:296
 
 ## Type Parameters
 

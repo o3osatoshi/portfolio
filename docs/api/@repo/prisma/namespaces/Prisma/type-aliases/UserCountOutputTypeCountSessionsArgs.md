@@ -8,7 +8,7 @@
 
 > **UserCountOutputTypeCountSessionsArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:755
+Defined in: packages/prisma/generated/prisma/models/User.ts:756
 
 UserCountOutputType without action
 
@@ -24,4 +24,4 @@ UserCountOutputType without action
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:756
+Defined in: packages/prisma/generated/prisma/models/User.ts:757
