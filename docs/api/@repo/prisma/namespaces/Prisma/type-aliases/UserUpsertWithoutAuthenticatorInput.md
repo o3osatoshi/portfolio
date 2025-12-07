@@ -8,7 +8,7 @@
 
 > **UserUpsertWithoutAuthenticatorInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:679
+Defined in: packages/prisma/generated/prisma/models/User.ts:680
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:679
 
 > **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutAuthenticatorInput`](UserCreateWithoutAuthenticatorInput.md), [`UserUncheckedCreateWithoutAuthenticatorInput`](UserUncheckedCreateWithoutAuthenticatorInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:681
+Defined in: packages/prisma/generated/prisma/models/User.ts:682
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:681
 
 > **update**: [`XOR`](XOR.md)\<[`UserUpdateWithoutAuthenticatorInput`](UserUpdateWithoutAuthenticatorInput.md), [`UserUncheckedUpdateWithoutAuthenticatorInput`](UserUncheckedUpdateWithoutAuthenticatorInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:680
+Defined in: packages/prisma/generated/prisma/models/User.ts:681
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:680
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:682
+Defined in: packages/prisma/generated/prisma/models/User.ts:683

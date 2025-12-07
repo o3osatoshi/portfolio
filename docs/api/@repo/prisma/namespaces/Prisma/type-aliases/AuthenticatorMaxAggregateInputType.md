@@ -8,7 +8,7 @@
 
 > **AuthenticatorMaxAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:90
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:91
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:90
 
 > `optional` **counter**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:95
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:96
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:95
 
 > `optional` **credentialBackedUp**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:97
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:98
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:97
 
 > `optional` **credentialDeviceType**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:96
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:97
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:96
 
 > `optional` **credentialID**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:91
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:92
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:91
 
 > `optional` **credentialPublicKey**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:94
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:95
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:94
 
 > `optional` **providerAccountId**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:93
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:94
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:93
 
 > `optional` **transports**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:98
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:99
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:98
 
 > `optional` **userId**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:92
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:93

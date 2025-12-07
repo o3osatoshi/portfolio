@@ -8,6 +8,6 @@
 
 > **Bytes** = `runtime.Bytes`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:102
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:95
 
 Utility Types

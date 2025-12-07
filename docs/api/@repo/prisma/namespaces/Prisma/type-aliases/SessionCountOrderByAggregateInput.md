@@ -8,7 +8,7 @@
 
 > **SessionCountOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:295
+Defined in: packages/prisma/generated/prisma/models/Session.ts:296
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:295
 
 > `optional` **createdAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:299
+Defined in: packages/prisma/generated/prisma/models/Session.ts:300
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:299
 
 > `optional` **expires**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:298
+Defined in: packages/prisma/generated/prisma/models/Session.ts:299
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:298
 
 > `optional` **sessionToken**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:296
+Defined in: packages/prisma/generated/prisma/models/Session.ts:297
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:296
 
 > `optional` **updatedAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:300
+Defined in: packages/prisma/generated/prisma/models/Session.ts:301
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:300
 
 > `optional` **userId**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:297
+Defined in: packages/prisma/generated/prisma/models/Session.ts:298

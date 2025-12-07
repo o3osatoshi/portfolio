@@ -8,7 +8,7 @@
 
 > `const` **sql**: (`strings`, ...`values`) => `Sql` = `runtime.sqltag`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:49
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:50
 
 Re-export of sql-template-tag
 

@@ -8,4 +8,4 @@
 
 > **VerificationTokenScalarFieldEnum** = *typeof* [`VerificationTokenScalarFieldEnum`](../variables/VerificationTokenScalarFieldEnum.md)\[keyof *typeof* [`VerificationTokenScalarFieldEnum`](../variables/VerificationTokenScalarFieldEnum.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:961
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:956

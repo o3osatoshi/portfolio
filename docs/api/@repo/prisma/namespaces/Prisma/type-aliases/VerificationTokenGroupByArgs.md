@@ -8,7 +8,7 @@
 
 > **VerificationTokenGroupByArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:125
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:126
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:125
 
 > `optional` **\_count**: [`VerificationTokenCountAggregateInputType`](VerificationTokenCountAggregateInputType.md) \| `true`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:132
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:133
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:132
 
 > `optional` **\_max**: [`VerificationTokenMaxAggregateInputType`](VerificationTokenMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:134
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:135
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:134
 
 > `optional` **\_min**: [`VerificationTokenMinAggregateInputType`](VerificationTokenMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:133
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:134
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:133
 
 > **by**: [`VerificationTokenScalarFieldEnum`](VerificationTokenScalarFieldEnum.md)[] \| [`VerificationTokenScalarFieldEnum`](VerificationTokenScalarFieldEnum.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:128
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:129
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:128
 
 > `optional` **having**: [`VerificationTokenScalarWhereWithAggregatesInput`](VerificationTokenScalarWhereWithAggregatesInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:129
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:130
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:129
 
 > `optional` **orderBy**: [`VerificationTokenOrderByWithAggregationInput`](VerificationTokenOrderByWithAggregationInput.md) \| [`VerificationTokenOrderByWithAggregationInput`](VerificationTokenOrderByWithAggregationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:127
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:128
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:127
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:131
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:132
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:131
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:130
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:131
 
 ***
 
@@ -86,4 +86,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:130
 
 > `optional` **where**: [`VerificationTokenWhereInput`](VerificationTokenWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:126
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:127

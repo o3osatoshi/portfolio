@@ -8,7 +8,7 @@
 
 > **NestedDateTimeWithAggregatesFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:347
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:348
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:347
 
 > `optional` **\_count**: [`NestedIntFilter`](NestedIntFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:356
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:357
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:356
 
 > `optional` **\_max**: [`NestedDateTimeFilter`](NestedDateTimeFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:358
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:359
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:358
 
 > `optional` **\_min**: [`NestedDateTimeFilter`](NestedDateTimeFilter.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:357
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:358
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:357
 
 > `optional` **equals**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:348
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:349
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:348
 
 > `optional` **gt**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:353
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:354
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:353
 
 > `optional` **gte**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:354
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:355
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:354
 
 > `optional` **in**: `Date`[] \| `string`[] \| [`ListDateTimeFieldRefInput`](ListDateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:349
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:350
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:349
 
 > `optional` **lt**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:351
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:352
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:351
 
 > `optional` **lte**: `Date` \| `string` \| [`DateTimeFieldRefInput`](DateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:352
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:353
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:352
 
 > `optional` **not**: `Prisma.NestedDateTimeWithAggregatesFilter`\<`$PrismaModel`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:355
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:356
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:355
 
 > `optional` **notIn**: `Date`[] \| `string`[] \| [`ListDateTimeFieldRefInput`](ListDateTimeFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:350
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:351

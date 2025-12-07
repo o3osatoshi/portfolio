@@ -8,7 +8,7 @@
 
 > **TransactionFindFirstArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1314
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1315
 
 Transaction findFirst
 
@@ -24,7 +24,7 @@ Transaction findFirst
 
 > `optional` **cursor**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1342
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1343
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -36,7 +36,7 @@ Sets the position for searching for Transactions.
 
 > `optional` **distinct**: [`TransactionScalarFieldEnum`](TransactionScalarFieldEnum.md) \| [`TransactionScalarFieldEnum`](TransactionScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1360
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1361
 
 [Distinct Docs](https://www.prisma.io/docs/concepts/components/prisma-client/distinct)
 
@@ -48,7 +48,7 @@ Filter by unique combinations of Transactions.
 
 > `optional` **include**: [`TransactionInclude`](TransactionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1326
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1327
 
 Choose, which related nodes to fetch as well
 
@@ -58,7 +58,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1322
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1323
 
 Omit specific fields from the Transaction
 
@@ -68,7 +68,7 @@ Omit specific fields from the Transaction
 
 > `optional` **orderBy**: [`TransactionOrderByWithRelationInput`](TransactionOrderByWithRelationInput.md) \| [`TransactionOrderByWithRelationInput`](TransactionOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1336
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1337
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -80,7 +80,7 @@ Determine the order of Transactions to fetch.
 
 > `optional` **select**: [`TransactionSelect`](TransactionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1318
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1319
 
 Select specific fields to fetch from the Transaction
 
@@ -90,7 +90,7 @@ Select specific fields to fetch from the Transaction
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1354
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1355
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -102,7 +102,7 @@ Skip the first `n` Transactions.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1348
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1349
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -114,6 +114,6 @@ Take `±n` Transactions from the position of the cursor.
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1330
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1331
 
 Filter, which Transaction to fetch.

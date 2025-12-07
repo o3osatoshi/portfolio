@@ -8,7 +8,7 @@
 
 > **Strict**\<`U`\> = [`ComputeRaw`](ComputeRaw.md)\<`_Strict`\<`U`\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:302
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:297
 
 ## Type Parameters
 

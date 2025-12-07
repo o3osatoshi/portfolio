@@ -8,7 +8,7 @@
 
 > **AuthenticatorUpsertArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1427
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1428
 
 Authenticator upsert
 
@@ -24,7 +24,7 @@ Authenticator upsert
 
 > **create**: [`XOR`](XOR.md)\<[`AuthenticatorCreateInput`](AuthenticatorCreateInput.md), [`AuthenticatorUncheckedCreateInput`](AuthenticatorUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1447
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1448
 
 In case the Authenticator found by the `where` argument doesn't exist, create a new Authenticator with this data.
 
@@ -34,7 +34,7 @@ In case the Authenticator found by the `where` argument doesn't exist, create a 
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1439
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1440
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1435
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1436
 
 Omit specific fields from the Authenticator
 
@@ -54,7 +54,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1431
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1432
 
 Select specific fields to fetch from the Authenticator
 
@@ -64,7 +64,7 @@ Select specific fields to fetch from the Authenticator
 
 > **update**: [`XOR`](XOR.md)\<[`AuthenticatorUpdateInput`](AuthenticatorUpdateInput.md), [`AuthenticatorUncheckedUpdateInput`](AuthenticatorUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1451
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1452
 
 In case the Authenticator was found with the provided `where` argument, update it with this data.
 
@@ -74,6 +74,6 @@ In case the Authenticator was found with the provided `where` argument, update i
 
 > **where**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1443
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1444
 
 The filter to search for the Authenticator to update in case it exists.

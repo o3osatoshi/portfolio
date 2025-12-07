@@ -8,7 +8,7 @@
 
 > **NullableStringFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:559
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:560
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:559
 
 > `optional` **set**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:560
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:561

@@ -8,7 +8,7 @@
 
 > **AuthenticatorDefaultArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1493
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1494
 
 Authenticator without action
 
@@ -24,7 +24,7 @@ Authenticator without action
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1505
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1506
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1501
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1502
 
 Omit specific fields from the Authenticator
 
@@ -44,6 +44,6 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1497
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1498
 
 Select specific fields to fetch from the Authenticator

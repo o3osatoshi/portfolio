@@ -8,7 +8,7 @@
 
 > **AccountFindManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1421
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1422
 
 Account findMany
 
@@ -24,7 +24,7 @@ Account findMany
 
 > `optional` **cursor**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1449
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1450
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -36,7 +36,7 @@ Sets the position for listing Accounts.
 
 > `optional` **distinct**: [`AccountScalarFieldEnum`](AccountScalarFieldEnum.md) \| [`AccountScalarFieldEnum`](AccountScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1462
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1463
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:1462
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1433
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1434
 
 Choose, which related nodes to fetch as well
 
@@ -54,7 +54,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1429
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1430
 
 Omit specific fields from the Account
 
@@ -64,7 +64,7 @@ Omit specific fields from the Account
 
 > `optional` **orderBy**: [`AccountOrderByWithRelationInput`](AccountOrderByWithRelationInput.md) \| [`AccountOrderByWithRelationInput`](AccountOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1443
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1444
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -76,7 +76,7 @@ Determine the order of Accounts to fetch.
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1425
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1426
 
 Select specific fields to fetch from the Account
 
@@ -86,7 +86,7 @@ Select specific fields to fetch from the Account
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1461
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1462
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -98,7 +98,7 @@ Skip the first `n` Accounts.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1455
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1456
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -110,6 +110,6 @@ Take `±n` Accounts from the position of the cursor.
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1437
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1438
 
 Filter, which Accounts to fetch.

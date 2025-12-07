@@ -8,7 +8,7 @@
 
 > **UserUpdateOneRequiredWithoutSessionsNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:422
+Defined in: packages/prisma/generated/prisma/models/User.ts:423
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:422
 
 > `optional` **connect**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:426
+Defined in: packages/prisma/generated/prisma/models/User.ts:427
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:426
 
 > `optional` **connectOrCreate**: [`UserCreateOrConnectWithoutSessionsInput`](UserCreateOrConnectWithoutSessionsInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:424
+Defined in: packages/prisma/generated/prisma/models/User.ts:425
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:424
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutSessionsInput`](UserCreateWithoutSessionsInput.md), [`UserUncheckedCreateWithoutSessionsInput`](UserUncheckedCreateWithoutSessionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:423
+Defined in: packages/prisma/generated/prisma/models/User.ts:424
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:423
 
 > `optional` **update**: [`XOR`](XOR.md)\<[`XOR`](XOR.md)\<[`UserUpdateToOneWithWhereWithoutSessionsInput`](UserUpdateToOneWithWhereWithoutSessionsInput.md), [`UserUpdateWithoutSessionsInput`](UserUpdateWithoutSessionsInput.md)\>, [`UserUncheckedUpdateWithoutSessionsInput`](UserUncheckedUpdateWithoutSessionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:427
+Defined in: packages/prisma/generated/prisma/models/User.ts:428
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:427
 
 > `optional` **upsert**: [`UserUpsertWithoutSessionsInput`](UserUpsertWithoutSessionsInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:425
+Defined in: packages/prisma/generated/prisma/models/User.ts:426

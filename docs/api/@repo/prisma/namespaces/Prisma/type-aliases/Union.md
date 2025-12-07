@@ -8,4 +8,4 @@
 
 > **Union** = `any`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:249
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:244

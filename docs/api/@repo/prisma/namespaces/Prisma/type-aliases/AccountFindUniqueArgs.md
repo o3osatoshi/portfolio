@@ -8,7 +8,7 @@
 
 > **AccountFindUniqueArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1273
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1274
 
 Account findUnique
 
@@ -24,7 +24,7 @@ Account findUnique
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1285
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1286
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1281
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1282
 
 Omit specific fields from the Account
 
@@ -44,7 +44,7 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1277
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1278
 
 Select specific fields to fetch from the Account
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Account
 
 > **where**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1289
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1290
 
 Filter, which Account to fetch.

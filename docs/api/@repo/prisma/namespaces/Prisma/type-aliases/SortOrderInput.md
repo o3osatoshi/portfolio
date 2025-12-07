@@ -8,7 +8,7 @@
 
 > **SortOrderInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:79
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:80
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:79
 
 > `optional` **nulls**: [`NullsOrder`](NullsOrder.md)
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:81
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:82
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:81
 
 > **sort**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:80
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:81

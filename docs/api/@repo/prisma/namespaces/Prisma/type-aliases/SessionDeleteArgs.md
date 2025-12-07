@@ -8,7 +8,7 @@
 
 > **SessionDeleteArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1290
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1291
 
 Session delete
 
@@ -24,7 +24,7 @@ Session delete
 
 > `optional` **include**: [`SessionInclude`](SessionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1302
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1303
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1298
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1299
 
 Omit specific fields from the Session
 
@@ -44,7 +44,7 @@ Omit specific fields from the Session
 
 > `optional` **select**: [`SessionSelect`](SessionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1294
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1295
 
 Select specific fields to fetch from the Session
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Session
 
 > **where**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1306
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1307
 
 Filter which Session to delete.

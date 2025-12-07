@@ -8,7 +8,7 @@
 
 > **TransactionGroupByOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:235
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:236
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:235
 
 > **\_avg**: [`TransactionAvgAggregateOutputType`](TransactionAvgAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:249
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:250
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:249
 
 > **\_count**: [`TransactionCountAggregateOutputType`](TransactionCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:248
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:249
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:248
 
 > **\_max**: [`TransactionMaxAggregateOutputType`](TransactionMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:252
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:253
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:252
 
 > **\_min**: [`TransactionMinAggregateOutputType`](TransactionMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:251
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:252
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:251
 
 > **\_sum**: [`TransactionSumAggregateOutputType`](TransactionSumAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:250
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:251
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:250
 
 > **amount**: `runtime.Decimal`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:239
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:240
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:239
 
 > **createdAt**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:246
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:247
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:246
 
 > **currency**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:241
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:242
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:241
 
 > **datetime**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:238
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:239
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:238
 
 > **fee**: `runtime.Decimal` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:243
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:244
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:243
 
 > **feeCurrency**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:244
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:245
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:244
 
 > **id**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:236
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:237
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:236
 
 > **price**: `runtime.Decimal`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:240
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:241
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:240
 
 > **profitLoss**: `runtime.Decimal` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:242
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:243
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:242
 
 > **type**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:237
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:238
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:237
 
 > **updatedAt**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:247
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:248
 
 ***
 
@@ -144,4 +144,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:247
 
 > **userId**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:245
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:246

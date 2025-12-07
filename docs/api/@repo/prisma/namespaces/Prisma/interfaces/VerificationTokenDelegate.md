@@ -6,7 +6,7 @@
 
 # Interface: VerificationTokenDelegate\<ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:315
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:316
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:315
 
 > `readonly` **fields**: [`VerificationTokenFieldRefs`](VerificationTokenFieldRefs.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:687
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:688
 
 Fields of the VerificationToken model
 
@@ -38,7 +38,7 @@ Fields of the VerificationToken model
 
 > **aggregate**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`GetVerificationTokenAggregateType`](../type-aliases/GetVerificationTokenAggregateType.md)\<`T`\>\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:606
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:607
 
 Allows you to perform aggregations operations on a VerificationToken.
 Note, that providing `undefined` is treated as the value not being there.
@@ -90,7 +90,7 @@ const aggregations = await prisma.user.aggregate({
 
 > **count**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`T` *extends* `Record_2`\<`"select"`, `any`\> ? `T`\<`T`\>\[`"select"`\] *extends* `true` ? `number` : \{ \[P in string \| number \| symbol\]: P extends keyof VerificationTokenCountAggregateOutputType ? VerificationTokenCountAggregateOutputType\[P\<P\>\] : never \} : `number`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:572
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:573
 
 Count the number of VerificationTokens.
 Note, that providing `undefined` is treated as the value not being there.
@@ -131,7 +131,7 @@ const count = await prisma.verificationToken.count({
 
 > **create**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:405
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:406
 
 Create a VerificationToken.
 
@@ -170,7 +170,7 @@ const VerificationToken = await prisma.verificationToken.create({
 
 > **createMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:419
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:420
 
 Create many VerificationTokens.
 
@@ -209,7 +209,7 @@ const verificationToken = await prisma.verificationToken.createMany({
 
 > **createManyAndReturn**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:443
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:444
 
 Create many VerificationTokens and returns the data saved in the database.
 
@@ -258,7 +258,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **delete**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:457
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:458
 
 Delete a VerificationToken.
 
@@ -297,7 +297,7 @@ const VerificationToken = await prisma.verificationToken.delete({
 
 > **deleteMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:488
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:489
 
 Delete zero or more VerificationTokens.
 
@@ -334,9 +334,9 @@ const { count } = await prisma.verificationToken.deleteMany({
 
 ### findFirst()
 
-> **findFirst**\<`T`\>(`args?`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`null` \| `GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findFirst**\<`T`\>(`args?`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:357
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:358
 
 Find the first VerificationToken that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -358,7 +358,7 @@ Arguments to find a VerificationToken
 
 #### Returns
 
-[`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`null` \| `GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -377,7 +377,7 @@ const verificationToken = await prisma.verificationToken.findFirst({
 
 > **findFirstOrThrow**\<`T`\>(`args?`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:373
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:374
 
 Find the first VerificationToken that matches the filter or
 throw `PrismaKnownClientError` with `P2025` code if no matches were found.
@@ -419,7 +419,7 @@ const verificationToken = await prisma.verificationToken.findFirstOrThrow({
 
 > **findMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:391
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:392
 
 Find zero or more VerificationTokens that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -460,9 +460,9 @@ const verificationTokenWithIdentifierOnly = await prisma.verificationToken.findM
 
 ### findUnique()
 
-> **findUnique**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`null` \| `GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findUnique**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:328
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:329
 
 Find zero or one VerificationToken that matches the filter.
 
@@ -482,7 +482,7 @@ Arguments to find a VerificationToken
 
 #### Returns
 
-[`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`null` \| `GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -501,7 +501,7 @@ const verificationToken = await prisma.verificationToken.findUnique({
 
 > **findUniqueOrThrow**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:342
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:343
 
 Find one VerificationToken that matches the filter or throw an error with `error.code='P2025'`
 if no matches were found.
@@ -541,7 +541,7 @@ const verificationToken = await prisma.verificationToken.findUniqueOrThrow({
 
 > **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetVerificationTokenGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:626
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:627
 
 Group by VerificationToken.
 Note, that providing `undefined` is treated as the value not being there.
@@ -559,7 +559,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderByArg
 
-`OrderByArg` *extends* \{ `orderBy`: `undefined` \| [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md) \| [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md)[]; \} \| \{ `orderBy?`: [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md) \| [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md)[]; \}
+`OrderByArg` *extends* \{ `orderBy`: [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md) \| [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md)[] \| `undefined`; \} \| \{ `orderBy?`: [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md) \| [`VerificationTokenOrderByWithAggregationInput`](../type-aliases/VerificationTokenOrderByWithAggregationInput.md)[]; \}
 
 ##### OrderFields
 
@@ -622,7 +622,7 @@ const result = await prisma.user.groupBy({
 
 > **update**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:474
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:475
 
 Update one VerificationToken.
 
@@ -664,7 +664,7 @@ const verificationToken = await prisma.verificationToken.update({
 
 > **updateMany**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:507
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:508
 
 Update zero or more VerificationTokens.
 Note, that providing `undefined` is treated as the value not being there.
@@ -708,7 +708,7 @@ const verificationToken = await prisma.verificationToken.updateMany({
 
 > **updateManyAndReturn**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:537
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:538
 
 Update zero or more VerificationTokens and returns the data updated in the database.
 
@@ -763,7 +763,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **upsert**\<`T`\>(`args`): [`Prisma__VerificationTokenClient`](Prisma__VerificationTokenClient.md)\<`GetFindResult`\<[`$VerificationTokenPayload`](../type-aliases/$VerificationTokenPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:556
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:557
 
 Create or update one VerificationToken.
 

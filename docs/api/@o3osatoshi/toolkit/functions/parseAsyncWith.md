@@ -8,7 +8,7 @@
 
 > **parseAsyncWith**\<`T`\>(`schema`, `ctx`): (`input`) => `ResultAsync`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod/zod-parse.ts:25](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-parse.ts#L25)
+Defined in: [zod/zod-parse.ts:25](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-parse.ts#L25)
 
 Creates an async Result-returning parser from a Zod schema.
 
@@ -45,7 +45,7 @@ Context describing the logical action and optional layer override.
 
 ## Returns
 
-A function that yields a neverthrow `ResultAsync` containing the inferred schema output.
+A function that yields a neverthrow ResultAsync containing the inferred schema output.
 
 > (`input`): `ResultAsync`\<`output`\<`T`\>, `Error`\>
 

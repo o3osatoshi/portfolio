@@ -8,4 +8,4 @@
 
 > `const` **PrismaClientValidationError**: *typeof* `PrismaClientValidationError` = `runtime.PrismaClientValidationError`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:43
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:44

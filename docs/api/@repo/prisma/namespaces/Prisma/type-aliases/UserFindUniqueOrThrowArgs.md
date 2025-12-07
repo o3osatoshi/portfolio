@@ -8,7 +8,7 @@
 
 > **UserFindUniqueOrThrowArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1309
+Defined in: packages/prisma/generated/prisma/models/User.ts:1310
 
 User findUniqueOrThrow
 
@@ -24,7 +24,7 @@ User findUniqueOrThrow
 
 > `optional` **include**: [`UserInclude`](UserInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1321
+Defined in: packages/prisma/generated/prisma/models/User.ts:1322
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1317
+Defined in: packages/prisma/generated/prisma/models/User.ts:1318
 
 Omit specific fields from the User
 
@@ -44,7 +44,7 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelect`](UserSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1313
+Defined in: packages/prisma/generated/prisma/models/User.ts:1314
 
 Select specific fields to fetch from the User
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the User
 
 > **where**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1325
+Defined in: packages/prisma/generated/prisma/models/User.ts:1326
 
 Filter, which User to fetch.

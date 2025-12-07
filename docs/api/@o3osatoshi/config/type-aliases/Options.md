@@ -8,7 +8,7 @@
 
 > **Options** = `object`
 
-Defined in: [packages/config/src/vitest/index.ts:17](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/vitest/index.ts#L17)
+Defined in: [packages/config/src/vitest/index.ts:18](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/vitest/index.ts#L18)
 
 Supported overrides for the shared Vitest presets.
 
@@ -21,12 +21,18 @@ optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]`.
 
 > `optional` **plugins**: `ViteUserConfig`\[`"plugins"`\]
 
-Defined in: [packages/config/src/vitest/index.ts:18](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/vitest/index.ts#L18)
+Defined in: [packages/config/src/vitest/index.ts:19](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/vitest/index.ts#L19)
 
 ***
 
 ### test?
 
-> `optional` **test**: `InlineConfig`
+> `optional` **test**: `object` & `InlineConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:19](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/vitest/index.ts#L19)
+Defined in: [packages/config/src/vitest/index.ts:20](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/vitest/index.ts#L20)
+
+#### Type Declaration
+
+##### coverage?
+
+> `optional` **coverage**: `CoverageV8Options`

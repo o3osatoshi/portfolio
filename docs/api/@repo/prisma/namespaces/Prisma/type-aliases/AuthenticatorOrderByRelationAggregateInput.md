@@ -8,7 +8,7 @@
 
 > **AuthenticatorOrderByRelationAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:385
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:386
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:385
 
 > `optional` **\_count**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:386
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:387

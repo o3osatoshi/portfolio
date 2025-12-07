@@ -8,7 +8,7 @@
 
 > **AccountAvgAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:86
+Defined in: packages/prisma/generated/prisma/models/Account.ts:87
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:86
 
 > `optional` **expires\_at**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:87
+Defined in: packages/prisma/generated/prisma/models/Account.ts:88

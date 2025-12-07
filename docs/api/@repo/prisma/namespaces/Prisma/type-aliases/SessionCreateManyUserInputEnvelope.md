@@ -8,7 +8,7 @@
 
 > **SessionCreateManyUserInputEnvelope** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:380
+Defined in: packages/prisma/generated/prisma/models/Session.ts:381
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:380
 
 > **data**: [`SessionCreateManyUserInput`](SessionCreateManyUserInput.md) \| [`SessionCreateManyUserInput`](SessionCreateManyUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:381
+Defined in: packages/prisma/generated/prisma/models/Session.ts:382
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:381
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:382
+Defined in: packages/prisma/generated/prisma/models/Session.ts:383

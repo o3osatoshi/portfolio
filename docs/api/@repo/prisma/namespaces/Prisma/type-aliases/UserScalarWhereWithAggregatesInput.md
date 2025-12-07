@@ -8,7 +8,7 @@
 
 > **UserScalarWhereWithAggregatesInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:250
+Defined in: packages/prisma/generated/prisma/models/User.ts:251
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:250
 
 > `optional` **AND**: `Prisma.UserScalarWhereWithAggregatesInput` \| `Prisma.UserScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:251
+Defined in: packages/prisma/generated/prisma/models/User.ts:252
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:251
 
 > `optional` **createdAt**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"User"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:259
+Defined in: packages/prisma/generated/prisma/models/User.ts:260
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:259
 
 > `optional` **email**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"User"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:256
+Defined in: packages/prisma/generated/prisma/models/User.ts:257
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:256
 
 > `optional` **emailVerified**: [`DateTimeNullableWithAggregatesFilter`](DateTimeNullableWithAggregatesFilter.md)\<`"User"`\> \| `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:257
+Defined in: packages/prisma/generated/prisma/models/User.ts:258
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:257
 
 > `optional` **id**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"User"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:254
+Defined in: packages/prisma/generated/prisma/models/User.ts:255
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:254
 
 > `optional` **image**: [`StringNullableWithAggregatesFilter`](StringNullableWithAggregatesFilter.md)\<`"User"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:258
+Defined in: packages/prisma/generated/prisma/models/User.ts:259
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:258
 
 > `optional` **name**: [`StringNullableWithAggregatesFilter`](StringNullableWithAggregatesFilter.md)\<`"User"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:255
+Defined in: packages/prisma/generated/prisma/models/User.ts:256
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:255
 
 > `optional` **NOT**: `Prisma.UserScalarWhereWithAggregatesInput` \| `Prisma.UserScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:253
+Defined in: packages/prisma/generated/prisma/models/User.ts:254
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:253
 
 > `optional` **OR**: `Prisma.UserScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:252
+Defined in: packages/prisma/generated/prisma/models/User.ts:253
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:252
 
 > `optional` **updatedAt**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"User"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:260
+Defined in: packages/prisma/generated/prisma/models/User.ts:261

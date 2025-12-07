@@ -8,7 +8,7 @@
 
 > **SessionGetPayload**\<`S`\> = `runtime.Types.Result.GetResult`\<[`$SessionPayload`]($SessionPayload.md), `S`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:503
+Defined in: packages/prisma/generated/prisma/models/Session.ts:504
 
 ## Type Parameters
 

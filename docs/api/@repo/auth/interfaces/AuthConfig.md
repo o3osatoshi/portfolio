@@ -6,7 +6,7 @@
 
 # Interface: AuthConfig
 
-Defined in: node\_modules/.pnpm/@hono+auth-js@1.1.0\_@auth+core@0.34.3\_hono@4.10.4\_react@19.1.1/node\_modules/@hono/auth-js/dist/index.d.ts:24
+Defined in: node\_modules/.pnpm/@hono+auth-js@1.1.0\_@auth+core@0.34.3\_hono@4.10.7\_react@19.2.1/node\_modules/@hono/auth-js/dist/index.d.ts:24
 
 ## Extends
 
@@ -60,7 +60,7 @@ as they **allow you to implement access controls without a database** and to **i
 
 #### jwt()?
 
-> `optional` **jwt**: (`params`) => `Awaitable`\<`null` \| `JWT`\>
+> `optional` **jwt**: (`params`) => `Awaitable`\<`JWT` \| `null`\>
 
 This callback is called whenever a JSON Web Token is created (i.e. at sign in)
 or updated (i.e whenever a session is accessed in the client). Anything you
@@ -77,7 +77,7 @@ AUTH_SECRET environment variable.
 
 ###### account
 
-`null` \| `Account`
+`Account` \| `null`
 
 Contains information about the provider that was used to sign in.
 Also includes TokenSet
@@ -149,7 +149,7 @@ Resources:
 
 ##### Returns
 
-`Awaitable`\<`null` \| `JWT`\>
+`Awaitable`\<`JWT` \| `null`\>
 
 #### redirect()?
 
@@ -259,7 +259,7 @@ Unhandled errors will throw an `AccessDenied` with the message set to the origin
 
 ###### account
 
-`null` \| `Account`
+`Account` \| `null`
 
 ###### credentials?
 
@@ -457,7 +457,7 @@ and an indicator if the user was new to your Adapter.
 
 ###### account
 
-`null` \| `Account`
+`Account` \| `null`
 
 ###### isNewUser?
 
@@ -488,7 +488,7 @@ if you use JWT or database persisted sessions:
 
 ###### message
 
-\{ `session`: `undefined` \| `null` \| `void` \| `AdapterSession`; \} | \{ `token`: `null` \| `JWT`; \}
+\{ `session`: `void` \| `AdapterSession` \| `null` \| `undefined`; \} | \{ `token`: `JWT` \| `null`; \}
 
 ##### Returns
 

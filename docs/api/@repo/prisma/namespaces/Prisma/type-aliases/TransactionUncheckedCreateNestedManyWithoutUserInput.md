@@ -8,7 +8,7 @@
 
 > **TransactionUncheckedCreateNestedManyWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:570
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:571
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:570
 
 > `optional` **connect**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md) \| [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:574
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:575
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:574
 
 > `optional` **connectOrCreate**: [`TransactionCreateOrConnectWithoutUserInput`](TransactionCreateOrConnectWithoutUserInput.md) \| [`TransactionCreateOrConnectWithoutUserInput`](TransactionCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:572
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:573
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:572
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`TransactionCreateWithoutUserInput`](TransactionCreateWithoutUserInput.md), [`TransactionUncheckedCreateWithoutUserInput`](TransactionUncheckedCreateWithoutUserInput.md)\> \| [`TransactionCreateWithoutUserInput`](TransactionCreateWithoutUserInput.md)[] \| [`TransactionUncheckedCreateWithoutUserInput`](TransactionUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:571
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:572
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:571
 
 > `optional` **createMany**: [`TransactionCreateManyUserInputEnvelope`](TransactionCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:573
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:574

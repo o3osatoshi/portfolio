@@ -6,7 +6,7 @@
 
 # Interface: AuthenticatorDelegate\<ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:674
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:675
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:674
 
 > `readonly` **fields**: [`AuthenticatorFieldRefs`](AuthenticatorFieldRefs.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1046
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1047
 
 Fields of the Authenticator model
 
@@ -38,7 +38,7 @@ Fields of the Authenticator model
 
 > **aggregate**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`GetAuthenticatorAggregateType`](../type-aliases/GetAuthenticatorAggregateType.md)\<`T`\>\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:965
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:966
 
 Allows you to perform aggregations operations on a Authenticator.
 Note, that providing `undefined` is treated as the value not being there.
@@ -90,7 +90,7 @@ const aggregations = await prisma.user.aggregate({
 
 > **count**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`T` *extends* `Record_2`\<`"select"`, `any`\> ? `T`\<`T`\>\[`"select"`\] *extends* `true` ? `number` : \{ \[P in string \| number \| symbol\]: P extends keyof AuthenticatorCountAggregateOutputType ? AuthenticatorCountAggregateOutputType\[P\<P\>\] : never \} : `number`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:931
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:932
 
 Count the number of Authenticators.
 Note, that providing `undefined` is treated as the value not being there.
@@ -131,7 +131,7 @@ const count = await prisma.authenticator.count({
 
 > **create**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:764
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:765
 
 Create a Authenticator.
 
@@ -170,7 +170,7 @@ const Authenticator = await prisma.authenticator.create({
 
 > **createMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:778
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:779
 
 Create many Authenticators.
 
@@ -209,7 +209,7 @@ const authenticator = await prisma.authenticator.createMany({
 
 > **createManyAndReturn**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:802
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:803
 
 Create many Authenticators and returns the data saved in the database.
 
@@ -258,7 +258,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **delete**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:816
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:817
 
 Delete a Authenticator.
 
@@ -297,7 +297,7 @@ const Authenticator = await prisma.authenticator.delete({
 
 > **deleteMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:847
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:848
 
 Delete zero or more Authenticators.
 
@@ -334,9 +334,9 @@ const { count } = await prisma.authenticator.deleteMany({
 
 ### findFirst()
 
-> **findFirst**\<`T`\>(`args?`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`null` \| `GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findFirst**\<`T`\>(`args?`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:716
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:717
 
 Find the first Authenticator that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -358,7 +358,7 @@ Arguments to find a Authenticator
 
 #### Returns
 
-[`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`null` \| `GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -377,7 +377,7 @@ const authenticator = await prisma.authenticator.findFirst({
 
 > **findFirstOrThrow**\<`T`\>(`args?`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:732
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:733
 
 Find the first Authenticator that matches the filter or
 throw `PrismaKnownClientError` with `P2025` code if no matches were found.
@@ -419,7 +419,7 @@ const authenticator = await prisma.authenticator.findFirstOrThrow({
 
 > **findMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:750
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:751
 
 Find zero or more Authenticators that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -460,9 +460,9 @@ const authenticatorWithCredentialIDOnly = await prisma.authenticator.findMany({ 
 
 ### findUnique()
 
-> **findUnique**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`null` \| `GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findUnique**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:687
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:688
 
 Find zero or one Authenticator that matches the filter.
 
@@ -482,7 +482,7 @@ Arguments to find a Authenticator
 
 #### Returns
 
-[`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`null` \| `GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -501,7 +501,7 @@ const authenticator = await prisma.authenticator.findUnique({
 
 > **findUniqueOrThrow**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:701
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:702
 
 Find one Authenticator that matches the filter or throw an error with `error.code='P2025'`
 if no matches were found.
@@ -541,7 +541,7 @@ const authenticator = await prisma.authenticator.findUniqueOrThrow({
 
 > **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetAuthenticatorGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:985
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:986
 
 Group by Authenticator.
 Note, that providing `undefined` is treated as the value not being there.
@@ -559,7 +559,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderByArg
 
-`OrderByArg` *extends* \{ `orderBy`: `undefined` \| [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md) \| [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md)[]; \} \| \{ `orderBy?`: [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md) \| [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md)[]; \}
+`OrderByArg` *extends* \{ `orderBy`: [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md) \| [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md)[] \| `undefined`; \} \| \{ `orderBy?`: [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md) \| [`AuthenticatorOrderByWithAggregationInput`](../type-aliases/AuthenticatorOrderByWithAggregationInput.md)[]; \}
 
 ##### OrderFields
 
@@ -622,7 +622,7 @@ const result = await prisma.user.groupBy({
 
 > **update**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:833
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:834
 
 Update one Authenticator.
 
@@ -664,7 +664,7 @@ const authenticator = await prisma.authenticator.update({
 
 > **updateMany**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:866
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:867
 
 Update zero or more Authenticators.
 Note, that providing `undefined` is treated as the value not being there.
@@ -708,7 +708,7 @@ const authenticator = await prisma.authenticator.updateMany({
 
 > **updateManyAndReturn**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:896
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:897
 
 Update zero or more Authenticators and returns the data updated in the database.
 
@@ -763,7 +763,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **upsert**\<`T`\>(`args`): [`Prisma__AuthenticatorClient`](Prisma__AuthenticatorClient.md)\<`GetFindResult`\<[`$AuthenticatorPayload`](../type-aliases/$AuthenticatorPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:915
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:916
 
 Create or update one Authenticator.
 

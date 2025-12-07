@@ -8,4 +8,4 @@
 
 > **SessionScalarFieldEnum** = *typeof* [`SessionScalarFieldEnum`](../variables/SessionScalarFieldEnum.md)\[keyof *typeof* [`SessionScalarFieldEnum`](../variables/SessionScalarFieldEnum.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:950
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:945

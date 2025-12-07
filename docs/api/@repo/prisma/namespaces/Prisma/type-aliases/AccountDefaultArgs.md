@@ -8,7 +8,7 @@
 
 > **AccountDefaultArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1664
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1665
 
 Account without action
 
@@ -24,7 +24,7 @@ Account without action
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1676
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1677
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1672
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1673
 
 Omit specific fields from the Account
 
@@ -44,6 +44,6 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1668
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1669
 
 Select specific fields to fetch from the Account

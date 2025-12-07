@@ -8,7 +8,7 @@
 
 > **TransactionGetPayload**\<`S`\> = `runtime.Types.Result.GetResult`\<[`$TransactionPayload`]($TransactionPayload.md), `S`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:831
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:832
 
 ## Type Parameters
 

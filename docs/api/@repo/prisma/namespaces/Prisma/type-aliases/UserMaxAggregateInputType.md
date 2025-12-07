@@ -8,7 +8,7 @@
 
 > **UserMaxAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:68
+Defined in: packages/prisma/generated/prisma/models/User.ts:69
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:68
 
 > `optional` **createdAt**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:74
+Defined in: packages/prisma/generated/prisma/models/User.ts:75
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:74
 
 > `optional` **email**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:71
+Defined in: packages/prisma/generated/prisma/models/User.ts:72
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:71
 
 > `optional` **emailVerified**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:72
+Defined in: packages/prisma/generated/prisma/models/User.ts:73
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:72
 
 > `optional` **id**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:69
+Defined in: packages/prisma/generated/prisma/models/User.ts:70
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:69
 
 > `optional` **image**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:73
+Defined in: packages/prisma/generated/prisma/models/User.ts:74
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:73
 
 > `optional` **name**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:70
+Defined in: packages/prisma/generated/prisma/models/User.ts:71
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:70
 
 > `optional` **updatedAt**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:75
+Defined in: packages/prisma/generated/prisma/models/User.ts:76

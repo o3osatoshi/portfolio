@@ -8,7 +8,7 @@
 
 > **AuthenticatorInclude**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:639
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:640
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:639
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:640
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:641

@@ -8,7 +8,7 @@
 
 > **SessionSelectCreateManyAndReturn**\<`ExtArgs`\> = `runtime.Types.Extensions.GetSelect`\<\{ `createdAt?`: `boolean`; `expires?`: `boolean`; `sessionToken?`: `boolean`; `updatedAt?`: `boolean`; `user?`: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>; `userId?`: `boolean`; \}, `ExtArgs`\[`"result"`\]\[`"session"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:451
+Defined in: packages/prisma/generated/prisma/models/Session.ts:452
 
 ## Type Parameters
 

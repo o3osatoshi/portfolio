@@ -8,7 +8,7 @@
 
 > **UserUpdateWithoutAuthenticatorInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:690
+Defined in: packages/prisma/generated/prisma/models/User.ts:691
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:690
 
 > `optional` **accounts**: [`AccountUpdateManyWithoutUserNestedInput`](AccountUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:698
+Defined in: packages/prisma/generated/prisma/models/User.ts:699
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:698
 
 > `optional` **createdAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:696
+Defined in: packages/prisma/generated/prisma/models/User.ts:697
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:696
 
 > `optional` **email**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:693
+Defined in: packages/prisma/generated/prisma/models/User.ts:694
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:693
 
 > `optional` **emailVerified**: [`NullableDateTimeFieldUpdateOperationsInput`](NullableDateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:694
+Defined in: packages/prisma/generated/prisma/models/User.ts:695
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:694
 
 > `optional` **id**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:691
+Defined in: packages/prisma/generated/prisma/models/User.ts:692
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:691
 
 > `optional` **image**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:695
+Defined in: packages/prisma/generated/prisma/models/User.ts:696
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:695
 
 > `optional` **name**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:692
+Defined in: packages/prisma/generated/prisma/models/User.ts:693
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:692
 
 > `optional` **sessions**: [`SessionUpdateManyWithoutUserNestedInput`](SessionUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:699
+Defined in: packages/prisma/generated/prisma/models/User.ts:700
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:699
 
 > `optional` **transactions**: [`TransactionUpdateManyWithoutUserNestedInput`](TransactionUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:700
+Defined in: packages/prisma/generated/prisma/models/User.ts:701
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:700
 
 > `optional` **updatedAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:697
+Defined in: packages/prisma/generated/prisma/models/User.ts:698

@@ -8,7 +8,7 @@
 
 > **SessionCreateOrConnectWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:375
+Defined in: packages/prisma/generated/prisma/models/Session.ts:376
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:375
 
 > **create**: [`XOR`](XOR.md)\<[`SessionCreateWithoutUserInput`](SessionCreateWithoutUserInput.md), [`SessionUncheckedCreateWithoutUserInput`](SessionUncheckedCreateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:377
+Defined in: packages/prisma/generated/prisma/models/Session.ts:378
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:377
 
 > **where**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:376
+Defined in: packages/prisma/generated/prisma/models/Session.ts:377

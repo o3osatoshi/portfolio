@@ -8,7 +8,7 @@
 
 > **GetScalarType**\<`T`, `O`\> = `O` *extends* `object` ? `{ [P in keyof T]: P extends keyof O ? O[P] : never }` : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:341
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:336
 
 ## Type Parameters
 

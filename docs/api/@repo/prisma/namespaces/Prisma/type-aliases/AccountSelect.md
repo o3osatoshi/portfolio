@@ -8,7 +8,7 @@
 
 > **AccountSelect**\<`ExtArgs`\> = `runtime.Types.Extensions.GetSelect`\<\{ `access_token?`: `boolean`; `createdAt?`: `boolean`; `expires_at?`: `boolean`; `id_token?`: `boolean`; `provider?`: `boolean`; `providerAccountId?`: `boolean`; `refresh_token?`: `boolean`; `scope?`: `boolean`; `session_state?`: `boolean`; `token_type?`: `boolean`; `type?`: `boolean`; `updatedAt?`: `boolean`; `user?`: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>; `userId?`: `boolean`; \}, `ExtArgs`\[`"result"`\]\[`"account"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:732
+Defined in: packages/prisma/generated/prisma/models/Account.ts:733
 
 ## Type Parameters
 

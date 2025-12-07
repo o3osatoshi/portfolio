@@ -8,7 +8,7 @@
 
 > **SessionDefaultArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1326
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1327
 
 Session without action
 
@@ -24,7 +24,7 @@ Session without action
 
 > `optional` **include**: [`SessionInclude`](SessionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1338
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1339
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1334
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1335
 
 Omit specific fields from the Session
 
@@ -44,6 +44,6 @@ Omit specific fields from the Session
 
 > `optional` **select**: [`SessionSelect`](SessionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1330
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1331
 
 Select specific fields to fetch from the Session

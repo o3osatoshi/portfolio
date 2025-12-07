@@ -8,7 +8,7 @@
 
 > **GetAuthenticatorAggregateType**\<`T`\> = \{ \[P in keyof T & keyof AggregateAuthenticator\]: P extends "\_count" \| "count" ? T\[P\] extends true ? number : GetScalarType\<T\[P\], AggregateAuthenticator\[P\]\> : GetScalarType\<T\[P\], AggregateAuthenticator\[P\]\> \}
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:174
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:175
 
 ## Type Parameters
 

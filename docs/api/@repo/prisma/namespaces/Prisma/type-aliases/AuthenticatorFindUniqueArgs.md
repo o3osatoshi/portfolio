@@ -8,7 +8,7 @@
 
 > **AuthenticatorFindUniqueArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1102
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1103
 
 Authenticator findUnique
 
@@ -24,7 +24,7 @@ Authenticator findUnique
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1114
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1115
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1110
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1111
 
 Omit specific fields from the Authenticator
 
@@ -44,7 +44,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1106
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1107
 
 Select specific fields to fetch from the Authenticator
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Authenticator
 
 > **where**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1118
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1119
 
 Filter, which Authenticator to fetch.

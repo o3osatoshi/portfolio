@@ -8,7 +8,7 @@
 
 > **$VerificationTokenPayload**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:297
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:298
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:297
 
 > **composites**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:305
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:306
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:305
 
 > **name**: `"VerificationToken"`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:298
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:299
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:298
 
 > **objects**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:299
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:300
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:299
 
 > **scalars**: `runtime.Types.Extensions.GetPayloadResult`\<\{ `expires`: `Date`; `identifier`: `string`; `token`: `string`; \}, `ExtArgs`\[`"result"`\]\[`"verificationToken"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:300
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:301

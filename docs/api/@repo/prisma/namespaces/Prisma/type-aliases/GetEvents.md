@@ -8,7 +8,7 @@
 
 > **GetEvents**\<`T`\> = `T` *extends* ([`LogLevel`](LogLevel.md) \| [`LogDefinition`](LogDefinition.md))[] ? [`GetLogType`](GetLogType.md)\<`T`\[`number`\]\> : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1198
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1201
 
 ## Type Parameters
 

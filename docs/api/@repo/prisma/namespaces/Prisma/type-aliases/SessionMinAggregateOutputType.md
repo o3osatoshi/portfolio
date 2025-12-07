@@ -8,7 +8,7 @@
 
 > **SessionMinAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:26
+Defined in: packages/prisma/generated/prisma/models/Session.ts:27
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:26
 
 > **createdAt**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:30
+Defined in: packages/prisma/generated/prisma/models/Session.ts:31
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:30
 
 > **expires**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:29
+Defined in: packages/prisma/generated/prisma/models/Session.ts:30
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:29
 
 > **sessionToken**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:27
+Defined in: packages/prisma/generated/prisma/models/Session.ts:28
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:27
 
 > **updatedAt**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:31
+Defined in: packages/prisma/generated/prisma/models/Session.ts:32
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:31
 
 > **userId**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:28
+Defined in: packages/prisma/generated/prisma/models/Session.ts:29

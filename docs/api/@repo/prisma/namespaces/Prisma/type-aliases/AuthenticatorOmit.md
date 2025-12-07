@@ -8,7 +8,7 @@
 
 > **AuthenticatorOmit**\<`ExtArgs`\> = `runtime.Types.Extensions.GetOmit`\<`"credentialID"` \| `"userId"` \| `"providerAccountId"` \| `"credentialPublicKey"` \| `"counter"` \| `"credentialDeviceType"` \| `"credentialBackedUp"` \| `"transports"`, `ExtArgs`\[`"result"`\]\[`"authenticator"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:638
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:639
 
 ## Type Parameters
 

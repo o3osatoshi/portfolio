@@ -8,7 +8,7 @@
 
 > **AggregateAuthenticator** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:20
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:21
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:20
 
 > **\_avg**: [`AuthenticatorAvgAggregateOutputType`](AuthenticatorAvgAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:22
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:23
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:22
 
 > **\_count**: [`AuthenticatorCountAggregateOutputType`](AuthenticatorCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:21
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:22
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:21
 
 > **\_max**: [`AuthenticatorMaxAggregateOutputType`](AuthenticatorMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:25
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:26
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:25
 
 > **\_min**: [`AuthenticatorMinAggregateOutputType`](AuthenticatorMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:24
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:25
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:24
 
 > **\_sum**: [`AuthenticatorSumAggregateOutputType`](AuthenticatorSumAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:23
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:24

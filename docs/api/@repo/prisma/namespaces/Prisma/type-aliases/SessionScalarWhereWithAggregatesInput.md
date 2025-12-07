@@ -8,7 +8,7 @@
 
 > **SessionScalarWhereWithAggregatesInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:219
+Defined in: packages/prisma/generated/prisma/models/Session.ts:220
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:219
 
 > `optional` **AND**: `Prisma.SessionScalarWhereWithAggregatesInput` \| `Prisma.SessionScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:220
+Defined in: packages/prisma/generated/prisma/models/Session.ts:221
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:220
 
 > `optional` **createdAt**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"Session"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:226
+Defined in: packages/prisma/generated/prisma/models/Session.ts:227
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:226
 
 > `optional` **expires**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"Session"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:225
+Defined in: packages/prisma/generated/prisma/models/Session.ts:226
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:225
 
 > `optional` **NOT**: `Prisma.SessionScalarWhereWithAggregatesInput` \| `Prisma.SessionScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:222
+Defined in: packages/prisma/generated/prisma/models/Session.ts:223
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:222
 
 > `optional` **OR**: `Prisma.SessionScalarWhereWithAggregatesInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:221
+Defined in: packages/prisma/generated/prisma/models/Session.ts:222
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:221
 
 > `optional` **sessionToken**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Session"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:223
+Defined in: packages/prisma/generated/prisma/models/Session.ts:224
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:223
 
 > `optional` **updatedAt**: [`DateTimeWithAggregatesFilter`](DateTimeWithAggregatesFilter.md)\<`"Session"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:227
+Defined in: packages/prisma/generated/prisma/models/Session.ts:228
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:227
 
 > `optional` **userId**: [`StringWithAggregatesFilter`](StringWithAggregatesFilter.md)\<`"Session"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:224
+Defined in: packages/prisma/generated/prisma/models/Session.ts:225

@@ -8,7 +8,7 @@
 
 > **SessionCreateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1163
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1164
 
 Session createManyAndReturn
 
@@ -24,7 +24,7 @@ Session createManyAndReturn
 
 > **data**: [`SessionCreateManyInput`](SessionCreateManyInput.md) \| [`SessionCreateManyInput`](SessionCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1175
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1176
 
 The data used to create many Sessions.
 
@@ -34,7 +34,7 @@ The data used to create many Sessions.
 
 > `optional` **include**: [`SessionIncludeCreateManyAndReturn`](SessionIncludeCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1180
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1181
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1171
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1172
 
 Omit specific fields from the Session
 
@@ -54,7 +54,7 @@ Omit specific fields from the Session
 
 > `optional` **select**: [`SessionSelectCreateManyAndReturn`](SessionSelectCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1167
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1168
 
 Select specific fields to fetch from the Session
 
@@ -64,4 +64,4 @@ Select specific fields to fetch from the Session
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1176
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1177

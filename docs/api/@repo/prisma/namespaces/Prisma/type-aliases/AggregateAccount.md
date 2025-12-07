@@ -8,7 +8,7 @@
 
 > **AggregateAccount** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:20
+Defined in: packages/prisma/generated/prisma/models/Account.ts:21
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:20
 
 > **\_avg**: [`AccountAvgAggregateOutputType`](AccountAvgAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:22
+Defined in: packages/prisma/generated/prisma/models/Account.ts:23
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:22
 
 > **\_count**: [`AccountCountAggregateOutputType`](AccountCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:21
+Defined in: packages/prisma/generated/prisma/models/Account.ts:22
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:21
 
 > **\_max**: [`AccountMaxAggregateOutputType`](AccountMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:25
+Defined in: packages/prisma/generated/prisma/models/Account.ts:26
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:25
 
 > **\_min**: [`AccountMinAggregateOutputType`](AccountMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:24
+Defined in: packages/prisma/generated/prisma/models/Account.ts:25
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:24
 
 > **\_sum**: [`AccountSumAggregateOutputType`](AccountSumAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:23
+Defined in: packages/prisma/generated/prisma/models/Account.ts:24

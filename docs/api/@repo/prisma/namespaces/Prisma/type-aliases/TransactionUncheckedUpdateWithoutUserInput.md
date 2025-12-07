@@ -8,7 +8,7 @@
 
 > **TransactionUncheckedUpdateWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:705
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:706
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:705
 
 > `optional` **amount**: [`DecimalFieldUpdateOperationsInput`](DecimalFieldUpdateOperationsInput.md) \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:709
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:710
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:709
 
 > `optional` **createdAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:715
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:716
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:715
 
 > `optional` **currency**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:711
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:712
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:711
 
 > `optional` **datetime**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:708
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:709
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:708
 
 > `optional` **fee**: [`NullableDecimalFieldUpdateOperationsInput`](NullableDecimalFieldUpdateOperationsInput.md) \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:713
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:714
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:713
 
 > `optional` **feeCurrency**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:714
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:715
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:714
 
 > `optional` **id**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:706
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:707
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:706
 
 > `optional` **price**: [`DecimalFieldUpdateOperationsInput`](DecimalFieldUpdateOperationsInput.md) \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:710
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:711
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:710
 
 > `optional` **profitLoss**: [`NullableDecimalFieldUpdateOperationsInput`](NullableDecimalFieldUpdateOperationsInput.md) \| `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:712
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:713
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:712
 
 > `optional` **type**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:707
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:708
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:707
 
 > `optional` **updatedAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:716
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:717

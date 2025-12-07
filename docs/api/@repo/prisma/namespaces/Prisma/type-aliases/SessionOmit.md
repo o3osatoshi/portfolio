@@ -8,7 +8,7 @@
 
 > **SessionOmit**\<`ExtArgs`\> = `runtime.Types.Extensions.GetOmit`\<`"sessionToken"` \| `"userId"` \| `"expires"` \| `"createdAt"` \| `"updatedAt"`, `ExtArgs`\[`"result"`\]\[`"session"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:477
+Defined in: packages/prisma/generated/prisma/models/Session.ts:478
 
 ## Type Parameters
 

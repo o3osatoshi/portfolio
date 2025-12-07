@@ -8,7 +8,7 @@
 
 > **AuthenticatorUpdateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1353
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1354
 
 Authenticator update
 
@@ -24,7 +24,7 @@ Authenticator update
 
 > **data**: [`XOR`](XOR.md)\<[`AuthenticatorUpdateInput`](AuthenticatorUpdateInput.md), [`AuthenticatorUncheckedUpdateInput`](AuthenticatorUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1369
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1370
 
 The data needed to update a Authenticator.
 
@@ -34,7 +34,7 @@ The data needed to update a Authenticator.
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1365
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1366
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1361
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1362
 
 Omit specific fields from the Authenticator
 
@@ -54,7 +54,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1357
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1358
 
 Select specific fields to fetch from the Authenticator
 
@@ -64,6 +64,6 @@ Select specific fields to fetch from the Authenticator
 
 > **where**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1373
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1374
 
 Choose, which Authenticator to update.

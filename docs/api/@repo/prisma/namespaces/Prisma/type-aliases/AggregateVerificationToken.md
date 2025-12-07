@@ -8,7 +8,7 @@
 
 > **AggregateVerificationToken** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:20
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:21
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:20
 
 > **\_count**: [`VerificationTokenCountAggregateOutputType`](VerificationTokenCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:21
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:22
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:21
 
 > **\_max**: [`VerificationTokenMaxAggregateOutputType`](VerificationTokenMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:23
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:24
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:23
 
 > **\_min**: [`VerificationTokenMinAggregateOutputType`](VerificationTokenMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:22
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:23

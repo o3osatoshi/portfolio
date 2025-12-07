@@ -8,4 +8,4 @@
 
 > `const` **PrismaClientRustPanicError**: *typeof* `PrismaClientRustPanicError` = `runtime.PrismaClientRustPanicError`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:37
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:38

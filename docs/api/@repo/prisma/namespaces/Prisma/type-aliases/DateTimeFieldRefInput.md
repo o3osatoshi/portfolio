@@ -8,7 +8,7 @@
 
 > **DateTimeFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1031
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1026
 
 Reference to a field of type 'DateTime'
 

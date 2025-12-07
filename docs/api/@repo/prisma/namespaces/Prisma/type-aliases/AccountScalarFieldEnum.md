@@ -8,4 +8,4 @@
 
 > **AccountScalarFieldEnum** = *typeof* [`AccountScalarFieldEnum`](../variables/AccountScalarFieldEnum.md)\[keyof *typeof* [`AccountScalarFieldEnum`](../variables/AccountScalarFieldEnum.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:931
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:926

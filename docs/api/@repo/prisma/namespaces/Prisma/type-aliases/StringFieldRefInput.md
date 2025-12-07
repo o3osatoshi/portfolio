@@ -8,7 +8,7 @@
 
 > **StringFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1017
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1012
 
 Reference to a field of type 'String'
 

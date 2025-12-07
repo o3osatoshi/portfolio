@@ -8,7 +8,7 @@
 
 > **VerificationTokenDeleteManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1070
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1071
 
 VerificationToken deleteMany
 
@@ -24,7 +24,7 @@ VerificationToken deleteMany
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1078
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1079
 
 Limit how many VerificationTokens to delete.
 
@@ -34,6 +34,6 @@ Limit how many VerificationTokens to delete.
 
 > `optional` **where**: [`VerificationTokenWhereInput`](VerificationTokenWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1074
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1075
 
 Filter which VerificationTokens to delete

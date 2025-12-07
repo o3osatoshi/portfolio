@@ -8,7 +8,7 @@
 
 > **TransactionUpdateManyWithWhereWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:654
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:655
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:654
 
 > **data**: [`XOR`](XOR.md)\<[`TransactionUpdateManyMutationInput`](TransactionUpdateManyMutationInput.md), [`TransactionUncheckedUpdateManyWithoutUserInput`](TransactionUncheckedUpdateManyWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:656
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:657
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:656
 
 > **where**: [`TransactionScalarWhereInput`](TransactionScalarWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:655
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:656

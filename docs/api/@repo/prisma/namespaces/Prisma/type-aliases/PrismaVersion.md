@@ -8,7 +8,7 @@
 
 > **PrismaVersion** = `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:84
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:77
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:84
 
 > **client**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:85
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:78
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:85
 
 > **engine**: `string`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:86
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:79

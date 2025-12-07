@@ -8,7 +8,7 @@
 
 > **VerificationTokenCreateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:912
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:913
 
 VerificationToken create
 
@@ -24,7 +24,7 @@ VerificationToken create
 
 > **data**: [`XOR`](XOR.md)\<[`VerificationTokenCreateInput`](VerificationTokenCreateInput.md), [`VerificationTokenUncheckedCreateInput`](VerificationTokenUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:924
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:925
 
 The data needed to create a VerificationToken.
 
@@ -34,7 +34,7 @@ The data needed to create a VerificationToken.
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:920
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:921
 
 Omit specific fields from the VerificationToken
 
@@ -44,6 +44,6 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:916
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:917
 
 Select specific fields to fetch from the VerificationToken

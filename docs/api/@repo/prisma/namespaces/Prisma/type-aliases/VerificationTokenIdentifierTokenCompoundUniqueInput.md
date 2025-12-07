@@ -8,7 +8,7 @@
 
 > **VerificationTokenIdentifierTokenCompoundUniqueInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:246
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:247
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:246
 
 > **identifier**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:247
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:248
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:247
 
 > **token**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:248
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:249

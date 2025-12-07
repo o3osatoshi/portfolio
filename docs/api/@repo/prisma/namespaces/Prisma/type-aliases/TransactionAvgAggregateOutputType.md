@@ -8,7 +8,7 @@
 
 > **TransactionAvgAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:28
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:29
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:28
 
 > **amount**: `runtime.Decimal` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:29
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:30
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:29
 
 > **fee**: `runtime.Decimal` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:32
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:33
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:32
 
 > **price**: `runtime.Decimal` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:30
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:31
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:30
 
 > **profitLoss**: `runtime.Decimal` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:31
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:32

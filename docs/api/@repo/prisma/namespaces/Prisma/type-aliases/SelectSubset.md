@@ -8,7 +8,7 @@
 
 > **SelectSubset**\<`T`, `U`\> = `{ [key in keyof T]: key extends keyof U ? T[key] : never }` & `T` *extends* `SelectAndInclude` ? `` "Please either choose `select` or `include`." `` : `T` *extends* `SelectAndOmit` ? `` "Please either choose `select` or `omit`." `` : `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:168
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:163
 
 SelectSubset
 

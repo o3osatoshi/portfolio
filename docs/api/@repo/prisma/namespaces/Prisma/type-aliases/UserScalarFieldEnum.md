@@ -8,4 +8,4 @@
 
 > **UserScalarFieldEnum** = *typeof* [`UserScalarFieldEnum`](../variables/UserScalarFieldEnum.md)\[keyof *typeof* [`UserScalarFieldEnum`](../variables/UserScalarFieldEnum.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:918
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:913

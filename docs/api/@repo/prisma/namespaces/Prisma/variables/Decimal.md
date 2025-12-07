@@ -8,6 +8,6 @@
 
 > `const` **Decimal**: *typeof* `Decimal` = `runtime.Decimal`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:61
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:62
 
 Decimal.js

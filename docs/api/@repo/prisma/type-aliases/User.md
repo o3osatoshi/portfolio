@@ -8,6 +8,6 @@
 
 > **User** = [`UserModel`](../namespaces/Prisma/type-aliases/UserModel.md)
 
-Defined in: packages/prisma/generated/prisma/client.ts:52
+Defined in: packages/prisma/generated/prisma/client.ts:51
 
 Model User

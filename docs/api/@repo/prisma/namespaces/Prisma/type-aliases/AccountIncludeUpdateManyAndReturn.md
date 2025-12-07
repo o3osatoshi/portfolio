@@ -8,7 +8,7 @@
 
 > **AccountIncludeUpdateManyAndReturn**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:806
+Defined in: packages/prisma/generated/prisma/models/Account.ts:807
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:806
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:807
+Defined in: packages/prisma/generated/prisma/models/Account.ts:808

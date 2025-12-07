@@ -8,13 +8,13 @@
 
 > `const` **NullTypes**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:111
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:104
 
 ## Type Declaration
 
 ### AnyNull()
 
-> **AnyNull**: (`secret`) => `AnyNull`
+> **AnyNull**: (`secret`) => `AnyNullClass`
 
 #### Parameters
 
@@ -24,11 +24,11 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:111
 
 #### Returns
 
-`AnyNull`
+`AnyNullClass`
 
 ### DbNull()
 
-> **DbNull**: (`secret`) => `DbNull`
+> **DbNull**: (`secret`) => `DbNullClass`
 
 #### Parameters
 
@@ -38,11 +38,11 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:111
 
 #### Returns
 
-`DbNull`
+`DbNullClass`
 
 ### JsonNull()
 
-> **JsonNull**: (`secret`) => `JsonNull`
+> **JsonNull**: (`secret`) => `JsonNullClass`
 
 #### Parameters
 
@@ -52,4 +52,4 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:111
 
 #### Returns
 
-`JsonNull`
+`JsonNullClass`

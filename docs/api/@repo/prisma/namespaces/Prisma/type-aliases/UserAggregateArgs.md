@@ -8,7 +8,7 @@
 
 > **UserAggregateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:89
+Defined in: packages/prisma/generated/prisma/models/User.ts:90
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:89
 
 > `optional` **\_count**: `true` \| [`UserCountAggregateInputType`](UserCountAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:123
+Defined in: packages/prisma/generated/prisma/models/User.ts:124
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -34,7 +34,7 @@ Count returned Users
 
 > `optional` **\_max**: [`UserMaxAggregateInputType`](UserMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:135
+Defined in: packages/prisma/generated/prisma/models/User.ts:136
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -46,7 +46,7 @@ Select which fields to find the maximum value
 
 > `optional` **\_min**: [`UserMinAggregateInputType`](UserMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:129
+Defined in: packages/prisma/generated/prisma/models/User.ts:130
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -58,7 +58,7 @@ Select which fields to find the minimum value
 
 > `optional` **cursor**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:105
+Defined in: packages/prisma/generated/prisma/models/User.ts:106
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -70,7 +70,7 @@ Sets the start position
 
 > `optional` **orderBy**: [`UserOrderByWithRelationInput`](UserOrderByWithRelationInput.md) \| [`UserOrderByWithRelationInput`](UserOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:99
+Defined in: packages/prisma/generated/prisma/models/User.ts:100
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -82,7 +82,7 @@ Determine the order of Users to fetch.
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:117
+Defined in: packages/prisma/generated/prisma/models/User.ts:118
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -94,7 +94,7 @@ Skip the first `n` Users.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:111
+Defined in: packages/prisma/generated/prisma/models/User.ts:112
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -106,6 +106,6 @@ Take `±n` Users from the position of the cursor.
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:93
+Defined in: packages/prisma/generated/prisma/models/User.ts:94
 
 Filter which User to aggregate.

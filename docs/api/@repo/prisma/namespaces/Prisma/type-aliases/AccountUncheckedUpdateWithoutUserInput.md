@@ -8,7 +8,7 @@
 
 > **AccountUncheckedUpdateWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:700
+Defined in: packages/prisma/generated/prisma/models/Account.ts:701
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:700
 
 > `optional` **access\_token**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:705
+Defined in: packages/prisma/generated/prisma/models/Account.ts:706
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:705
 
 > `optional` **createdAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:711
+Defined in: packages/prisma/generated/prisma/models/Account.ts:712
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:711
 
 > `optional` **expires\_at**: [`NullableIntFieldUpdateOperationsInput`](NullableIntFieldUpdateOperationsInput.md) \| `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:706
+Defined in: packages/prisma/generated/prisma/models/Account.ts:707
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:706
 
 > `optional` **id\_token**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:709
+Defined in: packages/prisma/generated/prisma/models/Account.ts:710
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:709
 
 > `optional` **provider**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:702
+Defined in: packages/prisma/generated/prisma/models/Account.ts:703
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:702
 
 > `optional` **providerAccountId**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:703
+Defined in: packages/prisma/generated/prisma/models/Account.ts:704
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:703
 
 > `optional` **refresh\_token**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:704
+Defined in: packages/prisma/generated/prisma/models/Account.ts:705
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:704
 
 > `optional` **scope**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:708
+Defined in: packages/prisma/generated/prisma/models/Account.ts:709
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:708
 
 > `optional` **session\_state**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:710
+Defined in: packages/prisma/generated/prisma/models/Account.ts:711
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:710
 
 > `optional` **token\_type**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:707
+Defined in: packages/prisma/generated/prisma/models/Account.ts:708
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:707
 
 > `optional` **type**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:701
+Defined in: packages/prisma/generated/prisma/models/Account.ts:702
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:701
 
 > `optional` **updatedAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:712
+Defined in: packages/prisma/generated/prisma/models/Account.ts:713

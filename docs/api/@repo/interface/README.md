@@ -172,6 +172,11 @@ export const app = buildApp(deps);
 
 This keeps transport concerns and domain/application logic decoupled while enabling different delivery targets to share the same API surface.
 
+## Quality
+
+- Tests: `pnpm -C packages/interface test` / `pnpm -C packages/interface test:cvrg`
+- Coverage: [![Coverage: @repo/interface](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=interface)](https://app.codecov.io/github/o3osatoshi/portfolio?component=interface)
+
 ## Type Aliases
 
 - [AppType](type-aliases/AppType.md)

@@ -8,6 +8,6 @@
 
 > **Account** = [`AccountModel`](../namespaces/Prisma/type-aliases/AccountModel.md)
 
-Defined in: packages/prisma/generated/prisma/client.ts:57
+Defined in: packages/prisma/generated/prisma/client.ts:56
 
 Model Account

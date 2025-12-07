@@ -8,7 +8,7 @@
 
 > **AccountCreateNestedManyWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:545
+Defined in: packages/prisma/generated/prisma/models/Account.ts:546
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:545
 
 > `optional` **connect**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md) \| [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:549
+Defined in: packages/prisma/generated/prisma/models/Account.ts:550
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:549
 
 > `optional` **connectOrCreate**: [`AccountCreateOrConnectWithoutUserInput`](AccountCreateOrConnectWithoutUserInput.md) \| [`AccountCreateOrConnectWithoutUserInput`](AccountCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:547
+Defined in: packages/prisma/generated/prisma/models/Account.ts:548
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:547
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`AccountCreateWithoutUserInput`](AccountCreateWithoutUserInput.md), [`AccountUncheckedCreateWithoutUserInput`](AccountUncheckedCreateWithoutUserInput.md)\> \| [`AccountCreateWithoutUserInput`](AccountCreateWithoutUserInput.md)[] \| [`AccountUncheckedCreateWithoutUserInput`](AccountUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:546
+Defined in: packages/prisma/generated/prisma/models/Account.ts:547
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:546
 
 > `optional` **createMany**: [`AccountCreateManyUserInputEnvelope`](AccountCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:548
+Defined in: packages/prisma/generated/prisma/models/Account.ts:549

@@ -8,7 +8,7 @@
 
 > **TransactionListRelationFilter** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:525
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:526
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:525
 
 > `optional` **every**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:526
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:527
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:526
 
 > `optional` **none**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:528
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:529
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:528
 
 > `optional` **some**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:527
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:528

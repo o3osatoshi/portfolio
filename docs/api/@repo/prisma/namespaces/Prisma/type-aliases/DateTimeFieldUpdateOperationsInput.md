@@ -8,7 +8,7 @@
 
 > **DateTimeFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:539
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:540
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:539
 
 > `optional` **set**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:540
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:541

@@ -8,7 +8,7 @@
 
 > **AccountCreateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1468
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1469
 
 Account create
 
@@ -24,7 +24,7 @@ Account create
 
 > **data**: [`XOR`](XOR.md)\<[`AccountCreateInput`](AccountCreateInput.md), [`AccountUncheckedCreateInput`](AccountUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1484
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1485
 
 The data needed to create a Account.
 
@@ -34,7 +34,7 @@ The data needed to create a Account.
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1480
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1481
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1476
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1477
 
 Omit specific fields from the Account
 
@@ -54,6 +54,6 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1472
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1473
 
 Select specific fields to fetch from the Account

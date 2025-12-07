@@ -8,7 +8,7 @@
 
 > **UserCountOutputTypeCountAuthenticatorArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:762
+Defined in: packages/prisma/generated/prisma/models/User.ts:763
 
 UserCountOutputType without action
 
@@ -24,4 +24,4 @@ UserCountOutputType without action
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:763
+Defined in: packages/prisma/generated/prisma/models/User.ts:764

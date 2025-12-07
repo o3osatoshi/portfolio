@@ -8,7 +8,7 @@
 
 > **parseErrorMessage**(`message`): [`ErrorMessageParts`](../type-aliases/ErrorMessageParts.md)
 
-Defined in: [error/error-format.ts:115](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L115)
+Defined in: [error/error-format.ts:115](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L115)
 
 Parse the JSON payload created by [composeErrorMessage](composeErrorMessage.md).
 
@@ -16,7 +16,7 @@ Parse the JSON payload created by [composeErrorMessage](composeErrorMessage.md).
 
 ### message
 
-`undefined` | `string`
+`string` | `undefined`
 
 ## Returns
 

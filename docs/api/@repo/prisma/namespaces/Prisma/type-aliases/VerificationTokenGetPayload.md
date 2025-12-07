@@ -8,7 +8,7 @@
 
 > **VerificationTokenGetPayload**\<`S`\> = `runtime.Types.Result.GetResult`\<[`$VerificationTokenPayload`]($VerificationTokenPayload.md), `S`\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:308
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:309
 
 ## Type Parameters
 

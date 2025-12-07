@@ -8,7 +8,7 @@
 
 > **TransactionCreateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1487
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1488
 
 Transaction createMany
 
@@ -24,7 +24,7 @@ Transaction createMany
 
 > **data**: [`TransactionCreateManyInput`](TransactionCreateManyInput.md) \| [`TransactionCreateManyInput`](TransactionCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1491
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1492
 
 The data used to create many Transactions.
 
@@ -34,4 +34,4 @@ The data used to create many Transactions.
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1492
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1493

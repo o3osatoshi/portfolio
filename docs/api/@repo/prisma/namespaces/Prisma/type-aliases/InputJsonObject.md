@@ -8,4 +8,4 @@
 
 > **InputJsonObject** = `runtime.InputJsonObject`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:106
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:99

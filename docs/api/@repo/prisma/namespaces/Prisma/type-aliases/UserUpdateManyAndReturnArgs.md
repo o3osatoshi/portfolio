@@ -8,7 +8,7 @@
 
 > **UserUpdateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1578
+Defined in: packages/prisma/generated/prisma/models/User.ts:1579
 
 User updateManyAndReturn
 
@@ -24,7 +24,7 @@ User updateManyAndReturn
 
 > **data**: [`XOR`](XOR.md)\<[`UserUpdateManyMutationInput`](UserUpdateManyMutationInput.md), [`UserUncheckedUpdateManyInput`](UserUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1590
+Defined in: packages/prisma/generated/prisma/models/User.ts:1591
 
 The data used to update Users.
 
@@ -34,7 +34,7 @@ The data used to update Users.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1598
+Defined in: packages/prisma/generated/prisma/models/User.ts:1599
 
 Limit how many Users to update.
 
@@ -44,7 +44,7 @@ Limit how many Users to update.
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1586
+Defined in: packages/prisma/generated/prisma/models/User.ts:1587
 
 Omit specific fields from the User
 
@@ -54,7 +54,7 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelectUpdateManyAndReturn`](UserSelectUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1582
+Defined in: packages/prisma/generated/prisma/models/User.ts:1583
 
 Select specific fields to fetch from the User
 
@@ -64,6 +64,6 @@ Select specific fields to fetch from the User
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1594
+Defined in: packages/prisma/generated/prisma/models/User.ts:1595
 
 Filter which Users to update

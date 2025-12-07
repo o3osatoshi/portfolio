@@ -8,7 +8,7 @@
 
 > **StringNullableFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:64
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:65
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:64
 
 > `optional` **contains**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:72
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:73
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:72
 
 > `optional` **endsWith**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:74
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:75
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:74
 
 > `optional` **equals**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:65
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:66
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:65
 
 > `optional` **gt**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:70
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:71
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:70
 
 > `optional` **gte**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:71
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:72
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:71
 
 > `optional` **in**: `string`[] \| [`ListStringFieldRefInput`](ListStringFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:66
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:67
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:66
 
 > `optional` **lt**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:68
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:69
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:68
 
 > `optional` **lte**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:69
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:70
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:69
 
 > `optional` **mode**: [`QueryMode`](QueryMode.md)
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:75
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:76
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:75
 
 > `optional` **not**: [`NestedStringNullableFilter`](NestedStringNullableFilter.md)\<`$PrismaModel`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:76
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:77
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:76
 
 > `optional` **notIn**: `string`[] \| [`ListStringFieldRefInput`](ListStringFieldRefInput.md)\<`$PrismaModel`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:67
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:68
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:67
 
 > `optional` **startsWith**: `string` \| [`StringFieldRefInput`](StringFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:73
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:74

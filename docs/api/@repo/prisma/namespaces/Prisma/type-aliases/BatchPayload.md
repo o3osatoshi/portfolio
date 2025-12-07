@@ -8,7 +8,7 @@
 
 > **BatchPayload** = `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1093
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1088
 
 Batch Payload for updateMany & deleteMany & createMany
 
@@ -18,4 +18,4 @@ Batch Payload for updateMany & deleteMany & createMany
 
 > **count**: `number`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1094
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1089

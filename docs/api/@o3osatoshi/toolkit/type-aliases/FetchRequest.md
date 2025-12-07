@@ -8,7 +8,7 @@
 
 > **FetchRequest** = `object`
 
-Defined in: [http/fetch-error.ts:13](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L13)
+Defined in: [http/fetch-error.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/http/fetch-error.ts#L13)
 
 Minimal request metadata used to contextualize fetch failures.
 
@@ -18,7 +18,7 @@ Minimal request metadata used to contextualize fetch failures.
 
 > `optional` **method**: `string`
 
-Defined in: [http/fetch-error.ts:14](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L14)
+Defined in: [http/fetch-error.ts:14](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/http/fetch-error.ts#L14)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [http/fetch-error.ts:14](https://github.com/o3osatoshi/experiment/bl
 
 > `optional` **url**: `string`
 
-Defined in: [http/fetch-error.ts:15](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/http/fetch-error.ts#L15)
+Defined in: [http/fetch-error.ts:15](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/http/fetch-error.ts#L15)

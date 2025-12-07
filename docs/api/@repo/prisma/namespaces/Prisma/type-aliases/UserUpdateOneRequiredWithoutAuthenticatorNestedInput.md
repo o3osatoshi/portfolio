@@ -8,7 +8,7 @@
 
 > **UserUpdateOneRequiredWithoutAuthenticatorNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:436
+Defined in: packages/prisma/generated/prisma/models/User.ts:437
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:436
 
 > `optional` **connect**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:440
+Defined in: packages/prisma/generated/prisma/models/User.ts:441
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:440
 
 > `optional` **connectOrCreate**: [`UserCreateOrConnectWithoutAuthenticatorInput`](UserCreateOrConnectWithoutAuthenticatorInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:438
+Defined in: packages/prisma/generated/prisma/models/User.ts:439
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:438
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutAuthenticatorInput`](UserCreateWithoutAuthenticatorInput.md), [`UserUncheckedCreateWithoutAuthenticatorInput`](UserUncheckedCreateWithoutAuthenticatorInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:437
+Defined in: packages/prisma/generated/prisma/models/User.ts:438
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:437
 
 > `optional` **update**: [`XOR`](XOR.md)\<[`XOR`](XOR.md)\<[`UserUpdateToOneWithWhereWithoutAuthenticatorInput`](UserUpdateToOneWithWhereWithoutAuthenticatorInput.md), [`UserUpdateWithoutAuthenticatorInput`](UserUpdateWithoutAuthenticatorInput.md)\>, [`UserUncheckedUpdateWithoutAuthenticatorInput`](UserUncheckedUpdateWithoutAuthenticatorInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:441
+Defined in: packages/prisma/generated/prisma/models/User.ts:442
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:441
 
 > `optional` **upsert**: [`UserUpsertWithoutAuthenticatorInput`](UserUpsertWithoutAuthenticatorInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:439
+Defined in: packages/prisma/generated/prisma/models/User.ts:440

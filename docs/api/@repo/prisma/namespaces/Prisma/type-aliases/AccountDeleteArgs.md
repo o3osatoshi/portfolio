@@ -8,7 +8,7 @@
 
 > **AccountDeleteArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1628
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1629
 
 Account delete
 
@@ -24,7 +24,7 @@ Account delete
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1640
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1641
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1636
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1637
 
 Omit specific fields from the Account
 
@@ -44,7 +44,7 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1632
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1633
 
 Select specific fields to fetch from the Account
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Account
 
 > **where**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1644
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1645
 
 Filter which Account to delete.

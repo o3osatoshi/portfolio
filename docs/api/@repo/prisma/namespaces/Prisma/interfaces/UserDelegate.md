@@ -6,7 +6,7 @@
 
 # Interface: UserDelegate\<ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:857
+Defined in: packages/prisma/generated/prisma/models/User.ts:858
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:857
 
 > `readonly` **fields**: [`UserFieldRefs`](UserFieldRefs.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1229
+Defined in: packages/prisma/generated/prisma/models/User.ts:1230
 
 Fields of the User model
 
@@ -38,7 +38,7 @@ Fields of the User model
 
 > **aggregate**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`GetUserAggregateType`](../type-aliases/GetUserAggregateType.md)\<`T`\>\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1148
+Defined in: packages/prisma/generated/prisma/models/User.ts:1149
 
 Allows you to perform aggregations operations on a User.
 Note, that providing `undefined` is treated as the value not being there.
@@ -90,7 +90,7 @@ const aggregations = await prisma.user.aggregate({
 
 > **count**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`T` *extends* `Record_2`\<`"select"`, `any`\> ? `T`\<`T`\>\[`"select"`\] *extends* `true` ? `number` : \{ \[P in string \| number \| symbol\]: P extends keyof UserCountAggregateOutputType ? UserCountAggregateOutputType\[P\<P\>\] : never \} : `number`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1114
+Defined in: packages/prisma/generated/prisma/models/User.ts:1115
 
 Count the number of Users.
 Note, that providing `undefined` is treated as the value not being there.
@@ -131,7 +131,7 @@ const count = await prisma.user.count({
 
 > **create**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:947
+Defined in: packages/prisma/generated/prisma/models/User.ts:948
 
 Create a User.
 
@@ -170,7 +170,7 @@ const User = await prisma.user.create({
 
 > **createMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:961
+Defined in: packages/prisma/generated/prisma/models/User.ts:962
 
 Create many Users.
 
@@ -209,7 +209,7 @@ const user = await prisma.user.createMany({
 
 > **createManyAndReturn**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:985
+Defined in: packages/prisma/generated/prisma/models/User.ts:986
 
 Create many Users and returns the data saved in the database.
 
@@ -258,7 +258,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **delete**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:999
+Defined in: packages/prisma/generated/prisma/models/User.ts:1000
 
 Delete a User.
 
@@ -297,7 +297,7 @@ const User = await prisma.user.delete({
 
 > **deleteMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1030
+Defined in: packages/prisma/generated/prisma/models/User.ts:1031
 
 Delete zero or more Users.
 
@@ -334,9 +334,9 @@ const { count } = await prisma.user.deleteMany({
 
 ### findFirst()
 
-> **findFirst**\<`T`\>(`args?`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`null` \| `GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findFirst**\<`T`\>(`args?`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:899
+Defined in: packages/prisma/generated/prisma/models/User.ts:900
 
 Find the first User that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -358,7 +358,7 @@ Arguments to find a User
 
 #### Returns
 
-[`Prisma__UserClient`](Prisma__UserClient.md)\<`null` \| `GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -377,7 +377,7 @@ const user = await prisma.user.findFirst({
 
 > **findFirstOrThrow**\<`T`\>(`args?`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:915
+Defined in: packages/prisma/generated/prisma/models/User.ts:916
 
 Find the first User that matches the filter or
 throw `PrismaKnownClientError` with `P2025` code if no matches were found.
@@ -419,7 +419,7 @@ const user = await prisma.user.findFirstOrThrow({
 
 > **findMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:933
+Defined in: packages/prisma/generated/prisma/models/User.ts:934
 
 Find zero or more Users that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -460,9 +460,9 @@ const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
 
 ### findUnique()
 
-> **findUnique**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`null` \| `GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findUnique**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:870
+Defined in: packages/prisma/generated/prisma/models/User.ts:871
 
 Find zero or one User that matches the filter.
 
@@ -482,7 +482,7 @@ Arguments to find a User
 
 #### Returns
 
-[`Prisma__UserClient`](Prisma__UserClient.md)\<`null` \| `GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -501,7 +501,7 @@ const user = await prisma.user.findUnique({
 
 > **findUniqueOrThrow**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:884
+Defined in: packages/prisma/generated/prisma/models/User.ts:885
 
 Find one User that matches the filter or throw an error with `error.code='P2025'`
 if no matches were found.
@@ -541,7 +541,7 @@ const user = await prisma.user.findUniqueOrThrow({
 
 > **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetUserGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1168
+Defined in: packages/prisma/generated/prisma/models/User.ts:1169
 
 Group by User.
 Note, that providing `undefined` is treated as the value not being there.
@@ -559,11 +559,11 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderByArg
 
-`OrderByArg` *extends* \{ `orderBy`: `undefined` \| [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md) \| [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md)[]; \} \| \{ `orderBy?`: [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md) \| [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md)[]; \}
+`OrderByArg` *extends* \{ `orderBy`: [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md) \| [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md)[] \| `undefined`; \} \| \{ `orderBy?`: [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md) \| [`UserOrderByWithAggregationInput`](../type-aliases/UserOrderByWithAggregationInput.md)[]; \}
 
 ##### OrderFields
 
-`OrderFields` *extends* `"id"` \| `"name"` \| `"createdAt"` \| `"updatedAt"` \| `"email"` \| `"emailVerified"` \| `"image"`
+`OrderFields` *extends* `"createdAt"` \| `"updatedAt"` \| `"id"` \| `"name"` \| `"email"` \| `"emailVerified"` \| `"image"`
 
 ##### ByFields
 
@@ -622,7 +622,7 @@ const result = await prisma.user.groupBy({
 
 > **update**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1016
+Defined in: packages/prisma/generated/prisma/models/User.ts:1017
 
 Update one User.
 
@@ -664,7 +664,7 @@ const user = await prisma.user.update({
 
 > **updateMany**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1049
+Defined in: packages/prisma/generated/prisma/models/User.ts:1050
 
 Update zero or more Users.
 Note, that providing `undefined` is treated as the value not being there.
@@ -708,7 +708,7 @@ const user = await prisma.user.updateMany({
 
 > **updateManyAndReturn**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1079
+Defined in: packages/prisma/generated/prisma/models/User.ts:1080
 
 Update zero or more Users and returns the data updated in the database.
 
@@ -763,7 +763,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **upsert**\<`T`\>(`args`): [`Prisma__UserClient`](Prisma__UserClient.md)\<`GetFindResult`\<[`$UserPayload`](../type-aliases/$UserPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1098
+Defined in: packages/prisma/generated/prisma/models/User.ts:1099
 
 Create or update one User.
 

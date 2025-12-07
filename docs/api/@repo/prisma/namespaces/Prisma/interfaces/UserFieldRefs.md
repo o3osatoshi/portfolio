@@ -6,7 +6,7 @@
 
 # Interface: UserFieldRefs
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1272
+Defined in: packages/prisma/generated/prisma/models/User.ts:1273
 
 Fields of the User model
 
@@ -16,7 +16,7 @@ Fields of the User model
 
 > `readonly` **createdAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1278
+Defined in: packages/prisma/generated/prisma/models/User.ts:1279
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1278
 
 > `readonly` **email**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1275
+Defined in: packages/prisma/generated/prisma/models/User.ts:1276
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1275
 
 > `readonly` **emailVerified**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1276
+Defined in: packages/prisma/generated/prisma/models/User.ts:1277
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1276
 
 > `readonly` **id**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1273
+Defined in: packages/prisma/generated/prisma/models/User.ts:1274
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1273
 
 > `readonly` **image**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1277
+Defined in: packages/prisma/generated/prisma/models/User.ts:1278
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1277
 
 > `readonly` **name**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1274
+Defined in: packages/prisma/generated/prisma/models/User.ts:1275
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1274
 
 > `readonly` **updatedAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"User"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1279
+Defined in: packages/prisma/generated/prisma/models/User.ts:1280

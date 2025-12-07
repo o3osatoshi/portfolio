@@ -8,4 +8,4 @@
 
 > **NullsOrder** = *typeof* [`NullsOrder`](../variables/NullsOrder.md)\[keyof *typeof* [`NullsOrder`](../variables/NullsOrder.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1000
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:995

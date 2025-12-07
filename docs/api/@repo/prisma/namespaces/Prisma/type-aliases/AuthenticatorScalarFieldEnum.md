@@ -8,4 +8,4 @@
 
 > **AuthenticatorScalarFieldEnum** = *typeof* [`AuthenticatorScalarFieldEnum`](../variables/AuthenticatorScalarFieldEnum.md)\[keyof *typeof* [`AuthenticatorScalarFieldEnum`](../variables/AuthenticatorScalarFieldEnum.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:970
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:965

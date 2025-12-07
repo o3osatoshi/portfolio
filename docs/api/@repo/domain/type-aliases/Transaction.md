@@ -8,6 +8,6 @@
 
 > **Transaction** = [`Base`](../interfaces/Base.md) & [`TransactionCore`](../interfaces/TransactionCore.md)
 
-Defined in: [entities/transaction.ts:70](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/domain/src/entities/transaction.ts#L70)
+Defined in: [entities/transaction.ts:70](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/domain/src/entities/transaction.ts#L70)
 
 Fully validated transaction entity consisting of base metadata and core fields.

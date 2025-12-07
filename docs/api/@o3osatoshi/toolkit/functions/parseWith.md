@@ -8,7 +8,7 @@
 
 > **parseWith**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
 
-Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/zod/zod-parse.ts#L55)
+Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-parse.ts#L55)
 
 Creates a synchronous Result-returning parser from a Zod schema.
 
@@ -45,7 +45,7 @@ Context describing the logical action and optional layer override.
 
 ## Returns
 
-A function that yields a neverthrow `Result` containing the inferred schema output.
+A function that yields a neverthrow Result containing the inferred schema output.
 
 > (`input`): `Result`\<`output`\<`T`\>, `Error`\>
 

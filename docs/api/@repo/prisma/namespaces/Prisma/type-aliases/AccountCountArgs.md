@@ -8,7 +8,7 @@
 
 > **AccountCountArgs**\<`ExtArgs`\> = `Omit`\<[`AccountFindManyArgs`](AccountFindManyArgs.md), `"select"` \| `"include"` \| `"distinct"` \| `"omit"`\> & `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:835
+Defined in: packages/prisma/generated/prisma/models/Account.ts:836
 
 ## Type Declaration
 

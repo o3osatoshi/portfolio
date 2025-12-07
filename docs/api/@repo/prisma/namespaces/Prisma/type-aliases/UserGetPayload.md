@@ -8,7 +8,7 @@
 
 > **UserGetPayload**\<`S`\> = `runtime.Types.Result.GetResult`\<[`$UserPayload`]($UserPayload.md), `S`\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:850
+Defined in: packages/prisma/generated/prisma/models/User.ts:851
 
 ## Type Parameters
 

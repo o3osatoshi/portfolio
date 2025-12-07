@@ -8,7 +8,7 @@
 
 > **AuthenticatorUpdateWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:525
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:526
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:525
 
 > **data**: [`XOR`](XOR.md)\<[`AuthenticatorUpdateWithoutUserInput`](AuthenticatorUpdateWithoutUserInput.md), [`AuthenticatorUncheckedUpdateWithoutUserInput`](AuthenticatorUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:527
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:528
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:527
 
 > **where**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:526
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:527

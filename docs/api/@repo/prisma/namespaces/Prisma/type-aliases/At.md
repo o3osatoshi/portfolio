@@ -8,7 +8,7 @@
 
 > **At**\<`O`, `K`, `strict`\> = `object`\[`strict`\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:273
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:268
 
 ## Type Parameters
 

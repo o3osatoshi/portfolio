@@ -8,4 +8,4 @@
 
 > **DecimalJsLike** = `runtime.DecimalJsLike`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:64
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:65

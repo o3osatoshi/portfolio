@@ -8,7 +8,7 @@
 
 > **AuthenticatorWhereInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:230
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:231
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:230
 
 > `optional` **AND**: `Prisma.AuthenticatorWhereInput` \| `Prisma.AuthenticatorWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:231
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:232
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:231
 
 > `optional` **counter**: [`IntFilter`](IntFilter.md)\<`"Authenticator"`\> \| `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:238
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:239
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:238
 
 > `optional` **credentialBackedUp**: [`BoolFilter`](BoolFilter.md)\<`"Authenticator"`\> \| `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:240
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:241
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:240
 
 > `optional` **credentialDeviceType**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:239
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:240
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:239
 
 > `optional` **credentialID**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:234
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:235
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:234
 
 > `optional` **credentialPublicKey**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:237
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:238
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:237
 
 > `optional` **NOT**: `Prisma.AuthenticatorWhereInput` \| `Prisma.AuthenticatorWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:233
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:234
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:233
 
 > `optional` **OR**: `Prisma.AuthenticatorWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:232
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:233
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:232
 
 > `optional` **providerAccountId**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:236
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:237
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:236
 
 > `optional` **transports**: [`StringNullableFilter`](StringNullableFilter.md)\<`"Authenticator"`\> \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:241
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:242
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:241
 
 > `optional` **user**: [`XOR`](XOR.md)\<[`UserScalarRelationFilter`](UserScalarRelationFilter.md), [`UserWhereInput`](UserWhereInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:242
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:243
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:242
 
 > `optional` **userId**: [`StringFilter`](StringFilter.md)\<`"Authenticator"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:235
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:236

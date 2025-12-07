@@ -8,7 +8,7 @@
 
 > **ListDecimalFieldRefInput**\<`$PrismaModel`\> = `FieldRefInputType`\<`$PrismaModel`, `"Decimal[]"`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1052
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1047
 
 Reference to a field of type 'Decimal[]'
 

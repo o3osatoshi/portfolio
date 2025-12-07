@@ -8,7 +8,7 @@
 
 > **AuthenticatorAggregateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:113
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:114
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:113
 
 > `optional` **\_avg**: [`AuthenticatorAvgAggregateInputType`](AuthenticatorAvgAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:153
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:154
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -34,7 +34,7 @@ Select which fields to average
 
 > `optional` **\_count**: `true` \| [`AuthenticatorCountAggregateInputType`](AuthenticatorCountAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:147
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:148
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -46,7 +46,7 @@ Count returned Authenticators
 
 > `optional` **\_max**: [`AuthenticatorMaxAggregateInputType`](AuthenticatorMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:171
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:172
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -58,7 +58,7 @@ Select which fields to find the maximum value
 
 > `optional` **\_min**: [`AuthenticatorMinAggregateInputType`](AuthenticatorMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:165
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:166
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -70,7 +70,7 @@ Select which fields to find the minimum value
 
 > `optional` **\_sum**: [`AuthenticatorSumAggregateInputType`](AuthenticatorSumAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:159
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:160
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -82,7 +82,7 @@ Select which fields to sum
 
 > `optional` **cursor**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:129
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:130
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -94,7 +94,7 @@ Sets the start position
 
 > `optional` **orderBy**: [`AuthenticatorOrderByWithRelationInput`](AuthenticatorOrderByWithRelationInput.md) \| [`AuthenticatorOrderByWithRelationInput`](AuthenticatorOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:123
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:124
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -106,7 +106,7 @@ Determine the order of Authenticators to fetch.
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:141
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:142
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -118,7 +118,7 @@ Skip the first `n` Authenticators.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:135
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:136
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -130,6 +130,6 @@ Take `±n` Authenticators from the position of the cursor.
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:117
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:118
 
 Filter which Authenticator to aggregate.

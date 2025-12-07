@@ -8,7 +8,7 @@
 
 > **AuthenticatorMinAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:36
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:37
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:36
 
 > **counter**: `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:41
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:42
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:41
 
 > **credentialBackedUp**: `boolean` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:43
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:44
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:43
 
 > **credentialDeviceType**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:42
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:43
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:42
 
 > **credentialID**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:37
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:38
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:37
 
 > **credentialPublicKey**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:40
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:41
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:40
 
 > **providerAccountId**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:39
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:40
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:39
 
 > **transports**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:44
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:45
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:44
 
 > **userId**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:38
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:39

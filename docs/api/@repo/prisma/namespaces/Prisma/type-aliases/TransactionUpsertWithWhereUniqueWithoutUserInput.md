@@ -8,7 +8,7 @@
 
 > **TransactionUpsertWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:643
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:644
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:643
 
 > **create**: [`XOR`](XOR.md)\<[`TransactionCreateWithoutUserInput`](TransactionCreateWithoutUserInput.md), [`TransactionUncheckedCreateWithoutUserInput`](TransactionUncheckedCreateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:646
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:647
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:646
 
 > **update**: [`XOR`](XOR.md)\<[`TransactionUpdateWithoutUserInput`](TransactionUpdateWithoutUserInput.md), [`TransactionUncheckedUpdateWithoutUserInput`](TransactionUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:645
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:646
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:645
 
 > **where**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:644
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:645

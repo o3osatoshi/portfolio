@@ -8,7 +8,7 @@
 
 > **Args**\<`T`, `F`\> = `runtime.Types.Public.Args`\<`T`, `F`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:79
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:72
 
 ## Type Parameters
 

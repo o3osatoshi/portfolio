@@ -8,7 +8,7 @@
 
 > **VerificationTokenUpdateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:960
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:961
 
 VerificationToken update
 
@@ -24,7 +24,7 @@ VerificationToken update
 
 > **data**: [`XOR`](XOR.md)\<[`VerificationTokenUpdateInput`](VerificationTokenUpdateInput.md), [`VerificationTokenUncheckedUpdateInput`](VerificationTokenUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:972
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:973
 
 The data needed to update a VerificationToken.
 
@@ -34,7 +34,7 @@ The data needed to update a VerificationToken.
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:968
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:969
 
 Omit specific fields from the VerificationToken
 
@@ -44,7 +44,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:964
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:965
 
 Select specific fields to fetch from the VerificationToken
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the VerificationToken
 
 > **where**: [`VerificationTokenWhereUniqueInput`](VerificationTokenWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:976
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:977
 
 Choose, which VerificationToken to update.

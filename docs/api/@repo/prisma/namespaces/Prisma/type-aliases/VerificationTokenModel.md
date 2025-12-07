@@ -8,6 +8,6 @@
 
 > **VerificationTokenModel** = `runtime.Types.Result.DefaultSelection`\<[`$VerificationTokenPayload`]($VerificationTokenPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:18
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:19
 
 Model VerificationToken

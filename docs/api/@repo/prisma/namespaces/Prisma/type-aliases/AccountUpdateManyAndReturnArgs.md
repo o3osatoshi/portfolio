@@ -8,7 +8,7 @@
 
 > **AccountUpdateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1568
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1569
 
 Account updateManyAndReturn
 
@@ -24,7 +24,7 @@ Account updateManyAndReturn
 
 > **data**: [`XOR`](XOR.md)\<[`AccountUpdateManyMutationInput`](AccountUpdateManyMutationInput.md), [`AccountUncheckedUpdateManyInput`](AccountUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1580
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1581
 
 The data used to update Accounts.
 
@@ -34,7 +34,7 @@ The data used to update Accounts.
 
 > `optional` **include**: [`AccountIncludeUpdateManyAndReturn`](AccountIncludeUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1592
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1593
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1588
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1589
 
 Limit how many Accounts to update.
 
@@ -54,7 +54,7 @@ Limit how many Accounts to update.
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1576
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1577
 
 Omit specific fields from the Account
 
@@ -64,7 +64,7 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelectUpdateManyAndReturn`](AccountSelectUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1572
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1573
 
 Select specific fields to fetch from the Account
 
@@ -74,6 +74,6 @@ Select specific fields to fetch from the Account
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1584
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1585
 
 Filter which Accounts to update

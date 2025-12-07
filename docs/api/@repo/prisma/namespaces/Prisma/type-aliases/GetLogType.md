@@ -8,7 +8,7 @@
 
 > **GetLogType**\<`T`\> = [`CheckIsLogLevel`](CheckIsLogLevel.md)\<`T` *extends* [`LogDefinition`](LogDefinition.md) ? `T`\[`"level"`\] : `T`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1194
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1197
 
 ## Type Parameters
 

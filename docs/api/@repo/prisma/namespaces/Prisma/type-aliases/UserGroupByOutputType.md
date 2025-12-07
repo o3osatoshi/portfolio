@@ -8,7 +8,7 @@
 
 > **UserGroupByOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:161
+Defined in: packages/prisma/generated/prisma/models/User.ts:162
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:161
 
 > **\_count**: [`UserCountAggregateOutputType`](UserCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:169
+Defined in: packages/prisma/generated/prisma/models/User.ts:170
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:169
 
 > **\_max**: [`UserMaxAggregateOutputType`](UserMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:171
+Defined in: packages/prisma/generated/prisma/models/User.ts:172
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:171
 
 > **\_min**: [`UserMinAggregateOutputType`](UserMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:170
+Defined in: packages/prisma/generated/prisma/models/User.ts:171
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:170
 
 > **createdAt**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:167
+Defined in: packages/prisma/generated/prisma/models/User.ts:168
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:167
 
 > **email**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:164
+Defined in: packages/prisma/generated/prisma/models/User.ts:165
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:164
 
 > **emailVerified**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:165
+Defined in: packages/prisma/generated/prisma/models/User.ts:166
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:165
 
 > **id**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:162
+Defined in: packages/prisma/generated/prisma/models/User.ts:163
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:162
 
 > **image**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:166
+Defined in: packages/prisma/generated/prisma/models/User.ts:167
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:166
 
 > **name**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:163
+Defined in: packages/prisma/generated/prisma/models/User.ts:164
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:163
 
 > **updatedAt**: `Date`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:168
+Defined in: packages/prisma/generated/prisma/models/User.ts:169

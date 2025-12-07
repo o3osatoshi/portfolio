@@ -8,7 +8,7 @@
 
 > **SessionUpdateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1230
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1231
 
 Session updateManyAndReturn
 
@@ -24,7 +24,7 @@ Session updateManyAndReturn
 
 > **data**: [`XOR`](XOR.md)\<[`SessionUpdateManyMutationInput`](SessionUpdateManyMutationInput.md), [`SessionUncheckedUpdateManyInput`](SessionUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1242
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1243
 
 The data used to update Sessions.
 
@@ -34,7 +34,7 @@ The data used to update Sessions.
 
 > `optional` **include**: [`SessionIncludeUpdateManyAndReturn`](SessionIncludeUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1254
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1255
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1250
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1251
 
 Limit how many Sessions to update.
 
@@ -54,7 +54,7 @@ Limit how many Sessions to update.
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1238
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1239
 
 Omit specific fields from the Session
 
@@ -64,7 +64,7 @@ Omit specific fields from the Session
 
 > `optional` **select**: [`SessionSelectUpdateManyAndReturn`](SessionSelectUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1234
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1235
 
 Select specific fields to fetch from the Session
 
@@ -74,6 +74,6 @@ Select specific fields to fetch from the Session
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:1246
+Defined in: packages/prisma/generated/prisma/models/Session.ts:1247
 
 Filter which Sessions to update

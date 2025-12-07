@@ -8,7 +8,7 @@
 
 > **Keys**\<`U`\> = `U` *extends* `unknown` ? keyof `U` : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:339
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:334
 
 ## Type Parameters
 

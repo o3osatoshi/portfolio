@@ -8,7 +8,7 @@
 
 > **PickEnumerable**\<`T`, `K`\> = `Prisma__Pick`\<`T`, [`MaybeTupleToUnion`](MaybeTupleToUnion.md)\<`K`\>\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:378
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:373
 
 Like `Pick`, but additionally can also accept an array of keys
 

@@ -8,7 +8,7 @@
 
 > **ExcludeUnderscoreKeys**\<`T`\> = `T` *extends* `` `_${string}` `` ? `never` : `T`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:383
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:378
 
 Exclude all keys with underscores
 

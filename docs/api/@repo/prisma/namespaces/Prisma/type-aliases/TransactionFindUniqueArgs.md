@@ -8,7 +8,7 @@
 
 > **TransactionFindUniqueArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1270
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1271
 
 Transaction findUnique
 
@@ -24,7 +24,7 @@ Transaction findUnique
 
 > `optional` **include**: [`TransactionInclude`](TransactionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1282
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1283
 
 Choose, which related nodes to fetch as well
 
@@ -34,7 +34,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`TransactionOmit`](TransactionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1278
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1279
 
 Omit specific fields from the Transaction
 
@@ -44,7 +44,7 @@ Omit specific fields from the Transaction
 
 > `optional` **select**: [`TransactionSelect`](TransactionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1274
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1275
 
 Select specific fields to fetch from the Transaction
 
@@ -54,6 +54,6 @@ Select specific fields to fetch from the Transaction
 
 > **where**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1286
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1287
 
 Filter, which Transaction to fetch.

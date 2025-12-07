@@ -8,7 +8,7 @@
 
 > **AggregateTransaction** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:20
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:21
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:20
 
 > **\_avg**: [`TransactionAvgAggregateOutputType`](TransactionAvgAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:22
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:23
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:22
 
 > **\_count**: [`TransactionCountAggregateOutputType`](TransactionCountAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:21
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:22
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:21
 
 > **\_max**: [`TransactionMaxAggregateOutputType`](TransactionMaxAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:25
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:26
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:25
 
 > **\_min**: [`TransactionMinAggregateOutputType`](TransactionMinAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:24
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:25
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:24
 
 > **\_sum**: [`TransactionSumAggregateOutputType`](TransactionSumAggregateOutputType.md) \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:23
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:24

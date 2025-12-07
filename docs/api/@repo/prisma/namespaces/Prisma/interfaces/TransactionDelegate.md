@@ -6,7 +6,7 @@
 
 # Interface: TransactionDelegate\<ExtArgs, GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:838
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:839
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:838
 
 > `readonly` **fields**: [`TransactionFieldRefs`](TransactionFieldRefs.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1210
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1211
 
 Fields of the Transaction model
 
@@ -38,7 +38,7 @@ Fields of the Transaction model
 
 > **aggregate**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`GetTransactionAggregateType`](../type-aliases/GetTransactionAggregateType.md)\<`T`\>\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1129
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1130
 
 Allows you to perform aggregations operations on a Transaction.
 Note, that providing `undefined` is treated as the value not being there.
@@ -90,7 +90,7 @@ const aggregations = await prisma.user.aggregate({
 
 > **count**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`T` *extends* `Record_2`\<`"select"`, `any`\> ? `T`\<`T`\>\[`"select"`\] *extends* `true` ? `number` : \{ \[P in string \| number \| symbol\]: P extends keyof TransactionCountAggregateOutputType ? TransactionCountAggregateOutputType\[P\<P\>\] : never \} : `number`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1095
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1096
 
 Count the number of Transactions.
 Note, that providing `undefined` is treated as the value not being there.
@@ -131,7 +131,7 @@ const count = await prisma.transaction.count({
 
 > **create**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:928
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:929
 
 Create a Transaction.
 
@@ -170,7 +170,7 @@ const Transaction = await prisma.transaction.create({
 
 > **createMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:942
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:943
 
 Create many Transactions.
 
@@ -209,7 +209,7 @@ const transaction = await prisma.transaction.createMany({
 
 > **createManyAndReturn**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:966
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:967
 
 Create many Transactions and returns the data saved in the database.
 
@@ -258,7 +258,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **delete**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:980
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:981
 
 Delete a Transaction.
 
@@ -297,7 +297,7 @@ const Transaction = await prisma.transaction.delete({
 
 > **deleteMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1011
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1012
 
 Delete zero or more Transactions.
 
@@ -334,9 +334,9 @@ const { count } = await prisma.transaction.deleteMany({
 
 ### findFirst()
 
-> **findFirst**\<`T`\>(`args?`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`null` \| `GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findFirst**\<`T`\>(`args?`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:880
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:881
 
 Find the first Transaction that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -358,7 +358,7 @@ Arguments to find a Transaction
 
 #### Returns
 
-[`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`null` \| `GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -377,7 +377,7 @@ const transaction = await prisma.transaction.findFirst({
 
 > **findFirstOrThrow**\<`T`\>(`args?`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:896
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:897
 
 Find the first Transaction that matches the filter or
 throw `PrismaKnownClientError` with `P2025` code if no matches were found.
@@ -419,7 +419,7 @@ const transaction = await prisma.transaction.findFirstOrThrow({
 
 > **findMany**\<`T`\>(`args?`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:914
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:915
 
 Find zero or more Transactions that matches the filter.
 Note, that providing `undefined` is treated as the value not being there.
@@ -460,9 +460,9 @@ const transactionWithIdOnly = await prisma.transaction.findMany({ select: { id: 
 
 ### findUnique()
 
-> **findUnique**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`null` \| `GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+> **findUnique**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:851
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:852
 
 Find zero or one Transaction that matches the filter.
 
@@ -482,7 +482,7 @@ Arguments to find a Transaction
 
 #### Returns
 
-[`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`null` \| `GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `null`, `ExtArgs`, `GlobalOmitOptions`\>
+[`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\> \| `null`, `null`, `ExtArgs`, `GlobalOmitOptions`\>
 
 #### Example
 
@@ -501,7 +501,7 @@ const transaction = await prisma.transaction.findUnique({
 
 > **findUniqueOrThrow**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:865
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:866
 
 Find one Transaction that matches the filter or throw an error with `error.code='P2025'`
 if no matches were found.
@@ -541,7 +541,7 @@ const transaction = await prisma.transaction.findUniqueOrThrow({
 
 > **groupBy**\<`T`, `HasSelectOrTake`, `OrderByArg`, `OrderFields`, `ByFields`, `ByValid`, `HavingFields`, `HavingValid`, `ByEmpty`, `InputErrors`\>(`args`): `object` *extends* `InputErrors` ? `GetTransactionGroupByPayload`\<`T`\> : [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`InputErrors`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1149
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1150
 
 Group by Transaction.
 Note, that providing `undefined` is treated as the value not being there.
@@ -559,11 +559,11 @@ Read more here: https://pris.ly/d/null-undefined
 
 ##### OrderByArg
 
-`OrderByArg` *extends* \{ `orderBy`: `undefined` \| [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md) \| [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md)[]; \} \| \{ `orderBy?`: [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md) \| [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md)[]; \}
+`OrderByArg` *extends* \{ `orderBy`: [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md) \| [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md)[] \| `undefined`; \} \| \{ `orderBy?`: [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md) \| [`TransactionOrderByWithAggregationInput`](../type-aliases/TransactionOrderByWithAggregationInput.md)[]; \}
 
 ##### OrderFields
 
-`OrderFields` *extends* `"type"` \| `"id"` \| `"createdAt"` \| `"updatedAt"` \| `"amount"` \| `"currency"` \| `"datetime"` \| `"fee"` \| `"feeCurrency"` \| `"price"` \| `"profitLoss"` \| `"userId"`
+`OrderFields` *extends* `"createdAt"` \| `"updatedAt"` \| `"id"` \| `"amount"` \| `"currency"` \| `"datetime"` \| `"fee"` \| `"feeCurrency"` \| `"price"` \| `"profitLoss"` \| `"type"` \| `"userId"`
 
 ##### ByFields
 
@@ -622,7 +622,7 @@ const result = await prisma.user.groupBy({
 
 > **update**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:997
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:998
 
 Update one Transaction.
 
@@ -664,7 +664,7 @@ const transaction = await prisma.transaction.update({
 
 > **updateMany**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<[`BatchPayload`](../type-aliases/BatchPayload.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1030
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1031
 
 Update zero or more Transactions.
 Note, that providing `undefined` is treated as the value not being there.
@@ -708,7 +708,7 @@ const transaction = await prisma.transaction.updateMany({
 
 > **updateManyAndReturn**\<`T`\>(`args`): [`PrismaPromise`](../type-aliases/PrismaPromise.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>[]\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1060
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1061
 
 Update zero or more Transactions and returns the data updated in the database.
 
@@ -763,7 +763,7 @@ Read more here: https://pris.ly/d/null-undefined
 
 > **upsert**\<`T`\>(`args`): [`Prisma__TransactionClient`](Prisma__TransactionClient.md)\<`GetFindResult`\<[`$TransactionPayload`](../type-aliases/$TransactionPayload.md)\<`ExtArgs`\>, `T`, `GlobalOmitOptions`\>, `never`, `ExtArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1079
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1080
 
 Create or update one Transaction.
 

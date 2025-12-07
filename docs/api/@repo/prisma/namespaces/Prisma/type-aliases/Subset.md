@@ -8,7 +8,7 @@
 
 > **Subset**\<`T`, `U`\> = `{ [key in keyof T]: key extends keyof U ? T[key] : never }`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:159
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:154
 
 Subset
 

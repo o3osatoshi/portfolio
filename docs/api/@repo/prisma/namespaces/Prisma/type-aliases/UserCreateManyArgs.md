@@ -8,7 +8,7 @@
 
 > **UserCreateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1504
+Defined in: packages/prisma/generated/prisma/models/User.ts:1505
 
 User createMany
 
@@ -24,7 +24,7 @@ User createMany
 
 > **data**: [`UserCreateManyInput`](UserCreateManyInput.md) \| [`UserCreateManyInput`](UserCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1508
+Defined in: packages/prisma/generated/prisma/models/User.ts:1509
 
 The data used to create many Users.
 
@@ -34,4 +34,4 @@ The data used to create many Users.
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1509
+Defined in: packages/prisma/generated/prisma/models/User.ts:1510

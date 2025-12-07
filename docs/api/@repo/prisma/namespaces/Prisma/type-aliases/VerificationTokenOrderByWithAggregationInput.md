@@ -8,7 +8,7 @@
 
 > **VerificationTokenOrderByWithAggregationInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:186
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:187
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:186
 
 > `optional` **\_count**: [`VerificationTokenCountOrderByAggregateInput`](VerificationTokenCountOrderByAggregateInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:190
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:191
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:190
 
 > `optional` **\_max**: [`VerificationTokenMaxOrderByAggregateInput`](VerificationTokenMaxOrderByAggregateInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:191
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:192
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:191
 
 > `optional` **\_min**: [`VerificationTokenMinOrderByAggregateInput`](VerificationTokenMinOrderByAggregateInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:192
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:193
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:192
 
 > `optional` **expires**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:189
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:190
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:189
 
 > `optional` **identifier**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:187
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:188
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:187
 
 > `optional` **token**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:188
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:189

@@ -8,4 +8,4 @@
 
 > **LogLevel** = `"info"` \| `"query"` \| `"warn"` \| `"error"`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1186
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1189

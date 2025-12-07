@@ -8,7 +8,7 @@
 
 > `const` **AccountScalarFieldEnum**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:931
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:926
 
 ## Type Declaration
 

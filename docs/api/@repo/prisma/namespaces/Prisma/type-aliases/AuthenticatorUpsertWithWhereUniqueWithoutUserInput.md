@@ -8,7 +8,7 @@
 
 > **AuthenticatorUpsertWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:519
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:520
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:519
 
 > **create**: [`XOR`](XOR.md)\<[`AuthenticatorCreateWithoutUserInput`](AuthenticatorCreateWithoutUserInput.md), [`AuthenticatorUncheckedCreateWithoutUserInput`](AuthenticatorUncheckedCreateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:522
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:523
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:522
 
 > **update**: [`XOR`](XOR.md)\<[`AuthenticatorUpdateWithoutUserInput`](AuthenticatorUpdateWithoutUserInput.md), [`AuthenticatorUncheckedUpdateWithoutUserInput`](AuthenticatorUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:521
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:522
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:521
 
 > **where**: [`AuthenticatorWhereUniqueInput`](AuthenticatorWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:520
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:521

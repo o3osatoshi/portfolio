@@ -8,7 +8,7 @@
 
 > **UserCountOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:721
+Defined in: packages/prisma/generated/prisma/models/User.ts:722
 
 Count Type UserCountOutputType
 
@@ -18,7 +18,7 @@ Count Type UserCountOutputType
 
 > **accounts**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:722
+Defined in: packages/prisma/generated/prisma/models/User.ts:723
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:722
 
 > **Authenticator**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:724
+Defined in: packages/prisma/generated/prisma/models/User.ts:725
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:724
 
 > **sessions**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:723
+Defined in: packages/prisma/generated/prisma/models/User.ts:724
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:723
 
 > **transactions**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:725
+Defined in: packages/prisma/generated/prisma/models/User.ts:726

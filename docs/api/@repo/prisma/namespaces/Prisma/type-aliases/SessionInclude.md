@@ -8,7 +8,7 @@
 
 > **SessionInclude**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:478
+Defined in: packages/prisma/generated/prisma/models/Session.ts:479
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:478
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:479
+Defined in: packages/prisma/generated/prisma/models/Session.ts:480

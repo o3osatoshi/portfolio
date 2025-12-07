@@ -8,7 +8,7 @@
 
 > **Extends**\<`A1`, `A2`\> = \[`A1`\] *extends* \[`never`\] ? `0` : `A1` *extends* `A2` ? `1` : `0`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:318
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:313
 
 ## Type Parameters
 

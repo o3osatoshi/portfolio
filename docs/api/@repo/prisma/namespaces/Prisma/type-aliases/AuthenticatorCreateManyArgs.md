@@ -8,7 +8,7 @@
 
 > **AuthenticatorCreateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1319
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1320
 
 Authenticator createMany
 
@@ -24,7 +24,7 @@ Authenticator createMany
 
 > **data**: [`AuthenticatorCreateManyInput`](AuthenticatorCreateManyInput.md) \| [`AuthenticatorCreateManyInput`](AuthenticatorCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1323
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1324
 
 The data used to create many Authenticators.
 
@@ -34,4 +34,4 @@ The data used to create many Authenticators.
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1324
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1325

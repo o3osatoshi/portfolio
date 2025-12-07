@@ -8,4 +8,4 @@
 
 > **DMMF** = *typeof* `runtime.DMMF`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:23
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:24

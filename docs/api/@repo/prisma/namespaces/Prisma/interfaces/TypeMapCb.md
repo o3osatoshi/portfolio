@@ -6,7 +6,7 @@
 
 # Interface: TypeMapCb\<GlobalOmitOptions\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:404
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:399
 
 ## Extends
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:404
 
 > **params**: `object`
 
-Defined in: node\_modules/.pnpm/@prisma+client@6.18.0\_prisma@6.18.0\_magicast@0.3.5\_typescript@5.9.3\_\_typescript@5.9.3/node\_modules/@prisma/client/runtime/client.d.ts:1432
+Defined in: node\_modules/.pnpm/@prisma+client@7.1.0\_prisma@7.1.0\_@types+react@19.2.7\_magicast@0.3.5\_react-dom@19.2.1\_r\_e9a0acd586289ebb0b612b74f4ffb2a4/node\_modules/@prisma/client/runtime/client.d.ts:1082
 
 #### extArgs
 
@@ -40,7 +40,7 @@ Defined in: node\_modules/.pnpm/@prisma+client@6.18.0\_prisma@6.18.0\_magicast@0
 
 > **returns**: [`TypeMap`](../type-aliases/TypeMap.md)\<`InternalArgs`, `GlobalOmitOptions`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:405
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:400
 
 #### Overrides
 

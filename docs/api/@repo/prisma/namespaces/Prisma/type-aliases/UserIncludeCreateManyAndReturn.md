@@ -8,7 +8,7 @@
 
 > **UserIncludeCreateManyAndReturn**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:827
+Defined in: packages/prisma/generated/prisma/models/User.ts:828
 
 ## Type Parameters
 

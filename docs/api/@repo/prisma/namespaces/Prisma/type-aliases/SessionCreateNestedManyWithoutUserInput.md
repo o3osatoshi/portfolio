@@ -8,7 +8,7 @@
 
 > **SessionCreateNestedManyWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:319
+Defined in: packages/prisma/generated/prisma/models/Session.ts:320
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:319
 
 > `optional` **connect**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md) \| [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:323
+Defined in: packages/prisma/generated/prisma/models/Session.ts:324
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:323
 
 > `optional` **connectOrCreate**: [`SessionCreateOrConnectWithoutUserInput`](SessionCreateOrConnectWithoutUserInput.md) \| [`SessionCreateOrConnectWithoutUserInput`](SessionCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:321
+Defined in: packages/prisma/generated/prisma/models/Session.ts:322
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:321
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`SessionCreateWithoutUserInput`](SessionCreateWithoutUserInput.md), [`SessionUncheckedCreateWithoutUserInput`](SessionUncheckedCreateWithoutUserInput.md)\> \| [`SessionCreateWithoutUserInput`](SessionCreateWithoutUserInput.md)[] \| [`SessionUncheckedCreateWithoutUserInput`](SessionUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:320
+Defined in: packages/prisma/generated/prisma/models/Session.ts:321
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:320
 
 > `optional` **createMany**: [`SessionCreateManyUserInputEnvelope`](SessionCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:322
+Defined in: packages/prisma/generated/prisma/models/Session.ts:323

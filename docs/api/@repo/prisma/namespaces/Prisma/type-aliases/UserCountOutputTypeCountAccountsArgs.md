@@ -8,7 +8,7 @@
 
 > **UserCountOutputTypeCountAccountsArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:748
+Defined in: packages/prisma/generated/prisma/models/User.ts:749
 
 UserCountOutputType without action
 
@@ -24,4 +24,4 @@ UserCountOutputType without action
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:749
+Defined in: packages/prisma/generated/prisma/models/User.ts:750

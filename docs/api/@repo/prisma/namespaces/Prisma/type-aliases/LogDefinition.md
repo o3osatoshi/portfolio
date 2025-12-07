@@ -8,7 +8,7 @@
 
 > **LogDefinition** = `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1187
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1190
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1187
 
 > **emit**: `"stdout"` \| `"event"`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1189
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1192
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1189
 
 > **level**: [`LogLevel`](LogLevel.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1188
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:1191

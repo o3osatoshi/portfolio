@@ -8,7 +8,7 @@
 
 > `const` **SortOrder**: `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:984
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:979
 
 ## Type Declaration
 

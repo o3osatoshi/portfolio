@@ -8,7 +8,7 @@
 
 > **UserSelectScalar** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:809
+Defined in: packages/prisma/generated/prisma/models/User.ts:810
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:809
 
 > `optional` **createdAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:815
+Defined in: packages/prisma/generated/prisma/models/User.ts:816
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:815
 
 > `optional` **email**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:812
+Defined in: packages/prisma/generated/prisma/models/User.ts:813
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:812
 
 > `optional` **emailVerified**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:813
+Defined in: packages/prisma/generated/prisma/models/User.ts:814
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:813
 
 > `optional` **id**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:810
+Defined in: packages/prisma/generated/prisma/models/User.ts:811
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:810
 
 > `optional` **image**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:814
+Defined in: packages/prisma/generated/prisma/models/User.ts:815
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:814
 
 > `optional` **name**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:811
+Defined in: packages/prisma/generated/prisma/models/User.ts:812
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:811
 
 > `optional` **updatedAt**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:816
+Defined in: packages/prisma/generated/prisma/models/User.ts:817

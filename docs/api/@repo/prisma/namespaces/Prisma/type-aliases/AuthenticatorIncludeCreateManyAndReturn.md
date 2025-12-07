@@ -8,7 +8,7 @@
 
 > **AuthenticatorIncludeCreateManyAndReturn**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:642
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:643
 
 ## Type Parameters
 
@@ -22,4 +22,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:642
 
 > `optional` **user**: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:643
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:644

@@ -8,7 +8,7 @@
 
 > **UnEnumerate**\<`T`\> = `T` *extends* infer U[] ? `U` : `T`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:218
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:213
 
 If it's T[], return T
 

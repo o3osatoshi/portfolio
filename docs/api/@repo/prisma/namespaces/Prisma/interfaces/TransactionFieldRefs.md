@@ -6,7 +6,7 @@
 
 # Interface: TransactionFieldRefs
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1250
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1251
 
 Fields of the Transaction model
 
@@ -16,7 +16,7 @@ Fields of the Transaction model
 
 > `readonly` **amount**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"Decimal"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1254
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1255
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1254
 
 > `readonly` **createdAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1261
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1262
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1261
 
 > `readonly` **currency**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1256
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1257
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1256
 
 > `readonly` **datetime**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1253
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1254
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1253
 
 > `readonly` **fee**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"Decimal"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1258
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1259
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1258
 
 > `readonly` **feeCurrency**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1259
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1260
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1259
 
 > `readonly` **id**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1251
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1252
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1251
 
 > `readonly` **price**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"Decimal"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1255
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1256
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1255
 
 > `readonly` **profitLoss**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"Decimal"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1257
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1258
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1257
 
 > `readonly` **type**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1252
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1253
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1252
 
 > `readonly` **updatedAt**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"DateTime"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1262
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1263
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1262
 
 > `readonly` **userId**: [`FieldRef`](../type-aliases/FieldRef.md)\<`"Transaction"`, `"String"`\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1260
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1261

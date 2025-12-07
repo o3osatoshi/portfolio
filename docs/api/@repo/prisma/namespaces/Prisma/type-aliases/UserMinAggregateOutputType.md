@@ -8,7 +8,7 @@
 
 > **UserMinAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:26
+Defined in: packages/prisma/generated/prisma/models/User.ts:27
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:26
 
 > **createdAt**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:32
+Defined in: packages/prisma/generated/prisma/models/User.ts:33
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:32
 
 > **email**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:29
+Defined in: packages/prisma/generated/prisma/models/User.ts:30
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:29
 
 > **emailVerified**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:30
+Defined in: packages/prisma/generated/prisma/models/User.ts:31
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:30
 
 > **id**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:27
+Defined in: packages/prisma/generated/prisma/models/User.ts:28
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:27
 
 > **image**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:31
+Defined in: packages/prisma/generated/prisma/models/User.ts:32
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:31
 
 > **name**: `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:28
+Defined in: packages/prisma/generated/prisma/models/User.ts:29
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:28
 
 > **updatedAt**: `Date` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:33
+Defined in: packages/prisma/generated/prisma/models/User.ts:34

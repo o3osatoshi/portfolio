@@ -8,7 +8,7 @@
 
 > **AccountDeleteManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1650
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1651
 
 Account deleteMany
 
@@ -24,7 +24,7 @@ Account deleteMany
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1658
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1659
 
 Limit how many Accounts to delete.
 
@@ -34,6 +34,6 @@ Limit how many Accounts to delete.
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1654
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1655
 
 Filter which Accounts to delete

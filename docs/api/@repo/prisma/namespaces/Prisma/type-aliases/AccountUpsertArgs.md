@@ -8,7 +8,7 @@
 
 > **AccountUpsertArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1598
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1599
 
 Account upsert
 
@@ -24,7 +24,7 @@ Account upsert
 
 > **create**: [`XOR`](XOR.md)\<[`AccountCreateInput`](AccountCreateInput.md), [`AccountUncheckedCreateInput`](AccountUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1618
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1619
 
 In case the Account found by the `where` argument doesn't exist, create a new Account with this data.
 
@@ -34,7 +34,7 @@ In case the Account found by the `where` argument doesn't exist, create a new Ac
 
 > `optional` **include**: [`AccountInclude`](AccountInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1610
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1611
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AccountOmit`](AccountOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1606
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1607
 
 Omit specific fields from the Account
 
@@ -54,7 +54,7 @@ Omit specific fields from the Account
 
 > `optional` **select**: [`AccountSelect`](AccountSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1602
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1603
 
 Select specific fields to fetch from the Account
 
@@ -64,7 +64,7 @@ Select specific fields to fetch from the Account
 
 > **update**: [`XOR`](XOR.md)\<[`AccountUpdateInput`](AccountUpdateInput.md), [`AccountUncheckedUpdateInput`](AccountUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1622
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1623
 
 In case the Account was found with the provided `where` argument, update it with this data.
 
@@ -74,6 +74,6 @@ In case the Account was found with the provided `where` argument, update it with
 
 > **where**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1614
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1615
 
 The filter to search for the Account to update in case it exists.

@@ -8,7 +8,7 @@
 
 > **AuthenticatorListRelationFilter** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:379
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:380
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:379
 
 > `optional` **every**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:380
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:381
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:380
 
 > `optional` **none**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:382
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:383
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:382
 
 > `optional` **some**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:381
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:382

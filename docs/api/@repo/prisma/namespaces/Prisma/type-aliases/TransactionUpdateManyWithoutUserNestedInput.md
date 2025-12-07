@@ -8,7 +8,7 @@
 
 > **TransactionUpdateManyWithoutUserNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:577
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:578
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:577
 
 > `optional` **connect**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md) \| [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:585
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:586
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:585
 
 > `optional` **connectOrCreate**: [`TransactionCreateOrConnectWithoutUserInput`](TransactionCreateOrConnectWithoutUserInput.md) \| [`TransactionCreateOrConnectWithoutUserInput`](TransactionCreateOrConnectWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:579
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:580
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:579
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`TransactionCreateWithoutUserInput`](TransactionCreateWithoutUserInput.md), [`TransactionUncheckedCreateWithoutUserInput`](TransactionUncheckedCreateWithoutUserInput.md)\> \| [`TransactionCreateWithoutUserInput`](TransactionCreateWithoutUserInput.md)[] \| [`TransactionUncheckedCreateWithoutUserInput`](TransactionUncheckedCreateWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:578
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:579
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:578
 
 > `optional` **createMany**: [`TransactionCreateManyUserInputEnvelope`](TransactionCreateManyUserInputEnvelope.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:581
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:582
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:581
 
 > `optional` **delete**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md) \| [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:584
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:585
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:584
 
 > `optional` **deleteMany**: [`TransactionScalarWhereInput`](TransactionScalarWhereInput.md) \| [`TransactionScalarWhereInput`](TransactionScalarWhereInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:588
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:589
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:588
 
 > `optional` **disconnect**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md) \| [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:583
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:584
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:583
 
 > `optional` **set**: [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md) \| [`TransactionWhereUniqueInput`](TransactionWhereUniqueInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:582
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:583
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:582
 
 > `optional` **update**: [`TransactionUpdateWithWhereUniqueWithoutUserInput`](TransactionUpdateWithWhereUniqueWithoutUserInput.md) \| [`TransactionUpdateWithWhereUniqueWithoutUserInput`](TransactionUpdateWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:586
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:587
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:586
 
 > `optional` **updateMany**: [`TransactionUpdateManyWithWhereWithoutUserInput`](TransactionUpdateManyWithWhereWithoutUserInput.md) \| [`TransactionUpdateManyWithWhereWithoutUserInput`](TransactionUpdateManyWithWhereWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:587
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:588
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:587
 
 > `optional` **upsert**: [`TransactionUpsertWithWhereUniqueWithoutUserInput`](TransactionUpsertWithWhereUniqueWithoutUserInput.md) \| [`TransactionUpsertWithWhereUniqueWithoutUserInput`](TransactionUpsertWithWhereUniqueWithoutUserInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:580
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:581

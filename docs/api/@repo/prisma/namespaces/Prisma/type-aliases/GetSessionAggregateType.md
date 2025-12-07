@@ -8,7 +8,7 @@
 
 > **GetSessionAggregateType**\<`T`\> = \{ \[P in keyof T & keyof AggregateSession\]: P extends "\_count" \| "count" ? T\[P\] extends true ? number : GetScalarType\<T\[P\], AggregateSession\[P\]\> : GetScalarType\<T\[P\], AggregateSession\[P\]\> \}
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:126
+Defined in: packages/prisma/generated/prisma/models/Session.ts:127
 
 ## Type Parameters
 

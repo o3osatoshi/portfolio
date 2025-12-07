@@ -8,7 +8,7 @@
 
 > **$UserPayload**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:830
+Defined in: packages/prisma/generated/prisma/models/User.ts:831
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:830
 
 > **composites**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:847
+Defined in: packages/prisma/generated/prisma/models/User.ts:848
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:847
 
 > **name**: `"User"`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:831
+Defined in: packages/prisma/generated/prisma/models/User.ts:832
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:831
 
 > **objects**: `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:832
+Defined in: packages/prisma/generated/prisma/models/User.ts:833
 
 #### accounts
 
@@ -62,4 +62,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:832
 
 > **scalars**: `runtime.Types.Extensions.GetPayloadResult`\<\{ `createdAt`: `Date`; `email`: `string`; `emailVerified`: `Date` \| `null`; `id`: `string`; `image`: `string` \| `null`; `name`: `string` \| `null`; `updatedAt`: `Date`; \}, `ExtArgs`\[`"result"`\]\[`"user"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:838
+Defined in: packages/prisma/generated/prisma/models/User.ts:839

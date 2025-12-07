@@ -8,7 +8,7 @@
 
 > **AccountUpdateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1550
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1551
 
 Account updateMany
 
@@ -24,7 +24,7 @@ Account updateMany
 
 > **data**: [`XOR`](XOR.md)\<[`AccountUpdateManyMutationInput`](AccountUpdateManyMutationInput.md), [`AccountUncheckedUpdateManyInput`](AccountUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1554
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1555
 
 The data used to update Accounts.
 
@@ -34,7 +34,7 @@ The data used to update Accounts.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1562
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1563
 
 Limit how many Accounts to update.
 
@@ -44,6 +44,6 @@ Limit how many Accounts to update.
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:1558
+Defined in: packages/prisma/generated/prisma/models/Account.ts:1559
 
 Filter which Accounts to update

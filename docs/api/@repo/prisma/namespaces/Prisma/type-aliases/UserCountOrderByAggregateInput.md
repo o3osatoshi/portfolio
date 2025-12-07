@@ -8,7 +8,7 @@
 
 > **UserCountOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:354
+Defined in: packages/prisma/generated/prisma/models/User.ts:355
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:354
 
 > `optional` **createdAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:360
+Defined in: packages/prisma/generated/prisma/models/User.ts:361
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:360
 
 > `optional` **email**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:357
+Defined in: packages/prisma/generated/prisma/models/User.ts:358
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:357
 
 > `optional` **emailVerified**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:358
+Defined in: packages/prisma/generated/prisma/models/User.ts:359
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:358
 
 > `optional` **id**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:355
+Defined in: packages/prisma/generated/prisma/models/User.ts:356
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:355
 
 > `optional` **image**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:359
+Defined in: packages/prisma/generated/prisma/models/User.ts:360
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:359
 
 > `optional` **name**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:356
+Defined in: packages/prisma/generated/prisma/models/User.ts:357
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:356
 
 > `optional` **updatedAt**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:361
+Defined in: packages/prisma/generated/prisma/models/User.ts:362

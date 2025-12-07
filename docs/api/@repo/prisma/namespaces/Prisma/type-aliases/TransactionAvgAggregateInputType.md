@@ -8,7 +8,7 @@
 
 > **TransactionAvgAggregateInputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:89
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:90
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:89
 
 > `optional` **amount**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:90
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:91
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:90
 
 > `optional` **fee**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:93
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:94
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:93
 
 > `optional` **price**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:91
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:92
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:91
 
 > `optional` **profitLoss**: `true`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:92
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:93

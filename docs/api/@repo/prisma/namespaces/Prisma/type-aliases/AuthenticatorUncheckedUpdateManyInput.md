@@ -8,7 +8,7 @@
 
 > **AuthenticatorUncheckedUpdateManyInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:368
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:369
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:368
 
 > `optional` **counter**: [`IntFieldUpdateOperationsInput`](IntFieldUpdateOperationsInput.md) \| `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:373
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:374
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:373
 
 > `optional` **credentialBackedUp**: [`BoolFieldUpdateOperationsInput`](BoolFieldUpdateOperationsInput.md) \| `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:375
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:376
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:375
 
 > `optional` **credentialDeviceType**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:374
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:375
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:374
 
 > `optional` **credentialID**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:369
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:370
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:369
 
 > `optional` **credentialPublicKey**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:372
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:373
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:372
 
 > `optional` **providerAccountId**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:371
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:372
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:371
 
 > `optional` **transports**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:376
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:377
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:376
 
 > `optional` **userId**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:370
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:371

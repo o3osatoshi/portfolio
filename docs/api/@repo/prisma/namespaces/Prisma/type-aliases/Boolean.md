@@ -8,4 +8,4 @@
 
 > **Boolean** = [`True`](True.md) \| [`False`](False.md)
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:307
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:302

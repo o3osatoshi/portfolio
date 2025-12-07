@@ -8,4 +8,4 @@
 
 > **True** = `1`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:309
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:304

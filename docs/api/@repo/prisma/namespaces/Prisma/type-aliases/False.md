@@ -8,4 +8,4 @@
 
 > **False** = `0`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:311
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:306

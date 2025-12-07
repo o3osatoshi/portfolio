@@ -8,7 +8,7 @@
 
 > **UserGroupByArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:149
+Defined in: packages/prisma/generated/prisma/models/User.ts:150
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:149
 
 > `optional` **\_count**: [`UserCountAggregateInputType`](UserCountAggregateInputType.md) \| `true`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:156
+Defined in: packages/prisma/generated/prisma/models/User.ts:157
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:156
 
 > `optional` **\_max**: [`UserMaxAggregateInputType`](UserMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:158
+Defined in: packages/prisma/generated/prisma/models/User.ts:159
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:158
 
 > `optional` **\_min**: [`UserMinAggregateInputType`](UserMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:157
+Defined in: packages/prisma/generated/prisma/models/User.ts:158
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:157
 
 > **by**: [`UserScalarFieldEnum`](UserScalarFieldEnum.md)[] \| [`UserScalarFieldEnum`](UserScalarFieldEnum.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:152
+Defined in: packages/prisma/generated/prisma/models/User.ts:153
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:152
 
 > `optional` **having**: [`UserScalarWhereWithAggregatesInput`](UserScalarWhereWithAggregatesInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:153
+Defined in: packages/prisma/generated/prisma/models/User.ts:154
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:153
 
 > `optional` **orderBy**: [`UserOrderByWithAggregationInput`](UserOrderByWithAggregationInput.md) \| [`UserOrderByWithAggregationInput`](UserOrderByWithAggregationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:151
+Defined in: packages/prisma/generated/prisma/models/User.ts:152
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:151
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:155
+Defined in: packages/prisma/generated/prisma/models/User.ts:156
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:155
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:154
+Defined in: packages/prisma/generated/prisma/models/User.ts:155
 
 ***
 
@@ -86,4 +86,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:154
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:150
+Defined in: packages/prisma/generated/prisma/models/User.ts:151

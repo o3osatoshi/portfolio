@@ -8,7 +8,7 @@
 
 > **VerificationTokenWhereInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:161
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:162
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:161
 
 > `optional` **AND**: `Prisma.VerificationTokenWhereInput` \| `Prisma.VerificationTokenWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:162
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:163
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:162
 
 > `optional` **expires**: [`DateTimeFilter`](DateTimeFilter.md)\<`"VerificationToken"`\> \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:167
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:168
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:167
 
 > `optional` **identifier**: [`StringFilter`](StringFilter.md)\<`"VerificationToken"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:165
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:166
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:165
 
 > `optional` **NOT**: `Prisma.VerificationTokenWhereInput` \| `Prisma.VerificationTokenWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:164
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:165
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:164
 
 > `optional` **OR**: `Prisma.VerificationTokenWhereInput`[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:163
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:164
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:163
 
 > `optional` **token**: [`StringFilter`](StringFilter.md)\<`"VerificationToken"`\> \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:166
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:167

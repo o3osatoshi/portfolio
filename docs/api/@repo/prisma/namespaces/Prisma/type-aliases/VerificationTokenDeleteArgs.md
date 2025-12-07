@@ -8,7 +8,7 @@
 
 > **VerificationTokenDeleteArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1052
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1053
 
 VerificationToken delete
 
@@ -24,7 +24,7 @@ VerificationToken delete
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1060
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1061
 
 Omit specific fields from the VerificationToken
 
@@ -34,7 +34,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1056
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1057
 
 Select specific fields to fetch from the VerificationToken
 
@@ -44,6 +44,6 @@ Select specific fields to fetch from the VerificationToken
 
 > **where**: [`VerificationTokenWhereUniqueInput`](VerificationTokenWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1064
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1065
 
 Filter which VerificationToken to delete.

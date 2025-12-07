@@ -6,9 +6,9 @@
 
 # Function: Message()
 
-> **Message**(`__namedParameters`): `null` \| `Element`
+> **Message**(`__namedParameters`): `Element` \| `null`
 
-Defined in: [packages/ui/src/components/base/message.tsx:19](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/base/message.tsx#L19)
+Defined in: [packages/ui/src/components/base/message.tsx:19](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/base/message.tsx#L19)
 
 Helper that lifts alert styling into forms by rendering an inline [Alert](Alert.md).
 
@@ -20,4 +20,4 @@ Helper that lifts alert styling into forms by rendering an inline [Alert](Alert.
 
 ## Returns
 
-`null` \| `Element`
+`Element` \| `null`

@@ -8,7 +8,7 @@
 
 > **AuthenticatorUpdateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1379
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1380
 
 Authenticator updateMany
 
@@ -24,7 +24,7 @@ Authenticator updateMany
 
 > **data**: [`XOR`](XOR.md)\<[`AuthenticatorUpdateManyMutationInput`](AuthenticatorUpdateManyMutationInput.md), [`AuthenticatorUncheckedUpdateManyInput`](AuthenticatorUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1383
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1384
 
 The data used to update Authenticators.
 
@@ -34,7 +34,7 @@ The data used to update Authenticators.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1391
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1392
 
 Limit how many Authenticators to update.
 
@@ -44,6 +44,6 @@ Limit how many Authenticators to update.
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1387
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1388
 
 Filter which Authenticators to update

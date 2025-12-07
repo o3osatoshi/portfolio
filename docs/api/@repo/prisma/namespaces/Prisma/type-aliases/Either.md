@@ -8,7 +8,7 @@
 
 > **Either**\<`O`, `K`, `strict`\> = `O` *extends* `unknown` ? `_Either`\<`O`, `K`, `strict`\> : `never`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:243
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:238
 
 ## Type Parameters
 

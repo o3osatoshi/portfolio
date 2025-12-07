@@ -8,7 +8,7 @@
 
 > **TransactionUpdateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1547
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1548
 
 Transaction updateMany
 
@@ -24,7 +24,7 @@ Transaction updateMany
 
 > **data**: [`XOR`](XOR.md)\<[`TransactionUpdateManyMutationInput`](TransactionUpdateManyMutationInput.md), [`TransactionUncheckedUpdateManyInput`](TransactionUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1551
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1552
 
 The data used to update Transactions.
 
@@ -34,7 +34,7 @@ The data used to update Transactions.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1559
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1560
 
 Limit how many Transactions to update.
 
@@ -44,6 +44,6 @@ Limit how many Transactions to update.
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1555
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:1556
 
 Filter which Transactions to update

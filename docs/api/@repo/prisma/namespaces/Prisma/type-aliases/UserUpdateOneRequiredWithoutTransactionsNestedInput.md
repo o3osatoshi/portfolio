@@ -8,7 +8,7 @@
 
 > **UserUpdateOneRequiredWithoutTransactionsNestedInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:390
+Defined in: packages/prisma/generated/prisma/models/User.ts:391
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:390
 
 > `optional` **connect**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:394
+Defined in: packages/prisma/generated/prisma/models/User.ts:395
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:394
 
 > `optional` **connectOrCreate**: [`UserCreateOrConnectWithoutTransactionsInput`](UserCreateOrConnectWithoutTransactionsInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:392
+Defined in: packages/prisma/generated/prisma/models/User.ts:393
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:392
 
 > `optional` **create**: [`XOR`](XOR.md)\<[`UserCreateWithoutTransactionsInput`](UserCreateWithoutTransactionsInput.md), [`UserUncheckedCreateWithoutTransactionsInput`](UserUncheckedCreateWithoutTransactionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:391
+Defined in: packages/prisma/generated/prisma/models/User.ts:392
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:391
 
 > `optional` **update**: [`XOR`](XOR.md)\<[`XOR`](XOR.md)\<[`UserUpdateToOneWithWhereWithoutTransactionsInput`](UserUpdateToOneWithWhereWithoutTransactionsInput.md), [`UserUpdateWithoutTransactionsInput`](UserUpdateWithoutTransactionsInput.md)\>, [`UserUncheckedUpdateWithoutTransactionsInput`](UserUncheckedUpdateWithoutTransactionsInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:395
+Defined in: packages/prisma/generated/prisma/models/User.ts:396
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:395
 
 > `optional` **upsert**: [`UserUpsertWithoutTransactionsInput`](UserUpsertWithoutTransactionsInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:393
+Defined in: packages/prisma/generated/prisma/models/User.ts:394

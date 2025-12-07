@@ -8,7 +8,7 @@
 
 > `const` **getExtensionContext**: \<`T`\>(`that`) => `Context_2`\<`T`\> = `runtime.Extensions.getExtensionContext`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:78
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:71
 
 ## Type Parameters
 

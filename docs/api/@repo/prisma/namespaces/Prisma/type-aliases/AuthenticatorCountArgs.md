@@ -8,7 +8,7 @@
 
 > **AuthenticatorCountArgs**\<`ExtArgs`\> = `Omit`\<[`AuthenticatorFindManyArgs`](AuthenticatorFindManyArgs.md), `"select"` \| `"include"` \| `"distinct"` \| `"omit"`\> & `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:669
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:670
 
 ## Type Declaration
 

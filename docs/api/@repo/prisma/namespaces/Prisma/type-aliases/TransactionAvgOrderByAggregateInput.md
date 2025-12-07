@@ -8,7 +8,7 @@
 
 > **TransactionAvgOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:481
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:482
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:481
 
 > `optional` **amount**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:482
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:483
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:482
 
 > `optional` **fee**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:485
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:486
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:485
 
 > `optional` **price**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:483
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:484
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:483
 
 > `optional` **profitLoss**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:484
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:485

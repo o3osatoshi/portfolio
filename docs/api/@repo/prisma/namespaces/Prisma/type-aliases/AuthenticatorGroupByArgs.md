@@ -8,7 +8,7 @@
 
 > **AuthenticatorGroupByArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:185
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:186
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:185
 
 > `optional` **\_avg**: [`AuthenticatorAvgAggregateInputType`](AuthenticatorAvgAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:193
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:194
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:193
 
 > `optional` **\_count**: [`AuthenticatorCountAggregateInputType`](AuthenticatorCountAggregateInputType.md) \| `true`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:192
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:193
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:192
 
 > `optional` **\_max**: [`AuthenticatorMaxAggregateInputType`](AuthenticatorMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:196
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:197
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:196
 
 > `optional` **\_min**: [`AuthenticatorMinAggregateInputType`](AuthenticatorMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:195
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:196
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:195
 
 > `optional` **\_sum**: [`AuthenticatorSumAggregateInputType`](AuthenticatorSumAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:194
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:195
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:194
 
 > **by**: [`AuthenticatorScalarFieldEnum`](AuthenticatorScalarFieldEnum.md)[] \| [`AuthenticatorScalarFieldEnum`](AuthenticatorScalarFieldEnum.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:188
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:189
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:188
 
 > `optional` **having**: [`AuthenticatorScalarWhereWithAggregatesInput`](AuthenticatorScalarWhereWithAggregatesInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:189
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:190
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:189
 
 > `optional` **orderBy**: [`AuthenticatorOrderByWithAggregationInput`](AuthenticatorOrderByWithAggregationInput.md) \| [`AuthenticatorOrderByWithAggregationInput`](AuthenticatorOrderByWithAggregationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:187
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:188
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:187
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:191
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:192
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:191
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:190
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:191
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:190
 
 > `optional` **where**: [`AuthenticatorWhereInput`](AuthenticatorWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:186
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:187

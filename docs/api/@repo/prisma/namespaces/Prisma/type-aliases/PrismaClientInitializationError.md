@@ -8,4 +8,4 @@
 
 > **PrismaClientInitializationError** = `runtime.PrismaClientInitializationError`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:40
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:41

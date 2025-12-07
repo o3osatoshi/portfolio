@@ -8,7 +8,7 @@
 
 > **AccountAvgOrderByAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:505
+Defined in: packages/prisma/generated/prisma/models/Account.ts:506
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:505
 
 > `optional` **expires\_at**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:506
+Defined in: packages/prisma/generated/prisma/models/Account.ts:507

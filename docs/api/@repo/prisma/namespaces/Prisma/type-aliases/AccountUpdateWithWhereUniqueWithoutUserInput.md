@@ -8,7 +8,7 @@
 
 > **AccountUpdateWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:641
+Defined in: packages/prisma/generated/prisma/models/Account.ts:642
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:641
 
 > **data**: [`XOR`](XOR.md)\<[`AccountUpdateWithoutUserInput`](AccountUpdateWithoutUserInput.md), [`AccountUncheckedUpdateWithoutUserInput`](AccountUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:643
+Defined in: packages/prisma/generated/prisma/models/Account.ts:644
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:643
 
 > **where**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:642
+Defined in: packages/prisma/generated/prisma/models/Account.ts:643

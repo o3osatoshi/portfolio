@@ -8,7 +8,7 @@
 
 > **VerificationTokenCreateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:941
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:942
 
 VerificationToken createManyAndReturn
 
@@ -24,7 +24,7 @@ VerificationToken createManyAndReturn
 
 > **data**: [`VerificationTokenCreateManyInput`](VerificationTokenCreateManyInput.md) \| [`VerificationTokenCreateManyInput`](VerificationTokenCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:953
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:954
 
 The data used to create many VerificationTokens.
 
@@ -34,7 +34,7 @@ The data used to create many VerificationTokens.
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:949
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:950
 
 Omit specific fields from the VerificationToken
 
@@ -44,7 +44,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelectCreateManyAndReturn`](VerificationTokenSelectCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:945
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:946
 
 Select specific fields to fetch from the VerificationToken
 
@@ -54,4 +54,4 @@ Select specific fields to fetch from the VerificationToken
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:954
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:955

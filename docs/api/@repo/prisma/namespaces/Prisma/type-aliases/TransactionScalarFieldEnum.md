@@ -8,4 +8,4 @@
 
 > **TransactionScalarFieldEnum** = *typeof* [`TransactionScalarFieldEnum`](../variables/TransactionScalarFieldEnum.md)\[keyof *typeof* [`TransactionScalarFieldEnum`](../variables/TransactionScalarFieldEnum.md)\]
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:900
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:895

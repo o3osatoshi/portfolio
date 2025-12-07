@@ -8,7 +8,7 @@
 
 > **VerificationTokenUpdateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1000
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1001
 
 VerificationToken updateManyAndReturn
 
@@ -24,7 +24,7 @@ VerificationToken updateManyAndReturn
 
 > **data**: [`XOR`](XOR.md)\<[`VerificationTokenUpdateManyMutationInput`](VerificationTokenUpdateManyMutationInput.md), [`VerificationTokenUncheckedUpdateManyInput`](VerificationTokenUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1012
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1013
 
 The data used to update VerificationTokens.
 
@@ -34,7 +34,7 @@ The data used to update VerificationTokens.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1020
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1021
 
 Limit how many VerificationTokens to update.
 
@@ -44,7 +44,7 @@ Limit how many VerificationTokens to update.
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1008
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1009
 
 Omit specific fields from the VerificationToken
 
@@ -54,7 +54,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelectUpdateManyAndReturn`](VerificationTokenSelectUpdateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1004
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1005
 
 Select specific fields to fetch from the VerificationToken
 
@@ -64,6 +64,6 @@ Select specific fields to fetch from the VerificationToken
 
 > `optional` **where**: [`VerificationTokenWhereInput`](VerificationTokenWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1016
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:1017
 
 Filter which VerificationTokens to update

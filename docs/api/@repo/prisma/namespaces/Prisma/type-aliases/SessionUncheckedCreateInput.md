@@ -8,7 +8,7 @@
 
 > **SessionUncheckedCreateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:238
+Defined in: packages/prisma/generated/prisma/models/Session.ts:239
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:238
 
 > `optional` **createdAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:242
+Defined in: packages/prisma/generated/prisma/models/Session.ts:243
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:242
 
 > **expires**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:241
+Defined in: packages/prisma/generated/prisma/models/Session.ts:242
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:241
 
 > **sessionToken**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:239
+Defined in: packages/prisma/generated/prisma/models/Session.ts:240
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:239
 
 > `optional` **updatedAt**: `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:243
+Defined in: packages/prisma/generated/prisma/models/Session.ts:244
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:243
 
 > **userId**: `string`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:240
+Defined in: packages/prisma/generated/prisma/models/Session.ts:241

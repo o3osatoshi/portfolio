@@ -8,7 +8,7 @@
 
 > **VerificationTokenUncheckedUpdateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:222
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:223
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:222
 
 > `optional` **expires**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:225
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:226
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:225
 
 > `optional` **identifier**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:223
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:224
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:223
 
 > `optional` **token**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:224
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:225

@@ -8,7 +8,7 @@
 
 > **TransactionOmit**\<`ExtArgs`\> = `runtime.Types.Extensions.GetOmit`\<`"id"` \| `"type"` \| `"datetime"` \| `"amount"` \| `"price"` \| `"currency"` \| `"profitLoss"` \| `"fee"` \| `"feeCurrency"` \| `"userId"` \| `"createdAt"` \| `"updatedAt"`, `ExtArgs`\[`"result"`\]\[`"transaction"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:798
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:799
 
 ## Type Parameters
 

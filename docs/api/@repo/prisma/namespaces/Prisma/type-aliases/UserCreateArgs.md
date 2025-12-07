@@ -8,7 +8,7 @@
 
 > **UserCreateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1482
+Defined in: packages/prisma/generated/prisma/models/User.ts:1483
 
 User create
 
@@ -24,7 +24,7 @@ User create
 
 > **data**: [`XOR`](XOR.md)\<[`UserCreateInput`](UserCreateInput.md), [`UserUncheckedCreateInput`](UserUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1498
+Defined in: packages/prisma/generated/prisma/models/User.ts:1499
 
 The data needed to create a User.
 
@@ -34,7 +34,7 @@ The data needed to create a User.
 
 > `optional` **include**: [`UserInclude`](UserInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1494
+Defined in: packages/prisma/generated/prisma/models/User.ts:1495
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1490
+Defined in: packages/prisma/generated/prisma/models/User.ts:1491
 
 Omit specific fields from the User
 
@@ -54,6 +54,6 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelect`](UserSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1486
+Defined in: packages/prisma/generated/prisma/models/User.ts:1487
 
 Select specific fields to fetch from the User

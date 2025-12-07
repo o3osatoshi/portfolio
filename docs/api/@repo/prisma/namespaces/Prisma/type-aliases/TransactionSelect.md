@@ -8,7 +8,7 @@
 
 > **TransactionSelect**\<`ExtArgs`\> = `runtime.Types.Extensions.GetSelect`\<\{ `amount?`: `boolean`; `createdAt?`: `boolean`; `currency?`: `boolean`; `datetime?`: `boolean`; `fee?`: `boolean`; `feeCurrency?`: `boolean`; `id?`: `boolean`; `price?`: `boolean`; `profitLoss?`: `boolean`; `type?`: `boolean`; `updatedAt?`: `boolean`; `user?`: `boolean` \| [`UserDefaultArgs`](UserDefaultArgs.md)\<`ExtArgs`\>; `userId?`: `boolean`; \}, `ExtArgs`\[`"result"`\]\[`"transaction"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:735
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:736
 
 ## Type Parameters
 

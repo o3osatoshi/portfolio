@@ -8,7 +8,7 @@
 
 > **userMessageFromError**(`error`): `string`
 
-Defined in: [next/error-message.ts:48](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/next/error-message.ts#L48)
+Defined in: [next/error-message.ts:48](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/next/error-message.ts#L48)
 
 Derive a user-facing message from an `Error` produced by `@o3osatoshi/toolkit`.
 

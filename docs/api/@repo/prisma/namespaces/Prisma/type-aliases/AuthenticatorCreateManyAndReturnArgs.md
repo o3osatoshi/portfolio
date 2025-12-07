@@ -8,7 +8,7 @@
 
 > **AuthenticatorCreateManyAndReturnArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1330
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1331
 
 Authenticator createManyAndReturn
 
@@ -24,7 +24,7 @@ Authenticator createManyAndReturn
 
 > **data**: [`AuthenticatorCreateManyInput`](AuthenticatorCreateManyInput.md) \| [`AuthenticatorCreateManyInput`](AuthenticatorCreateManyInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1342
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1343
 
 The data used to create many Authenticators.
 
@@ -34,7 +34,7 @@ The data used to create many Authenticators.
 
 > `optional` **include**: [`AuthenticatorIncludeCreateManyAndReturn`](AuthenticatorIncludeCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1347
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1348
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1338
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1339
 
 Omit specific fields from the Authenticator
 
@@ -54,7 +54,7 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelectCreateManyAndReturn`](AuthenticatorSelectCreateManyAndReturn.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1334
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1335
 
 Select specific fields to fetch from the Authenticator
 
@@ -64,4 +64,4 @@ Select specific fields to fetch from the Authenticator
 
 > `optional` **skipDuplicates**: `boolean`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1343
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1344

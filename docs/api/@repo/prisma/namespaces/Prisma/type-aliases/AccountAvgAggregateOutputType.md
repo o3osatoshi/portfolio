@@ -8,7 +8,7 @@
 
 > **AccountAvgAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:28
+Defined in: packages/prisma/generated/prisma/models/Account.ts:29
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:28
 
 > **expires\_at**: `number` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:29
+Defined in: packages/prisma/generated/prisma/models/Account.ts:30

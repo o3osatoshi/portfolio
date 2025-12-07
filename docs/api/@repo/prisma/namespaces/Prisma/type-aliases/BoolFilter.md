@@ -8,7 +8,7 @@
 
 > **BoolFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:229
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:230
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:229
 
 > `optional` **equals**: `boolean` \| [`BooleanFieldRefInput`](BooleanFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:230
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:231
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:230
 
 > `optional` **not**: [`NestedBoolFilter`](NestedBoolFilter.md)\<`$PrismaModel`\> \| `boolean`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:231
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:232

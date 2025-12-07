@@ -8,7 +8,7 @@
 
 > **SessionUpsertWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:385
+Defined in: packages/prisma/generated/prisma/models/Session.ts:386
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:385
 
 > **create**: [`XOR`](XOR.md)\<[`SessionCreateWithoutUserInput`](SessionCreateWithoutUserInput.md), [`SessionUncheckedCreateWithoutUserInput`](SessionUncheckedCreateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:388
+Defined in: packages/prisma/generated/prisma/models/Session.ts:389
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:388
 
 > **update**: [`XOR`](XOR.md)\<[`SessionUpdateWithoutUserInput`](SessionUpdateWithoutUserInput.md), [`SessionUncheckedUpdateWithoutUserInput`](SessionUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:387
+Defined in: packages/prisma/generated/prisma/models/Session.ts:388
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:387
 
 > **where**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:386
+Defined in: packages/prisma/generated/prisma/models/Session.ts:387

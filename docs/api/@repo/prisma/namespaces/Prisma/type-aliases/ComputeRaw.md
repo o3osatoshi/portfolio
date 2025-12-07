@@ -8,7 +8,7 @@
 
 > **ComputeRaw**\<`A`\> = `A` *extends* `Function` ? `A` : `{ [K in keyof A]: A[K] }` & `object`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:278
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:273
 
 ## Type Parameters
 

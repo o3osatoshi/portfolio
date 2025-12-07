@@ -8,4 +8,4 @@
 
 > **JsonObject** = `runtime.JsonObject`
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:103
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:96

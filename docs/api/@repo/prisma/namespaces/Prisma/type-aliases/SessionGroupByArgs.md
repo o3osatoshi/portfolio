@@ -8,7 +8,7 @@
 
 > **SessionGroupByArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:137
+Defined in: packages/prisma/generated/prisma/models/Session.ts:138
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:137
 
 > `optional` **\_count**: [`SessionCountAggregateInputType`](SessionCountAggregateInputType.md) \| `true`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:144
+Defined in: packages/prisma/generated/prisma/models/Session.ts:145
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:144
 
 > `optional` **\_max**: [`SessionMaxAggregateInputType`](SessionMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:146
+Defined in: packages/prisma/generated/prisma/models/Session.ts:147
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:146
 
 > `optional` **\_min**: [`SessionMinAggregateInputType`](SessionMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:145
+Defined in: packages/prisma/generated/prisma/models/Session.ts:146
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:145
 
 > **by**: [`SessionScalarFieldEnum`](SessionScalarFieldEnum.md)[] \| [`SessionScalarFieldEnum`](SessionScalarFieldEnum.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:140
+Defined in: packages/prisma/generated/prisma/models/Session.ts:141
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:140
 
 > `optional` **having**: [`SessionScalarWhereWithAggregatesInput`](SessionScalarWhereWithAggregatesInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:141
+Defined in: packages/prisma/generated/prisma/models/Session.ts:142
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:141
 
 > `optional` **orderBy**: [`SessionOrderByWithAggregationInput`](SessionOrderByWithAggregationInput.md) \| [`SessionOrderByWithAggregationInput`](SessionOrderByWithAggregationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:139
+Defined in: packages/prisma/generated/prisma/models/Session.ts:140
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:139
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:143
+Defined in: packages/prisma/generated/prisma/models/Session.ts:144
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:143
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:142
+Defined in: packages/prisma/generated/prisma/models/Session.ts:143
 
 ***
 
@@ -86,4 +86,4 @@ Defined in: packages/prisma/generated/prisma/models/Session.ts:142
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Session.ts:138
+Defined in: packages/prisma/generated/prisma/models/Session.ts:139

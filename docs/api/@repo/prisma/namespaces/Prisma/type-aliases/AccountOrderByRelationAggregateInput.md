@@ -8,7 +8,7 @@
 
 > **AccountOrderByRelationAggregateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:480
+Defined in: packages/prisma/generated/prisma/models/Account.ts:481
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:480
 
 > `optional` **\_count**: [`SortOrder`](SortOrder.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:481
+Defined in: packages/prisma/generated/prisma/models/Account.ts:482

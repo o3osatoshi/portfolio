@@ -8,7 +8,7 @@
 
 > **VerificationTokenFindUniqueOrThrowArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:755
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:756
 
 VerificationToken findUniqueOrThrow
 
@@ -24,7 +24,7 @@ VerificationToken findUniqueOrThrow
 
 > `optional` **omit**: [`VerificationTokenOmit`](VerificationTokenOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:763
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:764
 
 Omit specific fields from the VerificationToken
 
@@ -34,7 +34,7 @@ Omit specific fields from the VerificationToken
 
 > `optional` **select**: [`VerificationTokenSelect`](VerificationTokenSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:759
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:760
 
 Select specific fields to fetch from the VerificationToken
 
@@ -44,6 +44,6 @@ Select specific fields to fetch from the VerificationToken
 
 > **where**: [`VerificationTokenWhereUniqueInput`](VerificationTokenWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:767
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:768
 
 Filter, which VerificationToken to fetch.

@@ -8,7 +8,7 @@
 
 > **UserSelectUpdateManyAndReturn**\<`ExtArgs`\> = `runtime.Types.Extensions.GetSelect`\<\{ `createdAt?`: `boolean`; `email?`: `boolean`; `emailVerified?`: `boolean`; `id?`: `boolean`; `image?`: `boolean`; `name?`: `boolean`; `updatedAt?`: `boolean`; \}, `ExtArgs`\[`"result"`\]\[`"user"`\]\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:799
+Defined in: packages/prisma/generated/prisma/models/User.ts:800
 
 ## Type Parameters
 

@@ -8,7 +8,7 @@
 
 > **NestedFloatFilter**\<`$PrismaModel`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:494
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:495
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:494
 
 > `optional` **equals**: `number` \| [`FloatFieldRefInput`](FloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:495
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:496
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:495
 
 > `optional` **gt**: `number` \| [`FloatFieldRefInput`](FloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:500
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:501
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:500
 
 > `optional` **gte**: `number` \| [`FloatFieldRefInput`](FloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:501
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:502
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:501
 
 > `optional` **in**: `number`[] \| [`ListFloatFieldRefInput`](ListFloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:496
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:497
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:496
 
 > `optional` **lt**: `number` \| [`FloatFieldRefInput`](FloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:498
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:499
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:498
 
 > `optional` **lte**: `number` \| [`FloatFieldRefInput`](FloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:499
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:500
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:499
 
 > `optional` **not**: `Prisma.NestedFloatFilter`\<`$PrismaModel`\> \| `number`
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:502
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:503
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:502
 
 > `optional` **notIn**: `number`[] \| [`ListFloatFieldRefInput`](ListFloatFieldRefInput.md)\<`$PrismaModel`\>
 
-Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:497
+Defined in: packages/prisma/generated/prisma/commonInputTypes.ts:498

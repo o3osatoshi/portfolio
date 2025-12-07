@@ -8,7 +8,7 @@
 
 > **AccountAggregateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:143
+Defined in: packages/prisma/generated/prisma/models/Account.ts:144
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:143
 
 > `optional` **\_avg**: [`AccountAvgAggregateInputType`](AccountAvgAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:183
+Defined in: packages/prisma/generated/prisma/models/Account.ts:184
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -34,7 +34,7 @@ Select which fields to average
 
 > `optional` **\_count**: `true` \| [`AccountCountAggregateInputType`](AccountCountAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:177
+Defined in: packages/prisma/generated/prisma/models/Account.ts:178
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -46,7 +46,7 @@ Count returned Accounts
 
 > `optional` **\_max**: [`AccountMaxAggregateInputType`](AccountMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:201
+Defined in: packages/prisma/generated/prisma/models/Account.ts:202
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -58,7 +58,7 @@ Select which fields to find the maximum value
 
 > `optional` **\_min**: [`AccountMinAggregateInputType`](AccountMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:195
+Defined in: packages/prisma/generated/prisma/models/Account.ts:196
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -70,7 +70,7 @@ Select which fields to find the minimum value
 
 > `optional` **\_sum**: [`AccountSumAggregateInputType`](AccountSumAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:189
+Defined in: packages/prisma/generated/prisma/models/Account.ts:190
 
 [Aggregation Docs](https://www.prisma.io/docs/concepts/components/prisma-client/aggregations)
 
@@ -82,7 +82,7 @@ Select which fields to sum
 
 > `optional` **cursor**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:159
+Defined in: packages/prisma/generated/prisma/models/Account.ts:160
 
 [Cursor Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination)
 
@@ -94,7 +94,7 @@ Sets the start position
 
 > `optional` **orderBy**: [`AccountOrderByWithRelationInput`](AccountOrderByWithRelationInput.md) \| [`AccountOrderByWithRelationInput`](AccountOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:153
+Defined in: packages/prisma/generated/prisma/models/Account.ts:154
 
 [Sorting Docs](https://www.prisma.io/docs/concepts/components/prisma-client/sorting)
 
@@ -106,7 +106,7 @@ Determine the order of Accounts to fetch.
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:171
+Defined in: packages/prisma/generated/prisma/models/Account.ts:172
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -118,7 +118,7 @@ Skip the first `n` Accounts.
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:165
+Defined in: packages/prisma/generated/prisma/models/Account.ts:166
 
 [Pagination Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination)
 
@@ -130,6 +130,6 @@ Take `±n` Accounts from the position of the cursor.
 
 > `optional` **where**: [`AccountWhereInput`](AccountWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:147
+Defined in: packages/prisma/generated/prisma/models/Account.ts:148
 
 Filter which Account to aggregate.

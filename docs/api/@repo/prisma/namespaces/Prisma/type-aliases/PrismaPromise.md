@@ -8,7 +8,7 @@
 
 > **PrismaPromise**\<`T`\> = `runtime.Types.Public.PrismaPromise`\<`T`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:25
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:26
 
 ## Type Parameters
 

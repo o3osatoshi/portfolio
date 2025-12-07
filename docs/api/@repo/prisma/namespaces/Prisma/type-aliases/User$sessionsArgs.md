@@ -8,7 +8,7 @@
 
 > **User$sessionsArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1694
+Defined in: packages/prisma/generated/prisma/models/User.ts:1695
 
 User.sessions
 
@@ -24,7 +24,7 @@ User.sessions
 
 > `optional` **cursor**: [`SessionWhereUniqueInput`](SessionWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1709
+Defined in: packages/prisma/generated/prisma/models/User.ts:1710
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1709
 
 > `optional` **distinct**: [`SessionScalarFieldEnum`](SessionScalarFieldEnum.md) \| [`SessionScalarFieldEnum`](SessionScalarFieldEnum.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1712
+Defined in: packages/prisma/generated/prisma/models/User.ts:1713
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1712
 
 > `optional` **include**: [`SessionInclude`](SessionInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1706
+Defined in: packages/prisma/generated/prisma/models/User.ts:1707
 
 Choose, which related nodes to fetch as well
 
@@ -50,7 +50,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`SessionOmit`](SessionOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1702
+Defined in: packages/prisma/generated/prisma/models/User.ts:1703
 
 Omit specific fields from the Session
 
@@ -60,7 +60,7 @@ Omit specific fields from the Session
 
 > `optional` **orderBy**: [`SessionOrderByWithRelationInput`](SessionOrderByWithRelationInput.md) \| [`SessionOrderByWithRelationInput`](SessionOrderByWithRelationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1708
+Defined in: packages/prisma/generated/prisma/models/User.ts:1709
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1708
 
 > `optional` **select**: [`SessionSelect`](SessionSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1698
+Defined in: packages/prisma/generated/prisma/models/User.ts:1699
 
 Select specific fields to fetch from the Session
 
@@ -78,7 +78,7 @@ Select specific fields to fetch from the Session
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1711
+Defined in: packages/prisma/generated/prisma/models/User.ts:1712
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1711
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1710
+Defined in: packages/prisma/generated/prisma/models/User.ts:1711
 
 ***
 
@@ -94,4 +94,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:1710
 
 > `optional` **where**: [`SessionWhereInput`](SessionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1707
+Defined in: packages/prisma/generated/prisma/models/User.ts:1708

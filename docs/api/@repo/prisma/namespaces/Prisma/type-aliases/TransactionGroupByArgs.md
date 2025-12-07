@@ -8,7 +8,7 @@
 
 > **TransactionGroupByArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:221
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:222
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:221
 
 > `optional` **\_avg**: [`TransactionAvgAggregateInputType`](TransactionAvgAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:229
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:230
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:229
 
 > `optional` **\_count**: [`TransactionCountAggregateInputType`](TransactionCountAggregateInputType.md) \| `true`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:228
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:229
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:228
 
 > `optional` **\_max**: [`TransactionMaxAggregateInputType`](TransactionMaxAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:232
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:233
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:232
 
 > `optional` **\_min**: [`TransactionMinAggregateInputType`](TransactionMinAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:231
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:232
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:231
 
 > `optional` **\_sum**: [`TransactionSumAggregateInputType`](TransactionSumAggregateInputType.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:230
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:231
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:230
 
 > **by**: [`TransactionScalarFieldEnum`](TransactionScalarFieldEnum.md)[] \| [`TransactionScalarFieldEnum`](TransactionScalarFieldEnum.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:224
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:225
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:224
 
 > `optional` **having**: [`TransactionScalarWhereWithAggregatesInput`](TransactionScalarWhereWithAggregatesInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:225
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:226
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:225
 
 > `optional` **orderBy**: [`TransactionOrderByWithAggregationInput`](TransactionOrderByWithAggregationInput.md) \| [`TransactionOrderByWithAggregationInput`](TransactionOrderByWithAggregationInput.md)[]
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:223
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:224
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:223
 
 > `optional` **skip**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:227
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:228
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:227
 
 > `optional` **take**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:226
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:227
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:226
 
 > `optional` **where**: [`TransactionWhereInput`](TransactionWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:222
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:223

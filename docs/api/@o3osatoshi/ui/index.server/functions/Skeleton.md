@@ -8,7 +8,7 @@
 
 > **Skeleton**(`__namedParameters`): `Element`
 
-Defined in: [packages/ui/src/components/skeleton.tsx:7](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/ui/src/components/skeleton.tsx#L7)
+Defined in: [packages/ui/src/components/skeleton.tsx:7](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/ui/src/components/skeleton.tsx#L7)
 
 Pulsing placeholder block for loading states.
 

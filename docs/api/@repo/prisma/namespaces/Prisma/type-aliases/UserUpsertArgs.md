@@ -8,7 +8,7 @@
 
 > **UserUpsertArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1604
+Defined in: packages/prisma/generated/prisma/models/User.ts:1605
 
 User upsert
 
@@ -24,7 +24,7 @@ User upsert
 
 > **create**: [`XOR`](XOR.md)\<[`UserCreateInput`](UserCreateInput.md), [`UserUncheckedCreateInput`](UserUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1624
+Defined in: packages/prisma/generated/prisma/models/User.ts:1625
 
 In case the User found by the `where` argument doesn't exist, create a new User with this data.
 
@@ -34,7 +34,7 @@ In case the User found by the `where` argument doesn't exist, create a new User 
 
 > `optional` **include**: [`UserInclude`](UserInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1616
+Defined in: packages/prisma/generated/prisma/models/User.ts:1617
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`UserOmit`](UserOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1612
+Defined in: packages/prisma/generated/prisma/models/User.ts:1613
 
 Omit specific fields from the User
 
@@ -54,7 +54,7 @@ Omit specific fields from the User
 
 > `optional` **select**: [`UserSelect`](UserSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1608
+Defined in: packages/prisma/generated/prisma/models/User.ts:1609
 
 Select specific fields to fetch from the User
 
@@ -64,7 +64,7 @@ Select specific fields to fetch from the User
 
 > **update**: [`XOR`](XOR.md)\<[`UserUpdateInput`](UserUpdateInput.md), [`UserUncheckedUpdateInput`](UserUncheckedUpdateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1628
+Defined in: packages/prisma/generated/prisma/models/User.ts:1629
 
 In case the User was found with the provided `where` argument, update it with this data.
 
@@ -74,6 +74,6 @@ In case the User was found with the provided `where` argument, update it with th
 
 > **where**: [`UserWhereUniqueInput`](UserWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1620
+Defined in: packages/prisma/generated/prisma/models/User.ts:1621
 
 The filter to search for the User to update in case it exists.

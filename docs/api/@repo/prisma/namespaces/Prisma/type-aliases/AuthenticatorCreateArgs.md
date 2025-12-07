@@ -8,7 +8,7 @@
 
 > **AuthenticatorCreateArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1297
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1298
 
 Authenticator create
 
@@ -24,7 +24,7 @@ Authenticator create
 
 > **data**: [`XOR`](XOR.md)\<[`AuthenticatorCreateInput`](AuthenticatorCreateInput.md), [`AuthenticatorUncheckedCreateInput`](AuthenticatorUncheckedCreateInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1313
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1314
 
 The data needed to create a Authenticator.
 
@@ -34,7 +34,7 @@ The data needed to create a Authenticator.
 
 > `optional` **include**: [`AuthenticatorInclude`](AuthenticatorInclude.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1309
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1310
 
 Choose, which related nodes to fetch as well
 
@@ -44,7 +44,7 @@ Choose, which related nodes to fetch as well
 
 > `optional` **omit**: [`AuthenticatorOmit`](AuthenticatorOmit.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1305
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1306
 
 Omit specific fields from the Authenticator
 
@@ -54,6 +54,6 @@ Omit specific fields from the Authenticator
 
 > `optional` **select**: [`AuthenticatorSelect`](AuthenticatorSelect.md)\<`ExtArgs`\> \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1301
+Defined in: packages/prisma/generated/prisma/models/Authenticator.ts:1302
 
 Select specific fields to fetch from the Authenticator

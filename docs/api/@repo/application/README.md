@@ -38,6 +38,11 @@ import { someUseCase } from "@repo/application"; // exported via src/index.ts
 - `pnpm -C packages/application typecheck` — Typecheck only (no build)
 - `pnpm -C packages/application test` — Run unit tests
 
+## Quality
+
+- Tests: `pnpm -C packages/application test` / `pnpm -C packages/application test:cvrg`
+- Coverage: [![Coverage: @repo/application](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=application)](https://app.codecov.io/github/o3osatoshi/portfolio?component=application)
+
 ## Notes
 - Source‑first: this package does not ship a dist build. Apps transpile TypeScript from this package directly (via Next's `transpilePackages`).
 - Errors: application‑level errors are shaped via `newApplicationError` wrapping the shared toolkit.
@@ -47,6 +52,8 @@ import { someUseCase } from "@repo/application"; // exported via src/index.ts
 - [CreateTransactionUseCase](classes/CreateTransactionUseCase.md)
 - [DeleteTransactionUseCase](classes/DeleteTransactionUseCase.md)
 - [GetTransactionsUseCase](classes/GetTransactionsUseCase.md)
+- [HeavyProcessCachedUseCase](classes/HeavyProcessCachedUseCase.md)
+- [HeavyProcessUseCase](classes/HeavyProcessUseCase.md)
 - [UpdateTransactionUseCase](classes/UpdateTransactionUseCase.md)
 
 ## Type Aliases
@@ -56,6 +63,8 @@ import { someUseCase } from "@repo/application"; // exported via src/index.ts
 - [DeleteTransactionRequest](type-aliases/DeleteTransactionRequest.md)
 - [GetTransactionsRequest](type-aliases/GetTransactionsRequest.md)
 - [GetTransactionsResponse](type-aliases/GetTransactionsResponse.md)
+- [HeavyProcessCachedResponse](type-aliases/HeavyProcessCachedResponse.md)
+- [HeavyProcessResponse](type-aliases/HeavyProcessResponse.md)
 - [TransactionResponse](type-aliases/TransactionResponse.md)
 - [UpdateTransactionRequest](type-aliases/UpdateTransactionRequest.md)
 
@@ -64,6 +73,8 @@ import { someUseCase } from "@repo/application"; // exported via src/index.ts
 - [createTransactionRequestSchema](variables/createTransactionRequestSchema.md)
 - [deleteTransactionRequestSchema](variables/deleteTransactionRequestSchema.md)
 - [getTransactionsRequestSchema](variables/getTransactionsRequestSchema.md)
+- [heavyProcessCachedResponseSchema](variables/heavyProcessCachedResponseSchema.md)
+- [heavyProcessResponseSchema](variables/heavyProcessResponseSchema.md)
 - [parseCreateTransactionRequest](variables/parseCreateTransactionRequest.md)
 - [parseDeleteTransactionRequest](variables/parseDeleteTransactionRequest.md)
 - [parseGetTransactionsRequest](variables/parseGetTransactionsRequest.md)

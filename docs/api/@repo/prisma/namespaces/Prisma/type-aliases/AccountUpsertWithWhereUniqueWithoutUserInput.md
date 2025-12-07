@@ -8,7 +8,7 @@
 
 > **AccountUpsertWithWhereUniqueWithoutUserInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:635
+Defined in: packages/prisma/generated/prisma/models/Account.ts:636
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:635
 
 > **create**: [`XOR`](XOR.md)\<[`AccountCreateWithoutUserInput`](AccountCreateWithoutUserInput.md), [`AccountUncheckedCreateWithoutUserInput`](AccountUncheckedCreateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:638
+Defined in: packages/prisma/generated/prisma/models/Account.ts:639
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:638
 
 > **update**: [`XOR`](XOR.md)\<[`AccountUpdateWithoutUserInput`](AccountUpdateWithoutUserInput.md), [`AccountUncheckedUpdateWithoutUserInput`](AccountUncheckedUpdateWithoutUserInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:637
+Defined in: packages/prisma/generated/prisma/models/Account.ts:638
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/prisma/generated/prisma/models/Account.ts:637
 
 > **where**: [`AccountWhereUniqueInput`](AccountWhereUniqueInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/Account.ts:636
+Defined in: packages/prisma/generated/prisma/models/Account.ts:637

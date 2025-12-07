@@ -6,9 +6,9 @@
 
 # Function: respondZodError()
 
-> **respondZodError**(`result`, `c`): `undefined` \| `Response`
+> **respondZodError**(`result`, `c`): `Response` \| `undefined`
 
-Defined in: [packages/interface/src/http/core/respond.ts:72](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/interface/src/http/core/respond.ts#L72)
+Defined in: [packages/interface/src/http/core/respond.ts:72](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/interface/src/http/core/respond.ts#L72)
 
 zValidator hook that maps Zod validation failures to normalized JSON errors.
 
@@ -40,7 +40,7 @@ Hono context used to create the JSON response.
 
 ## Returns
 
-`undefined` \| `Response`
+`Response` \| `undefined`
 
 A JSON `Response` when validation fails, otherwise `undefined` to
 allow request processing to continue.

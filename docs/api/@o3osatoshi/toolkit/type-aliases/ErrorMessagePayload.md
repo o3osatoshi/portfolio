@@ -8,7 +8,7 @@
 
 > **ErrorMessagePayload** = `object` & [`ErrorMessageParts`](ErrorMessageParts.md)
 
-Defined in: [error/error-format.ts:65](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-format.ts#L65)
+Defined in: [error/error-format.ts:65](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L65)
 
 JSON payload shape produced by [composeErrorMessage](../functions/composeErrorMessage.md).
 

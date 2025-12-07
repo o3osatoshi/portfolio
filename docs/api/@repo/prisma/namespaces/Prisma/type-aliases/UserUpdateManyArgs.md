@@ -8,7 +8,7 @@
 
 > **UserUpdateManyArgs**\<`ExtArgs`\> = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1560
+Defined in: packages/prisma/generated/prisma/models/User.ts:1561
 
 User updateMany
 
@@ -24,7 +24,7 @@ User updateMany
 
 > **data**: [`XOR`](XOR.md)\<[`UserUpdateManyMutationInput`](UserUpdateManyMutationInput.md), [`UserUncheckedUpdateManyInput`](UserUncheckedUpdateManyInput.md)\>
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1564
+Defined in: packages/prisma/generated/prisma/models/User.ts:1565
 
 The data used to update Users.
 
@@ -34,7 +34,7 @@ The data used to update Users.
 
 > `optional` **limit**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1572
+Defined in: packages/prisma/generated/prisma/models/User.ts:1573
 
 Limit how many Users to update.
 
@@ -44,6 +44,6 @@ Limit how many Users to update.
 
 > `optional` **where**: [`UserWhereInput`](UserWhereInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:1568
+Defined in: packages/prisma/generated/prisma/models/User.ts:1569
 
 Filter which Users to update

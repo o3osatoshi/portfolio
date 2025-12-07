@@ -8,7 +8,7 @@
 
 > **VerificationTokenCountAggregateOutputType** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:38
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:39
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:38
 
 > **\_all**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:42
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:43
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:42
 
 > **expires**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:41
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:42
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:41
 
 > **identifier**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:39
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:40
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:39
 
 > **token**: `number`
 
-Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:40
+Defined in: packages/prisma/generated/prisma/models/VerificationToken.ts:41

@@ -8,7 +8,7 @@
 
 > **functionsBundlePreset**(`opts`): `Promise`\<`Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>\>
 
-Defined in: [packages/config/src/tsup/index.ts:66](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/config/src/tsup/index.ts#L66)
+Defined in: [packages/config/src/tsup/index.ts:66](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/tsup/index.ts#L66)
 
 Creates a tsup configuration preset for Firebase Cloud Functions deployments.
 

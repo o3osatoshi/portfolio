@@ -8,7 +8,7 @@
 
 > **UserUncheckedUpdateInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:305
+Defined in: packages/prisma/generated/prisma/models/User.ts:306
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:305
 
 > `optional` **accounts**: [`AccountUncheckedUpdateManyWithoutUserNestedInput`](AccountUncheckedUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:313
+Defined in: packages/prisma/generated/prisma/models/User.ts:314
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:313
 
 > `optional` **Authenticator**: [`AuthenticatorUncheckedUpdateManyWithoutUserNestedInput`](AuthenticatorUncheckedUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:315
+Defined in: packages/prisma/generated/prisma/models/User.ts:316
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:315
 
 > `optional` **createdAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:311
+Defined in: packages/prisma/generated/prisma/models/User.ts:312
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:311
 
 > `optional` **email**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:308
+Defined in: packages/prisma/generated/prisma/models/User.ts:309
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:308
 
 > `optional` **emailVerified**: [`NullableDateTimeFieldUpdateOperationsInput`](NullableDateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:309
+Defined in: packages/prisma/generated/prisma/models/User.ts:310
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:309
 
 > `optional` **id**: [`StringFieldUpdateOperationsInput`](StringFieldUpdateOperationsInput.md) \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:306
+Defined in: packages/prisma/generated/prisma/models/User.ts:307
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:306
 
 > `optional` **image**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:310
+Defined in: packages/prisma/generated/prisma/models/User.ts:311
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:310
 
 > `optional` **name**: [`NullableStringFieldUpdateOperationsInput`](NullableStringFieldUpdateOperationsInput.md) \| `string` \| `null`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:307
+Defined in: packages/prisma/generated/prisma/models/User.ts:308
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:307
 
 > `optional` **sessions**: [`SessionUncheckedUpdateManyWithoutUserNestedInput`](SessionUncheckedUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:314
+Defined in: packages/prisma/generated/prisma/models/User.ts:315
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:314
 
 > `optional` **transactions**: [`TransactionUncheckedUpdateManyWithoutUserNestedInput`](TransactionUncheckedUpdateManyWithoutUserNestedInput.md)
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:316
+Defined in: packages/prisma/generated/prisma/models/User.ts:317
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: packages/prisma/generated/prisma/models/User.ts:316
 
 > `optional` **updatedAt**: [`DateTimeFieldUpdateOperationsInput`](DateTimeFieldUpdateOperationsInput.md) \| `Date` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/User.ts:312
+Defined in: packages/prisma/generated/prisma/models/User.ts:313

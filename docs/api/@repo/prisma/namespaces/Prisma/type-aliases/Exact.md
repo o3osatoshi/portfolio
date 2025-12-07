@@ -8,7 +8,7 @@
 
 > **Exact**\<`A`, `W`\> = `runtime.Types.Public.Exact`\<`A`, `W`\>
 
-Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:82
+Defined in: packages/prisma/generated/prisma/internal/prismaNamespace.ts:75
 
 ## Type Parameters
 

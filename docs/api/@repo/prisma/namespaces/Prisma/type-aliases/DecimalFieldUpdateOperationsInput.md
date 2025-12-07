@@ -8,7 +8,7 @@
 
 > **DecimalFieldUpdateOperationsInput** = `object`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:543
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:544
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:543
 
 > `optional` **decrement**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:546
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:547
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:546
 
 > `optional` **divide**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:548
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:549
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:548
 
 > `optional` **increment**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:545
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:546
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:545
 
 > `optional` **multiply**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:547
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:548
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/prisma/generated/prisma/models/Transaction.ts:547
 
 > `optional` **set**: `runtime.Decimal` \| `runtime.DecimalJsLike` \| `number` \| `string`
 
-Defined in: packages/prisma/generated/prisma/models/Transaction.ts:544
+Defined in: packages/prisma/generated/prisma/models/Transaction.ts:545

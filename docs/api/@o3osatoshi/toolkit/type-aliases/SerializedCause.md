@@ -8,7 +8,7 @@
 
 > **SerializedCause** = [`SerializedError`](../interfaces/SerializedError.md) \| `string`
 
-Defined in: [error/error-serializer.ts:13](https://github.com/o3osatoshi/experiment/blob/6cdc4d4fc6fecaa10978fba483375a4d01659beb/packages/toolkit/src/error/error-serializer.ts#L13)
+Defined in: [error/error-serializer.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-serializer.ts#L13)
 
 Union used to represent an error's `cause` in serialized form.
 
