@@ -35,6 +35,11 @@ export interface EdgeTelemetryOptions extends BaseTelemetryOptions {
 }
 
 // @public
+export type ErrorAttributes = {
+    error?: unknown;
+} & Attributes;
+
+// @public
 export type ErrorReporter = (error: unknown, context?: ErrorReporterContext) => string | undefined;
 
 // @public
@@ -52,9 +57,7 @@ export interface Logger {
     // (undocumented)
     debug(message: string, attributes?: Attributes): void;
     // (undocumented)
-    error(message: string, attributes?: {
-        error?: unknown;
-    } & Attributes): void;
+    error(message: string, attributes?: ErrorAttributes): void;
     // (undocumented)
     info(message: string, attributes?: Attributes): void;
     // (undocumented)
@@ -83,9 +86,7 @@ export interface RequestContext {
 
 // @public
 export interface RequestTelemetry {
-    end: (attributes?: {
-        error?: unknown;
-    } & Attributes) => void;
+    end: (attributes?: ErrorAttributes) => void;
     logger: Logger;
     span: Span;
     spanId: string;

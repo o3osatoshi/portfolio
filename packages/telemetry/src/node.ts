@@ -6,6 +6,7 @@ import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 import type {
   Attributes,
+  ErrorAttributes,
   Logger,
   LogLevel,
   NodeTelemetryOptions,
@@ -121,7 +122,7 @@ function createSpanLogger(
   const log = (
     level: LogLevel,
     message: string,
-    attributes?: { error?: unknown } & Attributes,
+    attributes?: ErrorAttributes,
   ) => {
     const { error, ...rest } = attributes ?? {};
 

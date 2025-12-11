@@ -86,6 +86,18 @@ export interface EdgeTelemetryOptions extends BaseTelemetryOptions {
 }
 
 /**
+ * Attributes associated with an error event.
+ *
+ * @remarks
+ * - Extends the common {@link Attributes} map with an optional `error` field.
+ * - When provided, `error` is recorded as an exception on the current span
+ *   and may be forwarded to an {@link ErrorReporter} implementation.
+ *
+ * @public
+ */
+export type ErrorAttributes = { error?: unknown } & Attributes;
+
+/**
  * Callback used to report errors to an external system.
  *
  * @remarks
@@ -134,7 +146,7 @@ export interface ErrorReporterContext {
  */
 export interface Logger {
   debug(message: string, attributes?: Attributes): void;
-  error(message: string, attributes?: { error?: unknown } & Attributes): void;
+  error(message: string, attributes?: ErrorAttributes): void;
   info(message: string, attributes?: Attributes): void;
   warn(message: string, attributes?: Attributes): void;
 }
@@ -203,7 +215,7 @@ export interface RequestTelemetry {
   /**
    * End the span and optionally attach error/attribute information.
    */
-  end: (attributes?: { error?: unknown } & Attributes) => void;
+  end: (attributes?: ErrorAttributes) => void;
   /**
    * Logger bound to the span and request context.
    */

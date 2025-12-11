@@ -210,6 +210,8 @@ All runtime options share a common configuration shape:
   - `env: Env` – canonical deployment environment (`"development" | "local" | "production" | "staging"`).
   - `sampleRate?: number` – reserved hint for future sampling configuration.
   - `serviceName: string`
+- `ErrorAttributes`
+  - Extends `Attributes` with an optional `error?: unknown` field used by `logger.error` and `RequestTelemetry["end"]` to record exceptions and feed the configured `errorReporter`.
 - `NodeTelemetryOptions`, `EdgeTelemetryOptions`, `BrowserTelemetryOptions`
   - Runtime‑specific extensions of `BaseTelemetryOptions`.
 - `RequestContext`
