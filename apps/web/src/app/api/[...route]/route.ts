@@ -3,8 +3,11 @@ import { buildHandler } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 import { env } from "@/env/server";
+import { ensureNodeTelemetryInitialised } from "@/lib/telemetry";
 
 export const runtime = "nodejs";
+
+ensureNodeTelemetryInitialised();
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
