@@ -53,9 +53,48 @@ vi.mock("@opentelemetry/api", () => {
   };
 });
 
-import * as otel from "@opentelemetry/api";
+vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
+  const OTLPTraceExporter = vi.fn().mockImplementation(function (
+    this: any,
+    options: unknown,
+  ) {
+    this.options = options;
+  });
+  return { OTLPTraceExporter };
+});
 
-import { createRequestTelemetry } from "./node";
+vi.mock("@opentelemetry/resources", () => {
+  const Resource = vi.fn().mockImplementation(function (
+    this: any,
+    attributes: unknown,
+  ) {
+    this.attributes = attributes;
+  });
+  return { Resource };
+});
+
+vi.mock("@opentelemetry/sdk-node", () => {
+  const NodeSDK = vi.fn().mockImplementation(function (
+    this: any,
+    options: unknown,
+  ) {
+    this.options = options;
+    this.start = vi.fn().mockResolvedValue(undefined);
+  });
+  return { NodeSDK };
+});
+
+vi.mock("@opentelemetry/semantic-conventions", () => ({
+  ATTR_SERVICE_NAME: "service.name",
+}));
+
+import * as otel from "@opentelemetry/api";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { Resource } from "@opentelemetry/resources";
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
+
+import { createRequestTelemetry, initNodeTelemetry } from "./node";
 import type { RequestContext } from "./types";
 
 const apiMocks = (otel as any).__mocks as {
@@ -141,5 +180,68 @@ describe("createRequestTelemetry (node)", () => {
     const recorded = apiMocks.mockSpanRecordException.mock.calls[0][0];
     expect(recorded).toBeInstanceOf(Error);
     expect((recorded as Error).message).toBe("unknown error");
+  });
+});
+
+describe("initNodeTelemetry", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("is idempotent and configures resource and exporter correctly", () => {
+    const options = {
+      axiom: {
+        apiToken: "test-token",
+        otlpEndpoint: "https://example.axiom.co/v1/traces",
+      },
+      env: "production",
+      serviceName: "my-node-service",
+    } as const;
+
+    initNodeTelemetry(options);
+    // Second call should be a no-op
+    initNodeTelemetry({
+      ...options,
+      axiom: {
+        apiToken: "other-token",
+        otlpEndpoint: "https://other.example/v1/traces",
+      },
+    });
+
+    const ResourceMock = Resource as unknown as ReturnType<typeof vi.fn>;
+    const ExporterMock = OTLPTraceExporter as unknown as ReturnType<
+      typeof vi.fn
+    >;
+    const NodeSDKMock = NodeSDK as unknown as ReturnType<typeof vi.fn>;
+
+    // Idempotent: constructors called only once
+    expect(ResourceMock).toHaveBeenCalledTimes(1);
+    expect(ExporterMock).toHaveBeenCalledTimes(1);
+    expect(NodeSDKMock).toHaveBeenCalledTimes(1);
+
+    // Resource attributes include service name and environment
+    expect(ResourceMock).toHaveBeenCalledWith({
+      [ATTR_SERVICE_NAME]: options.serviceName,
+      "deployment.environment": options.env,
+    });
+
+    // Exporter configured with Axiom token and endpoint
+    expect(ExporterMock).toHaveBeenCalledWith({
+      headers: {
+        Authorization: `Bearer ${options.axiom.apiToken}`,
+      },
+      url: options.axiom.otlpEndpoint,
+    });
+
+    // NodeSDK is wired with the created resource and exporter
+    const sdkInstance = (NodeSDKMock as any).mock.instances[0];
+    const resourceInstance = (ResourceMock as any).mock.instances[0];
+    const exporterInstance = (ExporterMock as any).mock.instances[0];
+
+    expect(sdkInstance.options.resource).toBe(resourceInstance);
+    expect(sdkInstance.options.traceExporter).toBe(exporterInstance);
+
+    // SDK start is invoked once
+    expect(sdkInstance.start).toHaveBeenCalledTimes(1);
   });
 });

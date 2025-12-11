@@ -42,10 +42,60 @@ vi.mock("@opentelemetry/api", () => {
   };
 });
 
+vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
+  const OTLPTraceExporter = vi.fn().mockImplementation(function (
+    this: any,
+    options: unknown,
+  ) {
+    this.options = options;
+  });
+  return { OTLPTraceExporter };
+});
+
+vi.mock("@opentelemetry/resources", () => {
+  const Resource = vi.fn().mockImplementation(function (
+    this: any,
+    attributes: unknown,
+  ) {
+    this.attributes = attributes;
+  });
+  return { Resource };
+});
+
+vi.mock("@opentelemetry/sdk-trace-base", () => {
+  const BatchSpanProcessor = vi.fn().mockImplementation(function (
+    this: any,
+    exporter: unknown,
+  ) {
+    this.exporter = exporter;
+  });
+  return { BatchSpanProcessor };
+});
+
+vi.mock("@opentelemetry/sdk-trace-web", () => {
+  const WebTracerProvider = vi.fn().mockImplementation(function (
+    this: any,
+    options: unknown,
+  ) {
+    this.options = options;
+    this.register = vi.fn();
+  });
+  return { WebTracerProvider };
+});
+
+vi.mock("@opentelemetry/semantic-conventions", () => ({
+  ATTR_SERVICE_NAME: "service.name",
+}));
+
 import * as otel from "@opentelemetry/api";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { Resource } from "@opentelemetry/resources";
+import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
+import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 import type { BrowserSessionContext } from "./browser";
-import { createBrowserLogger } from "./browser";
+import { createBrowserLogger, initBrowserTelemetry } from "./browser";
 
 const apiMocks = (otel as any).__mocks as {
   mockContextWith: ReturnType<typeof vi.fn>;
@@ -105,5 +155,77 @@ describe("createBrowserLogger", () => {
       level: "info",
       message: "hello",
     });
+  });
+});
+
+describe("initBrowserTelemetry", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("is idempotent and configures resource and exporter correctly", () => {
+    const options = {
+      axiom: {
+        apiToken: "test-token",
+        otlpEndpoint: "https://example.axiom.co/v1/traces",
+      },
+      env: "production",
+      serviceName: "my-web-app",
+    } as const;
+
+    initBrowserTelemetry(options);
+    // Second call should be a no-op
+    initBrowserTelemetry({
+      ...options,
+      axiom: {
+        apiToken: "other-token",
+        otlpEndpoint: "https://other.example/v1/traces",
+      },
+    });
+
+    const ResourceMock = Resource as unknown as ReturnType<typeof vi.fn>;
+    const ExporterMock = OTLPTraceExporter as unknown as ReturnType<
+      typeof vi.fn
+    >;
+    const ProviderMock = WebTracerProvider as unknown as ReturnType<
+      typeof vi.fn
+    >;
+    const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ReturnType<
+      typeof vi.fn
+    >;
+
+    // Idempotent: constructors called only once
+    expect(ResourceMock).toHaveBeenCalledTimes(1);
+    expect(ExporterMock).toHaveBeenCalledTimes(1);
+    expect(ProviderMock).toHaveBeenCalledTimes(1);
+    expect(BatchSpanProcessorMock).toHaveBeenCalledTimes(1);
+
+    // Resource attributes include service name and environment
+    expect(ResourceMock).toHaveBeenCalledWith({
+      [ATTR_SERVICE_NAME]: options.serviceName,
+      "deployment.environment": options.env,
+    });
+
+    // Exporter configured with Axiom token and endpoint
+    expect(ExporterMock).toHaveBeenCalledWith({
+      headers: {
+        Authorization: `Bearer ${options.axiom.apiToken}`,
+      },
+      url: options.axiom.otlpEndpoint,
+    });
+
+    // Provider is wired with the created resource and span processor
+    const providerInstance = (ProviderMock as any).mock.instances[0];
+    const resourceInstance = (ResourceMock as any).mock.instances[0];
+    const spanProcessorInstance = (BatchSpanProcessorMock as any).mock
+      .instances[0];
+
+    expect(providerInstance.options.resource).toBe(resourceInstance);
+    expect(providerInstance.options.spanProcessors).toEqual([
+      spanProcessorInstance,
+    ]);
+
+    // Provider is registered once
+    expect(providerInstance.register).toHaveBeenCalledTimes(1);
   });
 });
