@@ -106,6 +106,7 @@ export function initEdgeTelemetry(options: EdgeTelemetryOptions): void {
   const exporter = new OTLPTraceExporter({
     headers: {
       Authorization: `Bearer ${options.axiom.apiToken}`,
+      "X-Axiom-Dataset": options.dataset,
     },
     url: options.axiom.otlpEndpoint,
   });

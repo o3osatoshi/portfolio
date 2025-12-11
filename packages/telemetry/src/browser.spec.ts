@@ -43,8 +43,11 @@ vi.mock("@opentelemetry/api", () => {
 });
 
 vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
-  const OTLPTraceExporter = vi.fn().mockImplementation(function (
-    this: any,
+  interface TestExporterInstance {
+    options?: unknown;
+  }
+  const OTLPTraceExporter = vi.fn(function (
+    this: TestExporterInstance,
     options: unknown,
   ) {
     this.options = options;
@@ -53,8 +56,11 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
 });
 
 vi.mock("@opentelemetry/resources", () => {
-  const Resource = vi.fn().mockImplementation(function (
-    this: any,
+  interface TestResourceInstance {
+    attributes?: unknown;
+  }
+  const Resource = vi.fn(function (
+    this: TestResourceInstance,
     attributes: unknown,
   ) {
     this.attributes = attributes;
@@ -63,8 +69,11 @@ vi.mock("@opentelemetry/resources", () => {
 });
 
 vi.mock("@opentelemetry/sdk-trace-base", () => {
-  const BatchSpanProcessor = vi.fn().mockImplementation(function (
-    this: any,
+  interface TestBatchSpanProcessorInstance {
+    exporter?: unknown;
+  }
+  const BatchSpanProcessor = vi.fn(function (
+    this: TestBatchSpanProcessorInstance,
     exporter: unknown,
   ) {
     this.exporter = exporter;
@@ -73,8 +82,12 @@ vi.mock("@opentelemetry/sdk-trace-base", () => {
 });
 
 vi.mock("@opentelemetry/sdk-trace-web", () => {
-  const WebTracerProvider = vi.fn().mockImplementation(function (
-    this: any,
+  interface TestWebTracerProviderInstance {
+    options?: unknown;
+    register?: ReturnType<typeof vi.fn>;
+  }
+  const WebTracerProvider = vi.fn(function (
+    this: TestWebTracerProviderInstance,
     options: unknown,
   ) {
     this.options = options;
@@ -97,7 +110,8 @@ import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 import type { BrowserSessionContext } from "./browser";
 import { createBrowserLogger, initBrowserTelemetry } from "./browser";
 
-const apiMocks = (otel as any).__mocks as {
+// @ts-expect-error – accessing Vitest mock internals
+const apiMocks = otel.__mocks as {
   mockContextWith: ReturnType<typeof vi.fn>;
   mockGetActiveSpan: ReturnType<typeof vi.fn>;
   mockGetTracer: ReturnType<typeof vi.fn>;
@@ -169,6 +183,7 @@ describe("initBrowserTelemetry", () => {
         apiToken: "test-token",
         otlpEndpoint: "https://example.axiom.co/v1/traces",
       },
+      dataset: "my-browser-dataset",
       env: "production",
       serviceName: "my-web-app",
     } as const;
@@ -183,16 +198,11 @@ describe("initBrowserTelemetry", () => {
       },
     });
 
-    const ResourceMock = Resource as unknown as ReturnType<typeof vi.fn>;
-    const ExporterMock = OTLPTraceExporter as unknown as ReturnType<
-      typeof vi.fn
-    >;
-    const ProviderMock = WebTracerProvider as unknown as ReturnType<
-      typeof vi.fn
-    >;
-    const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ReturnType<
-      typeof vi.fn
-    >;
+    type ViMockFn = ReturnType<typeof vi.fn>;
+    const ResourceMock = Resource as unknown as ViMockFn;
+    const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
+    const ProviderMock = WebTracerProvider as unknown as ViMockFn;
+    const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ViMockFn;
 
     // Idempotent: constructors called only once
     expect(ResourceMock).toHaveBeenCalledTimes(1);
@@ -210,15 +220,15 @@ describe("initBrowserTelemetry", () => {
     expect(ExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
+        "X-Axiom-Dataset": options.dataset,
       },
       url: options.axiom.otlpEndpoint,
     });
 
     // Provider is wired with the created resource and span processor
-    const providerInstance = (ProviderMock as any).mock.instances[0];
-    const resourceInstance = (ResourceMock as any).mock.instances[0];
-    const spanProcessorInstance = (BatchSpanProcessorMock as any).mock
-      .instances[0];
+    const providerInstance = ProviderMock.mock.instances[0];
+    const resourceInstance = ResourceMock.mock.instances[0];
+    const spanProcessorInstance = BatchSpanProcessorMock.mock.instances[0];
 
     expect(providerInstance.options.resource).toBe(resourceInstance);
     expect(providerInstance.options.spanProcessors).toEqual([

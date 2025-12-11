@@ -49,6 +49,14 @@ export interface BaseTelemetryOptions {
    */
   axiom: AxiomConfig;
   /**
+   * Target Axiom dataset name for OTLP traces.
+   *
+   * @remarks
+   * - Propagated via the `X-Axiom-Dataset` header on OTLP/HTTP requests.
+   * - Should refer to an "Events" dataset configured to receive OpenTelemetry spans.
+   */
+  dataset: string;
+  /**
    * Canonical deployment environment label shared with `@o3osatoshi/toolkit`.
    */
   env: Env;

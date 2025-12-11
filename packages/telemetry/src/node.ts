@@ -103,6 +103,7 @@ export function initNodeTelemetry(options: NodeTelemetryOptions): void {
   const traceExporter = new OTLPTraceExporter({
     headers: {
       Authorization: `Bearer ${options.axiom.apiToken}`,
+      "X-Axiom-Dataset": options.dataset,
     },
     url: options.axiom.otlpEndpoint,
   });

@@ -20,6 +20,7 @@ export interface AxiomConfig {
 // @public
 export interface BaseTelemetryOptions {
     axiom: AxiomConfig;
+    dataset: string;
     env: Env;
     sampleRate?: number;
     serviceName: string;

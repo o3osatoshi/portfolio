@@ -207,6 +207,7 @@ All runtime options share a common configuration shape:
   - `otlpEndpoint: string` – OTLP/HTTP traces endpoint.
 - `BaseTelemetryOptions`
   - `axiom: AxiomConfig`
+  - `dataset: string` – target Axiom dataset name used for OTLP traces (propagated via the `X-Axiom-Dataset` header).
   - `env: Env` – canonical deployment environment (`"development" | "local" | "production" | "staging"`).
   - `sampleRate?: number` – reserved hint for future sampling configuration.
   - `serviceName: string`

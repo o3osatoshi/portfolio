@@ -54,8 +54,11 @@ vi.mock("@opentelemetry/api", () => {
 });
 
 vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
-  const OTLPTraceExporter = vi.fn().mockImplementation(function (
-    this: any,
+  interface TestExporterInstance {
+    options?: unknown;
+  }
+  const OTLPTraceExporter = vi.fn(function (
+    this: TestExporterInstance,
     options: unknown,
   ) {
     this.options = options;
@@ -64,8 +67,11 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
 });
 
 vi.mock("@opentelemetry/resources", () => {
-  const Resource = vi.fn().mockImplementation(function (
-    this: any,
+  interface TestResourceInstance {
+    attributes?: unknown;
+  }
+  const Resource = vi.fn(function (
+    this: TestResourceInstance,
     attributes: unknown,
   ) {
     this.attributes = attributes;
@@ -74,10 +80,11 @@ vi.mock("@opentelemetry/resources", () => {
 });
 
 vi.mock("@opentelemetry/sdk-node", () => {
-  const NodeSDK = vi.fn().mockImplementation(function (
-    this: any,
-    options: unknown,
-  ) {
+  interface TestNodeSDKInstance {
+    options?: unknown;
+    start?: ReturnType<typeof vi.fn>;
+  }
+  const NodeSDK = vi.fn(function (this: TestNodeSDKInstance, options: unknown) {
     this.options = options;
     this.start = vi.fn().mockResolvedValue(undefined);
   });
@@ -97,7 +104,8 @@ import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 import { createRequestTelemetry, initNodeTelemetry } from "./node";
 import type { RequestContext } from "./types";
 
-const apiMocks = (otel as any).__mocks as {
+// @ts-expect-error – accessing Vitest mock internals
+const apiMocks = otel.__mocks as {
   mockGetActiveSpan: ReturnType<typeof vi.fn>;
   mockGetTracer: ReturnType<typeof vi.fn>;
   mockSpanAddEvent: ReturnType<typeof vi.fn>;
@@ -194,6 +202,7 @@ describe("initNodeTelemetry", () => {
         apiToken: "test-token",
         otlpEndpoint: "https://example.axiom.co/v1/traces",
       },
+      dataset: "my-node-dataset",
       env: "production",
       serviceName: "my-node-service",
     } as const;
@@ -208,11 +217,10 @@ describe("initNodeTelemetry", () => {
       },
     });
 
-    const ResourceMock = Resource as unknown as ReturnType<typeof vi.fn>;
-    const ExporterMock = OTLPTraceExporter as unknown as ReturnType<
-      typeof vi.fn
-    >;
-    const NodeSDKMock = NodeSDK as unknown as ReturnType<typeof vi.fn>;
+    type ViMockFn = ReturnType<typeof vi.fn>;
+    const ResourceMock = Resource as unknown as ViMockFn;
+    const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
+    const NodeSDKMock = NodeSDK as unknown as ViMockFn;
 
     // Idempotent: constructors called only once
     expect(ResourceMock).toHaveBeenCalledTimes(1);
@@ -229,14 +237,27 @@ describe("initNodeTelemetry", () => {
     expect(ExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
+        "X-Axiom-Dataset": options.dataset,
       },
       url: options.axiom.otlpEndpoint,
     });
 
     // NodeSDK is wired with the created resource and exporter
-    const sdkInstance = (NodeSDKMock as any).mock.instances[0];
-    const resourceInstance = (ResourceMock as any).mock.instances[0];
-    const exporterInstance = (ExporterMock as any).mock.instances[0];
+    const rawSdkInstance = NodeSDKMock.mock.instances[0];
+    const rawResourceInstance = ResourceMock.mock.instances[0];
+    const rawExporterInstance = ExporterMock.mock.instances[0];
+
+    interface SdkInstanceShape {
+      options: {
+        resource: unknown;
+        traceExporter: unknown;
+      };
+      start: ReturnType<typeof vi.fn>;
+    }
+
+    const sdkInstance = rawSdkInstance as SdkInstanceShape;
+    const resourceInstance = rawResourceInstance as unknown;
+    const exporterInstance = rawExporterInstance as unknown;
 
     expect(sdkInstance.options.resource).toBe(resourceInstance);
     expect(sdkInstance.options.traceExporter).toBe(exporterInstance);
