@@ -1,4 +1,15 @@
 /**
+ * Canonical deployment environment label used across this workspace.
+ *
+ * @remarks
+ * - Intended for high-level environment classification (e.g. telemetry, config).
+ * - Values are kept deliberately small and opinionated to match common stages.
+ *
+ * @public
+ */
+export type Env = "development" | "local" | "production" | "staging";
+
+/**
  * JSON array value.
  *
  * @public

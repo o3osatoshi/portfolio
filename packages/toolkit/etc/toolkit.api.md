@@ -61,6 +61,9 @@ export function deserializeError(input: unknown): Error;
 export function encode(value: unknown): Result<string, Error>;
 
 // @public
+export type Env = "development" | "local" | "production" | "staging";
+
+// @public
 export type EnvOf<T extends EnvSchema> = {
     [K in keyof T]: z.infer<T[K]>;
 };
