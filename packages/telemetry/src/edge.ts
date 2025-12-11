@@ -17,6 +17,7 @@ import type {
 } from "./types";
 
 let provider: BasicTracerProvider | undefined;
+let edgeOptions: EdgeTelemetryOptions | undefined;
 
 /**
  * Create a request-scoped span and logger for Edge HTTP handlers.
@@ -94,6 +95,8 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
 export function initEdgeTelemetry(options: EdgeTelemetryOptions): void {
   if (provider) return;
 
+  edgeOptions = options;
+
   const resource = new Resource({
     [ATTR_SERVICE_NAME]: options.serviceName,
     "deployment.environment": options.env,
@@ -118,13 +121,33 @@ function createSpanLogger(
   baseAttributes: Attributes,
   span = trace.getActiveSpan(),
 ): Logger {
-  const log = (level: LogLevel, message: string, attributes?: Attributes) => {
+  const log = (
+    level: LogLevel,
+    message: string,
+    attributes?: { error?: unknown } & Attributes,
+  ) => {
+    const { error, ...rest } = attributes ?? {};
+
     span?.addEvent("log", {
       level,
       message,
       ...baseAttributes,
-      ...attributes,
+      ...rest,
     });
+
+    if (level === "error" && error && edgeOptions?.errorReporter) {
+      const spanContext = span?.spanContext();
+      const eventId = edgeOptions.errorReporter(error, {
+        requestId: baseAttributes["request_id"] as string | undefined,
+        spanId: spanContext?.spanId,
+        traceId: spanContext?.traceId,
+        userId: baseAttributes["user_id"] as string | undefined,
+      });
+
+      if (eventId) {
+        span?.setAttribute("sentry_event_id", eventId);
+      }
+    }
   };
 
   return {

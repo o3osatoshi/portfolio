@@ -196,6 +196,7 @@ logger.info("navigated to settings", { page: "/settings" });
   - Enriches all events with `session_id` and `user_id`.
   - `event(name, attrs)` creates a short‑lived span per UX event and records a `"ux_event"` event.
   - `debug` / `info` / `warn` / `error` add `"log"` events to the current active span (if available).
+  - When an `errorReporter` is configured for the Edge or Node runtime, `error` logs with an attached `error` value will forward that error (plus request/span context) to the reporter and attach any returned event identifier (for example, a Sentry event ID) to the span as `sentry_event_id`.
 
 ## Types
 
@@ -224,4 +225,3 @@ Consult the generated API docs for a complete list of exported types and functio
 
 - Requires Node **22.x** for all runtime entry points.
 - Edge/browser bundles target modern runtimes compatible with the bundled OpenTelemetry SDKs.
-
