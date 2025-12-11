@@ -74,6 +74,7 @@
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",
     "@o3osatoshi/config": "workspace:*",
+    "@o3osatoshi/toolkit": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "rimraf": "catalog:",

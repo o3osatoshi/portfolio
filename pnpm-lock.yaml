@@ -724,6 +724,9 @@ importers:
       '@o3osatoshi/config':
         specifier: workspace:*
         version: link:../config
+      '@o3osatoshi/toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1

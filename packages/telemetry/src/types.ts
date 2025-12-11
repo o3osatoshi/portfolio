@@ -3,6 +3,8 @@ import type {
   Span,
 } from "@opentelemetry/api";
 
+import type { Env } from "@o3osatoshi/toolkit";
+
 export type Attributes = OpenTelemetryAttributes;
 
 export interface AxiomConfig {
@@ -31,8 +33,6 @@ export interface BrowserTelemetryOptions extends BaseTelemetryOptions {}
 export interface EdgeTelemetryOptions extends BaseTelemetryOptions {
   errorReporter?: ErrorReporter;
 }
-
-export type Env = "development" | "local" | "production" | "staging";
 
 export type ErrorReporter = (
   error: unknown,
