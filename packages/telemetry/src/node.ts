@@ -5,10 +5,11 @@ import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 import type {
+  Attributes,
   Logger,
-  LoggerFields,
+  LogLevel,
   NodeTelemetryOptions,
-  RequestContextInput,
+  RequestContext,
   RequestTelemetry,
 } from "./types";
 
@@ -18,9 +19,7 @@ let nodeOptions: NodeTelemetryOptions | undefined;
 /**
  * Create a request-scoped span and logger for Node HTTP handlers.
  */
-export function createRequestTelemetry(
-  ctx: RequestContextInput,
-): RequestTelemetry {
+export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
   const tracer = trace.getTracer("@o3osatoshi/telemetry/node");
 
   const span = tracer.startSpan("request", {
@@ -35,32 +34,37 @@ export function createRequestTelemetry(
   });
 
   const spanCtx = span.spanContext();
-  const baseFields: LoggerFields = {
-    request_id: ctx.requestId,
-    span_id: spanCtx.spanId,
-    trace_id: spanCtx.traceId,
-    user_id: ctx.userId ?? undefined,
-    http_method: ctx.httpMethod,
-    http_route: ctx.httpRoute,
-  };
 
-  const logger = createSpanLogger(baseFields, span);
+  const logger = createSpanLogger(
+    {
+      request_id: ctx.requestId,
+      span_id: spanCtx.spanId,
+      trace_id: spanCtx.traceId,
+      user_id: ctx.userId ?? undefined,
+      http_method: ctx.httpMethod,
+      http_route: ctx.httpRoute,
+    },
+    span,
+  );
 
-  const end: RequestTelemetry["end"] = (fields) => {
-    if (fields?.error) {
-      span.recordException(fields.error as Error);
+  const end: RequestTelemetry["end"] = (attributes) => {
+    if (attributes?.error) {
+      if (attributes.error instanceof Error) {
+        span.recordException(attributes.error);
+      } else {
+        span.recordException(new Error("unknown error"));
+      }
     }
-    if (fields) {
-      for (const [key, value] of Object.entries(fields)) {
-        if (key === "error") continue;
-        span.setAttribute(key, value as never);
+    if (attributes) {
+      for (const [key, value] of Object.entries(attributes)) {
+        if (key === "error" || value === undefined) continue;
+        span.setAttribute(key, value);
       }
     }
     span.end();
   };
 
-  const activeCtx = trace.setSpan(context.active(), span);
-  context.with(activeCtx, () => {
+  context.with(trace.setSpan(context.active(), span), () => {
     // No-op: context is now active for downstream code if they use the OTel API.
   });
 
@@ -104,25 +108,22 @@ export function initNodeTelemetry(options: NodeTelemetryOptions): void {
 }
 
 function createSpanLogger(
-  baseFields: LoggerFields,
+  baseFields: Attributes,
   span = trace.getActiveSpan(),
 ): Logger {
   const log = (
-    level: "debug" | "error" | "info" | "warn",
+    level: LogLevel,
     message: string,
-    fields?: { error?: unknown } & LoggerFields,
+    attributes?: { error?: unknown } & Attributes,
   ) => {
-    const { error, ...rest } = fields ?? {};
+    const { error, ...rest } = attributes ?? {};
 
-    const merged: LoggerFields = {
+    span?.addEvent("log", {
       level,
       message,
       ...baseFields,
-      ...(rest as LoggerFields),
-    };
-
-    // Attach as span event when a span is available.
-    span?.addEvent("log", merged);
+      ...rest,
+    });
 
     if (level === "error" && error && nodeOptions?.errorReporter) {
       const spanContext = span?.spanContext();
@@ -140,9 +141,9 @@ function createSpanLogger(
   };
 
   return {
-    debug: (message, fields) => log("debug", message, fields),
-    error: (message, fields) => log("error", message, fields),
-    info: (message, fields) => log("info", message, fields),
-    warn: (message, fields) => log("warn", message, fields),
+    debug: (message, attributes) => log("debug", message, attributes),
+    error: (message, attributes) => log("error", message, attributes),
+    info: (message, attributes) => log("info", message, attributes),
+    warn: (message, attributes) => log("warn", message, attributes),
   };
 }

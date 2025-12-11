@@ -8,10 +8,11 @@ import {
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 import type {
+  Attributes,
   EdgeTelemetryOptions,
   Logger,
-  LoggerFields,
-  RequestContextInput,
+  LogLevel,
+  RequestContext,
   RequestTelemetry,
 } from "./types";
 
@@ -20,9 +21,7 @@ let provider: BasicTracerProvider | undefined;
 /**
  * Create a request-scoped span and logger for Edge HTTP handlers.
  */
-export function createRequestTelemetry(
-  ctx: RequestContextInput,
-): RequestTelemetry {
+export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
   const tracer = trace.getTracer("@o3osatoshi/telemetry/edge");
 
   const span = tracer.startSpan("request", {
@@ -37,32 +36,37 @@ export function createRequestTelemetry(
   });
 
   const spanCtx = span.spanContext();
-  const baseFields: LoggerFields = {
-    request_id: ctx.requestId,
-    span_id: spanCtx.spanId,
-    trace_id: spanCtx.traceId,
-    user_id: ctx.userId ?? undefined,
-    http_method: ctx.httpMethod,
-    http_route: ctx.httpRoute,
-  };
 
-  const logger = createSpanLogger(baseFields, span);
+  const logger = createSpanLogger(
+    {
+      request_id: ctx.requestId,
+      span_id: spanCtx.spanId,
+      trace_id: spanCtx.traceId,
+      user_id: ctx.userId ?? undefined,
+      http_method: ctx.httpMethod,
+      http_route: ctx.httpRoute,
+    },
+    span,
+  );
 
-  const end: RequestTelemetry["end"] = (fields) => {
-    if (fields?.error) {
-      span.recordException(fields.error as Error);
+  const end: RequestTelemetry["end"] = (attributes) => {
+    if (attributes?.error) {
+      if (attributes.error instanceof Error) {
+        span.recordException(attributes.error);
+      } else {
+        span.recordException(new Error("unknown error"));
+      }
     }
-    if (fields) {
-      for (const [key, value] of Object.entries(fields)) {
-        if (key === "error") continue;
-        span.setAttribute(key, value as never);
+    if (attributes) {
+      for (const [key, value] of Object.entries(attributes)) {
+        if (key === "error" || value === undefined) continue;
+        span.setAttribute(key, value);
       }
     }
     span.end();
   };
 
-  const activeCtx = trace.setSpan(context.active(), span);
-  context.with(activeCtx, () => {
+  context.with(trace.setSpan(context.active(), span), () => {
     // No-op: context is now active for downstream code if they use the OTel API.
   });
 
@@ -104,28 +108,22 @@ export function initEdgeTelemetry(options: EdgeTelemetryOptions): void {
 }
 
 function createSpanLogger(
-  baseFields: LoggerFields,
+  baseAttributes: Attributes,
   span = trace.getActiveSpan(),
 ): Logger {
-  const log = (
-    level: "debug" | "error" | "info" | "warn",
-    message: string,
-    fields?: LoggerFields,
-  ) => {
-    const merged = {
+  const log = (level: LogLevel, message: string, attributes?: Attributes) => {
+    span?.addEvent("log", {
       level,
       message,
-      ...baseFields,
-      ...fields,
-    };
-
-    span?.addEvent("log", merged);
+      ...baseAttributes,
+      ...attributes,
+    });
   };
 
   return {
-    debug: (message, fields) => log("debug", message, fields),
-    error: (message, fields) => log("error", message, fields),
-    info: (message, fields) => log("info", message, fields),
-    warn: (message, fields) => log("warn", message, fields),
+    debug: (message, attributes) => log("debug", message, attributes),
+    error: (message, attributes) => log("error", message, attributes),
+    info: (message, attributes) => log("info", message, attributes),
+    warn: (message, attributes) => log("warn", message, attributes),
   };
 }

@@ -5,12 +5,17 @@ import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
-import type { BrowserTelemetryOptions, Logger, LoggerFields } from "./types";
+import type {
+  Attributes,
+  BrowserTelemetryOptions,
+  Logger,
+  LogLevel,
+} from "./types";
 
 let provider: undefined | WebTracerProvider;
 
 export interface BrowserLogger extends Logger {
-  event: (eventName: string, fields?: LoggerFields) => void;
+  event: (eventName: string, attributes?: Attributes) => void;
 }
 
 export interface BrowserSessionContext {
@@ -25,28 +30,25 @@ export interface BrowserSessionContext {
 export function createBrowserLogger(
   session: BrowserSessionContext,
 ): BrowserLogger {
-  const baseFields: LoggerFields = {
+  const baseAttributes: Attributes = {
     session_id: session.sessionId,
     user_id: session.userId ?? undefined,
   };
 
-  const logger = createSpanLogger(baseFields);
+  const logger = createSpanLogger(baseAttributes);
 
-  const event: BrowserLogger["event"] = (eventName, fields) => {
+  const event: BrowserLogger["event"] = (eventName, attributes) => {
     const tracer = trace.getTracer("@o3osatoshi/telemetry/browser");
     const span = tracer.startSpan(eventName);
-    const spanCtx = trace.setSpan(context.active(), span);
 
-    const mergedFields: LoggerFields = {
+    span.addEvent("ux_event", {
       event_name: eventName,
-      ...baseFields,
-      ...fields,
-    };
-
-    span.addEvent("ux_event", mergedFields);
+      ...baseAttributes,
+      ...attributes,
+    });
     span.end();
 
-    context.with(spanCtx, () => {
+    context.with(trace.setSpan(context.active(), span), () => {
       // Context is active within the span lifetime.
     });
   };
@@ -85,27 +87,21 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   provider.register();
 }
 
-function createSpanLogger(baseFields: LoggerFields): Logger {
-  const log = (
-    level: "debug" | "error" | "info" | "warn",
-    message: string,
-    fields?: LoggerFields,
-  ) => {
+function createSpanLogger(baseAttributes: Attributes): Logger {
+  const log = (level: LogLevel, message: string, attributes?: Attributes) => {
     const span = trace.getActiveSpan();
-    const merged: LoggerFields = {
+    span?.addEvent("log", {
       level,
       message,
-      ...baseFields,
-      ...fields,
-    };
-
-    span?.addEvent("log", merged);
+      ...baseAttributes,
+      ...attributes,
+    });
   };
 
   return {
-    debug: (message, fields) => log("debug", message, fields),
-    error: (message, fields) => log("error", message, fields),
-    info: (message, fields) => log("info", message, fields),
-    warn: (message, fields) => log("warn", message, fields),
+    debug: (message, attributes) => log("debug", message, attributes),
+    error: (message, attributes) => log("error", message, attributes),
+    info: (message, attributes) => log("info", message, attributes),
+    warn: (message, attributes) => log("warn", message, attributes),
   };
 }

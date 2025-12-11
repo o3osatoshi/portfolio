@@ -1,4 +1,9 @@
-import type { Attributes, Span } from "@opentelemetry/api";
+import type {
+  Attributes as OpenTelemetryAttributes,
+  Span,
+} from "@opentelemetry/api";
+
+export type Attributes = OpenTelemetryAttributes;
 
 export interface AxiomConfig {
   /**
@@ -43,19 +48,19 @@ export interface ErrorReporterContext {
 }
 
 export interface Logger {
-  debug(message: string, fields?: LoggerFields): void;
-  error(message: string, fields?: { error?: unknown } & LoggerFields): void;
-  info(message: string, fields?: LoggerFields): void;
-  warn(message: string, fields?: LoggerFields): void;
+  debug(message: string, attributes?: Attributes): void;
+  error(message: string, attributes?: { error?: unknown } & Attributes): void;
+  info(message: string, attributes?: Attributes): void;
+  warn(message: string, attributes?: Attributes): void;
 }
 
-export type LoggerFields = Attributes;
+export type LogLevel = "debug" | "error" | "info" | "warn";
 
 export interface NodeTelemetryOptions extends BaseTelemetryOptions {
   errorReporter?: ErrorReporter;
 }
 
-export interface RequestContextInput {
+export interface RequestContext {
   [key: string]: unknown;
   clientIp?: string;
   httpMethod?: string;
@@ -66,7 +71,7 @@ export interface RequestContextInput {
 }
 
 export interface RequestTelemetry {
-  end: (fields?: { error?: unknown } & LoggerFields) => void;
+  end: (attributes?: { error?: unknown } & Attributes) => void;
   logger: Logger;
   span: Span;
   spanId: string;
