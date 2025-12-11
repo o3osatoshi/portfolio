@@ -697,7 +697,7 @@ importers:
   packages/telemetry:
     dependencies:
       '@opentelemetry/api':
-        specifier: 1.9.0
+        specifier: ^1.9.0
         version: 1.9.0
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: ^0.54.0
