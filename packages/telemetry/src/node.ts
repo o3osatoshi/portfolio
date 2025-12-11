@@ -18,6 +18,11 @@ let nodeOptions: NodeTelemetryOptions | undefined;
 
 /**
  * Create a request-scoped span and logger for Node HTTP handlers.
+ *
+ * @param ctx - Request metadata used to populate span attributes.
+ * @returns Request-scoped telemetry helpers for the current HTTP request.
+ *
+ * @public
  */
 export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
   const tracer = trace.getTracer("@o3osatoshi/telemetry/node");
@@ -81,6 +86,8 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
  * Initialise OpenTelemetry for Node runtimes.
  *
  * This function is idempotent and can be called multiple times safely.
+ *
+ * @public
  */
 export function initNodeTelemetry(options: NodeTelemetryOptions): void {
   if (sdk) return;

@@ -14,18 +14,38 @@ import type {
 
 let provider: undefined | WebTracerProvider;
 
+/**
+ * Browser-specific logger that records events on OpenTelemetry spans.
+ *
+ * @remarks
+ * - Log methods (`debug` / `info` / `warn` / `error`) annotate the
+ *   currently active span (if any).
+ * - The `event` helper creates a short-lived span per UX event and
+ *   records a `ux_event` with the provided attributes.
+ *
+ * @public
+ */
 export interface BrowserLogger extends Logger {
   event: (eventName: string, attributes?: Attributes) => void;
 }
 
+/**
+ * Session-level context attached to browser telemetry.
+ *
+ * @public
+ */
 export interface BrowserSessionContext {
   sessionId: string;
   userId?: null | string;
 }
 
 /**
- * Create a browser-side logger tied to the current active span, enriched
- * with session-level fields.
+ * Create a browser-side logger enriched with session-level fields.
+ *
+ * @param session - Session context to attach to all log events.
+ * @returns A {@link BrowserLogger} instance bound to the active span.
+ *
+ * @public
  */
 export function createBrowserLogger(
   session: BrowserSessionContext,
@@ -63,6 +83,8 @@ export function createBrowserLogger(
  * Initialise OpenTelemetry for browser runtimes.
  *
  * This function is idempotent and can be called multiple times safely.
+ *
+ * @public
  */
 export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   if (provider) return;
