@@ -83,7 +83,7 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
 }
 
 /**
- * Initialise OpenTelemetry for Node runtimes.
+ * Initialize OpenTelemetry for Node runtimes.
  *
  * This function is idempotent and can be called multiple times safely.
  *

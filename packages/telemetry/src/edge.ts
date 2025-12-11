@@ -85,7 +85,7 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
 }
 
 /**
- * Initialise OpenTelemetry for Edge runtimes (e.g. Cloudflare Workers).
+ * Initialize OpenTelemetry for Edge runtimes (e.g. Cloudflare Workers).
  *
  * This function is idempotent and can be called multiple times safely.
  *

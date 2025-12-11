@@ -80,7 +80,7 @@ export function createBrowserLogger(
 }
 
 /**
- * Initialise OpenTelemetry for browser runtimes.
+ * Initialize OpenTelemetry for browser runtimes.
  *
  * This function is idempotent and can be called multiple times safely.
  *
