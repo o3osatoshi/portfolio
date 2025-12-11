@@ -621,8 +621,8 @@ importers:
         specifier: workspace:*
         version: link:../config
       '@types/express':
-        specifier: 4.17.21
-        version: 4.17.21
+        specifier: ^4.17.21
+        version: 4.17.25
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1
@@ -4054,9 +4054,6 @@ packages:
   '@types/express-serve-static-core@4.19.7':
     resolution: {integrity: sha512-FvPtiIf1LfhzsaIXhv/PHan/2FeQBbtBDtfX2QfvPxdUelMDEckK08SM6nqo1MIZY3RUlfA+HV8+hFUSio78qg==}
 
-  '@types/express@4.17.21':
-    resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
-
   '@types/express@4.17.25':
     resolution: {integrity: sha512-dVd04UKsfpINUnK0yBoYHDF3xu7xVH4BuDotC/xGuycx4CgbP48X/KF/586bcObxT0HENHXEU8Nqtu6NR+eKhw==}
 
@@ -4146,9 +4143,6 @@ packages:
 
   '@types/serve-static@1.15.10':
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
-
-  '@types/serve-static@2.2.0':
-    resolution: {integrity: sha512-8mam4H1NHLtu7nmtalF7eyBH14QyOASmcxHhSfEoRyr0nP/YdoesEtU+uSRvMe96TW/HPTtkoKqQLl53N7UXMQ==}
 
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
@@ -13484,13 +13478,6 @@ snapshots:
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
 
-  '@types/express@4.17.21':
-    dependencies:
-      '@types/body-parser': 1.19.6
-      '@types/express-serve-static-core': 4.19.7
-      '@types/qs': 6.14.0
-      '@types/serve-static': 2.2.0
-
   '@types/express@4.17.25':
     dependencies:
       '@types/body-parser': 1.19.6
@@ -13596,11 +13583,6 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/node': 24.10.1
       '@types/send': 0.17.6
-
-  '@types/serve-static@2.2.0':
-    dependencies:
-      '@types/http-errors': 2.0.5
-      '@types/node': 24.10.1
 
   '@types/shimmer@1.2.0': {}
 
@@ -17407,7 +17389,7 @@ snapshots:
 
   jwks-rsa@3.2.0:
     dependencies:
-      '@types/express': 4.17.21
+      '@types/express': 4.17.25
       '@types/jsonwebtoken': 9.0.10
       debug: 4.4.3
       jose: 4.15.9
