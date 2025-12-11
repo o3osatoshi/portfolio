@@ -56,6 +56,8 @@
     "LICENSE"
   ],
   "scripts": {
+    "api:extract": "api-extractor run --local",
+    "api:report": "api-extractor run --diagnostics",
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
