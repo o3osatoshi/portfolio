@@ -49,6 +49,12 @@ export type CreateEnvOptions = {
 };
 
 // @public
+export function createLazyEnv<T extends EnvSchema>(schema: T, opts?: CreateLazyEnvOptions): EnvOf<T>;
+
+// @public
+export type CreateLazyEnvOptions = CreateEnvOptions;
+
+// @public
 export function createRedisClient(options?: RedisClientOptions): Redis_2;
 
 // @public

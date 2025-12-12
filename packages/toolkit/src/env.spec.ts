@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import { createEnv } from "./env";
+import { createEnv, type CreateEnvOptions, createLazyEnv } from "./env";
 
 describe("createEnv", () => {
   it("returns typed values using provided source", () => {
@@ -40,5 +40,36 @@ describe("createEnv", () => {
         { source: { URL: "not-a-url" } },
       ),
     ).toThrowError(/Invalid env: URL/i);
+  });
+
+  it("supports lazy evaluation via createLazyEnv", () => {
+    const lazy = createLazyEnv(
+      {
+        FOO: z.string().min(1),
+      },
+      { source: { FOO: "lazy" } },
+    );
+
+    expect(lazy.FOO).toBe("lazy");
+  });
+
+  it("evaluates env only once for lazy proxies", () => {
+    let calls = 0;
+    const lazy = createLazyEnv(
+      {
+        FOO: z.string().min(1),
+      },
+      {
+        get source() {
+          calls += 1;
+          return { FOO: "cached" };
+        },
+      } as CreateEnvOptions,
+    );
+
+    // multiple property accesses should reuse the cached value
+    expect(lazy.FOO).toBe("cached");
+    expect(lazy.FOO).toBe("cached");
+    expect(calls).toBe(1);
   });
 });
