@@ -19,6 +19,13 @@ export type CreateEnvOptions = {
 };
 
 /**
+ * Options for {@link createLazyEnv}.
+ *
+ * @public
+ */
+export type CreateLazyEnvOptions = CreateEnvOptions;
+
+/**
  * Utility type that maps an {@link EnvSchema} to the inferred runtime types
  * produced by each Zod validator.
  *
@@ -82,4 +89,68 @@ export function createEnv<T extends EnvSchema>(
     throw new Error(`Invalid ${where}: ${issues}`);
   }
   return result.data as EnvOf<T>;
+}
+
+/**
+ * Lazily validates environment variables on first property access.
+ *
+ * This helper is useful when environment validation should only occur at
+ * runtime (e.g. inside serverless handlers or route handlers) instead of at
+ * module evaluation time.
+ *
+ * The underlying {@link createEnv} result is cached after the first access.
+ * The returned proxy is effectively read-only: attempts to define, update, or
+ * delete properties will fail (throw in strict mode or be ignored in
+ * non-strict mode), and only the properties defined by the schema are
+ * guaranteed to be readable.
+ *
+ * @typeParam T - The {@link EnvSchema} describing expected variables.
+ * @param schema - Map of variable names to Zod validators.
+ * @param opts - Optional settings to customize source and error labeling.
+ * @returns A proxied object that resolves properties against the validated env.
+ *
+ * @public
+ */
+export function createLazyEnv<T extends EnvSchema>(
+  schema: T,
+  opts: CreateLazyEnvOptions = {},
+): EnvOf<T> {
+  type Env = EnvOf<T>;
+
+  let cachedEnv: Env | undefined;
+
+  const load = (): Env => {
+    if (cachedEnv === undefined) {
+      cachedEnv = createEnv(schema, opts);
+    }
+    return cachedEnv;
+  };
+
+  const shouldBypass = (prop: PropertyKey) => prop === "then";
+
+  return new Proxy({} as Env, {
+    defineProperty() {
+      throw new Error("Cannot define properties on env object");
+    },
+    deleteProperty() {
+      throw new Error("Cannot delete properties from env object");
+    },
+    get(_target, prop, receiver) {
+      if (shouldBypass(prop)) return undefined;
+      return Reflect.get(load(), prop, receiver);
+    },
+    getOwnPropertyDescriptor(_target, prop) {
+      return Object.getOwnPropertyDescriptor(load(), prop);
+    },
+    has(_target, prop) {
+      if (shouldBypass(prop)) return false;
+      return prop in load();
+    },
+    ownKeys() {
+      return Reflect.ownKeys(load());
+    },
+    set(_target, _prop, _value) {
+      throw new Error("Cannot set properties on env object");
+    },
+  });
 }
