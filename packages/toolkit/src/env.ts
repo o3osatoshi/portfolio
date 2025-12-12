@@ -129,6 +129,12 @@ export function createLazyEnv<T extends EnvSchema>(
   const shouldBypass = (prop: PropertyKey) => prop === "then";
 
   return new Proxy({} as Env, {
+    defineProperty() {
+      throw new Error("Cannot define properties on env object");
+    },
+    deleteProperty() {
+      throw new Error("Cannot delete properties from env object");
+    },
     get(_target, prop, receiver) {
       if (shouldBypass(prop)) return undefined;
       return Reflect.get(load(), prop, receiver);
@@ -142,6 +148,9 @@ export function createLazyEnv<T extends EnvSchema>(
     },
     ownKeys() {
       return Reflect.ownKeys(load());
+    },
+    set(_target, _prop, _value) {
+      throw new Error("Cannot set properties on env object");
     },
   });
 }

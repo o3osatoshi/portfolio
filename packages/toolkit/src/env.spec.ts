@@ -129,5 +129,28 @@ describe("createLazyEnv", () => {
     const resolved = await Promise.resolve(lazy);
     expect(resolved.FOO).toBe("lazy");
   });
-}
-);
+
+  it("prevents mutation via set/delete/defineProperty", () => {
+    const lazy = createLazyEnv(
+      {
+        FOO: z.string().min(1),
+      },
+      { source: { FOO: "immutable" } },
+    );
+
+    expect(() => {
+      (lazy as { FOO: string }).FOO = "changed";
+    }).toThrow(/Cannot set properties on env object/);
+
+    expect(() => {
+      delete (lazy as { FOO?: string }).FOO;
+    }).toThrow(/Cannot delete properties from env object/);
+
+    expect(() => {
+      Object.defineProperty(lazy, "BAR", { value: "bar" });
+    }).toThrow(/Cannot define properties on env object/);
+
+    // Original value remains unchanged
+    expect(lazy.FOO).toBe("immutable");
+  });
+});
