@@ -99,6 +99,10 @@ export function createEnv<T extends EnvSchema>(
  * module evaluation time.
  *
  * The underlying {@link createEnv} result is cached after the first access.
+ * The returned proxy is effectively read-only: attempts to define, update, or
+ * delete properties will fail (throw in strict mode or be ignored in
+ * non-strict mode), and only the properties defined by the schema are
+ * guaranteed to be readable.
  *
  * @typeParam T - The {@link EnvSchema} describing expected variables.
  * @param schema - Map of variable names to Zod validators.
