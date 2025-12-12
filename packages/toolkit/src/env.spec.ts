@@ -72,4 +72,59 @@ describe("createEnv", () => {
     expect(lazy.FOO).toBe("cached");
     expect(calls).toBe(1);
   });
+
+  it("throws on first access when lazy env is invalid", () => {
+    const lazy = createLazyEnv(
+      {
+        URL: z.url(),
+      },
+      { source: { URL: "not-a-url" } },
+    );
+
+    expect(() => {
+      lazy.URL;
+    }).toThrowError(/Invalid env: URL/i);
+  });
+
+  it("honors proxy traps for has, ownKeys, and property descriptors", () => {
+    const lazy = createLazyEnv(
+      {
+        BAR: z.string().min(1),
+        FOO: z.string().min(1),
+      },
+      { source: { BAR: "bar", FOO: "foo" } },
+    );
+
+    // has trap
+    expect("FOO" in lazy).toBe(true);
+    expect("BAR" in lazy).toBe(true);
+    expect("BAZ" in lazy).toBe(false);
+
+    // ownKeys + getOwnPropertyDescriptor via Object.keys / descriptor lookup
+    const keys = Object.keys(lazy);
+    expect(keys).toEqual(expect.arrayContaining(["FOO", "BAR"]));
+
+    const desc = Object.getOwnPropertyDescriptor(lazy, "FOO");
+    expect(desc?.enumerable).toBe(true);
+    expect(desc?.configurable).toBe(true);
+    expect(desc?.value).toBe("foo");
+  });
+
+  it("bypasses then to avoid thenable behavior in async contexts", async () => {
+    const lazy = createLazyEnv(
+      {
+        FOO: z.string().min(1),
+      },
+      { source: { FOO: "lazy" } },
+    );
+
+    // then trap should be bypassed
+    expect("then" in lazy).toBe(false);
+    // @ts-expect-error — runtime check for then
+    expect(lazy.then).toBeUndefined();
+
+    // Promise resolution should treat the proxy as a plain value
+    const resolved = await Promise.resolve(lazy);
+    expect(resolved.FOO).toBe("lazy");
+  });
 });
