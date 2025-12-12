@@ -41,8 +41,10 @@ describe("createEnv", () => {
       ),
     ).toThrowError(/Invalid env: URL/i);
   });
+});
 
-  it("supports lazy evaluation via createLazyEnv", () => {
+describe("createLazyEnv", () => {
+  it("supports lazy evaluation", () => {
     const lazy = createLazyEnv(
       {
         FOO: z.string().min(1),
@@ -53,7 +55,7 @@ describe("createEnv", () => {
     expect(lazy.FOO).toBe("lazy");
   });
 
-  it("evaluates env only once for lazy proxies", () => {
+  it("evaluates env only once for proxies", () => {
     let calls = 0;
     const lazy = createLazyEnv(
       {
@@ -73,7 +75,7 @@ describe("createEnv", () => {
     expect(calls).toBe(1);
   });
 
-  it("throws on first access when lazy env is invalid", () => {
+  it("throws on first access when env is invalid", () => {
     const lazy = createLazyEnv(
       {
         URL: z.url(),
@@ -127,4 +129,5 @@ describe("createEnv", () => {
     const resolved = await Promise.resolve(lazy);
     expect(resolved.FOO).toBe("lazy");
   });
-});
+}
+);
