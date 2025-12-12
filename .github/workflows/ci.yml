@@ -82,10 +82,11 @@ jobs:
       - name: Run typecheck
         run: pnpm turbo run typecheck --affected
 
-      - name: Setup testcontainers cloud client
-        uses: atomicjar/testcontainers-cloud-setup-action@v1
-        with:
-          token: ${{ secrets.TC_CLOUD_TOKEN }}
+# NOTE: testcontainers cloud example
+#      - name: Setup testcontainers cloud client
+#        uses: atomicjar/testcontainers-cloud-setup-action@v1
+#        with:
+#          token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Run test
         run: pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit
