@@ -8,7 +8,7 @@ export const env = createEnv(
     AUTH_GOOGLE_SECRET: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
     AXIOM_API_TOKEN: z.string().min(1),
-    AXIOM_OTLP_ENDPOINT: z.url().min(1),
+    AXIOM_OTLP_ENDPOINT: z.url(),
     DATABASE_URL: z.string().min(1),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
     UPSTASH_REDIS_REST_URL: z.string().min(1),
