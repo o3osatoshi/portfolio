@@ -215,6 +215,8 @@ describe("initEdgeTelemetry", () => {
   });
 
   it("is idempotent and configures resource and exporter correctly", () => {
+    const errorReporter = vi.fn(() => "edge-event-1");
+
     const options = {
       axiom: {
         apiToken: "test-token",
@@ -222,6 +224,7 @@ describe("initEdgeTelemetry", () => {
       },
       dataset: "my-edge-dataset",
       env: "production",
+      errorReporter,
       serviceName: "my-edge-service",
     } as const;
 
@@ -274,5 +277,35 @@ describe("initEdgeTelemetry", () => {
 
     // Provider is registered once
     expect(providerInstance.register).toHaveBeenCalledTimes(1);
+
+    // Logger forwards errors to the configured errorReporter with context
+    const ctx: RequestContext = {
+      clientIp: "10.0.0.2",
+      httpMethod: "GET",
+      httpRoute: "/edge/error",
+      requestId: "edge-req-error-1",
+      userAgent: "edge-agent-error",
+      userId: "edge-user-error",
+    };
+
+    const telemetry = createRequestTelemetry(ctx);
+    const error = new Error("edge error");
+
+    // @ts-expect-error
+    telemetry.logger.error("handled edge error", { error });
+
+    expect(errorReporter).toHaveBeenCalledTimes(1);
+    expect(errorReporter).toHaveBeenCalledWith(error, {
+      requestId: "edge-req-error-1",
+      spanId: "edge-span-123",
+      traceId: "edge-trace-456",
+      userId: "edge-user-error",
+    });
+
+    // Returned event ID is attached to the span
+    expect(apiMocks.mockSpanSetAttribute).toHaveBeenCalledWith(
+      "sentry_event_id",
+      "edge-event-1",
+    );
   });
 });
