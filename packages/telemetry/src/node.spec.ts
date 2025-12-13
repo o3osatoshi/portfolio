@@ -197,6 +197,8 @@ describe("initNodeTelemetry", () => {
   });
 
   it("is idempotent and configures resource and exporter correctly", () => {
+    const errorReporter = vi.fn(() => "node-event-1");
+
     const options = {
       axiom: {
         apiToken: "test-token",
@@ -204,6 +206,7 @@ describe("initNodeTelemetry", () => {
       },
       dataset: "my-node-dataset",
       env: "production",
+      errorReporter,
       serviceName: "my-node-service",
     } as const;
 
@@ -264,5 +267,35 @@ describe("initNodeTelemetry", () => {
 
     // SDK start is invoked once
     expect(sdkInstance.start).toHaveBeenCalledTimes(1);
+
+    // Logger forwards errors to the configured errorReporter with context
+    const ctx: RequestContext = {
+      clientIp: "127.0.0.2",
+      httpMethod: "POST",
+      httpRoute: "/api/error",
+      requestId: "req-error-1",
+      userAgent: "test-agent-error",
+      userId: "user-error-1",
+    };
+
+    const telemetry = createRequestTelemetry(ctx);
+    const error = new Error("node error");
+
+    // @ts-expect-error
+    telemetry.logger.error("handled node error", { error });
+
+    expect(errorReporter).toHaveBeenCalledTimes(1);
+    expect(errorReporter).toHaveBeenCalledWith(error, {
+      requestId: "req-error-1",
+      spanId: "span-123",
+      traceId: "trace-456",
+      userId: "user-error-1",
+    });
+
+    // Returned event ID is attached to the span
+    expect(apiMocks.mockSpanSetAttribute).toHaveBeenCalledWith(
+      "sentry_event_id",
+      "node-event-1",
+    );
   });
 });
