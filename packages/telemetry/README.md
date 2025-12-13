@@ -34,7 +34,7 @@ The package bundles the required OpenTelemetry SDK/exporter dependencies interna
 
 ## Node usage (`@o3osatoshi/telemetry/node`)
 
-### Initialisation
+### Initialization
 
 ```ts
 import { initNodeTelemetry } from "@o3osatoshi/telemetry/node";
@@ -97,7 +97,7 @@ When an `errorReporter` is configured and `end({ error })` is called in Node:
 
 ## Edge usage (`@o3osatoshi/telemetry/edge`)
 
-### Initialisation
+### Initialization
 
 ```ts
 import type { Env } from "@o3osatoshi/toolkit";
@@ -153,7 +153,7 @@ The semantics mirror the Node helpers, but use OpenTelemetry’s `BasicTracerPro
 
 ## Browser usage (`@o3osatoshi/telemetry/browser`)
 
-### Initialisation
+### Initialization
 
 ```ts
 import { initBrowserTelemetry } from "@o3osatoshi/telemetry/browser";
