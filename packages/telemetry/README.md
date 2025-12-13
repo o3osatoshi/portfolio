@@ -44,6 +44,7 @@ initNodeTelemetry({
     apiToken: process.env.AXIOM_API_TOKEN!,
     otlpEndpoint: "https://api.axiom.co/v1/traces",
   },
+  dataset: "my-node-dataset",
   env: "production",
   serviceName: "my-node-service",
   // Optional: forward errors to Sentry or a similar service
@@ -109,6 +110,7 @@ export function init(env: Env, axiomToken: string, axiomUrl: string) {
       apiToken: axiomToken,
       otlpEndpoint: axiomUrl,
     },
+    dataset: "my-edge-dataset",
     env,
     serviceName: "my-edge-service",
   });
@@ -163,6 +165,7 @@ initBrowserTelemetry({
     apiToken: window.ENV.AXIOM_API_TOKEN,
     otlpEndpoint: "https://api.axiom.co/v1/traces",
   },
+  dataset: "my-browser-dataset",
   env: "production",
   serviceName: "my-web-app",
 });
