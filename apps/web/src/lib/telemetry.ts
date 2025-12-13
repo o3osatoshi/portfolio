@@ -3,7 +3,7 @@ import { initNodeTelemetry } from "@o3osatoshi/telemetry/node";
 
 let initialised = false;
 
-export function ensureNodeTelemetryInitialised(): void {
+export function ensureNodeTelemetryInitialized(): void {
   if (initialised) return;
 
   initNodeTelemetry({
