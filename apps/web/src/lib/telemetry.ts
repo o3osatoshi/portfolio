@@ -13,7 +13,7 @@ export function ensureNodeTelemetryInitialized(): void {
     },
     dataset: "portfolio-logs",
     env: "production",
-    serviceName: "web",
+    serviceName: "portfolio-web",
   });
 
   initialised = true;
