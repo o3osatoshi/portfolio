@@ -48,7 +48,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@upstash/redis": "^1.35.7",
+    "@upstash/redis": "^1.35.8",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },
