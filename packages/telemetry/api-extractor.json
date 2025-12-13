@@ -1,0 +1,3 @@
+{
+  "extends": "@o3osatoshi/config/api-extractor/base.json"
+}
