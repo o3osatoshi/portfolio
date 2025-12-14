@@ -1,6 +1,6 @@
 import { context, trace } from "@opentelemetry/api";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { Resource } from "@opentelemetry/resources";
+import { resourceFromAttributes } from "@opentelemetry/resources";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
@@ -89,7 +89,7 @@ export function createBrowserLogger(
 export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   if (provider) return;
 
-  const resource = new Resource({
+  const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: options.serviceName,
     "deployment.environment": options.env,
   });

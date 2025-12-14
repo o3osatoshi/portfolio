@@ -111,7 +111,7 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 
 import * as otel from "@opentelemetry/api";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { Resource } from "@opentelemetry/resources";
+import { resourceFromAttributes } from "@opentelemetry/resources";
 import {
   BasicTracerProvider,
   BatchSpanProcessor,
@@ -239,7 +239,7 @@ describe("initEdgeTelemetry", () => {
     });
 
     type ViMockFn = ReturnType<typeof vi.fn>;
-    const ResourceMock = Resource as unknown as ViMockFn;
+    const ResourceMock = typeof resourceFromAttributes as unknown as ViMockFn;
     const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
     const ProviderMock = BasicTracerProvider as unknown as ViMockFn;
     const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ViMockFn;

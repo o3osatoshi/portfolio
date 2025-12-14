@@ -1,6 +1,6 @@
 import { context, trace } from "@opentelemetry/api";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { Resource } from "@opentelemetry/resources";
+import { resourceFromAttributes } from "@opentelemetry/resources";
 import {
   BasicTracerProvider,
   BatchSpanProcessor,
@@ -98,7 +98,7 @@ export function initEdgeTelemetry(options: EdgeTelemetryOptions): void {
 
   edgeOptions = options;
 
-  const resource = new Resource({
+  const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: options.serviceName,
     "deployment.environment": options.env,
   });
@@ -116,7 +116,7 @@ export function initEdgeTelemetry(options: EdgeTelemetryOptions): void {
     spanProcessors: [new BatchSpanProcessor(exporter)],
   });
 
-  provider.register();
+  trace.setGlobalTracerProvider(provider);
 }
 
 function createSpanLogger(

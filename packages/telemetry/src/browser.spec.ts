@@ -102,7 +102,7 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 
 import * as otel from "@opentelemetry/api";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { Resource } from "@opentelemetry/resources";
+import { resourceFromAttributes } from "@opentelemetry/resources";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
@@ -199,7 +199,7 @@ describe("initBrowserTelemetry", () => {
     });
 
     type ViMockFn = ReturnType<typeof vi.fn>;
-    const ResourceMock = Resource as unknown as ViMockFn;
+    const ResourceMock = typeof resourceFromAttributes as unknown as ViMockFn;
     const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
     const ProviderMock = WebTracerProvider as unknown as ViMockFn;
     const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ViMockFn;
