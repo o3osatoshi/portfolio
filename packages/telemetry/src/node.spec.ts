@@ -67,16 +67,10 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
 });
 
 vi.mock("@opentelemetry/resources", () => {
-  interface TestResourceInstance {
-    attributes?: unknown;
-  }
-  const Resource = vi.fn(function (
-    this: TestResourceInstance,
-    attributes: unknown,
-  ) {
-    this.attributes = attributes;
-  });
-  return { Resource };
+  const resourceFromAttributes = vi.fn((attributes: unknown) => ({
+    attributes,
+  }));
+  return { resourceFromAttributes };
 });
 
 vi.mock("@opentelemetry/sdk-node", () => {
@@ -221,17 +215,18 @@ describe("initNodeTelemetry", () => {
     });
 
     type ViMockFn = ReturnType<typeof vi.fn>;
-    const ResourceMock = typeof resourceFromAttributes as unknown as ViMockFn;
+    const resourceFromAttributesMock =
+      resourceFromAttributes as unknown as ViMockFn;
     const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
     const NodeSDKMock = NodeSDK as unknown as ViMockFn;
 
-    // Idempotent: constructors called only once
-    expect(ResourceMock).toHaveBeenCalledTimes(1);
+    // Idempotent: functions/constructors called only once
+    expect(resourceFromAttributesMock).toHaveBeenCalledTimes(1);
     expect(ExporterMock).toHaveBeenCalledTimes(1);
     expect(NodeSDKMock).toHaveBeenCalledTimes(1);
 
     // Resource attributes include service name and environment
-    expect(ResourceMock).toHaveBeenCalledWith({
+    expect(resourceFromAttributesMock).toHaveBeenCalledWith({
       [ATTR_SERVICE_NAME]: options.serviceName,
       "deployment.environment": options.env,
     });
@@ -247,7 +242,8 @@ describe("initNodeTelemetry", () => {
 
     // NodeSDK is wired with the created resource and exporter
     const rawSdkInstance = NodeSDKMock.mock.instances[0];
-    const rawResourceInstance = ResourceMock.mock.instances[0];
+    // @ts-expect-error
+    const resourceInstance = resourceFromAttributesMock.mock.results[0].value;
     const rawExporterInstance = ExporterMock.mock.instances[0];
 
     interface SdkInstanceShape {
@@ -259,7 +255,6 @@ describe("initNodeTelemetry", () => {
     }
 
     const sdkInstance = rawSdkInstance as SdkInstanceShape;
-    const resourceInstance = rawResourceInstance as unknown;
     const exporterInstance = rawExporterInstance as unknown;
 
     expect(sdkInstance.options.resource).toBe(resourceInstance);

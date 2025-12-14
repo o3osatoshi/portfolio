@@ -26,12 +26,14 @@ vi.mock("@opentelemetry/api", () => {
   const mockGetTracer = vi.fn(() => mockTracer);
   const mockGetActiveSpan = vi.fn(() => mockSpan);
   const mockSetSpan = vi.fn((_ctx: unknown, _span: unknown) => ({}));
+  const mockSetGlobalTracerProvider = vi.fn();
 
   const mockContextActive = vi.fn(() => ({}));
   const mockContextWith = vi.fn((_ctx: unknown, fn: () => void) => fn());
 
   return {
     __mocks: {
+      mockSetGlobalTracerProvider,
       mockGetActiveSpan,
       mockGetTracer,
       mockSpanAddEvent,
@@ -46,6 +48,7 @@ vi.mock("@opentelemetry/api", () => {
       with: mockContextWith,
     },
     trace: {
+      setGlobalTracerProvider: mockSetGlobalTracerProvider,
       getActiveSpan: mockGetActiveSpan,
       getTracer: mockGetTracer,
       setSpan: mockSetSpan,
@@ -67,16 +70,10 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
 });
 
 vi.mock("@opentelemetry/resources", () => {
-  interface TestResourceInstance {
-    attributes?: unknown;
-  }
-  const Resource = vi.fn(function (
-    this: TestResourceInstance,
-    attributes: unknown,
-  ) {
-    this.attributes = attributes;
-  });
-  return { Resource };
+  const resourceFromAttributes = vi.fn((attributes: unknown) => ({
+    attributes,
+  }));
+  return { resourceFromAttributes };
 });
 
 vi.mock("@opentelemetry/sdk-trace-base", () => {
@@ -125,6 +122,7 @@ import type { RequestContext } from "./types";
 const apiMocks = otel.__mocks as {
   mockGetActiveSpan: ReturnType<typeof vi.fn>;
   mockGetTracer: ReturnType<typeof vi.fn>;
+  mockSetGlobalTracerProvider: ReturnType<typeof vi.fn>;
   mockSpanAddEvent: ReturnType<typeof vi.fn>;
   mockSpanContext: ReturnType<typeof vi.fn>;
   mockSpanRecordException: ReturnType<typeof vi.fn>;
@@ -239,19 +237,20 @@ describe("initEdgeTelemetry", () => {
     });
 
     type ViMockFn = ReturnType<typeof vi.fn>;
-    const ResourceMock = typeof resourceFromAttributes as unknown as ViMockFn;
+    const resourceFromAttributesMock =
+      resourceFromAttributes as unknown as ViMockFn;
     const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
     const ProviderMock = BasicTracerProvider as unknown as ViMockFn;
     const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ViMockFn;
 
-    // Idempotent: constructors called only once
-    expect(ResourceMock).toHaveBeenCalledTimes(1);
+    // Idempotent: functions/constructors called only once
+    expect(resourceFromAttributesMock).toHaveBeenCalledTimes(1);
     expect(ExporterMock).toHaveBeenCalledTimes(1);
     expect(ProviderMock).toHaveBeenCalledTimes(1);
     expect(BatchSpanProcessorMock).toHaveBeenCalledTimes(1);
 
     // Resource attributes include service name and environment
-    expect(ResourceMock).toHaveBeenCalledWith({
+    expect(resourceFromAttributesMock).toHaveBeenCalledWith({
       [ATTR_SERVICE_NAME]: options.serviceName,
       "deployment.environment": options.env,
     });
@@ -267,7 +266,8 @@ describe("initEdgeTelemetry", () => {
 
     // Provider is wired with the created resource and span processor
     const providerInstance = ProviderMock.mock.instances[0];
-    const resourceInstance = ResourceMock.mock.instances[0];
+    // @ts-expect-error
+    const resourceInstance = resourceFromAttributesMock.mock.results[0].value;
     const spanProcessorInstance = BatchSpanProcessorMock.mock.instances[0];
 
     expect(providerInstance.options.resource).toBe(resourceInstance);
@@ -275,9 +275,11 @@ describe("initEdgeTelemetry", () => {
       spanProcessorInstance,
     ]);
 
-    // Provider is registered once
-    expect(providerInstance.register).toHaveBeenCalledTimes(1);
-
+    // Provider is registered globally once
+    expect(apiMocks.mockSetGlobalTracerProvider).toHaveBeenCalledTimes(1);
+    expect(apiMocks.mockSetGlobalTracerProvider).toHaveBeenCalledWith(
+      providerInstance,
+    );
     // Logger forwards errors to the configured errorReporter with context
     const ctx: RequestContext = {
       clientIp: "10.0.0.2",
