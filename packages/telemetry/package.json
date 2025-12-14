@@ -67,6 +67,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@o3osatoshi/config": "workspace:*",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.208.0",
     "@opentelemetry/resources": "^2.2.0",
@@ -77,7 +78,6 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",
-    "@o3osatoshi/config": "workspace:*",
     "@o3osatoshi/toolkit": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",

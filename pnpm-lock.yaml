@@ -699,6 +699,9 @@ importers:
 
   packages/telemetry:
     dependencies:
+      '@o3osatoshi/config':
+        specifier: workspace:*
+        version: link:../config
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
@@ -724,9 +727,6 @@ importers:
       '@microsoft/api-extractor':
         specifier: 'catalog:'
         version: 7.55.2(@types/node@25.0.1)
-      '@o3osatoshi/config':
-        specifier: workspace:*
-        version: link:../config
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
