@@ -190,27 +190,27 @@ export interface RequestContext {
   /**
    * Client IP address, if known.
    */
-  clientIp?: string;
+  clientIp?: string | undefined;
   /**
    * HTTP method (for example, GET or POST).
    */
-  httpMethod?: string;
+  httpMethod?: string | undefined;
   /**
    * Logical HTTP route template (for example, `/api/users/:id`).
    */
-  httpRoute?: string;
+  httpRoute?: string | undefined;
   /**
    * Correlation identifier for the request, when available.
    */
-  requestId?: string;
+  requestId?: string | undefined;
   /**
    * Raw user agent string, if available.
    */
-  userAgent?: string;
+  userAgent?: string | undefined;
   /**
    * Authenticated user identifier, if present.
    */
-  userId?: null | string;
+  userId?: null | string | undefined;
 }
 
 /**
