@@ -30,10 +30,23 @@ vi.mock("@opentelemetry/api", () => {
   const mockContextActive = vi.fn(() => ({}));
   const mockContextWith = vi.fn((_ctx: unknown, fn: () => void) => fn());
 
+  const mockMeterCreateCounter = vi.fn();
+  const mockMeterCreateHistogram = vi.fn();
+  const mockMeter = {
+    createCounter: mockMeterCreateCounter,
+    createHistogram: mockMeterCreateHistogram,
+  };
+  const mockGetMeter = vi.fn(() => mockMeter);
+
   return {
     __mocks: {
+      mockContextWith,
       mockGetActiveSpan,
+      mockGetMeter,
       mockGetTracer,
+      mockMeterCreateCounter,
+      mockMeterCreateHistogram,
+      mockSetSpan,
       mockSpanAddEvent,
       mockSpanContext,
       mockSpanEnd,
@@ -45,11 +58,39 @@ vi.mock("@opentelemetry/api", () => {
       active: mockContextActive,
       with: mockContextWith,
     },
+    metrics: {
+      getMeter: mockGetMeter,
+    },
     trace: {
       getActiveSpan: mockGetActiveSpan,
       getTracer: mockGetTracer,
       setSpan: mockSetSpan,
     },
+  };
+});
+
+vi.mock("@opentelemetry/api-logs", () => {
+  const mockEmit = vi.fn();
+  const mockGetLogger = vi.fn(() => ({
+    emit: mockEmit,
+  }));
+
+  const SeverityNumber = {
+    DEBUG: 5,
+    ERROR: 17,
+    INFO: 9,
+    WARN: 13,
+  } as const;
+
+  return {
+    __mocks: {
+      mockEmit,
+      mockGetLogger,
+    },
+    logs: {
+      getLogger: mockGetLogger,
+    },
+    SeverityNumber,
   };
 });
 
@@ -90,23 +131,43 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 }));
 
 import * as otel from "@opentelemetry/api";
+import * as otelLogs from "@opentelemetry/api-logs";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
-import { createRequestTelemetry, initNodeTelemetry } from "./node";
+import {
+  addBusinessEventToActiveSpan,
+  addErrorBusinessEventToActiveSpan,
+  createNodeLogger,
+  createRequestTelemetry,
+  getNodeMetrics,
+  initNodeTelemetry,
+  withRequestTelemetry,
+} from "./node";
 import type { RequestContext } from "./types";
 
 // @ts-expect-error – accessing Vitest mock internals
 const apiMocks = otel.__mocks as {
+  mockContextWith: ReturnType<typeof vi.fn>;
   mockGetActiveSpan: ReturnType<typeof vi.fn>;
+  mockGetMeter: ReturnType<typeof vi.fn>;
   mockGetTracer: ReturnType<typeof vi.fn>;
+  mockMeterCreateCounter: ReturnType<typeof vi.fn>;
+  mockMeterCreateHistogram: ReturnType<typeof vi.fn>;
+  mockSetSpan: ReturnType<typeof vi.fn>;
   mockSpanAddEvent: ReturnType<typeof vi.fn>;
   mockSpanContext: ReturnType<typeof vi.fn>;
   mockSpanRecordException: ReturnType<typeof vi.fn>;
   mockSpanSetAttribute: ReturnType<typeof vi.fn>;
   mockTracerStartSpan: ReturnType<typeof vi.fn>;
+};
+
+// @ts-expect-error – accessing Vitest mock internals
+const logApiMocks = otelLogs.__mocks as {
+  mockEmit: ReturnType<typeof vi.fn>;
+  mockGetLogger: ReturnType<typeof vi.fn>;
 };
 
 describe("createRequestTelemetry (node)", () => {
@@ -153,12 +214,13 @@ describe("createRequestTelemetry (node)", () => {
 
     const error = new Error("boom");
 
-    // @ts-expect-error
-    telemetry.end({
+    telemetry.end(
+      {
+        foo: "bar",
+        skip: undefined,
+      },
       error,
-      foo: "bar",
-      skip: undefined,
-    });
+    );
 
     expect(apiMocks.mockSpanRecordException).toHaveBeenCalledWith(error);
     expect(apiMocks.mockSpanSetAttribute).toHaveBeenCalledWith("foo", "bar");
@@ -175,7 +237,7 @@ describe("createRequestTelemetry (node)", () => {
 
     const telemetry = createRequestTelemetry(ctx);
 
-    telemetry.end({ error: "not-an-error" });
+    telemetry.end(undefined, "not-an-error");
 
     expect(apiMocks.mockSpanRecordException).toHaveBeenCalledTimes(1);
     // @ts-expect-error accessing private Vitest internals for assertions
@@ -276,8 +338,7 @@ describe("initNodeTelemetry", () => {
     const telemetry = createRequestTelemetry(ctx);
     const error = new Error("node error");
 
-    // @ts-expect-error
-    telemetry.logger.error("handled node error", { error });
+    telemetry.logger.error("handled node error", undefined, error);
 
     expect(errorReporter).toHaveBeenCalledTimes(1);
     expect(errorReporter).toHaveBeenCalledWith(error, {
@@ -292,5 +353,129 @@ describe("initNodeTelemetry", () => {
       "sentry_event_id",
       "node-event-1",
     );
+  });
+});
+
+describe("withRequestTelemetry (node)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("runs handler with a request-scoped span as the active span", async () => {
+    const ctx: RequestContext = {
+      httpMethod: "GET",
+      httpRoute: "/with",
+      requestId: "req-4",
+    };
+
+    const handler = vi.fn(async (telemetry) => {
+      expect(telemetry.spanId).toBe("span-123");
+      expect(telemetry.traceId).toBe("trace-456");
+      return "ok" as const;
+    });
+
+    const result = await withRequestTelemetry(ctx, handler);
+
+    expect(result).toBe("ok");
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(apiMocks.mockSetSpan).toHaveBeenCalledTimes(1);
+    expect(apiMocks.mockContextWith).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("business event helpers (node)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("addBusinessEventToActiveSpan attaches a business_event to the active span", () => {
+    addBusinessEventToActiveSpan("user_signed_in", {
+      user_id: "user-1",
+    });
+
+    expect(apiMocks.mockGetActiveSpan).toHaveBeenCalled();
+    expect(apiMocks.mockSpanAddEvent).toHaveBeenCalledWith(
+      "business_event",
+      expect.objectContaining({
+        event_name: "user_signed_in",
+        user_id: "user-1",
+      }),
+    );
+  });
+
+  it("addErrorBusinessEventToActiveSpan adds an error-level event and records the error", () => {
+    const error = new Error("business error");
+
+    addErrorBusinessEventToActiveSpan(
+      "user_signup_failed",
+      { reason: "validation" },
+      error,
+    );
+
+    expect(apiMocks.mockSpanAddEvent).toHaveBeenCalledWith(
+      "business_event",
+      expect.objectContaining({
+        event_name: "user_signup_failed",
+        level: "error",
+        reason: "validation",
+      }),
+    );
+    expect(apiMocks.mockSpanRecordException).toHaveBeenCalledWith(error);
+  });
+});
+
+describe("getNodeMetrics (node)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates and caches counters and histograms via the global meter", () => {
+    const metricsHelper = getNodeMetrics();
+
+    expect(apiMocks.mockGetMeter).toHaveBeenCalledWith(
+      "@o3osatoshi/telemetry/node",
+    );
+
+    // Instruments are cached by name (no additional create* calls)
+    const counterAgain = metricsHelper.getCounter("http.server.requests");
+    const histogramAgain = metricsHelper.getHistogram("http.server.duration");
+
+    expect(counterAgain).not.toBeUndefined();
+    expect(histogramAgain).not.toBeUndefined();
+  });
+});
+
+describe("createNodeLogger (node)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates a process logger, emits records, and reuses the same instance", () => {
+    const logger1 = createNodeLogger();
+
+    logger1.info("node_info", {
+      foo: "bar",
+    });
+
+    expect(logApiMocks.mockGetLogger).toHaveBeenCalledWith(
+      "@o3osatoshi/telemetry/node",
+    );
+    expect(logApiMocks.mockEmit).toHaveBeenCalledTimes(1);
+
+    // @ts-expect-error – accessing Vitest mock internals for assertions
+    const emitted = logApiMocks.mockEmit.mock.calls[0][0] as {
+      attributes?: unknown;
+      body: string;
+      severityText: string;
+    };
+    expect(emitted.body).toBe("node_info");
+    expect(emitted.severityText).toBe("INFO");
+    expect(emitted.attributes).toEqual({
+      foo: "bar",
+    });
+
+    const logger2 = createNodeLogger();
+    expect(logger2).toBe(logger1);
+    expect(logApiMocks.mockGetLogger).toHaveBeenCalledTimes(1);
   });
 });

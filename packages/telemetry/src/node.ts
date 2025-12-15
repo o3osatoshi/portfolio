@@ -1,12 +1,24 @@
-import { context, trace } from "@opentelemetry/api";
+import { context, metrics, trace } from "@opentelemetry/api";
+import type {
+  Counter as OpenTelemetryCounter,
+  Histogram as OpenTelemetryHistogram,
+} from "@opentelemetry/api";
+import type {
+  LogAttributes,
+  Logger as OpenTelemetryLogger,
+} from "@opentelemetry/api-logs";
+import { logs, SeverityNumber } from "@opentelemetry/api-logs";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
+import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
+import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 import type {
   Attributes,
-  ErrorAttributes,
   Logger,
   LogLevel,
   NodeTelemetryOptions,
@@ -18,10 +30,260 @@ let sdk: NodeSDK | undefined;
 let nodeOptions: NodeTelemetryOptions | undefined;
 
 /**
- * Create a request-scoped span and logger for Node HTTP handlers.
+ * Options for creating Node metrics instruments.
+ *
+ * @remarks
+ * Used when creating counters and histograms via {@link getNodeMetrics}.
+ *
+ * @public
+ */
+export interface MetricOptions {
+  description?: string;
+  unit?: string;
+}
+/**
+ * Counter metric wrapper used by Node telemetry helpers.
+ *
+ * @remarks
+ * Backs onto an OpenTelemetry {@link @opentelemetry/api!Counter} with
+ * {@link Attributes} as metric attributes.
+ *
+ * @public
+ */
+export interface NodeMetricCounter {
+  add(value: number, attributes?: Attributes): void;
+}
+
+/**
+ * Histogram metric wrapper used by Node telemetry helpers.
+ *
+ * @remarks
+ * Backs onto an OpenTelemetry {@link @opentelemetry/api!Histogram} with
+ * {@link Attributes} as metric attributes.
+ *
+ * @public
+ */
+export interface NodeMetricHistogram {
+  record(value: number, attributes?: Attributes): void;
+}
+
+/**
+ * Node metrics helper exposed by {@link getNodeMetrics}.
+ *
+ * @remarks
+ * Instruments are cached by name and created on demand from the global
+ * OpenTelemetry {@link @opentelemetry/api!Meter}.
+ *
+ * @public
+ */
+export interface NodeMetrics {
+  /**
+   * Get or create a counter metric with the given name.
+   */
+  getCounter(name: string, options?: MetricOptions): NodeMetricCounter;
+  /**
+   * Get or create a histogram metric with the given name.
+   */
+  getHistogram(name: string, options?: MetricOptions): NodeMetricHistogram;
+}
+
+type Counter = OpenTelemetryCounter<Attributes>;
+type Histogram = OpenTelemetryHistogram<Attributes>;
+
+let nodeMetrics: NodeMetrics | undefined;
+
+/**
+ * Logger that emits OpenTelemetry log records via the logs API.
+ *
+ * @remarks
+ * - Complements the span‑bound {@link Logger} used in request telemetry
+ *   (see {@link createRequestTelemetry}).
+ * - Intended for process‑level or background job logging where there may
+ *   not be an active span.
+ *
+ * @public
+ */
+export interface NodeLogger {
+  debug(message: string, attributes?: Attributes): void;
+  error(message: string, attributes?: Attributes): void;
+  info(message: string, attributes?: Attributes): void;
+  warn(message: string, attributes?: Attributes): void;
+}
+
+/**
+ * Access Node metrics instruments backed by the global OpenTelemetry Meter.
+ *
+ * @remarks
+ * - Requires {@link initNodeTelemetry} to have been called so that a Meter
+ *   with an OTLP exporter is registered.
+ * - Instruments are created lazily and cached by name.
+ *
+ * @public
+ */
+export function getNodeMetrics(): NodeMetrics {
+  if (nodeMetrics) return nodeMetrics;
+
+  const meter = metrics.getMeter("@o3osatoshi/telemetry/node");
+
+  const counters = new Map<string, NodeMetricCounter>();
+  const histograms = new Map<string, NodeMetricHistogram>();
+
+  const getCounter = (
+    name: string,
+    options?: MetricOptions,
+  ): NodeMetricCounter => {
+    let counter = counters.get(name);
+    if (!counter) {
+      const otelCounter: Counter = meter.createCounter(name, options);
+      counter = {
+        add: (value, attributes) => {
+          otelCounter.add(value, attributes);
+        },
+      };
+      counters.set(name, counter);
+    }
+
+    return counter;
+  };
+
+  const getHistogram = (
+    name: string,
+    options?: MetricOptions,
+  ): NodeMetricHistogram => {
+    let histogram = histograms.get(name);
+    if (!histogram) {
+      const otelHistogram: Histogram = meter.createHistogram(name, options);
+      histogram = {
+        record: (value, attributes) => {
+          otelHistogram.record(value, attributes);
+        },
+      };
+      histograms.set(name, histogram);
+    }
+
+    return histogram;
+  };
+
+  nodeMetrics = {
+    getCounter,
+    getHistogram,
+  };
+
+  return nodeMetrics;
+}
+
+let logger: OpenTelemetryLogger | undefined;
+let nodeLogger: NodeLogger | undefined;
+
+/**
+ * Attach a business event to the currently active span, when available.
+ *
+ * Intended to be used from HTTP/interface layers that have already
+ * established a request span via {@link withRequestTelemetry}.
+ *
+ * When no span is active, this function is a no‑op.
+ *
+ * @public
+ */
+export function addBusinessEventToActiveSpan(
+  message: string,
+  attributes?: Attributes,
+): void {
+  const span = trace.getActiveSpan();
+  if (!span) return;
+
+  span.addEvent("business_event", {
+    event_name: message,
+    ...attributes,
+  });
+}
+
+/**
+ * Attach an error‑level business event to the currently active span.
+ *
+ * @remarks
+ * - Adds a `"business_event"` span event with `level: "error"` and the
+ *   provided {@link Attributes}.
+ * - When `error` is provided it is also recorded as an exception on the span.
+ * - When no span is active, this function is a no‑op.
+ *
+ * @public
+ */
+export function addErrorBusinessEventToActiveSpan(
+  message: string,
+  attributes?: Attributes,
+  error?: unknown,
+): void {
+  const span = trace.getActiveSpan();
+  if (!span) return;
+
+  span.addEvent("business_event", {
+    event_name: message,
+    level: "error",
+    ...attributes,
+  });
+
+  if (error) {
+    span.recordException(
+      error instanceof Error ? error : new Error("unknown error"),
+    );
+  }
+}
+
+/**
+ * Create (or reuse) a process‑level logger that emits OpenTelemetry log
+ * records via the logs API.
+ *
+ * @remarks
+ * - Requires {@link initNodeTelemetry} to have been called so that a
+ *   log provider and OTLP exporter are registered.
+ * - Log records are exported to the same Axiom dataset configured via
+ *   {@link NodeTelemetryOptions}.
+ *
+ * @public
+ */
+export function createNodeLogger(): NodeLogger {
+  if (nodeLogger) return nodeLogger;
+
+  const logger = getLogger();
+
+  const emit = (level: LogLevel, message: string, attributes?: Attributes) => {
+    const { severityNumber, severityText } = mapLogLevel(level);
+
+    const _attributes = toLogAttributes(attributes);
+
+    logger.emit({
+      ...(_attributes ? { attributes: _attributes } : {}),
+      body: message,
+      severityNumber,
+      severityText,
+    });
+  };
+
+  nodeLogger = {
+    debug: (msg, attrs) => emit("debug", msg, attrs),
+    error: (msg, attrs) => emit("error", msg, attrs),
+    info: (msg, attrs) => emit("info", msg, attrs),
+    warn: (msg, attributes) => emit("warn", msg, attributes),
+  };
+
+  return nodeLogger;
+}
+
+/**
+ * Create a request‑scoped span and logger for Node HTTP handlers.
  *
  * @param ctx - Request metadata used to populate span attributes.
- * @returns Request-scoped telemetry helpers for the current HTTP request.
+ * @returns Request‑scoped telemetry helpers for the current HTTP request.
+ *
+ * @remarks
+ * - The returned {@link RequestTelemetry} exposes:
+ *   - `span` / `spanId` / `traceId` – the underlying OpenTelemetry span
+ *     and identifiers.
+ *   - `logger` – a span‑bound logger that records `"log"` events and
+ *     forwards errors to the configured `errorReporter`.
+ *   - `end(attributes, error?)` – attaches attributes, records `error`
+ *     as an exception when provided, and ends the span.
  *
  * @public
  */
@@ -53,26 +315,20 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
     span,
   );
 
-  const end: RequestTelemetry["end"] = (attributes) => {
-    if (attributes?.error) {
-      if (attributes.error instanceof Error) {
-        span.recordException(attributes.error);
-      } else {
-        span.recordException(new Error("unknown error"));
-      }
+  const end: RequestTelemetry["end"] = (attributes, error) => {
+    if (error) {
+      span.recordException(
+        error instanceof Error ? error : new Error("unknown error"),
+      );
     }
     if (attributes) {
       for (const [key, value] of Object.entries(attributes)) {
-        if (key === "error" || value === undefined) continue;
+        if (value === undefined) continue;
         span.setAttribute(key, value);
       }
     }
     span.end();
   };
-
-  context.with(trace.setSpan(context.active(), span), () => {
-    // No-op: context is now active for downstream code if they use the OTel API.
-  });
 
   return {
     end,
@@ -86,7 +342,16 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
 /**
  * Initialize OpenTelemetry for Node runtimes.
  *
- * This function is idempotent and can be called multiple times safely.
+ * @remarks
+ * - Configures trace, metric, and log pipelines backed by OTLP/HTTP
+ *   exporters using the provided Axiom configuration.
+ * - Registers a {@link NodeSDK} instance with:
+ *   - a resource containing `service.name` and `deployment.environment`,
+ *   - a trace exporter,
+ *   - a periodic metric reader and exporter,
+ *   - a batch log record processor and exporter.
+ * - This function is idempotent and can be called multiple times safely;
+ *   subsequent calls are ignored after the first initialization.
  *
  * @public
  */
@@ -108,12 +373,62 @@ export function initNodeTelemetry(options: NodeTelemetryOptions): void {
     url: options.axiom.otlpEndpoint,
   });
 
+  const metricExporter = new OTLPMetricExporter({
+    headers: {
+      Authorization: `Bearer ${options.axiom.apiToken}`,
+      "X-Axiom-Dataset": options.dataset,
+    },
+    url: options.axiom.otlpEndpoint,
+  });
+
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: metricExporter,
+  });
+
+  const logExporter = new OTLPLogExporter({
+    headers: {
+      Authorization: `Bearer ${options.axiom.apiToken}`,
+      "X-Axiom-Dataset": options.dataset,
+    },
+    url: options.axiom.otlpEndpoint,
+  });
+
+  const logRecordProcessor = new BatchLogRecordProcessor(logExporter);
+
   sdk = new NodeSDK({
+    logRecordProcessors: [logRecordProcessor],
+    metricReaders: [metricReader],
     resource,
     traceExporter,
   });
 
   void sdk.start();
+}
+
+/**
+ * Run a handler function with a request‑scoped span set as the active span.
+ *
+ * @param ctx - Request metadata used to populate span attributes.
+ * @param handler - Function that receives the request telemetry helpers.
+ * @returns Result of the handler function.
+ *
+ * @remarks
+ * - Internally calls {@link createRequestTelemetry} and installs the
+ *   created span as the active span for the duration of `handler`.
+ * - The caller is responsible for invoking `telemetry.end(...)` inside
+ *   the handler to close the span.
+ *
+ * @public
+ */
+export async function withRequestTelemetry<T>(
+  ctx: RequestContext,
+  handler: (telemetry: RequestTelemetry) => Promise<T> | T,
+): Promise<T> {
+  const telem = createRequestTelemetry(ctx);
+
+  return context.with(trace.setSpan(context.active(), telem.span), async () =>
+    handler(telem),
+  );
 }
 
 function createSpanLogger(
@@ -123,15 +438,14 @@ function createSpanLogger(
   const log = (
     level: LogLevel,
     message: string,
-    attributes?: ErrorAttributes,
+    attributes?: Attributes,
+    error?: unknown,
   ) => {
-    const { error, ...rest } = attributes ?? {};
-
     span?.addEvent("log", {
       level,
       message,
       ...baseFields,
-      ...rest,
+      ...attributes,
     });
 
     if (level === "error" && error && nodeOptions?.errorReporter) {
@@ -150,9 +464,54 @@ function createSpanLogger(
   };
 
   return {
-    debug: (message, attributes) => log("debug", message, attributes),
-    error: (message, attributes) => log("error", message, attributes),
-    info: (message, attributes) => log("info", message, attributes),
-    warn: (message, attributes) => log("warn", message, attributes),
+    debug: (msg, attrs) => log("debug", msg, attrs),
+    error: (msg, attrs, err) => log("error", msg, attrs, err),
+    info: (msg, attrs) => log("info", msg, attrs),
+    warn: (msg, attrs) => log("warn", msg, attrs),
   };
+}
+
+function getLogger(): OpenTelemetryLogger {
+  if (!logger) {
+    logger = logs.getLogger("@o3osatoshi/telemetry/node");
+  }
+  return logger;
+}
+
+function mapLogLevel(level: LogLevel): {
+  severityNumber: SeverityNumber;
+  severityText: string;
+} {
+  switch (level) {
+    case "debug":
+      return {
+        severityNumber: SeverityNumber.DEBUG,
+        severityText: "DEBUG",
+      };
+    case "info":
+      return {
+        severityNumber: SeverityNumber.INFO,
+        severityText: "INFO",
+      };
+    case "warn":
+      return {
+        severityNumber: SeverityNumber.WARN,
+        severityText: "WARN",
+      };
+    case "error":
+      return {
+        severityNumber: SeverityNumber.ERROR,
+        severityText: "ERROR",
+      };
+    default:
+      return {
+        severityNumber: SeverityNumber.INFO,
+        severityText: "INFO",
+      };
+  }
+}
+
+function toLogAttributes(attributes?: Attributes): LogAttributes | undefined {
+  if (!attributes) return undefined;
+  return attributes as LogAttributes;
 }

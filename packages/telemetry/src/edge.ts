@@ -10,7 +10,6 @@ import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 import type {
   Attributes,
   EdgeTelemetryOptions,
-  ErrorAttributes,
   Logger,
   LogLevel,
   RequestContext,
@@ -21,10 +20,20 @@ let provider: BasicTracerProvider | undefined;
 let edgeOptions: EdgeTelemetryOptions | undefined;
 
 /**
- * Create a request-scoped span and logger for Edge HTTP handlers.
+ * Create a request‑scoped span and logger for Edge HTTP handlers.
  *
  * @param ctx - Request metadata used to populate span attributes.
- * @returns Request-scoped telemetry helpers for the current HTTP request.
+ * @returns Request‑scoped telemetry helpers for the current HTTP request.
+ *
+ * @remarks
+ * - The returned {@link RequestTelemetry} exposes:
+ *   - `span` / `spanId` / `traceId` – the underlying OpenTelemetry span
+ *     and identifiers.
+ *   - `logger` – a span‑bound logger that records `"log"` events and, when
+ *     an {@link EdgeTelemetryOptions.errorReporter} is configured, forwards
+ *     errors with request/span context.
+ *   - `end(attributes, error?)` – attaches attributes, records `error`
+ *     as an exception when provided, and ends the span.
  *
  * @public
  */
@@ -56,17 +65,15 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
     span,
   );
 
-  const end: RequestTelemetry["end"] = (attributes) => {
-    if (attributes?.error) {
-      if (attributes.error instanceof Error) {
-        span.recordException(attributes.error);
-      } else {
-        span.recordException(new Error("unknown error"));
-      }
+  const end: RequestTelemetry["end"] = (attributes, error) => {
+    if (error) {
+      span.recordException(
+        error instanceof Error ? error : new Error("unknown error"),
+      );
     }
     if (attributes) {
       for (const [key, value] of Object.entries(attributes)) {
-        if (key === "error" || value === undefined) continue;
+        if (value === undefined) continue;
         span.setAttribute(key, value);
       }
     }
@@ -89,7 +96,15 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
 /**
  * Initialize OpenTelemetry for Edge runtimes (e.g. Cloudflare Workers).
  *
- * This function is idempotent and can be called multiple times safely.
+ * @remarks
+ * - Configures a {@link BasicTracerProvider} with:
+ *   - a resource containing `service.name` and `deployment.environment`,
+ *   - a trace exporter wired to the OTLP/HTTP endpoint and dataset provided
+ *     via {@link EdgeTelemetryOptions.axiom} / `dataset`,
+ *   - a {@link BatchSpanProcessor} for efficient span export.
+ * - Registers the provider via {@link trace.setGlobalTracerProvider}.
+ * - This function is idempotent and can be called multiple times safely;
+ *   subsequent calls are ignored after the first initialization.
  *
  * @public
  */
@@ -126,15 +141,14 @@ function createSpanLogger(
   const log = (
     level: LogLevel,
     message: string,
-    attributes?: ErrorAttributes,
+    attributes?: Attributes,
+    error?: unknown,
   ) => {
-    const { error, ...rest } = attributes ?? {};
-
     span?.addEvent("log", {
       level,
       message,
       ...baseAttributes,
-      ...rest,
+      ...attributes,
     });
 
     if (level === "error" && error && edgeOptions?.errorReporter) {
@@ -153,9 +167,9 @@ function createSpanLogger(
   };
 
   return {
-    debug: (message, attributes) => log("debug", message, attributes),
-    error: (message, attributes) => log("error", message, attributes),
-    info: (message, attributes) => log("info", message, attributes),
-    warn: (message, attributes) => log("warn", message, attributes),
+    debug: (msg, attrs) => log("debug", msg, attrs),
+    error: (msg, attrs, err) => log("error", msg, attrs, err),
+    info: (msg, attrs) => log("info", msg, attrs),
+    warn: (msg, attrs) => log("warn", msg, attrs),
   };
 }

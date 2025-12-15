@@ -174,12 +174,13 @@ describe("createRequestTelemetry (edge)", () => {
 
     const error = new Error("edge-boom");
 
-    // @ts-expect-error
-    telemetry.end({
+    telemetry.end(
+      {
+        foo: "edge",
+        skip: undefined,
+      },
       error,
-      foo: "edge",
-      skip: undefined,
-    });
+    );
 
     expect(apiMocks.mockSpanRecordException).toHaveBeenCalledWith(error);
     expect(apiMocks.mockSpanSetAttribute).toHaveBeenCalledWith("foo", "edge");
@@ -196,8 +197,7 @@ describe("createRequestTelemetry (edge)", () => {
 
     const telemetry = createRequestTelemetry(ctx);
 
-    // @ts-expect-error
-    telemetry.end({ error: { some: "value" } });
+    telemetry.end(undefined, { some: "value" });
 
     expect(apiMocks.mockSpanRecordException).toHaveBeenCalledTimes(1);
     // @ts-expect-error accessing private Vitest internals for assertions
@@ -293,8 +293,7 @@ describe("initEdgeTelemetry", () => {
     const telemetry = createRequestTelemetry(ctx);
     const error = new Error("edge error");
 
-    // @ts-expect-error
-    telemetry.logger.error("handled edge error", { error });
+    telemetry.logger.error("handled edge error", undefined, error);
 
     expect(errorReporter).toHaveBeenCalledTimes(1);
     expect(errorReporter).toHaveBeenCalledWith(error, {

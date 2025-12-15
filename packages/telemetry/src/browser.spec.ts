@@ -21,11 +21,25 @@ vi.mock("@opentelemetry/api", () => {
   const mockContextActive = vi.fn(() => ({}));
   const mockContextWith = vi.fn((_ctx: unknown, fn: () => void) => fn());
 
+  const mockSetGlobalMeterProvider = vi.fn();
+  const mockMeterCreateCounter = vi.fn();
+  const mockMeterCreateHistogram = vi.fn();
+  const mockMeter = {
+    createCounter: mockMeterCreateCounter,
+    createHistogram: mockMeterCreateHistogram,
+  };
+  const mockGetMeter = vi.fn(() => mockMeter);
+
   return {
     __mocks: {
+      mockSetGlobalMeterProvider,
       mockContextWith,
       mockGetActiveSpan,
+      mockGetMeter,
       mockGetTracer,
+      mockMeterCreateCounter,
+      mockMeterCreateHistogram,
+      mockSetSpan,
       mockSpanAddEvent,
       mockSpanEnd,
       mockTracerStartSpan,
@@ -34,11 +48,43 @@ vi.mock("@opentelemetry/api", () => {
       active: mockContextActive,
       with: mockContextWith,
     },
+    metrics: {
+      setGlobalMeterProvider: mockSetGlobalMeterProvider,
+      getMeter: mockGetMeter,
+    },
     trace: {
       getActiveSpan: mockGetActiveSpan,
       getTracer: mockGetTracer,
       setSpan: mockSetSpan,
     },
+  };
+});
+
+vi.mock("@opentelemetry/api-logs", () => {
+  const mockEmit = vi.fn();
+  const mockGetLogger = vi.fn(() => ({
+    emit: mockEmit,
+  }));
+  const mockSetGlobalLoggerProvider = vi.fn();
+
+  const SeverityNumber = {
+    DEBUG: 5,
+    ERROR: 17,
+    INFO: 9,
+    WARN: 13,
+  } as const;
+
+  return {
+    __mocks: {
+      mockSetGlobalLoggerProvider,
+      mockEmit,
+      mockGetLogger,
+    },
+    logs: {
+      setGlobalLoggerProvider: mockSetGlobalLoggerProvider,
+      getLogger: mockGetLogger,
+    },
+    SeverityNumber,
   };
 });
 
@@ -95,6 +141,7 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 }));
 
 import * as otel from "@opentelemetry/api";
+import * as otelLogs from "@opentelemetry/api-logs";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
@@ -102,19 +149,36 @@ import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 import type { BrowserSessionContext } from "./browser";
-import { createBrowserLogger, initBrowserTelemetry } from "./browser";
+import {
+  createBrowserLogger,
+  createEventLogger,
+  getBrowserMetrics,
+  initBrowserTelemetry,
+} from "./browser";
 
 // @ts-expect-error – accessing Vitest mock internals
 const apiMocks = otel.__mocks as {
   mockContextWith: ReturnType<typeof vi.fn>;
   mockGetActiveSpan: ReturnType<typeof vi.fn>;
+  mockGetMeter: ReturnType<typeof vi.fn>;
   mockGetTracer: ReturnType<typeof vi.fn>;
+  mockMeterCreateCounter: ReturnType<typeof vi.fn>;
+  mockMeterCreateHistogram: ReturnType<typeof vi.fn>;
+  mockSetGlobalMeterProvider: ReturnType<typeof vi.fn>;
+  mockSetSpan: ReturnType<typeof vi.fn>;
   mockSpanAddEvent: ReturnType<typeof vi.fn>;
   mockSpanEnd: ReturnType<typeof vi.fn>;
   mockTracerStartSpan: ReturnType<typeof vi.fn>;
 };
 
-describe("createBrowserLogger", () => {
+// @ts-expect-error – accessing Vitest mock internals
+const logApiMocks = otelLogs.__mocks as {
+  mockEmit: ReturnType<typeof vi.fn>;
+  mockGetLogger: ReturnType<typeof vi.fn>;
+  mockSetGlobalLoggerProvider: ReturnType<typeof vi.fn>;
+};
+
+describe("createEventLogger (browser)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -125,7 +189,7 @@ describe("createBrowserLogger", () => {
       userId: "user-1",
     };
 
-    const logger = createBrowserLogger(session);
+    const logger = createEventLogger(session);
 
     logger.event("button_clicked", { button: "primary" });
 
@@ -151,7 +215,7 @@ describe("createBrowserLogger", () => {
       userId: null,
     };
 
-    const logger = createBrowserLogger(session);
+    const logger = createEventLogger(session);
 
     logger.info("hello", { foo: "bar" });
 
@@ -171,7 +235,7 @@ describe("initBrowserTelemetry", () => {
     vi.clearAllMocks();
   });
 
-  it("is idempotent and configures resource and exporter correctly", () => {
+  it("is idempotent and configures trace, metric, and log pipelines", () => {
     const options = {
       axiom: {
         apiToken: "test-token",
@@ -199,7 +263,7 @@ describe("initBrowserTelemetry", () => {
     const ProviderMock = WebTracerProvider as unknown as ViMockFn;
     const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ViMockFn;
 
-    // Idempotent: functions/constructors called only once
+    // Idempotent: trace components are created only once
     expect(resourceFromAttributesMock).toHaveBeenCalledTimes(1);
     expect(ExporterMock).toHaveBeenCalledTimes(1);
     expect(ProviderMock).toHaveBeenCalledTimes(1);
@@ -211,7 +275,7 @@ describe("initBrowserTelemetry", () => {
       "deployment.environment": options.env,
     });
 
-    // Exporter configured with Axiom token and endpoint
+    // Trace exporter configured with Axiom token and endpoint
     expect(ExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
@@ -220,7 +284,7 @@ describe("initBrowserTelemetry", () => {
       url: options.axiom.otlpEndpoint,
     });
 
-    // Provider is wired with the created resource and span processor
+    // Tracer provider is wired with the created resource and span processor
     const providerInstance = ProviderMock.mock.instances[0];
     // @ts-expect-error
     const resourceInstance = resourceFromAttributesMock.mock.results[0].value;
@@ -231,7 +295,92 @@ describe("initBrowserTelemetry", () => {
       spanProcessorInstance,
     ]);
 
-    // Provider is registered once
+    // Tracer provider is registered once
     expect(providerInstance.register).toHaveBeenCalledTimes(1);
+
+    // Meter and logger providers are registered globally
+    expect(apiMocks.mockSetGlobalMeterProvider).toHaveBeenCalledTimes(1);
+    expect(logApiMocks.mockSetGlobalLoggerProvider).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("getBrowserMetrics (browser)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates and caches counters and histograms via the global meter", () => {
+    const metricsHelper = getBrowserMetrics();
+
+    const counter = metricsHelper.getCounter("ui.view_count", {
+      description: "View count",
+      unit: "1",
+    });
+    const histogram = metricsHelper.getHistogram("ui.view_duration", {
+      description: "View duration",
+      unit: "ms",
+    });
+
+    expect(apiMocks.mockGetMeter).toHaveBeenCalledWith(
+      "@o3osatoshi/telemetry/browser",
+    );
+    expect(apiMocks.mockMeterCreateCounter).toHaveBeenCalledWith(
+      "ui.view_count",
+      {
+        description: "View count",
+        unit: "1",
+      },
+    );
+    expect(apiMocks.mockMeterCreateHistogram).toHaveBeenCalledWith(
+      "ui.view_duration",
+      {
+        description: "View duration",
+        unit: "ms",
+      },
+    );
+
+    // Instruments are cached by name
+    const counterAgain = metricsHelper.getCounter("ui.view_count");
+    const histogramAgain = metricsHelper.getHistogram("ui.view_duration");
+
+    expect(counterAgain).toBe(counter);
+    expect(histogramAgain).toBe(histogram);
+    expect(apiMocks.mockMeterCreateCounter).toHaveBeenCalledTimes(1);
+    expect(apiMocks.mockMeterCreateHistogram).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("createBrowserLogger (browser)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates a process logger, emits records, and reuses the same instance", () => {
+    const logger1 = createBrowserLogger();
+
+    logger1.info("browser_info", {
+      foo: "bar",
+    });
+
+    expect(logApiMocks.mockGetLogger).toHaveBeenCalledWith(
+      "@o3osatoshi/telemetry/browser",
+    );
+    expect(logApiMocks.mockEmit).toHaveBeenCalledTimes(1);
+
+    // @ts-expect-error – accessing Vitest mock internals for assertions
+    const emitted = logApiMocks.mockEmit.mock.calls[0][0] as {
+      attributes?: unknown;
+      body: string;
+      severityText: string;
+    };
+    expect(emitted.body).toBe("browser_info");
+    expect(emitted.severityText).toBe("INFO");
+    expect(emitted.attributes).toEqual({
+      foo: "bar",
+    });
+
+    const logger2 = createBrowserLogger();
+    expect(logger2).toBe(logger1);
+    expect(logApiMocks.mockGetLogger).toHaveBeenCalledTimes(1);
   });
 });
