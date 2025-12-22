@@ -113,6 +113,32 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
   return { OTLPTraceExporter };
 });
 
+vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
+  interface TestExporterInstance {
+    options?: unknown;
+  }
+  const OTLPMetricExporter = vi.fn(function (
+    this: TestExporterInstance,
+    options: unknown,
+  ) {
+    this.options = options;
+  });
+  return { OTLPMetricExporter };
+});
+
+vi.mock("@opentelemetry/exporter-logs-otlp-http", () => {
+  interface TestExporterInstance {
+    options?: unknown;
+  }
+  const OTLPLogExporter = vi.fn(function (
+    this: TestExporterInstance,
+    options: unknown,
+  ) {
+    this.options = options;
+  });
+  return { OTLPLogExporter };
+});
+
 vi.mock("@opentelemetry/resources", () => {
   const resourceFromAttributes = vi.fn((attributes: unknown) => ({
     attributes,
@@ -152,6 +178,8 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 
 import * as otel from "@opentelemetry/api";
 import * as otelLogs from "@opentelemetry/api-logs";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import {
@@ -279,7 +307,11 @@ describe("initEdgeTelemetry", () => {
     const options = {
       axiom: {
         apiToken: "test-token",
-        otlpEndpoint: "https://example.axiom.co/v1/traces",
+        otlpEndpoints: {
+          logs: "https://logs.example.axiom.co/v1/logs",
+          metrics: "https://metrics.example.axiom.co/v1/metrics",
+          traces: "https://traces.example.axiom.co/v1/traces",
+        },
       },
       datasets: {
         logs: "my-edge-logs",
@@ -297,7 +329,11 @@ describe("initEdgeTelemetry", () => {
       ...options,
       axiom: {
         apiToken: "other-token",
-        otlpEndpoint: "https://other.example/v1/traces",
+        otlpEndpoints: {
+          logs: "https://other.example/v1/logs",
+          metrics: "https://other.example/v1/metrics",
+          traces: "https://other.example/v1/traces",
+        },
       },
     });
 
@@ -305,12 +341,16 @@ describe("initEdgeTelemetry", () => {
     const resourceFromAttributesMock =
       resourceFromAttributes as unknown as ViMockFn;
     const ExporterMock = OTLPTraceExporter as unknown as ViMockFn;
+    const MetricExporterMock = OTLPMetricExporter as unknown as ViMockFn;
+    const LogExporterMock = OTLPLogExporter as unknown as ViMockFn;
     const ProviderMock = BasicTracerProvider as unknown as ViMockFn;
     const BatchSpanProcessorMock = BatchSpanProcessor as unknown as ViMockFn;
 
     // Idempotent: functions/constructors called only once
     expect(resourceFromAttributesMock).toHaveBeenCalledTimes(1);
     expect(ExporterMock).toHaveBeenCalledTimes(1);
+    expect(MetricExporterMock).toHaveBeenCalledTimes(1);
+    expect(LogExporterMock).toHaveBeenCalledTimes(1);
     expect(ProviderMock).toHaveBeenCalledTimes(1);
     expect(BatchSpanProcessorMock).toHaveBeenCalledTimes(1);
 
@@ -326,7 +366,23 @@ describe("initEdgeTelemetry", () => {
         Authorization: `Bearer ${options.axiom.apiToken}`,
         "X-Axiom-Dataset": options.datasets.traces,
       },
-      url: options.axiom.otlpEndpoint,
+      url: options.axiom.otlpEndpoints.traces,
+    });
+
+    expect(MetricExporterMock).toHaveBeenCalledWith({
+      headers: {
+        Authorization: `Bearer ${options.axiom.apiToken}`,
+        "X-Axiom-Dataset": options.datasets.metrics,
+      },
+      url: options.axiom.otlpEndpoints.metrics,
+    });
+
+    expect(LogExporterMock).toHaveBeenCalledWith({
+      headers: {
+        Authorization: `Bearer ${options.axiom.apiToken}`,
+        "X-Axiom-Dataset": options.datasets.logs,
+      },
+      url: options.axiom.otlpEndpoints.logs,
     });
 
     // Provider is wired with the created resource and span processor

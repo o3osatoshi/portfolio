@@ -27,12 +27,43 @@ export interface AxiomConfig {
    */
   apiToken: string;
   /**
-   * OTLP/HTTP endpoint for sending telemetry to Axiom.
+   * Signal-specific OTLP/HTTP endpoints.
    *
-   * Typically looks like:
-   * `https://api.axiom.co/v1/traces`
+   * @remarks
+   * OpenTelemetry OTLP/HTTP uses different endpoints for each signal:
+   * - traces: `/v1/traces`
+   * - metrics: `/v1/metrics`
+   * - logs: `/v1/logs`
    */
-  otlpEndpoint: string;
+  otlpEndpoints: AxiomOtlpEndpoints;
+}
+
+/**
+ * OTLP/HTTP endpoints used for each OpenTelemetry signal.
+ *
+ * @remarks
+ * Each endpoint can be either:
+ * - a base endpoint (for example, `https://api.axiom.co`), or
+ * - any signal endpoint (for example, `https://api.axiom.co/v1/traces`).
+ *
+ * Runtime initializers normalize each value so the corresponding signal is sent
+ * to the correct path.
+ *
+ * @public
+ */
+export interface AxiomOtlpEndpoints {
+  /**
+   * Endpoint used for log record export.
+   */
+  logs: string;
+  /**
+   * Endpoint used for metric export.
+   */
+  metrics: string;
+  /**
+   * Endpoint used for trace export.
+   */
+  traces: string;
 }
 
 /**
@@ -109,6 +140,9 @@ export type ErrorReporter = (
  * @public
  */
 export interface ErrorReporterContext {
+  /**
+   * Additional fields that may be provided by runtime-specific helpers.
+   */
   [key: string]: unknown;
   /**
    * Correlation identifier for the current request, when available.
@@ -137,9 +171,25 @@ export interface ErrorReporterContext {
  * @public
  */
 export interface Logger {
+  /**
+   * Record a debug-level message.
+   */
   debug(message: string, attributes?: Attributes): void;
+  /**
+   * Record an error-level message.
+   *
+   * @remarks
+   * When `error` is provided, runtime-specific implementations may also record
+   * it as an exception on the active span or report it via an error reporter.
+   */
   error(message: string, attributes?: Attributes, error?: unknown): void;
+  /**
+   * Record an info-level message.
+   */
   info(message: string, attributes?: Attributes): void;
+  /**
+   * Record a warn-level message.
+   */
   warn(message: string, attributes?: Attributes): void;
 }
 
@@ -213,6 +263,9 @@ export interface NodeTelemetryOptions extends BaseTelemetryOptions {
  * @public
  */
 export interface RequestContext {
+  /**
+   * Additional fields that may be provided by callers and forwarded to error reporters.
+   */
   [key: string]: unknown;
   /**
    * Client IP address, if known.

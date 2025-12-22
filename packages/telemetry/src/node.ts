@@ -75,9 +75,21 @@ let nodeMetrics: NodeMetrics | undefined;
  * @public
  */
 export interface NodeLogger {
+  /**
+   * Emit a debug log record.
+   */
   debug(message: string, attributes?: Attributes): void;
+  /**
+   * Emit an error log record.
+   */
   error(message: string, attributes?: Attributes): void;
+  /**
+   * Emit an info log record.
+   */
   info(message: string, attributes?: Attributes): void;
+  /**
+   * Emit a warn log record.
+   */
   warn(message: string, attributes?: Attributes): void;
 }
 
@@ -357,7 +369,7 @@ export function initNodeTelemetry(
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
       "X-Axiom-Dataset": tracesDataset,
     },
-    url: telemetryOptions.axiom.otlpEndpoint,
+    url: telemetryOptions.axiom.otlpEndpoints.traces,
   });
 
   const metricExporter = new OTLPMetricExporter({
@@ -365,7 +377,7 @@ export function initNodeTelemetry(
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
       "X-Axiom-Dataset": metricsDataset,
     },
-    url: telemetryOptions.axiom.otlpEndpoint,
+    url: telemetryOptions.axiom.otlpEndpoints.metrics,
   });
   const metricReader = new PeriodicExportingMetricReader({
     exporter: metricExporter,
@@ -376,7 +388,7 @@ export function initNodeTelemetry(
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
       "X-Axiom-Dataset": logsDataset,
     },
-    url: telemetryOptions.axiom.otlpEndpoint,
+    url: telemetryOptions.axiom.otlpEndpoints.logs,
   });
   const logProcessor = new BatchLogRecordProcessor(logExporter);
 

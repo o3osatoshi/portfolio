@@ -14,7 +14,14 @@ export type Attributes = Attributes_2;
 // @public
 export interface AxiomConfig {
     apiToken: string;
-    otlpEndpoint: string;
+    otlpEndpoints: AxiomOtlpEndpoints;
+}
+
+// @public
+export interface AxiomOtlpEndpoints {
+    logs: string;
+    metrics: string;
+    traces: string;
 }
 
 // @public
@@ -40,7 +47,6 @@ export type ErrorReporter = (error: unknown, context?: ErrorReporterContext) => 
 
 // @public
 export interface ErrorReporterContext {
-    // (undocumented)
     [key: string]: unknown;
     requestId?: string | undefined;
     spanId?: string | undefined;
@@ -50,13 +56,9 @@ export interface ErrorReporterContext {
 
 // @public
 export interface Logger {
-    // (undocumented)
     debug(message: string, attributes?: Attributes): void;
-    // (undocumented)
     error(message: string, attributes?: Attributes, error?: unknown): void;
-    // (undocumented)
     info(message: string, attributes?: Attributes): void;
-    // (undocumented)
     warn(message: string, attributes?: Attributes): void;
 }
 
@@ -83,7 +85,6 @@ export interface NodeTelemetryOptions extends BaseTelemetryOptions {
 
 // @public
 export interface RequestContext {
-    // (undocumented)
     [key: string]: unknown;
     clientIp?: string | undefined;
     httpMethod?: string | undefined;

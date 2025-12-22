@@ -99,9 +99,21 @@ let browserMetrics: BrowserMetrics | undefined;
  * @public
  */
 export interface BrowserLogger {
+  /**
+   * Emit a debug log record.
+   */
   debug(message: string, attributes?: Attributes): void;
+  /**
+   * Emit an error log record.
+   */
   error(message: string, attributes?: Attributes): void;
+  /**
+   * Emit an info log record.
+   */
   info(message: string, attributes?: Attributes): void;
+  /**
+   * Emit a warn log record.
+   */
   warn(message: string, attributes?: Attributes): void;
 }
 
@@ -328,7 +340,7 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
       Authorization: `Bearer ${options.axiom.apiToken}`,
       "X-Axiom-Dataset": tracesDataset,
     },
-    url: options.axiom.otlpEndpoint,
+    url: options.axiom.otlpEndpoints.traces,
   });
   const traceProcessor = new BatchSpanProcessor(traceExporter);
   tracerProvider = new WebTracerProvider({
@@ -342,7 +354,7 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
       Authorization: `Bearer ${options.axiom.apiToken}`,
       "X-Axiom-Dataset": metricsDataset,
     },
-    url: options.axiom.otlpEndpoint,
+    url: options.axiom.otlpEndpoints.metrics,
   });
   const metricReader = new PeriodicExportingMetricReader({
     exporter: metricExporter,
@@ -358,7 +370,7 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
       Authorization: `Bearer ${options.axiom.apiToken}`,
       "X-Axiom-Dataset": logsDataset,
     },
-    url: options.axiom.otlpEndpoint,
+    url: options.axiom.otlpEndpoints.logs,
   });
   const logProcessor = new BatchLogRecordProcessor(logExporter);
   loggerProvider = new LoggerProvider({

@@ -23,7 +23,10 @@ The package bundles the required OpenTelemetry SDK/exporter dependencies interna
   - All runtimes send traces to Axiom via OTLP/HTTP.
   - Node and browser runtimes also wire metrics and log records to the same OTLP endpoint using:
     - `axiom.apiToken` – Axiom API token used in the `Authorization` header.
-    - `axiom.otlpEndpoint` – OTLP endpoint for traces/metrics/logs, e.g. `https://api.axiom.co/v1/traces`.
+    - `axiom.otlp` – OTLP endpoints per signal (`traces`, `metrics`, `logs`), for example:
+      - `https://api.axiom.co/v1/traces`
+      - `https://api.axiom.co/v1/metrics`
+      - `https://api.axiom.co/v1/logs`
 - **Service and environment labels**
   - Each runtime attaches:
     - `service.name` – from `serviceName`.
@@ -43,7 +46,11 @@ import { initNodeTelemetry } from "@o3osatoshi/telemetry/node";
 initNodeTelemetry({
   axiom: {
     apiToken: process.env.AXIOM_API_TOKEN!,
-    otlpEndpoint: "https://api.axiom.co/v1/traces",
+    otlpEndpoints: {
+      traces: "https://api.axiom.co/v1/traces",
+      metrics: "https://api.axiom.co/v1/metrics",
+      logs: "https://api.axiom.co/v1/logs",
+    },
   },
   datasets: {
     traces: "my-node-traces",
@@ -186,11 +193,15 @@ try {
 import type { Env } from "@o3osatoshi/toolkit";
 import { initEdgeTelemetry } from "@o3osatoshi/telemetry/edge";
 
-export function init(env: Env, axiomToken: string, axiomUrl: string) {
+export function init(env: Env, axiomToken: string) {
   initEdgeTelemetry({
     axiom: {
       apiToken: axiomToken,
-      otlpEndpoint: axiomUrl,
+      otlpEndpoints: {
+        traces: "https://api.axiom.co/v1/traces",
+        metrics: "https://api.axiom.co/v1/metrics",
+        logs: "https://api.axiom.co/v1/logs",
+      },
     },
     datasets: {
       traces: "my-edge-traces",
@@ -255,7 +266,11 @@ import { initBrowserTelemetry } from "@o3osatoshi/telemetry/browser";
 initBrowserTelemetry({
   axiom: {
     apiToken: window.ENV.AXIOM_API_TOKEN,
-    otlpEndpoint: "https://api.axiom.co/v1/traces",
+    otlpEndpoints: {
+      traces: "https://api.axiom.co/v1/traces",
+      metrics: "https://api.axiom.co/v1/metrics",
+      logs: "https://api.axiom.co/v1/logs",
+    },
   },
   datasets: {
     traces: "my-browser-traces",
@@ -341,7 +356,11 @@ All runtime options share a common configuration shape:
 
 - `AxiomConfig`
   - `apiToken: string` – Axiom API token.
-  - `otlpEndpoint: string` – OTLP/HTTP traces endpoint.
+  - `otlp: AxiomOtlpEndpoints` – OTLP/HTTP endpoints per signal.
+- `AxiomOtlpEndpoints`
+  - `traces: string` – OTLP/HTTP traces endpoint.
+  - `metrics: string` – OTLP/HTTP metrics endpoint.
+  - `logs: string` – OTLP/HTTP logs endpoint.
 - `BaseTelemetryOptions`
   - `axiom: AxiomConfig`
   - `datasets: TelemetryDatasets` – target Axiom dataset names used for each telemetry signal (propagated via the `X-Axiom-Dataset` header).
