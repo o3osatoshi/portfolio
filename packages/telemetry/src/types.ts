@@ -256,6 +256,17 @@ export interface RequestTelemetry {
    */
   logger: Logger;
   /**
+   * Update the authenticated user identifier for the current request span.
+   *
+   * @remarks
+   * - Updates both the span attribute (`enduser.id`) and any runtime-specific
+   *   logger context that is derived from the request user identifier.
+   * - Intended to be called after authentication middleware resolves the user.
+   *
+   * @param userId - Authenticated user identifier, if available.
+   */
+  setUserId: (userId?: null | string) => void;
+  /**
    * Underlying OpenTelemetry span representing the request.
    */
   span: Span;

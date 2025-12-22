@@ -97,6 +97,7 @@ export interface RequestContext {
 export interface RequestTelemetry {
     end: (attributes?: Attributes, error?: unknown) => void;
     logger: Logger;
+    setUserId: (userId?: null | string) => void;
     span: Span;
     spanId: string;
     traceId: string;

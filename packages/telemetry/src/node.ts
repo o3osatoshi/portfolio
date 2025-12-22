@@ -275,17 +275,23 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
 
   const spanCtx = span.spanContext();
 
-  const logger = createSpanLogger(
-    {
-      request_id: ctx.requestId,
-      span_id: spanCtx.spanId,
-      trace_id: spanCtx.traceId,
-      user_id: ctx.userId ?? undefined,
-      http_method: ctx.httpMethod,
-      http_route: ctx.httpRoute,
-    },
-    span,
-  );
+  const attributes: Attributes = {
+    request_id: ctx.requestId,
+    span_id: spanCtx.spanId,
+    trace_id: spanCtx.traceId,
+    user_id: ctx.userId ?? undefined,
+    http_method: ctx.httpMethod,
+    http_route: ctx.httpRoute,
+  };
+
+  const logger = createSpanLogger(attributes, span);
+
+  const setUserId: RequestTelemetry["setUserId"] = (userId) => {
+    attributes["user_id"] = userId ?? undefined;
+    if (typeof userId === "string" && userId.length > 0) {
+      span.setAttribute("enduser.id", userId);
+    }
+  };
 
   const end: RequestTelemetry["end"] = (attributes, error) => {
     if (error) {
@@ -305,6 +311,7 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
   return {
     end,
     logger,
+    setUserId,
     span,
     spanId: spanCtx.spanId,
     traceId: spanCtx.traceId,

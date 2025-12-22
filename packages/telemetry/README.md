@@ -95,6 +95,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse) {
   - `span` – the underlying OpenTelemetry span.
   - `spanId` / `traceId` – IDs suitable for logging or correlation headers.
   - `logger` – `debug` / `info` / `warn` / `error` helpers that add a `"log"` event to the span.
+  - `setUserId(userId?)` – updates the authenticated user id (`enduser.id`) on the span and logger context (call after auth middleware).
   - `end(attributes?, error?)` – records `error` as an exception when provided and attaches all defined attributes as span attributes.
 
 When an `errorReporter` is configured in Node and you call `telemetry.logger.error("message", attrs, error)`:
@@ -359,7 +360,7 @@ All runtime options share a common configuration shape:
 - `RequestContext`
   - Request metadata for `createRequestTelemetry` (client IP, HTTP method/route, requestId, userAgent, userId).
 - `RequestTelemetry`
-  - `{ span, spanId, traceId, logger, end }` as returned from `createRequestTelemetry`.
+  - `{ span, spanId, traceId, logger, setUserId, end }` as returned from `createRequestTelemetry`.
 - `Logger`
   - Minimal logger interface used across runtimes with `debug` / `info` / `warn` / `error`. The `error` method accepts an optional `error` parameter that is recorded on the span and, in Node/Edge, forwarded to the configured `errorReporter` when present.
 
