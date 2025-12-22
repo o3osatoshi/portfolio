@@ -260,7 +260,11 @@ describe("initNodeTelemetry", () => {
         apiToken: "test-token",
         otlpEndpoint: "https://example.axiom.co/v1/traces",
       },
-      dataset: "my-node-dataset",
+      datasets: {
+        logs: "my-node-logs",
+        metrics: "my-node-metrics",
+        traces: "my-node-traces",
+      },
       env: "production",
       errorReporter,
       serviceName: "my-node-service",
@@ -297,7 +301,7 @@ describe("initNodeTelemetry", () => {
     expect(ExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
-        "X-Axiom-Dataset": options.dataset,
+        "X-Axiom-Dataset": options.datasets.traces,
       },
       url: options.axiom.otlpEndpoint,
     });

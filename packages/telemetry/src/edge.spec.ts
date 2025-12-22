@@ -27,15 +27,27 @@ vi.mock("@opentelemetry/api", () => {
   const mockGetActiveSpan = vi.fn(() => mockSpan);
   const mockSetSpan = vi.fn((_ctx: unknown, _span: unknown) => ({}));
   const mockSetGlobalTracerProvider = vi.fn();
+  const mockSetGlobalMeterProvider = vi.fn();
+  const mockMeterCreateCounter = vi.fn();
+  const mockMeterCreateHistogram = vi.fn();
+  const mockMeter = {
+    createCounter: mockMeterCreateCounter,
+    createHistogram: mockMeterCreateHistogram,
+  };
+  const mockGetMeter = vi.fn(() => mockMeter);
 
   const mockContextActive = vi.fn(() => ({}));
   const mockContextWith = vi.fn((_ctx: unknown, fn: () => void) => fn());
 
   return {
     __mocks: {
+      mockSetGlobalMeterProvider,
       mockSetGlobalTracerProvider,
       mockGetActiveSpan,
+      mockGetMeter,
       mockGetTracer,
+      mockMeterCreateCounter,
+      mockMeterCreateHistogram,
       mockSpanAddEvent,
       mockSpanContext,
       mockSpanEnd,
@@ -47,12 +59,44 @@ vi.mock("@opentelemetry/api", () => {
       active: mockContextActive,
       with: mockContextWith,
     },
+    metrics: {
+      setGlobalMeterProvider: mockSetGlobalMeterProvider,
+      getMeter: mockGetMeter,
+    },
     trace: {
       setGlobalTracerProvider: mockSetGlobalTracerProvider,
       getActiveSpan: mockGetActiveSpan,
       getTracer: mockGetTracer,
       setSpan: mockSetSpan,
     },
+  };
+});
+
+vi.mock("@opentelemetry/api-logs", () => {
+  const mockEmit = vi.fn();
+  const mockGetLogger = vi.fn(() => ({
+    emit: mockEmit,
+  }));
+  const mockSetGlobalLoggerProvider = vi.fn();
+
+  const SeverityNumber = {
+    DEBUG: 5,
+    ERROR: 17,
+    INFO: 9,
+    WARN: 13,
+  } as const;
+
+  return {
+    __mocks: {
+      mockSetGlobalLoggerProvider,
+      mockEmit,
+      mockGetLogger,
+    },
+    logs: {
+      setGlobalLoggerProvider: mockSetGlobalLoggerProvider,
+      getLogger: mockGetLogger,
+    },
+    SeverityNumber,
   };
 });
 
@@ -107,6 +151,7 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 }));
 
 import * as otel from "@opentelemetry/api";
+import * as otelLogs from "@opentelemetry/api-logs";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import {
@@ -115,19 +160,35 @@ import {
 } from "@opentelemetry/sdk-trace-base";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
-import { createRequestTelemetry, initEdgeTelemetry } from "./edge";
+import {
+  createEdgeLogger,
+  createRequestTelemetry,
+  getEdgeMetrics,
+  initEdgeTelemetry,
+} from "./edge";
 import type { RequestContext } from "./types";
 
 // @ts-expect-error – accessing Vitest mock internals
 const apiMocks = otel.__mocks as {
   mockGetActiveSpan: ReturnType<typeof vi.fn>;
+  mockGetMeter: ReturnType<typeof vi.fn>;
   mockGetTracer: ReturnType<typeof vi.fn>;
+  mockMeterCreateCounter: ReturnType<typeof vi.fn>;
+  mockMeterCreateHistogram: ReturnType<typeof vi.fn>;
+  mockSetGlobalMeterProvider: ReturnType<typeof vi.fn>;
   mockSetGlobalTracerProvider: ReturnType<typeof vi.fn>;
   mockSpanAddEvent: ReturnType<typeof vi.fn>;
   mockSpanContext: ReturnType<typeof vi.fn>;
   mockSpanRecordException: ReturnType<typeof vi.fn>;
   mockSpanSetAttribute: ReturnType<typeof vi.fn>;
   mockTracerStartSpan: ReturnType<typeof vi.fn>;
+};
+
+// @ts-expect-error – accessing Vitest mock internals
+const logApiMocks = otelLogs.__mocks as {
+  mockEmit: ReturnType<typeof vi.fn>;
+  mockGetLogger: ReturnType<typeof vi.fn>;
+  mockSetGlobalLoggerProvider: ReturnType<typeof vi.fn>;
 };
 
 describe("createRequestTelemetry (edge)", () => {
@@ -220,7 +281,11 @@ describe("initEdgeTelemetry", () => {
         apiToken: "test-token",
         otlpEndpoint: "https://example.axiom.co/v1/traces",
       },
-      dataset: "my-edge-dataset",
+      datasets: {
+        logs: "my-edge-logs",
+        metrics: "my-edge-metrics",
+        traces: "my-edge-traces",
+      },
       env: "production",
       errorReporter,
       serviceName: "my-edge-service",
@@ -259,7 +324,7 @@ describe("initEdgeTelemetry", () => {
     expect(ExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
-        "X-Axiom-Dataset": options.dataset,
+        "X-Axiom-Dataset": options.datasets.traces,
       },
       url: options.axiom.otlpEndpoint,
     });
@@ -280,6 +345,9 @@ describe("initEdgeTelemetry", () => {
     expect(apiMocks.mockSetGlobalTracerProvider).toHaveBeenCalledWith(
       providerInstance,
     );
+    // Meter and logger providers are registered globally
+    expect(apiMocks.mockSetGlobalMeterProvider).toHaveBeenCalledTimes(1);
+    expect(logApiMocks.mockSetGlobalLoggerProvider).toHaveBeenCalledTimes(1);
     // Logger forwards errors to the configured errorReporter with context
     const ctx: RequestContext = {
       clientIp: "10.0.0.2",
@@ -308,5 +376,72 @@ describe("initEdgeTelemetry", () => {
       "sentry_event_id",
       "edge-event-1",
     );
+  });
+});
+
+describe("getEdgeMetrics (edge)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates and caches counters and histograms via the global meter", () => {
+    const metricsHelper = getEdgeMetrics();
+
+    expect(apiMocks.mockGetMeter).toHaveBeenCalledWith(
+      "@o3osatoshi/telemetry/edge",
+    );
+
+    const counter = metricsHelper.getCounter("edge.requests", {
+      description: "Edge HTTP requests",
+      unit: "1",
+    });
+    const histogram = metricsHelper.getHistogram("edge.duration", {
+      description: "Edge HTTP request duration",
+      unit: "ms",
+    });
+
+    expect(counter).not.toBeUndefined();
+    expect(histogram).not.toBeUndefined();
+
+    const counterAgain = metricsHelper.getCounter("edge.requests");
+    const histogramAgain = metricsHelper.getHistogram("edge.duration");
+
+    expect(counterAgain).toBe(counter);
+    expect(histogramAgain).toBe(histogram);
+  });
+});
+
+describe("createEdgeLogger (edge)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates a process logger, emits records, and reuses the same instance", () => {
+    const logger1 = createEdgeLogger();
+
+    logger1.info("edge_info", {
+      foo: "bar",
+    });
+
+    expect(logApiMocks.mockGetLogger).toHaveBeenCalledWith(
+      "@o3osatoshi/telemetry/edge",
+    );
+    expect(logApiMocks.mockEmit).toHaveBeenCalledTimes(1);
+
+    // @ts-expect-error – accessing Vitest mock internals for assertions
+    const emitted = logApiMocks.mockEmit.mock.calls[0][0] as {
+      attributes?: unknown;
+      body: string;
+      severityText: string;
+    };
+    expect(emitted.body).toBe("edge_info");
+    expect(emitted.severityText).toBe("INFO");
+    expect(emitted.attributes).toEqual({
+      foo: "bar",
+    });
+
+    const logger2 = createEdgeLogger();
+    expect(logger2).toBe(logger1);
+    expect(logApiMocks.mockGetLogger).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,13 +1,18 @@
+/**
+ * @packageDocumentation
+ * Browser runtime helpers for wiring OpenTelemetry exporters to Axiom over OTLP/HTTP.
+ *
+ * @remarks
+ * Import from `@o3osatoshi/telemetry/browser`.
+ */
+
 import { context, metrics, trace } from "@opentelemetry/api";
 import type {
   Counter as OpenTelemetryCounter,
   Histogram as OpenTelemetryHistogram,
 } from "@opentelemetry/api";
-import type {
-  LogAttributes,
-  Logger as OpenTelemetryLogger,
-} from "@opentelemetry/api-logs";
-import { logs, SeverityNumber } from "@opentelemetry/api-logs";
+import type { Logger as OpenTelemetryLogger } from "@opentelemetry/api-logs";
+import { logs } from "@opentelemetry/api-logs";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
@@ -24,58 +29,21 @@ import type {
   Attributes,
   BrowserTelemetryOptions,
   Logger,
-  LogLevel,
+  MetricOptions,
+  Severity,
 } from "./types";
+import { toLogAttributes, toLogRecordSeverity } from "./utils";
 
 let tracerProvider: undefined | WebTracerProvider;
 let meterProvider: MeterProvider | undefined;
 let loggerProvider: LoggerProvider | undefined;
 
 /**
- * Counter metric wrapper used by browser telemetry helpers.
- *
- * @remarks
- * Backs onto an OpenTelemetry {@link @opentelemetry/api!Counter} with
- * {@link Attributes} as metric attributes.
- *
- * @public
- */
-export interface BrowserMetricCounter {
-  add(value: number, attributes?: Attributes): void;
-}
-
-/**
- * Histogram metric wrapper used by browser telemetry helpers.
- *
- * @remarks
- * Backs onto an OpenTelemetry {@link @opentelemetry/api!Histogram} with
- * {@link Attributes} as metric attributes.
- *
- * @public
- */
-export interface BrowserMetricHistogram {
-  record(value: number, attributes?: Attributes): void;
-}
-
-/**
- * Options for creating metrics instruments in the browser.
- *
- * @remarks
- * Used when creating counters and histograms via {@link getBrowserMetrics}.
- *
- * @public
- */
-export interface BrowserMetricOptions {
-  description?: string;
-  unit?: string;
-}
-
-/**
  * Browser metrics helper exposed by {@link getBrowserMetrics}.
  *
  * @remarks
  * Instruments are cached by name and created on demand from the global
- * OpenTelemetry {@link @opentelemetry/api!Meter}.
+ * OpenTelemetry {@link @opentelemetry/api#Meter}.
  *
  * @public
  */
@@ -83,17 +51,37 @@ export interface BrowserMetrics {
   /**
    * Get or create a counter metric with the given name.
    */
-  getCounter(
-    name: string,
-    options?: BrowserMetricOptions,
-  ): BrowserMetricCounter;
+  getCounter(name: string, options?: MetricOptions): MetricCounter;
   /**
    * Get or create a histogram metric with the given name.
    */
-  getHistogram(
-    name: string,
-    options?: BrowserMetricOptions,
-  ): BrowserMetricHistogram;
+  getHistogram(name: string, options?: MetricOptions): MetricHistogram;
+}
+
+/**
+ * Counter metric wrapper used by browser telemetry helpers.
+ *
+ * @remarks
+ * Backs onto an OpenTelemetry {@link @opentelemetry/api#Counter} with
+ * {@link Attributes} as metric attributes.
+ *
+ * @public
+ */
+export interface MetricCounter {
+  add(value: number, attributes?: Attributes): void;
+}
+
+/**
+ * Histogram metric wrapper used by browser telemetry helpers.
+ *
+ * @remarks
+ * Backs onto an OpenTelemetry {@link @opentelemetry/api#Histogram} with
+ * {@link Attributes} as metric attributes.
+ *
+ * @public
+ */
+export interface MetricHistogram {
+  record(value: number, attributes?: Attributes): void;
 }
 
 type Counter = OpenTelemetryCounter<Attributes>;
@@ -132,19 +120,16 @@ export function getBrowserMetrics(): BrowserMetrics {
 
   const meter = metrics.getMeter("@o3osatoshi/telemetry/browser");
 
-  const counters = new Map<string, BrowserMetricCounter>();
-  const histograms = new Map<string, BrowserMetricHistogram>();
+  const counters = new Map<string, MetricCounter>();
+  const histograms = new Map<string, MetricHistogram>();
 
-  const getCounter = (
-    name: string,
-    options?: BrowserMetricOptions,
-  ): BrowserMetricCounter => {
+  const getCounter = (name: string, options?: MetricOptions): MetricCounter => {
     let counter = counters.get(name);
     if (!counter) {
-      const otelCounter: Counter = meter.createCounter(name, options);
+      const _counter: Counter = meter.createCounter(name, options);
       counter = {
         add: (value, attributes) => {
-          otelCounter.add(value, attributes);
+          _counter.add(value, attributes);
         },
       };
       counters.set(name, counter);
@@ -155,14 +140,14 @@ export function getBrowserMetrics(): BrowserMetrics {
 
   const getHistogram = (
     name: string,
-    options?: BrowserMetricOptions,
-  ): BrowserMetricHistogram => {
+    options?: MetricOptions,
+  ): MetricHistogram => {
     let histogram = histograms.get(name);
     if (!histogram) {
-      const otelHistogram: Histogram = meter.createHistogram(name, options);
+      const _histogram: Histogram = meter.createHistogram(name, options);
       histogram = {
         record: (value, attributes) => {
-          otelHistogram.record(value, attributes);
+          _histogram.record(value, attributes);
         },
       };
       histograms.set(name, histogram);
@@ -191,7 +176,13 @@ let browserLogger: BrowserLogger | undefined;
  * @public
  */
 export interface BrowserSessionContext {
+  /**
+   * Client-generated identifier used to correlate UX events within a session.
+   */
   sessionId: string;
+  /**
+   * Authenticated user identifier, when available.
+   */
   userId?: null | string;
 }
 
@@ -227,13 +218,17 @@ export function createBrowserLogger(): BrowserLogger {
 
   const logger = getLogger();
 
-  const emit = (level: LogLevel, message: string, attributes?: Attributes) => {
-    const { severityNumber, severityText } = mapLogLevel(level);
+  const emit = (
+    severity: Severity,
+    message: string,
+    attributes?: Attributes,
+  ) => {
+    const { severityNumber, severityText } = toLogRecordSeverity(severity);
 
-    const _attributes = toLogAttributes(attributes);
+    const logAttributes = toLogAttributes(attributes);
 
     logger.emit({
-      ...(_attributes ? { attributes: _attributes } : {}),
+      ...(logAttributes ? { attributes: logAttributes } : {}),
       body: message,
       severityNumber,
       severityText,
@@ -277,9 +272,9 @@ export function createEventLogger(session: BrowserSessionContext): EventLogger {
     const span = tracer.startSpan(eventName);
 
     span.addEvent("ux_event", {
-      event_name: eventName,
       ...baseAttributes,
       ...attributes,
+      event_name: eventName,
     });
     span.end();
 
@@ -317,65 +312,75 @@ export function createEventLogger(session: BrowserSessionContext): EventLogger {
 export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   if (tracerProvider) return;
 
+  const {
+    logs: logsDataset,
+    metrics: metricsDataset,
+    traces: tracesDataset,
+  } = options.datasets;
+
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: options.serviceName,
     "deployment.environment": options.env,
   });
 
-  const commonExporterConfig = {
+  const traceExporter = new OTLPTraceExporter({
     headers: {
       Authorization: `Bearer ${options.axiom.apiToken}`,
-      "X-Axiom-Dataset": options.dataset,
+      "X-Axiom-Dataset": tracesDataset,
     },
     url: options.axiom.otlpEndpoint,
-  } as const;
-
-  const traceExporter = new OTLPTraceExporter(commonExporterConfig);
-
+  });
+  const traceProcessor = new BatchSpanProcessor(traceExporter);
   tracerProvider = new WebTracerProvider({
     resource,
-    spanProcessors: [new BatchSpanProcessor(traceExporter)],
+    spanProcessors: [traceProcessor],
   });
-
   tracerProvider.register();
 
-  const metricReader = new PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter(commonExporterConfig),
+  const metricExporter = new OTLPMetricExporter({
+    headers: {
+      Authorization: `Bearer ${options.axiom.apiToken}`,
+      "X-Axiom-Dataset": metricsDataset,
+    },
+    url: options.axiom.otlpEndpoint,
   });
-
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: metricExporter,
+  });
   meterProvider = new MeterProvider({
     readers: [metricReader],
     resource,
   });
-
   metrics.setGlobalMeterProvider(meterProvider);
 
-  const logExporter = new OTLPLogExporter(commonExporterConfig);
-  const logRecordProcessor = new BatchLogRecordProcessor(logExporter);
-
+  const logExporter = new OTLPLogExporter({
+    headers: {
+      Authorization: `Bearer ${options.axiom.apiToken}`,
+      "X-Axiom-Dataset": logsDataset,
+    },
+    url: options.axiom.otlpEndpoint,
+  });
+  const logProcessor = new BatchLogRecordProcessor(logExporter);
   loggerProvider = new LoggerProvider({
-    processors: [logRecordProcessor],
+    processors: [logProcessor],
     resource,
   });
-
   logs.setGlobalLoggerProvider(loggerProvider);
 }
 
 function createSpanLogger(baseAttributes: Attributes): Logger {
   const log = (
-    level: LogLevel,
+    severity: Severity,
     message: string,
     attributes?: Attributes,
-    // Browser loggers do not currently forward errors to an external reporter,
-    // but the parameter is accepted to satisfy the shared Logger interface.
     _error?: unknown,
   ) => {
     const span = trace.getActiveSpan();
     span?.addEvent("log", {
-      level,
-      message,
       ...baseAttributes,
       ...attributes,
+      message,
+      severity,
     });
   };
 
@@ -392,42 +397,4 @@ function getLogger(): OpenTelemetryLogger {
     logger = logs.getLogger("@o3osatoshi/telemetry/browser");
   }
   return logger;
-}
-
-function mapLogLevel(level: LogLevel): {
-  severityNumber: SeverityNumber;
-  severityText: string;
-} {
-  switch (level) {
-    case "debug":
-      return {
-        severityNumber: SeverityNumber.DEBUG,
-        severityText: "DEBUG",
-      };
-    case "info":
-      return {
-        severityNumber: SeverityNumber.INFO,
-        severityText: "INFO",
-      };
-    case "warn":
-      return {
-        severityNumber: SeverityNumber.WARN,
-        severityText: "WARN",
-      };
-    case "error":
-      return {
-        severityNumber: SeverityNumber.ERROR,
-        severityText: "ERROR",
-      };
-    default:
-      return {
-        severityNumber: SeverityNumber.INFO,
-        severityText: "INFO",
-      };
-  }
-}
-
-function toLogAttributes(attributes?: Attributes): LogAttributes | undefined {
-  if (!attributes) return undefined;
-  return attributes as LogAttributes;
 }

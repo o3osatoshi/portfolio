@@ -209,7 +209,7 @@ describe("createEventLogger (browser)", () => {
     expect(apiMocks.mockContextWith).toHaveBeenCalled();
   });
 
-  it("logs messages onto the active span with level and attributes", () => {
+  it("logs messages onto the active span with severity and attributes", () => {
     const session: BrowserSessionContext = {
       sessionId: "session-456",
       userId: null,
@@ -224,8 +224,8 @@ describe("createEventLogger (browser)", () => {
       session_id: "session-456",
       user_id: undefined,
       foo: "bar",
-      level: "info",
       message: "hello",
+      severity: "info",
     });
   });
 });
@@ -241,7 +241,11 @@ describe("initBrowserTelemetry", () => {
         apiToken: "test-token",
         otlpEndpoint: "https://example.axiom.co/v1/traces",
       },
-      dataset: "my-browser-dataset",
+      datasets: {
+        logs: "my-browser-logs",
+        metrics: "my-browser-metrics",
+        traces: "my-browser-traces",
+      },
       env: "production",
       serviceName: "my-web-app",
     } as const;
@@ -279,7 +283,7 @@ describe("initBrowserTelemetry", () => {
     expect(ExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
-        "X-Axiom-Dataset": options.dataset,
+        "X-Axiom-Dataset": options.datasets.traces,
       },
       url: options.axiom.otlpEndpoint,
     });

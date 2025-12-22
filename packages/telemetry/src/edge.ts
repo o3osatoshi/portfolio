@@ -1,6 +1,30 @@
-import { context, trace } from "@opentelemetry/api";
+/**
+ * @packageDocumentation
+ * Edge runtime helpers for wiring OpenTelemetry exporters to Axiom over OTLP/HTTP.
+ *
+ * @remarks
+ * Import from `@o3osatoshi/telemetry/edge`.
+ */
+
+import { context, metrics, trace } from "@opentelemetry/api";
+import type {
+  Counter as OpenTelemetryCounter,
+  Histogram as OpenTelemetryHistogram,
+} from "@opentelemetry/api";
+import type { Logger as OpenTelemetryLogger } from "@opentelemetry/api-logs";
+import { logs } from "@opentelemetry/api-logs";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
+import {
+  BatchLogRecordProcessor,
+  LoggerProvider,
+} from "@opentelemetry/sdk-logs";
+import {
+  MeterProvider,
+  PeriodicExportingMetricReader,
+} from "@opentelemetry/sdk-metrics";
 import {
   BasicTracerProvider,
   BatchSpanProcessor,
@@ -11,13 +35,163 @@ import type {
   Attributes,
   EdgeTelemetryOptions,
   Logger,
-  LogLevel,
+  MetricCounter,
+  MetricHistogram,
+  MetricOptions,
   RequestContext,
   RequestTelemetry,
+  Severity,
 } from "./types";
+import { toLogAttributes, toLogRecordSeverity } from "./utils";
 
-let provider: BasicTracerProvider | undefined;
-let edgeOptions: EdgeTelemetryOptions | undefined;
+let traceProvider: BasicTracerProvider | undefined;
+let meterProvider: MeterProvider | undefined;
+let loggerProvider: LoggerProvider | undefined;
+let options: EdgeTelemetryOptions | undefined;
+let logger: OpenTelemetryLogger | undefined;
+
+/**
+ * Edge metrics helper exposed by {@link getEdgeMetrics}.
+ *
+ * @remarks
+ * Instruments are cached by name and created on demand from the global
+ * OpenTelemetry {@link @opentelemetry/api#Meter}.
+ *
+ * @public
+ */
+export interface EdgeMetrics {
+  /**
+   * Get or create a counter metric with the given name.
+   */
+  getCounter(name: string, options?: MetricOptions): MetricCounter;
+  /**
+   * Get or create a histogram metric with the given name.
+   */
+  getHistogram(name: string, options?: MetricOptions): MetricHistogram;
+}
+
+type Counter = OpenTelemetryCounter<Attributes>;
+type Histogram = OpenTelemetryHistogram<Attributes>;
+
+let edgeMetrics: EdgeMetrics | undefined;
+
+/**
+ * Logger that emits OpenTelemetry log records via the logs API in Edge
+ * runtimes.
+ *
+ * @remarks
+ * Intended for process‑level logs (for example, background jobs) that
+ * should flow through OpenTelemetry logs rather than span events.
+ *
+ * @public
+ */
+export interface EdgeLogger {
+  debug(message: string, attributes?: Attributes): void;
+  error(message: string, attributes?: Attributes): void;
+  info(message: string, attributes?: Attributes): void;
+  warn(message: string, attributes?: Attributes): void;
+}
+
+/**
+ * Access Edge metrics instruments backed by the global OpenTelemetry Meter.
+ *
+ * @remarks
+ * - Requires {@link initEdgeTelemetry} to have been called so that a Meter
+ *   with an OTLP exporter is registered.
+ * - Instruments are created lazily and cached by name.
+ *
+ * @public
+ */
+export function getEdgeMetrics(): EdgeMetrics {
+  if (edgeMetrics) return edgeMetrics;
+
+  const meter = metrics.getMeter("@o3osatoshi/telemetry/edge");
+
+  const counters = new Map<string, MetricCounter>();
+  const histograms = new Map<string, MetricHistogram>();
+
+  const getCounter = (name: string, options?: MetricOptions): MetricCounter => {
+    let counter = counters.get(name);
+    if (!counter) {
+      const _counter: Counter = meter.createCounter(name, options);
+      counter = {
+        add: (value, attributes) => {
+          _counter.add(value, attributes);
+        },
+      };
+      counters.set(name, counter);
+    }
+
+    return counter;
+  };
+
+  const getHistogram = (
+    name: string,
+    options?: MetricOptions,
+  ): MetricHistogram => {
+    let histogram = histograms.get(name);
+    if (!histogram) {
+      const _histogram: Histogram = meter.createHistogram(name, options);
+      histogram = {
+        record: (value, attributes) => {
+          _histogram.record(value, attributes);
+        },
+      };
+      histograms.set(name, histogram);
+    }
+
+    return histogram;
+  };
+
+  edgeMetrics = {
+    getCounter,
+    getHistogram,
+  };
+
+  return edgeMetrics;
+}
+
+let edgeLogger: EdgeLogger | undefined;
+
+/**
+ * Create (or reuse) a process‑level logger that emits OpenTelemetry log
+ * records via the logs API in Edge runtimes.
+ *
+ * @remarks
+ * - Requires {@link initEdgeTelemetry} to have been called so that a
+ *   log provider and OTLP exporter are registered.
+ * - Log records are exported to the dataset configured via
+ *   {@link EdgeTelemetryOptions.datasets.logs}.
+ *
+ * @public
+ */
+export function createEdgeLogger(): EdgeLogger {
+  if (edgeLogger) return edgeLogger;
+
+  const logger = getLogger();
+
+  const emit = (level: Severity, message: string, attributes?: Attributes) => {
+    const { severityNumber, severityText } = toLogRecordSeverity(level);
+
+    const logAttributes = toLogAttributes(attributes);
+
+    logger.emit({
+      ...(logAttributes ? { attributes: logAttributes } : {}),
+      body: message,
+      severityNumber,
+      severityText,
+    });
+  };
+
+  edgeLogger = {
+    debug: (msg, attrs) => emit("debug", msg, attrs),
+    error: (msg, attrs) => emit("error", msg, attrs),
+    info: (msg, attrs) => emit("info", msg, attrs),
+    warn: (msg, attrs) => emit("warn", msg, attrs),
+  };
+
+  return edgeLogger;
+}
 
 /**
  * Create a request‑scoped span and logger for Edge HTTP handlers.
@@ -100,7 +274,8 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
  * - Configures a {@link BasicTracerProvider} with:
  *   - a resource containing `service.name` and `deployment.environment`,
  *   - a trace exporter wired to the OTLP/HTTP endpoint and dataset provided
- *     via {@link EdgeTelemetryOptions.axiom} / `dataset`,
+ *     via {@link EdgeTelemetryOptions.axiom} / `datasets.traces`,
+ *   - metric and log pipelines wired to `datasets.metrics` / `datasets.logs`.
  *   - a {@link BatchSpanProcessor} for efficient span export.
  * - Registers the provider via {@link trace.setGlobalTracerProvider}.
  * - This function is idempotent and can be called multiple times safely;
@@ -108,30 +283,67 @@ export function createRequestTelemetry(ctx: RequestContext): RequestTelemetry {
  *
  * @public
  */
-export function initEdgeTelemetry(options: EdgeTelemetryOptions): void {
-  if (provider) return;
+export function initEdgeTelemetry(
+  telemetryOptions: EdgeTelemetryOptions,
+): void {
+  if (traceProvider) return;
 
-  edgeOptions = options;
+  options = telemetryOptions;
+
+  const {
+    logs: logsDataset,
+    metrics: metricsDataset,
+    traces: tracesDataset,
+  } = telemetryOptions.datasets;
 
   const resource = resourceFromAttributes({
-    [ATTR_SERVICE_NAME]: options.serviceName,
-    "deployment.environment": options.env,
+    [ATTR_SERVICE_NAME]: telemetryOptions.serviceName,
+    "deployment.environment": telemetryOptions.env,
   });
 
-  const exporter = new OTLPTraceExporter({
+  const traceExporter = new OTLPTraceExporter({
     headers: {
-      Authorization: `Bearer ${options.axiom.apiToken}`,
-      "X-Axiom-Dataset": options.dataset,
+      Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
+      "X-Axiom-Dataset": tracesDataset,
     },
-    url: options.axiom.otlpEndpoint,
+    url: telemetryOptions.axiom.otlpEndpoint,
   });
-
-  provider = new BasicTracerProvider({
+  const traceProcessor = new BatchSpanProcessor(traceExporter);
+  traceProvider = new BasicTracerProvider({
     resource,
-    spanProcessors: [new BatchSpanProcessor(exporter)],
+    spanProcessors: [traceProcessor],
   });
+  trace.setGlobalTracerProvider(traceProvider);
 
-  trace.setGlobalTracerProvider(provider);
+  const metricExporter = new OTLPMetricExporter({
+    headers: {
+      Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
+      "X-Axiom-Dataset": metricsDataset,
+    },
+    url: telemetryOptions.axiom.otlpEndpoint,
+  });
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: metricExporter,
+  });
+  meterProvider = new MeterProvider({
+    readers: [metricReader],
+    resource,
+  });
+  metrics.setGlobalMeterProvider(meterProvider);
+
+  const logExporter = new OTLPLogExporter({
+    headers: {
+      Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
+      "X-Axiom-Dataset": logsDataset,
+    },
+    url: telemetryOptions.axiom.otlpEndpoint,
+  });
+  const logProcessor = new BatchLogRecordProcessor(logExporter);
+  loggerProvider = new LoggerProvider({
+    processors: [logProcessor],
+    resource,
+  });
+  logs.setGlobalLoggerProvider(loggerProvider);
 }
 
 function createSpanLogger(
@@ -139,21 +351,21 @@ function createSpanLogger(
   span = trace.getActiveSpan(),
 ): Logger {
   const log = (
-    level: LogLevel,
+    severity: Severity,
     message: string,
     attributes?: Attributes,
     error?: unknown,
   ) => {
     span?.addEvent("log", {
-      level,
-      message,
       ...baseAttributes,
       ...attributes,
+      message,
+      severity,
     });
 
-    if (level === "error" && error && edgeOptions?.errorReporter) {
+    if (severity === "error" && error && options?.errorReporter) {
       const spanContext = span?.spanContext();
-      const eventId = edgeOptions.errorReporter(error, {
+      const eventId = options.errorReporter(error, {
         requestId: baseAttributes["request_id"] as string | undefined,
         spanId: spanContext?.spanId,
         traceId: spanContext?.traceId,
@@ -172,4 +384,11 @@ function createSpanLogger(
     info: (msg, attrs) => log("info", msg, attrs),
     warn: (msg, attrs) => log("warn", msg, attrs),
   };
+}
+
+function getLogger(): OpenTelemetryLogger {
+  if (!logger) {
+    logger = logs.getLogger("@o3osatoshi/telemetry/edge");
+  }
+  return logger;
 }

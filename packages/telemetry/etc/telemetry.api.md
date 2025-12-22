@@ -20,7 +20,7 @@ export interface AxiomConfig {
 // @public
 export interface BaseTelemetryOptions {
     axiom: AxiomConfig;
-    dataset: string;
+    datasets: TelemetryDatasets;
     env: Env;
     sampleRate?: number;
     serviceName: string;
@@ -61,7 +61,20 @@ export interface Logger {
 }
 
 // @public
-export type LogLevel = "debug" | "error" | "info" | "warn";
+export interface MetricCounter {
+    add(value: number, attributes?: Attributes): void;
+}
+
+// @public
+export interface MetricHistogram {
+    record(value: number, attributes?: Attributes): void;
+}
+
+// @public
+export interface MetricOptions {
+    description?: string;
+    unit?: string;
+}
 
 // @public
 export interface NodeTelemetryOptions extends BaseTelemetryOptions {
@@ -87,6 +100,16 @@ export interface RequestTelemetry {
     span: Span;
     spanId: string;
     traceId: string;
+}
+
+// @public
+export type Severity = "debug" | "error" | "info" | "warn";
+
+// @public
+export interface TelemetryDatasets {
+    logs: string;
+    metrics: string;
+    traces: string;
 }
 
 // (No @packageDocumentation comment for this package)

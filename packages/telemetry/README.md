@@ -45,7 +45,11 @@ initNodeTelemetry({
     apiToken: process.env.AXIOM_API_TOKEN!,
     otlpEndpoint: "https://api.axiom.co/v1/traces",
   },
-  dataset: "my-node-dataset",
+  datasets: {
+    traces: "my-node-traces",
+    metrics: "my-node-metrics",
+    logs: "my-node-logs",
+  },
   env: "production",
   serviceName: "my-node-service",
   // Optional: forward errors to Sentry or a similar service
@@ -118,7 +122,7 @@ requestCounter.add(1, {
 ```
 
 - `getNodeMetrics()` returns a helper that creates and caches counter/histogram instruments using the global OpenTelemetry `Meter`.
-- Metrics are exported to Axiom via OTLP/HTTP using the same `axiom` and `dataset` configuration as traces.
+- Metrics are exported to Axiom via OTLP/HTTP using the `datasets.metrics` configuration from {@link NodeTelemetryOptions}.
 
 ### Process‑level logs
 
@@ -187,7 +191,11 @@ export function init(env: Env, axiomToken: string, axiomUrl: string) {
       apiToken: axiomToken,
       otlpEndpoint: axiomUrl,
     },
-    dataset: "my-edge-dataset",
+    datasets: {
+      traces: "my-edge-traces",
+      metrics: "my-edge-metrics",
+      logs: "my-edge-logs",
+    },
     env,
     serviceName: "my-edge-service",
     // Optional: forward errors to Sentry or a similar service
@@ -248,7 +256,11 @@ initBrowserTelemetry({
     apiToken: window.ENV.AXIOM_API_TOKEN,
     otlpEndpoint: "https://api.axiom.co/v1/traces",
   },
-  dataset: "my-browser-dataset",
+  datasets: {
+    traces: "my-browser-traces",
+    metrics: "my-browser-metrics",
+    logs: "my-browser-logs",
+  },
   env: "production",
   serviceName: "my-web-app",
 });
@@ -301,7 +313,7 @@ viewCounter.add(1, {
 ```
 
 - `getBrowserMetrics()` returns a helper that creates and caches counter/histogram instruments.
-- Metrics are exported to Axiom via OTLP/HTTP using the same `axiom` / `dataset` configuration as traces.
+- Metrics are exported to Axiom via OTLP/HTTP using the `datasets.metrics` configuration from {@link BrowserTelemetryOptions}.
 
 ### Browser logs (OTel Logs API)
 
@@ -331,10 +343,14 @@ All runtime options share a common configuration shape:
   - `otlpEndpoint: string` – OTLP/HTTP traces endpoint.
 - `BaseTelemetryOptions`
   - `axiom: AxiomConfig`
-  - `dataset: string` – target Axiom dataset name used for OTLP traces (propagated via the `X-Axiom-Dataset` header).
+  - `datasets: TelemetryDatasets` – target Axiom dataset names used for each telemetry signal (propagated via the `X-Axiom-Dataset` header).
   - `env: Env` – canonical deployment environment (`"development" | "local" | "production" | "staging"`).
   - `sampleRate?: number` – reserved hint for future sampling configuration.
   - `serviceName: string`
+- `TelemetryDatasets`
+  - `traces: string` – dataset for OpenTelemetry traces.
+  - `metrics: string` – dataset for OpenTelemetry metrics.
+  - `logs: string` – dataset for OpenTelemetry log records.
 - `Attributes`
   - Thin alias over OpenTelemetry’s `Attributes` type; used for span attributes, log attributes, and metric attributes.
 - `NodeTelemetryOptions`, `EdgeTelemetryOptions`, `BrowserTelemetryOptions`

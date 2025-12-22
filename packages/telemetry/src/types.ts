@@ -17,7 +17,7 @@ import type { Env } from "@o3osatoshi/toolkit";
 export type Attributes = OpenTelemetryAttributes;
 
 /**
- * Configuration for sending OTLP traces to Axiom.
+ * Configuration for sending OpenTelemetry signals to Axiom over OTLP/HTTP.
  *
  * @public
  */
@@ -27,7 +27,7 @@ export interface AxiomConfig {
    */
   apiToken: string;
   /**
-   * OTLP/HTTP endpoint for sending traces to Axiom.
+   * OTLP/HTTP endpoint for sending telemetry to Axiom.
    *
    * Typically looks like:
    * `https://api.axiom.co/v1/traces`
@@ -49,13 +49,9 @@ export interface BaseTelemetryOptions {
    */
   axiom: AxiomConfig;
   /**
-   * Target Axiom dataset name for OTLP traces.
-   *
-   * @remarks
-   * - Propagated via the `X-Axiom-Dataset` header on OTLP/HTTP requests.
-   * - Should refer to an "Events" dataset configured to receive OpenTelemetry spans.
+   * Target dataset names used for each telemetry signal.
    */
-  dataset: string;
+  datasets: TelemetryDatasets;
   /**
    * Canonical deployment environment label shared with `@o3osatoshi/toolkit`.
    */
@@ -148,11 +144,54 @@ export interface Logger {
 }
 
 /**
- * Log severity levels supported by {@link Logger}.
+ * Counter metric wrapper used by the runtime telemetry helpers.
+ *
+ * @remarks
+ * Provides a small, stable interface over the OpenTelemetry counter instrument.
  *
  * @public
  */
-export type LogLevel = "debug" | "error" | "info" | "warn";
+export interface MetricCounter {
+  /**
+   * Increase the counter by `value`.
+   */
+  add(value: number, attributes?: Attributes): void;
+}
+
+/**
+ * Histogram metric wrapper used by the runtime telemetry helpers.
+ *
+ * @remarks
+ * Histograms are typically used for recording request durations or sizes.
+ *
+ * @public
+ */
+export interface MetricHistogram {
+  /**
+   * Record a measurement.
+   */
+  record(value: number, attributes?: Attributes): void;
+}
+
+/**
+ * Options passed when creating metric instruments.
+ *
+ * @remarks
+ * Values are forwarded to the underlying OpenTelemetry `Meter` when calling
+ * `createCounter` / `createHistogram`.
+ *
+ * @public
+ */
+export interface MetricOptions {
+  /**
+   * Human readable description of what the metric measures.
+   */
+  description?: string;
+  /**
+   * Unit label for the metric values (for example, `"ms"` or `"1"`).
+   */
+  unit?: string;
+}
 
 /**
  * Telemetry options for Node runtimes.
@@ -228,4 +267,35 @@ export interface RequestTelemetry {
    * Trace identifier shared across spans in the same request.
    */
   traceId: string;
+}
+
+/**
+ * Log severity levels supported by {@link Logger}.
+ *
+ * @public
+ */
+export type Severity = "debug" | "error" | "info" | "warn";
+
+/**
+ * Dataset names used for each telemetry signal.
+ *
+ * @remarks
+ * All datasets should refer to Axiom "Events" datasets configured to receive
+ * OpenTelemetry data for the corresponding signal type.
+ *
+ * @public
+ */
+export interface TelemetryDatasets {
+  /**
+   * Target dataset for OpenTelemetry log records.
+   */
+  logs: string;
+  /**
+   * Target dataset for OpenTelemetry metrics.
+   */
+  metrics: string;
+  /**
+   * Target dataset for OpenTelemetry traces.
+   */
+  traces: string;
 }
