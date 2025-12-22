@@ -11,7 +11,16 @@ export function toLogAttributes(
   attributes?: Attributes,
 ): LogAttributes | undefined {
   if (!attributes) return undefined;
-  return attributes as LogAttributes;
+
+  const logAttributes: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attributes)) {
+    if (value === undefined) continue;
+    logAttributes[key] = value;
+  }
+
+  if (Object.keys(logAttributes).length === 0) return undefined;
+
+  return logAttributes as LogAttributes;
 }
 
 /**

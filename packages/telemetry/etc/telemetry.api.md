@@ -5,7 +5,6 @@
 ```ts
 
 import { Attributes as Attributes_2 } from '@opentelemetry/api';
-import { Env } from '@o3osatoshi/toolkit';
 import { Span } from '@opentelemetry/api';
 
 // @public
@@ -41,6 +40,9 @@ export interface BrowserTelemetryOptions extends BaseTelemetryOptions {
 export interface EdgeTelemetryOptions extends BaseTelemetryOptions {
     errorReporter?: ErrorReporter;
 }
+
+// @public
+export type Env = "development" | "local" | "production" | "staging";
 
 // @public
 export type ErrorReporter = (error: unknown, context?: ErrorReporterContext) => string | undefined;

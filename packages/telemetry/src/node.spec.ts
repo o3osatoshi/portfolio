@@ -94,7 +94,7 @@ vi.mock("@opentelemetry/api-logs", () => {
   };
 });
 
-vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-trace-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -107,7 +107,7 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
   return { OTLPTraceExporter };
 });
 
-vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-metrics-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -120,7 +120,7 @@ vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
   return { OTLPMetricExporter };
 });
 
-vi.mock("@opentelemetry/exporter-logs-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-logs-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -158,9 +158,9 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 
 import * as otel from "@opentelemetry/api";
 import * as otelLogs from "@opentelemetry/api-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
@@ -231,6 +231,52 @@ describe("createRequestTelemetry (node)", () => {
 
     expect(telemetry.spanId).toBe("span-123");
     expect(telemetry.traceId).toBe("trace-456");
+  });
+
+  it("emits log records with request-scoped attributes", () => {
+    const ctx: RequestContext = {
+      httpMethod: "GET",
+      httpRoute: "/api/node/items",
+      requestId: "req-log-1",
+      userId: "user-log-1",
+    };
+
+    const telemetry = createRequestTelemetry(ctx);
+
+    telemetry.logger.info("request log", {
+      foo: "bar",
+    });
+
+    expect(apiMocks.mockSpanAddEvent).toHaveBeenCalledWith(
+      "log",
+      expect.objectContaining({
+        request_id: "req-log-1",
+        span_id: "span-123",
+        trace_id: "trace-456",
+        user_id: "user-log-1",
+        foo: "bar",
+        http_method: "GET",
+        http_route: "/api/node/items",
+        message: "request log",
+        severity: "info",
+      }),
+    );
+
+    expect(logApiMocks.mockEmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        attributes: {
+          request_id: "req-log-1",
+          span_id: "span-123",
+          trace_id: "trace-456",
+          user_id: "user-log-1",
+          foo: "bar",
+          http_method: "GET",
+          http_route: "/api/node/items",
+        },
+        body: "request log",
+        severityText: "INFO",
+      }),
+    );
   });
 
   it("end records exceptions and attaches attributes while skipping error and undefined values", () => {

@@ -100,7 +100,7 @@ vi.mock("@opentelemetry/api-logs", () => {
   };
 });
 
-vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-trace-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -113,7 +113,7 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
   return { OTLPTraceExporter };
 });
 
-vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-metrics-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -126,7 +126,7 @@ vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
   return { OTLPMetricExporter };
 });
 
-vi.mock("@opentelemetry/exporter-logs-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-logs-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -178,9 +178,9 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 
 import * as otel from "@opentelemetry/api";
 import * as otelLogs from "@opentelemetry/api-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import {
   BasicTracerProvider,
@@ -252,6 +252,52 @@ describe("createRequestTelemetry (edge)", () => {
 
     expect(telemetry.spanId).toBe("edge-span-123");
     expect(telemetry.traceId).toBe("edge-trace-456");
+  });
+
+  it("emits log records with request-scoped attributes", () => {
+    const ctx: RequestContext = {
+      httpMethod: "PUT",
+      httpRoute: "/api/edge/items",
+      requestId: "edge-req-log-1",
+      userId: "edge-user-log-1",
+    };
+
+    const telemetry = createRequestTelemetry(ctx);
+
+    telemetry.logger.info("edge request log", {
+      foo: "bar",
+    });
+
+    expect(apiMocks.mockSpanAddEvent).toHaveBeenCalledWith(
+      "log",
+      expect.objectContaining({
+        request_id: "edge-req-log-1",
+        span_id: "edge-span-123",
+        trace_id: "edge-trace-456",
+        user_id: "edge-user-log-1",
+        foo: "bar",
+        http_method: "PUT",
+        http_route: "/api/edge/items",
+        message: "edge request log",
+        severity: "info",
+      }),
+    );
+
+    expect(logApiMocks.mockEmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        attributes: {
+          request_id: "edge-req-log-1",
+          span_id: "edge-span-123",
+          trace_id: "edge-trace-456",
+          user_id: "edge-user-log-1",
+          foo: "bar",
+          http_method: "PUT",
+          http_route: "/api/edge/items",
+        },
+        body: "edge request log",
+        severityText: "INFO",
+      }),
+    );
   });
 
   it("end records exceptions and attaches attributes while skipping error and undefined values", () => {
@@ -380,7 +426,7 @@ describe("initEdgeTelemetry", () => {
     expect(LogExporterMock).toHaveBeenCalledWith({
       headers: {
         Authorization: `Bearer ${options.axiom.apiToken}`,
-        "X-Axiom-Dataset": options.datasets.logs,
+        "X-Axiom-Dataset": options.datasets.metrics,
       },
       url: options.axiom.otlpEndpoints.logs,
     });

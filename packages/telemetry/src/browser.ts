@@ -13,9 +13,9 @@ import type {
 } from "@opentelemetry/api";
 import type { Logger as OpenTelemetryLogger } from "@opentelemetry/api-logs";
 import { logs } from "@opentelemetry/api-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { LoggerProvider } from "@opentelemetry/sdk-logs";
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
@@ -242,6 +242,7 @@ export function createBrowserLogger(): BrowserLogger {
     logger.emit({
       ...(logAttributes ? { attributes: logAttributes } : {}),
       body: message,
+      context: context.active(),
       severityNumber,
       severityText,
     });
@@ -324,12 +325,6 @@ export function createEventLogger(session: BrowserSessionContext): EventLogger {
 export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   if (tracerProvider) return;
 
-  const {
-    logs: logsDataset,
-    metrics: metricsDataset,
-    traces: tracesDataset,
-  } = options.datasets;
-
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: options.serviceName,
     "deployment.environment": options.env,
@@ -338,7 +333,7 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   const traceExporter = new OTLPTraceExporter({
     headers: {
       Authorization: `Bearer ${options.axiom.apiToken}`,
-      "X-Axiom-Dataset": tracesDataset,
+      "X-Axiom-Dataset": options.datasets.traces,
     },
     url: options.axiom.otlpEndpoints.traces,
   });
@@ -352,7 +347,7 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   const metricExporter = new OTLPMetricExporter({
     headers: {
       Authorization: `Bearer ${options.axiom.apiToken}`,
-      "X-Axiom-Dataset": metricsDataset,
+      "X-Axiom-Dataset": options.datasets.metrics,
     },
     url: options.axiom.otlpEndpoints.metrics,
   });
@@ -368,7 +363,7 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
   const logExporter = new OTLPLogExporter({
     headers: {
       Authorization: `Bearer ${options.axiom.apiToken}`,
-      "X-Axiom-Dataset": logsDataset,
+      "X-Axiom-Dataset": options.datasets.logs,
     },
     url: options.axiom.otlpEndpoints.logs,
   });
@@ -378,6 +373,32 @@ export function initBrowserTelemetry(options: BrowserTelemetryOptions): void {
     resource,
   });
   logs.setGlobalLoggerProvider(loggerProvider);
+}
+
+/**
+ * Flush and shut down OpenTelemetry providers for browser runtimes.
+ *
+ * @remarks
+ * After shutdown, {@link initBrowserTelemetry} can be called again to
+ * re-initialize providers.
+ *
+ * @public
+ */
+export async function shutdownBrowserTelemetry(): Promise<void> {
+  const tasks: Array<Promise<void>> = [];
+
+  if (tracerProvider) tasks.push(tracerProvider.shutdown());
+  if (loggerProvider) tasks.push(loggerProvider.shutdown());
+  if (meterProvider) tasks.push(meterProvider.shutdown());
+
+  await Promise.all(tasks);
+
+  tracerProvider = undefined;
+  loggerProvider = undefined;
+  meterProvider = undefined;
+  logger = undefined;
+  browserLogger = undefined;
+  browserMetrics = undefined;
 }
 
 function createSpanLogger(baseAttributes: Attributes): Logger {

@@ -20,20 +20,21 @@ The package bundles the required OpenTelemetry SDK/exporter dependencies interna
 ## Concepts
 
 - **Axiom OTLP/HTTP**
-  - All runtimes send traces to Axiom via OTLP/HTTP.
-  - Node and browser runtimes also wire metrics and log records to the same OTLP endpoint using:
+  - All runtimes send traces, logs, and metrics to Axiom via OTLP/HTTP (protobuf).
+  - Runtimes wire exporters using:
     - `axiom.apiToken` – Axiom API token used in the `Authorization` header.
-    - `axiom.otlp` – OTLP endpoints per signal (`traces`, `metrics`, `logs`), for example:
+    - `axiom.otlpEndpoints` – OTLP endpoints per signal (`traces`, `metrics`, `logs`), for example:
       - `https://api.axiom.co/v1/traces`
       - `https://api.axiom.co/v1/metrics`
       - `https://api.axiom.co/v1/logs`
+  - Each value may be a base endpoint (e.g. `https://api.axiom.co`) or any `/v1/*` endpoint; helpers normalize to the correct signal path.
 - **Service and environment labels**
   - Each runtime attaches:
     - `service.name` – from `serviceName`.
     - `deployment.environment` – from `env` (`"development" | "local" | "production" | "staging"`).
 - **Request‑scoped telemetry**
   - Node/Edge helpers create a span per incoming request and expose:
-    - `logger` – convenience logger that enriches span events.
+    - `logger` – convenience logger that enriches span events and emits log records.
     - `end(attributes?)` – closes the span and optionally records an error + extra attributes.
 
 ## Node usage (`@o3osatoshi/telemetry/node`)
@@ -70,6 +71,8 @@ initNodeTelemetry({
 
 Call `initNodeTelemetry` once during process startup. The function is idempotent and safe to call multiple times.
 
+For short-lived/serverless runtimes, call `shutdownNodeTelemetry()` before the process is frozen/terminated to flush pending exports.
+
 ### Request‑scoped span + logger
 
 ```ts
@@ -101,7 +104,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse) {
 - `createRequestTelemetry(ctx)` returns:
   - `span` – the underlying OpenTelemetry span.
   - `spanId` / `traceId` – IDs suitable for logging or correlation headers.
-  - `logger` – `debug` / `info` / `warn` / `error` helpers that add a `"log"` event to the span.
+  - `logger` – `debug` / `info` / `warn` / `error` helpers that add a `"log"` event to the span and emit an OpenTelemetry log record.
   - `setUserId(userId?)` – updates the authenticated user id (`enduser.id`) on the span and logger context (call after auth middleware).
   - `end(attributes?, error?)` – records `error` as an exception when provided and attaches all defined attributes as span attributes.
 
@@ -130,7 +133,7 @@ requestCounter.add(1, {
 ```
 
 - `getNodeMetrics()` returns a helper that creates and caches counter/histogram instruments using the global OpenTelemetry `Meter`.
-- Metrics are exported to Axiom via OTLP/HTTP using the `datasets.metrics` configuration from {@link NodeTelemetryOptions}.
+- Metrics are exported to Axiom via OTLP/HTTP (protobuf) using the `datasets.metrics` configuration from {@link NodeTelemetryOptions}.
 
 ### Process‑level logs
 
@@ -155,7 +158,7 @@ try {
 ```
 
 - `createNodeLogger()` returns a process‑level logger that emits OpenTelemetry log records via the logs API.
-- Log records are exported to Axiom over OTLP/HTTP alongside traces and metrics.
+- Log records are exported to Axiom over OTLP/HTTP (protobuf) alongside traces and metrics.
 
 ### Business events
 
@@ -190,7 +193,7 @@ try {
 ### Initialization
 
 ```ts
-import type { Env } from "@o3osatoshi/toolkit";
+import type { Env } from "@o3osatoshi/telemetry";
 import { initEdgeTelemetry } from "@o3osatoshi/telemetry/edge";
 
 export function init(env: Env, axiomToken: string) {
@@ -221,6 +224,8 @@ export function init(env: Env, axiomToken: string) {
 ```
 
 Call `initEdgeTelemetry` once during worker bootstrap. It is idempotent.
+
+For short-lived Edge runtimes, call `shutdownEdgeTelemetry()` to flush pending exports.
 
 ### Request‑scoped span + logger
 
@@ -283,6 +288,8 @@ initBrowserTelemetry({
 ```
 
 Call `initBrowserTelemetry` once during app startup (for example, in your app bootstrap file). The function is idempotent.
+
+When you need to flush buffered telemetry (for example, before a hard navigation), call `shutdownBrowserTelemetry()`.
 
 ### UX logger
 

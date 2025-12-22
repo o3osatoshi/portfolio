@@ -17,6 +17,17 @@ describe("toLogAttributes", () => {
 
     expect(toLogAttributes(attrs)).toEqual(attrs);
   });
+
+  it("strips undefined attribute values", () => {
+    expect(
+      toLogAttributes({
+        foo: "bar",
+        missing: undefined,
+      }),
+    ).toEqual({
+      foo: "bar",
+    });
+  });
 });
 
 describe("toLogRecordSeverity", () => {

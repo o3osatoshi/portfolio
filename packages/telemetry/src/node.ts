@@ -13,9 +13,9 @@ import type {
 } from "@opentelemetry/api";
 import type { Logger as OpenTelemetryLogger } from "@opentelemetry/api-logs";
 import { logs } from "@opentelemetry/api-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
@@ -152,7 +152,6 @@ export function getNodeMetrics(): NodeMetrics {
   return nodeMetrics;
 }
 
-let logger: OpenTelemetryLogger | undefined;
 let nodeLogger: NodeLogger | undefined;
 
 /**
@@ -239,6 +238,7 @@ export function createNodeLogger(): NodeLogger {
     logger.emit({
       ...(logAttributes ? { attributes: logAttributes } : {}),
       body: message,
+      context: context.active(),
       severityNumber,
       severityText,
     });
@@ -264,8 +264,9 @@ export function createNodeLogger(): NodeLogger {
  * - The returned {@link RequestTelemetry} exposes:
  *   - `span` / `spanId` / `traceId` – the underlying OpenTelemetry span
  *     and identifiers.
- *   - `logger` – a span‑bound logger that records `"log"` events and
- *     forwards errors to the configured `errorReporter`.
+ *   - `logger` – a span‑bound logger that records `"log"` events and emits
+ *     OpenTelemetry log records (when Node telemetry has been initialized).
+ *     Error logs are also forwarded to the configured `errorReporter`.
  *   - `end(attributes, error?)` – attaches attributes, records `error`
  *     as an exception when provided, and ends the span.
  *
@@ -353,12 +354,6 @@ export function initNodeTelemetry(
 
   options = telemetryOptions;
 
-  const {
-    logs: logsDataset,
-    metrics: metricsDataset,
-    traces: tracesDataset,
-  } = telemetryOptions.datasets;
-
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: telemetryOptions.serviceName,
     "deployment.environment": telemetryOptions.env,
@@ -367,17 +362,17 @@ export function initNodeTelemetry(
   const traceExporter = new OTLPTraceExporter({
     headers: {
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
-      "X-Axiom-Dataset": tracesDataset,
+      "X-Axiom-Dataset": options.datasets.traces,
     },
-    url: telemetryOptions.axiom.otlpEndpoints.traces,
+    url: options.axiom.otlpEndpoints.traces,
   });
 
   const metricExporter = new OTLPMetricExporter({
     headers: {
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
-      "X-Axiom-Dataset": metricsDataset,
+      "X-Axiom-Dataset": options.datasets.metrics,
     },
-    url: telemetryOptions.axiom.otlpEndpoints.metrics,
+    url: options.axiom.otlpEndpoints.metrics,
   });
   const metricReader = new PeriodicExportingMetricReader({
     exporter: metricExporter,
@@ -386,9 +381,9 @@ export function initNodeTelemetry(
   const logExporter = new OTLPLogExporter({
     headers: {
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
-      "X-Axiom-Dataset": logsDataset,
+      "X-Axiom-Dataset": options.datasets.logs,
     },
-    url: telemetryOptions.axiom.otlpEndpoints.logs,
+    url: options.axiom.otlpEndpoints.logs,
   });
   const logProcessor = new BatchLogRecordProcessor(logExporter);
 
@@ -400,6 +395,28 @@ export function initNodeTelemetry(
   });
 
   void sdk.start();
+}
+
+/**
+ * Flush and shut down OpenTelemetry providers for Node runtimes.
+ *
+ * @remarks
+ * Useful for short‑lived or serverless runtimes where batched exporters may
+ * not run before the process is frozen or terminated.
+ *
+ * After calling this function, {@link initNodeTelemetry} can be called again.
+ *
+ * @public
+ */
+export async function shutdownNodeTelemetry(): Promise<void> {
+  if (!sdk) return;
+
+  await sdk.shutdown();
+
+  sdk = undefined;
+  options = undefined;
+  nodeLogger = undefined;
+  nodeMetrics = undefined;
 }
 
 /**
@@ -432,6 +449,33 @@ function createSpanLogger(
   baseAttributes: Attributes,
   span = trace.getActiveSpan(),
 ): Logger {
+  const logger = getLogger();
+
+  const emitLogRecord = (
+    severity: Severity,
+    message: string,
+    attributes?: Attributes,
+  ) => {
+    const { severityNumber, severityText } = toLogRecordSeverity(severity);
+
+    const logAttributes = toLogAttributes({
+      ...baseAttributes,
+      ...attributes,
+    });
+
+    const _context = span
+      ? trace.setSpan(context.active(), span)
+      : context.active();
+
+    logger.emit({
+      ...(logAttributes ? { attributes: logAttributes } : {}),
+      body: message,
+      context: _context,
+      severityNumber,
+      severityText,
+    });
+  };
+
   const log = (
     severity: Severity,
     message: string,
@@ -444,6 +488,8 @@ function createSpanLogger(
       message,
       severity,
     });
+
+    emitLogRecord(severity, message, attributes);
 
     if (severity === "error" && error && options?.errorReporter) {
       const spanContext = span?.spanContext();
@@ -469,8 +515,5 @@ function createSpanLogger(
 }
 
 function getLogger(): OpenTelemetryLogger {
-  if (!logger) {
-    logger = logs.getLogger("@o3osatoshi/telemetry/node");
-  }
-  return logger;
+  return logs.getLogger("@o3osatoshi/telemetry/node");
 }

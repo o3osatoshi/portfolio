@@ -13,9 +13,9 @@ import type {
 } from "@opentelemetry/api";
 import type { Logger as OpenTelemetryLogger } from "@opentelemetry/api-logs";
 import { logs } from "@opentelemetry/api-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import {
   BatchLogRecordProcessor,
@@ -48,7 +48,6 @@ let traceProvider: BasicTracerProvider | undefined;
 let meterProvider: MeterProvider | undefined;
 let loggerProvider: LoggerProvider | undefined;
 let options: EdgeTelemetryOptions | undefined;
-let logger: OpenTelemetryLogger | undefined;
 
 /**
  * Edge metrics helper exposed by {@link getEdgeMetrics}.
@@ -190,6 +189,7 @@ export function createEdgeLogger(): EdgeLogger {
     logger.emit({
       ...(logAttributes ? { attributes: logAttributes } : {}),
       body: message,
+      context: context.active(),
       severityNumber,
       severityText,
     });
@@ -215,9 +215,9 @@ export function createEdgeLogger(): EdgeLogger {
  * - The returned {@link RequestTelemetry} exposes:
  *   - `span` / `spanId` / `traceId` – the underlying OpenTelemetry span
  *     and identifiers.
- *   - `logger` – a span‑bound logger that records `"log"` events and, when
- *     an {@link EdgeTelemetryOptions.errorReporter} is configured, forwards
- *     errors with request/span context.
+ *   - `logger` – a span‑bound logger that records `"log"` events and emits
+ *     OpenTelemetry log records (when Edge telemetry has been initialized).
+ *     Error logs are forwarded to the configured {@link EdgeTelemetryOptions.errorReporter}.
  *   - `end(attributes, error?)` – attaches attributes, records `error`
  *     as an exception when provided, and ends the span.
  *
@@ -309,12 +309,6 @@ export function initEdgeTelemetry(
 
   options = telemetryOptions;
 
-  const {
-    logs: logsDataset,
-    metrics: metricsDataset,
-    traces: tracesDataset,
-  } = telemetryOptions.datasets;
-
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: telemetryOptions.serviceName,
     "deployment.environment": telemetryOptions.env,
@@ -323,9 +317,9 @@ export function initEdgeTelemetry(
   const traceExporter = new OTLPTraceExporter({
     headers: {
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
-      "X-Axiom-Dataset": tracesDataset,
+      "X-Axiom-Dataset": options.datasets.traces,
     },
-    url: telemetryOptions.axiom.otlpEndpoints.traces,
+    url: options.axiom.otlpEndpoints.traces,
   });
   const traceProcessor = new BatchSpanProcessor(traceExporter);
   traceProvider = new BasicTracerProvider({
@@ -337,9 +331,9 @@ export function initEdgeTelemetry(
   const metricExporter = new OTLPMetricExporter({
     headers: {
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
-      "X-Axiom-Dataset": metricsDataset,
+      "X-Axiom-Dataset": options.datasets.metrics,
     },
-    url: telemetryOptions.axiom.otlpEndpoints.metrics,
+    url: options.axiom.otlpEndpoints.metrics,
   });
   const metricReader = new PeriodicExportingMetricReader({
     exporter: metricExporter,
@@ -353,9 +347,9 @@ export function initEdgeTelemetry(
   const logExporter = new OTLPLogExporter({
     headers: {
       Authorization: `Bearer ${telemetryOptions.axiom.apiToken}`,
-      "X-Axiom-Dataset": logsDataset,
+      "X-Axiom-Dataset": options.datasets.metrics,
     },
-    url: telemetryOptions.axiom.otlpEndpoints.logs,
+    url: options.axiom.otlpEndpoints.logs,
   });
   const logProcessor = new BatchLogRecordProcessor(logExporter);
   loggerProvider = new LoggerProvider({
@@ -365,10 +359,63 @@ export function initEdgeTelemetry(
   logs.setGlobalLoggerProvider(loggerProvider);
 }
 
+/**
+ * Flush and shut down OpenTelemetry providers for Edge runtimes.
+ *
+ * @remarks
+ * Useful for runtimes that may terminate between requests. After shutdown,
+ * {@link initEdgeTelemetry} can be called again to re-initialize providers.
+ *
+ * @public
+ */
+export async function shutdownEdgeTelemetry(): Promise<void> {
+  const tasks: Array<Promise<void>> = [];
+
+  if (traceProvider) tasks.push(traceProvider.shutdown());
+  if (loggerProvider) tasks.push(loggerProvider.shutdown());
+  if (meterProvider) tasks.push(meterProvider.shutdown());
+
+  await Promise.all(tasks);
+
+  traceProvider = undefined;
+  loggerProvider = undefined;
+  meterProvider = undefined;
+  options = undefined;
+  edgeLogger = undefined;
+  edgeMetrics = undefined;
+}
+
 function createSpanLogger(
   baseAttributes: Attributes,
   span = trace.getActiveSpan(),
 ): Logger {
+  const logger = getLogger();
+
+  const emitLogRecord = (
+    severity: Severity,
+    message: string,
+    attributes?: Attributes,
+  ) => {
+    const { severityNumber, severityText } = toLogRecordSeverity(severity);
+
+    const logAttributes = toLogAttributes({
+      ...baseAttributes,
+      ...attributes,
+    });
+
+    const _context = span
+      ? trace.setSpan(context.active(), span)
+      : context.active();
+
+    logger.emit({
+      ...(logAttributes ? { attributes: logAttributes } : {}),
+      body: message,
+      context: _context,
+      severityNumber,
+      severityText,
+    });
+  };
+
   const log = (
     severity: Severity,
     message: string,
@@ -381,6 +428,8 @@ function createSpanLogger(
       message,
       severity,
     });
+
+    emitLogRecord(severity, message, attributes);
 
     if (severity === "error" && error && options?.errorReporter) {
       const spanContext = span?.spanContext();
@@ -406,8 +455,5 @@ function createSpanLogger(
 }
 
 function getLogger(): OpenTelemetryLogger {
-  if (!logger) {
-    logger = logs.getLogger("@o3osatoshi/telemetry/edge");
-  }
-  return logger;
+  return logs.getLogger("@o3osatoshi/telemetry/edge");
 }

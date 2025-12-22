@@ -3,8 +3,6 @@ import type {
   Span,
 } from "@opentelemetry/api";
 
-import type { Env } from "@o3osatoshi/toolkit";
-
 /**
  * Common attribute map used for telemetry events and span logs.
  *
@@ -18,6 +16,10 @@ export type Attributes = OpenTelemetryAttributes;
 
 /**
  * Configuration for sending OpenTelemetry signals to Axiom over OTLP/HTTP.
+ *
+ * @remarks
+ * This package uses OTLP/HTTP protobuf exporters so that Axiom metrics
+ * ingestion works (Axiom's `/v1/metrics` endpoint does not accept OTLP/HTTP JSON).
  *
  * @public
  */
@@ -84,7 +86,7 @@ export interface BaseTelemetryOptions {
    */
   datasets: TelemetryDatasets;
   /**
-   * Canonical deployment environment label shared with `@o3osatoshi/toolkit`.
+   * Canonical deployment environment label.
    */
   env: Env;
   /**
@@ -119,6 +121,17 @@ export interface EdgeTelemetryOptions extends BaseTelemetryOptions {
    */
   errorReporter?: ErrorReporter;
 }
+
+/**
+ * Canonical deployment environment label.
+ *
+ * @remarks
+ * Values are intentionally small and opinionated to match common deployment
+ * stages.
+ *
+ * @public
+ */
+export type Env = "development" | "local" | "production" | "staging";
 
 /**
  * Callback used to report errors to an external system.
@@ -167,6 +180,8 @@ export interface ErrorReporterContext {
  *
  * @remarks
  * Implementations typically log to the active span rather than stdout.
+ * Some runtime helpers may also emit OpenTelemetry log records when a log
+ * exporter is configured.
  *
  * @public
  */

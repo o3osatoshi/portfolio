@@ -88,7 +88,7 @@ vi.mock("@opentelemetry/api-logs", () => {
   };
 });
 
-vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-trace-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -101,7 +101,7 @@ vi.mock("@opentelemetry/exporter-trace-otlp-http", () => {
   return { OTLPTraceExporter };
 });
 
-vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-metrics-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -114,7 +114,7 @@ vi.mock("@opentelemetry/exporter-metrics-otlp-http", () => {
   return { OTLPMetricExporter };
 });
 
-vi.mock("@opentelemetry/exporter-logs-otlp-http", () => {
+vi.mock("@opentelemetry/exporter-logs-otlp-proto", () => {
   interface TestExporterInstance {
     options?: unknown;
   }
@@ -168,9 +168,9 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
 
 import * as otel from "@opentelemetry/api";
 import * as otelLogs from "@opentelemetry/api-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
