@@ -1,3 +1,5 @@
+import type { Env } from "@o3osatoshi/toolkit";
+
 /**
  * Attribute map attached to log and metric events.
  *
@@ -64,16 +66,6 @@ export interface BaseLoggingOptions {
    */
   service: string;
 }
-
-/**
- * Canonical deployment environment labels.
- *
- * @remarks
- * Used for the `deployment.environment` field on all events.
- *
- * @public
- */
-export type Env = "development" | "local" | "production" | "staging";
 
 /**
  * JSON-compatible primitive values.

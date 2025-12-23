@@ -6,6 +6,7 @@
 
 import { Axiom } from '@axiomhq/js';
 import { AxiomWithoutBatching } from '@axiomhq/js';
+import { Env } from '@o3osatoshi/toolkit';
 
 // @public
 export type Attributes = Record<string, JsonValue | undefined>;
@@ -49,9 +50,6 @@ export function createTraceContext(input?: {
     traceId?: string | undefined;
     traceparent?: string | undefined;
 }): TraceContext;
-
-// @public
-export type Env = "development" | "local" | "production" | "staging";
 
 // @public
 export function formatTraceparent(context: TraceContext, flags?: string): string;
