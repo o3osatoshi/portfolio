@@ -83,17 +83,17 @@ export function createAxiomTransport(config: AxiomClientConfig): Transport {
       if (result && typeof (result as Promise<unknown>).catch === "function") {
         void (result as Promise<unknown>).catch((error) => {
           if (error instanceof Error) {
-            onError?.(error);
+            onError(error);
           } else {
-            onError?.(new Error("Axiom ingest failed"));
+            onError(new Error("Axiom ingest failed"));
           }
         });
       }
     } catch (error) {
       if (error instanceof Error) {
-        onError?.(error);
+        onError(error);
       } else {
-        onError?.(new Error("Axiom ingest failed"));
+        onError(new Error("Axiom ingest failed"));
       }
     }
   };
