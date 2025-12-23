@@ -70,9 +70,16 @@ export function createTraceContext(input?: {
  *
  * @param flags - Optional trace flags (defaults to `01`).
  *
+ * @throws
+ * Throws when `flags` is not a 2-character hex string.
+ *
  * @public
  */
 export function formatTraceparent(context: TraceContext, flags = "01"): string {
+  if (!isValidHex(flags, 2)) {
+    throw new Error("traceparent flags must be a 2-character hex string");
+  }
+
   const version = "00";
   const traceId = context.traceId;
   const spanId = context.spanId;

@@ -39,6 +39,18 @@ describe("trace", () => {
     );
   });
 
+  it("throws for invalid trace flags", () => {
+    expect(() =>
+      formatTraceparent(
+        {
+          spanId: "00f067aa0ba902b7",
+          traceId: "4bf92f3577b34da6a3ce929d0e0e4736",
+        },
+        "zz",
+      ),
+    ).toThrow("traceparent flags must be a 2-character hex string");
+  });
+
   it("returns undefined for invalid traceparent headers", () => {
     expect(parseTraceparent("")).toBeUndefined();
     expect(parseTraceparent("00-xyz")).toBeUndefined();
