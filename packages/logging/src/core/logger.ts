@@ -1,8 +1,7 @@
-import { serializeError } from "@o3osatoshi/toolkit";
+import { type JsonValue, serializeError } from "@o3osatoshi/toolkit";
 
 import type {
   Attributes,
-  JsonValue,
   LogEvent,
   Logger,
   LoggingDatasets,

@@ -1,4 +1,4 @@
-import type { Env } from "@o3osatoshi/toolkit";
+import type { Env, JsonValue } from "@o3osatoshi/toolkit";
 
 /**
  * Attribute map attached to log and metric events.
@@ -66,23 +66,6 @@ export interface BaseLoggingOptions {
    */
   service: string;
 }
-
-/**
- * JSON-compatible primitive values.
- *
- * @public
- */
-export type JsonPrimitive = boolean | null | number | string;
-
-/**
- * JSON-compatible values used for log attributes.
- *
- * @public
- */
-export type JsonValue =
-  | { [key: string]: JsonValue }
-  | JsonPrimitive
-  | JsonValue[];
 
 /**
  * Event shape emitted by loggers.

@@ -7,6 +7,7 @@
 import { Axiom } from '@axiomhq/js';
 import { AxiomWithoutBatching } from '@axiomhq/js';
 import { Env } from '@o3osatoshi/toolkit';
+import { JsonValue } from '@o3osatoshi/toolkit';
 
 // @public
 export type Attributes = Record<string, JsonValue | undefined>;
@@ -67,14 +68,6 @@ export function createTraceContext(input?: {
 
 // @public
 export function formatTraceparent(context: TraceContext, flags?: string): string;
-
-// @public
-export type JsonPrimitive = boolean | null | number | string;
-
-// @public
-export type JsonValue = {
-    [key: string]: JsonValue;
-} | JsonPrimitive | JsonValue[];
 
 // @public
 export interface LogEvent extends Attributes {
