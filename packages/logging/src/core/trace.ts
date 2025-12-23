@@ -118,13 +118,13 @@ function isValidHex(
 function randomHex(bytes: number): string {
   const buffer = new Uint8Array(bytes);
 
-  if (globalThis.crypto?.getRandomValues) {
-    globalThis.crypto.getRandomValues(buffer);
-  } else {
-    for (let i = 0; i < buffer.length; i += 1) {
-      buffer[i] = Math.floor(Math.random() * 256);
-    }
+  const crypto = globalThis.crypto;
+  if (!crypto?.getRandomValues) {
+    throw new Error(
+      "crypto.getRandomValues is required to generate trace/span identifiers",
+    );
   }
+  crypto.getRandomValues(buffer);
 
   return Array.from(buffer)
     .map((byte) => byte.toString(16).padStart(2, "0"))
