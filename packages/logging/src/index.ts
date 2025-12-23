@@ -10,10 +10,17 @@
  */
 
 export { createAxiomClient, createAxiomTransport } from "./core/axiom";
+export type {
+  AxiomClient,
+  AxiomClientConfig,
+  AxiomClientMode,
+} from "./core/axiom";
 export { createLogger } from "./core/logger";
+export type { CreateLoggerOptions } from "./core/logger";
 export {
   createTraceContext,
   formatTraceparent,
   parseTraceparent,
 } from "./core/trace";
+export type { TraceContext } from "./core/trace";
 export * from "./types";

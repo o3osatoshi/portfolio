@@ -12,6 +12,18 @@ import { Env } from '@o3osatoshi/toolkit';
 export type Attributes = Record<string, JsonValue | undefined>;
 
 // @public
+export type AxiomClient = Axiom | AxiomWithoutBatching;
+
+// @public
+export interface AxiomClientConfig extends AxiomConfig {
+    mode?: AxiomClientMode;
+    onError?: (error: Error) => void;
+}
+
+// @public
+export type AxiomClientMode = "batch" | "immediate";
+
+// @public
 export interface AxiomConfig {
     orgId?: string;
     token: string;
@@ -28,22 +40,24 @@ export interface BaseLoggingOptions {
     service: string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "AxiomClientConfig" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AxiomClient" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function createAxiomClient(config: AxiomClientConfig): AxiomClient;
 
 // @public
 export function createAxiomTransport(config: AxiomClientConfig): Transport;
 
-// Warning: (ae-forgotten-export) The symbol "CreateLoggerOptions" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function createLogger(options: CreateLoggerOptions): Logger;
 
-// Warning: (ae-forgotten-export) The symbol "TraceContext" needs to be exported by the entry point index.d.ts
-//
+// @public
+export interface CreateLoggerOptions {
+    base?: Attributes;
+    datasets: LoggingDatasets;
+    minLevel?: LogLevel;
+    sampleRate?: number;
+    transport: Transport;
+}
+
 // @public
 export function createTraceContext(input?: {
     spanId?: string | undefined;
@@ -137,6 +151,14 @@ export interface RuntimeLoggingOptions extends BaseLoggingOptions {
     flushOnEnd?: boolean;
     onError?: (error: Error) => void;
 }
+
+// @public
+export type TraceContext = {
+    parentSpanId?: string;
+    spanId: string;
+    traceFlags?: string;
+    traceId: string;
+};
 
 // @public
 export interface Transport {
