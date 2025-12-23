@@ -27,7 +27,7 @@ export interface CreateLoggerOptions {
   /**
    * Base attributes applied to every event.
    *
-   * @defaultValue {}
+   * @defaultValue An empty object
    */
   base?: Attributes;
   /**
