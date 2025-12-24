@@ -6,6 +6,7 @@
 
 import { Axiom } from '@axiomhq/js';
 import { AxiomWithoutBatching } from '@axiomhq/js';
+import { ClientOptions } from '@axiomhq/js';
 import { Env } from '@o3osatoshi/toolkit';
 import { JsonValue } from '@o3osatoshi/toolkit';
 
@@ -16,24 +17,13 @@ export type Attributes = Record<string, JsonValue | undefined>;
 export type AxiomClient = Axiom | AxiomWithoutBatching;
 
 // @public
-export interface AxiomClientConfig extends AxiomConfig {
-    mode?: AxiomClientMode;
-    onError?: (error: Error) => void;
-}
-
-// @public
-export type AxiomClientMode = "batch" | "immediate";
-
-// @public
-export interface AxiomConfig {
-    orgId?: string;
-    token: string;
-    url?: string;
+export interface AxiomClientOptions extends ClientOptions {
+    mode?: ClientMode;
 }
 
 // @public
 export interface BaseLoggingOptions {
-    axiom: AxiomConfig;
+    client: ClientOptions;
     datasets: LoggingDatasets;
     env: Env;
     minLevel?: LogLevel;
@@ -42,17 +32,20 @@ export interface BaseLoggingOptions {
 }
 
 // @public
-export function createAxiomClient(config: AxiomClientConfig): AxiomClient;
+export type ClientMode = "batch" | "immediate";
 
 // @public
-export function createAxiomTransport(config: AxiomClientConfig): Transport;
+export function createAxiomClient(options: AxiomClientOptions): AxiomClient;
+
+// @public
+export function createAxiomTransport(options: AxiomClientOptions): Transport;
 
 // @public
 export function createLogger(options: CreateLoggerOptions): Logger;
 
 // @public
 export interface CreateLoggerOptions {
-    base?: Attributes;
+    attributes?: Attributes;
     datasets: LoggingDatasets;
     minLevel?: LogLevel;
     sampleRate?: number;

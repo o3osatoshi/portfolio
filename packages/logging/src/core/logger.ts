@@ -28,7 +28,7 @@ export interface CreateLoggerOptions {
    *
    * @defaultValue An empty object
    */
-  base?: Attributes;
+  attributes?: Attributes;
   /**
    * Target datasets for logs and metrics.
    */
@@ -62,13 +62,13 @@ export interface CreateLoggerOptions {
  * @public
  */
 export function createLogger(options: CreateLoggerOptions): Logger {
-  const base = options.base ?? {};
+  const baseAttributes = options.attributes ?? {};
   const minLevel = options.minLevel;
-  const sampleRate = options.sampleRate;
   const transport = options.transport;
   const datasets = options.datasets;
 
   const shouldSample = () => {
+    const sampleRate = options.sampleRate;
     if (sampleRate === undefined) return true;
     if (sampleRate >= 1) return true;
     if (sampleRate <= 0) return false;
@@ -82,12 +82,11 @@ export function createLogger(options: CreateLoggerOptions): Logger {
   };
 
   const buildEvent = (attributes: Attributes): LogEvent => {
-    const merged = {
-      ...normalizeAttributes(base),
+    return {
+      ...normalizeAttributes(baseAttributes),
       ...normalizeAttributes(attributes),
       timestamp: new Date().toISOString(),
     };
-    return merged as LogEvent;
   };
 
   const emit = (dataset: string, event: LogEvent) => {
@@ -102,24 +101,24 @@ export function createLogger(options: CreateLoggerOptions): Logger {
   ) => {
     if (!shouldLog(level)) return;
 
-    const errorFields = error ? toErrorFields(error) : undefined;
+    const errorAttributes = error ? toErrorAttributes(error) : undefined;
 
-    const event = buildEvent({
+    const logEvent = buildEvent({
       ...(attributes ?? {}),
-      ...(errorFields ?? {}),
+      ...(errorAttributes ?? {}),
       "event.name": message,
       "event.type": "log",
       level,
       message,
     });
 
-    emit(datasets.logs, event);
+    emit(datasets.logs, logEvent);
   };
 
   const event = (name: string, attributes?: Attributes) => {
     if (!shouldLog("info")) return;
 
-    const payload = buildEvent({
+    const logEvent = buildEvent({
       ...(attributes ?? {}),
       "event.name": name,
       "event.type": "event",
@@ -127,7 +126,7 @@ export function createLogger(options: CreateLoggerOptions): Logger {
       message: name,
     });
 
-    emit(datasets.logs, payload);
+    emit(datasets.logs, logEvent);
   };
 
   const metric = (
@@ -138,7 +137,7 @@ export function createLogger(options: CreateLoggerOptions): Logger {
   ) => {
     if (!shouldSample()) return;
 
-    const payload = buildEvent({
+    const logEvent = buildEvent({
       ...(attributes ?? {}),
       "event.name": name,
       "metric.name": name,
@@ -150,7 +149,7 @@ export function createLogger(options: CreateLoggerOptions): Logger {
       "metric.value": value,
     });
 
-    emit(datasets.metrics, payload);
+    emit(datasets.metrics, logEvent);
   };
 
   const flush = async () => {
@@ -160,38 +159,35 @@ export function createLogger(options: CreateLoggerOptions): Logger {
   };
 
   const child = (attributes: Attributes): Logger => {
-    const merged: Attributes = {
-      ...base,
-      ...attributes,
-    };
-
     return createLogger({
       ...options,
-      base: merged,
+      attributes: {
+        ...baseAttributes,
+        ...attributes,
+      },
     });
   };
 
   return {
     child,
-    debug: (message, attributes) => log("debug", message, attributes),
-    error: (message, attributes, error) =>
-      log("error", message, attributes, error),
+    debug: (msg, attrs) => log("debug", msg, attrs),
+    error: (msg, attrs, err) => log("error", msg, attrs, err),
     event,
     flush,
-    info: (message, attributes) => log("info", message, attributes),
+    info: (msg, attrs) => log("info", msg, attrs),
     metric,
-    warn: (message, attributes) => log("warn", message, attributes),
+    warn: (msg, attrs) => log("warn", msg, attrs),
   };
 }
 
 function normalizeAttributes(attributes: Attributes): Attributes {
-  const result: Attributes = {};
-  for (const [key, value] of Object.entries(attributes)) {
-    const normalized = normalizeValue(value);
-    if (normalized === undefined) continue;
-    result[key] = normalized;
+  const nAttributes: Attributes = {};
+  for (const [key, rawValue] of Object.entries(attributes)) {
+    const nValue = normalizeValue(rawValue);
+    if (nValue === undefined) continue;
+    nAttributes[key] = nValue;
   }
-  return result;
+  return nAttributes;
 }
 
 function normalizeValue(value: unknown): JsonValue | undefined {
@@ -204,37 +200,38 @@ function normalizeValue(value: unknown): JsonValue | undefined {
   if (value instanceof Date) return value.toISOString();
 
   if (Array.isArray(value)) {
-    const mapped = value
-      .map((item) => normalizeValue(item))
-      .filter((item): item is JsonValue => item !== undefined);
-    return mapped;
+    return value
+      .map((rawValue) => normalizeValue(rawValue))
+      .filter((rawValue): rawValue is JsonValue => rawValue !== undefined);
   }
 
   if (typeof value === "object") {
-    const output: Record<string, JsonValue> = {};
-    for (const [key, item] of Object.entries(value)) {
-      const normalized = normalizeValue(item);
-      if (normalized === undefined) continue;
-      output[key] = normalized;
+    const nAttributes: Record<string, JsonValue> = {};
+    for (const [key, rawValue] of Object.entries(value)) {
+      const nValue = normalizeValue(rawValue);
+      if (nValue === undefined) continue;
+      nAttributes[key] = nValue;
     }
-    return output;
+    return nAttributes;
   }
 
   return String(value);
 }
 
-function toErrorFields(error: unknown): Attributes {
-  const err = error instanceof Error ? error : new Error(String(error));
-  const includeStack =
-    typeof process !== "undefined" &&
-    process.env?.["NODE_ENV"] === "development";
-  const serialized = serializeError(err, { includeStack });
-  const cause = normalizeValue(serialized.cause);
+function toErrorAttributes(error: unknown): Attributes {
+  const serializedError = serializeError(
+    error instanceof Error ? error : new Error(String(error)),
+    {
+      includeStack:
+        typeof process !== "undefined" &&
+        process.env?.["NODE_ENV"] === "development",
+    },
+  );
 
   return {
-    "exception.cause": cause,
-    "exception.message": serialized.message,
-    "exception.stacktrace": serialized.stack,
-    "exception.type": serialized.name,
+    "exception.cause": normalizeValue(serializedError.cause),
+    "exception.message": serializedError.message,
+    "exception.stacktrace": serializedError.stack,
+    "exception.type": serializedError.name,
   };
 }

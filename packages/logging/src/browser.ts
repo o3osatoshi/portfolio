@@ -17,7 +17,7 @@ import type {
 } from "./types";
 
 type BrowserState = {
-  base: Attributes;
+  attributes: Attributes;
   logger: Logger;
   options: RuntimeLoggingOptions;
   transport: Transport;
@@ -38,7 +38,6 @@ export function createBrowserLogger(): Logger {
   if (!browserState) {
     return createNoopLogger();
   }
-
   return browserState.logger;
 }
 
@@ -56,19 +55,19 @@ export function initBrowserLogger(options: RuntimeLoggingOptions): void {
 
   const transport = createAxiomTransport({
     mode: "immediate",
-    token: options.axiom.token,
-    ...(options.axiom.orgId ? { orgId: options.axiom.orgId } : {}),
-    ...(options.axiom.url ? { url: options.axiom.url } : {}),
+    token: options.client.token,
+    ...(options.client.orgId ? { orgId: options.client.orgId } : {}),
+    ...(options.client.url ? { url: options.client.url } : {}),
     ...(options.onError ? { onError: options.onError } : {}),
   });
 
-  const base: Attributes = {
+  const attributes: Attributes = {
     "service.name": options.service,
     "deployment.environment": options.env,
   };
 
   const logger = createLogger({
-    base,
+    attributes,
     datasets: options.datasets,
     transport,
     ...(options.minLevel !== undefined ? { minLevel: options.minLevel } : {}),
@@ -78,7 +77,7 @@ export function initBrowserLogger(options: RuntimeLoggingOptions): void {
   });
 
   browserState = {
-    base,
+    attributes,
     logger,
     options,
     transport,
@@ -104,7 +103,7 @@ function registerBrowserFlush(): void {
   if (flushRegistered) return;
   flushRegistered = true;
 
-  const target = globalThis as {
+  const gt = globalThis as {
     addEventListener?: (type: string, listener: () => void) => void;
     document?: {
       addEventListener?: (type: string, listener: () => void) => void;
@@ -112,15 +111,15 @@ function registerBrowserFlush(): void {
     };
   };
 
-  if (!target.addEventListener) return;
+  if (!gt.addEventListener) return;
 
   const flush = () => {
     void browserState?.transport.flush?.();
   };
 
-  target.addEventListener("pagehide", flush);
-  target.document?.addEventListener?.("visibilitychange", () => {
-    if (target.document?.visibilityState === "hidden") {
+  gt.addEventListener("pagehide", flush);
+  gt.document?.addEventListener?.("visibilitychange", () => {
+    if (gt.document?.visibilityState === "hidden") {
       flush();
     }
   });

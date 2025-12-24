@@ -13,7 +13,7 @@ describe("createLogger", () => {
     };
 
     const logger = createLogger({
-      base: { "service.name": "svc" },
+      attributes: { "service.name": "svc" },
       datasets: { logs: "logs", metrics: "metrics" },
       transport,
     });
@@ -36,7 +36,7 @@ describe("createLogger", () => {
     };
 
     const logger = createLogger({
-      base: { "service.name": "svc" },
+      attributes: { "service.name": "svc" },
       datasets: { logs: "logs", metrics: "metrics" },
       transport,
     });
@@ -67,7 +67,7 @@ describe("createLogger", () => {
     };
 
     const logger = createLogger({
-      base: {},
+      attributes: {},
       datasets: { logs: "logs", metrics: "metrics" },
       minLevel: "warn",
       transport,
@@ -90,7 +90,7 @@ describe("createLogger", () => {
     };
 
     const logger = createLogger({
-      base: {},
+      attributes: {},
       datasets: { logs: "logs", metrics: "metrics" },
       sampleRate: 0,
       transport,
@@ -100,7 +100,7 @@ describe("createLogger", () => {
     expect(calls).toHaveLength(0);
 
     const loggerAll = createLogger({
-      base: {},
+      attributes: {},
       datasets: { logs: "logs", metrics: "metrics" },
       sampleRate: 1,
       transport,
@@ -119,7 +119,7 @@ describe("createLogger", () => {
     };
 
     const logger = createLogger({
-      base: { "service.name": "svc" },
+      attributes: { "service.name": "svc" },
       datasets: { logs: "logs", metrics: "metrics" },
       transport,
     });

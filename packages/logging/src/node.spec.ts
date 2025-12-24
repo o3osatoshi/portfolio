@@ -36,7 +36,7 @@ describe("node logging helpers", () => {
     const { initNodeLogger, shutdownNodeLogger } = await import("./node");
 
     initNodeLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
@@ -44,7 +44,7 @@ describe("node logging helpers", () => {
     });
 
     initNodeLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
@@ -75,7 +75,7 @@ describe("node logging helpers", () => {
     } = await import("./node");
 
     initNodeLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       flushOnEnd: true,

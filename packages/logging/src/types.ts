@@ -1,3 +1,5 @@
+import type { ClientOptions } from "@axiomhq/js";
+
 import type { Env, JsonValue } from "@o3osatoshi/toolkit";
 
 /**
@@ -12,26 +14,6 @@ import type { Env, JsonValue } from "@o3osatoshi/toolkit";
 export type Attributes = Record<string, JsonValue | undefined>;
 
 /**
- * Axiom authentication and endpoint configuration.
- *
- * @public
- */
-export interface AxiomConfig {
-  /**
-   * Optional organization ID (required when using a personal token).
-   */
-  orgId?: string;
-  /**
-   * Axiom API token.
-   */
-  token: string;
-  /**
-   * Optional API base URL for self-hosted instances.
-   */
-  url?: string;
-}
-
-/**
  * Shared logging configuration for all runtimes.
  *
  * @public
@@ -40,7 +22,7 @@ export interface BaseLoggingOptions {
   /**
    * Axiom configuration for sending events.
    */
-  axiom: AxiomConfig;
+  client: ClientOptions;
   /**
    * Target datasets for logs and metrics.
    */

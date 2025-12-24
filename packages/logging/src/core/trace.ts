@@ -98,19 +98,20 @@ export function parseTraceparent(
   value?: string,
 ): { spanId: string; traceFlags: string; traceId: string } | undefined {
   if (!value) return undefined;
-  const trimmed = value.trim();
-  if (!trimmed) return undefined;
 
-  const parts = trimmed.split("-");
+  const trimmedValue = value.trim();
+  if (!trimmedValue) return undefined;
+
+  const parts = trimmedValue.split("-");
   if (parts.length !== 4) return undefined;
 
-  const [version, traceId, spanId, flags] = parts;
+  const [version, traceId, spanId, traceFlags] = parts;
   if (!isValidHex(version, 2)) return undefined;
   if (!isValidHex(traceId, 32) || traceId === "0".repeat(32)) return undefined;
   if (!isValidHex(spanId, 16) || spanId === "0".repeat(16)) return undefined;
-  if (!isValidHex(flags, 2)) return undefined;
+  if (!isValidHex(traceFlags, 2)) return undefined;
 
-  return { spanId, traceFlags: flags, traceId };
+  return { spanId, traceFlags, traceId };
 }
 
 function isValidHex(

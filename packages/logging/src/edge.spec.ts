@@ -46,14 +46,14 @@ describe("edge logging helpers", () => {
     } = await import("./edge");
 
     initEdgeLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       service: "svc",
     });
 
     initEdgeLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       service: "svc",

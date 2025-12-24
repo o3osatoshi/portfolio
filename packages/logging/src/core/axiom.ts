@@ -1,6 +1,6 @@
 import { Axiom, AxiomWithoutBatching, type ClientOptions } from "@axiomhq/js";
 
-import type { AxiomConfig, LogEvent, Transport } from "../types";
+import type { LogEvent, Transport } from "../types";
 
 /**
  * Axiom client type used for ingestion.
@@ -14,20 +14,13 @@ export type AxiomClient = Axiom | AxiomWithoutBatching;
  *
  * @public
  */
-export interface AxiomClientConfig extends AxiomConfig {
+export interface AxiomClientOptions extends ClientOptions {
   /**
    * Client ingestion mode.
    *
    * @defaultValue "batch"
    */
-  mode?: AxiomClientMode;
-  /**
-   * Optional ingestion error handler.
-   *
-   * @remarks
-   * When omitted, {@link createAxiomTransport} falls back to `console.error`.
-   */
-  onError?: (error: Error) => void;
+  mode?: ClientMode;
 }
 
 /**
@@ -39,7 +32,7 @@ export interface AxiomClientConfig extends AxiomConfig {
  *
  * @public
  */
-export type AxiomClientMode = "batch" | "immediate";
+export type ClientMode = "batch" | "immediate";
 
 /**
  * Create an Axiom client with the provided configuration.
@@ -49,18 +42,10 @@ export type AxiomClientMode = "batch" | "immediate";
  *
  * @public
  */
-export function createAxiomClient(config: AxiomClientConfig): AxiomClient {
-  const options: ClientOptions = {
-    token: config.token,
-    ...(config.orgId ? { orgId: config.orgId } : {}),
-    ...(config.url ? { url: config.url } : {}),
-    ...(config.onError ? { onError: config.onError } : {}),
-  };
-
-  if (config.mode === "immediate") {
+export function createAxiomClient(options: AxiomClientOptions): AxiomClient {
+  if (options.mode === "immediate") {
     return new AxiomWithoutBatching(options);
   }
-
   return new Axiom(options);
 }
 
@@ -72,16 +57,16 @@ export function createAxiomClient(config: AxiomClientConfig): AxiomClient {
  *
  * @public
  */
-export function createAxiomTransport(config: AxiomClientConfig): Transport {
-  const onError = config.onError ?? ((error: Error) => console.error(error));
-  const client = createAxiomClient({ ...config, onError });
+export function createAxiomTransport(options: AxiomClientOptions): Transport {
+  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const client = createAxiomClient({ ...options, onError });
 
   const emit = (dataset: string, events: LogEvent | LogEvent[]) => {
     const payload = Array.isArray(events) ? events : [events];
     try {
       const result = client.ingest(dataset, payload);
-      if (result && typeof (result as Promise<unknown>).catch === "function") {
-        void (result as Promise<unknown>).catch((error) => {
+      if (result && typeof result.catch === "function") {
+        void result.catch((error) => {
           if (error instanceof Error) {
             onError(error);
           } else {

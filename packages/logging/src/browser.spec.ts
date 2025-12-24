@@ -84,14 +84,14 @@ describe("browser logging helpers", () => {
       await import("./browser");
 
     initBrowserLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       service: "web",
     });
 
     initBrowserLogger({
-      axiom: { token: "token" },
+      client: { token: "token" },
       datasets: { logs: "logs", metrics: "metrics" },
       env: "production",
       service: "web",

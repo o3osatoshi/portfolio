@@ -20,7 +20,7 @@ import type {
 } from "./types";
 
 type EdgeState = {
-  base: Attributes;
+  attributes: Attributes;
   logger: Logger;
   options: RuntimeLoggingOptions;
   transport: Transport;
@@ -40,7 +40,6 @@ export function createEdgeLogger(): Logger {
   if (!edgeState) {
     return createNoopLogger();
   }
-
   return edgeState.logger;
 }
 
@@ -57,19 +56,19 @@ export function initEdgeLogger(options: RuntimeLoggingOptions): void {
 
   const transport = createAxiomTransport({
     mode: "immediate",
-    token: options.axiom.token,
-    ...(options.axiom.orgId ? { orgId: options.axiom.orgId } : {}),
-    ...(options.axiom.url ? { url: options.axiom.url } : {}),
+    token: options.client.token,
+    ...(options.client.orgId ? { orgId: options.client.orgId } : {}),
+    ...(options.client.url ? { url: options.client.url } : {}),
     ...(options.onError ? { onError: options.onError } : {}),
   });
 
-  const base: Attributes = {
+  const attributes: Attributes = {
     "service.name": options.service,
     "deployment.environment": options.env,
   };
 
   const logger = createLogger({
-    base,
+    attributes,
     datasets: options.datasets,
     transport,
     ...(options.minLevel !== undefined ? { minLevel: options.minLevel } : {}),
@@ -79,7 +78,7 @@ export function initEdgeLogger(options: RuntimeLoggingOptions): void {
   });
 
   edgeState = {
-    base,
+    attributes,
     logger,
     options,
     transport,
@@ -121,31 +120,31 @@ export async function withRequestLogger<T>(
 }
 
 function createRequestLogger(ctx: RequestContext): RequestLogger {
-  const trace = createTraceContext({
+  const traceContext = createTraceContext({
     spanId: ctx.spanId,
     traceId: ctx.traceId,
     traceparent: ctx.traceparent,
   });
 
-  const base: Attributes = {
-    ...(edgeState?.base ?? {}),
+  const attributes: Attributes = {
+    ...(edgeState?.attributes ?? {}),
     "enduser.id": ctx.userId ?? undefined,
     "request.id": ctx.requestId,
-    span_id: trace.spanId,
-    trace_id: trace.traceId,
+    span_id: traceContext.spanId,
+    trace_id: traceContext.traceId,
     "client.address": ctx.clientIp,
     "http.method": ctx.httpMethod,
     "http.route": ctx.httpRoute,
     "user_agent.original": ctx.userAgent,
   };
 
-  if (trace.parentSpanId) {
-    base["parent_span_id"] = trace.parentSpanId;
+  if (traceContext.parentSpanId) {
+    attributes["parent_span_id"] = traceContext.parentSpanId;
   }
 
   const logger = edgeState
     ? createLogger({
-        base,
+        attributes,
         datasets: edgeState.options.datasets,
         transport: edgeState.transport,
         ...(edgeState.options.minLevel !== undefined
@@ -158,19 +157,19 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
     : createNoopLogger();
 
   const setUserId: RequestLogger["setUserId"] = (userId) => {
-    base["enduser.id"] = userId ?? undefined;
+    attributes["enduser.id"] = userId ?? undefined;
   };
 
   const requestLogger: RequestLogger = {
     flush: () => logger.flush(),
     logger,
     setUserId,
-    spanId: trace.spanId,
-    traceId: trace.traceId,
+    spanId: traceContext.spanId,
+    traceId: traceContext.traceId,
   };
 
-  if (trace.parentSpanId) {
-    requestLogger.parentSpanId = trace.parentSpanId;
+  if (traceContext.parentSpanId) {
+    requestLogger.parentSpanId = traceContext.parentSpanId;
   }
   if (ctx.requestId) {
     requestLogger.requestId = ctx.requestId;
