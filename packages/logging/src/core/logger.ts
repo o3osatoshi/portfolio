@@ -27,6 +27,9 @@ export interface CreateLoggerOptions {
    * Base attributes applied to every event.
    *
    * @defaultValue An empty object
+   *
+   * @remarks
+   * Per-call attributes override these base values.
    */
   attributes?: Attributes;
   /**

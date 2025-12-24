@@ -54,12 +54,12 @@ export function createEdgeLogger(): Logger {
 export function initEdgeLogger(options: RuntimeLoggingOptions): void {
   if (edgeState) return;
 
+  const { onError: clientOnError, ...clientOptions } = options.client;
+  const onError = options.onError ?? clientOnError;
   const transport = createAxiomTransport({
+    ...clientOptions,
     mode: "immediate",
-    token: options.client.token,
-    ...(options.client.orgId ? { orgId: options.client.orgId } : {}),
-    ...(options.client.url ? { url: options.client.url } : {}),
-    ...(options.onError ? { onError: options.onError } : {}),
+    ...(onError ? { onError } : {}),
   });
 
   const attributes: Attributes = {

@@ -53,12 +53,12 @@ export function createBrowserLogger(): Logger {
 export function initBrowserLogger(options: RuntimeLoggingOptions): void {
   if (browserState) return;
 
+  const { onError: clientOnError, ...clientOptions } = options.client;
+  const onError = options.onError ?? clientOnError;
   const transport = createAxiomTransport({
+    ...clientOptions,
     mode: "immediate",
-    token: options.client.token,
-    ...(options.client.orgId ? { orgId: options.client.orgId } : {}),
-    ...(options.client.url ? { url: options.client.url } : {}),
-    ...(options.onError ? { onError: options.onError } : {}),
+    ...(onError ? { onError } : {}),
   });
 
   const attributes: Attributes = {

@@ -12,6 +12,9 @@ export type AxiomClient = Axiom | AxiomWithoutBatching;
 /**
  * Configuration for constructing an Axiom client.
  *
+ * @remarks
+ * Extends {@link ClientOptions} from `@axiomhq/js`; `token` is required.
+ *
  * @public
  */
 export interface AxiomClientOptions extends ClientOptions {

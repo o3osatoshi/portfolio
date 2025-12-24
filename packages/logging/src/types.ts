@@ -16,11 +16,17 @@ export type Attributes = Record<string, JsonValue | undefined>;
 /**
  * Shared logging configuration for all runtimes.
  *
+ * @remarks
+ * The `client` field maps to Axiom SDK options and requires an API token.
+ *
  * @public
  */
 export interface BaseLoggingOptions {
   /**
-   * Axiom configuration for sending events.
+   * Axiom client options used to create transports.
+   *
+   * @remarks
+   * Based on {@link ClientOptions} from `@axiomhq/js`.
    */
   client: ClientOptions;
   /**
@@ -270,6 +276,7 @@ export interface RuntimeLoggingOptions extends BaseLoggingOptions {
    * Optional error handler invoked when ingestion fails.
    *
    * @remarks
+   * Overrides `client.onError` when provided.
    * When omitted, the Axiom transport falls back to `console.error`.
    */
   onError?: (error: Error) => void;

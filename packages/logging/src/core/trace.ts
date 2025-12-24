@@ -33,6 +33,9 @@ const SPAN_ID_BYTES = 8;
  * @remarks
  * Invalid identifiers are ignored and regenerated.
  *
+ * @throws
+ * Throws when Web Crypto is unavailable and new identifiers are required.
+ *
  * @public
  */
 export function createTraceContext(input?: {

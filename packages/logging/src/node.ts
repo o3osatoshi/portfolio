@@ -71,12 +71,12 @@ export function getActiveRequestLogger(): RequestLogger | undefined {
 export function initNodeLogger(options: NodeLoggingOptions): void {
   if (nodeState) return;
 
+  const { onError: clientOnError, ...clientOptions } = options.client;
+  const onError = options.onError ?? clientOnError;
   const transport = createAxiomTransport({
+    ...clientOptions,
     mode: "batch",
-    token: options.client.token,
-    ...(options.client.orgId ? { orgId: options.client.orgId } : {}),
-    ...(options.client.url ? { url: options.client.url } : {}),
-    ...(options.onError ? { onError: options.onError } : {}),
+    ...(onError ? { onError } : {}),
   });
 
   const attributes: Attributes = {
