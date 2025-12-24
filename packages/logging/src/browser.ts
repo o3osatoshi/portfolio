@@ -1,12 +1,13 @@
 /**
  * @packageDocumentation
- * Browser logging helpers for sending structured logs and metrics to Axiom.
+ * Browser logging helpers for sending structured logs and metrics via Axiom
+ * or a custom transport.
  *
  * @remarks
  * Import from `@o3osatoshi/logging/browser`.
  */
 
-import { createAxiomTransport } from "./core/axiom";
+import { createAxiomTransport } from "./axiom";
 import { createLogger } from "./core/logger";
 import { createNoopLogger } from "./core/noop";
 import type {
@@ -42,24 +43,21 @@ export function createBrowserLogger(): Logger {
 }
 
 /**
- * Initialize the browser logger with Axiom transport.
+ * Initialize the browser logger with a custom transport or Axiom transport.
  *
  * @remarks
  * This function is idempotent; subsequent calls are ignored.
  * When `flushOnEnd` is not `false`, the logger flushes on pagehide/visibility.
+ *
+ * @throws
+ * Throws when neither `client` nor `transport` is provided.
  *
  * @public
  */
 export function initBrowserLogger(options: RuntimeLoggingOptions): void {
   if (browserState) return;
 
-  const { onError: clientOnError, ...clientOptions } = options.client;
-  const onError = options.onError ?? clientOnError;
-  const transport = createAxiomTransport({
-    ...clientOptions,
-    mode: "immediate",
-    ...(onError ? { onError } : {}),
-  });
+  const transport = resolveTransport(options);
 
   const attributes: Attributes = {
     "service.name": options.service,
@@ -122,5 +120,23 @@ function registerBrowserFlush(): void {
     if (gt.document?.visibilityState === "hidden") {
       flush();
     }
+  });
+}
+
+function resolveTransport(options: RuntimeLoggingOptions): Transport {
+  if (options.transport) {
+    return options.transport;
+  }
+
+  if (!options.client) {
+    throw new Error("client or transport is required to initialize logging");
+  }
+
+  const { onError: clientOnError, ...clientOptions } = options.client;
+  const onError = options.onError ?? clientOnError;
+  return createAxiomTransport({
+    ...clientOptions,
+    mode: "immediate",
+    ...(onError ? { onError } : {}),
   });
 }

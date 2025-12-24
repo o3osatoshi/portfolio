@@ -1,11 +1,12 @@
 # @o3osatoshi/logging
 
-Axiom‑first logging helpers for Node, Edge, and browser runtimes.
+Axiom-first logging helpers for Node, Edge, and browser runtimes.
 
 Focus:
 - Small surface area with consistent fields across runtimes
 - Logs + metrics separated into dedicated Axiom datasets
 - Trace context fields (`trace_id`, `span_id`) aligned with OpenTelemetry naming
+- Next.js helpers available via `@o3osatoshi/logging/nextjs`
 
 ## Install
 
@@ -32,7 +33,7 @@ pnpm add @o3osatoshi/logging
 import { initNodeLogger } from "@o3osatoshi/logging/node";
 
 initNodeLogger({
-  axiom: {
+  client: {
     token: process.env.AXIOM_API_TOKEN!,
   },
   datasets: {
@@ -91,7 +92,7 @@ log.info("server_started", { node_version: process.version });
 import { initEdgeLogger, withRequestLogger } from "@o3osatoshi/logging/edge";
 
 initEdgeLogger({
-  axiom: { token: env.AXIOM_API_TOKEN },
+  client: { token: env.AXIOM_API_TOKEN },
   datasets: { logs: "logs", metrics: "metrics" },
   env: "production",
   service: "portfolio-edge",
@@ -108,7 +109,7 @@ await withRequestLogger({ httpMethod: "GET", httpRoute: "/edge/healthz" }, (req)
 import { initBrowserLogger, createBrowserLogger } from "@o3osatoshi/logging/browser";
 
 initBrowserLogger({
-  axiom: { token: window.ENV.AXIOM_API_TOKEN },
+  client: { token: window.ENV.AXIOM_API_TOKEN },
   datasets: { logs: "logs", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
@@ -117,3 +118,85 @@ initBrowserLogger({
 const log = createBrowserLogger();
 log.event("page_view", { path: window.location.pathname });
 ```
+
+## Custom transport
+
+Runtime helpers accept a custom `transport` if you want to swap away from Axiom:
+
+```ts
+import { initNodeLogger } from "@o3osatoshi/logging/node";
+
+initNodeLogger({
+  transport: customTransport,
+  datasets: { logs: "logs", metrics: "metrics" },
+  env: "production",
+  service: "portfolio-web",
+});
+```
+
+## Axiom helpers (`@o3osatoshi/logging/axiom`)
+
+```ts
+import { createAxiomTransport } from "@o3osatoshi/logging/axiom";
+import { createLogger } from "@o3osatoshi/logging";
+
+const transport = createAxiomTransport({
+  token: process.env.AXIOM_API_TOKEN!,
+  mode: "batch",
+});
+
+const logger = createLogger({
+  attributes: { "service.name": "portfolio-web" },
+  datasets: { logs: "logs", metrics: "metrics" },
+  transport,
+});
+```
+
+## Next.js helpers (`@o3osatoshi/logging/nextjs`)
+
+Requires Next.js and React in the consuming app.
+Client helpers (Web Vitals, `useLogger`) live in `@o3osatoshi/logging/nextjs/client`.
+
+```ts
+import {
+  createNextjsOnRequestError,
+  createNextjsRouteHandler,
+  logNextjsMiddlewareRequest,
+} from "@o3osatoshi/logging/nextjs";
+import { createNextjsWebVitalsComponent } from "@o3osatoshi/logging/nextjs/client";
+import { createBrowserLogger, initBrowserLogger } from "@o3osatoshi/logging/browser";
+import { createNodeLogger, initNodeLogger } from "@o3osatoshi/logging/node";
+import { NextResponse } from "next/server";
+
+initNodeLogger({
+  client: { token: process.env.AXIOM_API_TOKEN! },
+  datasets: { logs: "logs", metrics: "metrics" },
+  env: "production",
+  service: "portfolio-web",
+});
+
+initBrowserLogger({
+  client: { token: process.env.NEXT_PUBLIC_AXIOM_TOKEN! },
+  datasets: { logs: "logs", metrics: "metrics" },
+  env: "production",
+  service: "portfolio-web",
+});
+
+const serverLogger = createNodeLogger();
+const clientLogger = createBrowserLogger();
+export const withAxiom = createNextjsRouteHandler(serverLogger);
+export const onRequestError = createNextjsOnRequestError(serverLogger);
+export const WebVitals = createNextjsWebVitalsComponent(clientLogger);
+
+export const GET = withAxiom(async () => {
+  return NextResponse.json({ ok: true });
+});
+
+export async function middleware(request: Request) {
+  logNextjsMiddlewareRequest(serverLogger, request);
+  return NextResponse.next();
+}
+```
+
+Client components can use `createNextjsUseLogger` from
+`@o3osatoshi/logging/nextjs/client`.

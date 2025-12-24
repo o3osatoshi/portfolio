@@ -23,12 +23,13 @@ export interface AxiomClientOptions extends ClientOptions {
 
 // @public
 export interface BaseLoggingOptions {
-    client: ClientOptions;
+    client?: ClientOptions;
     datasets: LoggingDatasets;
     env: Env;
     minLevel?: LogLevel;
     sampleRate?: number;
     service: string;
+    transport?: Transport;
 }
 
 // @public

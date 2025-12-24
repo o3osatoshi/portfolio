@@ -17,7 +17,8 @@ export type Attributes = Record<string, JsonValue | undefined>;
  * Shared logging configuration for all runtimes.
  *
  * @remarks
- * The `client` field maps to Axiom SDK options and requires an API token.
+ * Either `client` or `transport` must be provided. When both are present,
+ * runtime helpers use `transport` and ignore the client settings.
  *
  * @public
  */
@@ -26,9 +27,11 @@ export interface BaseLoggingOptions {
    * Axiom client options used to create transports.
    *
    * @remarks
+   * Required when `transport` is not provided.
    * Based on {@link ClientOptions} from `@axiomhq/js`.
+   * The Axiom API token is required.
    */
-  client: ClientOptions;
+  client?: ClientOptions;
   /**
    * Target datasets for logs and metrics.
    */
@@ -53,6 +56,14 @@ export interface BaseLoggingOptions {
    * Logical service name.
    */
   service: string;
+  /**
+   * Optional transport override used instead of the Axiom client.
+   *
+   * @remarks
+   * When provided, `client` is optional and the runtime helpers will use this
+   * transport directly.
+   */
+  transport?: Transport;
 }
 
 /**
@@ -270,6 +281,7 @@ export interface RuntimeLoggingOptions extends BaseLoggingOptions {
    *
    * @remarks
    * Edge/Browser helpers default this to `true` when omitted.
+   * Node helpers require an explicit `true` value.
    */
   flushOnEnd?: boolean;
   /**
@@ -278,6 +290,7 @@ export interface RuntimeLoggingOptions extends BaseLoggingOptions {
    * @remarks
    * Overrides `client.onError` when provided.
    * When omitted, the Axiom transport falls back to `console.error`.
+   * Ignored when a custom `transport` is provided.
    */
   onError?: (error: Error) => void;
 }

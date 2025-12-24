@@ -10,7 +10,7 @@ const h = vi.hoisted(() => {
   return { createAxiomTransport, emit, flush, transport };
 });
 
-vi.mock("./core/axiom", () => ({
+vi.mock("./axiom", () => ({
   createAxiomTransport: h.createAxiomTransport,
 }));
 
@@ -30,6 +30,18 @@ describe("node logging helpers", () => {
 
     expect(h.emit).not.toHaveBeenCalled();
     expect(h.createAxiomTransport).not.toHaveBeenCalled();
+  });
+
+  it("throws when initializing without client or transport", async () => {
+    const { initNodeLogger } = await import("./node");
+
+    expect(() =>
+      initNodeLogger({
+        datasets: { logs: "logs", metrics: "metrics" },
+        env: "production",
+        service: "svc",
+      }),
+    ).toThrow("client or transport is required to initialize logging");
   });
 
   it("initializes Axiom transport in batch mode and shuts down", async () => {
@@ -59,6 +71,58 @@ describe("node logging helpers", () => {
     await shutdownNodeLogger();
 
     expect(h.flush).toHaveBeenCalledTimes(1);
+  });
+
+  it("uses a provided transport without creating Axiom transport", async () => {
+    const { createNodeLogger, initNodeLogger, shutdownNodeLogger } =
+      await import("./node");
+
+    const customTransport = {
+      emit: vi.fn(),
+      flush: vi.fn().mockResolvedValue(undefined),
+    };
+
+    initNodeLogger({
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      flushOnExit: false,
+      service: "svc",
+      transport: customTransport,
+    });
+
+    const logger = createNodeLogger();
+    logger.info("custom_transport");
+
+    expect(customTransport.emit).toHaveBeenCalledTimes(1);
+    expect(h.createAxiomTransport).not.toHaveBeenCalled();
+
+    await shutdownNodeLogger();
+
+    expect(customTransport.flush).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not flush request loggers by default", async () => {
+    const { initNodeLogger, shutdownNodeLogger, withRequestLogger } =
+      await import("./node");
+
+    initNodeLogger({
+      client: { token: "token" },
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      flushOnExit: false,
+      service: "svc",
+    });
+
+    await withRequestLogger(
+      { httpMethod: "GET", httpRoute: "/healthz" },
+      (request) => {
+        request.logger.info("request_started");
+      },
+    );
+
+    expect(h.flush).not.toHaveBeenCalled();
+
+    await shutdownNodeLogger();
   });
 
   it("binds request context and flushes on completion", async () => {

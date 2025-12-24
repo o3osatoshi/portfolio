@@ -10,7 +10,7 @@ const h = vi.hoisted(() => {
   return { createAxiomTransport, emit, flush, transport };
 });
 
-vi.mock("./core/axiom", () => ({
+vi.mock("./axiom", () => ({
   createAxiomTransport: h.createAxiomTransport,
 }));
 
@@ -30,6 +30,18 @@ describe("edge logging helpers", () => {
 
     expect(h.emit).not.toHaveBeenCalled();
     expect(h.createAxiomTransport).not.toHaveBeenCalled();
+  });
+
+  it("throws when initializing without client or transport", async () => {
+    const { initEdgeLogger } = await import("./edge");
+
+    expect(() =>
+      initEdgeLogger({
+        datasets: { logs: "logs", metrics: "metrics" },
+        env: "production",
+        service: "svc",
+      }),
+    ).toThrow("client or transport is required to initialize logging");
   });
 
   it("initializes immediate transport and logs request context", async () => {
@@ -111,5 +123,38 @@ describe("edge logging helpers", () => {
     expect(h.flush).toHaveBeenCalledTimes(1);
 
     await shutdownEdgeLogger();
+  });
+
+  it("uses a custom transport and skips flush when disabled", async () => {
+    const customTransport = {
+      emit: vi.fn(),
+      flush: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const { initEdgeLogger, shutdownEdgeLogger, withRequestLogger } =
+      await import("./edge");
+
+    initEdgeLogger({
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      flushOnEnd: false,
+      service: "svc",
+      transport: customTransport,
+    });
+
+    await withRequestLogger(
+      { httpMethod: "GET", httpRoute: "/edge" },
+      (request) => {
+        request.logger.info("edge_custom");
+      },
+    );
+
+    expect(customTransport.emit).toHaveBeenCalledTimes(1);
+    expect(customTransport.flush).not.toHaveBeenCalled();
+    expect(h.createAxiomTransport).not.toHaveBeenCalled();
+
+    await shutdownEdgeLogger();
+
+    expect(customTransport.flush).toHaveBeenCalledTimes(1);
   });
 });

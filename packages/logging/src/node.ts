@@ -1,6 +1,7 @@
 /**
  * @packageDocumentation
- * Node.js logging helpers for sending structured logs and metrics to Axiom.
+ * Node.js logging helpers for sending structured logs and metrics via Axiom
+ * or a custom transport.
  *
  * @remarks
  * Import from `@o3osatoshi/logging/node`.
@@ -8,7 +9,7 @@
 
 import { AsyncLocalStorage } from "node:async_hooks";
 
-import { createAxiomTransport } from "./core/axiom";
+import { createAxiomTransport } from "./axiom";
 import { createLogger } from "./core/logger";
 import { createNoopLogger } from "./core/noop";
 import { createTraceContext } from "./core/trace";
@@ -61,23 +62,20 @@ export function getActiveRequestLogger(): RequestLogger | undefined {
 }
 
 /**
- * Initialize the Node.js logger with Axiom transport.
+ * Initialize the Node.js logger with a custom transport or Axiom transport.
  *
  * @remarks
  * This function is idempotent; subsequent calls are ignored.
+ *
+ * @throws
+ * Throws when neither `client` nor `transport` is provided.
  *
  * @public
  */
 export function initNodeLogger(options: NodeLoggingOptions): void {
   if (nodeState) return;
 
-  const { onError: clientOnError, ...clientOptions } = options.client;
-  const onError = options.onError ?? clientOnError;
-  const transport = createAxiomTransport({
-    ...clientOptions,
-    mode: "batch",
-    ...(onError ? { onError } : {}),
-  });
+  const transport = resolveTransport(options);
 
   const attributes: Attributes = {
     "service.name": options.service,
@@ -122,6 +120,7 @@ export async function shutdownNodeLogger(): Promise<void> {
  *
  * @remarks
  * When `flushOnEnd` is enabled, the logger is flushed after the handler settles.
+ * Node helpers do not enable this by default.
  *
  * @public
  */
@@ -212,4 +211,22 @@ function registerProcessHooks(): void {
   process.on("beforeExit", handler);
   process.on("SIGTERM", handler);
   process.on("SIGINT", handler);
+}
+
+function resolveTransport(options: NodeLoggingOptions): Transport {
+  if (options.transport) {
+    return options.transport;
+  }
+
+  if (!options.client) {
+    throw new Error("client or transport is required to initialize logging");
+  }
+
+  const { onError: clientOnError, ...clientOptions } = options.client;
+  const onError = options.onError ?? clientOnError;
+  return createAxiomTransport({
+    ...clientOptions,
+    mode: "batch",
+    ...(onError ? { onError } : {}),
+  });
 }

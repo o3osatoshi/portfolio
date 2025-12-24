@@ -1,12 +1,13 @@
 /**
  * @packageDocumentation
- * Edge runtime logging helpers for sending structured logs and metrics to Axiom.
+ * Edge runtime logging helpers for sending structured logs and metrics via
+ * Axiom or a custom transport.
  *
  * @remarks
  * Import from `@o3osatoshi/logging/edge`.
  */
 
-import { createAxiomTransport } from "./core/axiom";
+import { createAxiomTransport } from "./axiom";
 import { createLogger } from "./core/logger";
 import { createNoopLogger } from "./core/noop";
 import { createTraceContext } from "./core/trace";
@@ -44,23 +45,20 @@ export function createEdgeLogger(): Logger {
 }
 
 /**
- * Initialize the Edge logger with Axiom transport.
+ * Initialize the Edge logger with a custom transport or Axiom transport.
  *
  * @remarks
  * This function is idempotent; subsequent calls are ignored.
+ *
+ * @throws
+ * Throws when neither `client` nor `transport` is provided.
  *
  * @public
  */
 export function initEdgeLogger(options: RuntimeLoggingOptions): void {
   if (edgeState) return;
 
-  const { onError: clientOnError, ...clientOptions } = options.client;
-  const onError = options.onError ?? clientOnError;
-  const transport = createAxiomTransport({
-    ...clientOptions,
-    mode: "immediate",
-    ...(onError ? { onError } : {}),
-  });
+  const transport = resolveTransport(options);
 
   const attributes: Attributes = {
     "service.name": options.service,
@@ -101,6 +99,7 @@ export async function shutdownEdgeLogger(): Promise<void> {
  *
  * @remarks
  * Flushes the request logger by default after the handler settles.
+ * Disable by setting `flushOnEnd: false`.
  *
  * @public
  */
@@ -176,4 +175,22 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
   }
 
   return requestLogger;
+}
+
+function resolveTransport(options: RuntimeLoggingOptions): Transport {
+  if (options.transport) {
+    return options.transport;
+  }
+
+  if (!options.client) {
+    throw new Error("client or transport is required to initialize logging");
+  }
+
+  const { onError: clientOnError, ...clientOptions } = options.client;
+  const onError = options.onError ?? clientOnError;
+  return createAxiomTransport({
+    ...clientOptions,
+    mode: "immediate",
+    ...(onError ? { onError } : {}),
+  });
 }

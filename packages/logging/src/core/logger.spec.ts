@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { LogEvent, Transport } from "../types";
+import type { Attributes, LogEvent, Transport } from "../types";
 import { createLogger } from "./logger";
 
 describe("createLogger", () => {
@@ -146,5 +146,44 @@ describe("createLogger", () => {
     expect(event["exception.cause"]).toEqual(
       expect.objectContaining({ name: "Error", message: "timeout" }),
     );
+  });
+
+  it("normalizes attribute values and omits undefined", () => {
+    const calls: Array<{ dataset: string; event: LogEvent }> = [];
+    const transport: Transport = {
+      emit: (dataset, event) => {
+        calls.push({ dataset, event: event as LogEvent });
+      },
+    };
+
+    const timestamp = new Date("2024-01-01T00:00:00.000Z");
+
+    const attributes = {
+      "service.name": "svc",
+      array: [1, undefined, "x"],
+      big: 42n,
+      date: timestamp,
+      empty: undefined,
+      nested: { inner: { value: 1 } },
+      object: { foo: "bar", skip: undefined },
+    } as unknown as Attributes;
+
+    const logger = createLogger({
+      attributes,
+      datasets: { logs: "logs", metrics: "metrics" },
+      transport,
+    });
+
+    logger.info("normalized", { extra: undefined, ok: true } as Attributes);
+
+    const event = calls[0]?.event as LogEvent;
+    expect(event["big"]).toBe("42");
+    expect(event["date"]).toBe(timestamp.toISOString());
+    expect(event["array"]).toEqual([1, "x"]);
+    expect(event["object"]).toEqual({ foo: "bar" });
+    expect(event["nested"]).toEqual({ inner: { value: 1 } });
+    expect(event["ok"]).toBe(true);
+    expect("empty" in event).toBe(false);
+    expect("extra" in event).toBe(false);
   });
 });

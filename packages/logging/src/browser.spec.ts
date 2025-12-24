@@ -10,7 +10,7 @@ const h = vi.hoisted(() => {
   return { createAxiomTransport, emit, flush, transport };
 });
 
-vi.mock("./core/axiom", () => ({
+vi.mock("./axiom", () => ({
   createAxiomTransport: h.createAxiomTransport,
 }));
 
@@ -59,6 +59,18 @@ describe("browser logging helpers", () => {
 
     expect(h.emit).not.toHaveBeenCalled();
     expect(h.createAxiomTransport).not.toHaveBeenCalled();
+  });
+
+  it("throws when initializing without client or transport", async () => {
+    const { initBrowserLogger } = await import("./browser");
+
+    expect(() =>
+      initBrowserLogger({
+        datasets: { logs: "logs", metrics: "metrics" },
+        env: "production",
+        service: "web",
+      }),
+    ).toThrow("client or transport is required to initialize logging");
   });
 
   it("registers flush handlers and emits events", async () => {
@@ -124,5 +136,42 @@ describe("browser logging helpers", () => {
     await shutdownBrowserLogger();
 
     expect(h.flush).toHaveBeenCalledTimes(3);
+  });
+
+  it("uses a custom transport and skips flush handlers when disabled", async () => {
+    globalTarget.addEventListener = vi.fn();
+    globalTarget.document = {
+      addEventListener: vi.fn(),
+      visibilityState: "visible",
+    };
+
+    const customTransport = {
+      emit: vi.fn(),
+      flush: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const { createBrowserLogger, initBrowserLogger, shutdownBrowserLogger } =
+      await import("./browser");
+
+    initBrowserLogger({
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      flushOnEnd: false,
+      service: "web",
+      transport: customTransport,
+    });
+
+    const logger = createBrowserLogger();
+    logger.info("custom_transport");
+
+    expect(customTransport.emit).toHaveBeenCalledTimes(1);
+    expect(customTransport.flush).not.toHaveBeenCalled();
+    expect(h.createAxiomTransport).not.toHaveBeenCalled();
+    expect(globalTarget.addEventListener).not.toHaveBeenCalled();
+    expect(globalTarget.document?.addEventListener).not.toHaveBeenCalled();
+
+    await shutdownBrowserLogger();
+
+    expect(customTransport.flush).toHaveBeenCalledTimes(1);
   });
 });
