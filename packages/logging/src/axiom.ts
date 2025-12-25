@@ -13,3 +13,4 @@ export type {
   AxiomClientOptions,
   ClientMode,
 } from "./core/axiom";
+export type { ClientOptions } from "@axiomhq/js";

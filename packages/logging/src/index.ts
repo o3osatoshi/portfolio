@@ -35,3 +35,4 @@ export {
 } from "./core/trace";
 export type { TraceContext } from "./core/trace";
 export * from "./types";
+export type { ClientOptions } from "@axiomhq/js";

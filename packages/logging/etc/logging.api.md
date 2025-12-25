@@ -35,6 +35,8 @@ export interface BaseLoggingOptions {
 // @public
 export type ClientMode = "batch" | "immediate";
 
+export { ClientOptions }
+
 // @public
 export function createAxiomClient(options: AxiomClientOptions): AxiomClient;
 
