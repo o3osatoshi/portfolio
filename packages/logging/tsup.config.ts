@@ -9,5 +9,6 @@ export default await publicDualBundlePreset({
     nextjs: "src/nextjs.ts",
     "nextjs-client": "src/nextjs-client.ts",
     node: "src/node.ts",
+    proxy: "src/proxy.ts",
   },
 });

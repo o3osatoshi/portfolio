@@ -13,6 +13,7 @@ import { createAxiomTransport } from "./axiom";
 import { createLogger } from "./core/logger";
 import { createNoopLogger } from "./core/noop";
 import { createTraceContext } from "./core/trace";
+import { createProxyHandler, type ProxyHandlerOptions } from "./proxy";
 import type {
   Attributes,
   Logger,
@@ -47,6 +48,34 @@ export function createNodeLogger(): Logger {
     return createNoopLogger();
   }
   return nodeState.logger;
+}
+
+/**
+ * Create a proxy handler that emits events using the initialized Node logger.
+ *
+ * @remarks
+ * Call {@link initNodeLogger} before creating the handler.
+ * When `allowDatasets` is omitted, the configured datasets are allowed.
+ *
+ * @public
+ */
+export function createNodeProxyHandler(
+  options: Omit<ProxyHandlerOptions, "transport"> = {},
+): ReturnType<typeof createProxyHandler> {
+  if (!nodeState) {
+    throw new Error(
+      "initNodeLogger must be called before createNodeProxyHandler",
+    );
+  }
+
+  const allowDatasets =
+    options.allowDatasets ?? Object.values(nodeState.options.datasets);
+
+  return createProxyHandler({
+    ...options,
+    allowDatasets,
+    transport: nodeState.transport,
+  });
 }
 
 /**

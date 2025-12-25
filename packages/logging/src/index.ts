@@ -18,6 +18,9 @@
  * Next.js helpers live in:
  * - `@o3osatoshi/logging/nextjs`
  * - `@o3osatoshi/logging/nextjs/client`
+ *
+ * Proxy helpers live in:
+ * - `@o3osatoshi/logging/proxy`
  */
 
 export { createAxiomClient, createAxiomTransport } from "./axiom";

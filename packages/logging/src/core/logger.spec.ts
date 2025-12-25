@@ -58,6 +58,29 @@ describe("createLogger", () => {
     expect(calls[0]?.event["metric.kind"]).toBe("histogram");
   });
 
+  it("emits event records to the logs dataset", () => {
+    const calls: Array<{ dataset: string; event: LogEvent }> = [];
+    const transport: Transport = {
+      emit: (dataset, event) => {
+        calls.push({ dataset, event: event as LogEvent });
+      },
+    };
+
+    const logger = createLogger({
+      attributes: { "service.name": "svc" },
+      datasets: { logs: "logs", metrics: "metrics" },
+      transport,
+    });
+
+    logger.event("user_signup", { plan: "pro" });
+
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.dataset).toBe("logs");
+    expect(calls[0]?.event["event.type"]).toBe("event");
+    expect(calls[0]?.event.message).toBe("user_signup");
+    expect(calls[0]?.event["plan"]).toBe("pro");
+  });
+
   it("respects minLevel filtering", () => {
     const calls: Array<{ dataset: string; event: LogEvent }> = [];
     const transport: Transport = {

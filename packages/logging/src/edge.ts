@@ -11,6 +11,7 @@ import { createAxiomTransport } from "./axiom";
 import { createLogger } from "./core/logger";
 import { createNoopLogger } from "./core/noop";
 import { createTraceContext } from "./core/trace";
+import { createProxyHandler, type ProxyHandlerOptions } from "./proxy";
 import type {
   Attributes,
   Logger,
@@ -42,6 +43,34 @@ export function createEdgeLogger(): Logger {
     return createNoopLogger();
   }
   return edgeState.logger;
+}
+
+/**
+ * Create a proxy handler that emits events using the initialized Edge logger.
+ *
+ * @remarks
+ * Call {@link initEdgeLogger} before creating the handler.
+ * When `allowDatasets` is omitted, the configured datasets are allowed.
+ *
+ * @public
+ */
+export function createEdgeProxyHandler(
+  options: Omit<ProxyHandlerOptions, "transport"> = {},
+): ReturnType<typeof createProxyHandler> {
+  if (!edgeState) {
+    throw new Error(
+      "initEdgeLogger must be called before createEdgeProxyHandler",
+    );
+  }
+
+  const allowDatasets =
+    options.allowDatasets ?? Object.values(edgeState.options.datasets);
+
+  return createProxyHandler({
+    ...options,
+    allowDatasets,
+    transport: edgeState.transport,
+  });
 }
 
 /**

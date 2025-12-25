@@ -32,6 +32,14 @@ describe("edge logging helpers", () => {
     expect(h.createAxiomTransport).not.toHaveBeenCalled();
   });
 
+  it("throws when creating a proxy handler before initialization", async () => {
+    const { createEdgeProxyHandler } = await import("./edge");
+
+    expect(() => createEdgeProxyHandler()).toThrow(
+      "initEdgeLogger must be called before createEdgeProxyHandler",
+    );
+  });
+
   it("throws when initializing without client or transport", async () => {
     const { initEdgeLogger } = await import("./edge");
 
@@ -156,5 +164,37 @@ describe("edge logging helpers", () => {
     await shutdownEdgeLogger();
 
     expect(customTransport.flush).toHaveBeenCalledTimes(1);
+  });
+
+  it("creates a proxy handler with the active edge transport", async () => {
+    const customTransport = {
+      emit: vi.fn(),
+      flush: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const { createEdgeProxyHandler, initEdgeLogger, shutdownEdgeLogger } =
+      await import("./edge");
+
+    initEdgeLogger({
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      service: "svc",
+      transport: customTransport,
+    });
+
+    const handler = createEdgeProxyHandler();
+    const response = await handler(
+      new Request("http://example.test", {
+        body: JSON.stringify({
+          events: [{ dataset: "logs", event: { timestamp: "now" } }],
+        }),
+        method: "POST",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(customTransport.emit).toHaveBeenCalledTimes(1);
+
+    await shutdownEdgeLogger();
   });
 });

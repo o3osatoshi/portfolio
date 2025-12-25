@@ -63,6 +63,12 @@
       "import": "./dist/nextjs-client.js",
       "require": "./dist/nextjs-client.cjs",
       "default": "./dist/nextjs-client.js"
+    },
+    "./proxy": {
+      "types": "./dist/proxy.d.ts",
+      "import": "./dist/proxy.js",
+      "require": "./dist/proxy.cjs",
+      "default": "./dist/proxy.js"
     }
   },
   "types": "./dist/index.d.ts",

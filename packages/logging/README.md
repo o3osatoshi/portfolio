@@ -119,6 +119,42 @@ const log = createBrowserLogger();
 log.event("page_view", { path: window.location.pathname });
 ```
 
+## Proxy transport (`@o3osatoshi/logging/proxy`)
+
+Use the proxy transport when you want to send client logs to your server before
+ingesting them into Axiom (for example, to avoid exposing tokens).
+
+### Client-side (browser)
+
+```ts
+import { initBrowserLogger } from "@o3osatoshi/logging/browser";
+import { createProxyTransport } from "@o3osatoshi/logging/proxy";
+
+initBrowserLogger({
+  transport: createProxyTransport({
+    url: "/api/logging",
+    flushIntervalMs: 1000,
+  }),
+  datasets: { logs: "logs", metrics: "metrics" },
+  env: "production",
+  service: "portfolio-web",
+});
+```
+
+### Server-side (Edge/Node)
+
+```ts
+import { createEdgeProxyHandler } from "@o3osatoshi/logging/edge";
+
+export const POST = createEdgeProxyHandler({
+  allowDatasets: (process.env.LOGGING_ALLOWED_DATASETS ?? "logs,metrics").split(
+    ",",
+  ),
+});
+```
+
+Node runtimes can use `createNodeProxyHandler` from `@o3osatoshi/logging/node`.
+
 ## Custom transport
 
 Runtime helpers accept a custom `transport` if you want to swap away from Axiom:

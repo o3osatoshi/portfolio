@@ -32,6 +32,14 @@ describe("node logging helpers", () => {
     expect(h.createAxiomTransport).not.toHaveBeenCalled();
   });
 
+  it("throws when creating a proxy handler before initialization", async () => {
+    const { createNodeProxyHandler } = await import("./node");
+
+    expect(() => createNodeProxyHandler()).toThrow(
+      "initNodeLogger must be called before createNodeProxyHandler",
+    );
+  });
+
   it("throws when initializing without client or transport", async () => {
     const { initNodeLogger } = await import("./node");
 
@@ -187,6 +195,39 @@ describe("node logging helpers", () => {
 
     expect(h.flush).toHaveBeenCalledTimes(1);
     expect(getActiveRequestLogger()).toBeUndefined();
+
+    await shutdownNodeLogger();
+  });
+
+  it("creates a proxy handler with the active node transport", async () => {
+    const customTransport = {
+      emit: vi.fn(),
+      flush: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const { createNodeProxyHandler, initNodeLogger, shutdownNodeLogger } =
+      await import("./node");
+
+    initNodeLogger({
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      flushOnExit: false,
+      service: "svc",
+      transport: customTransport,
+    });
+
+    const handler = createNodeProxyHandler();
+    const response = await handler(
+      new Request("http://example.test", {
+        body: JSON.stringify({
+          events: [{ dataset: "logs", event: { timestamp: "now" } }],
+        }),
+        method: "POST",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(customTransport.emit).toHaveBeenCalledTimes(1);
 
     await shutdownNodeLogger();
   });
