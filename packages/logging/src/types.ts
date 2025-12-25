@@ -28,7 +28,7 @@ export interface BaseLoggingOptions {
    *
    * @remarks
    * Required when `transport` is not provided.
-   * Based on {@link ClientOptions} from `@axiomhq/js`.
+   * Based on `ClientOptions` from `@axiomhq/js`.
    * The Axiom API token is required.
    */
   client?: ClientOptions;
