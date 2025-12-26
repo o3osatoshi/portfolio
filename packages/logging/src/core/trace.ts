@@ -28,7 +28,7 @@ const SPAN_ID_BYTES = 8;
 /**
  * Create a trace context from explicit values or a `traceparent` header.
  *
- * @param input - Optional identifiers and traceparent header.
+ * @param keepsake - Optional identifiers and traceparent header.
  *
  * @remarks
  * Invalid identifiers are ignored and regenerated.
@@ -38,19 +38,19 @@ const SPAN_ID_BYTES = 8;
  *
  * @public
  */
-export function createTraceContext(input?: {
+export function createTraceContext(keepsake?: {
   spanId?: string | undefined;
   traceId?: string | undefined;
   traceparent?: string | undefined;
 }): TraceContext {
-  const parsed = parseTraceparent(input?.traceparent);
+  const parsed = parseTraceparent(keepsake?.traceparent);
 
-  const traceId = isValidHex(input?.traceId, 32)
-    ? input?.traceId
+  const traceId = isValidHex(keepsake?.traceId, 32)
+    ? keepsake?.traceId
     : (parsed?.traceId ?? randomHex(TRACE_ID_BYTES));
 
-  const spanId = isValidHex(input?.spanId, 16)
-    ? input?.spanId
+  const spanId = isValidHex(keepsake?.spanId, 16)
+    ? keepsake?.spanId
     : randomHex(SPAN_ID_BYTES);
 
   const context: TraceContext = {

@@ -56,7 +56,7 @@ export interface CreateLoggerOptions {
 }
 
 // @public
-export function createTraceContext(input?: {
+export function createTraceContext(keepsake?: {
     spanId?: string | undefined;
     traceId?: string | undefined;
     traceparent?: string | undefined;
