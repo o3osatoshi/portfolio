@@ -135,7 +135,7 @@ export interface ProxyTransportOptions {
  * @public
  */
 export function createProxyHandler(options: ProxyHandlerOptions) {
-  const allowSet = options.allowDatasets
+  const allowDatasets = options.allowDatasets
     ? new Set(options.allowDatasets)
     : undefined;
   const maxEvents = Math.max(1, options.maxEvents ?? 500);
@@ -174,7 +174,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
         return json({ message: "invalid_dataset", status: "error" }, 400);
       }
 
-      if (allowSet && !allowSet.has(dataset)) {
+      if (allowDatasets && !allowDatasets.has(dataset)) {
         return json({ message: "dataset_not_allowed", status: "error" }, 403);
       }
 
@@ -342,6 +342,7 @@ function json(data: Record<string, unknown>, status: number): Response {
   });
 }
 
+// TODO: Extract common logic
 function toError(error: unknown): Error {
   if (error instanceof Error) return error;
   return new Error(String(error));
