@@ -91,6 +91,12 @@ Note: Some gateways use non‑standard 499 (Client Closed Request). The default 
   - Wraps a `ZodError` (or issues array) into a structured `Error` via `newError`.
 - `parseWith(schema, ctx)` / `parseAsyncWith(schema, ctx)`
   - Create functions returning `neverthrow` `Result` / `ResultAsync` from a Zod schema. Errors are normalized via `newZodError`.
+- `createEnv(schema, opts?)`
+  - Validate environment variables with Zod and return a fully typed configuration object. Accepts an optional `name` label (used in error messages) and `source` map (useful for tests or SSR).
+- `Env`
+  - String union type for canonical deployment environments (`"development" | "local" | "production" | "staging"`), shared across packages (for example, telemetry configuration) to avoid ad‑hoc string literals.
+- `EnvOf<T>`, `EnvSchema`
+  - Helper types for `createEnv`. `EnvSchema` models the map of variable names to Zod validators, and `EnvOf<T>` infers the resulting runtime shape from that schema.
 - `@o3osatoshi/toolkit/next`
   - Helpers for Next.js Server Actions. See below.
 
