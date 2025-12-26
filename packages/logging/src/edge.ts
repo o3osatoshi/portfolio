@@ -97,11 +97,9 @@ export function initEdgeLogger(options: RuntimeLoggerOptions): void {
   const logger = createLogger({
     attributes,
     datasets: options.datasets,
+    minLevel: options.minLevel,
+    sampleRate: options.sampleRate,
     transport,
-    ...(options.minLevel !== undefined ? { minLevel: options.minLevel } : {}),
-    ...(options.sampleRate !== undefined
-      ? { sampleRate: options.sampleRate }
-      : {}),
   });
 
   edgeState = {
@@ -170,21 +168,13 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
     attributes["parent_span_id"] = traceContext.parentSpanId;
   }
 
-  const requestSampleRate = resolveRequestSampleRate(
-    edgeState?.options.sampleRate,
-  );
-
   const logger = edgeState
     ? createLogger({
         attributes,
         datasets: edgeState.options.datasets,
+        minLevel: edgeState.options.minLevel,
+        sampleRate: resolveRequestSampleRate(edgeState?.options.sampleRate),
         transport: edgeState.transport,
-        ...(edgeState.options.minLevel !== undefined
-          ? { minLevel: edgeState.options.minLevel }
-          : {}),
-        ...(requestSampleRate !== undefined
-          ? { sampleRate: requestSampleRate }
-          : {}),
       })
     : createNoopLogger();
 
@@ -228,11 +218,9 @@ function resolveTransport(options: RuntimeLoggerOptions): Transport {
     throw new Error("client or transport is required to initialize logging");
   }
 
-  const { onError: clientOnError, ...clientOptions } = options.client;
-  const onError = options.onError ?? clientOnError;
   return createAxiomTransport({
-    ...clientOptions,
+    ...options.client,
     mode: "immediate",
-    ...(onError ? { onError } : {}),
+    ...(options.onError ? { onError: options.onError } : {}),
   });
 }

@@ -50,8 +50,8 @@ export function createLogger(options: CreateLoggerOptions): Logger;
 export interface CreateLoggerOptions {
     attributes?: Attributes;
     datasets: LoggingDatasets;
-    minLevel?: LogLevel;
-    sampleRate?: number;
+    minLevel?: LogLevel | undefined;
+    sampleRate?: number | undefined;
     transport: Transport;
 }
 

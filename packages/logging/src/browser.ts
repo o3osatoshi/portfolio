@@ -67,11 +67,9 @@ export function initBrowserLogger(options: RuntimeLoggerOptions): void {
   const logger = createLogger({
     attributes,
     datasets: options.datasets,
+    minLevel: options.minLevel,
+    sampleRate: options.sampleRate,
     transport,
-    ...(options.minLevel !== undefined ? { minLevel: options.minLevel } : {}),
-    ...(options.sampleRate !== undefined
-      ? { sampleRate: options.sampleRate }
-      : {}),
   });
 
   browserState = {

@@ -114,11 +114,9 @@ export function initNodeLogger(options: NodeLoggingOptions): void {
   const logger = createLogger({
     attributes,
     datasets: options.datasets,
+    minLevel: options.minLevel,
+    sampleRate: options.sampleRate,
     transport,
-    ...(options.minLevel !== undefined ? { minLevel: options.minLevel } : {}),
-    ...(options.sampleRate !== undefined
-      ? { sampleRate: options.sampleRate }
-      : {}),
   });
 
   nodeState = {
@@ -193,21 +191,13 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
     attributes["parent_span_id"] = traceContext.parentSpanId;
   }
 
-  const requestSampleRate = resolveRequestSampleRate(
-    nodeState?.options.sampleRate,
-  );
-
   const logger = nodeState
     ? createLogger({
-        attributes: attributes,
+        attributes,
         datasets: nodeState.options.datasets,
+        minLevel: nodeState.options.minLevel,
+        sampleRate: resolveRequestSampleRate(nodeState?.options.sampleRate),
         transport: nodeState.transport,
-        ...(nodeState.options.minLevel !== undefined
-          ? { minLevel: nodeState.options.minLevel }
-          : {}),
-        ...(requestSampleRate !== undefined
-          ? { sampleRate: requestSampleRate }
-          : {}),
       })
     : createNoopLogger();
 
@@ -264,11 +254,9 @@ function resolveTransport(options: NodeLoggingOptions): Transport {
     throw new Error("client or transport is required to initialize logging");
   }
 
-  const { onError: clientOnError, ...clientOptions } = options.client;
-  const onError = options.onError ?? clientOnError;
   return createAxiomTransport({
-    ...clientOptions,
+    ...options.client,
     mode: "batch",
-    ...(onError ? { onError } : {}),
+    ...(options.onError ? { onError: options.onError } : {}),
   });
 }

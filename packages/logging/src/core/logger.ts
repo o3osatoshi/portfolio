@@ -41,13 +41,13 @@ export interface CreateLoggerOptions {
    *
    * @defaultValue undefined (all levels are emitted)
    */
-  minLevel?: LogLevel;
+  minLevel?: LogLevel | undefined;
   /**
    * Optional sampling rate (0..1) applied to logs/events.
    *
    * @defaultValue undefined (no sampling)
    */
-  sampleRate?: number;
+  sampleRate?: number | undefined;
   /**
    * Transport responsible for emitting events.
    */
