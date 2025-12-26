@@ -255,7 +255,7 @@ export function createProxyTransport(
     }
 
     if (buffer.length > maxBufferSize) {
-      buffer.splice(0, buffer.length - maxBufferSize);
+      buffer = buffer.slice(-maxBufferSize);
       onError(new Error("proxy transport buffer overflow"));
     }
 
