@@ -22,7 +22,7 @@ export interface AxiomClientOptions extends ClientOptions {
 }
 
 // @public
-export interface BaseLoggingOptions {
+export interface BaseLoggerOptions {
     client?: ClientOptions;
     datasets: LoggingDatasets;
     env: Env;
@@ -100,7 +100,7 @@ export interface MetricOptions {
 }
 
 // @public
-export interface NodeLoggingOptions extends RuntimeLoggingOptions {
+export interface NodeLoggingOptions extends RuntimeLoggerOptions {
     flushOnExit?: boolean;
 }
 
@@ -136,7 +136,7 @@ export interface RequestLogger {
 }
 
 // @public
-export interface RuntimeLoggingOptions extends BaseLoggingOptions {
+export interface RuntimeLoggerOptions extends BaseLoggerOptions {
     flushOnEnd?: boolean;
     onError?: (error: Error) => void;
 }

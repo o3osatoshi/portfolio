@@ -13,14 +13,14 @@ import { createNoopLogger } from "./core/noop";
 import type {
   Attributes,
   Logger,
-  RuntimeLoggingOptions,
+  RuntimeLoggerOptions,
   Transport,
 } from "./types";
 
 type BrowserState = {
   attributes: Attributes;
   logger: Logger;
-  options: RuntimeLoggingOptions;
+  options: RuntimeLoggerOptions;
   transport: Transport;
 };
 
@@ -54,7 +54,7 @@ export function createBrowserLogger(): Logger {
  *
  * @public
  */
-export function initBrowserLogger(options: RuntimeLoggingOptions): void {
+export function initBrowserLogger(options: RuntimeLoggerOptions): void {
   if (browserState) return;
 
   const transport = resolveTransport(options);
@@ -123,7 +123,7 @@ function registerBrowserFlush(): void {
   });
 }
 
-function resolveTransport(options: RuntimeLoggingOptions): Transport {
+function resolveTransport(options: RuntimeLoggerOptions): Transport {
   if (options.transport) {
     return options.transport;
   }
@@ -132,11 +132,9 @@ function resolveTransport(options: RuntimeLoggingOptions): Transport {
     throw new Error("client or transport is required to initialize logging");
   }
 
-  const { onError: clientOnError, ...clientOptions } = options.client;
-  const onError = options.onError ?? clientOnError;
   return createAxiomTransport({
-    ...clientOptions,
+    ...options.client,
     mode: "immediate",
-    ...(onError ? { onError } : {}),
+    ...(options.onError ? { onError: options.onError } : {}),
   });
 }

@@ -17,14 +17,14 @@ import type {
   Logger,
   RequestContext,
   RequestLogger,
-  RuntimeLoggingOptions,
+  RuntimeLoggerOptions,
   Transport,
 } from "./types";
 
 type EdgeState = {
   attributes: Attributes;
   logger: Logger;
-  options: RuntimeLoggingOptions;
+  options: RuntimeLoggerOptions;
   transport: Transport;
 };
 
@@ -84,7 +84,7 @@ export function createEdgeProxyHandler(
  *
  * @public
  */
-export function initEdgeLogger(options: RuntimeLoggingOptions): void {
+export function initEdgeLogger(options: RuntimeLoggerOptions): void {
   if (edgeState) return;
 
   const transport = resolveTransport(options);
@@ -219,7 +219,7 @@ function resolveRequestSampleRate(
   return Math.random() <= sampleRate ? 1 : 0;
 }
 
-function resolveTransport(options: RuntimeLoggingOptions): Transport {
+function resolveTransport(options: RuntimeLoggerOptions): Transport {
   if (options.transport) {
     return options.transport;
   }

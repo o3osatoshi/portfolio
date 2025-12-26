@@ -22,7 +22,7 @@ export type Attributes = Record<string, JsonValue | undefined>;
  *
  * @public
  */
-export interface BaseLoggingOptions {
+export interface BaseLoggerOptions {
   /**
    * Axiom client options used to create transports.
    *
@@ -178,7 +178,7 @@ export interface MetricOptions {
  *
  * @public
  */
-export interface NodeLoggingOptions extends RuntimeLoggingOptions {
+export interface NodeLoggingOptions extends RuntimeLoggerOptions {
   /**
    * Flush buffered logs on process exit.
    *
@@ -275,7 +275,7 @@ export interface RequestLogger {
  *
  * @public
  */
-export interface RuntimeLoggingOptions extends BaseLoggingOptions {
+export interface RuntimeLoggerOptions extends BaseLoggerOptions {
   /**
    * Flush after each request or visibility event when enabled.
    *
