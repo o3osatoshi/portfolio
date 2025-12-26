@@ -133,6 +133,58 @@ describe("node logging helpers", () => {
     await shutdownNodeLogger();
   });
 
+  it("samples request loggers once per request", async () => {
+    const events: Array<{ dataset: string; event: LogEvent }> = [];
+    h.emit.mockImplementation((dataset, event) => {
+      events.push({ dataset, event: event as LogEvent });
+    });
+
+    const { initNodeLogger, shutdownNodeLogger, withRequestLogger } =
+      await import("./node");
+
+    initNodeLogger({
+      client: { token: "token" },
+      datasets: { logs: "logs", metrics: "metrics" },
+      env: "production",
+      flushOnExit: false,
+      sampleRate: 0.5,
+      service: "svc",
+    });
+
+    const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0.1);
+
+    await withRequestLogger(
+      { httpMethod: "GET", httpRoute: "/sample" },
+      (request) => {
+        request.logger.info("sampled");
+        request.logger.event("sampled_event");
+        request.logger.metric("sampled_metric", 1);
+      },
+    );
+
+    expect(randomSpy).toHaveBeenCalledTimes(1);
+    expect(events).toHaveLength(3);
+
+    events.length = 0;
+    randomSpy.mockClear();
+    randomSpy.mockReturnValue(0.9);
+
+    await withRequestLogger(
+      { httpMethod: "GET", httpRoute: "/sample" },
+      (request) => {
+        request.logger.info("dropped");
+        request.logger.metric("dropped_metric", 1);
+      },
+    );
+
+    expect(randomSpy).toHaveBeenCalledTimes(1);
+    expect(events).toHaveLength(0);
+
+    randomSpy.mockRestore();
+
+    await shutdownNodeLogger();
+  });
+
   it("binds request context and flushes on completion", async () => {
     const events: Array<{ dataset: string; event: LogEvent }> = [];
     h.emit.mockImplementation((dataset, event) => {

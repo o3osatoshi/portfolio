@@ -170,6 +170,10 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
     attributes["parent_span_id"] = traceContext.parentSpanId;
   }
 
+  const requestSampleRate = resolveRequestSampleRate(
+    edgeState?.options.sampleRate,
+  );
+
   const logger = edgeState
     ? createLogger({
         attributes,
@@ -178,8 +182,8 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
         ...(edgeState.options.minLevel !== undefined
           ? { minLevel: edgeState.options.minLevel }
           : {}),
-        ...(edgeState.options.sampleRate !== undefined
-          ? { sampleRate: edgeState.options.sampleRate }
+        ...(requestSampleRate !== undefined
+          ? { sampleRate: requestSampleRate }
           : {}),
       })
     : createNoopLogger();
@@ -204,6 +208,15 @@ function createRequestLogger(ctx: RequestContext): RequestLogger {
   }
 
   return requestLogger;
+}
+
+function resolveRequestSampleRate(
+  sampleRate: number | undefined,
+): number | undefined {
+  if (sampleRate === undefined) return undefined;
+  if (sampleRate >= 1) return 1;
+  if (sampleRate <= 0) return 0;
+  return Math.random() <= sampleRate ? 1 : 0;
 }
 
 function resolveTransport(options: RuntimeLoggingOptions): Transport {
