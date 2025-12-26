@@ -71,6 +71,7 @@ export function createTraceContext(input?: {
 /**
  * Format a W3C `traceparent` header value.
  *
+ * @param context - Trace identifiers used to construct the header.
  * @param flags - Optional trace flags (defaults to `01`).
  *
  * @throws
