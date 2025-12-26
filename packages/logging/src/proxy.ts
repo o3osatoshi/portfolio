@@ -142,7 +142,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
   const onError = options.onError ?? ((error: Error) => console.error(error));
 
   return async (req: Request): Promise<Response> => {
-    if (req.method && req.method.toUpperCase() !== "POST") {
+    if (req.method.toUpperCase() !== "POST") {
       return json({ message: "method_not_allowed", status: "error" }, 405);
     }
 
