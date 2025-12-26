@@ -197,7 +197,10 @@ function normalizeValue(value: unknown): JsonValue | undefined {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value === "string") return value;
-  if (typeof value === "number") return value;
+  if (typeof value === "number") {
+    // Ensure we never return non-JSON-safe numeric values like NaN or Infinity.
+    return Number.isFinite(value) ? value : String(value);
+  }
   if (typeof value === "boolean") return value;
   if (typeof value === "bigint") return value.toString();
   if (value instanceof Date) return value.toISOString();
