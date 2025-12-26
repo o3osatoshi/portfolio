@@ -65,9 +65,9 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
   const client = createAxiomClient({ ...options, onError });
 
   const emit = (dataset: string, events: LogEvent | LogEvent[]) => {
-    const payload = Array.isArray(events) ? events : [events];
+    const logEvents = Array.isArray(events) ? events : [events];
     try {
-      const result = client.ingest(dataset, payload);
+      const result = client.ingest(dataset, logEvents);
       if (result && typeof result.catch === "function") {
         void result.catch((error) => {
           if (error instanceof Error) {
@@ -77,7 +77,7 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
           }
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         onError(error);
       } else {
