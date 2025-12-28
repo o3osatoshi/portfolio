@@ -201,12 +201,13 @@ describe("proxy handler", () => {
   });
 
   it("rejects missing eventSets payloads", async () => {
+    const onError = vi.fn();
     const transport: Transport = {
       emit: vi.fn(),
       flush: vi.fn().mockResolvedValue(undefined),
     };
 
-    const handler = createProxyHandler({ transport });
+    const handler = createProxyHandler({ onError, transport });
     const request = new Request("http://example.test", {
       body: JSON.stringify({}),
       method: "POST",
@@ -240,12 +241,13 @@ describe("proxy handler", () => {
   });
 
   it("rejects invalid datasets and events", async () => {
+    const onError = vi.fn();
     const transport: Transport = {
       emit: vi.fn(),
       flush: vi.fn().mockResolvedValue(undefined),
     };
 
-    const handler = createProxyHandler({ transport });
+    const handler = createProxyHandler({ onError, transport });
 
     const invalidDataset = await handler(
       new Request("http://example.test", {
