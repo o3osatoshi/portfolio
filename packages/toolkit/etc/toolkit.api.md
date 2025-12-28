@@ -136,6 +136,9 @@ export function isZodError(e: unknown): e is ZodError;
 export type JsonArray = JsonValue[];
 
 // @public
+export const jsonArraySchema: z.ZodType<JsonArray>;
+
+// @public
 export type JsonContainer = JsonArray | JsonObject;
 
 // @public
@@ -144,10 +147,19 @@ export type JsonObject = {
 };
 
 // @public
+export const jsonObjectSchema: z.ZodType<JsonObject>;
+
+// @public
 export type JsonPrimitive = boolean | null | number | string;
 
 // @public
+export const jsonPrimitiveSchema: z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>;
+
+// @public
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
+// @public
+export const jsonValueSchema: z.ZodType<JsonValue>;
 
 // @public
 export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";

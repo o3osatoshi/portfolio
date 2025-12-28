@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 /**
  * Canonical deployment environment label used across this workspace.
  *
@@ -46,6 +48,47 @@ export type JsonPrimitive = boolean | null | number | string;
  * - Nested values are also constrained to {@link JsonValue}.
  */
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
+/**
+ * Zod schema for {@link JsonPrimitive}.
+ *
+ * @public
+ */
+export const jsonPrimitiveSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.null(),
+]);
+
+/**
+ * Zod schema for {@link JsonValue}.
+ *
+ * @remarks
+ * Uses {@link z.lazy} to support recursive object/array nesting.
+ *
+ * @public
+ */
+export const jsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
+  z.union([jsonPrimitiveSchema, jsonObjectSchema, jsonArraySchema]),
+);
+
+/**
+ * Zod schema for {@link JsonObject}.
+ *
+ * @public
+ */
+export const jsonObjectSchema: z.ZodType<JsonObject> = z.record(
+  z.string(),
+  jsonValueSchema,
+);
+
+/**
+ * Zod schema for {@link JsonArray}.
+ *
+ * @public
+ */
+export const jsonArraySchema: z.ZodType<JsonArray> = z.array(jsonValueSchema);
 
 /**
  * Generic object-shaped JSON-compatible record.
