@@ -65,7 +65,7 @@ export const jsonPrimitiveSchema = z.union([
  * Zod schema for {@link JsonValue}.
  *
  * @remarks
- * Uses {@link z.lazy} to support recursive object/array nesting.
+ * Uses `z.lazy` to support recursive object/array nesting.
  *
  * @public
  */
