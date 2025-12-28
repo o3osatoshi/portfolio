@@ -656,6 +656,9 @@ importers:
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
+      zod:
+        specifier: 'catalog:'
+        version: 4.2.0
     devDependencies:
       '@microsoft/api-extractor':
         specifier: 'catalog:'
