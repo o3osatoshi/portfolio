@@ -52,7 +52,6 @@ jobs:
           AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           AXIOM_API_TOKEN: ${{ secrets.AXIOM_API_TOKEN }}
-          AXIOM_OTLP_ENDPOINT: ${{ secrets.AXIOM_OTLP_ENDPOINT }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
           NEXT_PUBLIC_RAINBOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_RAINBOW_PROJECT_ID }}
