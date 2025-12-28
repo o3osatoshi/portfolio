@@ -281,7 +281,9 @@ export interface RequestLogger {
    * Update the authenticated user identifier.
    *
    * @remarks
-   * Subsequent logs include the updated `enduser.id` value.
+   * Subsequent logs include the updated `enduser.id` value. The request logger
+   * holds a shared attributes reference, so calling `setUserId` mutates that
+   * shared state and affects all future logs emitted by the same request logger.
    */
   setUserId: (userId?: null | string) => void;
   /**
