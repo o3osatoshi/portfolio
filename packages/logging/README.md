@@ -109,7 +109,7 @@ await withRequestLogger({ httpMethod: "GET", httpRoute: "/edge/healthz" }, (req)
 import { initBrowserLogger, createBrowserLogger } from "@o3osatoshi/logging/browser";
 
 initBrowserLogger({
-  client: { token: window.ENV.AXIOM_API_TOKEN },
+  client: { token: process.env.NEXT_PUBLIC_AXIOM_TOKEN! },
   datasets: { logs: "logs", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
