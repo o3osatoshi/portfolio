@@ -41,7 +41,7 @@
     "api:report": "api-extractor run --diagnostics",
     "build": "tsup",
     "clean": "rimraf dist",
-    "dev": "tsup --watch",
+    "dev": "tsup --watch --no-clean",
     "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test && NODE_ENV=production pnpm build",
     "test": "vitest run",
     "test:cvrg": "vitest run --coverage",
