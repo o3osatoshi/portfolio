@@ -1,6 +1,20 @@
 import type { ClientOptions } from "@axiomhq/js";
+import { z } from "zod";
 
-import type { Env, JsonValue } from "@o3osatoshi/toolkit";
+import { type Env, jsonValueSchema } from "@o3osatoshi/toolkit";
+
+/**
+ * Zod schema for {@link Attributes}.
+ *
+ * @remarks
+ * Attribute values must be JSON-compatible. Use `undefined` to omit a key.
+ *
+ * @public
+ */
+export const attributesSchema = z.record(
+  z.string(),
+  jsonValueSchema.optional(),
+);
 
 /**
  * Attribute map attached to log and metric events.
@@ -11,7 +25,7 @@ import type { Env, JsonValue } from "@o3osatoshi/toolkit";
  *
  * @public
  */
-export type Attributes = Record<string, JsonValue | undefined>;
+export type Attributes = z.infer<typeof attributesSchema>;
 
 /**
  * Shared logging configuration for all runtimes.
@@ -47,7 +61,7 @@ export interface BaseLoggerOptions {
    */
   minLevel?: LogLevel;
   /**
-   * Optional sampling rate (0..1) applied to log/event emission.
+   * Optional sampling rate (0..1) applied to logs, events, and metrics.
    *
    * @defaultValue undefined (no sampling)
    */
@@ -67,6 +81,36 @@ export interface BaseLoggerOptions {
 }
 
 /**
+ * Zod schema for {@link LogLevel}.
+ *
+ * @public
+ */
+export const logLevelSchema = z.enum(["debug", "error", "info", "warn"]);
+
+/**
+ * Supported log levels.
+ *
+ * @public
+ */
+export type LogLevel = z.infer<typeof logLevelSchema>;
+
+/**
+ * Zod schema for {@link LogEvent}.
+ *
+ * @remarks
+ * The `timestamp` field is required and should be ISO 8601.
+ *
+ * @public
+ */
+export const logEventSchema = z
+  .object({
+    level: logLevelSchema.optional(),
+    message: z.string().optional(),
+    timestamp: z.string(),
+  })
+  .catchall(jsonValueSchema);
+
+/**
  * Event shape emitted by loggers.
  *
  * @remarks
@@ -74,20 +118,7 @@ export interface BaseLoggerOptions {
  *
  * @public
  */
-export interface LogEvent extends Attributes {
-  /**
-   * Optional log level label.
-   */
-  level?: LogLevel;
-  /**
-   * Optional message label.
-   */
-  message?: string;
-  /**
-   * ISO 8601 timestamp.
-   */
-  timestamp: string;
-}
+export type LogEvent = z.infer<typeof logEventSchema>;
 
 /**
  * Structured logging interface used across runtimes.
@@ -149,13 +180,6 @@ export interface LoggingDatasets {
    */
   metrics: string;
 }
-
-/**
- * Supported log levels.
- *
- * @public
- */
-export type LogLevel = "debug" | "error" | "info" | "warn";
 
 /**
  * Options applied to metrics emitted via {@link Logger.metric}.

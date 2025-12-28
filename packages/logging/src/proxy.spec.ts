@@ -37,12 +37,12 @@ describe("proxy transport", () => {
     expect(url).toBe("/api/logging");
 
     const body = JSON.parse((init?.body as string) ?? "{}") as {
-      events: Array<{ dataset: string; event: LogEvent }>;
+      eventSets: Array<{ dataset: string; event: LogEvent }>;
     };
 
-    expect(body.events).toHaveLength(1);
-    expect(body.events[0]?.dataset).toBe("logs");
-    expect(body.events[0]?.event.message).toBe("hello");
+    expect(body.eventSets).toHaveLength(1);
+    expect(body.eventSets[0]?.dataset).toBe("logs");
+    expect(body.eventSets[0]?.event.message).toBe("hello");
   });
 
   it("includes headers and credentials in proxy requests", async () => {
@@ -128,63 +128,43 @@ describe("proxy transport", () => {
 
     const messages = fetchMock.mock.calls.flatMap((call) => {
       const body = JSON.parse((call[1]?.body as string) ?? "{}") as {
-        events: Array<{ event: LogEvent }>;
+        eventSets: Array<{ event: LogEvent }>;
       };
-      return body.events.map((event) => event.event.message);
+      return body.eventSets.map((event) => event.event.message);
     });
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(messages).toEqual(["one", "three"]);
   });
 
-  it("retries failed sends before succeeding", async () => {
+  it("does not retry failed sends automatically", async () => {
     vi.useFakeTimers();
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce({ ok: false, status: 500 } as Response)
-      .mockResolvedValueOnce({ ok: true } as Response);
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+    } as Response);
     const onError = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
 
     const transport = createProxyTransport({
       fetch: fetchMock,
       onError,
-      retryBackoffMs: 50,
-      retryLimit: 2,
-      url: "/api/logging",
-    });
-
-    transport.emit("logs", createEvent("retry"));
-    await transport.flush?.();
-
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-
-    await vi.runAllTimersAsync();
-
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(onError).toHaveBeenCalledTimes(1);
-  });
-
-  it("drops buffered events after retry limit is exceeded", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 500,
-    } as Response);
-    const onError = vi.fn();
-
-    const transport = createProxyTransport({
-      fetch: fetchMock,
-      onError,
-      retryLimit: 0,
       url: "/api/logging",
     });
 
     transport.emit("logs", createEvent("fail"));
     await transport.flush?.();
-    await transport.flush?.();
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(onError).toHaveBeenCalledTimes(1);
+
+    await vi.runAllTimersAsync();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    await transport.flush?.();
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -220,7 +200,7 @@ describe("proxy handler", () => {
     expect(onError).toHaveBeenCalledTimes(1);
   });
 
-  it("rejects missing events payloads", async () => {
+  it("rejects missing eventSets payloads", async () => {
     const transport: Transport = {
       emit: vi.fn(),
       flush: vi.fn().mockResolvedValue(undefined),
@@ -246,7 +226,7 @@ describe("proxy handler", () => {
     const handler = createProxyHandler({ maxEvents: 1, transport });
     const request = new Request("http://example.test", {
       body: JSON.stringify({
-        events: [
+        eventSets: [
           { dataset: "logs", event: createEvent("one") },
           { dataset: "logs", event: createEvent("two") },
         ],
@@ -270,7 +250,7 @@ describe("proxy handler", () => {
     const invalidDataset = await handler(
       new Request("http://example.test", {
         body: JSON.stringify({
-          events: [{ dataset: 1, event: createEvent("bad") }],
+          eventSets: [{ dataset: 1, event: createEvent("bad") }],
         }),
         method: "POST",
       }),
@@ -281,7 +261,7 @@ describe("proxy handler", () => {
     const invalidEvent = await handler(
       new Request("http://example.test", {
         body: JSON.stringify({
-          events: [{ dataset: "logs", event: null }],
+          eventSets: [{ dataset: "logs", event: null }],
         }),
         method: "POST",
       }),
@@ -302,7 +282,7 @@ describe("proxy handler", () => {
 
     const request = new Request("http://example.test", {
       body: JSON.stringify({
-        events: [
+        eventSets: [
           { dataset: "logs", event: createEvent("one") },
           { dataset: "metrics", event: createEvent("two") },
         ],
@@ -328,7 +308,7 @@ describe("proxy handler", () => {
     const response = await handler(
       new Request("http://example.test", {
         body: JSON.stringify({
-          events: [
+          eventSets: [
             { dataset: "logs", event: createEvent("one") },
             { dataset: "logs", event: createEvent("two") },
           ],
@@ -361,7 +341,7 @@ describe("proxy handler", () => {
 
     const request = new Request("http://example.test", {
       body: JSON.stringify({
-        events: [{ dataset: "metrics", event: createEvent("blocked") }],
+        eventSets: [{ dataset: "metrics", event: createEvent("blocked") }],
       }),
       method: "POST",
     });
@@ -384,7 +364,7 @@ describe("proxy handler", () => {
     const response = await handler(
       new Request("http://example.test", {
         body: JSON.stringify({
-          events: [{ dataset: "logs", event: createEvent("oops") }],
+          eventSets: [{ dataset: "logs", event: createEvent("oops") }],
         }),
         method: "POST",
       }),

@@ -7,23 +7,29 @@
  * endpoint before ingesting them into Axiom.
  */
 
-import type { LogEvent, Transport } from "./types";
+import { z } from "zod";
+
+import { type LogEvent, logEventSchema, type Transport } from "./types";
 
 /**
- * A proxy event envelope pairing a dataset with a log event.
+ * Zod schema for {@link EventSet}.
+ *
+ * @remarks
+ * Each event set pairs a dataset name with a single log event.
  *
  * @public
  */
-export interface ProxyEvent {
-  /**
-   * Dataset name used when emitting the event.
-   */
-  dataset: string;
-  /**
-   * Log or metric event payload.
-   */
-  event: LogEvent;
-}
+export const eventSetSchema = z.object({
+  dataset: z.string(),
+  event: logEventSchema,
+});
+
+/**
+ * Dataset + event envelope emitted by the proxy transport.
+ *
+ * @public
+ */
+export type EventSet = z.infer<typeof eventSetSchema>;
 
 /**
  * Configuration for the proxy handler.
@@ -36,7 +42,7 @@ export interface ProxyHandlerOptions {
    */
   allowDatasets?: ReadonlyArray<string>;
   /**
-   * Maximum number of events per request.
+   * Maximum number of event sets per request.
    *
    * @defaultValue 500
    */
@@ -52,16 +58,20 @@ export interface ProxyHandlerOptions {
 }
 
 /**
- * Payload shape accepted by the proxy handler.
+ * Zod schema for {@link ProxyPayload}.
  *
  * @public
  */
-export interface ProxyPayload {
-  /**
-   * Events to forward to the server-side transport.
-   */
-  events: ProxyEvent[];
-}
+export const proxyPayloadSchema = z.object({
+  eventSets: z.array(eventSetSchema),
+});
+
+/**
+ * Request payload accepted by {@link createProxyHandler}.
+ *
+ * @public
+ */
+export type ProxyPayload = z.infer<typeof proxyPayloadSchema>;
 
 /**
  * Configuration for the proxy transport.
@@ -86,13 +96,13 @@ export interface ProxyTransportOptions {
    */
   headers?: Record<string, string>;
   /**
-   * Maximum events to send per request.
+   * Maximum event sets to send per request.
    *
    * @defaultValue 50
    */
   maxBatchSize?: number;
   /**
-   * Maximum events buffered in memory before dropping.
+   * Maximum event sets buffered in memory before dropping.
    *
    * @defaultValue 1000
    */
@@ -102,34 +112,16 @@ export interface ProxyTransportOptions {
    */
   onError?: (error: Error) => void;
   /**
-   * Base backoff delay in milliseconds.
-   *
-   * @defaultValue 500
-   */
-  retryBackoffMs?: number;
-  /**
-   * Number of retries before dropping buffered events.
-   *
-   * @defaultValue 2
-   */
-  retryLimit?: number;
-  /**
-   * Maximum backoff delay in milliseconds.
-   *
-   * @defaultValue 5000
-   */
-  retryMaxBackoffMs?: number;
-  /**
    * Proxy endpoint URL.
    */
   url: string;
 }
 
 /**
- * Create a proxy handler that forwards client events to the transport.
+ * Create a proxy handler that forwards client event sets to the transport.
  *
  * @remarks
- * Accepts {@link ProxyPayload} JSON via POST requests.
+ * Accepts {@link ProxyPayload} JSON (with `eventSets`) via POST requests.
  * Returns JSON responses with status information.
  *
  * @public
@@ -146,54 +138,46 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       return json({ message: "method_not_allowed", status: "error" }, 405);
     }
 
-    let payload: ProxyPayload;
+    let rawPayload: unknown;
     try {
-      payload = (await req.json()) as ProxyPayload;
-    } catch (error) {
+      rawPayload = await req.json();
+    } catch (error: unknown) {
       onError(toError(error));
       return json({ message: "invalid_json", status: "error" }, 400);
     }
 
-    if (!payload?.events || !Array.isArray(payload.events)) {
-      return json({ message: "invalid_payload", status: "error" }, 400);
+    const result = proxyPayloadSchema.safeParse(rawPayload);
+    const payload = result.success ? result.data : undefined;
+
+    if (!payload) {
+      onError(new Error("invalid proxy payload"));
+      return json({ message: "invalid_proxy_payload", status: "error" }, 400);
     }
 
-    if (payload.events.length > maxEvents) {
+    if (payload.eventSets.length > maxEvents) {
       return json({ message: "too_many_events", status: "error" }, 413);
     }
 
-    const grouped = new Map<string, LogEvent[]>();
+    const logEventMap = new Map<string, LogEvent[]>();
 
-    for (const item of payload.events) {
-      if (!item || typeof item !== "object") {
-        return json({ message: "invalid_event", status: "error" }, 400);
-      }
-
-      const dataset = (item as ProxyEvent).dataset;
-      if (!dataset || typeof dataset !== "string") {
-        return json({ message: "invalid_dataset", status: "error" }, 400);
-      }
+    for (const eventSet of payload.eventSets) {
+      const dataset = eventSet.dataset;
 
       if (allowDatasets && !allowDatasets.has(dataset)) {
         return json({ message: "dataset_not_allowed", status: "error" }, 403);
       }
 
-      const event = (item as ProxyEvent).event;
-      if (!event || typeof event !== "object") {
-        return json({ message: "invalid_event", status: "error" }, 400);
-      }
-
-      const events = grouped.get(dataset) ?? [];
-      events.push(event);
-      grouped.set(dataset, events);
+      const events = logEventMap.get(dataset) ?? [];
+      events.push(eventSet.event);
+      logEventMap.set(dataset, events);
     }
 
     try {
-      for (const [dataset, events] of grouped.entries()) {
+      for (const [dataset, events] of logEventMap.entries()) {
         options.transport.emit(dataset, events);
       }
       await options.transport.flush?.();
-      return json({ accepted: payload.events.length, status: "ok" }, 200);
+      return json({ accepted: payload.eventSets.length, status: "ok" }, 200);
     } catch (error) {
       onError(toError(error));
       return json({ message: "proxy_failed", status: "error" }, 500);
@@ -202,11 +186,11 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
 }
 
 /**
- * Create a transport that forwards events to a proxy endpoint.
+ * Create a transport that forwards event sets to a proxy endpoint.
  *
  * @remarks
- * Uses in-memory buffering with optional auto-flush. Failed sends are retried
- * up to `retryLimit` times before the buffer is dropped.
+ * Uses in-memory buffering with optional auto-flush. Failed sends are reported
+ * via `onError` and left in the buffer until a later flush succeeds.
  *
  * @throws
  * Throws when `fetch` is unavailable and no custom implementation is provided.
@@ -223,22 +207,11 @@ export function createProxyTransport(
 
   const maxBatchSize = Math.max(1, options.maxBatchSize ?? 50);
   const maxBufferSize = Math.max(maxBatchSize, options.maxBufferSize ?? 1000);
-  const retryLimit = Math.max(0, options.retryLimit ?? 2);
-  const retryBackoffMs = Math.max(0, options.retryBackoffMs ?? 500);
-  const retryMaxBackoffMs = Math.max(
-    retryBackoffMs,
-    options.retryMaxBackoffMs ?? 5000,
-  );
   const onError = options.onError ?? ((error: Error) => console.error(error));
-  const headers = {
-    "content-type": "application/json",
-    ...(options.headers ?? {}),
-  };
 
-  let buffer: ProxyEvent[] = [];
+  let eventSets: EventSet[] = [];
   let flushTimer: ReturnType<typeof setTimeout> | undefined;
   let inflight: Promise<void> | undefined;
-  let retryCount = 0;
 
   const scheduleFlush = (delayMs: number) => {
     if (flushTimer) clearTimeout(flushTimer);
@@ -248,18 +221,18 @@ export function createProxyTransport(
     }, delayMs);
   };
 
-  const enqueue = (dataset: string, events: LogEvent | LogEvent[]) => {
-    const items = Array.isArray(events) ? events : [events];
-    for (const event of items) {
-      buffer.push({ dataset, event });
+  const emit = (dataset: string, events: LogEvent | LogEvent[]) => {
+    const _events = Array.isArray(events) ? events : [events];
+    for (const event of _events) {
+      eventSets.push({ dataset, event });
     }
 
-    if (buffer.length > maxBufferSize) {
-      buffer = buffer.slice(-maxBufferSize);
+    if (eventSets.length > maxBufferSize) {
+      eventSets = eventSets.slice(-maxBufferSize);
       onError(new Error("proxy transport buffer overflow"));
     }
 
-    if (buffer.length >= maxBatchSize) {
+    if (eventSets.length >= maxBatchSize) {
       void flush();
       return;
     }
@@ -269,10 +242,13 @@ export function createProxyTransport(
     }
   };
 
-  const sendBatch = async (batch: ProxyEvent[]) => {
+  const sendBatch = async (eventSets: EventSet[]) => {
     const init: RequestInit = {
-      body: JSON.stringify({ events: batch } satisfies ProxyPayload),
-      headers,
+      body: JSON.stringify({ eventSets } satisfies ProxyPayload),
+      headers: {
+        "content-type": "application/json",
+        ...(options.headers ?? {}),
+      },
       method: "POST",
     };
 
@@ -289,36 +265,19 @@ export function createProxyTransport(
 
   const flush = async () => {
     if (inflight) return inflight;
-    if (buffer.length === 0) return;
+    if (eventSets.length === 0) return;
 
-    const batch = buffer.splice(0, maxBatchSize);
+    const _eventSets = eventSets.splice(0, maxBatchSize);
 
     inflight = (async () => {
       try {
-        await sendBatch(batch);
-        retryCount = 0;
-        if (buffer.length > 0) {
+        await sendBatch(_eventSets);
+        if (eventSets.length > 0) {
           scheduleFlush(0);
         }
-      } catch (error) {
-        buffer = batch.concat(buffer);
-        retryCount += 1;
-        const err = toError(error);
-
-        if (retryCount > retryLimit) {
-          buffer = [];
-          retryCount = 0;
-          onError(
-            new Error("proxy transport dropped buffered events after retries"),
-          );
-        } else {
-          onError(err);
-          const delay = Math.min(
-            retryBackoffMs * 2 ** (retryCount - 1),
-            retryMaxBackoffMs,
-          );
-          scheduleFlush(delay);
-        }
+      } catch (error: unknown) {
+        eventSets = _eventSets.concat(eventSets);
+        onError(toError(error));
       } finally {
         inflight = undefined;
       }
@@ -328,7 +287,7 @@ export function createProxyTransport(
   };
 
   return {
-    emit: enqueue,
+    emit,
     flush,
   };
 }

@@ -8,10 +8,14 @@ import { Axiom } from '@axiomhq/js';
 import { AxiomWithoutBatching } from '@axiomhq/js';
 import { ClientOptions } from '@axiomhq/js';
 import { Env } from '@o3osatoshi/toolkit';
-import { JsonValue } from '@o3osatoshi/toolkit';
+import * as _o3osatoshi_toolkit from '@o3osatoshi/toolkit';
+import { z } from 'zod';
 
 // @public
-export type Attributes = Record<string, JsonValue | undefined>;
+export type Attributes = z.infer<typeof attributesSchema>;
+
+// @public
+export const attributesSchema: z.ZodRecord<z.ZodString, z.ZodOptional<z.ZodType<_o3osatoshi_toolkit.JsonValue, unknown, z.core.$ZodTypeInternals<_o3osatoshi_toolkit.JsonValue, unknown>>>>;
 
 // @public
 export type AxiomClient = Axiom | AxiomWithoutBatching;
@@ -66,11 +70,19 @@ export function createTraceContext(keepsake?: {
 export function formatTraceparent(context: TraceContext, flags?: string): string;
 
 // @public
-export interface LogEvent extends Attributes {
-    level?: LogLevel;
-    message?: string;
-    timestamp: string;
-}
+export type LogEvent = z.infer<typeof logEventSchema>;
+
+// @public
+export const logEventSchema: z.ZodObject<{
+    level: z.ZodOptional<z.ZodEnum<{
+        debug: "debug";
+        error: "error";
+        info: "info";
+        warn: "warn";
+    }>>;
+    message: z.ZodOptional<z.ZodString>;
+    timestamp: z.ZodString;
+}, z.core.$catchall<z.ZodType<_o3osatoshi_toolkit.JsonValue, unknown, z.core.$ZodTypeInternals<_o3osatoshi_toolkit.JsonValue, unknown>>>>;
 
 // @public
 export interface Logger {
@@ -91,7 +103,15 @@ export interface LoggingDatasets {
 }
 
 // @public
-export type LogLevel = "debug" | "error" | "info" | "warn";
+export type LogLevel = z.infer<typeof logLevelSchema>;
+
+// @public
+export const logLevelSchema: z.ZodEnum<{
+    debug: "debug";
+    error: "error";
+    info: "info";
+    warn: "warn";
+}>;
 
 // @public
 export interface MetricOptions {

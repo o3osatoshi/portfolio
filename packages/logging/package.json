@@ -94,7 +94,8 @@
     "@axiomhq/nextjs": "^0.1.6",
     "@axiomhq/react": "^0.1.6",
     "@o3osatoshi/config": "workspace:*",
-    "@o3osatoshi/toolkit": "workspace:*"
+    "@o3osatoshi/toolkit": "workspace:*",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",
