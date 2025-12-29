@@ -3,7 +3,7 @@ import { buildHandler } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 import { env } from "@/env/server";
-import { initWebNodeLogger } from "@/lib/logging/node";
+import { initWebNodeLogger } from "@/lib/logger/node";
 
 export const runtime = "nodejs";
 
