@@ -14,7 +14,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes: { "service.name": "svc" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       transport,
     });
 
@@ -37,7 +37,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes: { "service.name": "svc" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       transport,
     });
 
@@ -68,7 +68,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes: { "service.name": "svc" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       transport,
     });
 
@@ -91,7 +91,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes: {},
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       minLevel: "warn",
       transport,
     });
@@ -114,7 +114,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes: {},
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       sampleRate: 0,
       transport,
     });
@@ -124,7 +124,7 @@ describe("createLogger", () => {
 
     const loggerAll = createLogger({
       attributes: {},
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       sampleRate: 1,
       transport,
     });
@@ -143,7 +143,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes: { "service.name": "svc" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       transport,
     });
 
@@ -193,7 +193,7 @@ describe("createLogger", () => {
 
     const logger = createLogger({
       attributes,
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       transport,
     });
 

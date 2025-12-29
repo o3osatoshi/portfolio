@@ -98,7 +98,7 @@ export interface Logger {
 
 // @public
 export interface LoggingDatasets {
-    logs: string;
+    events: string;
     metrics: string;
 }
 

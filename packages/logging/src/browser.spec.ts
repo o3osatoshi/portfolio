@@ -66,7 +66,7 @@ describe("browser logging helpers", () => {
 
     expect(() =>
       initBrowserLogger({
-        datasets: { logs: "logs", metrics: "metrics" },
+        datasets: { events: "events", metrics: "metrics" },
         env: "production",
         service: "web",
       }),
@@ -97,14 +97,14 @@ describe("browser logging helpers", () => {
 
     initBrowserLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       service: "web",
     });
 
     initBrowserLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       service: "web",
     });
@@ -154,7 +154,7 @@ describe("browser logging helpers", () => {
       await import("./browser");
 
     initBrowserLogger({
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnEnd: false,
       service: "web",

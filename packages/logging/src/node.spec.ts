@@ -45,7 +45,7 @@ describe("node logging helpers", () => {
 
     expect(() =>
       initNodeLogger({
-        datasets: { logs: "logs", metrics: "metrics" },
+        datasets: { events: "events", metrics: "metrics" },
         env: "production",
         service: "svc",
       }),
@@ -57,7 +57,7 @@ describe("node logging helpers", () => {
 
     initNodeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
       service: "svc",
@@ -65,7 +65,7 @@ describe("node logging helpers", () => {
 
     initNodeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
       service: "svc",
@@ -91,7 +91,7 @@ describe("node logging helpers", () => {
     };
 
     initNodeLogger({
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
       service: "svc",
@@ -115,7 +115,7 @@ describe("node logging helpers", () => {
 
     initNodeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
       service: "svc",
@@ -144,7 +144,7 @@ describe("node logging helpers", () => {
 
     initNodeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
       sampleRate: 0.5,
@@ -200,7 +200,7 @@ describe("node logging helpers", () => {
 
     initNodeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnEnd: true,
       flushOnExit: false,
@@ -261,7 +261,7 @@ describe("node logging helpers", () => {
       await import("./node");
 
     initNodeLogger({
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnExit: false,
       service: "svc",

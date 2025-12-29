@@ -174,7 +174,7 @@ export interface LoggingDatasets {
   /**
    * Dataset for log and event records.
    */
-  logs: string;
+  events: string;
   /**
    * Dataset for metric events.
    */

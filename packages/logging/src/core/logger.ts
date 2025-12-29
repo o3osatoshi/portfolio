@@ -115,7 +115,7 @@ export function createLogger(options: CreateLoggerOptions): Logger {
       message,
     });
 
-    emit(datasets.logs, logEvent);
+    emit(datasets.events, logEvent);
   };
 
   const event = (name: string, attributes?: Attributes) => {
@@ -129,7 +129,7 @@ export function createLogger(options: CreateLoggerOptions): Logger {
       message: name,
     });
 
-    emit(datasets.logs, logEvent);
+    emit(datasets.events, logEvent);
   };
 
   const metric = (

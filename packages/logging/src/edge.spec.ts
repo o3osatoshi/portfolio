@@ -45,7 +45,7 @@ describe("edge logging helpers", () => {
 
     expect(() =>
       initEdgeLogger({
-        datasets: { logs: "logs", metrics: "metrics" },
+        datasets: { events: "events", metrics: "metrics" },
         env: "production",
         service: "svc",
       }),
@@ -67,14 +67,14 @@ describe("edge logging helpers", () => {
 
     initEdgeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       service: "svc",
     });
 
     initEdgeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       service: "svc",
     });
@@ -144,7 +144,7 @@ describe("edge logging helpers", () => {
 
     initEdgeLogger({
       client: { token: "token" },
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       sampleRate: 0.5,
       service: "svc",
@@ -194,7 +194,7 @@ describe("edge logging helpers", () => {
       await import("./edge");
 
     initEdgeLogger({
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       flushOnEnd: false,
       service: "svc",
@@ -227,7 +227,7 @@ describe("edge logging helpers", () => {
       await import("./edge");
 
     initEdgeLogger({
-      datasets: { logs: "logs", metrics: "metrics" },
+      datasets: { events: "events", metrics: "metrics" },
       env: "production",
       service: "svc",
       transport: customTransport,
