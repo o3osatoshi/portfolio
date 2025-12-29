@@ -1,22 +1,20 @@
+import type { CacheStore } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type {
+  HeavyProcessCachedResponse,
+  HeavyProcessResponse,
+} from "../../dtos/heavy-process.res.dto";
+import { HeavyProcessCachedUseCase } from "./heavy-process-cached";
+
 const h = vi.hoisted(() => {
   return {
-    kvGetMock: vi.fn(),
-    kvSetMock: vi.fn(),
-    sleepMock: vi.fn(),
+    cacheGetMock: vi.fn(),
+    cacheSetMock: vi.fn(),
+    heavyExecuteMock: vi.fn(),
   };
 });
-
-vi.mock("@o3osatoshi/toolkit", () => ({
-  kvGet: h.kvGetMock,
-  kvSet: h.kvSetMock,
-  sleep: h.sleepMock,
-}));
-
-import type { HeavyProcessCachedResponse } from "../../dtos/heavy-process.res.dto";
-import { HeavyProcessCachedUseCase } from "./heavy-process-cached";
 
 const CACHE_KEY = "edge:public:heavy";
 const CACHE_TTL_MS = 200_000;
@@ -24,30 +22,36 @@ const CACHE_TTL_MS = 200_000;
 describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    h.kvGetMock.mockReset();
-    h.kvSetMock.mockReset();
-    h.sleepMock.mockReset();
+    h.cacheGetMock.mockReset();
+    h.cacheSetMock.mockReset();
+    h.heavyExecuteMock.mockReset();
   });
 
-  it("returns cached response when value exists in Redis", async () => {
+  const buildUseCase = () => {
+    const cacheStore: CacheStore = {
+      get: h.cacheGetMock,
+      set: h.cacheSetMock,
+    };
+    const heavyProcess = {
+      execute: h.heavyExecuteMock,
+    };
+    return new HeavyProcessCachedUseCase(cacheStore, heavyProcess);
+  };
+
+  it("returns cached response when value exists in cache", async () => {
     const cachedTimestamp = new Date("2025-01-01T00:00:00Z");
 
-    h.kvGetMock.mockReturnValueOnce(
-      okAsync<{ timestamp: Date } | null, Error>({
+    h.cacheGetMock.mockReturnValueOnce(
+      okAsync<HeavyProcessResponse | null, Error>({
         timestamp: cachedTimestamp,
       }),
     );
 
-    const redis = {} as unknown as Record<string, unknown>;
-    const useCase = new HeavyProcessCachedUseCase(
-      // @ts-expect-error
-      redis as unknown as Parameters<typeof HeavyProcessCachedUseCase>[0],
-    );
-
+    const useCase = buildUseCase();
     const result = await useCase.execute();
 
-    expect(h.kvGetMock).toHaveBeenCalledTimes(1);
-    expect(h.kvGetMock).toHaveBeenCalledWith(redis, CACHE_KEY);
+    expect(h.cacheGetMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheGetMock).toHaveBeenCalledWith(CACHE_KEY);
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -56,126 +60,104 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
     expect(payload.cached).toBe(true);
     expect(payload.timestamp).toEqual(cachedTimestamp);
 
-    expect(h.sleepMock).not.toHaveBeenCalled();
-    expect(h.kvSetMock).not.toHaveBeenCalled();
+    expect(h.heavyExecuteMock).not.toHaveBeenCalled();
+    expect(h.cacheSetMock).not.toHaveBeenCalled();
   });
 
-  it("runs heavy process and caches result when no cached value exists", async () => {
-    h.kvGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+  it("runs heavy process and caches result when cache misses", async () => {
+    const heavyTimestamp = new Date("2025-01-02T00:00:00Z");
 
-    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined));
-
-    h.kvSetMock.mockReturnValueOnce(
-      okAsync<"OK" | { timestamp: Date } | null, Error>("OK"),
+    h.cacheGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+    h.heavyExecuteMock.mockReturnValueOnce(
+      okAsync<HeavyProcessResponse, Error>({ timestamp: heavyTimestamp }),
     );
+    h.cacheSetMock.mockReturnValueOnce(okAsync<"OK" | null, Error>("OK"));
 
-    const redis = {} as unknown as Record<string, unknown>;
-    const useCase = new HeavyProcessCachedUseCase(
-      // @ts-expect-error
-      redis as unknown as Parameters<typeof HeavyProcessCachedUseCase>[0],
-    );
-
-    const before = new Date();
+    const useCase = buildUseCase();
     const result = await useCase.execute();
-    const after = new Date();
 
-    expect(h.kvGetMock).toHaveBeenCalledTimes(1);
-    expect(h.kvGetMock).toHaveBeenCalledWith(redis, CACHE_KEY);
+    expect(h.cacheGetMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheGetMock).toHaveBeenCalledWith(CACHE_KEY);
 
-    expect(h.sleepMock).toHaveBeenCalledTimes(1);
-    expect(h.sleepMock.mock.calls[0]?.[0]).toBe(3_000);
+    expect(h.heavyExecuteMock).toHaveBeenCalledTimes(1);
 
-    expect(h.kvSetMock).toHaveBeenCalledTimes(1);
-    const [, keyArg, storedValue, setOptions] = h.kvSetMock.mock.calls[0] ?? [];
-    expect(keyArg).toBe(CACHE_KEY);
-    expect(setOptions).toEqual({ ttlMs: CACHE_TTL_MS });
+    expect(h.cacheSetMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheSetMock).toHaveBeenCalledWith(
+      CACHE_KEY,
+      { timestamp: heavyTimestamp },
+      { ttlMs: CACHE_TTL_MS },
+    );
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
 
     const payload: HeavyProcessCachedResponse = result.value;
     expect(payload.cached).toBe(false);
-    expect(payload.timestamp).toBeInstanceOf(Date);
-    expect(payload.timestamp.getTime()).toBeGreaterThanOrEqual(
-      before.getTime(),
-    );
-    expect(payload.timestamp.getTime()).toBeLessThanOrEqual(after.getTime());
-
-    if (storedValue && typeof storedValue === "object") {
-      expect((storedValue as { timestamp: Date }).timestamp).toEqual(
-        payload.timestamp,
-      );
-    }
+    expect(payload.timestamp).toEqual(heavyTimestamp);
   });
 
-  it("propagates error when kvGet fails", async () => {
-    const kvError = new Error("kvGet failed");
-    h.kvGetMock.mockReturnValueOnce(errAsync<null, Error>(kvError));
+  it("falls back to heavy process when cache get fails", async () => {
+    const cacheError = new Error("cache get failed");
+    const heavyTimestamp = new Date("2025-01-03T00:00:00Z");
 
-    const redis = {} as unknown as Record<string, unknown>;
-    const useCase = new HeavyProcessCachedUseCase(
-      // @ts-expect-error
-      redis as unknown as Parameters<typeof HeavyProcessCachedUseCase>[0],
+    h.cacheGetMock.mockReturnValueOnce(
+      errAsync<HeavyProcessResponse | null, Error>(cacheError),
     );
+    h.heavyExecuteMock.mockReturnValueOnce(
+      okAsync<HeavyProcessResponse, Error>({ timestamp: heavyTimestamp }),
+    );
+    h.cacheSetMock.mockReturnValueOnce(okAsync<"OK" | null, Error>("OK"));
 
+    const useCase = buildUseCase();
     const result = await useCase.execute();
 
-    expect(h.kvGetMock).toHaveBeenCalledTimes(1);
-    expect(result.isErr()).toBe(true);
-    if (!result.isErr()) return;
-
-    expect(result.error).toBe(kvError);
-    expect(h.sleepMock).not.toHaveBeenCalled();
-    expect(h.kvSetMock).not.toHaveBeenCalled();
+    expect(h.cacheGetMock).toHaveBeenCalledTimes(1);
+    expect(h.heavyExecuteMock).toHaveBeenCalledTimes(1);
+    expect(result.isOk()).toBe(true);
   });
 
-  it("propagates error when sleep fails after cache miss", async () => {
-    h.kvGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+  it("propagates error when heavy process fails", async () => {
+    h.cacheGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
 
-    const sleepError = new Error("sleep aborted");
-    h.sleepMock.mockReturnValueOnce(errAsync<void, Error>(sleepError));
-
-    const redis = {} as unknown as Record<string, unknown>;
-    const useCase = new HeavyProcessCachedUseCase(
-      // @ts-expect-error
-      redis as unknown as Parameters<typeof HeavyProcessCachedUseCase>[0],
+    const heavyError = new Error("heavy process failed");
+    h.heavyExecuteMock.mockReturnValueOnce(
+      errAsync<HeavyProcessResponse, Error>(heavyError),
     );
 
+    const useCase = buildUseCase();
     const result = await useCase.execute();
 
-    expect(h.kvGetMock).toHaveBeenCalledTimes(1);
-    expect(h.sleepMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheGetMock).toHaveBeenCalledTimes(1);
+    expect(h.heavyExecuteMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheSetMock).not.toHaveBeenCalled();
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-
-    expect(result.error).toBe(sleepError);
-    expect(h.kvSetMock).not.toHaveBeenCalled();
+    expect(result.error).toBe(heavyError);
   });
 
-  it("propagates error when kvSet fails after heavy process", async () => {
-    h.kvGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+  it("returns success even when cache set fails after heavy process", async () => {
+    const heavyTimestamp = new Date("2025-01-04T00:00:00Z");
 
-    h.sleepMock.mockReturnValueOnce(okAsync<void, Error>(undefined));
-
-    const kvSetError = new Error("kvSet failed");
-    h.kvSetMock.mockReturnValueOnce(errAsync<"OK" | null, Error>(kvSetError));
-
-    const redis = {} as unknown as Record<string, unknown>;
-    const useCase = new HeavyProcessCachedUseCase(
-      // @ts-expect-error
-      redis as unknown as Parameters<typeof HeavyProcessCachedUseCase>[0],
+    h.cacheGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+    h.heavyExecuteMock.mockReturnValueOnce(
+      okAsync<HeavyProcessResponse, Error>({ timestamp: heavyTimestamp }),
     );
 
+    const cacheSetError = new Error("cache set failed");
+    h.cacheSetMock.mockReturnValueOnce(
+      errAsync<"OK" | null, Error>(cacheSetError),
+    );
+
+    const useCase = buildUseCase();
     const result = await useCase.execute();
 
-    expect(h.kvGetMock).toHaveBeenCalledTimes(1);
-    expect(h.sleepMock).toHaveBeenCalledTimes(1);
-    expect(h.kvSetMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheGetMock).toHaveBeenCalledTimes(1);
+    expect(h.heavyExecuteMock).toHaveBeenCalledTimes(1);
+    expect(h.cacheSetMock).toHaveBeenCalledTimes(1);
 
-    expect(result.isErr()).toBe(true);
-    if (!result.isErr()) return;
-
-    expect(result.error).toBe(kvSetError);
+    expect(result.isOk()).toBe(true);
+    if (!result.isOk()) return;
+    expect(result.value.cached).toBe(false);
   });
 });

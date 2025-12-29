@@ -1,5 +1,7 @@
 import type { AuthConfig } from "@repo/auth";
+import type { CacheStore } from "@repo/domain";
 import type { Context, Next } from "hono";
+import { okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mocks for auth middlewares used by the edge app
@@ -34,35 +36,19 @@ async function loadAppWithVerify(allow: boolean) {
     initAuthConfig: h.initAuthConfigMock,
     verifyAuth: allow ? h.verifyAuthPass : h.verifyAuthDeny,
   }));
-  vi.doMock("@o3osatoshi/toolkit", async () => {
-    const actual = (await vi.importActual<typeof import("@o3osatoshi/toolkit")>(
-      "@o3osatoshi/toolkit",
-    )) as typeof import("@o3osatoshi/toolkit");
-
-    const store = new Map<string, unknown>();
-
-    return {
-      ...actual,
-      createEdgeRedisClient: vi.fn(() => {
-        return {
-          get: vi.fn((key: string) =>
-            Promise.resolve(store.has(key) ? (store.get(key) ?? null) : null),
-          ),
-          set: vi.fn((key: string, value: unknown) => {
-            store.set(key, value);
-            return Promise.resolve("OK");
-          }),
-        };
-      }),
-    };
-  });
+  const store = new Map<string, unknown>();
+  const cacheStore: CacheStore = {
+    get: (key) =>
+      okAsync(store.has(key) ? (store.get(key) ?? null) : null),
+    set: (key, value) => {
+      store.set(key, value);
+      return okAsync("OK");
+    },
+  };
   const mod = await import("./app");
   return mod.buildEdgeApp({
     authConfig: {} as AuthConfig,
-    redisClientOptions: {
-      token: "test-token",
-      url: "https://example.upstash.io",
-    },
+    cacheStore,
   });
 }
 

@@ -1,17 +1,17 @@
 import {
   type HeavyProcessCachedResponse,
   type HeavyProcessResponse,
+  HeavyProcessCachedUseCase,
   HeavyProcessUseCase,
 } from "@repo/application";
-import { HeavyProcessCachedUseCase } from "@repo/application";
+import type { CacheStore } from "@repo/domain";
 import type { AuthConfig, User } from "@repo/auth";
 import { userSchema } from "@repo/auth";
 import { initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import { type Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { createEdgeRedisClient, parseWith } from "@o3osatoshi/toolkit";
-import type { RedisClientOptions } from "@o3osatoshi/toolkit";
+import { parseWith } from "@o3osatoshi/toolkit";
 
 import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
 import { respond, respondAsync } from "../core/respond";
@@ -28,20 +28,20 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
  *
  * - `AuthConfig` can be created via `createAuthConfig` from `@repo/auth`.
  */
-export type EdgeDeps = EdgeDepsAuth & EdgeDepsRedis;
+export type EdgeDeps = EdgeDepsAuth & EdgeDepsCache;
 
 export type EdgeDepsAuth =
   | { authConfig: AuthConfig; createAuthConfig?: (c: Context) => AuthConfig }
   | { authConfig?: AuthConfig; createAuthConfig: (c: Context) => AuthConfig };
 
-export type EdgeDepsRedis =
+export type EdgeDepsCache =
   | {
-      createRedisClientOptions: (c: Context) => RedisClientOptions;
-      redisClientOptions?: RedisClientOptions;
+      cacheStore: CacheStore;
+      createCacheStore?: (c: Context) => CacheStore;
     }
   | {
-      createRedisClientOptions?: (c: Context) => RedisClientOptions;
-      redisClientOptions: RedisClientOptions;
+      cacheStore?: CacheStore;
+      createCacheStore: (c: Context) => CacheStore;
     };
 
 /**
@@ -115,12 +115,12 @@ function buildEdgePrivateRoutes() {
 }
 
 function buildEdgePublicRoutes(deps: EdgeDeps) {
-  const redisClient = (c: Context) => {
-    if (deps.redisClientOptions !== undefined) {
-      return createEdgeRedisClient(deps.redisClientOptions);
+  const cacheStore = (c: Context) => {
+    if (deps.cacheStore !== undefined) {
+      return deps.cacheStore;
     } else {
       // @ts-expect-error
-      return createEdgeRedisClient(deps.createRedisClientOptions(c));
+      return deps.createCacheStore(c);
     }
   };
   return new Hono()
@@ -130,7 +130,7 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
       return respondAsync<HeavyProcessResponse>(c)(heavyProcess.execute());
     })
     .get("/heavy/cached", (c) => {
-      const heavyProcessCached = new HeavyProcessCachedUseCase(redisClient(c));
+      const heavyProcessCached = new HeavyProcessCachedUseCase(cacheStore(c));
       return respondAsync<HeavyProcessCachedResponse>(c)(
         heavyProcessCached.execute(),
       );

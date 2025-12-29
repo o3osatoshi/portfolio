@@ -6,7 +6,7 @@ import { getPath } from "@/utils/nav-handler";
 
 export const metadata: Metadata = {
   description:
-    "Demonstration of using @o3osatoshi/toolkit redis-cache helpers to cache a slow API response.",
+    "Demonstration of using the Upstash cache adapter from @repo/integrations to cache a slow API response.",
   title: "Toolkit · Redis cache",
 };
 
@@ -17,12 +17,11 @@ export default function Page() {
         <h1 className="font-semibold text-3xl">Redis cache</h1>
         <p className="text-neutral-600">
           This demo calls a deliberately slow API endpoint exposed by the
-          interface service at <code>/edge/public/heavy</code> and uses the{" "}
-          <code>kvGet</code> / <code>kvSet</code> helpers from{" "}
-          <code>@o3osatoshi/toolkit</code> to cache the response in Upstash
-          Redis. Requests within the TTL are served from cache; once the TTL
-          expires, the next request recomputes the value by hitting the slow API
-          again.
+          interface service at <code>/edge/public/heavy</code> and uses the
+          Upstash cache adapter from <code>@repo/integrations</code> to cache
+          the response. Requests within the TTL are served from cache; once
+          the TTL expires, the next request recomputes the value by hitting the
+          slow API again.
         </p>
       </header>
 

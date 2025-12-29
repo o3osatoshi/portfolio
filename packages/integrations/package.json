@@ -15,6 +15,7 @@
   "dependencies": {
     "@o3osatoshi/toolkit": "workspace:*",
     "@repo/domain": "workspace:*",
+    "@upstash/redis": "^1.35.7",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },

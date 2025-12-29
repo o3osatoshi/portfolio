@@ -1,4 +1,5 @@
 /**
- * Public surface for external API integrations.
+ * Public surface for external integrations (APIs, infrastructure adapters).
  */
 export * from "./exchange-rate-host";
+export * from "./redis";
