@@ -1,11 +1,16 @@
 import {
+  GetExchangeRateUseCase,
   GetTransactionsUseCase,
+  parseGetExchangeRateRequest,
   parseGetTransactionsRequest,
 } from "@repo/application";
-import type { GetTransactionsResponse } from "@repo/application";
+import type {
+  GetExchangeRateResponse,
+  GetTransactionsResponse,
+} from "@repo/application";
 import type { AuthConfig } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
-import type { TransactionRepository } from "@repo/domain";
+import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -27,6 +32,8 @@ export type AppType = ReturnType<typeof buildApp>;
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
+  /** Provider required by exchange-rate use cases. */
+  exchangeRateProvider: ExchangeRateProvider;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -59,7 +66,7 @@ export function buildApp(deps: Deps) {
       initAuthConfig(() => deps.authConfig),
     )
     .route("/auth", buildAuthRoutes())
-    .route("/public", buildPublicRoutes())
+    .route("/public", buildPublicRoutes(deps))
     .route("/private", buildPrivateRoutes(deps));
 }
 
@@ -74,19 +81,28 @@ export function buildApp(deps: Deps) {
  * ```ts
  * // app/api/[...route]/route.ts
  * import { createAuthConfig } from "@repo/auth";
+ * import { ExchangeRateHostProvider } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
  * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
  * export const runtime = "nodejs";
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
  * const transactionRepo = new PrismaTransactionRepository(prisma);
+ * const exchangeRateProvider = new ExchangeRateHostProvider({
+ *   apiKey: process.env.EXCHANGE_RATE_HOST_API_KEY,
+ *   baseUrl: process.env.EXCHANGE_RATE_HOST_BASE_URL,
+ * });
  * const authConfig = createAuthConfig({
  *   providers: { google: { clientId: process.env.AUTH_GOOGLE_ID!, clientSecret: process.env.AUTH_GOOGLE_SECRET! } },
  *   prismaClient: prisma,
  *   secret: process.env.AUTH_SECRET!,
  * });
  *
- * export const { GET, POST } = buildHandler({ authConfig, transactionRepo });
+ * export const { GET, POST } = buildHandler({
+ *   authConfig,
+ *   exchangeRateProvider,
+ *   transactionRepo,
+ * });
  * ```
  */
 export function buildHandler(deps: Deps) {
@@ -111,6 +127,18 @@ function buildPrivateRoutes(deps: Deps) {
   );
 }
 
-function buildPublicRoutes() {
-  return new Hono().get("/healthz", (c) => c.json({ ok: true }));
+function buildPublicRoutes(deps: Deps) {
+  const getExchangeRate = new GetExchangeRateUseCase(
+    deps.exchangeRateProvider,
+  );
+  return new Hono()
+    .get("/healthz", (c) => c.json({ ok: true }))
+    .get("/exchange-rate", (c) =>
+      respondAsync<GetExchangeRateResponse>(c)(
+        parseGetExchangeRateRequest({
+          base: c.req.query("base"),
+          target: c.req.query("target"),
+        }).asyncAndThen((req) => getExchangeRate.execute(req)),
+      ),
+    );
 }

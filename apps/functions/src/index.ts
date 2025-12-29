@@ -1,4 +1,5 @@
 import { createAuthConfig } from "@repo/auth";
+import { ExchangeRateHostProvider } from "@repo/integrations";
 import {
   buildApp,
   createExpressRequestHandler,
@@ -26,7 +27,15 @@ export const api = onRequest(async (req, res) => {
       secret: env.AUTH_SECRET,
     });
     const repo = new PrismaTransactionRepository(client);
-    const app = buildApp({ authConfig, transactionRepo: repo });
+    const exchangeRateProvider = new ExchangeRateHostProvider({
+      apiKey: env.EXCHANGE_RATE_HOST_API_KEY,
+      baseUrl: env.EXCHANGE_RATE_HOST_BASE_URL,
+    });
+    const app = buildApp({
+      authConfig,
+      exchangeRateProvider,
+      transactionRepo: repo,
+    });
     handler = createExpressRequestHandler(app);
   }
   await handler(req, res);

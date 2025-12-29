@@ -16,6 +16,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@repo/integrations": "workspace:*",
     "firebase-admin": "^13.6.0",
     "firebase-functions": "^7.0.0",
     "zod": "^4.1.13"
