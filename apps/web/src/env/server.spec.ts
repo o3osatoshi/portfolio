@@ -12,6 +12,7 @@ describe("apps/web env (server)", () => {
     vi.stubEnv("AUTH_GOOGLE_ID", "test-google-id");
     vi.stubEnv("AUTH_GOOGLE_SECRET", "test-google-secret");
     vi.stubEnv("AUTH_SECRET", "test-auth-secret");
+    vi.stubEnv("AXIOM_API_TOKEN", "test-axiom-token");
     vi.stubEnv(
       "DATABASE_URL",
       "postgresql://postgres:postgres@localhost:54329/postgres?schema=public",
