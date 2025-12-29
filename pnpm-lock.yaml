@@ -293,6 +293,9 @@ importers:
       '@next/third-parties':
         specifier: ^16.0.10
         version: 16.0.10(next@16.0.10(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
+      '@o3osatoshi/logging':
+        specifier: workspace:*
+        version: link:../../packages/logging
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../../packages/toolkit
@@ -592,6 +595,9 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.7.5
         version: 0.7.5(hono@4.11.1)(zod@4.2.0)
+      '@o3osatoshi/logging':
+        specifier: workspace:*
+        version: link:../logging
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
