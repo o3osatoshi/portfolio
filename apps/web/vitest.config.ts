@@ -8,5 +8,6 @@ export default browserTestPreset({
     coverage: {
       exclude: ["next.config.mjs", "postcss.config.mjs"],
     },
+    setupFiles: ["./src/test/vitest.setup.ts"],
   },
 });
