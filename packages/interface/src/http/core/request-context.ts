@@ -54,7 +54,7 @@ function resolveRequestId(c: Context): string | undefined {
 }
 
 function resolveRoute(c: Context): string | undefined {
-  const path = routePath(c);
-  if (path && path !== "*") return path;
-  return c.req.path;
+  const path = c.req.path;
+  if (path && !path.includes("*")) return path;
+  return routePath(c);
 }
