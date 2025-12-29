@@ -11,9 +11,9 @@
 
 import { Logger as AxiomLogger, EVENT } from "@axiomhq/logging";
 import {
-  createAxiomRouteHandler,
-  createOnRequestError,
-  createProxyRouteHandler,
+  createAxiomRouteHandler as axiomCreateAxiomRouteHandler,
+  createOnRequestError as axiomCreateOnRequestError,
+  createProxyRouteHandler as axiomCreateProxyRouteHandler,
   frameworkIdentifier,
   frameworkIdentifierFormatter,
   getLogLevelFromStatusCode,
@@ -27,10 +27,7 @@ import {
   transformRouteHandlerSuccessResult,
 } from "@axiomhq/nextjs";
 
-import {
-  createBridgeTransport,
-  type NextjsLoggerOptions,
-} from "./nextjs-shared";
+import { createBridgeTransport, type LoggerOptions } from "./nextjs-shared";
 import type { Attributes, Logger } from "./types";
 
 /**
@@ -43,13 +40,13 @@ export interface NextjsRouteHandlerOptions {
    * Optional route handler configuration forwarded to Axiom helpers.
    *
    * @remarks
-   * Passed directly to {@link createAxiomRouteHandler}.
+   * Passed directly to {@link axiomCreateAxiomRouteHandler}.
    */
-  handler?: Parameters<typeof createAxiomRouteHandler>[1];
+  handler?: Parameters<typeof axiomCreateAxiomRouteHandler>[1];
   /**
    * Optional bridge logger configuration.
    */
-  logger?: Omit<NextjsLoggerOptions, "logger">;
+  logger?: Omit<LoggerOptions, "logger">;
 }
 
 /**
@@ -63,7 +60,7 @@ export interface NextjsRouteHandlerOptions {
  *
  * @public
  */
-export function createNextjsLogger(options: NextjsLoggerOptions): AxiomLogger {
+export function createLogger(options: LoggerOptions): AxiomLogger {
   const transport = createBridgeTransport(options.logger);
   const formatters = options.formatters ?? nextJsServerFormatters;
 
@@ -86,16 +83,16 @@ export function createNextjsLogger(options: NextjsLoggerOptions): AxiomLogger {
  *
  * @public
  */
-export function createNextjsOnRequestError(
+export function createOnRequestError(
   logger: Logger,
-  options?: Omit<NextjsLoggerOptions, "logger">,
-): ReturnType<typeof createOnRequestError> {
-  const bridgeLogger = createNextjsLogger({
+  options?: Omit<LoggerOptions, "logger">,
+): ReturnType<typeof axiomCreateOnRequestError> {
+  const bridgeLogger = createLogger({
     logger,
     ...options,
   });
 
-  return createOnRequestError(bridgeLogger);
+  return axiomCreateOnRequestError(bridgeLogger);
 }
 
 /**
@@ -106,16 +103,16 @@ export function createNextjsOnRequestError(
  *
  * @public
  */
-export function createNextjsProxyRouteHandler(
+export function createProxyRouteHandler(
   logger: Logger,
-  options?: Omit<NextjsLoggerOptions, "logger">,
-): ReturnType<typeof createProxyRouteHandler> {
-  const bridgeLogger = createNextjsLogger({
+  options?: Omit<LoggerOptions, "logger">,
+): ReturnType<typeof axiomCreateProxyRouteHandler> {
+  const bridgeLogger = createLogger({
     logger,
     ...options,
   });
 
-  return createProxyRouteHandler(bridgeLogger);
+  return axiomCreateProxyRouteHandler(bridgeLogger);
 }
 
 /**
@@ -126,16 +123,16 @@ export function createNextjsProxyRouteHandler(
  *
  * @public
  */
-export function createNextjsRouteHandler(
+export function createRouteHandler(
   logger: Logger,
   options: NextjsRouteHandlerOptions = {},
-): ReturnType<typeof createAxiomRouteHandler> {
-  const bridgeLogger = createNextjsLogger({
+): ReturnType<typeof axiomCreateAxiomRouteHandler> {
+  const bridgeLogger = createLogger({
     logger,
     ...options.logger,
   });
 
-  return createAxiomRouteHandler(bridgeLogger, options.handler);
+  return axiomCreateAxiomRouteHandler(bridgeLogger, options.handler);
 }
 
 /**
@@ -145,7 +142,7 @@ export function createNextjsRouteHandler(
  *
  * @public
  */
-export function logNextjsMiddlewareRequest(
+export function logMiddlewareRequest(
   logger: Logger,
   request: Parameters<typeof transformMiddlewareRequest>[0],
   attributes?: Attributes,
@@ -171,9 +168,6 @@ export function logNextjsMiddlewareRequest(
 }
 
 export {
-  createAxiomRouteHandler,
-  createOnRequestError,
-  createProxyRouteHandler,
   EVENT,
   frameworkIdentifier,
   frameworkIdentifierFormatter,
@@ -187,4 +181,4 @@ export {
   transformRouteHandlerErrorResult,
   transformRouteHandlerSuccessResult,
 };
-export type { NextjsLoggerOptions };
+export type { LoggerOptions };

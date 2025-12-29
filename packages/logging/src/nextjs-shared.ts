@@ -17,7 +17,7 @@ import type { Attributes, Logger } from "./types";
  *
  * @public
  */
-export interface NextjsLoggerOptions {
+export interface LoggerOptions {
   /**
    * Optional logger args to be applied to every event.
    */

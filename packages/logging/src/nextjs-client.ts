@@ -10,16 +10,13 @@
 import { Logger as AxiomLogger } from "@axiomhq/logging";
 import { nextJsFormatters } from "@axiomhq/nextjs/client";
 import {
-  createUseLogger,
-  createWebVitalsComponent,
+  createUseLogger as AxiomCreateUseLogger,
+  createWebVitalsComponent as AxiomCreateWebVitalsComponent,
   transformWebVitalsMetric,
   useReportWebVitals,
 } from "@axiomhq/react";
 
-import {
-  createBridgeTransport,
-  type NextjsLoggerOptions,
-} from "./nextjs-shared";
+import { createBridgeTransport, type LoggerOptions } from "./nextjs-shared";
 import type { Logger } from "./types";
 
 /**
@@ -32,7 +29,7 @@ import type { Logger } from "./types";
  *
  * @public
  */
-export function createNextjsLogger(options: NextjsLoggerOptions): AxiomLogger {
+export function createLogger(options: LoggerOptions): AxiomLogger {
   const transport = createBridgeTransport(options.logger);
   const formatters = options.formatters ?? nextJsFormatters;
 
@@ -56,16 +53,16 @@ export function createNextjsLogger(options: NextjsLoggerOptions): AxiomLogger {
  *
  * @public
  */
-export function createNextjsUseLogger(
+export function createUseLogger(
   logger: Logger,
-  options?: Omit<NextjsLoggerOptions, "logger">,
-): ReturnType<typeof createUseLogger> {
-  const bridgeLogger = createNextjsLogger({
+  options?: Omit<LoggerOptions, "logger">,
+): ReturnType<typeof AxiomCreateUseLogger> {
+  const bridgeLogger = createLogger({
     logger,
     ...options,
   });
 
-  return createUseLogger(bridgeLogger);
+  return AxiomCreateUseLogger(bridgeLogger);
 }
 
 /**
@@ -76,25 +73,20 @@ export function createNextjsUseLogger(
  *
  * @public
  */
-export function createNextjsWebVitalsComponent(
+export function createWebVitalsComponent(
   logger: Logger,
-  options?: Omit<NextjsLoggerOptions, "logger">,
-): ReturnType<typeof createWebVitalsComponent> {
-  const bridgeLogger = createNextjsLogger({
+  options?: Omit<LoggerOptions, "logger">,
+): ReturnType<typeof AxiomCreateWebVitalsComponent> {
+  const bridgeLogger = createLogger({
     logger,
     ...options,
   });
 
-  return createWebVitalsComponent(bridgeLogger);
+  return AxiomCreateWebVitalsComponent(bridgeLogger);
 }
 
 export { nextJsFormatters };
 
-export {
-  createUseLogger,
-  createWebVitalsComponent,
-  transformWebVitalsMetric,
-  useReportWebVitals,
-};
+export { transformWebVitalsMetric, useReportWebVitals };
 
-export type { NextjsLoggerOptions };
+export type { LoggerOptions };

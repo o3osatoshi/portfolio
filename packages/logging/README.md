@@ -191,15 +191,15 @@ const logger = createLogger({
 ## Next.js helpers (`@o3osatoshi/logging/nextjs`)
 
 Requires Next.js and React in the consuming app.
-Client helpers (Web Vitals, `useLogger`) live in `@o3osatoshi/logging/nextjs/client`.
+Client helpers (Web Vitals, `createUseLogger`) live in `@o3osatoshi/logging/nextjs/client`.
 
 ```ts
 import {
-  createNextjsOnRequestError,
-  createNextjsRouteHandler,
-  logNextjsMiddlewareRequest,
+  createOnRequestError,
+  createRouteHandler,
+  logMiddlewareRequest,
 } from "@o3osatoshi/logging/nextjs";
-import { createNextjsWebVitalsComponent } from "@o3osatoshi/logging/nextjs/client";
+import { createWebVitalsComponent } from "@o3osatoshi/logging/nextjs/client";
 import { createBrowserLogger, initBrowserLogger } from "@o3osatoshi/logging/browser";
 import { createNodeLogger, initNodeLogger } from "@o3osatoshi/logging/node";
 import { NextResponse } from "next/server";
@@ -220,19 +220,19 @@ initBrowserLogger({
 
 const serverLogger = createNodeLogger();
 const clientLogger = createBrowserLogger();
-export const withAxiom = createNextjsRouteHandler(serverLogger);
-export const onRequestError = createNextjsOnRequestError(serverLogger);
-export const WebVitals = createNextjsWebVitalsComponent(clientLogger);
+export const withAxiom = createRouteHandler(serverLogger);
+export const onRequestError = createOnRequestError(serverLogger);
+export const WebVitals = createWebVitalsComponent(clientLogger);
 
 export const GET = withAxiom(async () => {
   return NextResponse.json({ ok: true });
 });
 
 export async function middleware(request: Request) {
-  logNextjsMiddlewareRequest(serverLogger, request);
+  logMiddlewareRequest(serverLogger, request);
   return NextResponse.next();
 }
 ```
 
-Client components can use `createNextjsUseLogger` from
+Client components can use `createUseLogger` from
 `@o3osatoshi/logging/nextjs/client`.
