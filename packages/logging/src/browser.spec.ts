@@ -118,7 +118,7 @@ describe("browser logging helpers", () => {
     logger.event("page_view", { path: "/home" });
 
     expect(events).toHaveLength(1);
-    expect(events[0]?.dataset).toBe("logs");
+    expect(events[0]?.dataset).toBe("events");
     const event = events[0]?.event as LogEvent;
     expect(event["event.type"]).toBe("event");
 

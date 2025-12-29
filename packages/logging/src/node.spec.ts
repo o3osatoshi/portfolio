@@ -272,7 +272,7 @@ describe("node logging helpers", () => {
     const response = await handler(
       new Request("http://example.test", {
         body: JSON.stringify({
-          eventSets: [{ dataset: "logs", event: { timestamp: "now" } }],
+          eventSets: [{ dataset: "events", event: { timestamp: "now" } }],
         }),
         method: "POST",
       }),

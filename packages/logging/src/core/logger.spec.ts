@@ -21,7 +21,7 @@ describe("createLogger", () => {
     logger.info("request_started", { "request.id": "req-1" });
 
     expect(calls).toHaveLength(1);
-    expect(calls[0]?.dataset).toBe("logs");
+    expect(calls[0]?.dataset).toBe("events");
     expect(calls[0]?.event["event.type"]).toBe("log");
     expect(calls[0]?.event.message).toBe("request_started");
     expect(calls[0]?.event["request.id"]).toBe("req-1");
@@ -75,7 +75,7 @@ describe("createLogger", () => {
     logger.event("user_signup", { plan: "pro" });
 
     expect(calls).toHaveLength(1);
-    expect(calls[0]?.dataset).toBe("logs");
+    expect(calls[0]?.dataset).toBe("events");
     expect(calls[0]?.event["event.type"]).toBe("event");
     expect(calls[0]?.event.message).toBe("user_signup");
     expect(calls[0]?.event["plan"]).toBe("pro");
