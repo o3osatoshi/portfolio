@@ -11,4 +11,5 @@ export default await publicDualBundlePreset({
     node: "src/node.ts",
     proxy: "src/proxy.ts",
   },
+  splitting: false,
 });
