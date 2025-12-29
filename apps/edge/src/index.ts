@@ -1,6 +1,6 @@
 import { createAuthConfig as repoAuthCreateAuthConfig } from "@repo/auth";
-import { buildEdgeApp } from "@repo/interface/http/edge";
 import { createEdgeUpstashCacheStore } from "@repo/integrations";
+import { buildEdgeApp } from "@repo/interface/http/edge";
 
 const app = buildEdgeApp({
   createAuthConfig: (c) =>

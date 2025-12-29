@@ -128,9 +128,7 @@ function buildPrivateRoutes(deps: Deps) {
 }
 
 function buildPublicRoutes(deps: Deps) {
-  const getExchangeRate = new GetExchangeRateUseCase(
-    deps.exchangeRateProvider,
-  );
+  const getExchangeRate = new GetExchangeRateUseCase(deps.exchangeRateProvider);
   return new Hono()
     .get("/healthz", (c) => c.json({ ok: true }))
     .get("/exchange-rate", (c) =>

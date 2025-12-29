@@ -18,7 +18,9 @@ export const getExchangeRateRequestSchema = z.object({
 /**
  * Validated shape of a get-exchange-rate request after Zod parsing.
  */
-export type GetExchangeRateRequest = z.infer<typeof getExchangeRateRequestSchema>;
+export type GetExchangeRateRequest = z.infer<
+  typeof getExchangeRateRequestSchema
+>;
 
 /**
  * Parse and validate an unknown payload into {@link GetExchangeRateRequest}.

@@ -26,7 +26,7 @@ const authConfig = createAuthConfig({
 });
 
 export const { GET, POST } = buildHandler({
-  authConfig,
   exchangeRateProvider,
+  authConfig,
   transactionRepo: repo,
 });

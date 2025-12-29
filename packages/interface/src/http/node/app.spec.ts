@@ -1,4 +1,7 @@
-import type { GetExchangeRateRequest, GetTransactionsRequest } from "@repo/application";
+import type {
+  GetExchangeRateRequest,
+  GetTransactionsRequest,
+} from "@repo/application";
 import type { AuthConfig } from "@repo/auth";
 import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
 import type { Context, Next } from "hono";
@@ -89,8 +92,8 @@ describe("http/node app", () => {
 
   function build() {
     const app = buildApp({
-      authConfig: {} as AuthConfig,
       exchangeRateProvider: {} as ExchangeRateProvider,
+      authConfig: {} as AuthConfig,
       // repo is unused because use case is mocked
       transactionRepo: {} as TransactionRepository,
     });

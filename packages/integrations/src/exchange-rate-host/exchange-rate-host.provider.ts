@@ -38,10 +38,7 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
     const baseUrl = this.config.baseUrl ?? DEFAULT_BASE_URL;
     const apiKeyParam = this.config.apiKeyParam ?? DEFAULT_API_KEY_PARAM;
 
-    const url = new URL(
-      DEFAULT_ENDPOINT,
-      normalizeBaseUrl(baseUrl),
-    );
+    const url = new URL(DEFAULT_ENDPOINT, normalizeBaseUrl(baseUrl));
     url.searchParams.set("base", query.base);
     url.searchParams.set("symbols", query.target);
     if (this.config.apiKey) {
@@ -66,21 +63,24 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
   }
 }
 
+function formatStatusReason(res: Response, body: string): string {
+  const summary = body ? `: ${truncate(body)}` : "";
+  return `ExchangeRate.host responded with ${res.status} ${res.statusText}${summary}`;
+}
+
 function handleExchangeRateResponse(
   res: Response,
   query: ExchangeRateQuery,
 ): ResultAsync<ExchangeRate, Error> {
   if (!res.ok) {
-    return ResultAsync.fromPromise(
-      res.text(),
-      (cause) =>
-        newError({
-          action: "ReadExchangeRateHostError",
-          cause,
-          kind: "BadGateway",
-          layer: "External",
-          reason: `Failed to read ExchangeRate.host response (${res.status})`,
-        }),
+    return ResultAsync.fromPromise(res.text(), (cause) =>
+      newError({
+        action: "ReadExchangeRateHostError",
+        cause,
+        kind: "BadGateway",
+        layer: "External",
+        reason: `Failed to read ExchangeRate.host response (${res.status})`,
+      }),
     ).andThen((body) =>
       errAsync(
         newError({
@@ -94,16 +94,14 @@ function handleExchangeRateResponse(
     );
   }
 
-  return ResultAsync.fromPromise(
-    res.json(),
-    (cause) =>
-      newError({
-        action: "ParseExchangeRateHostResponse",
-        cause,
-        kind: "BadGateway",
-        layer: "External",
-        reason: "Failed to parse ExchangeRate.host JSON response.",
-      }),
+  return ResultAsync.fromPromise(res.json(), (cause) =>
+    newError({
+      action: "ParseExchangeRateHostResponse",
+      cause,
+      kind: "BadGateway",
+      layer: "External",
+      reason: "Failed to parse ExchangeRate.host JSON response.",
+    }),
   ).andThen((payload) => {
     const parsed = exchangeRateHostResponseSchema.safeParse(payload);
     if (!parsed.success) {
@@ -120,9 +118,7 @@ function handleExchangeRateResponse(
 
     if (parsed.data.success === false) {
       const detail =
-        parsed.data.error?.info ??
-        parsed.data.error?.type ??
-        "Unknown error";
+        parsed.data.error?.info ?? parsed.data.error?.type ?? "Unknown error";
       return errAsync(
         newError({
           action: "FetchExchangeRateHost",
@@ -160,6 +156,10 @@ function handleExchangeRateResponse(
   });
 }
 
+function normalizeBaseUrl(baseUrl: string): string {
+  return baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+}
+
 function statusToKind(status: number): Kind {
   if (status === 401) return "Unauthorized";
   if (status === 403) return "Forbidden";
@@ -169,13 +169,4 @@ function statusToKind(status: number): Kind {
   if (status >= 400 && status < 500) return "BadRequest";
   if (status >= 500 && status < 600) return "BadGateway";
   return "Unknown";
-}
-
-function formatStatusReason(res: Response, body: string): string {
-  const summary = body ? `: ${truncate(body)}` : "";
-  return `ExchangeRate.host responded with ${res.status} ${res.statusText}${summary}`;
-}
-
-function normalizeBaseUrl(baseUrl: string): string {
-  return baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 }

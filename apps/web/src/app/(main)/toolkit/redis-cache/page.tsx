@@ -19,9 +19,9 @@ export default function Page() {
           This demo calls a deliberately slow API endpoint exposed by the
           interface service at <code>/edge/public/heavy</code> and uses the
           Upstash cache adapter from <code>@repo/integrations</code> to cache
-          the response. Requests within the TTL are served from cache; once
-          the TTL expires, the next request recomputes the value by hitting the
-          slow API again.
+          the response. Requests within the TTL are served from cache; once the
+          TTL expires, the next request recomputes the value by hitting the slow
+          API again.
         </p>
       </header>
 

@@ -41,13 +41,9 @@ export class HeavyProcessCachedUseCase {
 
         return this.heavyProcess.execute().andThen((heavyProcess) =>
           this.cacheStore
-            .set(
-              HEAVY_PROCESS_CACHE_KEY,
-              heavyProcess,
-              {
-                ttlMs: HEAVY_PROCESS_CACHE_TTL_MS,
-              },
-            )
+            .set(HEAVY_PROCESS_CACHE_KEY, heavyProcess, {
+              ttlMs: HEAVY_PROCESS_CACHE_TTL_MS,
+            })
             .orElse(() => okAsync(null))
             .map(() => ({ ...heavyProcess, cached: false })),
         );

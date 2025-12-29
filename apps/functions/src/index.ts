@@ -32,8 +32,8 @@ export const api = onRequest(async (req, res) => {
       baseUrl: env.EXCHANGE_RATE_HOST_BASE_URL,
     });
     const app = buildApp({
-      authConfig,
       exchangeRateProvider,
+      authConfig,
       transactionRepo: repo,
     });
     handler = createExpressRequestHandler(app);

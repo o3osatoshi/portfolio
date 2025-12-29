@@ -115,15 +115,19 @@ describe("integrations/redis wrapUpstashClient", () => {
     };
     const store = wrapUpstashClient(client);
 
-    const result = await store.set("cache:key", { foo: "bar" }, {
-      ttlMs: 1_000,
-      onlyIfAbsent: true,
-    });
+    const result = await store.set(
+      "cache:key",
+      { foo: "bar" },
+      {
+        onlyIfAbsent: true,
+        ttlMs: 1_000,
+      },
+    );
 
     expect(client.set).toHaveBeenCalledWith(
       "cache:key",
       { foo: "bar" },
-      { px: 1_000, nx: true },
+      { nx: true, px: 1_000 },
     );
     expect(result.isOk()).toBe(true);
   });

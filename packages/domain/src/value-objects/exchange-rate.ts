@@ -7,11 +7,6 @@ import { type DateTime, newDateTime } from "./datetime";
 import { type DecimalString, newDecimal } from "./decimal";
 
 /**
- * Normalized exchange rate (strictly greater than zero).
- */
-export type ExchangeRateValue = Brand<DecimalString, "ExchangeRateValue">;
-
-/**
  * Validated exchange rate quote between two currencies.
  */
 export type ExchangeRate = {
@@ -22,6 +17,11 @@ export type ExchangeRate = {
 };
 
 /**
+ * Normalized exchange rate (strictly greater than zero).
+ */
+export type ExchangeRateValue = Brand<DecimalString, "ExchangeRateValue">;
+
+/**
  * Untyped payload accepted by {@link newExchangeRate} before validation.
  */
 export type NewExchangeRateInput = {
@@ -30,25 +30,6 @@ export type NewExchangeRateInput = {
   rate: unknown;
   target: unknown;
 };
-
-/**
- * Normalize an unknown value into an {@link ExchangeRateValue}, ensuring it is > 0.
- */
-export function newExchangeRateValue(
-  v: unknown,
-): Result<ExchangeRateValue, Error> {
-  const res = newDecimal(v);
-  if (res.isErr()) return err(res.error);
-  if (!isPositiveDecimal(res.value)) {
-    return err(
-      domainValidationError({
-        action: "NewExchangeRateValue",
-        reason: "Exchange rate must be > 0",
-      }),
-    );
-  }
-  return ok(res.value as ExchangeRateValue);
-}
 
 /**
  * Validate raw input into a domain {@link ExchangeRate} quote.
@@ -67,6 +48,25 @@ export function newExchangeRate(
     rate,
     target,
   }));
+}
+
+/**
+ * Normalize an unknown value into an {@link ExchangeRateValue}, ensuring it is > 0.
+ */
+export function newExchangeRateValue(
+  v: unknown,
+): Result<ExchangeRateValue, Error> {
+  const res = newDecimal(v);
+  if (res.isErr()) return err(res.error);
+  if (!isPositiveDecimal(res.value)) {
+    return err(
+      domainValidationError({
+        action: "NewExchangeRateValue",
+        reason: "Exchange rate must be > 0",
+      }),
+    );
+  }
+  return ok(res.value as ExchangeRateValue);
 }
 
 function isPositiveDecimal(value: DecimalString): boolean {
