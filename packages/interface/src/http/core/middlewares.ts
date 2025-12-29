@@ -1,19 +1,7 @@
-import type { Context, Next } from "hono";
+import { getAuthUserId } from "@repo/auth";
+import type { Context, MiddlewareHandler, Next } from "hono";
 
-/**
- * Minimal request logger middleware.
- * Logs: HTTP method, path, response status, and elapsed time in ms.
- *
- * @param c Hono context for the current request.
- * @param next Function to invoke the downstream handler/middleware.
- */
-export async function loggerMiddleware(c: Context, next: Next) {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-
-  console.log(`${c.req.method} ${c.req.path} -> ${c.res.status} (${ms}ms)`);
-}
+import type { ContextEnv } from "./types";
 
 /**
  * Simple request id middleware.
@@ -31,3 +19,11 @@ export async function requestIdMiddleware(c: Context, next: Next) {
   c.set("requestId", rid);
   await next();
 }
+
+export const userIdMiddleware: MiddlewareHandler<ContextEnv> = async (
+  c,
+  next,
+) => {
+  c.get("requestLogger")?.setUserId?.(getAuthUserId(c.get("authUser")));
+  await next();
+};

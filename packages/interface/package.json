@@ -23,6 +23,7 @@
   "dependencies": {
     "@hono/node-server": "^1.19.7",
     "@hono/zod-validator": "^0.7.5",
+    "@o3osatoshi/logging": "workspace:*",
     "@o3osatoshi/toolkit": "workspace:*",
     "@repo/application": "workspace:*",
     "@repo/auth": "workspace:*",
