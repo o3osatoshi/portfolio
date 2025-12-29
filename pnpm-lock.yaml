@@ -149,6 +149,9 @@ importers:
 
   apps/edge:
     dependencies:
+      '@o3osatoshi/logging':
+        specifier: workspace:*
+        version: link:../../packages/logging
       '@repo/auth':
         specifier: workspace:*
         version: link:../../packages/auth
