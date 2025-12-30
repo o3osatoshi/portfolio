@@ -1,8 +1,13 @@
 import {
+  GetExchangeRateUseCase,
   GetTransactionsUseCase,
+  parseGetExchangeRateRequest,
   parseGetTransactionsRequest,
 } from "@repo/application";
-import type { GetTransactionsResponse } from "@repo/application";
+import type {
+  GetExchangeRateResponse,
+  GetTransactionsResponse,
+} from "@repo/application";
 import { type AuthConfig, getAuthUserId } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
@@ -62,7 +67,7 @@ export function buildApp(deps: Deps) {
       initAuthConfig(() => deps.authConfig),
     )
     .route("/auth", buildAuthRoutes())
-    .route("/public", buildPublicRoutes())
+    .route("/public", buildPublicRoutes(deps))
     .route("/private", buildPrivateRoutes(deps));
 }
 
@@ -125,6 +130,19 @@ function buildPrivateRoutes(deps: Deps) {
     });
 }
 
-function buildPublicRoutes() {
-  return new Hono<ContextEnv>().get("/healthz", (c) => c.json({ ok: true }));
+function buildPublicRoutes(deps: Deps) {
+  return new Hono<ContextEnv>()
+    .get("/healthz", (c) => c.json({ ok: true }))
+    .get("/exchange-rate", (c) => {
+      const getExchangeRate = new GetExchangeRateUseCase(
+        deps.exchangeRateProvider,
+      );
+      const query = c.req.query();
+      return respondAsync<GetExchangeRateResponse>(c)(
+        parseGetExchangeRateRequest({
+          base: query["base"],
+          target: query["target"],
+        }).asyncAndThen((res) => getExchangeRate.execute(res)),
+      );
+    });
 }
