@@ -75,7 +75,7 @@ export function initBrowserLogger(options: RuntimeLoggingOptions): void {
   browserState = {
     attributes,
     logger,
-    options: options,
+    options,
     transport,
   };
 
