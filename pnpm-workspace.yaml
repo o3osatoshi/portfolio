@@ -4,6 +4,8 @@ packages:
 
 catalog:
   '@microsoft/api-extractor': ^7.55.2
+  '@prisma/adapter-pg': ^7.1.0
+  '@prisma/client': ^7.1.0
   '@types/node': ^25.0.2
   '@types/react': ^19.2.7
   '@types/react-dom': ^19.2.3
@@ -16,6 +18,8 @@ catalog:
   neverthrow: ^8.2.0
   next-themes: ^0.4.6
   npm-run-all: ^4.1.5
+  pg: 8.16.3
+  prisma: ^7.1.0
   react: ^19.2.3
   react-dom: ^19.2.3
   rimraf: ^6.1.2

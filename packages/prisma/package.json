@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@o3osatoshi/toolkit": "workspace:*",
-    "@prisma/adapter-pg": "^7.1.0",
-    "@prisma/client": "^7.1.0",
+    "@prisma/adapter-pg": "catalog:",
+    "@prisma/client": "catalog:",
     "@repo/domain": "workspace:*",
     "neverthrow": "catalog:",
     "zod": "catalog:"
@@ -39,7 +39,7 @@
     "@vitest/coverage-v8": "catalog:",
     "dotenv": "catalog:",
     "npm-run-all": "catalog:",
-    "prisma": "^7.1.0",
+    "prisma": "catalog:",
     "testcontainers": "^11.10.0",
     "tsx": "catalog:",
     "typescript": "catalog:",
