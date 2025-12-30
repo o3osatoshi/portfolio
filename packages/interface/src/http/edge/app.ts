@@ -40,15 +40,10 @@ export type EdgeDepsAuth =
   | { authConfig: AuthConfig; createAuthConfig?: (c: Context) => AuthConfig }
   | { authConfig?: AuthConfig; createAuthConfig: (c: Context) => AuthConfig };
 
-export type EdgeDepsCache =
-  | {
-      cacheStore: CacheStore;
-      createCacheStore?: (c: Context) => CacheStore;
-    }
-  | {
-      cacheStore?: CacheStore;
-      createCacheStore: (c: Context) => CacheStore;
-    };
+export type EdgeDepsCache = {
+  cacheStore?: CacheStore;
+  createCacheStore?: (c: Context) => CacheStore;
+};
 
 /**
  * Build the Edge-ready HTTP application.
@@ -133,10 +128,11 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
   const cacheStore = (c: Context) => {
     if (deps.cacheStore !== undefined) {
       return deps.cacheStore;
-    } else {
-      // @ts-expect-error: Runtime check is required because undefined can be passed
+    }
+    if (deps.createCacheStore) {
       return deps.createCacheStore(c);
     }
+    return undefined;
   };
   return new Hono<ContextEnv>()
     .get("/healthz", (c) => c.json({ ok: true }))
@@ -145,7 +141,14 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
       return respondAsync<HeavyProcessResponse>(c)(heavyProcess.execute());
     })
     .get("/heavy/cached", (c) => {
-      const heavyProcessCached = new HeavyProcessCachedUseCase(cacheStore(c));
+      const store = cacheStore(c);
+      if (!store) {
+        const heavyProcess = new HeavyProcessUseCase();
+        return respondAsync<HeavyProcessCachedResponse>(c)(
+          heavyProcess.execute().map((res) => ({ ...res, cached: false })),
+        );
+      }
+      const heavyProcessCached = new HeavyProcessCachedUseCase(store);
       return respondAsync<HeavyProcessCachedResponse>(c)(
         heavyProcessCached.execute(),
       );

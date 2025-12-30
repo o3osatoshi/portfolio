@@ -13,21 +13,22 @@ import {
   truncate,
 } from "@o3osatoshi/toolkit";
 
-import { exchangeRateHostResponseSchema } from "./schema";
+import {
+  type ExchangeRateHostResponse,
+  exchangeRateHostResponseSchema,
+} from "./schema";
 
-const DEFAULT_BASE_URL = "https://api.exchangerate.host";
-const DEFAULT_API_KEY_PARAM = "access_key";
-const DEFAULT_ENDPOINT = "latest";
+const DEFAULT_BASE_URL = "https://v6.exchangerate-api.com/v6";
+const DEFAULT_ENDPOINT = "pair";
 
 export type ExchangeRateHostConfig = {
   apiKey?: string | undefined;
-  apiKeyParam?: string | undefined;
   baseUrl?: string | undefined;
   fetch?: typeof fetch | undefined;
 };
 
 /**
- * ExchangeRate.host-backed implementation of {@link ExchangeRateProvider}.
+ * ExchangeRate-API-backed implementation of {@link ExchangeRateProvider}.
  */
 export class ExchangeRateHostProvider implements ExchangeRateProvider {
   constructor(private readonly config: ExchangeRateHostConfig = {}) {}
@@ -36,14 +37,10 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
   getRate(query: ExchangeRateQuery) {
     const fetcher = this.config.fetch ?? fetch;
     const baseUrl = this.config.baseUrl ?? DEFAULT_BASE_URL;
-    const apiKeyParam = this.config.apiKeyParam ?? DEFAULT_API_KEY_PARAM;
-
-    const url = new URL(DEFAULT_ENDPOINT, normalizeBaseUrl(baseUrl));
-    url.searchParams.set("base", query.base);
-    url.searchParams.set("symbols", query.target);
-    if (this.config.apiKey) {
-      url.searchParams.set(apiKeyParam, this.config.apiKey);
-    }
+    const path = this.config.apiKey
+      ? `${this.config.apiKey}/${DEFAULT_ENDPOINT}/${query.base}/${query.target}`
+      : `${DEFAULT_ENDPOINT}/${query.base}/${query.target}`;
+    const url = new URL(path, normalizeBaseUrl(baseUrl));
 
     const request = { method: "GET", url: url.toString() };
 
@@ -55,7 +52,7 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
       }),
       (cause) =>
         newFetchError({
-          action: "FetchExchangeRateHost",
+          action: "FetchExchangeRateApi",
           cause,
           request,
         }),
@@ -65,7 +62,7 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
 
 function formatStatusReason(res: Response, body: string): string {
   const summary = body ? `: ${truncate(body)}` : "";
-  return `ExchangeRate.host responded with ${res.status} ${res.statusText}${summary}`;
+  return `ExchangeRate API responded with ${res.status} ${res.statusText}${summary}`;
 }
 
 function handleExchangeRateResponse(
@@ -75,16 +72,16 @@ function handleExchangeRateResponse(
   if (!res.ok) {
     return ResultAsync.fromPromise(res.text(), (cause) =>
       newError({
-        action: "ReadExchangeRateHostError",
+        action: "ReadExchangeRateApiError",
         cause,
         kind: "BadGateway",
         layer: "External",
-        reason: `Failed to read ExchangeRate.host response (${res.status})`,
+        reason: `Failed to read ExchangeRate API response (${res.status})`,
       }),
     ).andThen((body) =>
       errAsync(
         newError({
-          action: "FetchExchangeRateHost",
+          action: "FetchExchangeRateApi",
           cause: body || undefined,
           kind: statusToKind(res.status),
           layer: "External",
@@ -96,53 +93,52 @@ function handleExchangeRateResponse(
 
   return ResultAsync.fromPromise(res.json(), (cause) =>
     newError({
-      action: "ParseExchangeRateHostResponse",
+      action: "ParseExchangeRateApiResponse",
       cause,
       kind: "BadGateway",
       layer: "External",
-      reason: "Failed to parse ExchangeRate.host JSON response.",
+      reason: "Failed to parse ExchangeRate API JSON response.",
     }),
   ).andThen((payload) => {
     const parsed = exchangeRateHostResponseSchema.safeParse(payload);
     if (!parsed.success) {
       return errAsync(
         newError({
-          action: "ParseExchangeRateHostResponse",
+          action: "ParseExchangeRateApiResponse",
           cause: parsed.error,
           kind: "BadGateway",
           layer: "External",
-          reason: "ExchangeRate.host payload did not match schema.",
+          reason: "ExchangeRate API payload did not match schema.",
         }),
       );
     }
 
-    if (parsed.data.success === false) {
-      const detail =
-        parsed.data.error?.info ?? parsed.data.error?.type ?? "Unknown error";
+    if (parsed.data.result && parsed.data.result !== "success") {
+      const detail = parsed.data["error-type"] ?? "Unknown error";
       return errAsync(
         newError({
-          action: "FetchExchangeRateHost",
-          cause: parsed.data.error,
+          action: "FetchExchangeRateApi",
+          cause: parsed.data,
           kind: "BadGateway",
           layer: "External",
-          reason: `ExchangeRate.host error: ${detail}`,
+          reason: `ExchangeRate API error: ${detail}`,
         }),
       );
     }
 
-    const rate = parsed.data.rates[query.target];
+    const rate = parsed.data.conversion_rate;
     if (rate === undefined) {
       return errAsync(
         newError({
-          action: "ParseExchangeRateHostResponse",
+          action: "ParseExchangeRateApiResponse",
           kind: "BadGateway",
           layer: "External",
-          reason: `ExchangeRate.host response missing rate for ${query.target}.`,
+          reason: "ExchangeRate API response missing conversion rate.",
         }),
       );
     }
 
-    const asOf = parsed.data.date ? new Date(parsed.data.date) : new Date();
+    const asOf = resolveAsOf(parsed.data);
     const normalized = newExchangeRate({
       asOf,
       base: query.base,
@@ -158,6 +154,19 @@ function handleExchangeRateResponse(
 
 function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+}
+
+function resolveAsOf(payload: ExchangeRateHostResponse): Date {
+  if (typeof payload.time_last_update_unix === "number") {
+    return new Date(payload.time_last_update_unix * 1000);
+  }
+  if (payload.time_last_update_utc) {
+    const parsed = new Date(payload.time_last_update_utc);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed;
+    }
+  }
+  return new Date();
 }
 
 function statusToKind(status: number): Kind {

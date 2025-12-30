@@ -1,4 +1,5 @@
 import {
+  GetExchangeRateCachedUseCase,
   GetExchangeRateUseCase,
   GetTransactionsUseCase,
   parseGetExchangeRateRequest,
@@ -10,7 +11,11 @@ import type {
 } from "@repo/application";
 import { type AuthConfig, getAuthUserId } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
-import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
+import type {
+  CacheStore,
+  ExchangeRateProvider,
+  TransactionRepository,
+} from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -33,6 +38,8 @@ export type AppType = ReturnType<typeof buildApp>;
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
+  /** Optional cache store for exchange-rate caching. */
+  cacheStore?: CacheStore;
   /** Provider required by exchange-rate use cases. */
   exchangeRateProvider: ExchangeRateProvider;
   /** Repository required by transaction use cases. */
@@ -134,9 +141,13 @@ function buildPublicRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
     .get("/healthz", (c) => c.json({ ok: true }))
     .get("/exchange-rate", (c) => {
-      const getExchangeRate = new GetExchangeRateUseCase(
-        deps.exchangeRateProvider,
-      );
+      const getExchangeRate =
+        deps.cacheStore !== undefined
+          ? new GetExchangeRateCachedUseCase(
+              deps.exchangeRateProvider,
+              deps.cacheStore,
+            )
+          : new GetExchangeRateUseCase(deps.exchangeRateProvider);
       const query = c.req.query();
       return respondAsync<GetExchangeRateResponse>(c)(
         parseGetExchangeRateRequest({

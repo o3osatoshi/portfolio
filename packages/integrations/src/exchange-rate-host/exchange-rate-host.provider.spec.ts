@@ -51,19 +51,20 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     vi.useRealTimers();
   });
 
-  it("builds request URL with api key param and returns date-based rate", async () => {
+  it("builds request URL with api key path and returns date-based rate", async () => {
+    const lastUpdateUnix = 1_704_153_600;
     const response = buildResponse({
       json: {
-        base: "USD",
-        date: "2024-01-02",
-        rates: { JPY: "150.25" },
-        success: true,
+        base_code: "USD",
+        conversion_rate: "150.25",
+        result: "success",
+        target_code: "JPY",
+        time_last_update_unix: lastUpdateUnix,
       },
     });
     const fetchMock = vi.fn(async () => response);
     const provider = new ExchangeRateHostProvider({
       apiKey: "key-123",
-      apiKeyParam: "token",
       baseUrl: "https://example.test/api",
       fetch: fetchMock as unknown as typeof fetch,
     });
@@ -73,9 +74,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     // @ts-expect-error
     const [url, init] = fetchMock.mock.calls[0] ?? [];
-    expect(url).toBe(
-      "https://example.test/api/latest?base=USD&symbols=JPY&token=key-123",
-    );
+    expect(url).toBe("https://example.test/api/key-123/pair/USD/JPY");
     expect(init).toEqual({ headers: { Accept: "application/json" } });
 
     expect(result.isOk()).toBe(true);
@@ -83,7 +82,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     expect(result.value.base).toBe("USD");
     expect(result.value.target).toBe("JPY");
     expect(result.value.rate).toBe("150.25");
-    expect(result.value.asOf.getTime()).toBe(new Date("2024-01-02").getTime());
+    expect(result.value.asOf.getTime()).toBe(lastUpdateUnix * 1000);
   });
 
   it("omits api key and uses current time when date is missing", async () => {
@@ -93,9 +92,10 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
 
     const response = buildResponse({
       json: {
-        base: "USD",
-        rates: { JPY: 150 },
-        success: true,
+        base_code: "USD",
+        conversion_rate: 150,
+        result: "success",
+        target_code: "JPY",
       },
     });
     const fetchMock = vi.fn(async () => response);
@@ -111,11 +111,9 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     const [url] = fetchMock.mock.calls[0] ?? [];
     const parsed = new URL(String(url));
     expect(`${parsed.origin}${parsed.pathname}`).toBe(
-      "https://example.test/api/latest",
+      "https://example.test/api/pair/USD/JPY",
     );
-    expect(parsed.searchParams.get("base")).toBe("USD");
-    expect(parsed.searchParams.get("symbols")).toBe("JPY");
-    expect(parsed.searchParams.has("access_key")).toBe(false);
+    expect(parsed.search).toBe("");
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -141,7 +139,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalNotFoundError");
     const { reason } = parseErrorMessage(result.error.message);
-    expect(reason ?? "").toContain("ExchangeRate.host responded with 404");
+    expect(reason ?? "").toContain("ExchangeRate API responded with 404");
   });
 
   it("returns BadGateway error when JSON parsing fails", async () => {
@@ -159,14 +157,14 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
     const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("Failed to parse ExchangeRate.host JSON response.");
+    expect(reason).toBe("Failed to parse ExchangeRate API JSON response.");
   });
 
   it("returns BadGateway error when payload schema is invalid", async () => {
     const response = buildResponse({
       json: {
-        base: "USD",
-        rates: "invalid",
+        conversion_rate: { invalid: true },
+        result: "success",
       },
     });
     const fetchMock = vi.fn(async () => response);
@@ -180,16 +178,14 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
     const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("ExchangeRate.host payload did not match schema.");
+    expect(reason).toBe("ExchangeRate API payload did not match schema.");
   });
 
   it("returns BadGateway error when API signals failure", async () => {
     const response = buildResponse({
       json: {
-        base: "USD",
-        error: { info: "No API key" },
-        rates: { JPY: 100 },
-        success: false,
+        "error-type": "invalid-key",
+        result: "error",
       },
     });
     const fetchMock = vi.fn(async () => response);
@@ -203,15 +199,15 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
     const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("ExchangeRate.host error: No API key");
+    expect(reason).toBe("ExchangeRate API error: invalid-key");
   });
 
   it("returns BadGateway error when the requested rate is missing", async () => {
     const response = buildResponse({
       json: {
-        base: "USD",
-        rates: { EUR: 0.9 },
-        success: true,
+        base_code: "USD",
+        result: "success",
+        target_code: "JPY",
       },
     });
     const fetchMock = vi.fn(async () => response);
@@ -225,15 +221,16 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
     const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("ExchangeRate.host response missing rate for JPY.");
+    expect(reason).toBe("ExchangeRate API response missing conversion rate.");
   });
 
   it("propagates domain validation errors for invalid rates", async () => {
     const response = buildResponse({
       json: {
-        base: "USD",
-        rates: { JPY: 0 },
-        success: true,
+        base_code: "USD",
+        conversion_rate: 0,
+        result: "success",
+        target_code: "JPY",
       },
     });
     const fetchMock = vi.fn(async () => response);

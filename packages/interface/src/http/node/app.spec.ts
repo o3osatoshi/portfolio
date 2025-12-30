@@ -49,6 +49,7 @@ const a = vi.hoisted(() => {
       });
     }
   }
+  class GetExchangeRateCachedUseCase extends GetExchangeRateUseCase {}
   const parseGetTransactionsRequest = vi.fn(
     (input: GetTransactionsRequest): Result<GetTransactionsRequest, Error> =>
       ok(input),
@@ -71,6 +72,7 @@ const a = vi.hoisted(() => {
     }
   }
   return {
+    GetExchangeRateCachedUseCase,
     GetExchangeRateUseCase,
     GetTransactionsUseCase,
     parseGetExchangeRateRequest,
@@ -79,6 +81,7 @@ const a = vi.hoisted(() => {
 });
 
 vi.mock("@repo/application", () => ({
+  GetExchangeRateCachedUseCase: a.GetExchangeRateCachedUseCase,
   GetExchangeRateUseCase: a.GetExchangeRateUseCase,
   GetTransactionsUseCase: a.GetTransactionsUseCase,
   parseGetExchangeRateRequest: a.parseGetExchangeRateRequest,

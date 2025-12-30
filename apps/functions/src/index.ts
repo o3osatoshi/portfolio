@@ -1,5 +1,8 @@
 import { createAuthConfig } from "@repo/auth";
-import { ExchangeRateHostProvider } from "@repo/integrations";
+import {
+  createUpstashCacheStore,
+  ExchangeRateHostProvider,
+} from "@repo/integrations";
 import {
   buildApp,
   createExpressRequestHandler,
@@ -34,10 +37,18 @@ export const api = onRequest(async (req, res) => {
       apiKey: env.EXCHANGE_RATE_API_KEY,
       baseUrl: env.EXCHANGE_RATE_BASE_URL,
     });
+    const cacheStore =
+      env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
+        ? createUpstashCacheStore({
+            token: env.UPSTASH_REDIS_REST_TOKEN,
+            url: env.UPSTASH_REDIS_REST_URL,
+          })
+        : undefined;
     const app = buildApp({
       exchangeRateProvider,
       authConfig,
       transactionRepo: repo,
+      ...(cacheStore ? { cacheStore } : {}),
     });
     handler = createExpressRequestHandler(app);
   }
