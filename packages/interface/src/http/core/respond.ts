@@ -15,6 +15,7 @@ export function respond<T>(c: Context) {
     ra.match(
       (ok) => c.json<T, SuccessStatusCode>(ok),
       (err) => {
+        c.set("error", err);
         const { body, statusCode } = toHttpErrorResponse(err);
         return c.json<SerializedError, ErrorStatusCode>(body, {
           status: statusCode,
@@ -39,6 +40,7 @@ export function respondAsync<T>(c: Context) {
     ra.match(
       (ok) => c.json<T, SuccessStatusCode>(ok),
       (err) => {
+        c.set("error", err);
         const { body, statusCode } = toHttpErrorResponse(err);
         return c.json<SerializedError, ErrorStatusCode>(body, {
           status: statusCode,
@@ -77,9 +79,9 @@ export function respondZodError(
   c: Context,
 ): Response | undefined {
   if (!result.success) {
-    const { body, statusCode } = toHttpErrorResponse(
-      newZodError({ cause: result.error }),
-    );
+    const err = newZodError({ cause: result.error });
+    c.set("error", err);
+    const { body, statusCode } = toHttpErrorResponse(err);
     return c.json(body, { status: statusCode });
   }
   return undefined;

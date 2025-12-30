@@ -1,20 +1,28 @@
-import type { RequestLogger } from "@o3osatoshi/logging";
+import type { Attributes, RequestLogger } from "@o3osatoshi/logging";
 
-export function emitRequestEnd(
+export function emitRequestSummary(
   requestLogger: RequestLogger,
   status: number,
   durationMs: number,
   error?: unknown,
 ) {
-  const attributes = {
+  const attributes: Attributes = {
     "http.response.duration_ms": Math.max(0, durationMs),
     "http.status_code": status,
   };
 
-  if (error) {
-    requestLogger.logger.error("http_request_error", attributes, error);
-  } else {
+  const isSuccess = status < 400;
+  const isClientError = status >= 400 && status < 500;
+  const isServerError = status >= 500;
+
+  if (isSuccess) {
     requestLogger.logger.info("http_request_success", attributes);
+  }
+  if (isClientError) {
+    requestLogger.logger.warn("http_request_error", attributes);
+  }
+  if (isServerError) {
+    requestLogger.logger.error("http_request_error", attributes, error);
   }
 
   requestLogger.logger.metric(
@@ -29,8 +37,4 @@ export function emitRequestEnd(
     { "http.status_code": status },
     { kind: "histogram", unit: "ms" },
   );
-}
-
-export function emitRequestStart(requestLogger: RequestLogger) {
-  requestLogger.logger.info("http_request_start");
 }
