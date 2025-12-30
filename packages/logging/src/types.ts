@@ -63,6 +63,12 @@ export interface BaseLoggerOptions {
   /**
    * Optional sampling rate (0..1) applied to logs, events, and metrics.
    *
+   * @remarks
+   * For request-scoped loggers (Node/Edge helpers), fractional values are
+   * resolved once per request into either `0` or `1`, so a request is fully
+   * sampled or fully dropped. Process-level loggers continue to sample per
+   * event.
+   *
    * @defaultValue undefined (no sampling)
    */
   sampleRate?: number;
