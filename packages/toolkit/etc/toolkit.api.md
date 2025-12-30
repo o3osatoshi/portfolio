@@ -4,8 +4,6 @@
 
 ```ts
 
-import { Redis } from '@upstash/redis/cloudflare';
-import { Redis as Redis_2 } from '@upstash/redis';
 import { Result } from 'neverthrow';
 import { ResultAsync } from 'neverthrow';
 import { z } from 'zod';
@@ -40,9 +38,6 @@ export function composeErrorMessage(parts: ErrorMessageParts): string;
 export function composeErrorName(layer: Layer, kind: Kind): string;
 
 // @public
-export function createEdgeRedisClient(options?: RedisClientOptions): Redis;
-
-// @public
 export function createEnv<T extends EnvSchema>(schema: T, opts?: CreateEnvOptions): EnvOf<T>;
 
 // @public
@@ -56,9 +51,6 @@ export function createLazyEnv<T extends EnvSchema>(schema: T, opts?: CreateLazyE
 
 // @public
 export type CreateLazyEnvOptions = CreateEnvOptions;
-
-// @public
-export function createRedisClient(options?: RedisClientOptions): Redis_2;
 
 // @public
 export function decode(value: string): Result<JsonContainer, Error>;
@@ -168,17 +160,6 @@ export const jsonValueSchema: z.ZodType<JsonValue>;
 export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
 
 // @public
-export function kvGet<T>(redis: Redis_2, key: number | string, opt?: KvOptions): ResultAsync<null | T, Error>;
-
-// @public
-export type KvOptions = {
-    prefix?: string;
-};
-
-// @public
-export function kvSet<T>(redis: Redis_2, key: number | string, value: T, { onlyIfAbsent, onlyIfPresent, ttlMs }?: SetOptions, opt?: KvOptions): ResultAsync<"OK" | null | T, Error>;
-
-// @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
 
 // @public
@@ -243,12 +224,6 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
 // @public
-export type RedisClientOptions = {
-    token?: string;
-    url?: string;
-};
-
-// @public
 export type SerializedCause = SerializedError | string;
 
 // @public
@@ -266,13 +241,6 @@ export function serializeError(error: Error, opts?: SerializeOptions): Serialize
 export type SerializeOptions = {
     depth?: number | undefined;
     includeStack?: boolean | undefined;
-};
-
-// @public
-export type SetOptions = {
-    onlyIfAbsent?: boolean;
-    onlyIfPresent?: boolean;
-    ttlMs?: number;
 };
 
 // @public
