@@ -1,12 +1,9 @@
 import "@o3osatoshi/ui/globals.css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import Providers from "@/app/_components/providers";
-import WebVitals from "@/app/_components/web-vitals";
 import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 
 export const metadata: Metadata = {
@@ -45,18 +42,20 @@ export const metadata: Metadata = {
 
 interface Props {
   children: ReactNode;
+  params?: Promise<{ locale?: string }>;
 }
 
-export default function Layout({ children }: Props) {
+export default async function Layout({ children, params }: Props) {
+  const resolvedParams = await params;
+  const locale = resolvedParams?.locale ?? "en";
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <GoogleAnalytics gaId="G-QFX9PV6BLQ" />
       <body
         className={`${fontSans.variable} ${fontMono.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
-        <SpeedInsights />
-        <WebVitals />
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
 import {
@@ -15,6 +16,7 @@ import {
 export default function ThemeToggle() {
   const { setTheme } = useTheme();
   const { isMobile } = useSidebar();
+  const t = useTranslations("Settings");
 
   return (
     <DropdownMenu>
@@ -22,18 +24,18 @@ export default function ThemeToggle() {
         <SidebarMenuButton size="sm">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 dark:scale-100" />
-          <span>Toggle theme</span>
+          <span>{t("theme")}</span>
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent side={isMobile ? "bottom" : "right"} align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
+          {t("light")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
+          {t("dark")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
+          {t("system")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

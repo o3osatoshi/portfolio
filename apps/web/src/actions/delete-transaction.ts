@@ -6,9 +6,9 @@ import {
 } from "@repo/application";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { updateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { env } from "@/env/server";
+import { redirect } from "@/i18n/navigation";
 import { getMe } from "@/services/get-me";
 import { getPath, getTag } from "@/utils/nav-handler";
 import { type ActionState, err } from "@o3osatoshi/toolkit";

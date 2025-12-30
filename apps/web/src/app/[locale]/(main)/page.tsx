@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
 
 export const metadata: Metadata = {
@@ -70,14 +70,14 @@ export default function Page() {
           The source code for this portfolio site is publicly available on
           GitHub.
         </p>
-        <Link
-          href="https://github.com/o3osatoshi/portfolio"
+        <a
           className="inline-block rounded border px-4 py-2 underline"
+          href="https://github.com/o3osatoshi/portfolio"
           rel="noreferrer"
           target="_blank"
         >
           View on GitHub
-        </Link>
+        </a>
       </section>
     </div>
   );

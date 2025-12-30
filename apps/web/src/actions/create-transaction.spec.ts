@@ -48,7 +48,7 @@ vi.mock("next/cache", () => ({
   updateTag: h.updateTagMock,
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/i18n/navigation", () => ({
   redirect: h.redirectMock,
 }));
 

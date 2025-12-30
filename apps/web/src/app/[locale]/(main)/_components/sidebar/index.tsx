@@ -1,4 +1,4 @@
-import ServiceLogo from "@/app/(main)/_components/sidebar/service-logo";
+import ServiceLogo from "@/app/[locale]/(main)/_components/sidebar/service-logo";
 import {
   SidebarContent,
   SidebarFooter,

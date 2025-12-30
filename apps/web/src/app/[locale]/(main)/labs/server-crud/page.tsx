@@ -1,5 +1,5 @@
-import TransactionCard from "@/app/(main)/labs/_components/transaction-card";
-import CreateForm from "@/app/(main)/labs/server-crud/_components/create-form";
+import TransactionCard from "@/app/[locale]/(main)/labs/_components/transaction-card";
+import CreateForm from "@/app/[locale]/(main)/labs/server-crud/_components/create-form";
 import { getTransactions } from "@/services/get-transactions";
 
 // const getTransactions: () => Promise<(Transaction & { author: Pick<User, "name"> })[]> =
