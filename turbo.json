@@ -26,7 +26,12 @@
         "UPSTASH_REDIS_REST_URL"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**"]
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "storybook-static/**"
+      ]
     },
     "clean": {
       "cache": false,
