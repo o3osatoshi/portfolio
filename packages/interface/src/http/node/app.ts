@@ -4,18 +4,16 @@ import {
   parseGetExchangeRateRequest,
   parseGetTransactionsRequest,
 } from "@repo/application";
-import type {
-  GetExchangeRateResponse,
-  GetTransactionsResponse,
-} from "@repo/application";
-import type { AuthConfig } from "@repo/auth";
+import type { GetTransactionsResponse } from "@repo/application";
+import { type AuthConfig, getAuthUserId } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respondAsync } from "../core/respond";
+import { requestIdMiddleware, respondAsync, userIdMiddleware } from "../core";
+import type { ContextEnv } from "../core/types";
+import { loggerMiddleware } from "./middlewares";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -58,7 +56,7 @@ export type Deps = {
  * @returns Configured Hono app instance.
  */
 export function buildApp(deps: Deps) {
-  return new Hono()
+  return new Hono<ContextEnv>()
     .basePath("/api")
     .use("*", requestIdMiddleware, loggerMiddleware)
     .use(
@@ -113,30 +111,22 @@ export function buildHandler(deps: Deps) {
 }
 
 function buildAuthRoutes() {
-  return new Hono().use("/*", authHandler());
+  return new Hono<ContextEnv>().use("/*", authHandler());
 }
 
 function buildPrivateRoutes(deps: Deps) {
-  const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-  return new Hono().use("/*", verifyAuth()).get("/labs/transactions", (c) =>
-    respondAsync<GetTransactionsResponse>(c)(
-      parseGetTransactionsRequest({
-        userId: c.get("authUser").session.user?.id,
-      }).asyncAndThen((res) => getTransactions.execute(res)),
-    ),
-  );
+  return new Hono<ContextEnv>()
+    .use("/*", verifyAuth(), userIdMiddleware)
+    .get("/labs/transactions", (c) => {
+      const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
+      return respondAsync<GetTransactionsResponse>(c)(
+        parseGetTransactionsRequest({
+          userId: getAuthUserId(c.get("authUser")),
+        }).asyncAndThen((res) => getTransactions.execute(res)),
+      );
+    });
 }
 
-function buildPublicRoutes(deps: Deps) {
-  const getExchangeRate = new GetExchangeRateUseCase(deps.exchangeRateProvider);
-  return new Hono()
-    .get("/healthz", (c) => c.json({ ok: true }))
-    .get("/exchange-rate", (c) =>
-      respondAsync<GetExchangeRateResponse>(c)(
-        parseGetExchangeRateRequest({
-          base: c.req.query("base"),
-          target: c.req.query("target"),
-        }).asyncAndThen((req) => getExchangeRate.execute(req)),
-      ),
-    );
+function buildPublicRoutes() {
+  return new Hono<ContextEnv>().get("/healthz", (c) => c.json({ ok: true }));
 }

@@ -2,7 +2,7 @@ import type {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from "express";
-import type { Hono } from "hono";
+import type { Env, Hono, Schema } from "hono";
 
 /**
  * Express-compatible adapter for a Hono app.
@@ -21,7 +21,11 @@ import type { Hono } from "hono";
  *    skipping `content-length` to avoid mismatches after re-serialization.
  * 7) Send the response body as JSON or text based on `content-type`.
  */
-export function createExpressRequestHandler(app: Hono) {
+export function createExpressRequestHandler<
+  E extends Env,
+  S extends Schema,
+  BasePath extends string,
+>(app: Hono<E, S, BasePath>) {
   return async (req: ExpressRequest, res: ExpressResponse) => {
     // 1) Build absolute URL from Express request parts
     const url = new URL(`${req.protocol}://${req.hostname}${req.url}`);

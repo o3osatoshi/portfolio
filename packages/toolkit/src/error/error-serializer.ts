@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import { coerceErrorMessage, extractErrorName } from "./error-attributes";
 
 /**
  * Union used to represent an error's `cause` in serialized form.
@@ -48,7 +48,7 @@ export type SerializeOptions = {
  *
  * - Validates the input against an internal Zod schema compatible with {@link SerializedError}.
  * - On schema success, restores `name`/`message`/`stack` and recursively rehydrates `cause`.
- * - On schema failure, builds a best-effort `Error` using {@link extractErrorName} and {@link extractErrorMessage}.
+ * - On schema failure, builds a best-effort `Error` using {@link extractErrorName} and {@link coerceErrorMessage}.
  * - If `input` is already an `Error`, it is returned as-is.
  * - Uses native `ErrorOptions` (`new Error(message, { cause })`) when available; otherwise attaches `cause` via `defineProperty`.
  *
@@ -64,7 +64,7 @@ export function deserializeError(input: unknown): Error {
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
     const name = extractErrorName(input) ?? "UnknownError";
-    const message = extractErrorMessage(input);
+    const message = coerceErrorMessage(input);
     const e = new Error(message);
     e.name = name;
     return e;
@@ -159,7 +159,7 @@ export function serializeError(
  *
  * - Preserves primitive string causes as-is for compatibility.
  * - Serializes nested `Error` instances using {@link serializeError}.
- * - When the configured `depth` is reached, returns a summarized string via {@link extractErrorMessage}.
+ * - When the configured `depth` is reached, returns a summarized string via {@link coerceErrorMessage}.
  * - Already serialized causes are passed through unchanged.
  *
  * @internal
@@ -173,7 +173,7 @@ function serializeCause(
 
   // Depth limit reached: return a summarized string
   if (depth === 0) {
-    return extractErrorMessage(cause);
+    return coerceErrorMessage(cause);
   }
 
   // Preserve primitive string causes as-is for compatibility
@@ -192,7 +192,7 @@ function serializeCause(
 
   // Non-error causes: coerce into a minimal SerializedError
   const name = extractErrorName(cause) ?? "Error";
-  const message = extractErrorMessage(cause);
+  const message = coerceErrorMessage(cause);
   if (message) {
     return { name, message };
   } else {

@@ -8,8 +8,11 @@ import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
 import { env } from "./env";
+import { initFunctionsLogger } from "./logger";
 
 let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
+
+initFunctionsLogger();
 
 export const api = onRequest(async (req, res) => {
   if (!handler) {

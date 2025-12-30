@@ -16,6 +16,7 @@
         "AUTH_GOOGLE_ID",
         "AUTH_GOOGLE_SECRET",
         "AUTH_SECRET",
+        "AXIOM_API_TOKEN",
         "DATABASE_URL",
         "EXCHANGE_RATE_HOST_API_KEY",
         "EXCHANGE_RATE_HOST_BASE_URL",

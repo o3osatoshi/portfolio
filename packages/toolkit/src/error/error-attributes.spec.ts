@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import {
+  coerceErrorMessage,
+  extractErrorMessage,
+  extractErrorName,
+} from "./error-attributes";
 
 describe("error attribute helpers", () => {
   describe("extractErrorMessage", () => {
@@ -58,6 +62,24 @@ describe("error attribute helpers", () => {
     it("returns undefined when the value lacks a name", () => {
       expect(extractErrorName("panic")).toBeUndefined();
       expect(extractErrorName(null)).toBeUndefined();
+    });
+  });
+
+  describe("coerceErrorMessage", () => {
+    it("prefers extracted messages when available", () => {
+      const err = new Error("boom");
+      expect(coerceErrorMessage(err)).toBe("boom");
+      expect(coerceErrorMessage("plain")).toBe("plain");
+      expect(coerceErrorMessage({ message: "object message" })).toBe(
+        "object message",
+      );
+    });
+
+    it("falls back to JSON or string coercion", () => {
+      expect(coerceErrorMessage({ foo: "bar" })).toBe('{"foo":"bar"}');
+      expect(coerceErrorMessage(42)).toBe("42");
+      expect(coerceErrorMessage(null)).toBe("null");
+      expect(coerceErrorMessage(undefined)).toBeUndefined();
     });
   });
 });

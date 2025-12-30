@@ -1,6 +1,6 @@
 {
   "name": "@o3osatoshi/toolkit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": false,
   "keywords": [
     "zod",
@@ -41,13 +41,14 @@
     "api:report": "api-extractor run --diagnostics",
     "build": "tsup",
     "clean": "rimraf dist",
-    "dev": "tsup --watch",
+    "dev": "tsup --watch --no-clean",
     "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test && NODE_ENV=production pnpm build",
     "test": "vitest run",
     "test:cvrg": "vitest run --coverage",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@upstash/redis": "^1.35.8",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },

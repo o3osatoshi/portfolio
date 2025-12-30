@@ -23,6 +23,7 @@ This document reflects the current state of the repository. Commands listed belo
 - `packages/integrations`: External service adapters (APIs, caches) for provider implementations.
 - `packages/auth`: Auth.js + Hono configuration and React helpers shared across delivery layers.
 - `packages/interface`: Runtime-agnostic HTTP interface (Hono app + typed RPC client) for Node/Edge.
+- `packages/logging`: Axiom-first logging helpers for Node/Edge/Browser runtimes.
 - `packages/ui`: Published React component library with split server/client builds.
 - `packages/toolkit`: Zod/Neverthrow helpers for consistent error handling.
 - `packages/eth`: Wagmi CLI generated contract types/hooks (requires local `.env`).

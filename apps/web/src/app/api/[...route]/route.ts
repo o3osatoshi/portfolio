@@ -4,8 +4,11 @@ import { buildHandler } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 import { env } from "@/env/server";
+import { initWebNodeLogger } from "@/lib/logger/node";
 
 export const runtime = "nodejs";
+
+initWebNodeLogger();
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);

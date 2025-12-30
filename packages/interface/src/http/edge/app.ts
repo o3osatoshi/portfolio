@@ -13,8 +13,14 @@ import { handle } from "hono/vercel";
 
 import { parseWith } from "@o3osatoshi/toolkit";
 
-import { loggerMiddleware, requestIdMiddleware } from "../core/middlewares";
-import { respond, respondAsync } from "../core/respond";
+import {
+  requestIdMiddleware,
+  respond,
+  respondAsync,
+  userIdMiddleware,
+} from "../core";
+import type { ContextEnv } from "../core/types";
+import { loggerMiddleware } from "./middlewares";
 
 /**
  * Concrete Hono app type for the Edge HTTP interface.
@@ -70,7 +76,7 @@ export function buildEdgeApp(deps: EdgeDeps) {
       return deps.createAuthConfig(c);
     }
   };
-  return new Hono()
+  return new Hono<ContextEnv>()
     .basePath("/edge")
     .use("*", requestIdMiddleware, loggerMiddleware)
     .use("*", initAuthConfig(authConfigHandler))
@@ -105,13 +111,16 @@ export function buildEdgeHandler(deps: EdgeDeps) {
 }
 
 function buildEdgePrivateRoutes() {
-  return new Hono().use("/*", verifyAuth()).get("/me", (c) =>
-    respond<User>(c)(
-      parseWith<typeof userSchema>(userSchema, {
-        action: "Parse user from session",
-      })(c.get("authUser").session.user ?? {}),
-    ),
-  );
+  return new Hono<ContextEnv>()
+    .use("/*", verifyAuth(), userIdMiddleware)
+    .get("/me", (c) => {
+      const authUser = c.get("authUser");
+      return respond<User>(c)(
+        parseWith<typeof userSchema>(userSchema, {
+          action: "Parse user from session",
+        })(authUser?.session.user ?? {}),
+      );
+    });
 }
 
 function buildEdgePublicRoutes(deps: EdgeDeps) {
@@ -119,11 +128,11 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
     if (deps.cacheStore !== undefined) {
       return deps.cacheStore;
     } else {
-      // @ts-expect-error
-      return deps.createCacheStore(c);
+      // @ts-expect-error: Runtime check is required because undefined can be passed
+      return createEdgeRedisClient(deps.createRedisClientOptions(c));
     }
   };
-  return new Hono()
+  return new Hono<ContextEnv>()
     .get("/healthz", (c) => c.json({ ok: true }))
     .get("/heavy", (c) => {
       const heavyProcess = new HeavyProcessUseCase();

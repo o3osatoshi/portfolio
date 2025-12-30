@@ -12,13 +12,14 @@
     "sync:env": "doppler secrets --json --project portfolio-edge --config prd | jq -c 'with_entries(.value = .value.computed)' | wrangler secret bulk"
   },
   "dependencies": {
+    "@o3osatoshi/logging": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/integrations": "workspace:*",
     "@repo/interface": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "wrangler": "^4.53.0"
+    "wrangler": "^4.54.0"
   },
   "engines": {
     "node": "22.x"

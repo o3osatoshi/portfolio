@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { AuthConfig } from "@hono/auth-js";
 import type { PrismaClient } from "@repo/prisma";
 
-import type { AuthProviderId } from "./types";
+import type { AuthProviderId, AuthUser } from "./types";
 
 export type CreateAuthConfigOptions = {
   basePath?: string;
@@ -63,6 +63,10 @@ export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
     secret: options.secret,
     session: { strategy: options.session?.strategy ?? "jwt" },
   };
+}
+
+export function getAuthUserId(authUser?: AuthUser): string | undefined {
+  return authUser?.session?.user?.id ?? authUser?.user?.id;
 }
 
 export type { AuthConfig };

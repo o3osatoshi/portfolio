@@ -1,23 +1,9 @@
 import { Hono } from "hono";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { loggerMiddleware, requestIdMiddleware } from "./middlewares";
+import { requestIdMiddleware } from "./middlewares";
 
 describe("middlewares", () => {
-  it("logs request summary", async () => {
-    const app = new Hono();
-    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
-    app.use("*", loggerMiddleware);
-    app.get("/t", (c) => c.text("ok"));
-
-    const res = await app.request("/t");
-    expect(res.status).toBe(200);
-    expect(spy).toHaveBeenCalled();
-    const arg = String(spy.mock.calls.at(-1)?.[0] ?? "");
-    expect(arg).toContain("GET /t -> 200 (");
-    spy.mockRestore();
-  });
-
   it("propagates incoming x-request-id and exposes it in context", async () => {
     const app = new Hono<{ Variables: { requestId: string } }>();
     app.use("*", requestIdMiddleware);
