@@ -31,6 +31,9 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends ActionEr
 } | never;
 
 // @public
+export function coerceErrorMessage(cause: unknown): string | undefined;
+
+// @public
 export function composeErrorMessage(parts: ErrorMessageParts): string;
 
 // @public
@@ -65,6 +68,9 @@ export function deserializeError(input: unknown): Error;
 
 // @public
 export function encode(value: unknown): Result<string, Error>;
+
+// @public
+export type Env = "development" | "local" | "production" | "staging";
 
 // @public
 export type EnvOf<T extends EnvSchema> = {
@@ -133,6 +139,9 @@ export function isZodError(e: unknown): e is ZodError;
 export type JsonArray = JsonValue[];
 
 // @public
+export const jsonArraySchema: z.ZodType<JsonArray>;
+
+// @public
 export type JsonContainer = JsonArray | JsonObject;
 
 // @public
@@ -141,10 +150,19 @@ export type JsonObject = {
 };
 
 // @public
+export const jsonObjectSchema: z.ZodType<JsonObject>;
+
+// @public
 export type JsonPrimitive = boolean | null | number | string;
 
 // @public
+export const jsonPrimitiveSchema: z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>;
+
+// @public
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
+// @public
+export const jsonValueSchema: z.ZodType<JsonValue>;
 
 // @public
 export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";

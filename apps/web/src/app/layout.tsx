@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import Providers from "@/app/_components/providers";
+import WebVitals from "@/app/_components/web-vitals";
 import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 
 export const metadata: Metadata = {
@@ -54,6 +55,7 @@ export default function Layout({ children }: Props) {
         className={`${fontSans.variable} ${fontMono.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <SpeedInsights />
+        <WebVitals />
         <Providers>{children}</Providers>
       </body>
     </html>

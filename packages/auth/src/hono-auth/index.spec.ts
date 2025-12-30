@@ -18,7 +18,7 @@ vi.mock("@auth/core/providers/google", () => ({
   default: h.GoogleProviderMock,
 }));
 
-import { createAuthConfig } from "./index";
+import { createAuthConfig, getAuthUserId } from "./index";
 
 describe("hono-auth/createAuthConfig", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -96,5 +96,26 @@ describe("hono-auth/createAuthConfig", () => {
       token: outToken,
     });
     expect(outSession?.user?.id).toBe("u-1");
+  });
+});
+
+describe("hono-auth/getAuthUserId", () => {
+  it("returns session.user.id when available", () => {
+    const userId = getAuthUserId({
+      session: { expires: "2024-01-01", user: { id: "u-1" } },
+    });
+    expect(userId).toBe("u-1");
+  });
+
+  it("falls back to adapter user.id when session user missing", () => {
+    const userId = getAuthUserId({
+      session: { expires: "2024-01-01" },
+      user: { id: "u-2", email: "u2@example.com", emailVerified: null },
+    });
+    expect(userId).toBe("u-2");
+  });
+
+  it("returns undefined when authUser missing", () => {
+    expect(getAuthUserId()).toBeUndefined();
   });
 });

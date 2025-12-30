@@ -7,6 +7,7 @@ export const env = createLazyEnv(
     AUTH_GOOGLE_ID: z.string().min(1),
     AUTH_GOOGLE_SECRET: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
+    AXIOM_API_TOKEN: z.string().min(1),
     DATABASE_URL: z.string().min(1),
   },
   { name: "functions" },
