@@ -17,7 +17,7 @@ export class HeavyProcessCachedUseCase {
   ) {}
 
   /**
-   * Execute a heavy process with cache-backed caching.
+   * Execute a cache-backed heavy process.
    *
    * - Attempts to read a {@link HeavyProcessResponse} from the cache store
    *   using {@link HEAVY_PROCESS_CACHE_KEY}.
