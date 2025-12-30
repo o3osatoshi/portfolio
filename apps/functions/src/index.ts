@@ -31,8 +31,8 @@ export const api = onRequest(async (req, res) => {
     });
     const repo = new PrismaTransactionRepository(client);
     const exchangeRateProvider = new ExchangeRateHostProvider({
-      apiKey: env.EXCHANGE_RATE_HOST_API_KEY,
-      baseUrl: env.EXCHANGE_RATE_HOST_BASE_URL,
+      apiKey: env.EXCHANGE_RATE_API_KEY,
+      baseUrl: env.EXCHANGE_RATE_URL,
     });
     const app = buildApp({
       exchangeRateProvider,

@@ -13,8 +13,8 @@ initWebNodeLogger();
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
 const exchangeRateProvider = new ExchangeRateHostProvider({
-  apiKey: env.EXCHANGE_RATE_HOST_API_KEY,
-  baseUrl: env.EXCHANGE_RATE_HOST_BASE_URL,
+  apiKey: env.EXCHANGE_RATE_API_KEY,
+  baseUrl: env.EXCHANGE_RATE_URL,
 });
 
 const authConfig = createAuthConfig({
