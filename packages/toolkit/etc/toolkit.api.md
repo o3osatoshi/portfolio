@@ -31,6 +31,9 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends ActionEr
 } | never;
 
 // @public
+export function coerceErrorMessage(cause: unknown): string | undefined;
+
+// @public
 export function composeErrorMessage(parts: ErrorMessageParts): string;
 
 // @public

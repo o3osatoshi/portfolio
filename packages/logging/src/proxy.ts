@@ -9,6 +9,8 @@
 
 import { z } from "zod";
 
+import { deserializeError } from "@o3osatoshi/toolkit";
+
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
 /**
@@ -142,7 +144,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
     try {
       rawPayload = await req.json();
     } catch (error: unknown) {
-      onError(toError(error));
+      onError(deserializeError(error));
       return json({ message: "invalid_json", status: "error" }, 400);
     }
 
@@ -179,7 +181,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       await options.transport.flush?.();
       return json({ accepted: payload.eventSets.length, status: "ok" }, 200);
     } catch (error) {
-      onError(toError(error));
+      onError(deserializeError(error));
       return json({ message: "proxy_failed", status: "error" }, 500);
     }
   };
@@ -277,7 +279,7 @@ export function createProxyTransport(
         }
       } catch (error: unknown) {
         eventSets = _eventSets.concat(eventSets);
-        onError(toError(error));
+        onError(deserializeError(error));
       } finally {
         inflight = undefined;
       }
@@ -299,10 +301,4 @@ function json(data: Record<string, unknown>, status: number): Response {
     },
     status,
   });
-}
-
-// TODO: Extract common logic
-function toError(error: unknown): Error {
-  if (error instanceof Error) return error;
-  return new Error(String(error));
 }

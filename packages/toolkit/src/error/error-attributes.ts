@@ -1,4 +1,32 @@
 /**
+ * Coerces an unknown value into a best-effort error message.
+ *
+ * @remarks
+ * Uses {@link extractErrorMessage} when available, otherwise falls back to
+ * JSON serialization or string coercion to avoid empty messages.
+ *
+ * @public
+ * @param cause - Value supplied as an error `cause`.
+ * @returns A message string when derivable, otherwise `undefined`.
+ */
+export function coerceErrorMessage(cause: unknown): string | undefined {
+  const extracted = extractErrorMessage(cause);
+  if (extracted !== undefined) return extracted;
+  if (cause === undefined) return undefined;
+
+  if (typeof cause === "object") {
+    try {
+      const serialized = JSON.stringify(cause);
+      if (serialized !== undefined) return serialized;
+    } catch {
+      // fall back to string coercion
+    }
+  }
+
+  return String(cause);
+}
+
+/**
  * Extracts a concise error message string from an unknown cause when possible.
  *
  * The function prefers `Error` instances but gracefully handles plain strings and

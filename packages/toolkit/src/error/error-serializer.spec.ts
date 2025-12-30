@@ -203,13 +203,13 @@ describe("error-serializer", () => {
     const e1 = deserializeError(42);
     expect(e1).toBeInstanceOf(Error);
     expect(e1.name).toBe("UnknownError");
-    // Non-string primitive yields no extracted message → empty string
-    expect(e1.message).toBe("");
+    // Non-string primitive falls back to string coercion
+    expect(e1.message).toBe("42");
 
     const e2 = deserializeError({ foo: "bar" });
     expect(e2).toBeInstanceOf(Error);
     expect(e2.name).toBe("UnknownError");
-    expect(typeof e2.message).toBe("string");
+    expect(e2.message).toBe('{"foo":"bar"}');
 
     const already = new Error("keep");
     const e3 = deserializeError(already);

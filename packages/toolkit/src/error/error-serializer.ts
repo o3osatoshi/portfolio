@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import {
+  coerceErrorMessage,
+  extractErrorMessage,
+  extractErrorName,
+} from "./error-attributes";
 
 /**
  * Union used to represent an error's `cause` in serialized form.
@@ -48,7 +52,7 @@ export type SerializeOptions = {
  *
  * - Validates the input against an internal Zod schema compatible with {@link SerializedError}.
  * - On schema success, restores `name`/`message`/`stack` and recursively rehydrates `cause`.
- * - On schema failure, builds a best-effort `Error` using {@link extractErrorName} and {@link extractErrorMessage}.
+ * - On schema failure, builds a best-effort `Error` using {@link extractErrorName} and {@link coerceErrorMessage}.
  * - If `input` is already an `Error`, it is returned as-is.
  * - Uses native `ErrorOptions` (`new Error(message, { cause })`) when available; otherwise attaches `cause` via `defineProperty`.
  *
@@ -64,7 +68,7 @@ export function deserializeError(input: unknown): Error {
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
     const name = extractErrorName(input) ?? "UnknownError";
-    const message = extractErrorMessage(input);
+    const message = coerceErrorMessage(input);
     const e = new Error(message);
     e.name = name;
     return e;
