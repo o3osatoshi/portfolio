@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
