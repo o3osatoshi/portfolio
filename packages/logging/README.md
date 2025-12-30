@@ -37,7 +37,7 @@ initNodeLogger({
     token: process.env.AXIOM_API_TOKEN!,
   },
   datasets: {
-    logs: "logs",
+    events: "events",
     metrics: "metrics",
   },
   env: "production",
@@ -93,7 +93,7 @@ import { initEdgeLogger, withRequestLogger } from "@o3osatoshi/logging/edge";
 
 initEdgeLogger({
   client: { token: env.AXIOM_API_TOKEN },
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   env: "production",
   service: "portfolio-edge",
 });
@@ -110,7 +110,7 @@ import { initBrowserLogger, createBrowserLogger } from "@o3osatoshi/logging/brow
 
 initBrowserLogger({
   client: { token: process.env.NEXT_PUBLIC_AXIOM_TOKEN! },
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
 });
@@ -135,7 +135,7 @@ initBrowserLogger({
     url: "/api/logging",
     flushIntervalMs: 1000,
   }),
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
 });
@@ -164,7 +164,7 @@ import { initNodeLogger } from "@o3osatoshi/logging/node";
 
 initNodeLogger({
   transport: customTransport,
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
 });
@@ -183,7 +183,7 @@ const transport = createAxiomTransport({
 
 const logger = createLogger({
   attributes: { "service.name": "portfolio-web" },
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   transport,
 });
 ```
@@ -206,14 +206,14 @@ import { NextResponse } from "next/server";
 
 initNodeLogger({
   client: { token: process.env.AXIOM_API_TOKEN! },
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
 });
 
 initBrowserLogger({
   client: { token: process.env.NEXT_PUBLIC_AXIOM_TOKEN! },
-  datasets: { logs: "logs", metrics: "metrics" },
+  datasets: { events: "events", metrics: "metrics" },
   env: "production",
   service: "portfolio-web",
 });
