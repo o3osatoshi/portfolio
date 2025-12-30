@@ -12,16 +12,16 @@ initWebEdgeLogger();
 const authConfig = createAuthConfig({
   providers: {
     google: {
-      clientId: String(env.AUTH_GOOGLE_ID),
-      clientSecret: String(env.AUTH_GOOGLE_SECRET),
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
     },
   },
-  secret: String(env.AUTH_SECRET),
+  secret: env.AUTH_SECRET,
 });
 
 const cacheStore = createEdgeUpstashCacheStore({
-  token: String(env.UPSTASH_REDIS_REST_TOKEN),
-  url: String(env.UPSTASH_REDIS_REST_URL),
+  token: env.UPSTASH_REDIS_REST_TOKEN,
+  url: env.UPSTASH_REDIS_REST_URL,
 });
 
 export const { GET, POST } = buildEdgeHandler({
