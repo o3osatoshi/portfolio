@@ -46,7 +46,7 @@ export interface NextjsRouteHandlerOptions {
   /**
    * Optional bridge logger configuration.
    */
-  logger?: Omit<LoggerOptions, "logger">;
+  options?: Omit<LoggerOptions, "logger">;
 }
 
 /**
@@ -129,7 +129,7 @@ export function createRouteHandler(
 ): ReturnType<typeof axiomCreateAxiomRouteHandler> {
   const bridgeLogger = createLogger({
     logger,
-    ...options.logger,
+    ...(options.options ?? {}),
   });
 
   return axiomCreateAxiomRouteHandler(bridgeLogger, options.handler);

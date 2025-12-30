@@ -36,7 +36,7 @@ export type Attributes = z.infer<typeof attributesSchema>;
  *
  * @public
  */
-export interface BaseLoggerOptions {
+export interface BaseLoggingOptions {
   /**
    * Axiom client options used to create transports.
    *
@@ -208,7 +208,7 @@ export interface MetricOptions {
  *
  * @public
  */
-export interface NodeLoggingOptions extends RuntimeLoggerOptions {
+export interface NodeLoggingOptions extends RuntimeLoggingOptions {
   /**
    * Flush buffered logs on process exit.
    *
@@ -307,7 +307,7 @@ export interface RequestLogger {
  *
  * @public
  */
-export interface RuntimeLoggerOptions extends BaseLoggerOptions {
+export interface RuntimeLoggingOptions extends BaseLoggingOptions {
   /**
    * Flush after each request or visibility event when enabled.
    *
