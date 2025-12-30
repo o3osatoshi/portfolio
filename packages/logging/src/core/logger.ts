@@ -1,4 +1,10 @@
-import { type JsonValue, serializeError } from "@o3osatoshi/toolkit";
+import {
+  extractErrorMessage,
+  extractErrorName,
+  type JsonValue,
+  parseErrorMessage,
+  parseErrorName,
+} from "@o3osatoshi/toolkit";
 
 import type {
   Attributes,
@@ -225,19 +231,18 @@ function normalizeValue(value: unknown): JsonValue | undefined {
 }
 
 function toErrorAttributes(error: unknown): Attributes {
-  const serializedError = serializeError(
-    error instanceof Error ? error : new Error(String(error)),
-    {
-      includeStack:
-        typeof process !== "undefined" &&
-        process.env?.["NODE_ENV"] === "development",
-    },
-  );
+  const name = extractErrorName(error);
+  const message = extractErrorMessage(error);
+  const nParts = parseErrorName(name);
+  const mParts = parseErrorMessage(message);
 
   return {
-    "exception.cause": normalizeValue(serializedError.cause),
-    "exception.message": serializedError.message,
-    "exception.stacktrace": serializedError.stack,
-    "exception.type": serializedError.name,
+    ...(nParts.kind ? { "error.kind": nParts.kind } : {}),
+    ...(nParts.layer ? { "error.layer": nParts.layer } : {}),
+    ...(mParts.action ? { "error.action": mParts.action } : {}),
+    ...(mParts.causeText ? { "error.causeText": mParts.causeText } : {}),
+    ...(mParts.hint ? { "error.hint": mParts.hint } : {}),
+    ...(mParts.impact ? { "error.impact": mParts.impact } : {}),
+    ...(mParts.reason ? { "error.reason": mParts.reason } : {}),
   };
 }

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { newError } from "@o3osatoshi/toolkit";
+
 import type { Attributes, LogEvent, Transport } from "../types";
 import { createLogger } from "./logger";
 
@@ -148,8 +150,15 @@ describe("createLogger", () => {
     });
 
     const child = logger.child({ "request.id": "req-1" });
-    const error = new Error("boom");
-    (error as { cause?: unknown } & Error).cause = new Error("timeout");
+    const error = newError({
+      action: "CreateTransaction",
+      cause: new Error("timeout"),
+      hint: "verify input",
+      impact: "transaction not saved",
+      kind: "Validation",
+      layer: "Domain",
+      reason: "amount is required",
+    });
 
     child.error("request_failed", { "http.status_code": 500 }, error);
 
@@ -162,13 +171,19 @@ describe("createLogger", () => {
     // @ts-expect-error
     expect(event["http.status_code"]).toBe(500);
     // @ts-expect-error
-    expect(event["exception.message"]).toBe("boom");
+    expect(event["error.kind"]).toBe("Validation");
     // @ts-expect-error
-    expect(event["exception.type"]).toBe("Error");
+    expect(event["error.layer"]).toBe("Domain");
     // @ts-expect-error
-    expect(event["exception.cause"]).toEqual(
-      expect.objectContaining({ name: "Error", message: "timeout" }),
-    );
+    expect(event["error.action"]).toBe("CreateTransaction");
+    // @ts-expect-error
+    expect(event["error.reason"]).toBe("amount is required");
+    // @ts-expect-error
+    expect(event["error.impact"]).toBe("transaction not saved");
+    // @ts-expect-error
+    expect(event["error.hint"]).toBe("verify input");
+    // @ts-expect-error
+    expect(event["error.causeText"]).toBe("timeout");
   });
 
   it("normalizes attribute values and omits undefined", () => {
