@@ -1,5 +1,11 @@
 # @o3osatoshi/config
 
+## 1.1.1
+
+### Patch Changes
+
+- [#54](https://github.com/o3osatoshi/portfolio/pull/54) [`d2efb58`](https://github.com/o3osatoshi/portfolio/commit/d2efb580b2bf66ad97014d549c462e20da49aed2) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - - No functional changes; republished to align the workspace release set.
+
 ## 1.1.0
 
 ### Minor Changes

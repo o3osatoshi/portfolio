@@ -1,5 +1,14 @@
 # @o3osatoshi/toolkit
 
+## 1.1.0
+
+### Minor Changes
+
+- [#54](https://github.com/o3osatoshi/portfolio/pull/54) [`d2efb58`](https://github.com/o3osatoshi/portfolio/commit/d2efb580b2bf66ad97014d549c462e20da49aed2) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - - Add `Env` plus JSON value types and Zod schemas for consistent runtime typing.
+  - Introduce `createLazyEnv` for deferred environment validation with immutability guards.
+  - Improve error message extraction and serialization with `coerceErrorMessage`.
+  - Document `tsup --watch --no-clean` behavior for dev workflows.
+
 ## 1.0.0
 
 ### Major Changes
