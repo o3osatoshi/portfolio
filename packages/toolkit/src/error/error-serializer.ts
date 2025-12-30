@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  coerceErrorMessage,
-  extractErrorMessage,
-  extractErrorName,
-} from "./error-attributes";
+import { coerceErrorMessage, extractErrorName } from "./error-attributes";
 
 /**
  * Union used to represent an error's `cause` in serialized form.
@@ -163,7 +159,7 @@ export function serializeError(
  *
  * - Preserves primitive string causes as-is for compatibility.
  * - Serializes nested `Error` instances using {@link serializeError}.
- * - When the configured `depth` is reached, returns a summarized string via {@link extractErrorMessage}.
+ * - When the configured `depth` is reached, returns a summarized string via {@link coerceErrorMessage}.
  * - Already serialized causes are passed through unchanged.
  *
  * @internal
@@ -177,7 +173,7 @@ function serializeCause(
 
   // Depth limit reached: return a summarized string
   if (depth === 0) {
-    return extractErrorMessage(cause);
+    return coerceErrorMessage(cause);
   }
 
   // Preserve primitive string causes as-is for compatibility
@@ -196,7 +192,7 @@ function serializeCause(
 
   // Non-error causes: coerce into a minimal SerializedError
   const name = extractErrorName(cause) ?? "Error";
-  const message = extractErrorMessage(cause);
+  const message = coerceErrorMessage(cause);
   if (message) {
     return { name, message };
   } else {
