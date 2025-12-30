@@ -83,6 +83,7 @@ jobs:
           printf "AUTH_GOOGLE_SECRET=%s\n" "${{ secrets.AUTH_GOOGLE_SECRET }}" >> apps/functions/.env
           printf "AUTH_SECRET=%s\n" "${{ secrets.AUTH_SECRET }}" >> apps/functions/.env
           printf "AUTH_TRUST_HOST=true\n" >> apps/functions/.env
+          printf "AXIOM_API_TOKEN=%s\n" "${{ secrets.AXIOM_API_TOKEN }}" >> apps/functions/.env
           printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" >> apps/functions/.env
 
       - name: Deploy functions
