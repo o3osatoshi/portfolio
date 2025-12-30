@@ -38,6 +38,7 @@ async function loadAppWithVerify(allow: boolean) {
   }));
   const store = new Map<string, unknown>();
   const cacheStore: CacheStore = {
+    // @ts-expect-error
     get: (key) => okAsync(store.has(key) ? (store.get(key) ?? null) : null),
     set: (key, value) => {
       store.set(key, value);

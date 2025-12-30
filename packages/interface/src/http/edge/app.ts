@@ -91,6 +91,7 @@ export function buildEdgeApp(deps: EdgeDeps) {
  * ```ts
  * // app/edge/[...route]/route.ts
  * import { createAuthConfig } from "@repo/auth";
+ * import { createEdgeUpstashCacheStore } from "@repo/integrations";
  * import { buildEdgeHandler } from "@repo/interface/http/edge";
  *
  * export const runtime = "edge";
@@ -100,7 +101,12 @@ export function buildEdgeApp(deps: EdgeDeps) {
  *   secret: "...",
  * });
  *
- * export const { GET, POST } = buildEdgeHandler({ authConfig });
+ * const cacheStore = createEdgeUpstashCacheStore({
+ *   token: "...",
+ *   url: "...",
+ * });
+ *
+ * export const { GET, POST } = buildEdgeHandler({ authConfig, cacheStore });
  * ```
  */
 export function buildEdgeHandler(deps: EdgeDeps) {
@@ -129,7 +135,7 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
       return deps.cacheStore;
     } else {
       // @ts-expect-error: Runtime check is required because undefined can be passed
-      return createEdgeRedisClient(deps.createRedisClientOptions(c));
+      return deps.createCacheStore(c);
     }
   };
   return new Hono<ContextEnv>()
