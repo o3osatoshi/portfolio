@@ -98,6 +98,7 @@ describe("integrations/redis wrapUpstashClient", () => {
       get: vi.fn(() => Promise.resolve("value")),
       set: vi.fn(),
     };
+    // @ts-expect-error
     const store = wrapUpstashClient(client);
 
     const result = await store.get("cache:key");
@@ -113,6 +114,7 @@ describe("integrations/redis wrapUpstashClient", () => {
       get: vi.fn(),
       set: vi.fn(() => Promise.resolve("OK")),
     };
+    // @ts-expect-error
     const store = wrapUpstashClient(client);
 
     const result = await store.set(
