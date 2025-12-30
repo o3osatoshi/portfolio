@@ -10,7 +10,7 @@ export const exchangeRateHostResponseSchema = z.object({
       type: z.string().optional(),
     })
     .optional(),
-  rates: z.record(z.union([z.number(), z.string()])),
+  rates: z.record(z.string(), z.union([z.number(), z.string()])),
   success: z.boolean().optional(),
   timestamp: z.number().optional(),
 });
