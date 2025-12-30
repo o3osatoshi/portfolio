@@ -128,7 +128,7 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
     if (deps.redisClientOptions !== undefined) {
       return createEdgeRedisClient(deps.redisClientOptions);
     } else {
-      // @ts-expect-error: By definition, if redisClientOptions is undefined, createRedisClientOptions exists
+      // @ts-expect-error: Runtime check is required because undefined can be passed
       return createEdgeRedisClient(deps.createRedisClientOptions(c));
     }
   };
