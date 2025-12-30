@@ -52,7 +52,7 @@ catalogs:
       specifier: ^4.1.5
       version: 4.1.5
     pg:
-      specifier: 8.16.3
+      specifier: ^8.16.3
       version: 8.16.3
     prisma:
       specifier: ^7.1.0
