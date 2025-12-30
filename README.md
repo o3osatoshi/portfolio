@@ -86,7 +86,7 @@ pnpm install
 - `pnpm check:test` / `pnpm check:test:cvrg` – Execute package `test` scripts (Vitest) with optional coverage.
 - `pnpm style` – Package sort → ESLint (fix) → Biome (write).
 - `pnpm clean` – Remove build artifacts across packages.
-- `pnpm pull:env` – Run `pull:env` scripts only in packages/apps that define them (updates local `.env*` files).
+- `pnpm env:pull` – Run `env:pull` scripts only in packages/apps that define them (updates local `.env*` files).
 - Docs: To update API docs, run `npx typedoc`.
 - `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
 - `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.
@@ -148,7 +148,7 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 
 ## Environment variables
 - `apps/web`: `.env.local` (Next.js runtime + Auth.js, database client, Web3 providers).
-- `apps/edge`: `.env.local` for local Wrangler dev (synced from Doppler); production secrets are managed as Cloudflare Worker secrets (synced via `pnpm -C apps/edge sync:env`).
+- `apps/edge`: `.env.local` for local Wrangler dev (synced from Doppler); production secrets are managed as Cloudflare Worker secrets (synced via `pnpm -C apps/edge env:sync`).
 - `packages/prisma`:
   - `.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
   - `.env.development.local`, `.env.production.local` (local templates)
@@ -159,14 +159,14 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 - This repository uses the Doppler CLI to manage environment variables and materialize local `.env.*` files used by scripts.
 - Authenticate with Doppler before pulling secrets: run `doppler login` (or set a `DOPPLER_TOKEN`).
 - Update env files from Doppler:
-  - Workspace convenience: `pnpm pull:env` (executes only in packages/apps that define `pull:env`).
+  - Workspace convenience: `pnpm env:pull` (executes only in packages/apps that define `env:pull`).
   - Prisma package:
-    - `pnpm -C packages/prisma pull:env:dev` → writes `packages/prisma/.env.development.local`
-    - `pnpm -C packages/prisma pull:env:lcl` → writes `packages/prisma/.env.test.local`
-    - `pnpm -C packages/prisma pull:env:prd` → writes `packages/prisma/.env.production.local`
+    - `pnpm -C packages/prisma env:pull:dev` → writes `packages/prisma/.env.development.local`
+    - `pnpm -C packages/prisma env:pull:lcl` → writes `packages/prisma/.env.test.local`
+    - `pnpm -C packages/prisma env:pull:prd` → writes `packages/prisma/.env.production.local`
 - Edge Worker:
-  - `pnpm -C apps/edge pull:env` → writes `apps/edge/.env.local` for local Wrangler dev.
-  - `pnpm -C apps/edge sync:env` → syncs secrets from Doppler to Cloudflare Worker via `wrangler secret bulk`.
+  - `pnpm -C apps/edge env:pull` → writes `apps/edge/.env.local` for local Wrangler dev.
+  - `pnpm -C apps/edge env:sync` → syncs secrets from Doppler to Cloudflare Worker via `wrangler secret bulk`.
 - Current Doppler setup includes:
   - Prisma: project `portfolio-prisma` with configs `dev`, `lcl`, `prd`.
   - Edge: project `portfolio-edge` with configs such as `dev`, `prd`.

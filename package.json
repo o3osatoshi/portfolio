@@ -22,7 +22,7 @@
     "dev:functions": "turbo run dev --filter=@repo/functions...",
     "dev:storybook": "turbo run dev --filter=@repo/storybook...",
     "dev:web": "turbo run dev --filter=@repo/web...",
-    "pull:env": "turbo run pull:env",
+    "env:pull": "turbo run env:pull",
     "refine": "run-s style build check api:extract",
     "release": "changeset publish",
     "release:log": "changeset",

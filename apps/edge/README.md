@@ -31,7 +31,7 @@ pnpm -C apps/edge run deploy
 pnpm -C apps/edge run deploy:prv
 
 # Sync secrets from Doppler to Cloudflare (bulk upload)
-pnpm -C apps/edge sync:env
+pnpm -C apps/edge env:sync
 ```
 
 You can also invoke root-level shortcuts:
@@ -60,7 +60,7 @@ If you need multiple environments (e.g., staging vs production), add `env` block
 Secrets are synchronized from Doppler and uploaded to Cloudflare with a pipeline:
 
 ```bash
-# Defined as the sync:env script
+# Defined as the env:sync script
 doppler secrets --json --project portfolio-edge --config prd \
   | jq -c 'with_entries(.value = .value.computed)' \
   | wrangler secret bulk
@@ -69,7 +69,7 @@ doppler secrets --json --project portfolio-edge --config prd \
 Notes:
 - Cloudflare secret names must match `^[A-Z0-9_]+$`.
 - If you split environments, use `wrangler secret bulk --env <name>`.
-- First-time setup: deploy the Worker once before running `sync:env`.
+- First-time setup: deploy the Worker once before running `env:sync`.
   - Wrangler’s API requires the “latest version” to be deployed before editing settings (including secrets).
 
 ## Local development
@@ -89,7 +89,7 @@ curl -i http://localhost:8787/edge/public/healthz
 pnpm deploy:edge
 
 # Then sync secrets
-pnpm -C apps/edge sync:env
+pnpm -C apps/edge env:sync
 ```
 
 ## API surface
@@ -99,7 +99,7 @@ The shared interface app mounts these routes under `/edge`:
 
 ## Troubleshooting
 - Error 10214 (“latest version isn't currently deployed”):
-  - Run `pnpm deploy:edge` once, then `pnpm -C apps/edge sync:env`.
+  - Run `pnpm deploy:edge` once, then `pnpm -C apps/edge env:sync`.
 - Unauthorized or account mismatch:
   - `wrangler whoami` and ensure the correct account is selected.
 - Doppler errors:
