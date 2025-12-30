@@ -13,14 +13,14 @@ import { createNoopLogger } from "./core/noop";
 import type {
   Attributes,
   Logger,
-  RuntimeLoggerOptions,
+  RuntimeLoggingOptions,
   Transport,
 } from "./types";
 
 type BrowserState = {
   attributes: Attributes;
   logger: Logger;
-  options: RuntimeLoggerOptions;
+  options: RuntimeLoggingOptions;
   transport: Transport;
 };
 
@@ -54,7 +54,7 @@ export function createBrowserLogger(): Logger {
  *
  * @public
  */
-export function initBrowserLogger(options: RuntimeLoggerOptions): void {
+export function initBrowserLogger(options: RuntimeLoggingOptions): void {
   if (browserState) return;
 
   const transport = resolveTransport(options);
@@ -121,7 +121,7 @@ function registerBrowserFlush(): void {
   });
 }
 
-function resolveTransport(options: RuntimeLoggerOptions): Transport {
+function resolveTransport(options: RuntimeLoggingOptions): Transport {
   if (options.transport) {
     return options.transport;
   }
