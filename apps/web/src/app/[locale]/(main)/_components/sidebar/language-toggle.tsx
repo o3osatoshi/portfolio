@@ -4,7 +4,7 @@ import { Languages } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { type Locale } from "@/i18n/routing";
+import type { Locale } from "@/i18n/routing";
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -71,8 +71,8 @@ export default function Page() {
           GitHub.
         </p>
         <a
-          className="inline-block rounded border px-4 py-2 underline"
           href="https://github.com/o3osatoshi/portfolio"
+          className="inline-block rounded border px-4 py-2 underline"
           rel="noreferrer"
           target="_blank"
         >
