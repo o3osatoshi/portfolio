@@ -135,6 +135,7 @@ export const createItem = async (
 - ESM + CJS outputs are provided; typings are included.
 - Target Node >= 22 (see `engines`).
 - When targeting different Zod instances (e.g., multiple versions), `isZodError` uses duck typing to remain resilient.
+- `pnpm -C packages/toolkit dev` uses `tsup --watch --no-clean` to avoid brief `dist` removals that can break dependent watch builds (e.g. `@o3osatoshi/logging`). Run `pnpm -C packages/toolkit clean` after export changes to prevent stale artifacts.
 
 ## Quality
 
