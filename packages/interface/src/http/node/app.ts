@@ -1,7 +1,5 @@
 import {
-  GetExchangeRateUseCase,
   GetTransactionsUseCase,
-  parseGetExchangeRateRequest,
   parseGetTransactionsRequest,
 } from "@repo/application";
 import type { GetTransactionsResponse } from "@repo/application";
@@ -64,7 +62,7 @@ export function buildApp(deps: Deps) {
       initAuthConfig(() => deps.authConfig),
     )
     .route("/auth", buildAuthRoutes())
-    .route("/public", buildPublicRoutes(deps))
+    .route("/public", buildPublicRoutes())
     .route("/private", buildPrivateRoutes(deps));
 }
 
