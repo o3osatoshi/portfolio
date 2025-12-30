@@ -14,7 +14,7 @@ const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
 const exchangeRateProvider = new ExchangeRateHostProvider({
   apiKey: env.EXCHANGE_RATE_API_KEY,
-  baseUrl: env.EXCHANGE_RATE_URL,
+  baseUrl: env.EXCHANGE_RATE_BASE_URL,
 });
 
 const authConfig = createAuthConfig({

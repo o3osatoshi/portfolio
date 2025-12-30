@@ -10,7 +10,7 @@ export const env = createLazyEnv(
     AXIOM_API_TOKEN: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     EXCHANGE_RATE_API_KEY: z.string().min(1).optional(),
-    EXCHANGE_RATE_URL: z.string().url().optional(),
+    EXCHANGE_RATE_BASE_URL: z.string().url().optional(),
   },
   { name: "functions" },
 );

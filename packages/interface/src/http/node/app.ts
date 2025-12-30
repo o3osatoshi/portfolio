@@ -91,7 +91,7 @@ export function buildApp(deps: Deps) {
  * const transactionRepo = new PrismaTransactionRepository(prisma);
  * const exchangeRateProvider = new ExchangeRateHostProvider({
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
- *   baseUrl: process.env.EXCHANGE_RATE_URL,
+ *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
  * });
  * const authConfig = createAuthConfig({
  *   providers: { google: { clientId: process.env.AUTH_GOOGLE_ID!, clientSecret: process.env.AUTH_GOOGLE_SECRET! } },
