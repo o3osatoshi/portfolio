@@ -19,6 +19,10 @@ Cookie: {{AUTH_COOKIE}}
 GET {{API_BASE_URL}}/api/public/healthz
 Accept: application/json
 
+### api exchange-rate
+GET {{API_BASE_URL}}/api/public/exchange-rate?base=usd&target=jpy
+Accept: application/json
+
 ### api labs/transactions
 GET {{API_BASE_URL}}/api/private/labs/transactions
 Accept: application/json
