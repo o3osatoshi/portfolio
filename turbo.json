@@ -39,7 +39,7 @@
       "cache": false,
       "persistent": true
     },
-    "pull:env": {
+    "env:pull": {
       "cache": false,
       "inputs": [],
       "outputLogs": "new-only",

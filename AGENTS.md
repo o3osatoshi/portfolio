@@ -39,7 +39,7 @@ This document reflects the current state of the repository. Commands listed belo
 - Combined check (types + tests): `pnpm check`.
 - Lint/format/package sorting: `pnpm style`.
 - Clean build artifacts: `pnpm clean`.
-- Update env files (runs only where `pull:env` script exists): `pnpm pull:env`.
+- Update env files (runs only where `env:pull` script exists): `pnpm env:pull`.
 - Deploy Firebase functions: `pnpm deploy:functions`.
 - Deploy Edge (prod): `pnpm deploy:edge`.
 - Deploy Edge (prv): `pnpm deploy:edge:prv`.
