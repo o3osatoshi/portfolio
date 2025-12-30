@@ -64,7 +64,7 @@ export interface CreateLoggerOptions {
  * Create a structured logger.
  *
  * @remarks
- * - Log and event entries are emitted to `datasets.logs`.
+ * - Log and event entries are emitted to `datasets.events`.
  * - Metric events are emitted to `datasets.metrics`.
  * - Error objects are serialized into `exception.*` fields.
  *
