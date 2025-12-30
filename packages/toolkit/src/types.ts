@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Canonical deployment environment label used across this workspace.
+ * Canonical runtime environment label used across this workspace.
  *
  * @remarks
  * - Intended for high-level environment classification (e.g. telemetry, config).
