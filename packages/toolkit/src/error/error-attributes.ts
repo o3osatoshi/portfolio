@@ -3,11 +3,11 @@
  *
  * @remarks
  * Uses {@link extractErrorMessage} when available, otherwise falls back to
- * JSON serialization or string coercion to avoid empty messages.
+ * JSON serialization or string coercion to avoid missing messages.
  *
  * @public
  * @param cause - Value supplied as an error `cause`.
- * @returns A message string when derivable, otherwise `undefined`.
+ * @returns A message string (possibly empty) when derivable, otherwise `undefined`.
  */
 export function coerceErrorMessage(cause: unknown): string | undefined {
   const extracted = extractErrorMessage(cause);
