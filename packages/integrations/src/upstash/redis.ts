@@ -1,17 +1,10 @@
 import type { CacheSetOptions, CacheStore } from "@repo/domain";
+import type { Redis as UpstashRedis } from "@upstash/redis";
 import { ResultAsync } from "neverthrow";
 
 import { newError } from "@o3osatoshi/toolkit";
 
-export type UpstashRedisClient = {
-  get<T>(key: string): Promise<null | T>;
-  set<T>(
-    key: string,
-    value: T,
-    options?: Record<string, unknown>,
-  ): Promise<"OK" | null | T>;
-};
-
+export type UpstashRedisClient = Pick<UpstashRedis, "get" | "set">;
 /**
  * Connection options for Upstash Redis.
  */
