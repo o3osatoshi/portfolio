@@ -10,7 +10,7 @@
     "start": "next start",
     "test": "vitest run",
     "test:cvrg": "vitest run --coverage",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "pnpm run typegen && tsc -p tsconfig.json --noEmit",
     "typegen": "next typegen"
   },
   "dependencies": {
