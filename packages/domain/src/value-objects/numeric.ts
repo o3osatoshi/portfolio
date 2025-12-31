@@ -2,7 +2,12 @@ import { err, ok, type Result } from "neverthrow";
 
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
-import { type DecimalString, newDecimal } from "./decimal";
+import {
+  type DecimalString,
+  isNonNegativeDecimal,
+  isPositiveDecimal,
+  newDecimal,
+} from "./decimal";
 
 /** Monetary quantity (strictly greater than zero). */
 export type Amount = Brand<DecimalString, "Amount">;
@@ -38,7 +43,7 @@ export function isProfitLoss(v: unknown): v is ProfitLoss {
 export function newAmount(v: unknown): Result<Amount, Error> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
-  if (!gtZero(r.value))
+  if (!isPositiveDecimal(r.value))
     return err(
       domainValidationError({
         action: "NewAmount",
@@ -54,7 +59,7 @@ export function newAmount(v: unknown): Result<Amount, Error> {
 export function newFee(v: unknown): Result<Fee, Error> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
-  if (!gteZero(r.value))
+  if (!isNonNegativeDecimal(r.value))
     return err(
       domainValidationError({
         action: "NewFee",
@@ -70,7 +75,7 @@ export function newFee(v: unknown): Result<Fee, Error> {
 export function newPrice(v: unknown): Result<Price, Error> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
-  if (!gtZero(r.value))
+  if (!isPositiveDecimal(r.value))
     return err(
       domainValidationError({
         action: "NewPrice",
@@ -86,11 +91,4 @@ export function newProfitLoss(v: unknown): Result<ProfitLoss, Error> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
   return ok(r.value as ProfitLoss);
-}
-function gteZero(d: DecimalString): boolean {
-  return !d.startsWith("-");
-}
-function gtZero(d: DecimalString): boolean {
-  if (d.startsWith("-")) return false;
-  return d !== "0"; // normalized ensures no trailing zeros-only variants
 }
