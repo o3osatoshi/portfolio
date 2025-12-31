@@ -20,13 +20,12 @@ import {
   exchangeRateHostResponseSchema,
 } from "./schema";
 
-const DEFAULT_BASE_URL = "https://v6.exchangerate-api.com/v6";
-const DEFAULT_ENDPOINT = "pair";
 const DEFAULT_CACHE_TTL_MS = 3_600_000;
-const EXCHANGE_RATE_CACHE_KEY_PREFIX = "fx:rate";
-export type ExchangeRateHostConfig = {
-  apiKey?: string | undefined;
-  baseUrl?: string | undefined;
+const CACHE_KEY_PREFIX = "fx:rate";
+
+export type ExchangeRateApiConfig = {
+  apiKey: string;
+  baseUrl: string;
   cacheStore?: CacheStore | undefined;
   cacheTtlMs?: number | undefined;
   fetch?: typeof fetch | undefined;
@@ -39,16 +38,13 @@ type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 /**
  * ExchangeRate-API-backed implementation of {@link ExchangeRateProvider}.
  */
-export class ExchangeRateHostProvider implements ExchangeRateProvider {
-  constructor(private readonly config: ExchangeRateHostConfig = {}) {}
+export class ExchangeRateApi implements ExchangeRateProvider {
+  constructor(private readonly config: ExchangeRateApiConfig) {}
 
   /** @inheritdoc */
   getRate(query: ExchangeRateQuery) {
-    const baseUrl = this.config.baseUrl ?? DEFAULT_BASE_URL;
-    const path = this.config.apiKey
-      ? `${this.config.apiKey}/${DEFAULT_ENDPOINT}/${query.base}/${query.quote}`
-      : `${DEFAULT_ENDPOINT}/${query.base}/${query.quote}`;
-    const url = new URL(path, normalizeBaseUrl(baseUrl));
+    const path = `${this.config.apiKey}/pair/${query.base}/${query.quote}`;
+    const url = new URL(path, normalizeBaseUrl(this.config.baseUrl));
 
     const request = {
       headers: {
@@ -58,12 +54,9 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
       url: url.toString(),
     };
 
-    const cacheKey = `${EXCHANGE_RATE_CACHE_KEY_PREFIX}:${query.base}:${query.quote}`;
-
-    const redactUrl = buildRedactUrl(this.config.apiKey);
     const client = createServerFetchClient<ExchangeRatePayload>({
       cache: {
-        getKey: () => cacheKey,
+        getKey: () => `${CACHE_KEY_PREFIX}:${query.base}:${query.quote}`,
         shouldCache: (res) => isCacheablePayload(res.data),
         store: this.config.cacheStore,
         ttlMs: this.config.cacheTtlMs ?? DEFAULT_CACHE_TTL_MS,
@@ -71,7 +64,7 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
       fetch: this.config.fetch,
       observability: {
         logger: this.config.logger,
-        redactUrl,
+        redactUrl: buildRedactUrl(this.config.apiKey),
         requestName: "exchange_rate",
       },
       retry: this.config.retry,

@@ -4,7 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
-import { ExchangeRateHostProvider } from "./exchange-rate-host.provider";
+import type { ExchangeRateApiConfig } from "./exchange-rate-api";
+import { ExchangeRateApi } from "./exchange-rate-api";
 
 type MockResponseOptions = {
   json?: unknown;
@@ -38,12 +39,23 @@ function buildResponse(options: MockResponseOptions): Response {
   } as Response;
 }
 
+const DEFAULT_CONFIG: ExchangeRateApiConfig = {
+  apiKey: "key-123",
+  baseUrl: "https://example.test/api/",
+};
+
 const query = {
   base: "USD",
   quote: "JPY",
 } as ExchangeRateQuery;
 
-describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
+const buildProvider = (overrides: Partial<ExchangeRateApiConfig> = {}) =>
+  new ExchangeRateApi({
+    ...DEFAULT_CONFIG,
+    ...overrides,
+  });
+
+describe("integrations/exchange-rate-host ExchangeRateApi", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -64,8 +76,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
-      apiKey: "key-123",
+    const provider = buildProvider({
       baseUrl: "https://example.test/api",
       fetch: fetchMock as unknown as typeof fetch,
     });
@@ -86,7 +97,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     expect(result.value.asOf.getTime()).toBe(lastUpdateUnix * 1000);
   });
 
-  it("omits api key and uses current time when date is missing", async () => {
+  it("uses current time when date is missing", async () => {
     vi.useFakeTimers();
     const now = new Date("2024-02-03T04:05:06Z");
     vi.setSystemTime(now);
@@ -100,8 +111,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
-      baseUrl: "https://example.test/api/",
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -112,7 +122,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     const [url] = fetchMock.mock.calls[0] ?? [];
     const parsed = new URL(String(url));
     expect(`${parsed.origin}${parsed.pathname}`).toBe(
-      "https://example.test/api/pair/USD/JPY",
+      "https://example.test/api/key-123/pair/USD/JPY",
     );
     expect(parsed.search).toBe("");
 
@@ -130,7 +140,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       text: "no such route",
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -148,7 +158,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       jsonError: new Error("bad json"),
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -169,7 +179,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -190,7 +200,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -212,7 +222,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -235,7 +245,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -263,7 +273,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     // @ts-expect-error
     cacheStore.set = vi.fn(() => okAsync("OK"));
     const fetchMock = vi.fn(async () => buildResponse({ json: cachedPayload }));
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       cacheStore,
       fetch: fetchMock as unknown as typeof fetch,
     });
@@ -297,7 +307,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = new ExchangeRateHostProvider({
+    const provider = buildProvider({
       cacheStore,
       fetch: fetchMock as unknown as typeof fetch,
     });

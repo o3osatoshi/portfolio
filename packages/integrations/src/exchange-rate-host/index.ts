@@ -1,1 +1,1 @@
-export * from "./exchange-rate-host.provider";
+export * from "./exchange-rate-api";

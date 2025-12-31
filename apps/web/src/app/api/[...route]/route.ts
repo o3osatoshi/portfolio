@@ -1,8 +1,5 @@
 import { createAuthConfig } from "@repo/auth";
-import {
-  createUpstashRedis,
-  ExchangeRateHostProvider,
-} from "@repo/integrations";
+import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import { buildHandler } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
@@ -18,7 +15,7 @@ const cacheStore = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
 });
-const exchangeRateProvider = new ExchangeRateHostProvider({
+const exchangeRateProvider = new ExchangeRateApi({
   apiKey: env.EXCHANGE_RATE_API_KEY,
   baseUrl: env.EXCHANGE_RATE_BASE_URL,
   cacheStore,

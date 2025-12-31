@@ -1,8 +1,5 @@
 import { createAuthConfig } from "@repo/auth";
-import {
-  createUpstashRedis,
-  ExchangeRateHostProvider,
-} from "@repo/integrations";
+import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import {
   buildApp,
   createExpressRequestHandler,
@@ -39,7 +36,7 @@ export const api = onRequest(async (req, res) => {
             url: env.UPSTASH_REDIS_REST_URL,
           })
         : undefined;
-    const exchangeRateProvider = new ExchangeRateHostProvider({
+    const exchangeRateProvider = new ExchangeRateApi({
       apiKey: env.EXCHANGE_RATE_API_KEY,
       baseUrl: env.EXCHANGE_RATE_BASE_URL,
       cacheStore,
