@@ -12,8 +12,8 @@ import { type DecimalString, newDecimal } from "./decimal";
 export type ExchangeRate = {
   asOf: DateTime;
   base: CurrencyCode;
+  quote: CurrencyCode;
   rate: ExchangeRateValue;
-  target: CurrencyCode;
 };
 
 /**
@@ -27,8 +27,8 @@ export type ExchangeRateValue = Brand<DecimalString, "ExchangeRateValue">;
 export type NewExchangeRateInput = {
   asOf: unknown;
   base: unknown;
+  quote: unknown;
   rate: unknown;
-  target: unknown;
 };
 
 /**
@@ -39,14 +39,14 @@ export function newExchangeRate(
 ): Result<ExchangeRate, Error> {
   return Result.combine([
     newCurrencyCode(input.base),
-    newCurrencyCode(input.target),
+    newCurrencyCode(input.quote),
     newExchangeRateValue(input.rate),
     newDateTime(input.asOf),
-  ]).map(([base, target, rate, asOf]) => ({
+  ]).map(([base, quote, rate, asOf]) => ({
     asOf,
     base,
+    quote,
     rate,
-    target,
   }));
 }
 

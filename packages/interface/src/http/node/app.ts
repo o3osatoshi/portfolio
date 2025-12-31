@@ -141,7 +141,7 @@ function buildPublicRoutes(deps: Deps) {
       return respondAsync<GetExchangeRateResponse>(c)(
         parseGetExchangeRateRequest({
           base: query["base"],
-          target: query["target"],
+          quote: query["quote"],
         }).asyncAndThen((res) => getExchangeRate.execute(res)),
       );
     });

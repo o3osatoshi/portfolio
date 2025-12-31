@@ -15,5 +15,5 @@ export interface ExchangeRateProvider {
  */
 export type ExchangeRateQuery = {
   base: CurrencyCode;
-  target: CurrencyCode;
+  quote: CurrencyCode;
 };

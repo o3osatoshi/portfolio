@@ -12,7 +12,7 @@ const CurrencyCodeSchema = z
  */
 export const getExchangeRateRequestSchema = z.object({
   base: CurrencyCodeSchema,
-  target: CurrencyCodeSchema,
+  quote: CurrencyCodeSchema,
 });
 
 /**

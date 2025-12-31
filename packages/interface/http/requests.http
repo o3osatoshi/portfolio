@@ -20,7 +20,7 @@ GET {{API_BASE_URL}}/api/public/healthz
 Accept: application/json
 
 ### api exchange-rate
-GET {{API_BASE_URL}}/api/public/exchange-rate?base=usd&target=jpy
+GET {{API_BASE_URL}}/api/public/exchange-rate?base=usd&quote=jpy
 Accept: application/json
 
 ### api labs/transactions

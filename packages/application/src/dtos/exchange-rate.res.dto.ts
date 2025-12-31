@@ -6,8 +6,8 @@ import type { ExchangeRate } from "@repo/domain";
 export type ExchangeRateResponse = {
   asOf: Date;
   base: string;
+  quote: string;
   rate: string;
-  target: string;
 };
 
 /**
@@ -24,7 +24,7 @@ export function toExchangeRateResponse(
   return {
     asOf: rate.asOf,
     base: rate.base,
+    quote: rate.quote,
     rate: rate.rate,
-    target: rate.target,
   };
 }

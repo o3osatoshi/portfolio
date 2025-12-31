@@ -50,8 +50,8 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
   getRate(query: ExchangeRateQuery) {
     const baseUrl = this.config.baseUrl ?? DEFAULT_BASE_URL;
     const path = this.config.apiKey
-      ? `${this.config.apiKey}/${DEFAULT_ENDPOINT}/${query.base}/${query.target}`
-      : `${DEFAULT_ENDPOINT}/${query.base}/${query.target}`;
+      ? `${this.config.apiKey}/${DEFAULT_ENDPOINT}/${query.base}/${query.quote}`
+      : `${DEFAULT_ENDPOINT}/${query.base}/${query.quote}`;
     const url = new URL(path, normalizeBaseUrl(baseUrl));
 
     const request = {
@@ -62,7 +62,7 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
       url: url.toString(),
     };
 
-    const cacheKey = `${EXCHANGE_RATE_CACHE_KEY_PREFIX}:${query.base}:${query.target}`;
+    const cacheKey = `${EXCHANGE_RATE_CACHE_KEY_PREFIX}:${query.base}:${query.quote}`;
 
     const baseFetch = createServerFetch(
       this.config.fetch ? { fetch: this.config.fetch } : {},
@@ -196,8 +196,8 @@ function handleExchangeRateResponse(
   const normalized = newExchangeRate({
     asOf,
     base: query.base,
+    quote: query.quote,
     rate,
-    target: query.target,
   });
   if (normalized.isErr()) {
     return errAsync(normalized.error);

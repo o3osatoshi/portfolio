@@ -16,13 +16,13 @@ describe("value-objects/exchange-rate", () => {
     const res = newExchangeRate({
       asOf: new Date("2024-01-01"),
       base: "usd",
+      quote: "jpy",
       rate: "140.01",
-      target: "jpy",
     });
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
       expect(res.value.base).toBe("USD");
-      expect(res.value.target).toBe("JPY");
+      expect(res.value.quote).toBe("JPY");
     }
   });
 });

@@ -40,7 +40,7 @@ function buildResponse(options: MockResponseOptions): Response {
 
 const query = {
   base: "USD",
-  target: "JPY",
+  quote: "JPY",
 } as ExchangeRateQuery;
 
 describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
@@ -81,7 +81,7 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
     expect(result.value.base).toBe("USD");
-    expect(result.value.target).toBe("JPY");
+    expect(result.value.quote).toBe("JPY");
     expect(result.value.rate).toBe("150.25");
     expect(result.value.asOf.getTime()).toBe(lastUpdateUnix * 1000);
   });

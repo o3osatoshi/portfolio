@@ -44,8 +44,8 @@ const a = vi.hoisted(() => {
       return okAsync({
         asOf: new Date(0),
         base: "USD",
+        quote: "JPY",
         rate: "150.0",
-        target: "JPY",
       });
     }
   }
@@ -135,15 +135,15 @@ describe("http/node app", () => {
 
   it("GET /api/public/exchange-rate returns the latest rate", async () => {
     const res = await build().request(
-      "/api/public/exchange-rate?base=usd&target=jpy",
+      "/api/public/exchange-rate?base=usd&quote=jpy",
     );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.base).toBe("USD");
-    expect(body.target).toBe("JPY");
+    expect(body.quote).toBe("JPY");
     expect(a.parseGetExchangeRateRequest).toHaveBeenCalledWith({
       base: "usd",
-      target: "jpy",
+      quote: "jpy",
     });
   });
 });

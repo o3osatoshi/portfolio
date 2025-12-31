@@ -25,13 +25,13 @@ export class GetExchangeRateUseCase {
   ): ResultAsync<GetExchangeRateResponse, Error> {
     const base = newCurrencyCode(req.base);
     if (base.isErr()) return errAsync(base.error);
-    const target = newCurrencyCode(req.target);
-    if (target.isErr()) return errAsync(target.error);
+    const quote = newCurrencyCode(req.quote);
+    if (quote.isErr()) return errAsync(quote.error);
 
     return this.provider
       .getRate({
         base: base.value,
-        target: target.value,
+        quote: quote.value,
       })
       .map(toExchangeRateResponse);
   }
