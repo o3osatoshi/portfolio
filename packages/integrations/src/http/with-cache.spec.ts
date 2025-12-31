@@ -1,0 +1,191 @@
+import type { CacheStore } from "@repo/domain";
+import { errAsync, okAsync } from "neverthrow";
+import { describe, expect, it, vi } from "vitest";
+
+import { withCache } from "./with-cache";
+
+const buildResponse = <T>(
+  data: T,
+  meta: { attempts?: number } = {},
+  ok = true,
+) =>
+  okAsync({
+    cached: false,
+    data,
+    meta,
+    response: {
+      headers: new Headers(),
+      ok,
+      status: ok ? 200 : 500,
+      statusText: ok ? "OK" : "ERR",
+      url: "https://example.test",
+    },
+  });
+
+describe("integrations/http withCache", () => {
+  it("returns the original client when no store is provided", () => {
+    const next = vi.fn();
+    const client = withCache(next, {
+      getKey: () => "cache:key",
+    });
+    expect(client).toBe(next);
+  });
+
+  it("skips cache when getKey returns undefined", async () => {
+    const cacheStore: CacheStore = {
+      // @ts-expect-error
+      get: vi.fn(() => okAsync("cached")),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() => buildResponse("fresh"));
+    const client = withCache(next, {
+      getKey: () => undefined,
+      store: cacheStore,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(cacheStore.get).not.toHaveBeenCalled();
+    expect(cacheStore.set).not.toHaveBeenCalled();
+  });
+
+  it("returns cached data on cache hits", async () => {
+    const cacheStore: CacheStore = {
+      // @ts-expect-error
+      get: vi.fn(() => okAsync({ value: "cached" })),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() => buildResponse({ value: "fresh" }));
+    const client = withCache(next, {
+      getKey: () => "cache:key",
+      store: cacheStore,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    if (!result.isOk()) return;
+    expect(next).not.toHaveBeenCalled();
+    expect(result.value.cached).toBe(true);
+    expect(result.value.data).toEqual({ value: "cached" });
+    expect(result.value.meta).toEqual({
+      attempts: 0,
+      cacheHit: true,
+      cacheKey: "cache:key",
+    });
+  });
+
+  it("writes to cache on cache miss", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(() => okAsync(null)),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() =>
+      buildResponse({ value: "fresh" }, { attempts: 2 }),
+    );
+    const client = withCache(next, {
+      getKey: () => "cache:key",
+      store: cacheStore,
+      ttlMs: 1000,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(cacheStore.set).toHaveBeenCalledWith(
+      "cache:key",
+      { value: "fresh" },
+      { ttlMs: 1000 },
+    );
+    if (!result.isOk()) return;
+    expect(result.value.meta).toEqual({
+      attempts: 2,
+      cacheHit: false,
+      cacheKey: "cache:key",
+    });
+  });
+
+  it("skips caching when shouldCache returns false", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(() => okAsync(null)),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() => buildResponse({ value: "fresh" }));
+    const client = withCache(next, {
+      getKey: () => "cache:key",
+      shouldCache: () => false,
+      store: cacheStore,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    expect(cacheStore.set).not.toHaveBeenCalled();
+  });
+
+  it("falls back to fetch when cached data cannot be deserialized", async () => {
+    const cacheStore: CacheStore = {
+      // @ts-expect-error
+      get: vi.fn(() => okAsync("bad-data")),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() => buildResponse({ value: "fresh" }));
+    const client = withCache(next, {
+      deserialize: () => {
+        throw new Error("bad cache");
+      },
+      getKey: () => "cache:key",
+      store: cacheStore,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(cacheStore.set).toHaveBeenCalledTimes(1);
+  });
+
+  it("falls back to fetch when cache get fails", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(() => errAsync(new Error("cache get failed"))),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() => buildResponse({ value: "fresh" }));
+    const client = withCache(next, {
+      getKey: () => "cache:key",
+      store: cacheStore,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores cache set failures", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(() => okAsync(null)),
+      set: vi.fn(() => errAsync(new Error("cache set failed"))),
+    };
+    const next = vi.fn(() => buildResponse({ value: "fresh" }));
+    const client = withCache(next, {
+      getKey: () => "cache:key",
+      store: cacheStore,
+      ttlMs: 1000,
+    });
+
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isOk()).toBe(true);
+    expect(cacheStore.set).toHaveBeenCalledTimes(1);
+  });
+});
