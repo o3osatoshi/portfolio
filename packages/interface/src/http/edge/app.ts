@@ -86,7 +86,7 @@ export function buildEdgeApp(deps: EdgeDeps) {
  * ```ts
  * // app/edge/[...route]/route.ts
  * import { createAuthConfig } from "@repo/auth";
- * import { createEdgeUpstashCacheStore } from "@repo/integrations";
+ * import { createEdgeUpstashRedis } from "@repo/integrations";
  * import { buildEdgeHandler } from "@repo/interface/http/edge";
  *
  * export const runtime = "edge";
@@ -96,7 +96,7 @@ export function buildEdgeApp(deps: EdgeDeps) {
  *   secret: "...",
  * });
  *
- * const cacheStore = createEdgeUpstashCacheStore({
+ * const cacheStore = createEdgeUpstashRedis({
  *   token: "...",
  *   url: "...",
  * });
@@ -129,7 +129,7 @@ function buildEdgePublicRoutes(deps: EdgeDeps) {
     if (deps.cacheStore !== undefined) {
       return deps.cacheStore;
     }
-    if (deps.createCacheStore) {
+    if (deps.createCacheStore !== undefined) {
       return deps.createCacheStore(c);
     }
     return undefined;
