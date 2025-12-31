@@ -43,12 +43,12 @@ export const api = onRequest(async (req, res) => {
       secret: env.AUTH_SECRET,
     });
 
-    const repo = new PrismaTransactionRepository(client);
+    const transactionRepo = new PrismaTransactionRepository(client);
 
     const app = buildApp({
       fxQuoteProvider,
       authConfig,
-      transactionRepo: repo,
+      transactionRepo,
     });
     handler = createExpressRequestHandler(app);
   }

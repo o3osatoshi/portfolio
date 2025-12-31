@@ -32,10 +32,10 @@ const authConfig = createAuthConfig({
   secret: env.AUTH_SECRET,
 });
 
-const repo = new PrismaTransactionRepository(client);
+const transactionRepo = new PrismaTransactionRepository(client);
 
 export const { GET, POST } = buildHandler({
   fxQuoteProvider,
   authConfig,
-  transactionRepo: repo,
+  transactionRepo,
 });
