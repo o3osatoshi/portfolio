@@ -1,6 +1,6 @@
 import { createAuthConfig } from "@repo/auth";
 import {
-  createUpstashCacheStore,
+  createUpstashRedis,
   ExchangeRateHostProvider,
 } from "@repo/integrations";
 import { buildHandler } from "@repo/interface/http/node";
@@ -14,7 +14,7 @@ export const runtime = "nodejs";
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
 const logger = getWebNodeLogger();
-const cacheStore = createUpstashCacheStore({
+const cacheStore = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
 });

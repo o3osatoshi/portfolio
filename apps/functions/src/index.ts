@@ -1,6 +1,6 @@
 import { createAuthConfig } from "@repo/auth";
 import {
-  createUpstashCacheStore,
+  createUpstashRedis,
   ExchangeRateHostProvider,
 } from "@repo/integrations";
 import {
@@ -34,7 +34,7 @@ export const api = onRequest(async (req, res) => {
     const logger = getFunctionsLogger();
     const cacheStore =
       env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
-        ? createUpstashCacheStore({
+        ? createUpstashRedis({
             token: env.UPSTASH_REDIS_REST_TOKEN,
             url: env.UPSTASH_REDIS_REST_URL,
           })

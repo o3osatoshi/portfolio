@@ -1,19 +1,9 @@
 import type { CacheSetOptions, CacheStore } from "@repo/domain";
-import { Redis } from "@upstash/redis";
-import { Redis as EdgeRedis } from "@upstash/redis/cloudflare";
 import { ResultAsync } from "neverthrow";
 
 import { newError } from "@o3osatoshi/toolkit";
 
-/**
- * Connection options for Upstash Redis.
- */
-export type UpstashRedisOptions = {
-  token?: string;
-  url?: string;
-};
-
-type UpstashRedisClient = {
+export type UpstashRedisClient = {
   get<T>(key: string): Promise<null | T>;
   set<T>(
     key: string,
@@ -23,31 +13,17 @@ type UpstashRedisClient = {
 };
 
 /**
- * Create a cache store backed by an Upstash Redis client (Edge runtime).
+ * Connection options for Upstash Redis.
  */
-export function createEdgeUpstashCacheStore(
-  options?: UpstashRedisOptions,
-): CacheStore {
-  return wrapUpstashClient(
-    new EdgeRedis({ token: options?.token, url: options?.url }),
-  );
-}
-
-/**
- * Create a cache store backed by an Upstash Redis client (Node runtime).
- */
-export function createUpstashCacheStore(
-  options?: UpstashRedisOptions,
-): CacheStore {
-  return wrapUpstashClient(
-    new Redis({ token: options?.token, url: options?.url }),
-  );
-}
+export type UpstashRedisOptions = {
+  token?: string;
+  url?: string;
+};
 
 /**
  * Wrap a preconfigured Upstash client with the {@link CacheStore} interface.
  */
-export function wrapUpstashClient(client: UpstashRedisClient): CacheStore {
+export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
   return {
     get: (key) =>
       ResultAsync.fromPromise(client.get(key), (cause) =>
@@ -62,14 +38,13 @@ export function wrapUpstashClient(client: UpstashRedisClient): CacheStore {
         }),
       ),
     set: (key, value, options: CacheSetOptions = {}) => {
+      const px = options.ttlMs;
+      const nx = options.onlyIfAbsent;
+      const xx = options.onlyIfPresent;
       const opts: Record<string, unknown> = {
-        ...(options.ttlMs !== undefined ? { px: options.ttlMs } : {}),
-        ...(options.onlyIfAbsent !== undefined
-          ? { nx: options.onlyIfAbsent }
-          : {}),
-        ...(options.onlyIfPresent !== undefined
-          ? { xx: options.onlyIfPresent }
-          : {}),
+        ...(px ? { px } : {}),
+        ...(nx ? { nx } : {}),
+        ...(xx ? { xx } : {}),
       };
       return ResultAsync.fromPromise(client.set(key, value, opts), (cause) =>
         newError({

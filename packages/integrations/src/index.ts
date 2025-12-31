@@ -3,4 +3,4 @@
  */
 export * from "./exchange-rate-host";
 export * from "./http";
-export * from "./redis";
+export * from "./upstash";

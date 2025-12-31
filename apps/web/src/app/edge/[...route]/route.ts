@@ -1,5 +1,5 @@
 import { createAuthConfig } from "@repo/auth";
-import { createEdgeUpstashCacheStore } from "@repo/integrations";
+import { createEdgeUpstashRedis } from "@repo/integrations";
 import { buildEdgeHandler } from "@repo/interface/http/edge";
 
 import { env } from "@/env/server";
@@ -19,7 +19,7 @@ const authConfig = createAuthConfig({
   secret: env.AUTH_SECRET,
 });
 
-const cacheStore = createEdgeUpstashCacheStore({
+const cacheStore = createEdgeUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
 });
