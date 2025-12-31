@@ -82,14 +82,14 @@ export function buildApp(deps: Deps) {
  * ```ts
  * // app/api/[...route]/route.ts
  * import { createAuthConfig } from "@repo/auth";
- * import { ExchangeRateHostProvider } from "@repo/integrations";
+ * import { ExchangeRateApi } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
  * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
  * export const runtime = "nodejs";
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
  * const transactionRepo = new PrismaTransactionRepository(prisma);
- * const exchangeRateProvider = new ExchangeRateHostProvider({
+ * const exchangeRateProvider = new ExchangeRateApi({
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
  * });

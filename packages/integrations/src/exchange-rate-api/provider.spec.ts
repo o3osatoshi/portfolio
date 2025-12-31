@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
-import type { ExchangeRateApiConfig } from "./exchange-rate-api";
-import { ExchangeRateApi } from "./exchange-rate-api";
+import type { ExchangeRateApiConfig } from "./provider";
+import { ExchangeRateApi } from "./provider";
 
 type MockResponseOptions = {
   json?: unknown;
@@ -55,7 +55,7 @@ const buildProvider = (overrides: Partial<ExchangeRateApiConfig> = {}) =>
     ...overrides,
   });
 
-describe("integrations/exchange-rate-host ExchangeRateApi", () => {
+describe("integrations/exchange-rate-api ExchangeRateApi", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
