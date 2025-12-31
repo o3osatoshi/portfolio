@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "wrangler deploy --dry-run --outdir dist --env=prd",
-    "deploy": "wrangler deploy --env=prd",
-    "deploy:prv": "wrangler versions upload --env=stg",
-    "dev": "wrangler dev --env=\"\"",
+    "build": "wrangler deploy --dry-run --outdir dist --env prd",
+    "deploy": "wrangler deploy --env prd",
+    "deploy:prv": "wrangler versions upload --env stg",
+    "dev": "wrangler dev --env \"\"",
     "env:pull": "doppler secrets download --project portfolio-edge --config dev --no-file --format env > ./.env.local",
     "env:sync": "doppler secrets --json --project portfolio-edge --config prd | jq -c 'with_entries(.value = .value.computed)' | wrangler secret bulk"
   },
