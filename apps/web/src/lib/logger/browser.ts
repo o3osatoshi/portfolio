@@ -8,7 +8,7 @@ import { createProxyTransport } from "@o3osatoshi/logging/proxy";
 
 import { loggingDatasets, loggingServices, resolveLoggerEnv } from "./config";
 
-export const LOGGING_PROXY_PATH = "/api/logger";
+export const LOGGING_PROXY_PATH = "/api/logging";
 
 export function getWebBrowserLogger() {
   initWebBrowserLogger();
