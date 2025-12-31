@@ -5,11 +5,11 @@ import type { ResultAsync } from "neverthrow";
  */
 export type CacheSetOptions = {
   /** Set only if the key does not already exist (NX). */
-  onlyIfAbsent?: boolean;
+  onlyIfAbsent?: boolean | undefined;
   /** Set only if the key already exists (XX). */
-  onlyIfPresent?: boolean;
+  onlyIfPresent?: boolean | undefined;
   /** Time to live in milliseconds. */
-  ttlMs?: number;
+  ttlMs?: number | undefined;
 };
 
 /**

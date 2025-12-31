@@ -619,6 +619,9 @@ importers:
 
   packages/integrations:
     dependencies:
+      '@o3osatoshi/logging':
+        specifier: workspace:*
+        version: link:../logging
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit

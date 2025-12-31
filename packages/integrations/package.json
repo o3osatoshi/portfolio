@@ -13,6 +13,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@o3osatoshi/logging": "workspace:*",
     "@o3osatoshi/toolkit": "workspace:*",
     "@repo/domain": "workspace:*",
     "@upstash/redis": "^1.35.7",

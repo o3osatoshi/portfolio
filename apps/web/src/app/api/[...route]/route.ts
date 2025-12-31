@@ -7,21 +7,22 @@ import { buildHandler } from "@repo/interface/http/node";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 import { env } from "@/env/server";
-import { initWebNodeLogger } from "@/lib/logger/node";
+import { getWebNodeLogger } from "@/lib/logger/node";
 
 export const runtime = "nodejs";
 
-initWebNodeLogger();
-
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
-const exchangeRateProvider = new ExchangeRateHostProvider({
-  apiKey: env.EXCHANGE_RATE_API_KEY,
-  baseUrl: env.EXCHANGE_RATE_BASE_URL,
-});
+const logger = getWebNodeLogger();
 const cacheStore = createUpstashCacheStore({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
+});
+const exchangeRateProvider = new ExchangeRateHostProvider({
+  apiKey: env.EXCHANGE_RATE_API_KEY,
+  baseUrl: env.EXCHANGE_RATE_BASE_URL,
+  cacheStore,
+  logger,
 });
 
 const authConfig = createAuthConfig({
@@ -38,6 +39,5 @@ const authConfig = createAuthConfig({
 export const { GET, POST } = buildHandler({
   exchangeRateProvider,
   authConfig,
-  cacheStore,
   transactionRepo: repo,
 });

@@ -1,4 +1,5 @@
-import type { ExchangeRateQuery } from "@repo/domain";
+import type { CacheStore, ExchangeRateQuery } from "@repo/domain";
+import { okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
@@ -156,8 +157,8 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
-    const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("Failed to parse ExchangeRate API JSON response.");
+    const { action } = parseErrorMessage(result.error.message);
+    expect(action).toBe("ParseExternalApiResponse");
   });
 
   it("returns BadGateway error when payload schema is invalid", async () => {
@@ -243,5 +244,74 @@ describe("integrations/exchange-rate-host ExchangeRateHostProvider", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("DomainValidationError");
+  });
+
+  it("returns cached data when cache store hits", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(),
+      set: vi.fn(),
+    };
+    const cachedPayload = {
+      base_code: "USD",
+      conversion_rate: "150.5",
+      result: "success",
+      target_code: "JPY",
+      time_last_update_unix: 1_704_153_600,
+    };
+    // @ts-expect-error
+    cacheStore.get = vi.fn(() => okAsync(cachedPayload));
+    // @ts-expect-error
+    cacheStore.set = vi.fn(() => okAsync("OK"));
+    const fetchMock = vi.fn(async () => buildResponse({ json: cachedPayload }));
+    const provider = new ExchangeRateHostProvider({
+      cacheStore,
+      fetch: fetchMock as unknown as typeof fetch,
+    });
+
+    const result = await provider.getRate(query);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(cacheStore.get).toHaveBeenCalledTimes(1);
+    expect(cacheStore.get).toHaveBeenCalledWith("fx:rate:USD:JPY");
+    expect(cacheStore.set).not.toHaveBeenCalled();
+    expect(result.isOk()).toBe(true);
+    if (!result.isOk()) return;
+    expect(result.value.rate).toBe("150.5");
+  });
+
+  it("writes to cache on cache miss", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(),
+      set: vi.fn(),
+    };
+    cacheStore.get = vi.fn(() => okAsync(null));
+    // @ts-expect-error
+    cacheStore.set = vi.fn(() => okAsync("OK"));
+    const response = buildResponse({
+      json: {
+        base_code: "USD",
+        conversion_rate: "151.25",
+        result: "success",
+        target_code: "JPY",
+        time_last_update_unix: 1_704_153_600,
+      },
+    });
+    const fetchMock = vi.fn(async () => response);
+    const provider = new ExchangeRateHostProvider({
+      cacheStore,
+      fetch: fetchMock as unknown as typeof fetch,
+    });
+
+    const result = await provider.getRate(query);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(cacheStore.get).toHaveBeenCalledTimes(1);
+    expect(cacheStore.set).toHaveBeenCalledTimes(1);
+    expect(cacheStore.set).toHaveBeenCalledWith(
+      "fx:rate:USD:JPY",
+      expect.anything(),
+      { ttlMs: 3_600_000 },
+    );
+    expect(result.isOk()).toBe(true);
   });
 });
