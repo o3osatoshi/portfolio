@@ -35,9 +35,9 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
       const nx = options.onlyIfAbsent;
       const xx = options.onlyIfPresent;
       const opts: Record<string, unknown> = {
-        ...(px ? { px } : {}),
-        ...(nx ? { nx } : {}),
-        ...(xx ? { xx } : {}),
+        ...(px !== undefined ? { px } : {}),
+        ...(nx !== undefined ? { nx } : {}),
+        ...(xx !== undefined ? { xx } : {}),
       };
       return ResultAsync.fromPromise(client.set(key, value, opts), (cause) =>
         newError({
