@@ -4,11 +4,11 @@ import { okAsync, type ResultAsync } from "neverthrow";
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
-} from "../../dtos/heavy-process.res.dto";
+} from "../../dtos";
 import { HeavyProcessUseCase } from "./heavy-process";
 
-const HEAVY_PROCESS_CACHE_KEY = "edge:public:heavy";
-const HEAVY_PROCESS_CACHE_TTL_MS = 200_000;
+const CACHE_KEY_PREFIX = "edge:public:heavy";
+const CACHE_TTL_MS = 200_000;
 
 export class HeavyProcessCachedUseCase {
   constructor(
@@ -20,11 +20,11 @@ export class HeavyProcessCachedUseCase {
    * Execute a cached heavy process.
    *
    * - Attempts to read a {@link HeavyProcessResponse} from the cache store
-   *   using {@link HEAVY_PROCESS_CACHE_KEY}.
+   *   using {@link CACHE_KEY_PREFIX}.
    * - When a cached value exists, it returns the cached payload with
    *   `cached: true`.
    * - When no cached value exists, it runs the heavy process, writes the
-   *   result to the cache store with {@link HEAVY_PROCESS_CACHE_TTL_MS}, and
+   *   result to the cache store with {@link CACHE_TTL_MS}, and
    *   returns the payload with `cached: false`.
    *
    * @returns ResultAsync wrapping a {@link HeavyProcessCachedResponse} or an
@@ -32,7 +32,7 @@ export class HeavyProcessCachedUseCase {
    */
   execute(): ResultAsync<HeavyProcessCachedResponse, Error> {
     return this.cacheStore
-      .get<HeavyProcessResponse>(HEAVY_PROCESS_CACHE_KEY)
+      .get<HeavyProcessResponse>(CACHE_KEY_PREFIX)
       .orElse(() => okAsync(null))
       .andThen((value) => {
         if (value !== null) {
@@ -41,8 +41,8 @@ export class HeavyProcessCachedUseCase {
 
         return this.heavyProcess.execute().andThen((heavyProcess) =>
           this.cacheStore
-            .set(HEAVY_PROCESS_CACHE_KEY, heavyProcess, {
-              ttlMs: HEAVY_PROCESS_CACHE_TTL_MS,
+            .set(CACHE_KEY_PREFIX, heavyProcess, {
+              ttlMs: CACHE_TTL_MS,
             })
             .orElse(() => okAsync(null))
             .map(() => ({ ...heavyProcess, cached: false })),

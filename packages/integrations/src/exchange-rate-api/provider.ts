@@ -20,7 +20,7 @@ import {
   exchangeRateHostResponseSchema,
 } from "./schema";
 
-const DEFAULT_CACHE_TTL_MS = 3_600_000;
+const CACHE_TTL_MS = 3_600_000;
 const CACHE_KEY_PREFIX = "fx:rate";
 
 export type ExchangeRateApiConfig = {
@@ -59,7 +59,7 @@ export class ExchangeRateApi implements ExchangeRateProvider {
         getKey: () => `${CACHE_KEY_PREFIX}:${query.base}:${query.quote}`,
         shouldCache: (res) => isCacheablePayload(res.data),
         store: this.config.cacheStore,
-        ttlMs: this.config.cacheTtlMs ?? DEFAULT_CACHE_TTL_MS,
+        ttlMs: this.config.cacheTtlMs ?? CACHE_TTL_MS,
       },
       fetch: this.config.fetch,
       observability: {

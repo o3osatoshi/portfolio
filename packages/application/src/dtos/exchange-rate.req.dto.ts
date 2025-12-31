@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { parseWith } from "@o3osatoshi/toolkit";
 
-const CurrencyCodeSchema = z
+const currencyCodeSchema = z
   .string()
   .regex(/^[A-Z]{3}$/i, "Must be a 3-letter currency code")
   .transform((value) => value.toUpperCase());
@@ -11,8 +11,8 @@ const CurrencyCodeSchema = z
  * Schema describing the payload required to fetch a currency exchange rate.
  */
 export const getExchangeRateRequestSchema = z.object({
-  base: CurrencyCodeSchema,
-  quote: CurrencyCodeSchema,
+  base: currencyCodeSchema,
+  quote: currencyCodeSchema,
 });
 
 /**

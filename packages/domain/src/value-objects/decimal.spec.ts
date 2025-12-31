@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isDecimal, newDecimal } from "./decimal";
+import { isDecimal, isPositiveDecimal, newDecimal } from "./decimal";
 
 describe("value-objects/decimal", () => {
   it("newDecimal parses valid inputs and returns normalized string", () => {
@@ -25,5 +25,19 @@ describe("value-objects/decimal", () => {
       expect(nonFinite.error.name).toBe("DomainValidationError");
       expect(nonFinite.error.message).toContain("finite");
     }
+  });
+
+  it("isPositiveDecimal returns true only for values > 0", () => {
+    const positive = newDecimal("0.1");
+    const zero = newDecimal("0.0");
+    const negative = newDecimal("-1");
+    expect(positive.isOk()).toBe(true);
+    expect(zero.isOk()).toBe(true);
+    expect(negative.isOk()).toBe(true);
+    if (!positive.isOk() || !zero.isOk() || !negative.isOk()) return;
+
+    expect(isPositiveDecimal(positive.value)).toBe(true);
+    expect(isPositiveDecimal(zero.value)).toBe(false);
+    expect(isPositiveDecimal(negative.value)).toBe(false);
   });
 });

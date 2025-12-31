@@ -1,11 +1,10 @@
-import { default as DecimalJs } from "decimal.js";
 import { err, ok, Result } from "neverthrow";
 
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 import { type CurrencyCode, newCurrencyCode } from "./currency";
 import { type DateTime, newDateTime } from "./datetime";
-import { type DecimalString, newDecimal } from "./decimal";
+import { type DecimalString, isPositiveDecimal, newDecimal } from "./decimal";
 
 /**
  * Validated exchange rate quote between two currencies.
@@ -68,12 +67,4 @@ export function newExchangeRateValue(
     );
   }
   return ok(res.value as ExchangeRateValue);
-}
-
-function isPositiveDecimal(value: DecimalString): boolean {
-  try {
-    return new DecimalJs(value).gt(0);
-  } catch {
-    return false;
-  }
 }

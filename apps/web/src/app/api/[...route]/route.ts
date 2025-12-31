@@ -8,20 +8,19 @@ import { getWebNodeLogger } from "@/lib/logger/node";
 
 export const runtime = "nodejs";
 
-const client = createPrismaClient({ connectionString: env.DATABASE_URL });
-const repo = new PrismaTransactionRepository(client);
-const logger = getWebNodeLogger();
 const cacheStore = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
 });
-const exchangeRateProvider = new ExchangeRateApi({
+const logger = getWebNodeLogger();
+const provider = new ExchangeRateApi({
   apiKey: env.EXCHANGE_RATE_API_KEY,
   baseUrl: env.EXCHANGE_RATE_BASE_URL,
   cacheStore,
   logger,
 });
 
+const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const authConfig = createAuthConfig({
   providers: {
     google: {
@@ -33,8 +32,10 @@ const authConfig = createAuthConfig({
   secret: env.AUTH_SECRET,
 });
 
+const repo = new PrismaTransactionRepository(client);
+
 export const { GET, POST } = buildHandler({
-  exchangeRateProvider,
+  exchangeRateProvider: provider,
   authConfig,
   transactionRepo: repo,
 });

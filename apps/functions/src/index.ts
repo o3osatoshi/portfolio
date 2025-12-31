@@ -14,6 +14,21 @@ let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
 
 export const api = onRequest(async (req, res) => {
   if (!handler) {
+    const cacheStore =
+      env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
+        ? createUpstashRedis({
+            token: env.UPSTASH_REDIS_REST_TOKEN,
+            url: env.UPSTASH_REDIS_REST_URL,
+          })
+        : undefined;
+    const logger = getFunctionsLogger();
+    const provider = new ExchangeRateApi({
+      apiKey: env.EXCHANGE_RATE_API_KEY,
+      baseUrl: env.EXCHANGE_RATE_BASE_URL,
+      cacheStore,
+      logger,
+    });
+
     const client = createPrismaClient({
       connectionString: env.DATABASE_URL,
     });
@@ -27,23 +42,11 @@ export const api = onRequest(async (req, res) => {
       prismaClient: client,
       secret: env.AUTH_SECRET,
     });
+
     const repo = new PrismaTransactionRepository(client);
-    const logger = getFunctionsLogger();
-    const cacheStore =
-      env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
-        ? createUpstashRedis({
-            token: env.UPSTASH_REDIS_REST_TOKEN,
-            url: env.UPSTASH_REDIS_REST_URL,
-          })
-        : undefined;
-    const exchangeRateProvider = new ExchangeRateApi({
-      apiKey: env.EXCHANGE_RATE_API_KEY,
-      baseUrl: env.EXCHANGE_RATE_BASE_URL,
-      cacheStore,
-      logger,
-    });
+
     const app = buildApp({
-      exchangeRateProvider,
+      exchangeRateProvider: provider,
       authConfig,
       transactionRepo: repo,
     });
