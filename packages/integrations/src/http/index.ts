@@ -1,6 +1,7 @@
 /**
  * Server-side HTTP client helpers (fetch, retries, caching, observability).
  */
+export * from "./client";
 export * from "./server-fetch";
 export * from "./types";
 export * from "./with-cache";

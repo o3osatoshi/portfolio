@@ -11,13 +11,9 @@ import type { Logger } from "@o3osatoshi/logging";
 import { type Kind, newError, truncate } from "@o3osatoshi/toolkit";
 
 import {
-  createServerFetch,
+  createServerFetchClient,
   type RetryOptions,
   type ServerFetchResponse,
-  withCache,
-  withLogging,
-  withMetrics,
-  withRetry,
 } from "../http";
 import {
   type ExchangeRateHostResponse,
@@ -64,35 +60,24 @@ export class ExchangeRateHostProvider implements ExchangeRateProvider {
 
     const cacheKey = `${EXCHANGE_RATE_CACHE_KEY_PREFIX}:${query.base}:${query.quote}`;
 
-    const baseFetch = createServerFetch(
-      this.config.fetch ? { fetch: this.config.fetch } : {},
-    );
-    const withRetryFetch = withRetry<ExchangeRatePayload>(
-      baseFetch,
-      this.config.retry,
-    );
-    const withCacheFetch = withCache<ExchangeRatePayload>(withRetryFetch, {
-      getKey: () => cacheKey,
-      shouldCache: (res) => isCacheablePayload(res.data),
-      store: this.config.cacheStore,
-      ttlMs: this.config.cacheTtlMs ?? DEFAULT_CACHE_TTL_MS,
-    });
     const redactUrl = buildRedactUrl(this.config.apiKey);
-    const withLoggingFetch = withLogging<ExchangeRatePayload>(withCacheFetch, {
-      logger: this.config.logger,
-      redactUrl,
-      requestName: "exchange_rate",
-    });
-    const withMetricsFetch = withMetrics<ExchangeRatePayload>(
-      withLoggingFetch,
-      {
+    const client = createServerFetchClient<ExchangeRatePayload>({
+      cache: {
+        getKey: () => cacheKey,
+        shouldCache: (res) => isCacheablePayload(res.data),
+        store: this.config.cacheStore,
+        ttlMs: this.config.cacheTtlMs ?? DEFAULT_CACHE_TTL_MS,
+      },
+      fetch: this.config.fetch,
+      observability: {
         logger: this.config.logger,
         redactUrl,
         requestName: "exchange_rate",
       },
-    );
+      retry: this.config.retry,
+    });
 
-    return withMetricsFetch(request).andThen((res) =>
+    return client(request).andThen((res) =>
       handleExchangeRateResponse(res, query),
     );
   }

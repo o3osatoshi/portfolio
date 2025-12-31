@@ -2,7 +2,11 @@ import { ResultAsync } from "neverthrow";
 
 import { newFetchError } from "@o3osatoshi/toolkit";
 
-import type { ServerFetchRequest, ServerFetchResponse } from "./types";
+import type {
+  ServerFetchClient,
+  ServerFetchRequest,
+  ServerFetchResponse,
+} from "./types";
 
 export type CreateServerFetchOptions = {
   fetch?: typeof fetch;
@@ -14,10 +18,12 @@ class ParseError extends Error {
   }
 }
 
-export function createServerFetch(options: CreateServerFetchOptions = {}) {
+export function createServerFetch<T = unknown>(
+  options: CreateServerFetchOptions = {},
+): ServerFetchClient<T> {
   const fetcher = options.fetch ?? fetch;
 
-  return <T>(
+  return (
     request: ServerFetchRequest<T>,
   ): ResultAsync<ServerFetchResponse<T>, Error> => {
     const method = (request.method ?? "GET").toUpperCase();
