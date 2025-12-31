@@ -1,10 +1,10 @@
 import type {
   CacheStore,
-  ExchangeRate,
-  ExchangeRateProvider,
-  ExchangeRateQuery,
+  FxQuote,
+  FxQuoteProvider,
+  FxQuoteQuery,
 } from "@repo/domain";
-import { newExchangeRate } from "@repo/domain";
+import { newFxQuote } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import type { Logger } from "@o3osatoshi/logging";
@@ -36,13 +36,13 @@ export type ExchangeRateApiConfig = {
 type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 
 /**
- * ExchangeRate-API-backed implementation of {@link ExchangeRateProvider}.
+ * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
  */
-export class ExchangeRateApi implements ExchangeRateProvider {
+export class ExchangeRateApi implements FxQuoteProvider {
   constructor(private readonly config: ExchangeRateApiConfig) {}
 
   /** @inheritdoc */
-  getRate(query: ExchangeRateQuery) {
+  getRate(query: FxQuoteQuery) {
     const path = `${this.config.apiKey}/pair/${query.base}/${query.quote}`;
     const url = new URL(path, normalizeBaseUrl(this.config.baseUrl));
 
@@ -118,8 +118,8 @@ function formatStatusReason(
 
 function handleExchangeRateResponse(
   result: ServerFetchResponse<ExchangeRatePayload>,
-  query: ExchangeRateQuery,
-): ResultAsync<ExchangeRate, Error> {
+  query: FxQuoteQuery,
+): ResultAsync<FxQuote, Error> {
   if (result.response && !result.response.ok) {
     return errAsync(
       newError({
@@ -171,7 +171,7 @@ function handleExchangeRateResponse(
   }
 
   const asOf = resolveAsOf(parsed.data);
-  const normalized = newExchangeRate({
+  const normalized = newFxQuote({
     asOf,
     base: query.base,
     quote: query.quote,

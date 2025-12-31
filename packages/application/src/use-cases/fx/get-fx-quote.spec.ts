@@ -1,8 +1,8 @@
-import { type ExchangeRateProvider, newExchangeRate } from "@repo/domain";
+import { type FxQuoteProvider, newFxQuote } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { GetExchangeRateUseCase } from "./get-exchange-rate";
+import { GetFxQuoteUseCase } from "./get-fx-quote";
 
 const h = vi.hoisted(() => {
   return {
@@ -10,18 +10,18 @@ const h = vi.hoisted(() => {
   };
 });
 
-describe("application/use-cases: GetExchangeRateUseCase", () => {
+describe("application/use-cases: GetFxQuoteUseCase", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     h.getRateMock.mockReset();
   });
 
   const buildUseCase = () =>
-    new GetExchangeRateUseCase({
+    new GetFxQuoteUseCase({
       getRate: h.getRateMock,
-    } as ExchangeRateProvider);
+    } as FxQuoteProvider);
 
-  const buildExchangeRate = ({
+  const buildFxQuote = ({
     asOf = new Date("2025-01-01T00:00:00Z"),
     base = "USD",
     quote = "JPY",
@@ -32,7 +32,7 @@ describe("application/use-cases: GetExchangeRateUseCase", () => {
     quote?: string;
     rate?: number | string;
   } = {}) => {
-    const res = newExchangeRate({ asOf, base, quote, rate });
+    const res = newFxQuote({ asOf, base, quote, rate });
     if (res.isErr()) {
       throw res.error;
     }
@@ -40,13 +40,13 @@ describe("application/use-cases: GetExchangeRateUseCase", () => {
   };
 
   it("normalizes currency codes and returns mapped response", async () => {
-    const exchangeRate = buildExchangeRate({
+    const fxQuote = buildFxQuote({
       asOf: new Date("2025-02-03T04:05:06Z"),
       base: "USD",
       quote: "JPY",
       rate: 150.5,
     });
-    h.getRateMock.mockReturnValueOnce(okAsync(exchangeRate));
+    h.getRateMock.mockReturnValueOnce(okAsync(fxQuote));
 
     const useCase = buildUseCase();
     const result = await useCase.execute({ base: "usd", quote: "jpy" });
@@ -62,8 +62,8 @@ describe("application/use-cases: GetExchangeRateUseCase", () => {
 
     expect(result.value.base).toBe("USD");
     expect(result.value.quote).toBe("JPY");
-    expect(result.value.rate).toBe(exchangeRate.rate);
-    expect(result.value.asOf.getTime()).toBe(exchangeRate.asOf.getTime());
+    expect(result.value.rate).toBe(fxQuote.rate);
+    expect(result.value.asOf.getTime()).toBe(fxQuote.asOf.getTime());
   });
 
   it("propagates provider errors", async () => {

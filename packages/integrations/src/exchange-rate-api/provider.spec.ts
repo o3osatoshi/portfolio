@@ -1,4 +1,4 @@
-import type { CacheStore, ExchangeRateQuery } from "@repo/domain";
+import type { CacheStore, FxQuoteQuery } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -47,7 +47,7 @@ const DEFAULT_CONFIG: ExchangeRateApiConfig = {
 const query = {
   base: "USD",
   quote: "JPY",
-} as ExchangeRateQuery;
+} as FxQuoteQuery;
 
 const buildProvider = (overrides: Partial<ExchangeRateApiConfig> = {}) =>
   new ExchangeRateApi({

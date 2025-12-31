@@ -7,24 +7,24 @@ import { type DateTime, newDateTime } from "./datetime";
 import { type DecimalString, isPositiveDecimal, newDecimal } from "./decimal";
 
 /**
- * Validated exchange rate quote between two currencies.
+ * Validated FX quote between two currencies.
  */
-export type ExchangeRate = {
+export type FxQuote = {
   asOf: DateTime;
   base: CurrencyCode;
   quote: CurrencyCode;
-  rate: ExchangeRateValue;
+  rate: FxRate;
 };
 
 /**
- * Normalized exchange rate (strictly greater than zero).
+ * Normalized FX rate (strictly greater than zero).
  */
-export type ExchangeRateValue = Brand<DecimalString, "ExchangeRateValue">;
+export type FxRate = Brand<DecimalString, "FxRate">;
 
 /**
- * Untyped payload accepted by {@link newExchangeRate} before validation.
+ * Untyped payload accepted by {@link newFxQuote} before validation.
  */
-export type NewExchangeRateInput = {
+export type NewFxQuoteInput = {
   asOf: unknown;
   base: unknown;
   quote: unknown;
@@ -32,15 +32,13 @@ export type NewExchangeRateInput = {
 };
 
 /**
- * Validate raw input into a domain {@link ExchangeRate} quote.
+ * Validate raw input into a domain {@link FxQuote}.
  */
-export function newExchangeRate(
-  input: NewExchangeRateInput,
-): Result<ExchangeRate, Error> {
+export function newFxQuote(input: NewFxQuoteInput): Result<FxQuote, Error> {
   return Result.combine([
     newCurrencyCode(input.base),
     newCurrencyCode(input.quote),
-    newExchangeRateValue(input.rate),
+    newFxRate(input.rate),
     newDateTime(input.asOf),
   ]).map(([base, quote, rate, asOf]) => ({
     asOf,
@@ -51,20 +49,18 @@ export function newExchangeRate(
 }
 
 /**
- * Normalize an unknown value into an {@link ExchangeRateValue}, ensuring it is > 0.
+ * Normalize an unknown value into an {@link FxRate}, ensuring it is > 0.
  */
-export function newExchangeRateValue(
-  v: unknown,
-): Result<ExchangeRateValue, Error> {
+export function newFxRate(v: unknown): Result<FxRate, Error> {
   const res = newDecimal(v);
   if (res.isErr()) return err(res.error);
   if (!isPositiveDecimal(res.value)) {
     return err(
       domainValidationError({
-        action: "NewExchangeRateValue",
-        reason: "Exchange rate must be > 0",
+        action: "NewFxRate",
+        reason: "FX rate must be > 0",
       }),
     );
   }
-  return ok(res.value as ExchangeRateValue);
+  return ok(res.value as FxRate);
 }

@@ -1,16 +1,16 @@
 import {
-  GetExchangeRateUseCase,
+  GetFxQuoteUseCase,
   GetTransactionsUseCase,
-  parseGetExchangeRateRequest,
+  parseGetFxQuoteRequest,
   parseGetTransactionsRequest,
 } from "@repo/application";
 import type {
-  GetExchangeRateResponse,
+  GetFxQuoteResponse,
   GetTransactionsResponse,
 } from "@repo/application";
 import { type AuthConfig, getAuthUserId } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
-import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
+import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -33,8 +33,8 @@ export type AppType = ReturnType<typeof buildApp>;
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
-  /** Provider required by exchange-rate use cases. */
-  exchangeRateProvider: ExchangeRateProvider;
+  /** Provider required by FX-quote use cases. */
+  fxQuoteProvider: FxQuoteProvider;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -89,7 +89,7 @@ export function buildApp(deps: Deps) {
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
  * const transactionRepo = new PrismaTransactionRepository(prisma);
- * const exchangeRateProvider = new ExchangeRateApi({
+ * const fxQuoteProvider = new ExchangeRateApi({
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
  * });
@@ -101,7 +101,7 @@ export function buildApp(deps: Deps) {
  *
  * export const { GET, POST } = buildHandler({
  *   authConfig,
- *   exchangeRateProvider,
+ *   fxQuoteProvider,
  *   transactionRepo,
  * });
  * ```
@@ -135,14 +135,12 @@ function buildPublicRoutes(deps: Deps) {
     .get("/healthz", (c) => c.json({ ok: true }))
     .get("/exchange-rate", (c) => {
       const query = c.req.query();
-      const getExchangeRate = new GetExchangeRateUseCase(
-        deps.exchangeRateProvider,
-      );
-      return respondAsync<GetExchangeRateResponse>(c)(
-        parseGetExchangeRateRequest({
+      const getFxQuote = new GetFxQuoteUseCase(deps.fxQuoteProvider);
+      return respondAsync<GetFxQuoteResponse>(c)(
+        parseGetFxQuoteRequest({
           base: query["base"],
           quote: query["quote"],
-        }).asyncAndThen((res) => getExchangeRate.execute(res)),
+        }).asyncAndThen((res) => getFxQuote.execute(res)),
       );
     });
 }

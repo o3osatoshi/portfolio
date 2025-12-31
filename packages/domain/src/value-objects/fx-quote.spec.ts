@@ -1,21 +1,21 @@
 import { describe, expect, it } from "vitest";
 
-import { newExchangeRate, newExchangeRateValue } from "./exchange-rate";
+import { newFxQuote, newFxRate } from "./fx-quote";
 
-describe("value-objects/exchange-rate", () => {
-  it("ExchangeRateValue must be > 0", () => {
-    const ok = newExchangeRateValue("1.25");
-    const zero = newExchangeRateValue(0);
-    const zeroDecimal = newExchangeRateValue("0.0");
-    const neg = newExchangeRateValue("-0.1");
+describe("value-objects/fx-quote", () => {
+  it("FxRate must be > 0", () => {
+    const ok = newFxRate("1.25");
+    const zero = newFxRate(0);
+    const zeroDecimal = newFxRate("0.0");
+    const neg = newFxRate("-0.1");
     expect(ok.isOk()).toBe(true);
     expect(zero.isErr()).toBe(true);
     expect(zeroDecimal.isErr()).toBe(true);
     expect(neg.isErr()).toBe(true);
   });
 
-  it("newExchangeRate validates and normalizes fields", () => {
-    const res = newExchangeRate({
+  it("newFxQuote validates and normalizes fields", () => {
+    const res = newFxQuote({
       asOf: new Date("2024-01-01"),
       base: "usd",
       quote: "jpy",

@@ -13,7 +13,7 @@ const cacheStore = createUpstashRedis({
   url: env.UPSTASH_REDIS_REST_URL,
 });
 const logger = getWebNodeLogger();
-const provider = new ExchangeRateApi({
+const fxQuoteProvider = new ExchangeRateApi({
   apiKey: env.EXCHANGE_RATE_API_KEY,
   baseUrl: env.EXCHANGE_RATE_BASE_URL,
   cacheStore,
@@ -35,7 +35,7 @@ const authConfig = createAuthConfig({
 const repo = new PrismaTransactionRepository(client);
 
 export const { GET, POST } = buildHandler({
-  exchangeRateProvider: provider,
+  fxQuoteProvider,
   authConfig,
   transactionRepo: repo,
 });

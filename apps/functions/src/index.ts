@@ -22,7 +22,7 @@ export const api = onRequest(async (req, res) => {
           })
         : undefined;
     const logger = getFunctionsLogger();
-    const provider = new ExchangeRateApi({
+    const fxQuoteProvider = new ExchangeRateApi({
       apiKey: env.EXCHANGE_RATE_API_KEY,
       baseUrl: env.EXCHANGE_RATE_BASE_URL,
       cacheStore,
@@ -46,7 +46,7 @@ export const api = onRequest(async (req, res) => {
     const repo = new PrismaTransactionRepository(client);
 
     const app = buildApp({
-      exchangeRateProvider: provider,
+      fxQuoteProvider,
       authConfig,
       transactionRepo: repo,
     });

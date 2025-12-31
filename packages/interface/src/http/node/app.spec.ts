@@ -1,9 +1,9 @@
 import type {
-  GetExchangeRateRequest,
+  GetFxQuoteRequest,
   GetTransactionsRequest,
 } from "@repo/application";
 import type { AuthConfig } from "@repo/auth";
-import type { ExchangeRateProvider, TransactionRepository } from "@repo/domain";
+import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import type { Context, Next } from "hono";
 import { err, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -35,11 +35,10 @@ vi.mock("@repo/auth/middleware", () => ({
 
 // Mock application layer for deterministic behavior
 const a = vi.hoisted(() => {
-  const parseGetExchangeRateRequest = vi.fn(
-    (input: GetExchangeRateRequest): Result<GetExchangeRateRequest, Error> =>
-      ok(input),
+  const parseGetFxQuoteRequest = vi.fn(
+    (input: GetFxQuoteRequest): Result<GetFxQuoteRequest, Error> => ok(input),
   );
-  class GetExchangeRateUseCase {
+  class GetFxQuoteUseCase {
     execute() {
       return okAsync({
         asOf: new Date(0),
@@ -71,17 +70,17 @@ const a = vi.hoisted(() => {
     }
   }
   return {
-    GetExchangeRateUseCase,
+    GetFxQuoteUseCase,
     GetTransactionsUseCase,
-    parseGetExchangeRateRequest,
+    parseGetFxQuoteRequest,
     parseGetTransactionsRequest,
   };
 });
 
 vi.mock("@repo/application", () => ({
-  GetExchangeRateUseCase: a.GetExchangeRateUseCase,
+  GetFxQuoteUseCase: a.GetFxQuoteUseCase,
   GetTransactionsUseCase: a.GetTransactionsUseCase,
-  parseGetExchangeRateRequest: a.parseGetExchangeRateRequest,
+  parseGetFxQuoteRequest: a.parseGetFxQuoteRequest,
   parseGetTransactionsRequest: a.parseGetTransactionsRequest,
 }));
 
@@ -92,7 +91,7 @@ describe("http/node app", () => {
 
   function build() {
     const app = buildApp({
-      exchangeRateProvider: {} as ExchangeRateProvider,
+      fxQuoteProvider: {} as FxQuoteProvider,
       authConfig: {} as AuthConfig,
       // repo is unused because use case is mocked
       transactionRepo: {} as TransactionRepository,
@@ -133,7 +132,7 @@ describe("http/node app", () => {
     await expect(res.json()).resolves.toEqual({ auth: true });
   });
 
-  it("GET /api/public/exchange-rate returns the latest rate", async () => {
+  it("GET /api/public/exchange-rate returns the latest FX quote", async () => {
     const res = await build().request(
       "/api/public/exchange-rate?base=usd&quote=jpy",
     );
@@ -141,7 +140,7 @@ describe("http/node app", () => {
     const body = await res.json();
     expect(body.base).toBe("USD");
     expect(body.quote).toBe("JPY");
-    expect(a.parseGetExchangeRateRequest).toHaveBeenCalledWith({
+    expect(a.parseGetFxQuoteRequest).toHaveBeenCalledWith({
       base: "usd",
       quote: "jpy",
     });
