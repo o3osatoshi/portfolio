@@ -134,10 +134,10 @@ function buildPublicRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
     .get("/healthz", (c) => c.json({ ok: true }))
     .get("/exchange-rate", (c) => {
+      const query = c.req.query();
       const getExchangeRate = new GetExchangeRateUseCase(
         deps.exchangeRateProvider,
       );
-      const query = c.req.query();
       return respondAsync<GetExchangeRateResponse>(c)(
         parseGetExchangeRateRequest({
           base: query["base"],
