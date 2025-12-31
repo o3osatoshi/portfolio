@@ -1,3 +1,4 @@
+import { default as DecimalJs } from "decimal.js";
 import { err, ok, Result } from "neverthrow";
 
 import { domainValidationError } from "../domain-error";
@@ -70,6 +71,9 @@ export function newExchangeRateValue(
 }
 
 function isPositiveDecimal(value: DecimalString): boolean {
-  if (value.startsWith("-")) return false;
-  return value !== "0";
+  try {
+    return new DecimalJs(value).gt(0);
+  } catch {
+    return false;
+  }
 }
