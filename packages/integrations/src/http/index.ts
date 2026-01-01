@@ -5,6 +5,5 @@ export * from "./smart-fetch";
 export * from "./smart-fetch-client";
 export * from "./smart-fetch-types";
 export * from "./with-cache";
-export * from "./with-events";
-export * from "./with-metrics";
+export * from "./with-logging";
 export * from "./with-retry";

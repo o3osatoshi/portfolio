@@ -70,8 +70,6 @@ describe("integrations/http createSmartFetchClient", () => {
     const client = createSmartFetchClient({
       fetch: fetchMock as unknown as typeof fetch,
       logging: {
-        enableEvents: false,
-        enableMetrics: true,
         logger,
         requestName: "client_test",
       },

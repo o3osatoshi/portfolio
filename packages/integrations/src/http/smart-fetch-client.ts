@@ -1,9 +1,8 @@
 import { createSmartFetch } from "./smart-fetch";
 import type { SmartFetchCache, SmartFetchClient } from "./smart-fetch-types";
 import { withCache } from "./with-cache";
-import type { SmartFetchEventsOptions } from "./with-events";
-import { withEvents } from "./with-events";
-import { withMetrics } from "./with-metrics";
+import type { SmartFetchLoggingOptions } from "./with-logging";
+import { withLogging } from "./with-logging";
 import type { SmartFetchRetryOptions } from "./with-retry";
 import { withRetry } from "./with-retry";
 
@@ -18,11 +17,6 @@ export type CreateSmartFetchClientOptions = {
   retry?: SmartFetchRetryOptions | undefined;
 };
 
-export type SmartFetchLoggingOptions = {
-  enableEvents?: boolean;
-  enableMetrics?: boolean;
-} & Pick<SmartFetchEventsOptions, "logger" | "redactUrl" | "requestName">;
-
 export function createSmartFetchClient(
   options: CreateSmartFetchClientOptions = {},
 ): SmartFetchClient {
@@ -35,17 +29,7 @@ export function createSmartFetchClient(
   client = withCache(client, options.cache ?? {});
 
   if (options.logging) {
-    const {
-      enableEvents = true,
-      enableMetrics = true,
-      ...rest
-    } = options.logging;
-    if (enableEvents) {
-      client = withEvents(client, rest);
-    }
-    if (enableMetrics) {
-      client = withMetrics(client, rest);
-    }
+    client = withLogging(client, options.logging);
   }
 
   return client;
