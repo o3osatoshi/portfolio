@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
-import { createServerFetch } from "./server-fetch";
+import { createBetterFetch } from "./better-fetch";
 
-describe("integrations/http createServerFetch", () => {
+describe("integrations/http createBetterFetch", () => {
   it("parses JSON responses by default", async () => {
     const fetchMock = vi.fn(async () => {
       return new Response(JSON.stringify({ ok: true }), {
@@ -12,7 +12,7 @@ describe("integrations/http createServerFetch", () => {
         status: 200,
       });
     });
-    const client = createServerFetch<{ ok: boolean }>({ fetch: fetchMock });
+    const client = createBetterFetch<{ ok: boolean }>({ fetch: fetchMock });
 
     const result = await client({ url: "https://example.test" });
 
@@ -30,7 +30,7 @@ describe("integrations/http createServerFetch", () => {
         status: 200,
       });
     });
-    const client = createServerFetch<string>({ fetch: fetchMock });
+    const client = createBetterFetch<string>({ fetch: fetchMock });
 
     const result = await client({ url: "https://example.test" });
 
@@ -43,7 +43,7 @@ describe("integrations/http createServerFetch", () => {
     const fetchMock = vi.fn(async () => {
       return new Response(null, { status: 204 });
     });
-    const client = createServerFetch<undefined>({ fetch: fetchMock });
+    const client = createBetterFetch<undefined>({ fetch: fetchMock });
 
     const result = await client({ url: "https://example.test" });
 
@@ -59,7 +59,7 @@ describe("integrations/http createServerFetch", () => {
         status: 200,
       });
     });
-    const client = createServerFetch<unknown>({ fetch: fetchMock });
+    const client = createBetterFetch<unknown>({ fetch: fetchMock });
 
     const result = await client({ url: "https://example.test" });
 
@@ -74,7 +74,7 @@ describe("integrations/http createServerFetch", () => {
     const fetchMock = vi.fn(async () => {
       throw new Error("fetch failed");
     });
-    const client = createServerFetch<unknown>({ fetch: fetchMock });
+    const client = createBetterFetch<unknown>({ fetch: fetchMock });
 
     const result = await client({ url: "https://example.test" });
 
@@ -92,7 +92,7 @@ describe("integrations/http createServerFetch", () => {
         status: 200,
       });
     });
-    const client = createServerFetch<string>({ fetch: fetchMock });
+    const client = createBetterFetch<string>({ fetch: fetchMock });
 
     const result = await client({
       body: "payload",

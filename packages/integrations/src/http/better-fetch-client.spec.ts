@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Logger } from "@o3osatoshi/logging";
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
-import { createServerFetchClient } from "./client";
+import { createBetterFetchClient } from "./better-fetch-client";
 
 const buildLogger = () => {
   // @ts-expect-error
@@ -23,7 +23,7 @@ const buildLogger = () => {
   return logger;
 };
 
-describe("integrations/http createServerFetchClient", () => {
+describe("integrations/http createBetterFetchClient", () => {
   it("serves cached responses without calling fetch", async () => {
     const cacheStore: CacheStore = {
       // @ts-expect-error
@@ -37,7 +37,7 @@ describe("integrations/http createServerFetchClient", () => {
         status: 200,
       });
     });
-    const client = createServerFetchClient<{ value: string }>({
+    const client = createBetterFetchClient<{ value: string }>({
       cache: {
         getKey: () => "cache:key",
         store: cacheStore,
@@ -65,7 +65,7 @@ describe("integrations/http createServerFetchClient", () => {
         status: 200,
       });
     });
-    const client = createServerFetchClient<{ ok: boolean }>({
+    const client = createBetterFetchClient<{ ok: boolean }>({
       fetch: fetchMock as unknown as typeof fetch,
       logging: {
         enableEvents: false,
@@ -87,7 +87,7 @@ describe("integrations/http createServerFetchClient", () => {
     const fetchMock = vi.fn(async () => {
       throw new Error("fetch failed");
     });
-    const client = createServerFetchClient({
+    const client = createBetterFetchClient({
       fetch: fetchMock as unknown as typeof fetch,
     });
 

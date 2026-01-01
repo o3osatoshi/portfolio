@@ -1,18 +1,21 @@
 import type { Attributes, Logger } from "@o3osatoshi/logging";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
-import type { ServerFetchClient, ServerFetchRequest } from "./types";
+import type {
+  BetterFetchClient,
+  BetterFetchRequest,
+} from "./better-fetch-types";
 
-export type EventsOptions = {
+export type BetterFetchEventsOptions = {
   logger?: Logger | undefined;
   redactUrl?: (url: string) => string;
   requestName?: string;
 };
 
 export function withEvents<T>(
-  next: ServerFetchClient<T>,
-  options: EventsOptions = {},
-): ServerFetchClient<T> {
+  next: BetterFetchClient<T>,
+  options: BetterFetchEventsOptions = {},
+): BetterFetchClient<T> {
   if (!options.logger) {
     return next;
   }
@@ -58,7 +61,7 @@ export function withEvents<T>(
 }
 
 function buildAttributes<T>(
-  request: ServerFetchRequest<T>,
+  request: BetterFetchRequest<T>,
   result: {
     cached: boolean;
     meta?: { attempts?: number; cacheHit?: boolean };
@@ -78,7 +81,7 @@ function buildAttributes<T>(
 }
 
 function buildErrorAttributes<T>(
-  request: ServerFetchRequest<T>,
+  request: BetterFetchRequest<T>,
   error: Error,
   redactUrl: (url: string) => string,
   requestName?: string,

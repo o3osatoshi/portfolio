@@ -3,13 +3,13 @@ import { type Result, ResultAsync } from "neverthrow";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type {
-  ServerFetchClient,
-  ServerFetchRequest,
-  ServerFetchResponse,
-} from "./types";
-import { mergeMeta } from "./types";
+  BetterFetchClient,
+  BetterFetchRequest,
+  BetterFetchResponse,
+} from "./better-fetch-types";
+import { mergeMeta } from "./better-fetch-types";
 
-export type RetryOptions = {
+export type BetterFetchRetryOptions = {
   baseDelayMs?: number;
   maxAttempts?: number;
   maxDelayMs?: number;
@@ -23,7 +23,7 @@ type RetryCheckInput = {
   attempt: number;
   error?: Error;
   maxAttempts: number;
-  request: ServerFetchRequest<unknown>;
+  request: BetterFetchRequest<unknown>;
   response?: { headers?: Headers; status?: number } | undefined;
 };
 
@@ -31,9 +31,9 @@ const DEFAULT_RETRY_METHODS = ["GET", "HEAD", "OPTIONS"];
 const DEFAULT_RETRY_STATUSES = [408, 429, 500, 502, 503, 504];
 
 export function withRetry<T>(
-  next: ServerFetchClient<T>,
-  options: RetryOptions = {},
-): ServerFetchClient<T> {
+  next: BetterFetchClient<T>,
+  options: BetterFetchRetryOptions = {},
+): BetterFetchClient<T> {
   const maxAttempts = Math.max(1, options.maxAttempts ?? 3);
   const baseDelayMs = options.baseDelayMs ?? 200;
   const maxDelayMs = options.maxDelayMs ?? 2000;
@@ -56,7 +56,7 @@ export function withRetry<T>(
       (async () => {
         let attempt = 0;
         let lastError: Error | undefined;
-        let lastResponse: Result<ServerFetchResponse<T>, Error> | undefined;
+        let lastResponse: Result<BetterFetchResponse<T>, Error> | undefined;
 
         while (attempt < maxAttempts) {
           attempt += 1;

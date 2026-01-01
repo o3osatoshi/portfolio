@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mergeMeta } from "./types";
+import { mergeMeta } from "./better-fetch-types";
 
 describe("integrations/http mergeMeta", () => {
   it("merges and overrides metadata", () => {

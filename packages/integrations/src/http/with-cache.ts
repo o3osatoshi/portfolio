@@ -2,25 +2,25 @@ import type { CacheStore } from "@repo/domain";
 import { okAsync } from "neverthrow";
 
 import type {
-  ServerFetchClient,
-  ServerFetchRequest,
-  ServerFetchResponse,
-} from "./types";
-import { mergeMeta } from "./types";
+  BetterFetchClient,
+  BetterFetchRequest,
+  BetterFetchResponse,
+} from "./better-fetch-types";
+import { mergeMeta } from "./better-fetch-types";
 
-export type CacheOptions<T> = {
+export type BetterFetchCacheOptions<T> = {
   deserialize?: (data: unknown) => null | T;
-  getKey: (request: ServerFetchRequest<T>) => string | undefined;
+  getKey: (request: BetterFetchRequest<T>) => string | undefined;
   serialize?: (data: T) => unknown;
-  shouldCache?: (response: ServerFetchResponse<T>) => boolean;
+  shouldCache?: (response: BetterFetchResponse<T>) => boolean;
   store?: CacheStore | undefined;
   ttlMs?: number;
 };
 
 export function withCache<T>(
-  next: ServerFetchClient<T>,
-  options: CacheOptions<T>,
-): ServerFetchClient<T> {
+  next: BetterFetchClient<T>,
+  options: BetterFetchCacheOptions<T>,
+): BetterFetchClient<T> {
   const store = options.store;
   if (!store) {
     return next;

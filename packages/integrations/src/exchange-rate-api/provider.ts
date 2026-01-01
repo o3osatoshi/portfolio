@@ -5,10 +5,10 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import { type Kind, newError, truncate } from "@o3osatoshi/toolkit";
 
 import {
-  createServerFetchClient,
-  type ExchangeRateApiClientOptions,
-  type ServerFetchClient,
-  type ServerFetchResponse,
+  type ApiBetterFetchClientOptions,
+  type BetterFetchClient,
+  type BetterFetchResponse,
+  createBetterFetchClient,
 } from "../http";
 import {
   type ExchangeRateHostResponse,
@@ -21,7 +21,7 @@ const CACHE_KEY_PREFIX = "fx:rate";
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
-} & ExchangeRateApiClientOptions<ExchangeRatePayload>;
+} & ApiBetterFetchClientOptions<ExchangeRatePayload>;
 
 type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 
@@ -31,7 +31,7 @@ type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiBaseUrl: string;
   private readonly apiKey: string;
-  private readonly client: ServerFetchClient<ExchangeRatePayload>;
+  private readonly client: BetterFetchClient<ExchangeRatePayload>;
 
   constructor(config: ExchangeRateApiConfig) {
     this.apiKey = config.apiKey;
@@ -55,7 +55,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
           requestName: config.logging.requestName ?? "exchange_rate",
         }
       : undefined;
-    this.client = createServerFetchClient<ExchangeRatePayload>({
+    this.client = createBetterFetchClient<ExchangeRatePayload>({
       cache,
       fetch: config.fetch,
       logging,
@@ -86,7 +86,7 @@ function buildCacheKeyFromUrl(url: string): string | undefined {
   try {
     const parsed = new URL(url);
     const segments = parsed.pathname.split("/").filter(Boolean);
-    const pairIndex = segments.findIndex((segment) => segment === "pair");
+    const pairIndex = segments.indexOf("pair");
     if (pairIndex < 0 || segments.length <= pairIndex + 2) return undefined;
     const base = segments[pairIndex + 1]?.toUpperCase();
     const quote = segments[pairIndex + 2]?.toUpperCase();
@@ -138,7 +138,7 @@ function formatStatusReason(
 }
 
 function handleExchangeRateResponse(
-  result: ServerFetchResponse<ExchangeRatePayload>,
+  result: BetterFetchResponse<ExchangeRatePayload>,
   query: FxQuoteQuery,
 ): ResultAsync<FxQuote, Error> {
   if (result.response && !result.response.ok) {
