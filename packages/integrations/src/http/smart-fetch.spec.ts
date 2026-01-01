@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
-import { createBetterFetch } from "./better-fetch";
+import { createSmartFetch } from "./smart-fetch";
 
-describe("integrations/http createBetterFetch", () => {
+describe("integrations/http createSmartFetch", () => {
   it("parses JSON responses by default", async () => {
     const fetchMock = vi.fn(async () => {
       return new Response(JSON.stringify({ ok: true }), {
@@ -12,7 +12,7 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch({ fetch: fetchMock });
+    const client = createSmartFetch({ fetch: fetchMock });
 
     const result = await client<{ ok: boolean }>({
       url: "https://example.test",
@@ -32,7 +32,7 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch({ fetch: fetchMock });
+    const client = createSmartFetch({ fetch: fetchMock });
 
     const result = await client<string>({ url: "https://example.test" });
 
@@ -45,7 +45,7 @@ describe("integrations/http createBetterFetch", () => {
     const fetchMock = vi.fn(async () => {
       return new Response(null, { status: 204 });
     });
-    const client = createBetterFetch({ fetch: fetchMock });
+    const client = createSmartFetch({ fetch: fetchMock });
 
     const result = await client<undefined>({ url: "https://example.test" });
 
@@ -61,7 +61,7 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch({ fetch: fetchMock });
+    const client = createSmartFetch({ fetch: fetchMock });
 
     const result = await client<unknown>({ url: "https://example.test" });
 
@@ -76,7 +76,7 @@ describe("integrations/http createBetterFetch", () => {
     const fetchMock = vi.fn(async () => {
       throw new Error("fetch failed");
     });
-    const client = createBetterFetch({ fetch: fetchMock });
+    const client = createSmartFetch({ fetch: fetchMock });
 
     const result = await client<unknown>({ url: "https://example.test" });
 
@@ -94,7 +94,7 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch({ fetch: fetchMock });
+    const client = createSmartFetch({ fetch: fetchMock });
 
     const result = await client<string>({
       body: "payload",

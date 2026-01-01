@@ -2,21 +2,21 @@ import type { Attributes, Logger } from "@o3osatoshi/logging";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type {
-  BetterFetchClient,
-  BetterFetchRequest,
-  BetterFetchRequestMeta,
-} from "./better-fetch-types";
+  SmartFetchClient,
+  SmartFetchRequest,
+  SmartFetchRequestMeta,
+} from "./smart-fetch-types";
 
-export type BetterFetchMetricsOptions = {
+export type SmartFetchMetricsOptions = {
   logger?: Logger | undefined;
   redactUrl?: (url: string) => string;
   requestName?: string;
 };
 
 export function withMetrics(
-  next: BetterFetchClient,
-  options: BetterFetchMetricsOptions = {},
-): BetterFetchClient {
+  next: SmartFetchClient,
+  options: SmartFetchMetricsOptions = {},
+): SmartFetchClient {
   if (!options.logger) {
     return next;
   }
@@ -25,7 +25,7 @@ export function withMetrics(
   const redactUrl = options.redactUrl ?? ((url: string) => url);
   const requestName = options.requestName;
 
-  return <T>(request: BetterFetchRequest<T>) => {
+  return <T>(request: SmartFetchRequest<T>) => {
     const startedAt = Date.now();
     return next(request)
       .map((result) => {
@@ -64,7 +64,7 @@ function buildAttributes({
 }: {
   error?: Error | undefined;
   redactUrl: (url: string) => string;
-  request: BetterFetchRequestMeta;
+  request: SmartFetchRequestMeta;
   requestName?: string | undefined;
   result?:
     | {
@@ -104,7 +104,7 @@ function emitMetrics({
   error?: Error;
   logger: Logger;
   redactUrl: (url: string) => string;
-  request: BetterFetchRequestMeta;
+  request: SmartFetchRequestMeta;
   requestName?: string | undefined;
   result?:
     | {

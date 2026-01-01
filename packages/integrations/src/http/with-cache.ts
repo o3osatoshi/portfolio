@@ -1,17 +1,18 @@
 import { okAsync, Result } from "neverthrow";
 
 import type {
-  BetterFetchCacheOptions,
-  BetterFetchClient,
-  BetterFetchRequest,
-} from "./better-fetch-types";
-import { mergeMeta } from "./better-fetch-types";
+  SmartFetchCacheOptions,
+  SmartFetchClient,
+  SmartFetchRequest,
+  SmartFetchResponse,
+} from "./smart-fetch-types";
+import { mergeMeta } from "./smart-fetch-types";
 
 export function withCache(
-  next: BetterFetchClient,
-  defaults: BetterFetchCacheOptions = {},
-): BetterFetchClient {
-  return <T>(request: BetterFetchRequest<T>) => {
+  next: SmartFetchClient,
+  defaults: SmartFetchCacheOptions = {},
+): SmartFetchClient {
+  return <T>(request: SmartFetchRequest<T>) => {
     // Skip cache when explicitly disabled
     if ("cache" in request && request.cache === undefined) {
       return next(request);
@@ -32,11 +33,9 @@ export function withCache(
       defaults.deserialize ??
       ((data: unknown) => data as T);
     const shouldCacheFunc = cacheOptions?.shouldCache ?? defaults.shouldCache;
-    const shouldCache = (response: any) => {
+    const shouldCache = (response: SmartFetchResponse<T>) => {
       if (shouldCacheFunc) {
-        const result = shouldCacheFunc(response);
-        if (result === false || result === undefined) return false;
-        return true;
+        return shouldCacheFunc(response);
       }
       return response.response?.ok ?? true;
     };

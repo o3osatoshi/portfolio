@@ -3,14 +3,14 @@ import { type Result, ResultAsync } from "neverthrow";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type {
-  BetterFetchClient,
-  BetterFetchRequest,
-  BetterFetchRequestMeta,
-  BetterFetchResponse,
-} from "./better-fetch-types";
-import { mergeMeta } from "./better-fetch-types";
+  SmartFetchClient,
+  SmartFetchRequest,
+  SmartFetchRequestMeta,
+  SmartFetchResponse,
+} from "./smart-fetch-types";
+import { mergeMeta } from "./smart-fetch-types";
 
-export type BetterFetchRetryOptions = {
+export type SmartFetchRetryOptions = {
   baseDelayMs?: number;
   maxAttempts?: number;
   maxDelayMs?: number;
@@ -24,7 +24,7 @@ type RetryCheckInput = {
   attempt: number;
   error?: Error;
   maxAttempts: number;
-  request: BetterFetchRequestMeta;
+  request: SmartFetchRequestMeta;
   response?: { headers?: Headers; status?: number } | undefined;
 };
 
@@ -32,9 +32,9 @@ const DEFAULT_RETRY_METHODS = ["GET", "HEAD", "OPTIONS"];
 const DEFAULT_RETRY_STATUSES = [408, 429, 500, 502, 503, 504];
 
 export function withRetry(
-  next: BetterFetchClient,
-  options: BetterFetchRetryOptions = {},
-): BetterFetchClient {
+  next: SmartFetchClient,
+  options: SmartFetchRetryOptions = {},
+): SmartFetchClient {
   const maxAttempts = Math.max(1, options.maxAttempts ?? 3);
   const baseDelayMs = options.baseDelayMs ?? 200;
   const maxDelayMs = options.maxDelayMs ?? 2000;
@@ -52,12 +52,12 @@ export function withRetry(
         retryOnStatuses,
       }));
 
-  return <T>(request: BetterFetchRequest<T>) =>
+  return <T>(request: SmartFetchRequest<T>) =>
     ResultAsync.fromPromise(
       (async () => {
         let attempt = 0;
         let lastError: Error | undefined;
-        let lastResponse: Result<BetterFetchResponse<T>, Error> | undefined;
+        let lastResponse: Result<SmartFetchResponse<T>, Error> | undefined;
 
         while (attempt < maxAttempts) {
           attempt += 1;

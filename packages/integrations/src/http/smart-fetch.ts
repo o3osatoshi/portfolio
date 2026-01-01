@@ -3,12 +3,12 @@ import { ResultAsync } from "neverthrow";
 import { isDeserializableBody, newFetchError } from "@o3osatoshi/toolkit";
 
 import type {
-  BetterFetchClient,
-  BetterFetchRequest,
-  BetterFetchResponse,
-} from "./better-fetch-types";
+  SmartFetchClient,
+  SmartFetchRequest,
+  SmartFetchResponse,
+} from "./smart-fetch-types";
 
-export type CreateBetterFetchOptions = {
+export type CreateSmartFetchOptions = {
   fetch?: typeof fetch;
 };
 
@@ -18,14 +18,14 @@ class ParseError extends Error {
   }
 }
 
-export function createBetterFetch(
-  options: CreateBetterFetchOptions = {},
-): BetterFetchClient {
+export function createSmartFetch(
+  options: CreateSmartFetchOptions = {},
+): SmartFetchClient {
   const fetcher = options.fetch ?? fetch;
 
   return <T>(
-    request: BetterFetchRequest<T>,
-  ): ResultAsync<BetterFetchResponse<T>, Error> => {
+    request: SmartFetchRequest<T>,
+  ): ResultAsync<SmartFetchResponse<T>, Error> => {
     const method = (request.method ?? "GET").toUpperCase();
     const requestMeta = { method, url: request.url };
     const parse = request.parse ?? defaultParse<T>;
@@ -65,9 +65,9 @@ async function defaultParse<T>(res: Response): Promise<T> {
 
 async function performFetch<T>(
   fetcher: typeof fetch,
-  request: BetterFetchRequest<T>,
+  request: SmartFetchRequest<T>,
   parse: (res: Response) => Promise<T>,
-): Promise<BetterFetchResponse<T>> {
+): Promise<SmartFetchResponse<T>> {
   const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
   const init: RequestInit = {
     ...(request.method ? { method: request.method } : {}),

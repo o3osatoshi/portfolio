@@ -10,11 +10,11 @@ import {
 } from "@o3osatoshi/toolkit";
 
 import {
-  type ApiBetterFetchClientOptions,
-  type BetterFetchCache,
-  type BetterFetchClient,
-  type BetterFetchResponse,
-  createBetterFetchClient,
+  type ApiSmartFetchClientOptions,
+  createSmartFetchClient,
+  type SmartFetchCache,
+  type SmartFetchClient,
+  type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
 import { exchangeRateApiPairSchema, type ExchangeRatePair } from "./schema";
@@ -25,7 +25,7 @@ const CACHE_KEY_PREFIX = "fx:rate";
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
-} & ApiBetterFetchClientOptions;
+} & ApiSmartFetchClientOptions;
 
 type ExchangeRatePayload = ExchangeRatePair | undefined;
 
@@ -35,8 +35,8 @@ type ExchangeRatePayload = ExchangeRatePair | undefined;
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiBaseUrl: string;
   private readonly apiKey: string;
-  private readonly cache: BetterFetchCache | undefined;
-  private readonly client: BetterFetchClient;
+  private readonly cache: SmartFetchCache | undefined;
+  private readonly client: SmartFetchClient;
 
   constructor(config: ExchangeRateApiConfig) {
     this.apiKey = config.apiKey;
@@ -62,7 +62,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
         }
       : undefined;
 
-    this.client = createBetterFetchClient({
+    this.client = createSmartFetchClient({
       cache: this.cache,
       fetch: config.fetch,
       logging,
@@ -78,7 +78,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
     const request = {
       cache: this.cache
         ? {
-            shouldCache: (res: BetterFetchResponse<ExchangeRatePayload>) =>
+            shouldCache: (res: SmartFetchResponse<ExchangeRatePayload>) =>
               isCacheablePayload(res.data),
           }
         : undefined,
@@ -121,7 +121,7 @@ function buildCacheKeyFromUrl(url: string): string | undefined {
 }
 
 function handleExchangeRateResponse(
-  result: BetterFetchResponse<ExchangeRatePayload>,
+  result: SmartFetchResponse<ExchangeRatePayload>,
   query: FxQuoteQuery,
 ): ResultAsync<FxQuote, Error> {
   // Check HTTP response status

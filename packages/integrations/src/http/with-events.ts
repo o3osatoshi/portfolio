@@ -2,21 +2,21 @@ import type { Attributes, Logger } from "@o3osatoshi/logging";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type {
-  BetterFetchClient,
-  BetterFetchRequest,
-  BetterFetchRequestMeta,
-} from "./better-fetch-types";
+  SmartFetchClient,
+  SmartFetchRequest,
+  SmartFetchRequestMeta,
+} from "./smart-fetch-types";
 
-export type BetterFetchEventsOptions = {
+export type SmartFetchEventsOptions = {
   logger?: Logger | undefined;
   redactUrl?: (url: string) => string;
   requestName?: string;
 };
 
 export function withEvents(
-  next: BetterFetchClient,
-  options: BetterFetchEventsOptions = {},
-): BetterFetchClient {
+  next: SmartFetchClient,
+  options: SmartFetchEventsOptions = {},
+): SmartFetchClient {
   if (!options.logger) {
     return next;
   }
@@ -25,7 +25,7 @@ export function withEvents(
   const redactUrl = options.redactUrl ?? ((url: string) => url);
   const requestName = options.requestName;
 
-  return <T>(request: BetterFetchRequest<T>) =>
+  return <T>(request: SmartFetchRequest<T>) =>
     next(request)
       .map((result) => {
         const response = result.response;
@@ -62,7 +62,7 @@ export function withEvents(
 }
 
 function buildAttributes(
-  request: BetterFetchRequestMeta,
+  request: SmartFetchRequestMeta,
   result: {
     cached: boolean;
     meta?: { attempts?: number; cacheHit?: boolean };
@@ -82,7 +82,7 @@ function buildAttributes(
 }
 
 function buildErrorAttributes(
-  request: BetterFetchRequestMeta,
+  request: SmartFetchRequestMeta,
   error: Error,
   redactUrl: (url: string) => string,
   requestName?: string,
