@@ -21,6 +21,23 @@ export type FormatHttpStatusReasonOptions = {
 };
 
 /**
+ * Error kinds produced by {@link httpStatusToKind}.
+ *
+ * @public
+ */
+export type HttpStatusKind = Extract<
+  Kind,
+  | "BadGateway"
+  | "BadRequest"
+  | "Forbidden"
+  | "NotFound"
+  | "RateLimit"
+  | "Timeout"
+  | "Unauthorized"
+  | "Unknown"
+>;
+
+/**
  * Minimal HTTP response shape used for status formatting helpers.
  *
  * @public
@@ -116,7 +133,7 @@ export function formatPayloadPreview(payload: unknown): string {
  * @returns Classified {@link Kind} value.
  * @public
  */
-export function httpStatusToKind(status: number): Kind {
+export function httpStatusToKind(status: number): HttpStatusKind {
   if (status === 401) return "Unauthorized";
   if (status === 403) return "Forbidden";
   if (status === 404) return "NotFound";

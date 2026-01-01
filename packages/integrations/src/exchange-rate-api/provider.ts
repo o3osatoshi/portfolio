@@ -6,7 +6,6 @@ import {
   createUrlRedactor,
   formatHttpStatusReason,
   httpStatusToKind,
-  newError,
   normalizeBaseUrl,
 } from "@o3osatoshi/toolkit";
 
@@ -16,6 +15,7 @@ import {
   type BetterFetchResponse,
   createBetterFetchClient,
 } from "../http";
+import { newIntegrationError } from "../integration-error";
 import {
   type ExchangeRateHostResponse,
   exchangeRateHostResponseSchema,
@@ -54,6 +54,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
           ttlMs: config.cache.ttlMs ?? CACHE_TTL_MS,
         }
       : undefined;
+
     const logging = config.logging
       ? {
           ...config.logging,
@@ -63,6 +64,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
           requestName: config.logging.requestName ?? "exchange_rate",
         }
       : undefined;
+
     this.client = createBetterFetchClient<ExchangeRatePayload>({
       cache,
       fetch: config.fetch,
@@ -111,11 +113,10 @@ function handleExchangeRateResponse(
 ): ResultAsync<FxQuote, Error> {
   if (result.response && !result.response.ok) {
     return errAsync(
-      newError({
+      newIntegrationError({
         action: "FetchExchangeRateApi",
         cause: result.data,
         kind: httpStatusToKind(result.response.status),
-        layer: "External",
         reason: formatHttpStatusReason({
           payload: result.data,
           response: result.response,
@@ -128,11 +129,10 @@ function handleExchangeRateResponse(
   const parsed = exchangeRateHostResponseSchema.safeParse(result.data);
   if (!parsed.success) {
     return errAsync(
-      newError({
+      newIntegrationError({
         action: "ParseExchangeRateApiResponse",
         cause: parsed.error,
         kind: "BadGateway",
-        layer: "External",
         reason: "ExchangeRate API payload did not match schema.",
       }),
     );
@@ -141,11 +141,10 @@ function handleExchangeRateResponse(
   if (parsed.data.result && parsed.data.result !== "success") {
     const detail = parsed.data["error-type"] ?? "Unknown error";
     return errAsync(
-      newError({
+      newIntegrationError({
         action: "FetchExchangeRateApi",
         cause: parsed.data,
         kind: "BadGateway",
-        layer: "External",
         reason: `ExchangeRate API error: ${detail}`,
       }),
     );
@@ -154,10 +153,9 @@ function handleExchangeRateResponse(
   const rate = parsed.data.conversion_rate;
   if (rate === undefined) {
     return errAsync(
-      newError({
+      newIntegrationError({
         action: "ParseExchangeRateApiResponse",
         kind: "BadGateway",
-        layer: "External",
         reason: "ExchangeRate API response missing conversion rate.",
       }),
     );

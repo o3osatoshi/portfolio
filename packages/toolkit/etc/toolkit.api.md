@@ -139,13 +139,16 @@ export type FormatHttpStatusReasonOptions = {
 export function formatPayloadPreview(payload: unknown): string;
 
 // @public
+export type HttpStatusKind = Extract<Kind, "BadGateway" | "BadRequest" | "Forbidden" | "NotFound" | "RateLimit" | "Timeout" | "Unauthorized" | "Unknown">;
+
+// @public
 export type HttpStatusLike = {
     status: number;
     statusText: string;
 };
 
 // @public
-export function httpStatusToKind(status: number): Kind;
+export function httpStatusToKind(status: number): HttpStatusKind;
 
 // @public
 export function isDeserializableBody(res: Response): boolean;

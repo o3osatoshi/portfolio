@@ -2,7 +2,7 @@ import type { CacheSetOptions, CacheStore } from "@repo/domain";
 import type { Redis as UpstashRedis } from "@upstash/redis";
 import { ResultAsync } from "neverthrow";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newIntegrationError } from "../integration-error";
 
 export type UpstashRedisClient = Pick<UpstashRedis, "get" | "set">;
 /**
@@ -20,13 +20,12 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
   return {
     get: (key) =>
       ResultAsync.fromPromise(client.get(key), (cause) =>
-        newError({
+        newIntegrationError({
           action: "ReadCacheStore",
           cause,
           hint: "Verify cache store connectivity or credentials.",
           impact: "response served without cache",
           kind: "Unavailable",
-          layer: "Infra",
           reason: "Cache store read failed",
         }),
       ),
@@ -40,13 +39,12 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
         ...(xx !== undefined ? { xx } : {}),
       };
       return ResultAsync.fromPromise(client.set(key, value, opts), (cause) =>
-        newError({
+        newIntegrationError({
           action: "WriteCacheStore",
           cause,
           hint: "Verify cache store connectivity or credentials.",
           impact: "response served without cache",
           kind: "Unavailable",
-          layer: "Infra",
           reason: "Cache store write failed",
         }),
       );

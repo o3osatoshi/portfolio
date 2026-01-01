@@ -132,7 +132,7 @@ describe("integrations/upstash wrapUpstashRedis (shared)", () => {
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("InfraUnavailableError");
+    expect(result.error.name).toBe("ExternalUnavailableError");
   });
 
   it("returns error when set rejects", async () => {
@@ -146,6 +146,6 @@ describe("integrations/upstash wrapUpstashRedis (shared)", () => {
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("InfraUnavailableError");
+    expect(result.error.name).toBe("ExternalUnavailableError");
   });
 });
