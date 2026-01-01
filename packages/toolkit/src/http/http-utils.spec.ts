@@ -40,6 +40,7 @@ describe("toolkit http-utils", () => {
 
     it("falls back to String for non-serializable payloads", () => {
       const payload: Record<string, unknown> = {};
+      // @ts-expect-error
       payload.self = payload;
       expect(formatPayloadPreview(payload)).toBe("[object Object]");
     });
@@ -48,9 +49,9 @@ describe("toolkit http-utils", () => {
   describe("formatHttpStatusReason", () => {
     it("includes the service name and status", () => {
       const reason = formatHttpStatusReason({
-        serviceName: "Service",
-        response: { status: 404, statusText: "Not Found" },
         payload: undefined,
+        response: { status: 404, statusText: "Not Found" },
+        serviceName: "Service",
       });
 
       expect(reason).toBe("Service responded with 404 Not Found");
@@ -58,10 +59,10 @@ describe("toolkit http-utils", () => {
 
     it("adds a truncated payload preview when available", () => {
       const reason = formatHttpStatusReason({
-        serviceName: "Service",
-        response: { status: 502, statusText: "Bad Gateway" },
-        payload: "abcdef",
         maxPayloadLength: 4,
+        payload: "abcdef",
+        response: { status: 502, statusText: "Bad Gateway" },
+        serviceName: "Service",
       });
       const ellipsis = "\u2026";
 
@@ -121,16 +122,16 @@ describe("toolkit http-utils", () => {
   describe("isDeserializableBody", () => {
     it("returns false for no-content status codes", () => {
       const res204 = new Response(null, {
-        status: 204,
         headers: { "content-type": "application/json" },
+        status: 204,
       });
       const res205 = new Response(null, {
-        status: 205,
         headers: { "content-type": "application/json" },
+        status: 205,
       });
       const res304 = new Response(null, {
-        status: 304,
         headers: { "content-type": "application/json" },
+        status: 304,
       });
 
       expect(isDeserializableBody(res204)).toBe(false);
@@ -140,11 +141,11 @@ describe("toolkit http-utils", () => {
 
     it("returns false when content-length is zero", () => {
       const res = new Response("{}", {
-        status: 200,
         headers: {
           "content-length": "0",
           "content-type": "application/json",
         },
+        status: 200,
       });
 
       expect(isDeserializableBody(res)).toBe(false);
@@ -152,8 +153,8 @@ describe("toolkit http-utils", () => {
 
     it("returns false when content-type is missing", () => {
       const res = new Response("{}", {
-        status: 200,
         headers: { "content-type": "" },
+        status: 200,
       });
 
       expect(isDeserializableBody(res)).toBe(false);
@@ -161,8 +162,8 @@ describe("toolkit http-utils", () => {
 
     it("returns true when content-type is present and length is non-zero", () => {
       const res = new Response("{}", {
-        status: 200,
         headers: { "content-type": "application/json" },
+        status: 200,
       });
 
       expect(isDeserializableBody(res)).toBe(true);
@@ -170,11 +171,11 @@ describe("toolkit http-utils", () => {
 
     it("returns true when content-length is invalid", () => {
       const res = new Response("{}", {
-        status: 200,
         headers: {
           "content-length": "abc",
           "content-type": "application/json",
         },
+        status: 200,
       });
 
       expect(isDeserializableBody(res)).toBe(true);
