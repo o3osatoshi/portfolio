@@ -18,8 +18,8 @@ import {
 } from "../http";
 import { newIntegrationError } from "../integration-error";
 import {
-  type ExchangeRatePairResponse,
-  exchangeRatePairResponseSchema,
+  type ExchangeRateApiPairResponse,
+  exchangeRateApiPairResponseSchema,
 } from "./schema";
 
 const CACHE_TTL_MS = 3_600_000;
@@ -75,8 +75,9 @@ export class ExchangeRateApi implements FxQuoteProvider {
     const request = {
       cache: this.cache
         ? {
-            shouldCache: (res: SmartFetchResponse<ExchangeRatePairResponse>) =>
-              isCacheablePayload(res.data),
+            shouldCache: (
+              res: SmartFetchResponse<ExchangeRateApiPairResponse>,
+            ) => isCacheablePayload(res.data),
           }
         : undefined,
       headers: {
@@ -86,7 +87,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
         action: "ParseExchangeRateApiResponse",
         layer: "External" as const,
       },
-      schema: exchangeRatePairResponseSchema,
+      schema: exchangeRateApiPairResponseSchema,
       url: url.toString(),
     };
 
@@ -119,7 +120,7 @@ function buildCacheKey(url: string): string | undefined {
     .unwrapOr(undefined);
 }
 
-function isCacheablePayload(res: ExchangeRatePairResponse): boolean {
+function isCacheablePayload(res: ExchangeRateApiPairResponse): boolean {
   if (!res) {
     return false;
   }
@@ -129,7 +130,7 @@ function isCacheablePayload(res: ExchangeRatePairResponse): boolean {
   return res.conversion_rate !== undefined;
 }
 
-function resolveAsOf(res: ExchangeRatePairResponse): Date {
+function resolveAsOf(res: ExchangeRateApiPairResponse): Date {
   if (typeof res.time_last_update_unix === "number") {
     return new Date(res.time_last_update_unix * 1000);
   }
@@ -143,7 +144,7 @@ function resolveAsOf(res: ExchangeRatePairResponse): Date {
 }
 
 function toFxQuote(
-  result: SmartFetchResponse<ExchangeRatePairResponse>,
+  result: SmartFetchResponse<ExchangeRateApiPairResponse>,
   query: FxQuoteQuery,
 ): ResultAsync<FxQuote, Error> {
   return ResultAsync.fromSafePromise(Promise.resolve())
