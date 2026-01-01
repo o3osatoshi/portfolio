@@ -1,4 +1,5 @@
 import { okAsync, Result } from "neverthrow";
+import type { z } from "zod";
 
 import type {
   SmartFetchCacheOptions,
@@ -12,7 +13,9 @@ export function withCache(
   next: SmartFetchClient,
   defaults: SmartFetchCacheOptions = {},
 ): SmartFetchClient {
-  return <T>(request: SmartFetchRequest<T>) => {
+  return <S extends z.ZodType>(request: SmartFetchRequest<S>) => {
+    type T = z.infer<S>;
+
     // Skip cache when explicitly disabled
     if ("cache" in request && request.cache === undefined) {
       return next(request);

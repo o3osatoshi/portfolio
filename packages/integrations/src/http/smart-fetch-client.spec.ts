@@ -1,6 +1,7 @@
 import type { CacheStore } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import type { Logger } from "@o3osatoshi/logging";
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
@@ -45,8 +46,9 @@ describe("integrations/http createSmartFetchClient", () => {
       fetch: fetchMock as unknown as typeof fetch,
     });
 
-    const result = await client<{ value: string }>({
-      parse: async () => ({ value: "fresh" }),
+    const schema = z.object({ value: z.string() });
+    const result = await client({
+      schema,
       url: "https://example.test",
     });
 
@@ -75,7 +77,8 @@ describe("integrations/http createSmartFetchClient", () => {
       },
     });
 
-    const result = await client({ url: "https://example.test" });
+    const schema = z.object({ ok: z.boolean() });
+    const result = await client({ schema, url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
     expect(logger.metric).toHaveBeenCalledTimes(2);
@@ -91,7 +94,8 @@ describe("integrations/http createSmartFetchClient", () => {
       fetch: fetchMock as unknown as typeof fetch,
     });
 
-    const result = await client({ url: "https://example.test" });
+    const schema = z.unknown();
+    const result = await client({ schema, url: "https://example.test" });
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(result.isErr()).toBe(true);

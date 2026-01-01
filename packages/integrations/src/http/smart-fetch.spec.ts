@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
@@ -14,7 +15,9 @@ describe("integrations/http createSmartFetch", () => {
     });
     const client = createSmartFetch({ fetch: fetchMock });
 
-    const result = await client<{ ok: boolean }>({
+    const schema = z.object({ ok: z.boolean() });
+    const result = await client({
+      schema,
       url: "https://example.test",
     });
 
@@ -27,31 +30,36 @@ describe("integrations/http createSmartFetch", () => {
 
   it("parses text responses when content-type is not JSON", async () => {
     const fetchMock = vi.fn(async () => {
-      return new Response("hello", {
-        headers: { "content-type": "text/plain" },
+      return new Response(JSON.stringify("hello"), {
+        headers: { "content-type": "application/json" },
         status: 200,
       });
     });
     const client = createSmartFetch({ fetch: fetchMock });
 
-    const result = await client<string>({ url: "https://example.test" });
+    const schema = z.string();
+    const result = await client({ schema, url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
     expect(result.value.data).toBe("hello");
   });
 
-  it("returns undefined when the response body is not deserializable", async () => {
+  it("returns null when the response body is null", async () => {
     const fetchMock = vi.fn(async () => {
-      return new Response(null, { status: 204 });
+      return new Response("null", {
+        headers: { "content-type": "application/json" },
+        status: 200,
+      });
     });
     const client = createSmartFetch({ fetch: fetchMock });
 
-    const result = await client<undefined>({ url: "https://example.test" });
+    const schema = z.null();
+    const result = await client({ schema, url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
-    expect(result.value.data).toBeUndefined();
+    expect(result.value.data).toBeNull();
   });
 
   it("wraps parse errors as ExternalBadGatewayError", async () => {
@@ -63,13 +71,14 @@ describe("integrations/http createSmartFetch", () => {
     });
     const client = createSmartFetch({ fetch: fetchMock });
 
-    const result = await client<unknown>({ url: "https://example.test" });
+    const schema = z.unknown();
+    const result = await client({ schema, url: "https://example.test" });
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
     const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("ParseExternalApiResponse");
+    expect(action).toBe("DeserializeResponseBody");
   });
 
   it("wraps fetch failures as ExternalUnavailableError", async () => {
@@ -78,7 +87,8 @@ describe("integrations/http createSmartFetch", () => {
     });
     const client = createSmartFetch({ fetch: fetchMock });
 
-    const result = await client<unknown>({ url: "https://example.test" });
+    const schema = z.unknown();
+    const result = await client({ schema, url: "https://example.test" });
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
@@ -89,17 +99,19 @@ describe("integrations/http createSmartFetch", () => {
 
   it("forwards method, headers, body, and signal", async () => {
     const fetchMock = vi.fn(async () => {
-      return new Response("ok", {
-        headers: { "content-type": "text/plain" },
+      return new Response(JSON.stringify("ok"), {
+        headers: { "content-type": "application/json" },
         status: 200,
       });
     });
     const client = createSmartFetch({ fetch: fetchMock });
 
-    const result = await client<string>({
+    const schema = z.string();
+    const result = await client({
       body: "payload",
       headers: { "x-test": "1" },
       method: "POST",
+      schema,
       timeoutMs: 50,
       url: "https://example.test",
     });

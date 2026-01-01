@@ -1,3 +1,5 @@
+import type { z } from "zod";
+
 import type { Attributes, Logger } from "@o3osatoshi/logging";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
@@ -25,7 +27,7 @@ export function withMetrics(
   const redactUrl = options.redactUrl ?? ((url: string) => url);
   const requestName = options.requestName;
 
-  return <T>(request: SmartFetchRequest<T>) => {
+  return <S extends z.ZodType>(request: SmartFetchRequest<S>) => {
     const startedAt = Date.now();
     return next(request)
       .map((result) => {

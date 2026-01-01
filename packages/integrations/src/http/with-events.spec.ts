@@ -52,6 +52,7 @@ describe("integrations/http withEvents", () => {
       requestName: "exchange_rate",
     });
 
+    // @ts-expect-error
     const result = await client({ method: "GET", url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -82,6 +83,7 @@ describe("integrations/http withEvents", () => {
       requestName: "exchange_rate",
     });
 
+    // @ts-expect-error
     const result = await client({ method: "GET", url: "https://example.test" });
 
     expect(result.isErr()).toBe(true);

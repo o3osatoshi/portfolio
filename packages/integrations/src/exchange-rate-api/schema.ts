@@ -14,4 +14,4 @@ export const exchangeRateApiPairSchema = z.object({
   time_next_update_utc: z.string().optional(),
 });
 
-export type ExchangeRatePair = z.infer<typeof exchangeRateApiPairSchema>;
+export type ExchangeRateApiPair = z.infer<typeof exchangeRateApiPairSchema>;

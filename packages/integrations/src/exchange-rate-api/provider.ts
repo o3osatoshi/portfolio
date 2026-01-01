@@ -17,7 +17,7 @@ import {
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
-import { exchangeRateApiPairSchema, type ExchangeRatePair } from "./schema";
+import { type ExchangeRateApiPair, exchangeRateApiPairSchema } from "./schema";
 
 const CACHE_TTL_MS = 3_600_000;
 const CACHE_KEY_PREFIX = "fx:rate";
@@ -27,7 +27,7 @@ export type ExchangeRateApiConfig = {
   baseUrl: string;
 } & ApiSmartFetchClientOptions;
 
-type ExchangeRatePayload = ExchangeRatePair | undefined;
+type ExchangeRatePayload = ExchangeRateApiPair | undefined;
 
 /**
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
@@ -85,11 +85,15 @@ export class ExchangeRateApi implements FxQuoteProvider {
       headers: {
         Accept: "application/json",
       },
-      parse: parseExchangeRatePayload,
+      parseContext: {
+        action: "ParseExchangeRateApiResponse",
+        layer: "External" as const,
+      },
+      schema: exchangeRateApiPairSchema,
       url: url.toString(),
     };
 
-    return this.client<ExchangeRatePayload>(request).andThen((res) =>
+    return this.client(request).andThen((res) =>
       handleExchangeRateResponse(res, query),
     );
   }
@@ -144,23 +148,9 @@ function handleExchangeRateResponse(
   return (
     ResultAsync.fromSafePromise(Promise.resolve())
       .andThen(() => httpResult)
-      // Parse and validate schema
-      .andThen((data) => {
-        const parsed = exchangeRateApiPairSchema.safeParse(data);
-        return parsed.success
-          ? ok(parsed.data)
-          : err(
-              newIntegrationError({
-                action: "ParseExchangeRateApiResponse",
-                cause: parsed.error,
-                kind: "BadGateway",
-                reason: "ExchangeRate API payload did not match schema.",
-              }),
-            );
-      })
       // Check API result status
       .andThen((data) => {
-        if (data.result && data.result !== "success") {
+        if (data?.result && data.result !== "success") {
           const detail = data["error-type"] ?? "Unknown error";
           return err(
             newIntegrationError({
@@ -175,7 +165,7 @@ function handleExchangeRateResponse(
       })
       // Extract conversion rate
       .andThen((data) => {
-        if (data.conversion_rate === undefined) {
+        if (data?.conversion_rate === undefined) {
           return err(
             newIntegrationError({
               action: "ParseExchangeRateApiResponse",
@@ -209,24 +199,7 @@ function isCacheablePayload(payload: ExchangeRatePayload): boolean {
   return payload.conversion_rate !== undefined;
 }
 
-async function parseExchangeRatePayload(
-  res: Response,
-): Promise<ExchangeRatePayload> {
-  return ResultAsync.fromPromise(res.json(), (cause) => ({
-    cause,
-    ok: res.ok,
-  })).match(
-    (data) => data as ExchangeRatePair,
-    (error) => {
-      if (error.ok) {
-        throw error.cause;
-      }
-      return undefined;
-    },
-  );
-}
-
-function resolveAsOf(payload: ExchangeRatePair): Date {
+function resolveAsOf(payload: ExchangeRateApiPair): Date {
   if (typeof payload.time_last_update_unix === "number") {
     return new Date(payload.time_last_update_unix * 1000);
   }

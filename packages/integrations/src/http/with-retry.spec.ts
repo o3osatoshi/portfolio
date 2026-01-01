@@ -34,6 +34,7 @@ describe("integrations/http withRetry", () => {
     // @ts-expect-error
     const client = withRetry(next);
 
+    // @ts-expect-error
     const promise = client({ url: "https://example.test" });
     await vi.runAllTimersAsync();
     const result = await promise;
@@ -54,6 +55,7 @@ describe("integrations/http withRetry", () => {
     // @ts-expect-error
     const client = withRetry(next);
 
+    // @ts-expect-error
     const result = await client({
       method: "POST",
       url: "https://example.test",
@@ -78,6 +80,7 @@ describe("integrations/http withRetry", () => {
       maxDelayMs: 1,
     });
 
+    // @ts-expect-error
     const promise = client({ url: "https://example.test" });
     await vi.runAllTimersAsync();
     const result = await promise;

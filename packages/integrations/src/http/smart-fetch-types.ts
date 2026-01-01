@@ -1,5 +1,8 @@
 import type { CacheStore } from "@repo/domain";
 import type { ResultAsync } from "neverthrow";
+import type { z } from "zod";
+
+import type { Layer } from "@o3osatoshi/toolkit";
 
 export type SmartFetchCache = {
   getKey?: (request: SmartFetchRequestMeta) => string | undefined;
@@ -13,9 +16,9 @@ export type SmartFetchCacheOptions<T = unknown> = {
   shouldCache?: (response: SmartFetchResponse<T>) => boolean;
 } & SmartFetchCache;
 
-export type SmartFetchClient = <T = unknown>(
-  request: SmartFetchRequest<T>,
-) => ResultAsync<SmartFetchResponse<T>, Error>;
+export type SmartFetchClient = <S extends z.ZodType>(
+  request: SmartFetchRequest<S>,
+) => ResultAsync<SmartFetchResponse<z.infer<S>>, Error>;
 
 export type SmartFetchMeta = {
   attempts?: number;
@@ -23,9 +26,10 @@ export type SmartFetchMeta = {
   cacheKey?: string;
 };
 
-export type SmartFetchRequest<T = unknown> = {
-  cache?: SmartFetchCacheOptions<T> | undefined;
-  parse?: (res: Response) => Promise<T>;
+export type SmartFetchRequest<S extends z.ZodType> = {
+  cache?: SmartFetchCacheOptions<z.infer<S>> | undefined;
+  parseContext?: { action: string; layer?: Layer };
+  schema: S;
 } & SmartFetchRequestMeta;
 
 export type SmartFetchRequestMeta = {

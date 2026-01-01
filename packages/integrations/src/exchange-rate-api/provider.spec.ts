@@ -134,10 +134,13 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
 
   it("returns NotFound error when the API responds with 404", async () => {
     const response = buildResponse({
+      json: {
+        "error-type": "unsupported-code",
+        result: "error",
+      },
       ok: false,
       status: 404,
       statusText: "Not Found",
-      text: "no such route",
     });
     const fetchMock = vi.fn(async () => response);
     const provider = buildProvider({
@@ -168,7 +171,7 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
     const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("ParseExternalApiResponse");
+    expect(action).toBe("DeserializeResponseBody");
   });
 
   it("returns BadGateway error when payload schema is invalid", async () => {
@@ -187,9 +190,9 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("ExternalBadGatewayError");
-    const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("ExchangeRate API payload did not match schema.");
+    expect(result.error.name).toBe("ExternalValidationError");
+    const { action } = parseErrorMessage(result.error.message);
+    expect(action).toBe("ParseExchangeRateApiResponse");
   });
 
   it("returns BadGateway error when API signals failure", async () => {

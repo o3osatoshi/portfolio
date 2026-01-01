@@ -30,6 +30,7 @@ describe("integrations/http withCache", () => {
       getKey: () => "cache:key",
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -50,6 +51,7 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -72,6 +74,7 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -102,6 +105,7 @@ describe("integrations/http withCache", () => {
       ttlMs: 1000,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -133,6 +137,7 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -156,6 +161,7 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -176,6 +182,7 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -195,6 +202,7 @@ describe("integrations/http withCache", () => {
       ttlMs: 1000,
     });
 
+    // @ts-expect-error
     const result = await client({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
@@ -215,6 +223,7 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
+    // @ts-expect-error
     const result = await client({
       cache: undefined,
       url: "https://example.test",

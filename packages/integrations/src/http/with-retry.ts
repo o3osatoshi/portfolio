@@ -1,4 +1,5 @@
 import { type Result, ResultAsync } from "neverthrow";
+import type { z } from "zod";
 
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
@@ -52,9 +53,10 @@ export function withRetry(
         retryOnStatuses,
       }));
 
-  return <T>(request: SmartFetchRequest<T>) =>
+  return <S extends z.ZodType>(request: SmartFetchRequest<S>) =>
     ResultAsync.fromPromise(
       (async () => {
+        type T = z.infer<S>;
         let attempt = 0;
         let lastError: Error | undefined;
         let lastResponse: Result<SmartFetchResponse<T>, Error> | undefined;

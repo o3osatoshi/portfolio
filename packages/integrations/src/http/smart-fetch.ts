@@ -1,6 +1,7 @@
 import { ResultAsync } from "neverthrow";
+import type { z } from "zod";
 
-import { isDeserializableBody, newFetchError } from "@o3osatoshi/toolkit";
+import { type Layer, newFetchError, parseAsyncWith } from "@o3osatoshi/toolkit";
 
 import type {
   SmartFetchClient,
@@ -12,34 +13,39 @@ export type CreateSmartFetchOptions = {
   fetch?: typeof fetch;
 };
 
-class ParseError extends Error {
-  constructor(override readonly cause: unknown) {
-    super("Failed to parse response body");
-  }
-}
-
 export function createSmartFetch(
   options: CreateSmartFetchOptions = {},
 ): SmartFetchClient {
   const fetcher = options.fetch ?? fetch;
 
-  return <T>(
-    request: SmartFetchRequest<T>,
-  ): ResultAsync<SmartFetchResponse<T>, Error> => {
+  return <S extends z.ZodType>(
+    request: SmartFetchRequest<S>,
+  ): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> => {
     const method = (request.method ?? "GET").toUpperCase();
     const requestMeta = { method, url: request.url };
-    const parse = request.parse ?? defaultParse<T>;
+
+    const parseContext = request.parseContext ?? {
+      action: "ParseExternalApiResponse",
+      layer: "External" as const,
+    };
 
     return ResultAsync.fromPromise(
-      performFetch(fetcher, request, parse),
+      performFetch(fetcher, request, parseContext),
       (cause) => {
-        if (cause instanceof ParseError) {
-          return newFetchError({
-            action: "ParseExternalApiResponse",
-            cause: cause.cause,
-            kind: "BadGateway",
-            request: requestMeta,
-          });
+        // Errors from newFetchError or newZodError have specific naming patterns
+        // e.g., "ExternalBadGatewayError", "ExternalValidationError"
+        if (
+          cause instanceof Error &&
+          (cause.name.includes("BadGateway") ||
+            cause.name.includes("Validation") ||
+            cause.name.includes("NotFound") ||
+            cause.name.includes("Unauthorized") ||
+            cause.name.includes("Forbidden") ||
+            cause.name.includes("RateLimit") ||
+            cause.name.includes("Unavailable") ||
+            cause.name.includes("Timeout"))
+        ) {
+          return cause;
         }
 
         return newFetchError({
@@ -52,22 +58,11 @@ export function createSmartFetch(
   };
 }
 
-async function defaultParse<T>(res: Response): Promise<T> {
-  if (!isDeserializableBody(res)) return undefined as T;
-
-  const contentType = res.headers.get("content-type") ?? "";
-  if (contentType.toLowerCase().includes("json")) {
-    return (await res.json()) as T;
-  }
-
-  return (await res.text()) as T;
-}
-
-async function performFetch<T>(
+async function performFetch<S extends z.ZodType>(
   fetcher: typeof fetch,
-  request: SmartFetchRequest<T>,
-  parse: (res: Response) => Promise<T>,
-): Promise<SmartFetchResponse<T>> {
+  request: SmartFetchRequest<S>,
+  parseContext: { action: string; layer?: Layer },
+): Promise<SmartFetchResponse<z.infer<S>>> {
   const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
   const init: RequestInit = {
     ...(request.method ? { method: request.method } : {}),
@@ -78,16 +73,34 @@ async function performFetch<T>(
 
   try {
     const res = await fetcher(request.url, init);
-    let data: T;
+
+    let json: unknown;
     try {
-      data = await parse(res);
+      json = await res.json();
     } catch (cause) {
-      throw new ParseError(cause);
+      throw newFetchError({
+        action: "DeserializeResponseBody",
+        cause,
+        kind: "BadGateway",
+        request: { method: request.method ?? "GET", url: request.url },
+      });
+    }
+
+    const parseResult = await parseAsyncWith(
+      request.schema,
+      parseContext,
+    )(json).match(
+      (data) => ({ data, success: true as const }),
+      (error) => ({ error, success: false as const }),
+    );
+
+    if (!parseResult.success) {
+      throw parseResult.error;
     }
 
     return {
       cached: false,
-      data,
+      data: parseResult.data,
       meta: {},
       response: {
         headers: res.headers,
