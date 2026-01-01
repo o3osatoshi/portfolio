@@ -11,16 +11,13 @@ import {
 
 import {
   type ApiBetterFetchClientOptions,
-  type BetterFetchCacheDefaults,
+  type BetterFetchCache,
   type BetterFetchClient,
   type BetterFetchResponse,
   createBetterFetchClient,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
-import {
-  type ExchangeRateHostResponse,
-  exchangeRateHostResponseSchema,
-} from "./schema";
+import { exchangeRateApiPairSchema, type ExchangeRatePair } from "./schema";
 
 const CACHE_TTL_MS = 3_600_000;
 const CACHE_KEY_PREFIX = "fx:rate";
@@ -30,7 +27,7 @@ export type ExchangeRateApiConfig = {
   baseUrl: string;
 } & ApiBetterFetchClientOptions;
 
-type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
+type ExchangeRatePayload = ExchangeRatePair | undefined;
 
 /**
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
@@ -38,14 +35,14 @@ type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiBaseUrl: string;
   private readonly apiKey: string;
-  private readonly cacheDefaults: BetterFetchCacheDefaults | undefined;
+  private readonly cache: BetterFetchCache | undefined;
   private readonly client: BetterFetchClient;
 
   constructor(config: ExchangeRateApiConfig) {
     this.apiKey = config.apiKey;
     this.apiBaseUrl = normalizeBaseUrl(config.baseUrl);
 
-    const cacheDefaults = config.cache
+    this.cache = config.cache
       ? {
           ...config.cache,
           getKey:
@@ -54,7 +51,6 @@ export class ExchangeRateApi implements FxQuoteProvider {
           ttlMs: config.cache.ttlMs ?? CACHE_TTL_MS,
         }
       : undefined;
-    this.cacheDefaults = cacheDefaults;
 
     const logging = config.logging
       ? {
@@ -67,7 +63,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
       : undefined;
 
     this.client = createBetterFetchClient({
-      cache: this.cacheDefaults,
+      cache: this.cache,
       fetch: config.fetch,
       logging,
       retry: config.retry,
@@ -80,7 +76,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
     const url = new URL(path, this.apiBaseUrl);
 
     const request = {
-      cache: this.cacheDefaults
+      cache: this.cache
         ? {
             shouldCache: (res: BetterFetchResponse<ExchangeRatePayload>) =>
               isCacheablePayload(res.data),
@@ -150,7 +146,7 @@ function handleExchangeRateResponse(
       .andThen(() => httpResult)
       // Parse and validate schema
       .andThen((data) => {
-        const parsed = exchangeRateHostResponseSchema.safeParse(data);
+        const parsed = exchangeRateApiPairSchema.safeParse(data);
         return parsed.success
           ? ok(parsed.data)
           : err(
@@ -220,7 +216,7 @@ async function parseExchangeRatePayload(
     cause,
     ok: res.ok,
   })).match(
-    (data) => data as ExchangeRateHostResponse,
+    (data) => data as ExchangeRatePair,
     (error) => {
       if (error.ok) {
         throw error.cause;
@@ -230,7 +226,7 @@ async function parseExchangeRatePayload(
   );
 }
 
-function resolveAsOf(payload: ExchangeRateHostResponse): Date {
+function resolveAsOf(payload: ExchangeRatePair): Date {
   if (typeof payload.time_last_update_unix === "number") {
     return new Date(payload.time_last_update_unix * 1000);
   }

@@ -1,8 +1,5 @@
 import { createBetterFetch } from "./better-fetch";
-import type {
-  BetterFetchCacheDefaults,
-  BetterFetchClient,
-} from "./better-fetch-types";
+import type { BetterFetchCache, BetterFetchClient } from "./better-fetch-types";
 import { withCache } from "./with-cache";
 import type { BetterFetchEventsOptions } from "./with-events";
 import { withEvents } from "./with-events";
@@ -11,7 +8,7 @@ import type { BetterFetchRetryOptions } from "./with-retry";
 import { withRetry } from "./with-retry";
 
 export type ApiBetterFetchClientOptions = {
-  cache?: BetterFetchCacheDefaults;
+  cache?: BetterFetchCache;
 } & Omit<CreateBetterFetchClientOptions, "cache">;
 
 export type BetterFetchLoggingOptions = {
@@ -20,7 +17,7 @@ export type BetterFetchLoggingOptions = {
 } & Pick<BetterFetchEventsOptions, "logger" | "redactUrl" | "requestName">;
 
 export type CreateBetterFetchClientOptions = {
-  cache?: BetterFetchCacheDefaults | undefined;
+  cache?: BetterFetchCache | undefined;
   fetch?: typeof fetch | undefined;
   logging?: BetterFetchLoggingOptions | undefined;
   retry?: BetterFetchRetryOptions | undefined;

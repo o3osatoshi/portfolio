@@ -1,7 +1,7 @@
 import type { CacheStore } from "@repo/domain";
 import type { ResultAsync } from "neverthrow";
 
-export type BetterFetchCacheDefaults = {
+export type BetterFetchCache = {
   getKey?: (request: BetterFetchRequestMeta) => string | undefined;
   store?: CacheStore | undefined;
   ttlMs?: number;
@@ -11,7 +11,7 @@ export type BetterFetchCacheOptions<T = unknown> = {
   deserialize?: (data: unknown) => null | T;
   serialize?: (data: T) => unknown;
   shouldCache?: (response: BetterFetchResponse<T>) => boolean;
-} & BetterFetchCacheDefaults;
+} & BetterFetchCache;
 
 export type BetterFetchClient = <T = unknown>(
   request: BetterFetchRequest<T>,
