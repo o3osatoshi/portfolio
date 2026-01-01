@@ -821,9 +821,6 @@ importers:
 
   packages/toolkit:
     dependencies:
-      '@upstash/redis':
-        specifier: ^1.35.8
-        version: 1.35.8
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
