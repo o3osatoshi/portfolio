@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { Logger } from "@o3osatoshi/logging";
 
-import { withLogging } from "./with-logging";
+import { withEvents } from "./with-events";
 
 const buildResponse = (status: number, ok = status < 400) =>
   okAsync({
@@ -35,17 +35,17 @@ const buildLogger = () => {
   return logger;
 };
 
-describe("integrations/http withLogging", () => {
+describe("integrations/http withEvents", () => {
   it("returns the original client when no logger is provided", () => {
     const next = vi.fn();
-    const client = withLogging(next);
+    const client = withEvents(next);
     expect(client).toBe(next);
   });
 
   it("logs warn on 4xx responses", async () => {
     const logger = buildLogger();
     const next = vi.fn(() => buildResponse(404, false));
-    const client = withLogging(next, {
+    const client = withEvents(next, {
       logger,
       redactUrl: (url) => `redacted:${url}`,
       requestName: "exchange_rate",
@@ -75,7 +75,7 @@ describe("integrations/http withLogging", () => {
     const error = new Error("timeout");
     error.name = "ExternalTimeoutError";
     const next = vi.fn(() => errAsync(error));
-    const client = withLogging(next, {
+    const client = withEvents(next, {
       logger,
       redactUrl: (url) => url,
       requestName: "exchange_rate",

@@ -3,15 +3,15 @@ import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type { ServerFetchClient, ServerFetchRequest } from "./types";
 
-export type LoggingOptions = {
+export type EventsOptions = {
   logger?: Logger | undefined;
   redactUrl?: (url: string) => string;
   requestName?: string;
 };
 
-export function withLogging<T>(
+export function withEvents<T>(
   next: ServerFetchClient<T>,
-  options: LoggingOptions = {},
+  options: EventsOptions = {},
 ): ServerFetchClient<T> {
   if (!options.logger) {
     return next;

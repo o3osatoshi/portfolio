@@ -1,18 +1,13 @@
-import type {
-  CacheStore,
-  FxQuote,
-  FxQuoteProvider,
-  FxQuoteQuery,
-} from "@repo/domain";
+import type { FxQuote, FxQuoteProvider, FxQuoteQuery } from "@repo/domain";
 import { newFxQuote } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
-import type { Logger } from "@o3osatoshi/logging";
 import { type Kind, newError, truncate } from "@o3osatoshi/toolkit";
 
 import {
   createServerFetchClient,
-  type RetryOptions,
+  type ExchangeRateApiClientOptions,
+  type ServerFetchClient,
   type ServerFetchResponse,
 } from "../http";
 import {
@@ -26,12 +21,7 @@ const CACHE_KEY_PREFIX = "fx:rate";
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
-  cacheStore?: CacheStore | undefined;
-  cacheTtlMs?: number | undefined;
-  fetch?: typeof fetch | undefined;
-  logger?: Logger | undefined;
-  retry?: RetryOptions | undefined;
-};
+} & ExchangeRateApiClientOptions<ExchangeRatePayload>;
 
 type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 
@@ -39,12 +29,44 @@ type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
  */
 export class ExchangeRateApi implements FxQuoteProvider {
-  constructor(private readonly config: ExchangeRateApiConfig) {}
+  private readonly apiBaseUrl: string;
+  private readonly apiKey: string;
+  private readonly client: ServerFetchClient<ExchangeRatePayload>;
+
+  constructor(config: ExchangeRateApiConfig) {
+    this.apiKey = config.apiKey;
+    this.apiBaseUrl = normalizeBaseUrl(config.baseUrl);
+
+    const cache = config.cache
+      ? {
+          ...config.cache,
+          getKey:
+            config.cache.getKey ??
+            ((request) => buildCacheKeyFromUrl(request.url)),
+          shouldCache:
+            config.cache.shouldCache ?? ((res) => isCacheablePayload(res.data)),
+          ttlMs: config.cache.ttlMs ?? CACHE_TTL_MS,
+        }
+      : undefined;
+    const logging = config.logging
+      ? {
+          ...config.logging,
+          redactUrl: config.logging.redactUrl ?? buildRedactUrl(config.apiKey),
+          requestName: config.logging.requestName ?? "exchange_rate",
+        }
+      : undefined;
+    this.client = createServerFetchClient<ExchangeRatePayload>({
+      cache,
+      fetch: config.fetch,
+      logging,
+      retry: config.retry,
+    });
+  }
 
   /** @inheritdoc */
   getRate(query: FxQuoteQuery) {
-    const path = `${this.config.apiKey}/pair/${query.base}/${query.quote}`;
-    const url = new URL(path, normalizeBaseUrl(this.config.baseUrl));
+    const path = `${this.apiKey}/pair/${query.base}/${query.quote}`;
+    const url = new URL(path, this.apiBaseUrl);
 
     const request = {
       headers: {
@@ -54,25 +76,24 @@ export class ExchangeRateApi implements FxQuoteProvider {
       url: url.toString(),
     };
 
-    const client = createServerFetchClient<ExchangeRatePayload>({
-      cache: {
-        getKey: () => `${CACHE_KEY_PREFIX}:${query.base}:${query.quote}`,
-        shouldCache: (res) => isCacheablePayload(res.data),
-        store: this.config.cacheStore,
-        ttlMs: this.config.cacheTtlMs ?? CACHE_TTL_MS,
-      },
-      fetch: this.config.fetch,
-      observability: {
-        logger: this.config.logger,
-        redactUrl: buildRedactUrl(this.config.apiKey),
-        requestName: "exchange_rate",
-      },
-      retry: this.config.retry,
-    });
-
-    return client(request).andThen((res) =>
+    return this.client(request).andThen((res) =>
       handleExchangeRateResponse(res, query),
     );
+  }
+}
+
+function buildCacheKeyFromUrl(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    const segments = parsed.pathname.split("/").filter(Boolean);
+    const pairIndex = segments.findIndex((segment) => segment === "pair");
+    if (pairIndex < 0 || segments.length <= pairIndex + 2) return undefined;
+    const base = segments[pairIndex + 1]?.toUpperCase();
+    const quote = segments[pairIndex + 2]?.toUpperCase();
+    if (!base || !quote) return undefined;
+    return `${CACHE_KEY_PREFIX}:${base}:${quote}`;
+  } catch {
+    return undefined;
   }
 }
 

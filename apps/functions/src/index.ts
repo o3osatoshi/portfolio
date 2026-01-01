@@ -14,7 +14,7 @@ let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
 
 export const api = onRequest(async (req, res) => {
   if (!handler) {
-    const cacheStore =
+    const store =
       env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
         ? createUpstashRedis({
             token: env.UPSTASH_REDIS_REST_TOKEN,
@@ -25,8 +25,12 @@ export const api = onRequest(async (req, res) => {
     const fxQuoteProvider = new ExchangeRateApi({
       apiKey: env.EXCHANGE_RATE_API_KEY,
       baseUrl: env.EXCHANGE_RATE_BASE_URL,
-      cacheStore,
-      logger,
+      cache: {
+        store,
+      },
+      logging: {
+        logger,
+      },
     });
 
     const client = createPrismaClient({

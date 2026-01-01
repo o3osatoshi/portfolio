@@ -57,7 +57,7 @@ describe("integrations/http createServerFetchClient", () => {
     expect(result.value.data).toEqual({ value: "cached" });
   });
 
-  it("honors observability toggles", async () => {
+  it("honors logging toggles", async () => {
     const logger = buildLogger();
     const fetchMock = vi.fn(async () => {
       return new Response(JSON.stringify({ ok: true }), {
@@ -67,8 +67,8 @@ describe("integrations/http createServerFetchClient", () => {
     });
     const client = createServerFetchClient<{ ok: boolean }>({
       fetch: fetchMock as unknown as typeof fetch,
-      observability: {
-        enableLogging: false,
+      logging: {
+        enableEvents: false,
         enableMetrics: true,
         logger,
         requestName: "client_test",

@@ -8,7 +8,7 @@ import { getWebNodeLogger } from "@/lib/logger/node";
 
 export const runtime = "nodejs";
 
-const cacheStore = createUpstashRedis({
+const store = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
 });
@@ -16,8 +16,12 @@ const logger = getWebNodeLogger();
 const fxQuoteProvider = new ExchangeRateApi({
   apiKey: env.EXCHANGE_RATE_API_KEY,
   baseUrl: env.EXCHANGE_RATE_BASE_URL,
-  cacheStore,
-  logger,
+  cache: {
+    store,
+  },
+  logging: {
+    logger,
+  },
 });
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });

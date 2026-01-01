@@ -274,7 +274,9 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     cacheStore.set = vi.fn(() => okAsync("OK"));
     const fetchMock = vi.fn(async () => buildResponse({ json: cachedPayload }));
     const provider = buildProvider({
-      cacheStore,
+      cache: {
+        store: cacheStore,
+      },
       fetch: fetchMock as unknown as typeof fetch,
     });
 
@@ -308,7 +310,9 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     });
     const fetchMock = vi.fn(async () => response);
     const provider = buildProvider({
-      cacheStore,
+      cache: {
+        store: cacheStore,
+      },
       fetch: fetchMock as unknown as typeof fetch,
     });
 
