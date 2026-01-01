@@ -1,4 +1,4 @@
-import { okAsync } from "neverthrow";
+import { okAsync, Result } from "neverthrow";
 
 import type {
   BetterFetchCacheOptions,
@@ -87,9 +87,8 @@ function safeDeserialize<T>(
   deserialize: (data: unknown) => null | T,
   value: unknown,
 ): null | T {
-  try {
-    return deserialize(value);
-  } catch {
-    return null;
-  }
+  return Result.fromThrowable(
+    () => deserialize(value),
+    () => null,
+  )().unwrapOr(null);
 }

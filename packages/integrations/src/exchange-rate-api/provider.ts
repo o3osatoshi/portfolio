@@ -1,6 +1,6 @@
 import type { FxQuote, FxQuoteProvider, FxQuoteQuery } from "@repo/domain";
 import { newFxQuote } from "@repo/domain";
-import { errAsync, okAsync, type ResultAsync } from "neverthrow";
+import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import {
   createUrlRedactor,
@@ -100,85 +100,107 @@ export class ExchangeRateApi implements FxQuoteProvider {
 }
 
 function buildCacheKeyFromUrl(url: string): string | undefined {
-  try {
-    const parsed = new URL(url);
-    const segments = parsed.pathname.split("/").filter(Boolean);
-    const pairIndex = segments.indexOf("pair");
-    if (pairIndex < 0 || segments.length <= pairIndex + 2) return undefined;
-    const base = segments[pairIndex + 1]?.toUpperCase();
-    const quote = segments[pairIndex + 2]?.toUpperCase();
-    if (!base || !quote) return undefined;
-    return `${CACHE_KEY_PREFIX}:${base}:${quote}`;
-  } catch {
-    return undefined;
-  }
+  return Result.fromThrowable(
+    () => new URL(url),
+    () => undefined,
+  )()
+    .andThen((parsed) => {
+      const segments = parsed.pathname.split("/").filter(Boolean);
+      const pairIndex = segments.indexOf("pair");
+
+      if (pairIndex < 0 || segments.length <= pairIndex + 2) {
+        return err(undefined);
+      }
+
+      const base = segments[pairIndex + 1]?.toUpperCase();
+      const quote = segments[pairIndex + 2]?.toUpperCase();
+
+      if (!base || !quote) {
+        return err(undefined);
+      }
+
+      return ok(`${CACHE_KEY_PREFIX}:${base}:${quote}`);
+    })
+    .unwrapOr(undefined);
 }
 
 function handleExchangeRateResponse(
   result: BetterFetchResponse<ExchangeRatePayload>,
   query: FxQuoteQuery,
 ): ResultAsync<FxQuote, Error> {
-  if (result.response && !result.response.ok) {
-    return errAsync(
-      newIntegrationError({
-        action: "FetchExchangeRateApi",
-        cause: result.data,
-        kind: httpStatusToKind(result.response.status),
-        reason: formatHttpStatusReason({
-          payload: result.data,
-          response: result.response,
-          serviceName: "ExchangeRate API",
-        }),
-      }),
-    );
-  }
+  // Check HTTP response status
+  const httpResult =
+    result.response?.ok === false
+      ? err(
+          newIntegrationError({
+            action: "FetchExchangeRateApi",
+            cause: result.data,
+            kind: httpStatusToKind(result.response.status),
+            reason: formatHttpStatusReason({
+              payload: result.data,
+              response: result.response,
+              serviceName: "ExchangeRate API",
+            }),
+          }),
+        )
+      : ok(result.data);
 
-  const parsed = exchangeRateHostResponseSchema.safeParse(result.data);
-  if (!parsed.success) {
-    return errAsync(
-      newIntegrationError({
-        action: "ParseExchangeRateApiResponse",
-        cause: parsed.error,
-        kind: "BadGateway",
-        reason: "ExchangeRate API payload did not match schema.",
-      }),
-    );
-  }
-
-  if (parsed.data.result && parsed.data.result !== "success") {
-    const detail = parsed.data["error-type"] ?? "Unknown error";
-    return errAsync(
-      newIntegrationError({
-        action: "FetchExchangeRateApi",
-        cause: parsed.data,
-        kind: "BadGateway",
-        reason: `ExchangeRate API error: ${detail}`,
-      }),
-    );
-  }
-
-  const rate = parsed.data.conversion_rate;
-  if (rate === undefined) {
-    return errAsync(
-      newIntegrationError({
-        action: "ParseExchangeRateApiResponse",
-        kind: "BadGateway",
-        reason: "ExchangeRate API response missing conversion rate.",
-      }),
-    );
-  }
-
-  const asOf = resolveAsOf(parsed.data);
-  const normalized = newFxQuote({
-    asOf,
-    base: query.base,
-    quote: query.quote,
-    rate,
-  });
-  if (normalized.isErr()) {
-    return errAsync(normalized.error);
-  }
-  return okAsync(normalized.value);
+  return (
+    ResultAsync.fromSafePromise(Promise.resolve())
+      .andThen(() => httpResult)
+      // Parse and validate schema
+      .andThen((data) => {
+        const parsed = exchangeRateHostResponseSchema.safeParse(data);
+        return parsed.success
+          ? ok(parsed.data)
+          : err(
+              newIntegrationError({
+                action: "ParseExchangeRateApiResponse",
+                cause: parsed.error,
+                kind: "BadGateway",
+                reason: "ExchangeRate API payload did not match schema.",
+              }),
+            );
+      })
+      // Check API result status
+      .andThen((data) => {
+        if (data.result && data.result !== "success") {
+          const detail = data["error-type"] ?? "Unknown error";
+          return err(
+            newIntegrationError({
+              action: "FetchExchangeRateApi",
+              cause: data,
+              kind: "BadGateway",
+              reason: `ExchangeRate API error: ${detail}`,
+            }),
+          );
+        }
+        return ok(data);
+      })
+      // Extract conversion rate
+      .andThen((data) => {
+        if (data.conversion_rate === undefined) {
+          return err(
+            newIntegrationError({
+              action: "ParseExchangeRateApiResponse",
+              kind: "BadGateway",
+              reason: "ExchangeRate API response missing conversion rate.",
+            }),
+          );
+        }
+        return ok({ data, rate: data.conversion_rate });
+      })
+      // Create FxQuote
+      .andThen(({ data, rate }) => {
+        const asOf = resolveAsOf(data);
+        return newFxQuote({
+          asOf,
+          base: query.base,
+          quote: query.quote,
+          rate,
+        });
+      })
+  );
 }
 
 function isCacheablePayload(payload: ExchangeRatePayload): boolean {
@@ -194,14 +216,18 @@ function isCacheablePayload(payload: ExchangeRatePayload): boolean {
 async function parseExchangeRatePayload(
   res: Response,
 ): Promise<ExchangeRatePayload> {
-  try {
-    return (await res.json()) as ExchangeRateHostResponse;
-  } catch (cause) {
-    if (res.ok) {
-      throw cause;
-    }
-    return undefined;
-  }
+  return ResultAsync.fromPromise(res.json(), (cause) => ({
+    cause,
+    ok: res.ok,
+  })).match(
+    (data) => data as ExchangeRateHostResponse,
+    (error) => {
+      if (error.ok) {
+        throw error.cause;
+      }
+      return undefined;
+    },
+  );
 }
 
 function resolveAsOf(payload: ExchangeRateHostResponse): Date {
