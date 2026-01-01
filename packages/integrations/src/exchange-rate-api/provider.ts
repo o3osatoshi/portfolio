@@ -81,14 +81,16 @@ export class ExchangeRateApi implements FxQuoteProvider {
             ) => isCacheable(res.data),
           }
         : undefined,
+      decode: {
+        context: {
+          action: "ParseExchangeRateApiResponse",
+          layer: "External" as const,
+        },
+        schema: exchangeRateApiPairResponseSchema,
+      },
       headers: {
         Accept: "application/json",
       },
-      parseContext: {
-        action: "ParseExchangeRateApiResponse",
-        layer: "External" as const,
-      },
-      schema: exchangeRateApiPairResponseSchema,
       url: url.toString(),
     };
 

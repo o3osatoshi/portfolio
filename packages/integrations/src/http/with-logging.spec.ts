@@ -45,7 +45,8 @@ const buildError = (name: string, message: string, retryAttempts?: number) => {
   const error = new Error(message);
   error.name = name;
   if (retryAttempts !== undefined) {
-    (error as any).retryAttempts = retryAttempts;
+    // @ts-expect-error adding custom property for testing
+    error.retryAttempts = retryAttempts;
   }
   return error;
 };

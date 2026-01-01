@@ -9,12 +9,12 @@ import type {
   SmartFetchResponse,
 } from "./smart-fetch-types";
 
-export type CreateSmartFetchOptions = {
+export type CreateBaseFetchOptions = {
   fetch?: typeof fetch;
 };
 
 export function createBaseFetch(
-  options: CreateSmartFetchOptions = {},
+  options: CreateBaseFetchOptions = {},
 ): SmartFetch {
   const fetcher = options.fetch ?? fetch;
 
@@ -24,13 +24,13 @@ export function createBaseFetch(
     const method = (request.method ?? "GET").toUpperCase();
     const requestMeta = { method, url: request.url };
 
-    const parseContext = request.parseContext ?? {
+    const decodeContext = request.decode.context ?? {
       action: "ParseExternalApiResponse",
       layer: "External" as const,
     };
 
     return ResultAsync.fromPromise(
-      performFetch(fetcher, request, parseContext),
+      performFetch(fetcher, request, decodeContext),
       (cause) => {
         // Errors from newFetchError or newZodError have specific naming patterns
         // e.g., "ExternalBadGatewayError", "ExternalValidationError"
@@ -61,7 +61,7 @@ export function createBaseFetch(
 async function performFetch<S extends z.ZodType>(
   fetcher: typeof fetch,
   request: SmartFetchRequest<S>,
-  parseContext: { action: string; layer?: Layer },
+  decodeContext: { action: string; layer?: Layer },
 ): Promise<SmartFetchResponse<z.infer<S>>> {
   const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
   const init: RequestInit = {
@@ -86,21 +86,21 @@ async function performFetch<S extends z.ZodType>(
       });
     }
 
-    const parseResult = await parseAsyncWith(
-      request.schema,
-      parseContext,
+    const decodeResult = await parseAsyncWith(
+      request.decode.schema,
+      decodeContext,
     )(json).match(
       (data) => ({ data, success: true as const }),
       (error) => ({ error, success: false as const }),
     );
 
-    if (!parseResult.success) {
-      throw parseResult.error;
+    if (!decodeResult.success) {
+      throw decodeResult.error;
     }
 
     return {
       cached: false,
-      data: parseResult.data,
+      data: decodeResult.data,
       meta: {},
       response: {
         headers: res.headers,

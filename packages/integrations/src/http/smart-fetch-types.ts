@@ -25,8 +25,10 @@ export type SmartFetchMeta = {
 
 export type SmartFetchRequest<S extends z.ZodType> = {
   cache?: SmartFetchCacheOptions<z.infer<S>> | undefined;
-  parseContext?: { action: string; layer?: Layer };
-  schema: S;
+  decode: {
+    context?: { action: string; layer?: Layer };
+    schema: S;
+  };
 } & SmartFetchRequestMeta;
 
 export type SmartFetchRequestMeta = {

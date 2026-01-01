@@ -17,7 +17,7 @@ describe("integrations/http createSmartFetch", () => {
 
     const schema = z.object({ ok: z.boolean() });
     const result = await client({
-      schema,
+      decode: { schema },
       url: "https://example.test",
     });
 
@@ -38,7 +38,10 @@ describe("integrations/http createSmartFetch", () => {
     const client = createSmartFetch({ fetch: fetchMock });
 
     const schema = z.string();
-    const result = await client({ schema, url: "https://example.test" });
+    const result = await client({
+      decode: { schema },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -55,7 +58,10 @@ describe("integrations/http createSmartFetch", () => {
     const client = createSmartFetch({ fetch: fetchMock });
 
     const schema = z.null();
-    const result = await client({ schema, url: "https://example.test" });
+    const result = await client({
+      decode: { schema },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -72,7 +78,10 @@ describe("integrations/http createSmartFetch", () => {
     const client = createSmartFetch({ fetch: fetchMock });
 
     const schema = z.unknown();
-    const result = await client({ schema, url: "https://example.test" });
+    const result = await client({
+      decode: { schema },
+      url: "https://example.test",
+    });
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
@@ -88,7 +97,10 @@ describe("integrations/http createSmartFetch", () => {
     const client = createSmartFetch({ fetch: fetchMock });
 
     const schema = z.unknown();
-    const result = await client({ schema, url: "https://example.test" });
+    const result = await client({
+      decode: { schema },
+      url: "https://example.test",
+    });
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
@@ -109,9 +121,9 @@ describe("integrations/http createSmartFetch", () => {
     const schema = z.string();
     const result = await client({
       body: "payload",
+      decode: { schema },
       headers: { "x-test": "1" },
       method: "POST",
-      schema,
       timeoutMs: 50,
       url: "https://example.test",
     });

@@ -48,7 +48,7 @@ describe("integrations/http createSmartFetchClient", () => {
 
     const schema = z.object({ value: z.string() });
     const result = await client({
-      schema,
+      decode: { schema },
       url: "https://example.test",
     });
 
@@ -76,7 +76,10 @@ describe("integrations/http createSmartFetchClient", () => {
     });
 
     const schema = z.object({ ok: z.boolean() });
-    const result = await client({ schema, url: "https://example.test" });
+    const result = await client({
+      decode: { schema },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(logger.metric).toHaveBeenCalledTimes(2);
@@ -93,7 +96,10 @@ describe("integrations/http createSmartFetchClient", () => {
     });
 
     const schema = z.unknown();
-    const result = await client({ schema, url: "https://example.test" });
+    const result = await client({
+      decode: { schema },
+      url: "https://example.test",
+    });
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(result.isErr()).toBe(true);
