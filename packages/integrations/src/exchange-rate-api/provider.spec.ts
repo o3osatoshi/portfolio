@@ -26,6 +26,7 @@ function buildResponse(options: MockResponseOptions): Response {
     text = "",
   } = options;
   return {
+    headers: new Headers({ "content-type": "application/json" }),
     json: async () => {
       if (jsonError) {
         throw jsonError;
@@ -36,6 +37,7 @@ function buildResponse(options: MockResponseOptions): Response {
     status,
     statusText,
     text: async () => text,
+    url: "https://example.test/api",
   } as Response;
 }
 

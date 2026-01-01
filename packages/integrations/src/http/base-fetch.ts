@@ -1,7 +1,7 @@
 import { ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import { type Layer, newFetchError, parseAsyncWith } from "@o3osatoshi/toolkit";
+import { newFetchError, parseAsyncWith } from "@o3osatoshi/toolkit";
 
 import type {
   SmartFetch,
@@ -21,30 +21,15 @@ export function createBaseFetch(
   return <S extends z.ZodType>(
     request: SmartFetchRequest<S>,
   ): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> => {
-    const method = (request.method ?? "GET").toUpperCase();
+    const method = request.method ?? "GET";
     const requestMeta = { method, url: request.url };
 
-    const decodeContext = request.decode.context ?? {
-      action: "ParseExternalApiResponse",
-      layer: "External" as const,
-    };
-
-    return ResultAsync.fromPromise(
-      performFetch(fetcher, request, decodeContext),
-      (cause) => {
-        // Errors from newFetchError or newZodError have specific naming patterns
-        // e.g., "ExternalBadGatewayError", "ExternalValidationError"
-        if (
-          cause instanceof Error &&
-          (cause.name.includes("BadGateway") ||
-            cause.name.includes("Validation") ||
-            cause.name.includes("NotFound") ||
-            cause.name.includes("Unauthorized") ||
-            cause.name.includes("Forbidden") ||
-            cause.name.includes("RateLimit") ||
-            cause.name.includes("Unavailable") ||
-            cause.name.includes("Timeout"))
-        ) {
+    return performFetch(fetcher, request)
+      .andThen((response) => deserializeBody(response, request))
+      .andThen((body) => decodeBody(body, request))
+      .mapErr((cause) => {
+        // Pass through structured errors from newFetchError or newZodError
+        if (cause instanceof Error && isStructuredError(cause)) {
           return cause;
         }
 
@@ -53,17 +38,105 @@ export function createBaseFetch(
           cause,
           request: requestMeta,
         });
-      },
-    );
+      });
   };
 }
 
-async function performFetch<S extends z.ZodType>(
-  fetcher: typeof fetch,
+function decodeBody<S extends z.ZodType>(
+  body: { data: unknown; response: Response },
   request: SmartFetchRequest<S>,
-  decodeContext: { action: string; layer?: Layer },
-): Promise<SmartFetchResponse<z.infer<S>>> {
+): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> {
+  const decodeContext = request.decode.context ?? {
+    action: "ParseExternalApiResponse",
+    layer: "External" as const,
+  };
+
+  return parseAsyncWith(
+    request.decode.schema,
+    decodeContext,
+  )(body.data).map((data) => ({
+    cached: false,
+    data,
+    meta: {},
+    response: {
+      headers: body.response.headers,
+      ok: body.response.ok,
+      status: body.response.status,
+      statusText: body.response.statusText,
+      url: body.response.url,
+    },
+  }));
+}
+
+function deserializeBody(
+  response: Response,
+  request: SmartFetchRequest<any>,
+): ResultAsync<{ data: unknown; response: Response }, Error> {
+  if (!isDeserializableResponse(response)) {
+    return ResultAsync.fromSafePromise(
+      Promise.resolve({ data: null, response }),
+    );
+  }
+
+  return ResultAsync.fromPromise(response.json(), (cause) =>
+    newFetchError({
+      action: "DeserializeResponseBody",
+      cause,
+      kind: "BadGateway",
+      request: { method: request.method ?? "GET", url: request.url },
+    }),
+  ).map((data) => ({ data, response }));
+}
+
+function isDeserializableResponse(response: Response): boolean {
+  // No response provided
+  if (!response) return false;
+
+  // No content responses
+  if (
+    response.status === 204 ||
+    response.status === 205 ||
+    response.status === 304
+  ) {
+    return false;
+  }
+
+  // Empty body by content-length
+  const contentLength = response.headers?.get("content-length");
+  if (contentLength !== null) {
+    const length = Number(contentLength);
+    if (!Number.isNaN(length) && length === 0) {
+      return false;
+    }
+  }
+
+  // Check content-type for JSON
+  const contentType = response.headers?.get("content-type");
+  if (!contentType) return false;
+
+  return contentType.toLowerCase().includes("json");
+}
+
+function isStructuredError(error: Error): boolean {
+  return (
+    error.name.includes("BadGateway") ||
+    error.name.includes("Validation") ||
+    error.name.includes("NotFound") ||
+    error.name.includes("Unauthorized") ||
+    error.name.includes("Forbidden") ||
+    error.name.includes("RateLimit") ||
+    error.name.includes("Unavailable") ||
+    error.name.includes("Timeout") ||
+    error.name.includes("Serialization")
+  );
+}
+
+function performFetch(
+  fetcher: typeof fetch,
+  request: SmartFetchRequest<any>,
+): ResultAsync<Response, Error> {
   const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
+
   const init: RequestInit = {
     ...(request.method ? { method: request.method } : {}),
     ...(request.headers ? { headers: request.headers } : {}),
@@ -71,48 +144,16 @@ async function performFetch<S extends z.ZodType>(
     ...(signal ? { signal } : {}),
   };
 
-  try {
-    const res = await fetcher(request.url, init);
-
-    let json: unknown;
-    try {
-      json = await res.json();
-    } catch (cause) {
-      throw newFetchError({
-        action: "DeserializeResponseBody",
-        cause,
-        kind: "BadGateway",
-        request: { method: request.method ?? "GET", url: request.url },
-      });
-    }
-
-    const decodeResult = await parseAsyncWith(
-      request.decode.schema,
-      decodeContext,
-    )(json).match(
-      (data) => ({ data, success: true as const }),
-      (error) => ({ error, success: false as const }),
-    );
-
-    if (!decodeResult.success) {
-      throw decodeResult.error;
-    }
-
-    return {
-      cached: false,
-      data: decodeResult.data,
-      meta: {},
-      response: {
-        headers: res.headers,
-        ok: res.ok,
-        status: res.status,
-        statusText: res.statusText,
-        url: res.url,
-      },
-    };
-  } finally {
+  return ResultAsync.fromPromise(fetcher(request.url, init), (cause) =>
+    newFetchError({
+      action: "FetchExternalApi",
+      cause,
+      request: { method: request.method ?? "GET", url: request.url },
+    }),
+  ).map((response) => {
     cleanup();
-  }
+    return response;
+  });
 }
 
 function resolveSignal(signal?: AbortSignal, timeoutMs?: number) {
