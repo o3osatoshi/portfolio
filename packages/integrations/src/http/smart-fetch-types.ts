@@ -4,6 +4,10 @@ import type { z } from "zod";
 
 import type { Layer } from "@o3osatoshi/toolkit";
 
+export type SmartFetch = <S extends z.ZodType>(
+  request: SmartFetchRequest<S>,
+) => ResultAsync<SmartFetchResponse<z.infer<S>>, Error>;
+
 export type SmartFetchCache = {
   getKey?: (request: SmartFetchRequestMeta) => string | undefined;
   store?: CacheStore | undefined;
@@ -15,10 +19,6 @@ export type SmartFetchCacheOptions<T = unknown> = {
   serialize?: (data: T) => unknown;
   shouldCache?: (response: SmartFetchResponse<T>) => boolean;
 } & SmartFetchCache;
-
-export type SmartFetchClient = <S extends z.ZodType>(
-  request: SmartFetchRequest<S>,
-) => ResultAsync<SmartFetchResponse<z.infer<S>>, Error>;
 
 export type SmartFetchMeta = {
   attempts?: number;

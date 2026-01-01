@@ -4,7 +4,7 @@ import type { Attributes, Logger } from "@o3osatoshi/logging";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type {
-  SmartFetchClient,
+  SmartFetch,
   SmartFetchRequest,
   SmartFetchRequestMeta,
 } from "./smart-fetch-types";
@@ -16,9 +16,9 @@ export type SmartFetchLoggingOptions = {
 };
 
 export function withLogging(
-  next: SmartFetchClient,
+  next: SmartFetch,
   options: SmartFetchLoggingOptions = {},
-): SmartFetchClient {
+): SmartFetch {
   if (!options.logger) {
     return next;
   }

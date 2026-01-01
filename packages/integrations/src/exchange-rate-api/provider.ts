@@ -12,9 +12,9 @@ import {
 
 import {
   type ApiSmartFetchClientOptions,
-  createSmartFetchClient,
+  createSmartFetch,
+  type SmartFetch,
   type SmartFetchCache,
-  type SmartFetchClient,
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
@@ -38,7 +38,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiBaseUrl: string;
   private readonly apiKey: string;
   private readonly cache: SmartFetchCache | undefined;
-  private readonly client: SmartFetchClient;
+  private readonly client: SmartFetch;
 
   constructor(config: ExchangeRateApiConfig) {
     this.apiKey = config.apiKey;
@@ -60,7 +60,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
         }
       : undefined;
 
-    this.client = createSmartFetchClient({
+    this.client = createSmartFetch({
       cache: this.cache,
       fetch: config.fetch,
       logging,

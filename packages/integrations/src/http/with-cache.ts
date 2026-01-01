@@ -2,17 +2,17 @@ import { okAsync, Result } from "neverthrow";
 import type { z } from "zod";
 
 import type {
+  SmartFetch,
   SmartFetchCacheOptions,
-  SmartFetchClient,
   SmartFetchRequest,
   SmartFetchResponse,
 } from "./smart-fetch-types";
 import { mergeMeta } from "./smart-fetch-types";
 
 export function withCache(
-  next: SmartFetchClient,
+  next: SmartFetch,
   defaults: SmartFetchCacheOptions = {},
-): SmartFetchClient {
+): SmartFetch {
   return <S extends z.ZodType>(request: SmartFetchRequest<S>) => {
     type T = z.infer<S>;
 

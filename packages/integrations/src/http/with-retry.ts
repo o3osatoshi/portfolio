@@ -4,7 +4,7 @@ import type { z } from "zod";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
 import type {
-  SmartFetchClient,
+  SmartFetch,
   SmartFetchRequest,
   SmartFetchRequestMeta,
   SmartFetchResponse,
@@ -33,9 +33,9 @@ const DEFAULT_RETRY_METHODS = ["GET", "HEAD", "OPTIONS"];
 const DEFAULT_RETRY_STATUSES = [408, 429, 500, 502, 503, 504];
 
 export function withRetry(
-  next: SmartFetchClient,
+  next: SmartFetch,
   options: SmartFetchRetryOptions = {},
-): SmartFetchClient {
+): SmartFetch {
   const maxAttempts = Math.max(1, options.maxAttempts ?? 3);
   const baseDelayMs = options.baseDelayMs ?? 200;
   const maxDelayMs = options.maxDelayMs ?? 2000;
