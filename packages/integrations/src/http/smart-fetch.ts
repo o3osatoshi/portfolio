@@ -1,5 +1,5 @@
 import { createBaseFetch } from "./base-fetch";
-import type { SmartFetch, SmartFetchCache } from "./smart-fetch-types";
+import type { SmartFetch, SmartFetchCacheOptions } from "./smart-fetch-types";
 import { withCache } from "./with-cache";
 import type { SmartFetchLoggingOptions } from "./with-logging";
 import { withLogging } from "./with-logging";
@@ -7,18 +7,18 @@ import type { SmartFetchRetryOptions } from "./with-retry";
 import { withRetry } from "./with-retry";
 
 export type ApiSmartFetchClientOptions = {
-  cache?: SmartFetchCache;
-} & Omit<CreateSmartFetchClientOptions, "cache">;
+  cache?: SmartFetchCacheOptions;
+} & Omit<CreateSmartFetchOptions, "cache">;
 
-export type CreateSmartFetchClientOptions = {
-  cache?: SmartFetchCache | undefined;
+export type CreateSmartFetchOptions = {
+  cache?: SmartFetchCacheOptions | undefined;
   fetch?: typeof fetch | undefined;
   logging?: SmartFetchLoggingOptions | undefined;
   retry?: SmartFetchRetryOptions | undefined;
 };
 
 export function createSmartFetch(
-  options: CreateSmartFetchClientOptions = {},
+  options: CreateSmartFetchOptions = {},
 ): SmartFetch {
   let baseFetch = createBaseFetch(
     options.fetch ? { fetch: options.fetch } : {},

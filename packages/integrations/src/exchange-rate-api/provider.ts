@@ -14,7 +14,7 @@ import {
   type ApiSmartFetchClientOptions,
   createSmartFetch,
   type SmartFetch,
-  type SmartFetchCache,
+  type SmartFetchCacheOptions,
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
@@ -37,7 +37,7 @@ export type ExchangeRateApiConfig = {
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiBaseUrl: string;
   private readonly apiKey: string;
-  private readonly cache: SmartFetchCache | undefined;
+  private readonly cache: SmartFetchCacheOptions | undefined;
   private readonly client: SmartFetch;
 
   constructor(config: ExchangeRateApiConfig) {

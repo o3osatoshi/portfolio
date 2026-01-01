@@ -8,17 +8,14 @@ export type SmartFetch = <S extends z.ZodType>(
   request: SmartFetchRequest<S>,
 ) => ResultAsync<SmartFetchResponse<z.infer<S>>, Error>;
 
-export type SmartFetchCache = {
+export type SmartFetchCacheOptions<T = unknown> = {
+  deserialize?: (data: unknown) => null | T;
   getKey?: (request: SmartFetchRequestMeta) => string | undefined;
+  serialize?: (data: T) => unknown;
+  shouldCache?: (response: SmartFetchResponse<T>) => boolean;
   store?: CacheStore | undefined;
   ttlMs?: number;
 };
-
-export type SmartFetchCacheOptions<T = unknown> = {
-  deserialize?: (data: unknown) => null | T;
-  serialize?: (data: T) => unknown;
-  shouldCache?: (response: SmartFetchResponse<T>) => boolean;
-} & SmartFetchCache;
 
 export type SmartFetchMeta = {
   attempts?: number;
