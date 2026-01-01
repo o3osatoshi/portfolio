@@ -1,6 +1,7 @@
 import type { FxQuote, FxQuoteProvider, FxQuoteQuery } from "@repo/domain";
 import { newFxQuote } from "@repo/domain";
-import { err, ok, Result } from "neverthrow";
+import type { Result } from "neverthrow";
+import { err } from "neverthrow";
 
 import {
   createUrlRedactor,
@@ -96,28 +97,22 @@ export class ExchangeRateApi implements FxQuoteProvider {
 }
 
 function buildCacheKey(url: string): string | undefined {
-  return Result.fromThrowable(
-    () => new URL(url),
-    () => undefined,
-  )()
-    .andThen((parsedUrl) => {
-      const segments = parsedUrl.pathname.split("/").filter(Boolean);
-      const pairIndex = segments.indexOf("pair");
+  const parsedUrl = new URL(url);
+  const segments = parsedUrl.pathname.split("/").filter(Boolean);
+  const pairIndex = segments.indexOf("pair");
 
-      if (pairIndex < 0 || segments.length <= pairIndex + 2) {
-        return err(undefined);
-      }
+  if (pairIndex < 0 || segments.length <= pairIndex + 2) {
+    return undefined;
+  }
 
-      const base = segments[pairIndex + 1]?.toUpperCase();
-      const quote = segments[pairIndex + 2]?.toUpperCase();
+  const base = segments[pairIndex + 1]?.toUpperCase();
+  const quote = segments[pairIndex + 2]?.toUpperCase();
 
-      if (!base || !quote) {
-        return err(undefined);
-      }
+  if (!base || !quote) {
+    return undefined;
+  }
 
-      return ok(`${CACHE_KEY_PREFIX}:${base}:${quote}`);
-    })
-    .unwrapOr(undefined);
+  return `${CACHE_KEY_PREFIX}:${base}:${quote}`;
 }
 
 function isCacheable(res: ExchangeRateApiPairResponse): boolean {
