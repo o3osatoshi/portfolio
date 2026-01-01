@@ -162,7 +162,7 @@ export function isDeserializableBody(res: Response) {
 
 /**
  * Ensure a base URL ends with a trailing slash, which makes URL resolution
- * with {@link URL} predictable.
+ * with {@link https://developer.mozilla.org/en-US/docs/Web/API/URL | URL} predictable.
  *
  * @param baseUrl - Base URL to normalize.
  * @returns The normalized base URL with a trailing slash.
