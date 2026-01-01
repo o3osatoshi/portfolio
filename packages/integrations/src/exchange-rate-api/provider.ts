@@ -2,7 +2,13 @@ import type { FxQuote, FxQuoteProvider, FxQuoteQuery } from "@repo/domain";
 import { newFxQuote } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
-import { type Kind, newError, truncate } from "@o3osatoshi/toolkit";
+import {
+  createUrlRedactor,
+  formatHttpStatusReason,
+  httpStatusToKind,
+  newError,
+  normalizeBaseUrl,
+} from "@o3osatoshi/toolkit";
 
 import {
   type ApiBetterFetchClientOptions,
@@ -51,7 +57,9 @@ export class ExchangeRateApi implements FxQuoteProvider {
     const logging = config.logging
       ? {
           ...config.logging,
-          redactUrl: config.logging.redactUrl ?? buildRedactUrl(config.apiKey),
+          redactUrl:
+            config.logging.redactUrl ??
+            createUrlRedactor({ secrets: [config.apiKey] }),
           requestName: config.logging.requestName ?? "exchange_rate",
         }
       : undefined;
@@ -97,46 +105,6 @@ function buildCacheKeyFromUrl(url: string): string | undefined {
   }
 }
 
-function buildRedactUrl(apiKey?: string) {
-  if (!apiKey) {
-    return (url: string) => url;
-  }
-
-  return (url: string) => {
-    try {
-      const parsed = new URL(url);
-      const segments = parsed.pathname.split("/").map((segment) => {
-        if (!segment) return segment;
-        return segment === apiKey ? "<redacted>" : segment;
-      });
-      parsed.pathname = segments.join("/");
-      return parsed.toString();
-    } catch {
-      return url.replace(apiKey, "<redacted>");
-    }
-  };
-}
-
-function formatPayload(payload: unknown): string {
-  if (payload === null) return "null";
-  if (payload === undefined) return "";
-  if (typeof payload === "string") return payload;
-  try {
-    return JSON.stringify(payload);
-  } catch {
-    return String(payload);
-  }
-}
-
-function formatStatusReason(
-  res: { status: number; statusText: string },
-  payload: unknown,
-): string {
-  const formatted = formatPayload(payload);
-  const summary = formatted ? `: ${truncate(formatted)}` : "";
-  return `ExchangeRate API responded with ${res.status} ${res.statusText}${summary}`;
-}
-
 function handleExchangeRateResponse(
   result: BetterFetchResponse<ExchangeRatePayload>,
   query: FxQuoteQuery,
@@ -146,9 +114,13 @@ function handleExchangeRateResponse(
       newError({
         action: "FetchExchangeRateApi",
         cause: result.data,
-        kind: statusToKind(result.response.status),
+        kind: httpStatusToKind(result.response.status),
         layer: "External",
-        reason: formatStatusReason(result.response, result.data),
+        reason: formatHttpStatusReason({
+          payload: result.data,
+          response: result.response,
+          serviceName: "ExchangeRate API",
+        }),
       }),
     );
   }
@@ -214,10 +186,6 @@ function isCacheablePayload(payload: ExchangeRatePayload): boolean {
   return payload.conversion_rate !== undefined;
 }
 
-function normalizeBaseUrl(baseUrl: string): string {
-  return baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-}
-
 async function parseExchangeRatePayload(
   res: Response,
 ): Promise<ExchangeRatePayload> {
@@ -242,15 +210,4 @@ function resolveAsOf(payload: ExchangeRateHostResponse): Date {
     }
   }
   return new Date();
-}
-
-function statusToKind(status: number): Kind {
-  if (status === 401) return "Unauthorized";
-  if (status === 403) return "Forbidden";
-  if (status === 404) return "NotFound";
-  if (status === 408) return "Timeout";
-  if (status === 429) return "RateLimit";
-  if (status >= 400 && status < 500) return "BadRequest";
-  if (status >= 500 && status < 600) return "BadGateway";
-  return "Unknown";
 }

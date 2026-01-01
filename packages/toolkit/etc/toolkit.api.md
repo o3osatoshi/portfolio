@@ -53,6 +53,9 @@ export function createLazyEnv<T extends EnvSchema>(schema: T, opts?: CreateLazyE
 export type CreateLazyEnvOptions = CreateEnvOptions;
 
 // @public
+export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
+
+// @public
 export function decode(value: string): Result<JsonContainer, Error>;
 
 // @public
@@ -120,6 +123,32 @@ export type FetchRequest = {
 export function formatFetchTarget({ request, }: {
     request?: FetchRequest | undefined;
 }): string | undefined;
+
+// @public
+export function formatHttpStatusReason({ maxPayloadLength, payload, response, serviceName, }: FormatHttpStatusReasonOptions): string;
+
+// @public
+export type FormatHttpStatusReasonOptions = {
+    maxPayloadLength?: null | number;
+    payload: unknown;
+    response: HttpStatusLike;
+    serviceName: string;
+};
+
+// @public
+export function formatPayloadPreview(payload: unknown): string;
+
+// @public
+export type HttpStatusLike = {
+    status: number;
+    statusText: string;
+};
+
+// @public
+export function httpStatusToKind(status: number): Kind;
+
+// @public
+export function isDeserializableBody(res: Response): boolean;
 
 // @public
 export function isSerializedError(v: unknown): v is SerializedError;
@@ -203,6 +232,9 @@ export type NewZodError = {
 export function newZodError(options: NewZodError): Error;
 
 // @public
+export function normalizeBaseUrl(baseUrl: string): string;
+
+// @public
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 
 // @public
@@ -265,6 +297,12 @@ export function truncate(value: string, maxLen?: null | number): string;
 
 // @public
 export type UnknownRecord = Record<string, unknown>;
+
+// @public
+export type UrlRedactorOptions = {
+    placeholder?: string;
+    secrets: Array<string | undefined>;
+};
 
 // @public
 export function userMessageFromError(error: Error): string;

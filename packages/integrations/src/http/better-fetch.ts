@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
-import { newFetchError } from "@o3osatoshi/toolkit";
+import { isDeserializableBody, newFetchError } from "@o3osatoshi/toolkit";
 
 import type {
   BetterFetchClient,
@@ -61,25 +61,6 @@ async function defaultParse<T>(res: Response): Promise<T> {
   }
 
   return (await res.text()) as T;
-}
-
-function isDeserializableBody(res: Response) {
-  if (res.status === 204 || res.status === 205 || res.status === 304) {
-    return false;
-  }
-
-  const contentLength = res.headers.get("content-length");
-  if (contentLength !== null) {
-    const length = Number(contentLength);
-    if (!Number.isNaN(length) && length === 0) {
-      return false;
-    }
-  }
-
-  const contentType = res.headers.get("content-type");
-  if (!contentType) return false;
-
-  return true;
 }
 
 async function performFetch<T>(
