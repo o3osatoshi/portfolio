@@ -1,7 +1,7 @@
-export * from "./smart-fetch";
 /**
  * Server-side HTTP client helpers (fetch, retries, caching, logging).
  */
+export * from "./smart-fetch";
 export * from "./smart-fetch-client";
 export * from "./smart-fetch-types";
 export * from "./with-cache";
