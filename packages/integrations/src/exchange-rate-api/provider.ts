@@ -144,7 +144,7 @@ function toFxQuote(
   result: SmartFetchResponse<ExchangeRateApiPairResponse>,
   query: FxQuoteQuery,
 ): Result<FxQuote, Error> {
-  if (result.response?.ok === false) {
+  if (result.response.ok === false) {
     return err(
       newIntegrationError({
         action: "FetchExchangeRateApi",

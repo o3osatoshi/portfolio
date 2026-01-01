@@ -1,26 +1,15 @@
 import { ResultAsync } from "neverthrow";
 
 import { env } from "@/env/client";
-import { newFetchError } from "@o3osatoshi/toolkit";
+import {
+  buildHttpResponse,
+  deserializeResponseBody,
+  type HttpRequestMeta,
+  type HttpResponse,
+  newFetchError,
+} from "@o3osatoshi/toolkit";
 
-/**
- * Query string shape for external HTTP services.
- *
- * Internal API calls (e.g. `/api/*`, `/edge/*`) should go through
- * the typed Hono RPC client instead of this helper.
- */
-export type Search =
-  | Record<string, string>
-  | string
-  | string[][]
-  | undefined
-  | URLSearchParams;
-
-type NextFetchResponse = {
-  body: unknown;
-} & Pick<Response, "ok" | "redirected" | "status" | "statusText" | "url">;
-
-type Props = {
+export type NextFetchRequest = {
   cache?: "force-cache" | "no-store";
   headers?: HeadersInit;
   /**
@@ -35,6 +24,19 @@ type Props = {
   tags?: string[];
 };
 
+/**
+ * Query string shape for external HTTP services.
+ *
+ * Internal API calls (e.g. `/api/*`, `/edge/*`) should go through
+ * the typed Hono RPC client instead of this helper.
+ */
+export type Search =
+  | Record<string, string>
+  | string
+  | string[][]
+  | undefined
+  | URLSearchParams;
+
 export function getQueryPath(path: string, search?: Search) {
   const params = new URLSearchParams(search);
   return search === undefined ? path : `${path}?${params.toString()}`;
@@ -48,81 +50,45 @@ export function getQueryPath(path: string, search?: Search) {
  * Note: for the portfolio's own interface API, prefer the Hono RPC client
  * (`@repo/interface/rpc-client`) instead of this helper.
  */
-export function nextFetch({
-  revalidate,
-  cache,
-  headers,
-  path,
-  search,
-  tags,
-}: Props): ResultAsync<NextFetchResponse, Error> {
-  const queryPath = getQueryPath(path, search);
-
+export function nextFetch(
+  request: NextFetchRequest,
+): ResultAsync<HttpResponse, Error> {
+  const queryPath = getQueryPath(request.path, request.search);
   const url = new URL(queryPath, env.NEXT_PUBLIC_API_BASE_URL);
+  const requestMeta: HttpRequestMeta = { method: "GET", url: url.href };
 
-  const _tags = tags === undefined ? [queryPath] : [...tags, queryPath];
+  const _tags =
+    request.tags === undefined ? [queryPath] : [...request.tags, queryPath];
 
   return ResultAsync.fromPromise(
     fetch(url, {
-      ...(cache !== undefined ? { cache } : {}),
-      ...(headers !== undefined ? { headers } : {}),
+      ...(request.cache !== undefined ? { cache: request.cache } : {}),
+      ...(request.headers !== undefined ? { headers: request.headers } : {}),
       next: {
-        ...(revalidate !== undefined ? { revalidate } : {}),
+        ...(request.revalidate !== undefined
+          ? { revalidate: request.revalidate }
+          : {}),
         tags: _tags,
       },
     }),
-    (e) =>
+    (cause) =>
       newFetchError({
         action: `Fetch ${queryPath}`,
-        cause: e,
-        request: {
-          method: "GET",
-          url: url.href,
-        },
+        cause,
+        request: requestMeta,
       }),
-  ).andThen((res) =>
-    ResultAsync.fromPromise(deserializeBody(res), (e) =>
+  ).andThen((response) =>
+    ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
       newFetchError({
         action: `Deserialize body for ${queryPath}`,
-        cause: e,
+        cause,
         kind: "Serialization",
-        request: {
-          method: "GET",
-          url: url.href,
-        },
+        request: requestMeta,
       }),
-    ).map((body) => ({
-      body,
-      ok: res.ok,
-      redirected: res.redirected,
-      status: res.status,
-      statusText: res.statusText,
-      url: res.url,
-    })),
+    ).map((data) =>
+      buildHttpResponse(data, response, {
+        // Next.js specific metadata could be added here if needed
+      }),
+    ),
   );
-}
-
-async function deserializeBody(res: Response): Promise<unknown> {
-  if (!isDeserializableBody(res)) return undefined;
-
-  return res.json();
-}
-
-function isDeserializableBody(res: Response) {
-  if (res.status === 204 || res.status === 205 || res.status === 304) {
-    return false;
-  }
-
-  const contentLength = res.headers.get("content-length");
-  if (contentLength !== null) {
-    const length = Number(contentLength);
-    if (!Number.isNaN(length) && length === 0) {
-      return false;
-    }
-  }
-
-  const contentType = res.headers.get("content-type");
-  if (!contentType) return false;
-
-  return contentType.toLowerCase().includes("json");
 }

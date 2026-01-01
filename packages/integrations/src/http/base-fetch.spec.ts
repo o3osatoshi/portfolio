@@ -25,7 +25,7 @@ describe("integrations/http createSmartFetch", () => {
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
     expect(result.value.data).toEqual({ ok: true });
-    expect(result.value.response?.status).toBe(200);
+    expect(result.value.response.status).toBe(200);
   });
 
   it("parses text responses when content-type is not JSON", async () => {

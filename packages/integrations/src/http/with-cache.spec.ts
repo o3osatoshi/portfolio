@@ -4,15 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 
 import { withCache } from "./with-cache";
 
-const buildResponse = <T>(
-  data: T,
-  meta: { attempts?: number } = {},
-  ok = true,
-) =>
+const buildResponse = <T>(data: T, attempts = 1, ok = true) =>
   okAsync({
-    cached: false,
     data,
-    meta,
     response: {
       headers: new Headers(),
       ok,
@@ -20,6 +14,7 @@ const buildResponse = <T>(
       statusText: ok ? "OK" : "ERR",
       url: "https://example.test",
     },
+    retry: { attempts },
   });
 
 describe("integrations/http withCache", () => {
@@ -80,13 +75,9 @@ describe("integrations/http withCache", () => {
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
     expect(next).not.toHaveBeenCalled();
-    expect(result.value.cached).toBe(true);
+    expect(result.value.cache?.hit).toBe(true);
+    expect(result.value.cache?.key).toBe("cache:key");
     expect(result.value.data).toEqual({ value: "cached" });
-    expect(result.value.meta).toEqual({
-      attempts: 0,
-      cacheHit: true,
-      cacheKey: "cache:key",
-    });
   });
 
   it("writes to cache on cache miss", async () => {
@@ -95,9 +86,7 @@ describe("integrations/http withCache", () => {
       // @ts-expect-error
       set: vi.fn(() => okAsync("OK")),
     };
-    const next = vi.fn(() =>
-      buildResponse({ value: "fresh" }, { attempts: 2 }),
-    );
+    const next = vi.fn(() => buildResponse({ value: "fresh" }, 2));
     // @ts-expect-error
     const client = withCache(next, {
       getKey: () => "cache:key",
@@ -116,11 +105,9 @@ describe("integrations/http withCache", () => {
       { ttlMs: 1000 },
     );
     if (!result.isOk()) return;
-    expect(result.value.meta).toEqual({
-      attempts: 2,
-      cacheHit: false,
-      cacheKey: "cache:key",
-    });
+    expect(result.value.cache?.hit).toBe(false);
+    expect(result.value.cache?.key).toBe("cache:key");
+    expect(result.value.retry?.attempts).toBe(2);
   });
 
   it("skips caching when shouldCache returns false", async () => {

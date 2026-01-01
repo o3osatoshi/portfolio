@@ -7,7 +7,6 @@ import type {
   SmartFetchRequest,
   SmartFetchResponse,
 } from "./smart-fetch-types";
-import { mergeMeta } from "./smart-fetch-types";
 
 export function withCache(
   next: SmartFetch,
@@ -40,7 +39,7 @@ export function withCache(
       if (shouldCacheFunc) {
         return shouldCacheFunc(response);
       }
-      return response.response?.ok ?? true;
+      return response.response.ok;
     };
 
     const cacheKey = getKey(request);
@@ -56,30 +55,29 @@ export function withCache(
           cached == null ? null : safeDeserialize(deserialize, cached);
         if (cachedValue !== null) {
           return okAsync({
-            cached: true,
+            cache: { hit: true, key: cacheKey },
             data: cachedValue as T,
-            meta: mergeMeta(
-              { attempts: 0, cacheHit: true, cacheKey },
-              undefined,
-            ),
-            response: undefined,
+            response: {
+              headers: new Headers(),
+              ok: true,
+              status: 200,
+              statusText: "OK",
+              url: request.url,
+            },
           });
         }
 
         return next(request).andThen((res) => {
-          const meta = mergeMeta(res.meta, {
-            cacheHit: false,
-            cacheKey,
-          });
+          const updatedCache = { hit: false, key: cacheKey };
 
           if (!shouldCache(res)) {
-            return okAsync({ ...res, meta });
+            return okAsync({ ...res, cache: updatedCache });
           }
 
           return store
             .set(cacheKey, serialize(res.data), { ttlMs })
             .orElse(() => okAsync(null))
-            .map(() => ({ ...res, meta }));
+            .map(() => ({ ...res, cache: updatedCache }));
         });
       });
   };

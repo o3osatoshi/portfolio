@@ -118,20 +118,20 @@ function buildErrorEventAttributes(
 function buildEventAttributes(
   request: SmartFetchRequestMeta,
   result: {
-    cached: boolean;
-    meta?: { attempts?: number; cacheHit?: boolean };
-    response?: { status?: number } | undefined;
+    cache?: { hit: boolean };
+    response: { status: number };
+    retry?: { attempts: number };
   },
   redactUrl: (url: string) => string,
   requestName?: string,
 ): Attributes {
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
-    "cache.hit": result.meta?.cacheHit,
+    "cache.hit": result.cache?.hit,
     "http.method": (request.method ?? "GET").toUpperCase(),
-    "http.status_code": result.response?.status,
+    "http.status_code": result.response.status,
     "http.url": redactUrl(request.url),
-    "retry.attempts": result.meta?.attempts,
+    "retry.attempts": result.retry?.attempts,
   };
 }
 
@@ -148,20 +148,20 @@ function buildMetricsAttributes({
   requestName?: string | undefined;
   result?:
     | {
-        cached: boolean;
-        meta?: { attempts?: number; cacheHit?: boolean };
-        response?: { status?: number } | undefined;
+        cache?: { hit: boolean };
+        response?: { status: number } | undefined;
+        retry?: { attempts: number };
       }
     | undefined;
 }): Attributes {
   const { kind, layer } = error ? parseErrorName(error.name) : {};
   const attempts =
-    result?.meta?.attempts ??
+    result?.retry?.attempts ??
     (error as { retryAttempts?: number } | undefined)?.retryAttempts;
 
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
-    "cache.hit": result?.meta?.cacheHit,
+    "cache.hit": result?.cache?.hit,
     "http.method": (request.method ?? "GET").toUpperCase(),
     "http.status_code": result?.response?.status,
     "http.url": redactUrl(request.url),
@@ -188,9 +188,9 @@ function emitMetrics({
   requestName?: string | undefined;
   result?:
     | {
-        cached: boolean;
-        meta?: { attempts?: number };
-        response?: { status?: number } | undefined;
+        cache?: { hit: boolean };
+        response?: { status: number } | undefined;
+        retry?: { attempts: number };
       }
     | undefined;
 }) {

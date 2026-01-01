@@ -29,6 +29,20 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends ActionEr
 } | never;
 
 // @public
+export function buildHttpResponse<T = unknown>(data: T, response: Response, options?: BuildHttpResponseOptions): HttpResponse<T>;
+
+// @public
+export type BuildHttpResponseOptions = {
+    cache?: {
+        hit: boolean;
+        key?: string;
+    };
+    retry?: {
+        attempts: number;
+    };
+};
+
+// @public
 export function coerceErrorMessage(cause: unknown): string | undefined;
 
 // @public
@@ -60,6 +74,9 @@ export function decode(value: string): Result<JsonContainer, Error>;
 
 // @public
 export function deserializeError(input: unknown): Error;
+
+// @public
+export function deserializeResponseBody(response: Response): Promise<unknown>;
 
 // @public
 export function encode(value: unknown): Result<string, Error>;
@@ -139,6 +156,32 @@ export type FormatHttpStatusReasonOptions = {
 export function formatPayloadPreview(payload: unknown): string;
 
 // @public
+export type HttpRequestMeta = {
+    method: string;
+    url: string;
+};
+
+// @public
+export type HttpResponse<T = unknown> = {
+    cache?: {
+        hit: boolean;
+        key?: string;
+    };
+    data: T;
+    response: {
+        headers: Headers;
+        ok: boolean;
+        redirected?: boolean;
+        status: number;
+        statusText: string;
+        url: string;
+    };
+    retry?: {
+        attempts: number;
+    };
+};
+
+// @public
 export type HttpStatusKind = Extract<Kind, "BadGateway" | "BadRequest" | "Forbidden" | "NotFound" | "RateLimit" | "Timeout" | "Unauthorized" | "Unknown">;
 
 // @public
@@ -152,6 +195,9 @@ export function httpStatusToKind(status: number): HttpStatusKind;
 
 // @public
 export function isDeserializableBody(res: Response): boolean;
+
+// @public
+export function isDeserializableResponse(response: Response): boolean;
 
 // @public
 export function isSerializedError(v: unknown): v is SerializedError;

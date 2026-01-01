@@ -5,9 +5,7 @@ import { withRetry } from "./with-retry";
 
 const buildResponse = (status: number, headers: Headers, ok = status < 400) =>
   okAsync({
-    cached: false,
     data: "ok",
-    meta: {},
     response: {
       headers,
       ok,
@@ -43,7 +41,7 @@ describe("integrations/http withRetry", () => {
     if (!result.isOk()) return;
     expect(callCount).toBe(3);
     expect(headers.get).toHaveBeenCalledWith("retry-after");
-    expect(result.value.meta.attempts).toBe(3);
+    expect(result.value.retry?.attempts).toBe(3);
 
     randomSpy.mockRestore();
     vi.useRealTimers();
@@ -64,7 +62,7 @@ describe("integrations/http withRetry", () => {
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
     expect(next).toHaveBeenCalledTimes(1);
-    expect(result.value.meta.attempts).toBe(1);
+    expect(result.value.retry?.attempts).toBe(1);
   });
 
   it("retries on retryable errors and attaches retryAttempts", async () => {

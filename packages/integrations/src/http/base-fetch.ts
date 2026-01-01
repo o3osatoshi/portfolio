@@ -1,13 +1,25 @@
 import { ResultAsync } from "neverthrow";
-import type { z } from "zod";
 
-import { newFetchError, parseAsyncWith } from "@o3osatoshi/toolkit";
+import {
+  buildHttpResponse,
+  deserializeResponseBody,
+  type HttpRequestMeta,
+  type HttpResponse,
+  newFetchError,
+} from "@o3osatoshi/toolkit";
 
-import type {
-  SmartFetch,
-  SmartFetchRequest,
-  SmartFetchResponse,
-} from "./smart-fetch-types";
+export type BaseFetch = (
+  request: BaseFetchRequest,
+) => ResultAsync<HttpResponse<unknown>, Error>;
+
+export type BaseFetchRequest = {
+  body?: RequestInit["body"];
+  headers?: RequestInit["headers"];
+  method?: string;
+  signal?: AbortSignal;
+  timeoutMs?: number;
+  url: string;
+};
 
 export type CreateBaseFetchOptions = {
   fetch?: typeof fetch;
@@ -15,20 +27,19 @@ export type CreateBaseFetchOptions = {
 
 export function createBaseFetch(
   options: CreateBaseFetchOptions = {},
-): SmartFetch {
+): BaseFetch {
   const fetcher = options.fetch ?? fetch;
 
-  return <S extends z.ZodType>(
-    request: SmartFetchRequest<S>,
-  ): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> => {
+  return (
+    request: BaseFetchRequest,
+  ): ResultAsync<HttpResponse<unknown>, Error> => {
     const method = request.method ?? "GET";
-    const requestMeta = { method, url: request.url };
+    const requestMeta: HttpRequestMeta = { method, url: request.url };
 
     return performFetch(fetcher, request)
-      .andThen((response) => deserializeBody(response, request))
-      .andThen((body) => decodeBody(body, request))
+      .andThen((response) => deserializeBody(response, requestMeta))
       .mapErr((cause) => {
-        // Pass through structured errors from newFetchError or newZodError
+        // Pass through structured errors from newFetchError
         if (cause instanceof Error && isStructuredError(cause)) {
           return cause;
         }
@@ -42,79 +53,18 @@ export function createBaseFetch(
   };
 }
 
-function decodeBody<S extends z.ZodType>(
-  body: { data: unknown; response: Response },
-  request: SmartFetchRequest<S>,
-): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> {
-  const decodeContext = request.decode.context ?? {
-    action: "ParseExternalApiResponse",
-    layer: "External" as const,
-  };
-
-  return parseAsyncWith(
-    request.decode.schema,
-    decodeContext,
-  )(body.data).map((data) => ({
-    cached: false,
-    data,
-    meta: {},
-    response: {
-      headers: body.response.headers,
-      ok: body.response.ok,
-      status: body.response.status,
-      statusText: body.response.statusText,
-      url: body.response.url,
-    },
-  }));
-}
-
 function deserializeBody(
   response: Response,
-  request: SmartFetchRequest<any>,
-): ResultAsync<{ data: unknown; response: Response }, Error> {
-  if (!isDeserializableResponse(response)) {
-    return ResultAsync.fromSafePromise(
-      Promise.resolve({ data: null, response }),
-    );
-  }
-
-  return ResultAsync.fromPromise(response.json(), (cause) =>
+  requestMeta: HttpRequestMeta,
+): ResultAsync<HttpResponse<unknown>, Error> {
+  return ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
     newFetchError({
       action: "DeserializeResponseBody",
       cause,
       kind: "BadGateway",
-      request: { method: request.method ?? "GET", url: request.url },
+      request: requestMeta,
     }),
-  ).map((data) => ({ data, response }));
-}
-
-function isDeserializableResponse(response: Response): boolean {
-  // No response provided
-  if (!response) return false;
-
-  // No content responses
-  if (
-    response.status === 204 ||
-    response.status === 205 ||
-    response.status === 304
-  ) {
-    return false;
-  }
-
-  // Empty body by content-length
-  const contentLength = response.headers?.get("content-length");
-  if (contentLength !== null) {
-    const length = Number(contentLength);
-    if (!Number.isNaN(length) && length === 0) {
-      return false;
-    }
-  }
-
-  // Check content-type for JSON
-  const contentType = response.headers?.get("content-type");
-  if (!contentType) return false;
-
-  return contentType.toLowerCase().includes("json");
+  ).map((data) => buildHttpResponse(data, response));
 }
 
 function isStructuredError(error: Error): boolean {
@@ -133,7 +83,7 @@ function isStructuredError(error: Error): boolean {
 
 function performFetch(
   fetcher: typeof fetch,
-  request: SmartFetchRequest<any>,
+  request: BaseFetchRequest,
 ): ResultAsync<Response, Error> {
   const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
 

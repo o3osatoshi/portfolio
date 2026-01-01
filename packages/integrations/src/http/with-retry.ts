@@ -9,7 +9,6 @@ import type {
   SmartFetchRequestMeta,
   SmartFetchResponse,
 } from "./smart-fetch-types";
-import { mergeMeta } from "./smart-fetch-types";
 
 export type SmartFetchRetryOptions = {
   baseDelayMs?: number;
@@ -76,7 +75,7 @@ export function withRetry(
             if (!shouldRetryResponse || attempt >= maxAttempts) {
               return {
                 ...result.value,
-                meta: mergeMeta(result.value.meta, { attempts: attempt }),
+                retry: { attempts: attempt },
               };
             }
 
@@ -115,7 +114,7 @@ export function withRetry(
         if (lastResponse?.isOk()) {
           return {
             ...lastResponse.value,
-            meta: mergeMeta(lastResponse.value.meta, { attempts: attempt }),
+            retry: { attempts: attempt },
           };
         }
 

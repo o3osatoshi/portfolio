@@ -1,5 +1,13 @@
+import type { z } from "zod";
+
+import { parseAsyncWith } from "@o3osatoshi/toolkit";
+
 import { createBaseFetch } from "./base-fetch";
-import type { SmartFetch, SmartFetchCacheOptions } from "./smart-fetch-types";
+import type {
+  SmartFetch,
+  SmartFetchCacheOptions,
+  SmartFetchRequest,
+} from "./smart-fetch-types";
 import { withCache } from "./with-cache";
 import type { SmartFetchLoggingOptions } from "./with-logging";
 import { withLogging } from "./with-logging";
@@ -20,21 +28,43 @@ export type CreateSmartFetchOptions = {
 export function createSmartFetch(
   options: CreateSmartFetchOptions = {},
 ): SmartFetch {
-  let baseFetch = createBaseFetch(
-    options.fetch ? { fetch: options.fetch } : {},
-  );
+  // Create base fetch function with Zod parsing adapter
+  const smartFetch: SmartFetch = <S extends z.ZodType>(
+    request: SmartFetchRequest<S>,
+  ) => {
+    const { decode, ...baseRequest } = request;
+
+    const baseFetch = createBaseFetch(
+      options.fetch ? { fetch: options.fetch } : {},
+    );
+
+    return baseFetch(baseRequest).andThen((response) => {
+      const decodeContext = decode.context ?? {
+        action: "ParseExternalApiResponse",
+        layer: "External" as const,
+      };
+
+      return parseAsyncWith(
+        decode.schema,
+        decodeContext,
+      )(response.data).map((data) => ({ ...response, data }));
+    });
+  };
+
+  // Apply middleware layers
+  let fetch = smartFetch;
 
   if (options.retry !== undefined) {
-    baseFetch = withRetry(baseFetch, options.retry);
+    fetch = withRetry(fetch, options.retry);
   }
 
   if (options.cache !== undefined) {
-    baseFetch = withCache(baseFetch, options.cache);
+    fetch = withCache(fetch, options.cache);
   }
 
   if (options.logging !== undefined) {
-    baseFetch = withLogging(baseFetch, options.logging);
+    fetch = withLogging(fetch, options.logging);
   }
 
-  return baseFetch;
+  return fetch;
 }

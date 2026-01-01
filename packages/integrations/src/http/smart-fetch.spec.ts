@@ -55,7 +55,7 @@ describe("integrations/http createSmartFetchClient", () => {
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(result.value.cached).toBe(true);
+    expect(result.value.cache?.hit).toBe(true);
     expect(result.value.data).toEqual({ value: "cached" });
   });
 

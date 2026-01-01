@@ -21,17 +21,20 @@ const buildLogger = () => {
   return logger;
 };
 
+type BuildResponseOptions = {
+  cache?: { hit: boolean; key?: string };
+  retry?: { attempts: number };
+};
+
 const buildResponse = (
   status: number,
   ok = status < 400,
-  cached = false,
-  attempts = 1,
-  cacheHit = false,
+  options: BuildResponseOptions = {},
 ) =>
   okAsync({
-    cached,
     data: { result: "success" },
-    meta: { attempts, cacheHit },
+    ...(options.cache ? { cache: options.cache } : {}),
+    ...(options.retry ? { retry: options.retry } : {}),
     response: {
       headers: new Headers({ "content-type": "application/json" }),
       ok,
@@ -155,11 +158,9 @@ describe("integrations/http withLogging", () => {
         "http.client.requests",
         1,
         expect.objectContaining({
-          "cache.hit": false,
           "http.method": "GET",
           "http.status_code": 200,
           "http.url": "https://example.test",
-          "retry.attempts": 1,
         }),
         { kind: "counter", unit: "1" },
       );
@@ -169,11 +170,9 @@ describe("integrations/http withLogging", () => {
         "http.client.request.duration",
         expect.any(Number),
         expect.objectContaining({
-          "cache.hit": false,
           "http.method": "GET",
           "http.status_code": 200,
           "http.url": "https://example.test",
-          "retry.attempts": 1,
         }),
         { kind: "histogram", unit: "ms" },
       );
@@ -181,7 +180,11 @@ describe("integrations/http withLogging", () => {
 
     it("includes cache hit information in metrics", async () => {
       const logger = buildLogger();
-      const next = vi.fn(() => buildResponse(200, true, true, 1, true));
+      const next = vi.fn(() =>
+        buildResponse(200, true, {
+          cache: { hit: true, key: "cache:key" },
+        }),
+      );
       // @ts-expect-error
       const client = withLogging(next, { logger });
 
@@ -200,7 +203,11 @@ describe("integrations/http withLogging", () => {
 
     it("includes retry attempts in metrics", async () => {
       const logger = buildLogger();
-      const next = vi.fn(() => buildResponse(200, true, false, 3));
+      const next = vi.fn(() =>
+        buildResponse(200, true, {
+          retry: { attempts: 3 },
+        }),
+      );
       // @ts-expect-error
       const client = withLogging(next, { logger });
 
@@ -279,7 +286,6 @@ describe("integrations/http withLogging", () => {
           "http.method": "GET",
           "http.status_code": 404,
           "http.url": "https://example.test",
-          "retry.attempts": 1,
         }),
       );
       expect(logger.error).not.toHaveBeenCalled();
@@ -301,7 +307,6 @@ describe("integrations/http withLogging", () => {
           "http.method": "GET",
           "http.status_code": 500,
           "http.url": "https://example.test",
-          "retry.attempts": 1,
         }),
       );
       expect(logger.warn).not.toHaveBeenCalled();
@@ -470,39 +475,11 @@ describe("integrations/http withLogging", () => {
   });
 
   describe("edge cases and attribute building", () => {
-    it("handles missing response object", async () => {
+    it("handles missing cache and retry information", async () => {
       const logger = buildLogger();
       const next = vi.fn(() =>
         okAsync({
-          cached: false,
           data: { result: "success" },
-          meta: { attempts: 1 },
-          response: undefined,
-        }),
-      );
-      // @ts-expect-error
-      const client = withLogging(next, { logger });
-
-      // @ts-expect-error partial mock for testing
-      await client({ url: "https://example.test" });
-
-      expect(logger.metric).toHaveBeenCalledWith(
-        "http.client.requests",
-        1,
-        expect.objectContaining({
-          "http.status_code": undefined,
-        }),
-        expect.any(Object),
-      );
-    });
-
-    it("handles missing meta object", async () => {
-      const logger = buildLogger();
-      const next = vi.fn(() =>
-        okAsync({
-          cached: false,
-          data: { result: "success" },
-          meta: undefined,
           response: {
             headers: new Headers(),
             ok: true,
@@ -635,9 +612,8 @@ describe("integrations/http withLogging", () => {
     it("preserves original request and response data", async () => {
       const logger = buildLogger();
       const originalResponseData = {
-        cached: false,
+        cache: { hit: false, key: "cache:key" },
         data: { result: "success" },
-        meta: { attempts: 1 },
         response: {
           headers: new Headers({ "content-type": "application/json" }),
           ok: true,
@@ -645,6 +621,7 @@ describe("integrations/http withLogging", () => {
           statusText: "OK",
           url: "https://example.test/api",
         },
+        retry: { attempts: 1 },
       };
       const originalResponse = okAsync(originalResponseData);
       const next = vi.fn(() => originalResponse);
