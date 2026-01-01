@@ -1,6 +1,6 @@
 import type { FxQuote, FxQuoteProvider, FxQuoteQuery } from "@repo/domain";
 import { newFxQuote } from "@repo/domain";
-import { err, ok, Result, ResultAsync } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import {
   createUrlRedactor,
@@ -77,7 +77,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
         ? {
             shouldCache: (
               res: SmartFetchResponse<ExchangeRateApiPairResponse>,
-            ) => isCacheablePayload(res.data),
+            ) => isCacheable(res.data),
           }
         : undefined,
       headers: {
@@ -120,7 +120,7 @@ function buildCacheKey(url: string): string | undefined {
     .unwrapOr(undefined);
 }
 
-function isCacheablePayload(res: ExchangeRateApiPairResponse): boolean {
+function isCacheable(res: ExchangeRateApiPairResponse): boolean {
   if (!res) {
     return false;
   }
@@ -146,57 +146,50 @@ function resolveAsOf(res: ExchangeRateApiPairResponse): Date {
 function toFxQuote(
   result: SmartFetchResponse<ExchangeRateApiPairResponse>,
   query: FxQuoteQuery,
-): ResultAsync<FxQuote, Error> {
-  return ResultAsync.fromSafePromise(Promise.resolve())
-    .andThen(() => {
-      return result.response?.ok === false
-        ? err(
-            newIntegrationError({
-              action: "FetchExchangeRateApi",
-              cause: result.data,
-              kind: httpStatusToKind(result.response.status),
-              reason: formatHttpStatusReason({
-                payload: result.data,
-                response: result.response,
-                serviceName: "ExchangeRate API",
-              }),
-            }),
-          )
-        : ok(result.data);
-    })
-    .andThen((res) => {
-      if (res?.result && res.result !== "success") {
-        const detail = res["error-type"] ?? "Unknown error";
-        return err(
-          newIntegrationError({
-            action: "FetchExchangeRateApi",
-            cause: res,
-            kind: "BadGateway",
-            reason: `ExchangeRate API error: ${detail}`,
-          }),
-        );
-      }
-      return ok(res);
-    })
-    .andThen((res) => {
-      if (res?.conversion_rate === undefined) {
-        return err(
-          newIntegrationError({
-            action: "ParseExchangeRateApiResponse",
-            kind: "BadGateway",
-            reason: "ExchangeRate API response missing conversion rate.",
-          }),
-        );
-      }
-      return ok({ rate: res.conversion_rate, res });
-    })
-    .andThen(({ rate, res }) => {
-      const asOf = resolveAsOf(res);
-      return newFxQuote({
-        asOf,
-        base: query.base,
-        quote: query.quote,
-        rate,
-      });
-    });
+): Result<FxQuote, Error> {
+  if (result.response?.ok === false) {
+    return err(
+      newIntegrationError({
+        action: "FetchExchangeRateApi",
+        cause: result.data,
+        kind: httpStatusToKind(result.response.status),
+        reason: formatHttpStatusReason({
+          payload: result.data,
+          response: result.response,
+          serviceName: "ExchangeRate API",
+        }),
+      }),
+    );
+  }
+
+  const res = result.data;
+
+  if (res?.result && res.result !== "success") {
+    const detail = res["error-type"] ?? "Unknown error";
+    return err(
+      newIntegrationError({
+        action: "FetchExchangeRateApi",
+        cause: res,
+        kind: "BadGateway",
+        reason: `ExchangeRate API error: ${detail}`,
+      }),
+    );
+  }
+
+  if (res?.conversion_rate === undefined) {
+    return err(
+      newIntegrationError({
+        action: "ParseExchangeRateApiResponse",
+        kind: "BadGateway",
+        reason: "ExchangeRate API response missing conversion rate.",
+      }),
+    );
+  }
+
+  return newFxQuote({
+    asOf: resolveAsOf(res),
+    base: query.base,
+    quote: query.quote,
+    rate: res.conversion_rate,
+  });
 }
