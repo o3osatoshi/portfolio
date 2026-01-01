@@ -18,12 +18,12 @@ class ParseError extends Error {
   }
 }
 
-export function createBetterFetch<T = unknown>(
+export function createBetterFetch(
   options: CreateBetterFetchOptions = {},
-): BetterFetchClient<T> {
+): BetterFetchClient {
   const fetcher = options.fetch ?? fetch;
 
-  return (
+  return <T>(
     request: BetterFetchRequest<T>,
   ): ResultAsync<BetterFetchResponse<T>, Error> => {
     const method = (request.method ?? "GET").toUpperCase();

@@ -4,6 +4,7 @@ import { parseErrorName } from "@o3osatoshi/toolkit";
 import type {
   BetterFetchClient,
   BetterFetchRequest,
+  BetterFetchRequestMeta,
 } from "./better-fetch-types";
 
 export type BetterFetchEventsOptions = {
@@ -12,10 +13,10 @@ export type BetterFetchEventsOptions = {
   requestName?: string;
 };
 
-export function withEvents<T>(
-  next: BetterFetchClient<T>,
+export function withEvents(
+  next: BetterFetchClient,
   options: BetterFetchEventsOptions = {},
-): BetterFetchClient<T> {
+): BetterFetchClient {
   if (!options.logger) {
     return next;
   }
@@ -24,7 +25,7 @@ export function withEvents<T>(
   const redactUrl = options.redactUrl ?? ((url: string) => url);
   const requestName = options.requestName;
 
-  return (request) =>
+  return <T>(request: BetterFetchRequest<T>) =>
     next(request)
       .map((result) => {
         const response = result.response;
@@ -60,8 +61,8 @@ export function withEvents<T>(
       });
 }
 
-function buildAttributes<T>(
-  request: BetterFetchRequest<T>,
+function buildAttributes(
+  request: BetterFetchRequestMeta,
   result: {
     cached: boolean;
     meta?: { attempts?: number; cacheHit?: boolean };
@@ -80,8 +81,8 @@ function buildAttributes<T>(
   };
 }
 
-function buildErrorAttributes<T>(
-  request: BetterFetchRequest<T>,
+function buildErrorAttributes(
+  request: BetterFetchRequestMeta,
   error: Error,
   redactUrl: (url: string) => string,
   requestName?: string,

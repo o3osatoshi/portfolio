@@ -49,6 +49,7 @@ describe("integrations/http withMetrics", () => {
       .mockReturnValueOnce(1000)
       .mockReturnValueOnce(1300);
     const next = vi.fn(() => buildResponse(200, true));
+    // @ts-expect-error
     const client = withMetrics(next, {
       logger,
       redactUrl: (url) => `redacted:${url}`,

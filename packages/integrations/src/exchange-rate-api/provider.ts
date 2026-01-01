@@ -11,6 +11,7 @@ import {
 
 import {
   type ApiBetterFetchClientOptions,
+  type BetterFetchCacheDefaults,
   type BetterFetchClient,
   type BetterFetchResponse,
   createBetterFetchClient,
@@ -27,7 +28,7 @@ const CACHE_KEY_PREFIX = "fx:rate";
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
-} & ApiBetterFetchClientOptions<ExchangeRatePayload>;
+} & ApiBetterFetchClientOptions;
 
 type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 
@@ -37,23 +38,23 @@ type ExchangeRatePayload = ExchangeRateHostResponse | undefined;
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiBaseUrl: string;
   private readonly apiKey: string;
-  private readonly client: BetterFetchClient<ExchangeRatePayload>;
+  private readonly cacheDefaults: BetterFetchCacheDefaults | undefined;
+  private readonly client: BetterFetchClient;
 
   constructor(config: ExchangeRateApiConfig) {
     this.apiKey = config.apiKey;
     this.apiBaseUrl = normalizeBaseUrl(config.baseUrl);
 
-    const cache = config.cache
+    const cacheDefaults = config.cache
       ? {
           ...config.cache,
           getKey:
             config.cache.getKey ??
             ((request) => buildCacheKeyFromUrl(request.url)),
-          shouldCache:
-            config.cache.shouldCache ?? ((res) => isCacheablePayload(res.data)),
           ttlMs: config.cache.ttlMs ?? CACHE_TTL_MS,
         }
       : undefined;
+    this.cacheDefaults = cacheDefaults;
 
     const logging = config.logging
       ? {
@@ -65,8 +66,8 @@ export class ExchangeRateApi implements FxQuoteProvider {
         }
       : undefined;
 
-    this.client = createBetterFetchClient<ExchangeRatePayload>({
-      cache,
+    this.client = createBetterFetchClient({
+      cache: this.cacheDefaults,
       fetch: config.fetch,
       logging,
       retry: config.retry,
@@ -79,6 +80,12 @@ export class ExchangeRateApi implements FxQuoteProvider {
     const url = new URL(path, this.apiBaseUrl);
 
     const request = {
+      cache: this.cacheDefaults
+        ? {
+            shouldCache: (res: BetterFetchResponse<ExchangeRatePayload>) =>
+              isCacheablePayload(res.data),
+          }
+        : undefined,
       headers: {
         Accept: "application/json",
       },
@@ -86,7 +93,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
       url: url.toString(),
     };
 
-    return this.client(request).andThen((res) =>
+    return this.client<ExchangeRatePayload>(request).andThen((res) =>
       handleExchangeRateResponse(res, query),
     );
   }

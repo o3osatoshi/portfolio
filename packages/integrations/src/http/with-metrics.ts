@@ -4,6 +4,7 @@ import { parseErrorName } from "@o3osatoshi/toolkit";
 import type {
   BetterFetchClient,
   BetterFetchRequest,
+  BetterFetchRequestMeta,
 } from "./better-fetch-types";
 
 export type BetterFetchMetricsOptions = {
@@ -12,10 +13,10 @@ export type BetterFetchMetricsOptions = {
   requestName?: string;
 };
 
-export function withMetrics<T>(
-  next: BetterFetchClient<T>,
+export function withMetrics(
+  next: BetterFetchClient,
   options: BetterFetchMetricsOptions = {},
-): BetterFetchClient<T> {
+): BetterFetchClient {
   if (!options.logger) {
     return next;
   }
@@ -24,7 +25,7 @@ export function withMetrics<T>(
   const redactUrl = options.redactUrl ?? ((url: string) => url);
   const requestName = options.requestName;
 
-  return (request) => {
+  return <T>(request: BetterFetchRequest<T>) => {
     const startedAt = Date.now();
     return next(request)
       .map((result) => {
@@ -54,7 +55,7 @@ export function withMetrics<T>(
   };
 }
 
-function buildAttributes<T>({
+function buildAttributes({
   error,
   redactUrl,
   request,
@@ -63,7 +64,7 @@ function buildAttributes<T>({
 }: {
   error?: Error | undefined;
   redactUrl: (url: string) => string;
-  request: BetterFetchRequest<T>;
+  request: BetterFetchRequestMeta;
   requestName?: string | undefined;
   result?:
     | {
@@ -90,7 +91,7 @@ function buildAttributes<T>({
   };
 }
 
-function emitMetrics<T>({
+function emitMetrics({
   durationMs,
   error,
   logger,
@@ -103,7 +104,7 @@ function emitMetrics<T>({
   error?: Error;
   logger: Logger;
   redactUrl: (url: string) => string;
-  request: BetterFetchRequest<T>;
+  request: BetterFetchRequestMeta;
   requestName?: string | undefined;
   result?:
     | {

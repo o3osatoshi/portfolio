@@ -1,38 +1,47 @@
-import type { CacheStore } from "@repo/domain";
 import { okAsync } from "neverthrow";
 
 import type {
+  BetterFetchCacheOptions,
   BetterFetchClient,
   BetterFetchRequest,
-  BetterFetchResponse,
 } from "./better-fetch-types";
 import { mergeMeta } from "./better-fetch-types";
 
-export type BetterFetchCacheOptions<T> = {
-  deserialize?: (data: unknown) => null | T;
-  getKey: (request: BetterFetchRequest<T>) => string | undefined;
-  serialize?: (data: T) => unknown;
-  shouldCache?: (response: BetterFetchResponse<T>) => boolean;
-  store?: CacheStore | undefined;
-  ttlMs?: number;
-};
+export function withCache(
+  next: BetterFetchClient,
+  defaults: BetterFetchCacheOptions = {},
+): BetterFetchClient {
+  return <T>(request: BetterFetchRequest<T>) => {
+    // Skip cache when explicitly disabled
+    if ("cache" in request && request.cache === undefined) {
+      return next(request);
+    }
 
-export function withCache<T>(
-  next: BetterFetchClient<T>,
-  options: BetterFetchCacheOptions<T>,
-): BetterFetchClient<T> {
-  const store = options.store;
-  if (!store) {
-    return next;
-  }
+    const cacheOptions = request.cache;
+    const store = cacheOptions?.store ?? defaults.store;
+    const getKey = cacheOptions?.getKey ?? defaults.getKey;
+    const ttlMs = cacheOptions?.ttlMs ?? defaults.ttlMs;
+    if (!store || !getKey) {
+      return next(request);
+    }
 
-  const serialize = options.serialize ?? ((data: T) => data);
-  const deserialize = options.deserialize ?? ((data: unknown) => data as T);
-  const shouldCache =
-    options.shouldCache ?? ((response) => response.response?.ok ?? true);
+    const serialize =
+      cacheOptions?.serialize ?? defaults.serialize ?? ((data: T) => data);
+    const deserialize =
+      cacheOptions?.deserialize ??
+      defaults.deserialize ??
+      ((data: unknown) => data as T);
+    const shouldCacheFunc = cacheOptions?.shouldCache ?? defaults.shouldCache;
+    const shouldCache = (response: any) => {
+      if (shouldCacheFunc) {
+        const result = shouldCacheFunc(response);
+        if (result === false || result === undefined) return false;
+        return true;
+      }
+      return response.response?.ok ?? true;
+    };
 
-  return (request) => {
-    const cacheKey = options.getKey(request);
+    const cacheKey = getKey(request);
     if (!cacheKey) {
       return next(request);
     }
@@ -46,7 +55,7 @@ export function withCache<T>(
         if (cachedValue !== null) {
           return okAsync({
             cached: true,
-            data: cachedValue,
+            data: cachedValue as T,
             meta: mergeMeta(
               { attempts: 0, cacheHit: true, cacheKey },
               undefined,
@@ -66,7 +75,7 @@ export function withCache<T>(
           }
 
           return store
-            .set(cacheKey, serialize(res.data), { ttlMs: options.ttlMs })
+            .set(cacheKey, serialize(res.data), { ttlMs })
             .orElse(() => okAsync(null))
             .map(() => ({ ...res, meta }));
         });

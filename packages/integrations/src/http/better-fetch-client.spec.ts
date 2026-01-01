@@ -37,7 +37,7 @@ describe("integrations/http createBetterFetchClient", () => {
         status: 200,
       });
     });
-    const client = createBetterFetchClient<{ value: string }>({
+    const client = createBetterFetchClient({
       cache: {
         getKey: () => "cache:key",
         store: cacheStore,
@@ -45,7 +45,7 @@ describe("integrations/http createBetterFetchClient", () => {
       fetch: fetchMock as unknown as typeof fetch,
     });
 
-    const result = await client({
+    const result = await client<{ value: string }>({
       parse: async () => ({ value: "fresh" }),
       url: "https://example.test",
     });
@@ -65,7 +65,7 @@ describe("integrations/http createBetterFetchClient", () => {
         status: 200,
       });
     });
-    const client = createBetterFetchClient<{ ok: boolean }>({
+    const client = createBetterFetchClient({
       fetch: fetchMock as unknown as typeof fetch,
       logging: {
         enableEvents: false,

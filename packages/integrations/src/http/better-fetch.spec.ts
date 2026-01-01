@@ -12,9 +12,11 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch<{ ok: boolean }>({ fetch: fetchMock });
+    const client = createBetterFetch({ fetch: fetchMock });
 
-    const result = await client({ url: "https://example.test" });
+    const result = await client<{ ok: boolean }>({
+      url: "https://example.test",
+    });
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(result.isOk()).toBe(true);
@@ -30,9 +32,9 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch<string>({ fetch: fetchMock });
+    const client = createBetterFetch({ fetch: fetchMock });
 
-    const result = await client({ url: "https://example.test" });
+    const result = await client<string>({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -43,9 +45,9 @@ describe("integrations/http createBetterFetch", () => {
     const fetchMock = vi.fn(async () => {
       return new Response(null, { status: 204 });
     });
-    const client = createBetterFetch<undefined>({ fetch: fetchMock });
+    const client = createBetterFetch({ fetch: fetchMock });
 
-    const result = await client({ url: "https://example.test" });
+    const result = await client<undefined>({ url: "https://example.test" });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -59,9 +61,9 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch<unknown>({ fetch: fetchMock });
+    const client = createBetterFetch({ fetch: fetchMock });
 
-    const result = await client({ url: "https://example.test" });
+    const result = await client<unknown>({ url: "https://example.test" });
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
@@ -74,9 +76,9 @@ describe("integrations/http createBetterFetch", () => {
     const fetchMock = vi.fn(async () => {
       throw new Error("fetch failed");
     });
-    const client = createBetterFetch<unknown>({ fetch: fetchMock });
+    const client = createBetterFetch({ fetch: fetchMock });
 
-    const result = await client({ url: "https://example.test" });
+    const result = await client<unknown>({ url: "https://example.test" });
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
@@ -92,9 +94,9 @@ describe("integrations/http createBetterFetch", () => {
         status: 200,
       });
     });
-    const client = createBetterFetch<string>({ fetch: fetchMock });
+    const client = createBetterFetch({ fetch: fetchMock });
 
-    const result = await client({
+    const result = await client<string>({
       body: "payload",
       headers: { "x-test": "1" },
       method: "POST",

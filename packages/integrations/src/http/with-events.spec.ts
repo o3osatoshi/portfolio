@@ -45,6 +45,7 @@ describe("integrations/http withEvents", () => {
   it("logs warn on 4xx responses", async () => {
     const logger = buildLogger();
     const next = vi.fn(() => buildResponse(404, false));
+    // @ts-expect-error
     const client = withEvents(next, {
       logger,
       redactUrl: (url) => `redacted:${url}`,

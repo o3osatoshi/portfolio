@@ -5,6 +5,7 @@ import { parseErrorName } from "@o3osatoshi/toolkit";
 import type {
   BetterFetchClient,
   BetterFetchRequest,
+  BetterFetchRequestMeta,
   BetterFetchResponse,
 } from "./better-fetch-types";
 import { mergeMeta } from "./better-fetch-types";
@@ -23,17 +24,17 @@ type RetryCheckInput = {
   attempt: number;
   error?: Error;
   maxAttempts: number;
-  request: BetterFetchRequest<unknown>;
+  request: BetterFetchRequestMeta;
   response?: { headers?: Headers; status?: number } | undefined;
 };
 
 const DEFAULT_RETRY_METHODS = ["GET", "HEAD", "OPTIONS"];
 const DEFAULT_RETRY_STATUSES = [408, 429, 500, 502, 503, 504];
 
-export function withRetry<T>(
-  next: BetterFetchClient<T>,
+export function withRetry(
+  next: BetterFetchClient,
   options: BetterFetchRetryOptions = {},
-): BetterFetchClient<T> {
+): BetterFetchClient {
   const maxAttempts = Math.max(1, options.maxAttempts ?? 3);
   const baseDelayMs = options.baseDelayMs ?? 200;
   const maxDelayMs = options.maxDelayMs ?? 2000;
@@ -51,7 +52,7 @@ export function withRetry<T>(
         retryOnStatuses,
       }));
 
-  return (request) =>
+  return <T>(request: BetterFetchRequest<T>) =>
     ResultAsync.fromPromise(
       (async () => {
         let attempt = 0;

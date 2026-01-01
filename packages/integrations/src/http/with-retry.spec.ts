@@ -31,6 +31,7 @@ describe("integrations/http withRetry", () => {
       }
       return buildResponse(200, headers, true);
     });
+    // @ts-expect-error
     const client = withRetry(next);
 
     const promise = client({ url: "https://example.test" });
@@ -50,6 +51,7 @@ describe("integrations/http withRetry", () => {
   it("does not retry for non-idempotent methods", async () => {
     const headers = new Headers();
     const next = vi.fn(() => buildResponse(503, headers, false));
+    // @ts-expect-error
     const client = withRetry(next);
 
     const result = await client({
