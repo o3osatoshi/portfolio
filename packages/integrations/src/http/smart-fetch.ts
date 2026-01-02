@@ -1,9 +1,14 @@
+import type { ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
 import { parseWith } from "@o3osatoshi/toolkit";
 
 import { createBaseFetch } from "./base-fetch";
-import type { SmartFetch, SmartFetchRequest } from "./types";
+import type {
+  SmartFetch,
+  SmartFetchRequest,
+  SmartFetchResponse,
+} from "./types";
 import { type SmartFetchCacheOptions, withCache } from "./with-cache";
 import type { SmartFetchLoggingOptions } from "./with-logging";
 import { withLogging } from "./with-logging";
@@ -22,7 +27,7 @@ export function createSmartFetch(
 ): SmartFetch {
   const smartFetch: SmartFetch = <S extends z.ZodType>(
     request: SmartFetchRequest<S>,
-  ) => {
+  ): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> => {
     const { decode, ...baseRequest } = request;
 
     const baseFetch = createBaseFetch(

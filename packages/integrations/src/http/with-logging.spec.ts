@@ -56,30 +56,6 @@ const buildError = (name: string, message: string, retryAttempts?: number) => {
 
 describe("integrations/http withLogging", () => {
   describe("configuration", () => {
-    it("returns next client when logger is not provided", async () => {
-      const next = vi.fn(() => buildResponse(200));
-      // @ts-expect-error
-      const client = withLogging(next, {});
-
-      // @ts-expect-error partial mock for testing
-      const result = await client({ url: "https://example.test" });
-
-      expect(result.isOk()).toBe(true);
-      expect(next).toHaveBeenCalledTimes(1);
-    });
-
-    it("returns next client when logger is undefined", async () => {
-      const next = vi.fn(() => buildResponse(200));
-      // @ts-expect-error
-      const client = withLogging(next, { logger: undefined });
-
-      // @ts-expect-error partial mock for testing
-      const result = await client({ url: "https://example.test" });
-
-      expect(result.isOk()).toBe(true);
-      expect(next).toHaveBeenCalledTimes(1);
-    });
-
     it("uses default redactUrl when not provided", async () => {
       const logger = buildLogger();
       const next = vi.fn(() => buildResponse(200));
@@ -104,10 +80,13 @@ describe("integrations/http withLogging", () => {
       const redactUrl = vi.fn((url: string) => url.replace("secret", "***"));
       const next = vi.fn(() => buildResponse(200));
       // @ts-expect-error
-      const client = withLogging(next, { logger, redactUrl });
+      const client = withLogging(next, { logger });
 
       // @ts-expect-error partial mock for testing
-      await client({ url: "https://example.test/secret" });
+      await client({
+        logging: { redactUrl },
+        url: "https://example.test/secret",
+      });
 
       expect(redactUrl).toHaveBeenCalledWith("https://example.test/secret");
       expect(logger.metric).toHaveBeenCalledWith(
@@ -124,10 +103,13 @@ describe("integrations/http withLogging", () => {
       const logger = buildLogger();
       const next = vi.fn(() => buildResponse(200));
       // @ts-expect-error
-      const client = withLogging(next, { logger, requestName: "test_api" });
+      const client = withLogging(next, { logger });
 
       // @ts-expect-error partial mock for testing
-      await client({ url: "https://example.test" });
+      await client({
+        logging: { requestName: "test_api" },
+        url: "https://example.test",
+      });
 
       expect(logger.metric).toHaveBeenCalledWith(
         "http.client.requests",
@@ -281,7 +263,7 @@ describe("integrations/http withLogging", () => {
 
       expect(result.isOk()).toBe(true);
       expect(logger.warn).toHaveBeenCalledWith(
-        "http_client_error",
+        "http_client_warn",
         expect.objectContaining({
           "http.method": "GET",
           "http.status_code": 404,
@@ -338,7 +320,7 @@ describe("integrations/http withLogging", () => {
 
       expect(result.isErr()).toBe(true);
       expect(logger.warn).toHaveBeenCalledWith(
-        "http_client_error",
+        "http_client_warn",
         expect.objectContaining({
           "error.name": "DomainBadRequestError",
           "error.kind": "BadRequest",
@@ -372,7 +354,7 @@ describe("integrations/http withLogging", () => {
       );
     });
 
-    it("includes retry attempts in error events", async () => {
+    it("logs error events when retryAttempts is set", async () => {
       const logger = buildLogger();
       const error = buildError("ExternalTimeoutError", "Timeout", 3);
       const next = vi.fn(() => errAsync(error));
@@ -384,7 +366,9 @@ describe("integrations/http withLogging", () => {
       expect(logger.error).toHaveBeenCalledWith(
         "http_client_error",
         expect.objectContaining({
-          "retry.attempts": 3,
+          "error.name": "ExternalTimeoutError",
+          "error.kind": "Timeout",
+          "error.layer": "External",
         }),
         error,
       );
@@ -405,7 +389,8 @@ describe("integrations/http withLogging", () => {
         expect.objectContaining({
           "error.kind": "Timeout",
           "error.layer": "External",
-          "retry.attempts": 2,
+          "http.method": "GET",
+          "http.url": "https://example.test",
         }),
         { kind: "counter", unit: "1" },
       );
@@ -465,7 +450,7 @@ describe("integrations/http withLogging", () => {
           expect(logger.warn).not.toHaveBeenCalled();
         } else {
           expect(logger.warn).toHaveBeenCalledWith(
-            "http_client_error",
+            "http_client_warn",
             expect.any(Object),
           );
           expect(logger.error).not.toHaveBeenCalled();
@@ -564,20 +549,24 @@ describe("integrations/http withLogging", () => {
       // @ts-expect-error
       const successClient = withLogging(successNext, {
         logger,
-        requestName: "success_test",
       });
       // @ts-expect-error partial mock for testing
-      await successClient({ url: "https://example.test/success" });
+      await successClient({
+        logging: { requestName: "success_test" },
+        url: "https://example.test/success",
+      });
 
       // Error case
       const errorNext = vi.fn(() => buildResponse(500, false));
       // @ts-expect-error
       const errorClient = withLogging(errorNext, {
         logger,
-        requestName: "error_test",
       });
       // @ts-expect-error partial mock for testing
-      await errorClient({ url: "https://example.test/error" });
+      await errorClient({
+        logging: { requestName: "error_test" },
+        url: "https://example.test/error",
+      });
 
       // Verify both metrics and events were logged
       expect(logger.metric).toHaveBeenCalledWith(

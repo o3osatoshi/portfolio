@@ -48,9 +48,8 @@ export class ExchangeRateApi implements FxQuoteProvider {
 
     this.cache = options.cache
       ? {
-          ...options.cache,
-          getKey: (request) => buildCacheKey(request.url),
           ttlMs: CACHE_TTL_MS,
+          ...options.cache,
         }
       : undefined;
 
@@ -78,8 +77,8 @@ export class ExchangeRateApi implements FxQuoteProvider {
     return this.sFetch<typeof exchangeRateApiPairSchema>({
       cache: this.cache
         ? {
-            shouldCache: (res: SmartFetchResponse<ExchangeRateApiPair>) =>
-              isCacheable(res.data),
+            getKey: (req) => buildCacheKey(req.url),
+            shouldCache: (res) => isCacheable(res.data),
           }
         : undefined,
       decode: {
@@ -143,7 +142,7 @@ function toFxQuote(
   res: SmartFetchResponse<ExchangeRateApiPair>,
   query: FxQuoteQuery,
 ): Result<FxQuote, Error> {
-  if (res.response.ok === false) {
+  if (!res.response.ok) {
     return err(
       newIntegrationError({
         action: "FetchExchangeRateApi",

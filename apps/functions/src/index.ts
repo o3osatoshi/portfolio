@@ -28,9 +28,7 @@ export const api = onRequest(async (req, res) => {
         baseUrl: env.EXCHANGE_RATE_BASE_URL,
       },
       {
-        cache: {
-          store,
-        },
+        ...(store ? { cache: { store } } : {}),
         logging: {
           logger,
         },

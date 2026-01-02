@@ -1,13 +1,23 @@
 import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import { parseErrorName } from "@o3osatoshi/toolkit";
+import { parseErrorName, sleep } from "@o3osatoshi/toolkit";
 
 import type {
   SmartFetch,
   SmartFetchRequest,
   SmartFetchResponse,
 } from "./types";
+
+export type SmartFetchRequestRetryOptions<S extends z.ZodType> = {
+  baseDelayMs?: number;
+  maxAttempts?: number;
+  maxDelayMs?: number;
+  respectRetryAfter?: boolean;
+  retryOnMethods?: string[];
+  retryOnStatuses?: number[];
+  shouldRetry?: (input: RetryCheckInput<S>) => boolean;
+};
 
 export type SmartFetchRetryOptions = {
   baseDelayMs?: number;
@@ -16,73 +26,89 @@ export type SmartFetchRetryOptions = {
   respectRetryAfter?: boolean;
   retryOnMethods?: string[];
   retryOnStatuses?: number[];
-  shouldRetry?: (input: RetryCheckInput) => boolean;
 };
 
-type RetryCheckInput = {
-  attempt: number;
+type RetryCheckInput<S extends z.ZodType> = {
+  attempts: number;
   error?: Error;
   maxAttempts: number;
-  request: SmartFetchRequest;
-  response?: { headers?: Headers; status?: number } | undefined;
+  request: SmartFetchRequest<S>;
+  response?: SmartFetchResponse<z.infer<S>> | undefined;
 };
 
-const DEFAULT_RETRY_METHODS = ["GET", "HEAD", "OPTIONS"];
-const DEFAULT_RETRY_STATUSES = [408, 429, 500, 502, 503, 504];
+const MAX_ATTEMPTS = 3;
+const BASE_DELAY_MS = 200;
+const MAX_DELAY_MS = 2000;
+const RETRY_ON_METHODS = ["GET", "HEAD", "OPTIONS"];
+const RETRY_ON_STATUSES = [408, 429, 500, 502, 503, 504];
+const RESPECT_RETRY_AFTER = true;
 
 export function withRetry(
   next: SmartFetch,
   options: SmartFetchRetryOptions = {},
 ): SmartFetch {
-  const maxAttempts = Math.max(1, options.maxAttempts ?? 3);
-  const baseDelayMs = options.baseDelayMs ?? 200;
-  const maxDelayMs = options.maxDelayMs ?? 2000;
-  const retryOnMethods = (options.retryOnMethods ?? DEFAULT_RETRY_METHODS).map(
-    (m) => m.toUpperCase(),
-  );
-  const retryOnStatuses = options.retryOnStatuses ?? DEFAULT_RETRY_STATUSES;
-  const respectRetryAfter = options.respectRetryAfter ?? true;
-  const shouldRetry =
-    options.shouldRetry ??
-    ((input) =>
-      defaultShouldRetry({
-        input,
-        retryOnMethods,
-        retryOnStatuses,
-      }));
-
   return <S extends z.ZodType>(request: SmartFetchRequest<S>) =>
     ResultAsync.fromPromise(
       (async () => {
-        type T = z.infer<S>;
-        let attempt = 0;
-        let lastError: Error | undefined;
-        let lastResponse: Result<SmartFetchResponse<T>, Error> | undefined;
+        const retry = request.retry ?? {};
+        const maxAttempts = Math.max(
+          MAX_ATTEMPTS,
+          retry?.maxAttempts ?? options.maxAttempts ?? 1,
+        );
+        const baseDelayMs =
+          retry?.baseDelayMs ?? options.baseDelayMs ?? BASE_DELAY_MS;
+        const maxDelayMs =
+          retry?.maxDelayMs ?? options.maxDelayMs ?? MAX_DELAY_MS;
+        const retryOnMethods = (
+          retry.retryOnMethods ??
+          options.retryOnMethods ??
+          RETRY_ON_METHODS
+        ).map((m) => m.toUpperCase());
+        const retryOnStatuses =
+          retry.retryOnStatuses ?? options.retryOnStatuses ?? RETRY_ON_STATUSES;
+        const respectRetryAfter =
+          retry.respectRetryAfter ??
+          options.respectRetryAfter ??
+          RESPECT_RETRY_AFTER;
+        const shouldRetry =
+          retry.shouldRetry ??
+          ((input: RetryCheckInput<S>) =>
+            defaultShouldRetry({
+              input,
+              retryOnMethods,
+              retryOnStatuses,
+            }));
 
-        while (attempt < maxAttempts) {
-          attempt += 1;
+        let attempts = 0;
+        let lastError: Error | undefined;
+        let lastResult:
+          | Result<SmartFetchResponse<z.infer<S>>, Error>
+          | undefined;
+
+        while (attempts < maxAttempts) {
+          attempts += 1;
           const result = await next(request);
           if (result.isOk()) {
-            lastResponse = result;
-            const responseMeta = result.value.response;
+            lastResult = result;
+            const response = result.value;
             const shouldRetryResponse = shouldRetry({
-              attempt,
+              attempts,
               maxAttempts,
               request,
-              response: responseMeta,
+              response,
             });
-            if (!shouldRetryResponse || attempt >= maxAttempts) {
+            if (!shouldRetryResponse || attempts >= maxAttempts) {
               return {
                 ...result.value,
-                retry: { attempts: attempt },
+                retry: { attempts },
               };
             }
 
             const retryAfterMs = respectRetryAfter
-              ? resolveRetryAfterMs(responseMeta)
+              ? resolveRetryAfterMs(response)
               : undefined;
             const delayMs = resolveDelayMs({
-              attempt,
+              attempts: attempts,
               baseDelayMs,
               maxDelayMs,
               retryAfterMs,
@@ -93,33 +119,33 @@ export function withRetry(
 
           lastError = result.error;
           const shouldRetryError = shouldRetry({
-            attempt,
+            attempts,
             error: result.error,
             maxAttempts,
             request,
           });
-          if (!shouldRetryError || attempt >= maxAttempts) {
-            throw attachRetryAttempts(result.error, attempt);
+          if (!shouldRetryError || attempts >= maxAttempts) {
+            throw attachRetryAttempts(result.error, attempts);
           }
 
           const delayMs = resolveDelayMs({
-            attempt,
+            attempts: attempts,
             baseDelayMs,
             maxDelayMs,
           });
           await sleep(delayMs);
         }
 
-        if (lastResponse?.isOk()) {
+        if (lastResult?.isOk()) {
           return {
-            ...lastResponse.value,
-            retry: { attempts: attempt },
+            ...lastResult.value,
+            retry: { attempts },
           };
         }
 
         throw attachRetryAttempts(
           lastError ?? new Error("Retry attempts exhausted"),
-          attempt,
+          attempts,
         );
       })(),
       (cause) => (cause instanceof Error ? cause : new Error(String(cause))),
@@ -135,16 +161,17 @@ function attachRetryAttempts(error: Error, attempts: number) {
   return error;
 }
 
-function defaultShouldRetry({
+function defaultShouldRetry<S extends z.ZodType>({
   input,
   retryOnMethods,
   retryOnStatuses,
 }: {
-  input: RetryCheckInput;
+  input: RetryCheckInput<S>;
   retryOnMethods: string[];
   retryOnStatuses: number[];
 }) {
-  if (input.attempt >= input.maxAttempts) return false;
+  if (input.attempts >= input.maxAttempts) return false;
+
   const method = (input.request.method ?? "GET").toUpperCase();
   if (!retryOnMethods.includes(method)) return false;
 
@@ -152,7 +179,7 @@ function defaultShouldRetry({
     return isRetryableError(input.error);
   }
 
-  const status = input.response?.status;
+  const status = input.response?.response.status;
   if (status === undefined) return false;
   return retryOnStatuses.includes(status);
 }
@@ -169,34 +196,32 @@ function isRetryableError(error: Error): boolean {
 }
 
 function resolveDelayMs({
-  attempt,
+  attempts,
   baseDelayMs,
   maxDelayMs,
   retryAfterMs,
 }: {
-  attempt: number;
+  attempts: number;
   baseDelayMs: number;
   maxDelayMs: number;
   retryAfterMs?: number | undefined;
 }) {
-  const exponential = Math.min(maxDelayMs, baseDelayMs * 2 ** (attempt - 1));
+  const exponential = Math.min(maxDelayMs, baseDelayMs * 2 ** (attempts - 1));
   const jitter = Math.random() * exponential;
   if (retryAfterMs === undefined) return jitter;
   return Math.min(maxDelayMs, Math.max(jitter, retryAfterMs));
 }
 
-function resolveRetryAfterMs(response?: { headers?: Headers }) {
-  const header = response?.headers?.get("retry-after");
-  if (!header) return undefined;
-  const seconds = Number(header);
-  if (!Number.isNaN(seconds)) {
-    return Math.max(0, seconds * 1000);
-  }
-  const dateMs = Date.parse(header);
-  if (Number.isNaN(dateMs)) return undefined;
-  return Math.max(0, dateMs - Date.now());
-}
+function resolveRetryAfterMs(response: SmartFetchResponse) {
+  const retryAfter = response.response.headers?.get("retry-after");
+  if (!retryAfter) return undefined;
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  const retryAfterNumber = Number(retryAfter);
+  if (!Number.isNaN(retryAfterNumber)) {
+    return Math.max(0, retryAfterNumber * 1000);
+  }
+
+  const retryAfterDate = Date.parse(retryAfter);
+  if (Number.isNaN(retryAfterDate)) return undefined;
+  return Math.max(0, retryAfterDate - Date.now());
 }

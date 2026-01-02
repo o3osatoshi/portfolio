@@ -18,11 +18,16 @@ const buildResponse = <T>(data: T, attempts = 1, ok = true) =>
   });
 
 describe("integrations/http withCache", () => {
-  it("passes through when no store is provided", async () => {
+  it("passes through when request cache is not provided", async () => {
+    const cacheStore: CacheStore = {
+      get: vi.fn(() => okAsync(null)),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
     const next = vi.fn(() => buildResponse("fresh"));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
+      store: cacheStore,
     });
 
     // @ts-expect-error
@@ -30,6 +35,8 @@ describe("integrations/http withCache", () => {
 
     expect(result.isOk()).toBe(true);
     expect(next).toHaveBeenCalledTimes(1);
+    expect(cacheStore.get).not.toHaveBeenCalled();
+    expect(cacheStore.set).not.toHaveBeenCalled();
   });
 
   it("skips cache when getKey returns undefined", async () => {
@@ -42,12 +49,14 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse("fresh"));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => undefined,
       store: cacheStore,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: { getKey: () => undefined },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(next).toHaveBeenCalledTimes(1);
@@ -65,12 +74,14 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
       store: cacheStore,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: { getKey: () => "cache:key" },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
@@ -89,13 +100,15 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }, 2));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
       store: cacheStore,
       ttlMs: 1000,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: { getKey: () => "cache:key" },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(next).toHaveBeenCalledTimes(1);
@@ -119,13 +132,17 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
-      shouldCache: () => undefined,
       store: cacheStore,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: {
+        getKey: () => "cache:key",
+        shouldCache: () => false,
+      },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(cacheStore.set).not.toHaveBeenCalled();
@@ -141,15 +158,19 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error
     const client = withCache(next, {
-      deserialize: () => {
-        throw new Error("bad cache");
-      },
-      getKey: () => "cache:key",
       store: cacheStore,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: {
+        deserialize: () => {
+          throw new Error("bad cache");
+        },
+        getKey: () => "cache:key",
+      },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(next).toHaveBeenCalledTimes(1);
@@ -165,12 +186,14 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
       store: cacheStore,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: { getKey: () => "cache:key" },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(next).toHaveBeenCalledTimes(1);
@@ -184,13 +207,15 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
       store: cacheStore,
       ttlMs: 1000,
     });
 
     // @ts-expect-error
-    const result = await client({ url: "https://example.test" });
+    const result = await client({
+      cache: { getKey: () => "cache:key" },
+      url: "https://example.test",
+    });
 
     expect(result.isOk()).toBe(true);
     expect(cacheStore.set).toHaveBeenCalledTimes(1);
@@ -206,7 +231,6 @@ describe("integrations/http withCache", () => {
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error
     const client = withCache(next, {
-      getKey: () => "cache:key",
       store: cacheStore,
     });
 

@@ -65,7 +65,7 @@ describe("integrations/http withRetry", () => {
     expect(result.value.retry?.attempts).toBe(1);
   });
 
-  it("retries on retryable errors and attaches retryAttempts", async () => {
+  it("retries on retryable errors and enforces minimum attempts", async () => {
     vi.useFakeTimers();
     const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0);
 
@@ -85,8 +85,8 @@ describe("integrations/http withRetry", () => {
 
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(next).toHaveBeenCalledTimes(2);
-    expect((result.error as { retryAttempts?: number }).retryAttempts).toBe(2);
+    expect(next).toHaveBeenCalledTimes(3);
+    expect((result.error as { retryAttempts?: number }).retryAttempts).toBe(3);
 
     randomSpy.mockRestore();
     vi.useRealTimers();

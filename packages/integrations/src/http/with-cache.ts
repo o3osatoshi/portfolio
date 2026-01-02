@@ -8,64 +8,53 @@ import type {
   SmartFetchResponse,
 } from "./types";
 
-export type SmartFetchCacheOptions<T = unknown> = {
-  deserialize?: (data: unknown) => null | T;
-  getKey?: (request: SmartFetchRequest) => string | undefined;
-  serialize?: (data: T) => unknown;
-  shouldCache?: (response: SmartFetchResponse<T>) => boolean;
-  store?: CacheStore | undefined;
+export type SmartFetchCacheOptions = {
+  store: CacheStore;
+  ttlMs?: number;
+};
+
+export type SmartFetchRequestCacheOptions<S extends z.ZodType> = {
+  deserialize?: (data: unknown) => null | z.infer<S>;
+  getKey: (request: SmartFetchRequest<S>) => string | undefined;
+  serialize?: (data: z.infer<S>) => unknown;
+  shouldCache?: (response: SmartFetchResponse<z.infer<S>>) => boolean;
   ttlMs?: number;
 };
 
 export function withCache(
   next: SmartFetch,
-  defaults: SmartFetchCacheOptions = {},
+  options: SmartFetchCacheOptions,
 ): SmartFetch {
+  const store = options.store;
+
   return <S extends z.ZodType>(request: SmartFetchRequest<S>) => {
-    type T = z.infer<S>;
-
-    // Skip cache when explicitly disabled
-    if ("cache" in request && request.cache === undefined) {
-      return next(request);
-    }
-
-    const cacheOptions = request.cache;
-    const store = cacheOptions?.store ?? defaults.store;
-    const getKey = cacheOptions?.getKey ?? defaults.getKey;
-    const ttlMs = cacheOptions?.ttlMs ?? defaults.ttlMs;
-    if (!store || !getKey) {
-      return next(request);
-    }
-
     const serialize =
-      cacheOptions?.serialize ?? defaults.serialize ?? ((data: T) => data);
+      request.cache?.serialize === undefined
+        ? (data: z.infer<S>) => data
+        : request.cache.serialize;
     const deserialize =
-      cacheOptions?.deserialize ??
-      defaults.deserialize ??
-      ((data: unknown) => data as T);
-    const shouldCacheFunc = cacheOptions?.shouldCache ?? defaults.shouldCache;
-    const shouldCache = (response: SmartFetchResponse<T>) => {
-      if (shouldCacheFunc) {
-        return shouldCacheFunc(response);
-      }
-      return response.response.ok;
-    };
+      request.cache?.deserialize === undefined
+        ? (data: unknown) => data as z.infer<S>
+        : request.cache.deserialize;
+    const shouldCache =
+      request.cache?.shouldCache === undefined
+        ? (response: SmartFetchResponse) => response.response.ok
+        : request.cache.shouldCache;
 
-    const cacheKey = getKey(request);
+    const cacheKey = request.cache?.getKey(request);
     if (!cacheKey) {
       return next(request);
     }
 
     return store
-      .get<unknown>(cacheKey)
+      .get(cacheKey)
       .orElse(() => okAsync(null))
-      .andThen((cached) => {
-        const cachedValue =
-          cached == null ? null : safeDeserialize(deserialize, cached);
-        if (cachedValue !== null) {
+      .andThen((rawData) => {
+        const data = safeDeserialize<z.infer<S>>(deserialize, rawData);
+        if (data !== null) {
           return okAsync({
             cache: { hit: true, key: cacheKey },
-            data: cachedValue as T,
+            data,
             response: {
               headers: new Headers(),
               ok: true,
@@ -77,16 +66,16 @@ export function withCache(
         }
 
         return next(request).andThen((res) => {
-          const updatedCache = { hit: false, key: cacheKey };
-
           if (!shouldCache(res)) {
-            return okAsync({ ...res, cache: updatedCache });
+            return okAsync({ ...res, cache: { hit: false, key: cacheKey } });
           }
 
           return store
-            .set(cacheKey, serialize(res.data), { ttlMs })
+            .set(cacheKey, serialize(res.data), {
+              ttlMs: request.cache?.ttlMs ?? options.ttlMs,
+            })
             .orElse(() => okAsync(null))
-            .map(() => ({ ...res, cache: updatedCache }));
+            .map(() => ({ ...res, cache: { hit: false, key: cacheKey } }));
         });
       });
   };

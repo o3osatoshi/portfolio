@@ -40,7 +40,6 @@ describe("integrations/http createSmartFetchClient", () => {
     });
     const client = createSmartFetch({
       cache: {
-        getKey: () => "cache:key",
         store: cacheStore,
       },
       fetch: fetchMock as unknown as typeof fetch,
@@ -48,6 +47,9 @@ describe("integrations/http createSmartFetchClient", () => {
 
     const schema = z.object({ value: z.string() });
     const result = await client({
+      cache: {
+        getKey: () => "cache:key",
+      },
       decode: { schema },
       url: "https://example.test",
     });
@@ -71,13 +73,15 @@ describe("integrations/http createSmartFetchClient", () => {
       fetch: fetchMock as unknown as typeof fetch,
       logging: {
         logger,
-        requestName: "client_test",
       },
     });
 
     const schema = z.object({ ok: z.boolean() });
     const result = await client({
       decode: { schema },
+      logging: {
+        requestName: "client_test",
+      },
       url: "https://example.test",
     });
 
