@@ -42,8 +42,10 @@ export function withRetry(
   next: SmartFetch,
   options: SmartFetchRetryOptions = {},
 ): SmartFetch {
-  return <S extends z.ZodType>(request: SmartFetchRequest<S>) =>
-    ResultAsync.fromPromise(
+  return <S extends z.ZodType>(request: SmartFetchRequest<S>) => {
+    let attempts = 0;
+
+    return ResultAsync.fromPromise(
       (async () => {
         const retry = request.retry ?? {};
         const maxAttempts = Math.max(
@@ -74,7 +76,6 @@ export function withRetry(
               retryOnStatuses,
             }));
 
-        let attempts = 0;
         let lastError: Error | undefined;
         let lastResult:
           | Result<SmartFetchResponse<z.infer<S>>, Error>
@@ -120,7 +121,7 @@ export function withRetry(
             request,
           });
           if (!shouldRetryError || attempts >= maxAttempts) {
-            throw attachRetryAttempts(result.error, attempts);
+            throw result.error;
           }
 
           const delayMs = resolveDelayMs({
@@ -138,14 +139,13 @@ export function withRetry(
           };
         }
 
-        throw attachRetryAttempts(
+        throw (
           lastError ??
-            newIntegrationError({
-              action: "RetryExternalApi",
-              kind: "Unknown",
-              reason: "Retry attempts exhausted",
-            }),
-          attempts,
+          newIntegrationError({
+            action: "RetryExternalApi",
+            kind: "Unknown",
+            reason: `Retry attempts exhausted (attempts: ${attempts}).`,
+          })
         );
       })(),
       (cause) =>
@@ -155,18 +155,10 @@ export function withRetry(
               action: "RetryExternalApi",
               cause,
               kind: "Unknown",
-              reason: "Retry failed with a non-error value",
+              reason: `Retry failed with a non-error value (attempts: ${attempts}).`,
             }),
     );
-}
-
-function attachRetryAttempts(error: Error, attempts: number) {
-  try {
-    (error as { retryAttempts?: number }).retryAttempts = attempts;
-  } catch {
-    return error;
-  }
-  return error;
+  };
 }
 
 function defaultShouldRetry<S extends z.ZodType>({
