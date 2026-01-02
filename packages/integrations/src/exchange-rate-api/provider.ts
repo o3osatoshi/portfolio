@@ -69,7 +69,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
       },
       logging: {
         redactUrl: createUrlRedactor({ secrets: [this.apiKey] }),
-        requestName: "exchange_rate",
+        requestName: "ExchangeRateApiPairRequest",
       },
       url: url.toString(),
     }).andThen((res) => toFxQuote(res, query));
