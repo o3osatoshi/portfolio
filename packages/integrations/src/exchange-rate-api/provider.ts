@@ -14,7 +14,6 @@ import {
   createSmartFetch,
   type CreateSmartFetchOptions,
   type SmartFetch,
-  type SmartFetchCacheOptions,
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
@@ -36,7 +35,6 @@ export type ExchangeRateApiOptions = CreateSmartFetchOptions;
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiKey: string;
   private readonly baseUrl: string;
-  private readonly cache: SmartFetchCacheOptions | undefined;
   private readonly sFetch: SmartFetch;
 
   constructor(
@@ -45,28 +43,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
   ) {
     this.apiKey = config.apiKey;
     this.baseUrl = normalizeBaseUrl(config.baseUrl);
-
-    this.cache = options.cache
-      ? {
-          ttlMs: CACHE_TTL_MS,
-          ...options.cache,
-        }
-      : undefined;
-
-    const logging = options.logging
-      ? {
-          ...options.logging,
-          redactUrl: createUrlRedactor({ secrets: [config.apiKey] }),
-          requestName: "exchange_rate",
-        }
-      : undefined;
-
-    this.sFetch = createSmartFetch({
-      cache: this.cache,
-      fetch: options.fetch,
-      logging,
-      retry: options.retry,
-    });
+    this.sFetch = createSmartFetch(options);
   }
 
   /** @inheritdoc */
@@ -75,12 +52,11 @@ export class ExchangeRateApi implements FxQuoteProvider {
     const url = new URL(path, this.baseUrl);
 
     return this.sFetch<typeof exchangeRateApiPairSchema>({
-      cache: this.cache
-        ? {
-            getKey: (req) => buildCacheKey(req.url),
-            shouldCache: (res) => isCacheable(res.data),
-          }
-        : undefined,
+      cache: {
+        getKey: (req) => buildCacheKey(req.url),
+        shouldCache: (res) => isCacheable(res.data),
+        ttlMs: CACHE_TTL_MS,
+      },
       decode: {
         context: {
           action: "ParseExchangeRateApiResponse",
@@ -90,6 +66,10 @@ export class ExchangeRateApi implements FxQuoteProvider {
       },
       headers: {
         Accept: "application/json",
+      },
+      logging: {
+        redactUrl: createUrlRedactor({ secrets: [this.apiKey] }),
+        requestName: "exchange_rate",
       },
       url: url.toString(),
     }).andThen((res) => toFxQuote(res, query));
