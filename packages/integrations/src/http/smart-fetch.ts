@@ -19,7 +19,7 @@ export type CreateSmartFetchOptions = {
   cache?: SmartFetchCacheOptions | undefined;
   fetch?: typeof fetch | undefined;
   logging?: SmartFetchLoggingOptions | undefined;
-  retry?: SmartFetchRetryOptions | undefined;
+  retry?: SmartFetchRetryOptions | true | undefined;
 };
 
 export function createSmartFetch(
@@ -45,7 +45,7 @@ export function createSmartFetch(
   let fetch = smartFetch;
 
   if (options.retry !== undefined) {
-    fetch = withRetry(fetch, options.retry);
+    fetch = withRetry(fetch, options.retry === true ? {} : options.retry);
   }
 
   if (options.cache !== undefined) {

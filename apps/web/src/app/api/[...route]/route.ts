@@ -19,12 +19,9 @@ const fxQuoteProvider = new ExchangeRateApi(
     baseUrl: env.EXCHANGE_RATE_BASE_URL,
   },
   {
-    cache: {
-      store,
-    },
-    logging: {
-      logger,
-    },
+    cache: { store },
+    logging: { logger },
+    retry: true,
   },
 );
 

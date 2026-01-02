@@ -29,9 +29,8 @@ export const api = onRequest(async (req, res) => {
       },
       {
         ...(store ? { cache: { store } } : {}),
-        logging: {
-          logger,
-        },
+        logging: { logger },
+        retry: true,
       },
     );
 
