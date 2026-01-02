@@ -97,7 +97,7 @@ const result = await client({
 ## Adapters
 - `ExchangeRateApi`: external FX quote provider with cache + logging enabled.
 - `wrapUpstashRedis`: Upstash Redis adapter that implements `CacheStore`.
-- `redis.node` / `redis.edge`: runtime-specific Upstash clients.
+- `redis-node` / `redis-edge`: runtime-specific Upstash clients.
 
 ## Scripts
 Run from the repo root:

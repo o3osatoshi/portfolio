@@ -183,9 +183,6 @@ importers:
 
   apps/functions:
     dependencies:
-      '@repo/integrations':
-        specifier: workspace:*
-        version: link:../../packages/integrations
       firebase-admin:
         specifier: ^13.6.0
         version: 13.6.0(encoding@0.1.13)
