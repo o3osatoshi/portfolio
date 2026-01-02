@@ -6,6 +6,7 @@ import {
   type HttpRequest,
   type HttpResponse,
   newFetchError,
+  resolveAbortSignal,
 } from "@o3osatoshi/toolkit";
 
 export type BaseFetch = (
@@ -40,7 +41,6 @@ export function createBaseFetch(
       .andThen((res) => deserializeBody(res, req))
       .mapErr((cause) => {
         if (isStructuredError(cause)) return cause;
-
         return newFetchError({
           action: "FetchExternalApi",
           cause,
@@ -82,7 +82,10 @@ function performFetch(
   fetcher: typeof fetch,
   request: BaseFetchRequest,
 ): ResultAsync<Response, Error> {
-  const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
+  const { cleanup, signal } = resolveAbortSignal({
+    signal: request.signal,
+    timeoutMs: request.timeoutMs,
+  });
 
   const init: RequestInit = {
     ...(request.method !== undefined ? { method: request.method } : {}),
@@ -101,36 +104,4 @@ function performFetch(
     cleanup();
     return response;
   });
-}
-
-function resolveSignal(signal?: AbortSignal, timeoutMs?: number) {
-  if (!timeoutMs) {
-    return { cleanup: () => {}, signal };
-  }
-
-  const controller = new AbortController();
-  const onAbort = () => {
-    controller.abort(signal?.reason);
-  };
-
-  if (signal) {
-    if (signal.aborted) {
-      controller.abort(signal.reason);
-      return { cleanup: () => {}, signal: controller.signal };
-    }
-    signal.addEventListener("abort", onAbort, { once: true });
-  }
-
-  const timeoutId = setTimeout(() => {
-    controller.abort(new Error("Request timeout exceeded"));
-  }, timeoutMs);
-
-  const cleanup = () => {
-    clearTimeout(timeoutId);
-    if (signal) {
-      signal.removeEventListener("abort", onAbort);
-    }
-  };
-
-  return { cleanup, signal: controller.signal };
 }

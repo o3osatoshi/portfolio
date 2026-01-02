@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { sleep } from "./asynchronous";
+import { sleep } from "./sleep";
 
 describe("sleep", () => {
   beforeEach(() => {

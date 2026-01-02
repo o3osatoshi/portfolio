@@ -305,6 +305,22 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
 // @public
+export function resolveAbortSignal(options?: ResolveAbortSignalOptions): ResolvedAbortSignal;
+
+// @public
+export type ResolveAbortSignalOptions = {
+    signal?: AbortSignal | undefined;
+    timeoutMs?: number | undefined;
+    timeoutReason?: undefined | unknown;
+};
+
+// @public
+export type ResolvedAbortSignal = {
+    cleanup: () => void;
+    signal?: AbortSignal | undefined;
+};
+
+// @public
 export type SerializedCause = SerializedError | string;
 
 // @public
