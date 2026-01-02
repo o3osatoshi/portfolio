@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const exchangeRateApiPairResponseSchema = z.object({
+export const exchangeRateApiPairSchema = z.object({
   base_code: z.string().optional(),
   conversion_rate: z.union([z.number(), z.string()]).optional(),
   documentation: z.string().optional(),
@@ -14,6 +14,4 @@ export const exchangeRateApiPairResponseSchema = z.object({
   time_next_update_utc: z.string().optional(),
 });
 
-export type ExchangeRateApiPairResponse = z.infer<
-  typeof exchangeRateApiPairResponseSchema
->;
+export type ExchangeRateApiPair = z.infer<typeof exchangeRateApiPairSchema>;

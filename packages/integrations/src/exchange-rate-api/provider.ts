@@ -18,10 +18,7 @@ import {
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
-import {
-  type ExchangeRateApiPairResponse,
-  exchangeRateApiPairResponseSchema,
-} from "./schema";
+import { type ExchangeRateApiPair, exchangeRateApiPairSchema } from "./schema";
 
 const CACHE_TTL_MS = 3_600_000;
 const CACHE_KEY_PREFIX = "fx:rate";
@@ -35,14 +32,14 @@ export type ExchangeRateApiConfig = {
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
  */
 export class ExchangeRateApi implements FxQuoteProvider {
-  private readonly apiBaseUrl: string;
   private readonly apiKey: string;
+  private readonly baseUrl: string;
   private readonly cache: SmartFetchCacheOptions | undefined;
-  private readonly client: SmartFetch;
+  private readonly sFetch: SmartFetch;
 
   constructor(config: ExchangeRateApiConfig) {
     this.apiKey = config.apiKey;
-    this.apiBaseUrl = normalizeBaseUrl(config.baseUrl);
+    this.baseUrl = normalizeBaseUrl(config.baseUrl);
 
     this.cache = config.cache
       ? {
@@ -60,7 +57,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
         }
       : undefined;
 
-    this.client = createSmartFetch({
+    this.sFetch = createSmartFetch({
       cache: this.cache,
       fetch: config.fetch,
       logging,
@@ -71,14 +68,13 @@ export class ExchangeRateApi implements FxQuoteProvider {
   /** @inheritdoc */
   getRate(query: FxQuoteQuery) {
     const path = `${this.apiKey}/pair/${query.base}/${query.quote}`;
-    const url = new URL(path, this.apiBaseUrl);
+    const url = new URL(path, this.baseUrl);
 
-    const request = {
+    return this.sFetch<typeof exchangeRateApiPairSchema>({
       cache: this.cache
         ? {
-            shouldCache: (
-              res: SmartFetchResponse<ExchangeRateApiPairResponse>,
-            ) => isCacheable(res.data),
+            shouldCache: (res: SmartFetchResponse<ExchangeRateApiPair>) =>
+              isCacheable(res.data),
           }
         : undefined,
       decode: {
@@ -86,21 +82,19 @@ export class ExchangeRateApi implements FxQuoteProvider {
           action: "ParseExchangeRateApiResponse",
           layer: "External" as const,
         },
-        schema: exchangeRateApiPairResponseSchema,
+        schema: exchangeRateApiPairSchema,
       },
       headers: {
         Accept: "application/json",
       },
       url: url.toString(),
-    };
-
-    return this.client(request).andThen((res) => toFxQuote(res, query));
+    }).andThen((res) => toFxQuote(res, query));
   }
 }
 
 function buildCacheKey(url: string): string | undefined {
-  const parsedUrl = new URL(url);
-  const segments = parsedUrl.pathname.split("/").filter(Boolean);
+  const _url = new URL(url);
+  const segments = _url.pathname.split("/").filter(Boolean);
   const pairIndex = segments.indexOf("pair");
 
   if (pairIndex < 0 || segments.length <= pairIndex + 2) {
@@ -117,63 +111,63 @@ function buildCacheKey(url: string): string | undefined {
   return `${CACHE_KEY_PREFIX}:${base}:${quote}`;
 }
 
-function isCacheable(res: ExchangeRateApiPairResponse): boolean {
-  if (!res) {
+function isCacheable(pair: ExchangeRateApiPair): boolean {
+  if (!pair) {
     return false;
   }
-  if (res.result && res.result !== "success") {
+  if (pair.result && pair.result !== "success") {
     return false;
   }
-  return res.conversion_rate !== undefined;
+  return pair.conversion_rate !== undefined;
 }
 
-function resolveAsOf(res: ExchangeRateApiPairResponse): Date {
-  if (typeof res.time_last_update_unix === "number") {
-    return new Date(res.time_last_update_unix * 1000);
+function resolveAsOf(pair: ExchangeRateApiPair): Date {
+  if (typeof pair.time_last_update_unix === "number") {
+    return new Date(pair.time_last_update_unix * 1000);
   }
-  if (res.time_last_update_utc) {
-    const lastDate = new Date(res.time_last_update_utc);
-    if (!Number.isNaN(lastDate.getTime())) {
-      return lastDate;
+  if (pair.time_last_update_utc) {
+    const asOf = new Date(pair.time_last_update_utc);
+    if (!Number.isNaN(asOf.getTime())) {
+      return asOf;
     }
   }
   return new Date();
 }
 
 function toFxQuote(
-  result: SmartFetchResponse<ExchangeRateApiPairResponse>,
+  res: SmartFetchResponse<ExchangeRateApiPair>,
   query: FxQuoteQuery,
 ): Result<FxQuote, Error> {
-  if (result.response.ok === false) {
+  if (res.response.ok === false) {
     return err(
       newIntegrationError({
         action: "FetchExchangeRateApi",
-        cause: result.data,
-        kind: httpStatusToKind(result.response.status),
+        cause: res.data,
+        kind: httpStatusToKind(res.response.status),
         reason: formatHttpStatusReason({
-          payload: result.data,
-          response: result.response,
+          payload: res.data,
+          response: res.response,
           serviceName: "ExchangeRate API",
         }),
       }),
     );
   }
 
-  const res = result.data;
+  const pair = res.data;
 
-  if (res?.result && res.result !== "success") {
-    const detail = res["error-type"] ?? "Unknown error";
+  if (pair?.result && pair.result !== "success") {
+    const detail = pair["error-type"] ?? "Unknown error";
     return err(
       newIntegrationError({
         action: "FetchExchangeRateApi",
-        cause: res,
+        cause: pair,
         kind: "BadGateway",
         reason: `ExchangeRate API error: ${detail}`,
       }),
     );
   }
 
-  if (res?.conversion_rate === undefined) {
+  if (pair?.conversion_rate === undefined) {
     return err(
       newIntegrationError({
         action: "ParseExchangeRateApiResponse",
@@ -184,9 +178,9 @@ function toFxQuote(
   }
 
   return newFxQuote({
-    asOf: resolveAsOf(res),
+    asOf: resolveAsOf(pair),
     base: query.base,
     quote: query.quote,
-    rate: res.conversion_rate,
+    rate: pair.conversion_rate,
   });
 }
