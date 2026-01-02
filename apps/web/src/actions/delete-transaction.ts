@@ -5,6 +5,7 @@ import {
   parseDeleteTransactionRequest,
 } from "@repo/application";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+import { getLocale } from "next-intl/server";
 import { updateTag } from "next/cache";
 
 import { env } from "@/env/server";
@@ -20,7 +21,9 @@ const usecase = new DeleteTransactionUseCase(repo);
 export const deleteTransaction = async (
   _: ActionState | undefined,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionState | undefined> => {
+  const locale = await getLocale();
+
   return getMe()
     .andThen((me) =>
       parseDeleteTransactionRequest({
@@ -29,10 +32,10 @@ export const deleteTransaction = async (
       }),
     )
     .andThen((req) => usecase.execute(req).map(() => req))
-    .match<ActionState>(
+    .match<undefined, ActionState>(
       (req) => {
         updateTag(getTag("labs-transactions", { userId: req.userId }));
-        redirect(getPath("labs-server-crud"));
+        redirect({ href: getPath("labs-server-crud"), locale });
       },
       (error) => err(error),
     );
