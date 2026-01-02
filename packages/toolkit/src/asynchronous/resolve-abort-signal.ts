@@ -14,7 +14,7 @@ export type ResolveAbortSignalOptions = {
   timeoutMs?: number | undefined;
   /**
    * Optional abort reason used when the timeout elapses.
-   * When omitted, a generic timeout {@link Error} is used.
+   * When omitted, a generic timeout error is used.
    */
   timeoutReason?: undefined | unknown;
 };
