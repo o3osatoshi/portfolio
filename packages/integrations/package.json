@@ -1,0 +1,33 @@
+{
+  "name": "@repo/integrations",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:cvrg": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@o3osatoshi/logging": "workspace:*",
+    "@o3osatoshi/toolkit": "workspace:*",
+    "@repo/domain": "workspace:*",
+    "@upstash/redis": "^1.35.7",
+    "neverthrow": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@o3osatoshi/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

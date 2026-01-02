@@ -25,6 +25,7 @@
     "@repo/application": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/domain": "workspace:*",
+    "@repo/integrations": "workspace:*",
     "@repo/interface": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@tanstack/react-query": "^5.90.12",

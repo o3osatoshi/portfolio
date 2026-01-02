@@ -14,6 +14,7 @@
   "dependencies": {
     "@o3osatoshi/logging": "workspace:*",
     "@repo/auth": "workspace:*",
+    "@repo/integrations": "workspace:*",
     "@repo/interface": "workspace:*",
     "zod": "catalog:"
   },

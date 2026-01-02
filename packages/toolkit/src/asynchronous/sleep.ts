@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
-import { newError } from "./error";
+import { newError } from "../error";
 
 /**
  * Options accepted by {@link sleep}.

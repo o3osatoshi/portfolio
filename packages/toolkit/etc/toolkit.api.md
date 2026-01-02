@@ -4,8 +4,6 @@
 
 ```ts
 
-import { Redis } from '@upstash/redis/cloudflare';
-import { Redis as Redis_2 } from '@upstash/redis';
 import { Result } from 'neverthrow';
 import { ResultAsync } from 'neverthrow';
 import { z } from 'zod';
@@ -31,6 +29,20 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends ActionEr
 } | never;
 
 // @public
+export function buildHttpResponse<T = unknown>(data: T, response: Response, options?: BuildHttpResponseOptions): HttpResponse<T>;
+
+// @public
+export type BuildHttpResponseOptions = {
+    cache?: {
+        hit: boolean;
+        key?: string;
+    };
+    retry?: {
+        attempts: number;
+    };
+};
+
+// @public
 export function coerceErrorMessage(cause: unknown): string | undefined;
 
 // @public
@@ -38,9 +50,6 @@ export function composeErrorMessage(parts: ErrorMessageParts): string;
 
 // @public
 export function composeErrorName(layer: Layer, kind: Kind): string;
-
-// @public
-export function createEdgeRedisClient(options?: RedisClientOptions): Redis;
 
 // @public
 export function createEnv<T extends EnvSchema>(schema: T, opts?: CreateEnvOptions): EnvOf<T>;
@@ -58,13 +67,16 @@ export function createLazyEnv<T extends EnvSchema>(schema: T, opts?: CreateLazyE
 export type CreateLazyEnvOptions = CreateEnvOptions;
 
 // @public
-export function createRedisClient(options?: RedisClientOptions): Redis_2;
+export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
 
 // @public
 export function decode(value: string): Result<JsonContainer, Error>;
 
 // @public
 export function deserializeError(input: unknown): Error;
+
+// @public
+export function deserializeResponseBody(response: Response): Promise<unknown>;
 
 // @public
 export function encode(value: unknown): Result<string, Error>;
@@ -130,6 +142,64 @@ export function formatFetchTarget({ request, }: {
 }): string | undefined;
 
 // @public
+export function formatHttpStatusReason({ maxPayloadLength, payload, response, serviceName, }: FormatHttpStatusReasonOptions): string;
+
+// @public
+export type FormatHttpStatusReasonOptions = {
+    maxPayloadLength?: null | number;
+    payload: unknown;
+    response: HttpStatusLike;
+    serviceName: string;
+};
+
+// @public
+export function formatPayloadPreview(payload: unknown): string;
+
+// @public
+export type HttpRequest = {
+    method?: string;
+    url: string;
+};
+
+// @public
+export type HttpResponse<T = unknown> = {
+    cache?: {
+        hit: boolean;
+        key?: string;
+    };
+    data: T;
+    response: {
+        headers: Headers;
+        ok: boolean;
+        redirected?: boolean;
+        status: number;
+        statusText: string;
+        url: string;
+    };
+    retry?: {
+        attempts: number;
+    };
+};
+
+// @public
+export type HttpStatusKind = Extract<Kind, "BadGateway" | "BadRequest" | "Forbidden" | "NotFound" | "RateLimit" | "Timeout" | "Unauthorized" | "Unknown">;
+
+// @public
+export type HttpStatusLike = {
+    status: number;
+    statusText: string;
+};
+
+// @public
+export function httpStatusToKind(status: number): HttpStatusKind;
+
+// @public
+export function isDeserializableBody(res: Response): boolean;
+
+// @public
+export function isDeserializableResponse(response: Response): boolean;
+
+// @public
 export function isSerializedError(v: unknown): v is SerializedError;
 
 // @public
@@ -166,17 +236,6 @@ export const jsonValueSchema: z.ZodType<JsonValue>;
 
 // @public
 export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
-
-// @public
-export function kvGet<T>(redis: Redis_2, key: number | string, opt?: KvOptions): ResultAsync<null | T, Error>;
-
-// @public
-export type KvOptions = {
-    prefix?: string;
-};
-
-// @public
-export function kvSet<T>(redis: Redis_2, key: number | string, value: T, { onlyIfAbsent, onlyIfPresent, ttlMs }?: SetOptions, opt?: KvOptions): ResultAsync<"OK" | null | T, Error>;
 
 // @public
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
@@ -222,6 +281,9 @@ export type NewZodError = {
 export function newZodError(options: NewZodError): Error;
 
 // @public
+export function normalizeBaseUrl(baseUrl: string): string;
+
+// @public
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 
 // @public
@@ -243,9 +305,19 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
 }): (input: unknown) => Result<z.infer<T>, Error>;
 
 // @public
-export type RedisClientOptions = {
-    token?: string;
-    url?: string;
+export function resolveAbortSignal(options?: ResolveAbortSignalOptions): ResolvedAbortSignal;
+
+// @public
+export type ResolveAbortSignalOptions = {
+    signal?: AbortSignal | undefined;
+    timeoutMs?: number | undefined;
+    timeoutReason?: undefined | unknown;
+};
+
+// @public
+export type ResolvedAbortSignal = {
+    cleanup: () => void;
+    signal?: AbortSignal | undefined;
 };
 
 // @public
@@ -266,13 +338,6 @@ export function serializeError(error: Error, opts?: SerializeOptions): Serialize
 export type SerializeOptions = {
     depth?: number | undefined;
     includeStack?: boolean | undefined;
-};
-
-// @public
-export type SetOptions = {
-    onlyIfAbsent?: boolean;
-    onlyIfPresent?: boolean;
-    ttlMs?: number;
 };
 
 // @public
@@ -297,6 +362,12 @@ export function truncate(value: string, maxLen?: null | number): string;
 
 // @public
 export type UnknownRecord = Record<string, unknown>;
+
+// @public
+export type UrlRedactorOptions = {
+    placeholder?: string;
+    secrets: Array<string | undefined>;
+};
 
 // @public
 export function userMessageFromError(error: Error): string;

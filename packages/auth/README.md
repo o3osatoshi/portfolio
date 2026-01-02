@@ -40,10 +40,15 @@ Node API route:
 // apps/web/src/app/api/[...route]/route.ts
 import { createAuthConfig } from "@repo/auth";
 import { buildHandler } from "@repo/interface/http/node";
+import { ExchangeRateApi } from "@repo/integrations";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
 const transactionRepo = new PrismaTransactionRepository(prisma);
+const fxQuoteProvider = new ExchangeRateApi({
+  apiKey: process.env.EXCHANGE_RATE_API_KEY!,
+  baseUrl: process.env.EXCHANGE_RATE_BASE_URL!,
+});
 
 const authConfig = createAuthConfig({
   providers: {
@@ -56,7 +61,11 @@ const authConfig = createAuthConfig({
   secret: process.env.AUTH_SECRET!,
 });
 
-export const { GET, POST } = buildHandler({ authConfig, transactionRepo });
+export const { GET, POST } = buildHandler({
+  authConfig,
+  fxQuoteProvider,
+  transactionRepo,
+});
 ```
 
 Edge route:

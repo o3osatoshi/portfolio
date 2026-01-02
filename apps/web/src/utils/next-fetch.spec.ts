@@ -79,9 +79,9 @@ describe("utils/next-fetch nextFetch", () => {
     expect(res.isOk()).toBe(true);
     if (!res.isOk()) return;
 
-    expect(res.value.body).toEqual(body);
-    expect(res.value.status).toBe(200);
-    expect(res.value.url).toBe("https://example.com/external");
+    expect(res.value.data).toEqual(body);
+    expect(res.value.response.status).toBe(200);
+    expect(res.value.response.url).toBe("https://example.com/external");
   });
 
   it("includes search, cache, revalidate and tags in fetch options", async () => {
@@ -126,7 +126,7 @@ describe("utils/next-fetch nextFetch", () => {
     expect(res.isOk()).toBe(true);
     if (!res.isOk()) return;
 
-    expect(res.value.body).toEqual(body);
+    expect(res.value.data).toEqual(body);
   });
 
   it("returns Err when fetch rejects with network error", async () => {
