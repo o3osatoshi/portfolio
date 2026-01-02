@@ -33,6 +33,8 @@ Personal portfolio and experimentation platform for **Satoshi Ogura**. The codeb
 - **Domain (`@repo/domain`)** – Entities, value objects, and repository ports implemented with `neverthrow`.
 - **Application (`@repo/application`)** – DTO validation (Zod + toolkit) and use cases that depend only on domain ports.
 - **Infrastructure (`@repo/prisma`)** – Prisma-based adapters that fulfill domain ports and expose a shared client.
+- **Integrations (`@repo/integrations`)** – External service adapters (APIs, caches) implementing domain ports.
+- **Logging (`@o3osatoshi/logging`)** – Axiom-first logging helpers for Node/Edge/Browser runtimes.
 - **Auth (`@repo/auth`)** – Shared Auth.js/Hono configuration and React helpers consumed by HTTP interface and delivery layers.
 - **HTTP Interface (`@repo/interface`)** – Hono-based HTTP interface and typed client for Node/Edge runtimes; wires auth + use cases, but owns no business logic.
 - **Delivery (`apps/web`, `apps/functions`, `apps/edge`)** – Next.js route handlers, Firebase Functions, and a Cloudflare Worker that inject infrastructure adapters into application use cases.
@@ -51,8 +53,10 @@ Personal portfolio and experimentation platform for **Satoshi Ogura**. The codeb
   │   ├── 📁 domain/           # Core entities, value objects, ports
   │   ├── 📁 application/      # DTOs + use cases orchestrating domain logic
   │   ├── 📁 prisma/           # Prisma schema, adapters, and DB utilities
+  │   ├── 📁 integrations/     # External adapters and HTTP utilities
   │   ├── 📁 auth/             # Auth.js + Hono glue (config, middleware, React helpers)
   │   ├── 📁 interface/        # HTTP interface (Hono app + typed RPC client for Node/Edge)
+  │   ├── 📁 logging/          # Axiom-first logging helpers
   │   ├── 📁 ui/               # Shared React component library (server/client splits)
   │   ├── 📁 toolkit/          # Zod/Neverthrow helpers and error builders
   │   ├── 📁 config/           # Shared tsconfig, Biome, ESLint, tsup presets
@@ -136,7 +140,7 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 - **Backend**: Hono-based HTTP interface delivered via Next.js route handlers, Firebase Functions (Node 22), and a Cloudflare Worker.
 - **Database**: Prisma ORM on PostgreSQL (adapter-pg).
 - **Web3**: Wagmi, RainbowKit, Viem with generated contract hooks.
-- **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`, `@repo/auth`, `@repo/interface`.
+- **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`, `@o3osatoshi/logging`, `@repo/auth`, `@repo/interface`, `@repo/integrations`.
 - **Tooling**: Turborepo, pnpm workspaces, Biome, ESLint (flat config), TypeDoc, Changesets, Renovate.
 
 ## Deployment & hosting
