@@ -3,7 +3,7 @@ import { ResultAsync } from "neverthrow";
 import {
   buildHttpResponse,
   deserializeResponseBody,
-  type HttpRequestMeta,
+  type HttpRequest,
   type HttpResponse,
   newFetchError,
 } from "@o3osatoshi/toolkit";
@@ -28,26 +28,23 @@ export type CreateBaseFetchOptions = {
 export function createBaseFetch(
   options: CreateBaseFetchOptions = {},
 ): BaseFetch {
-  const fetcher = options.fetch ?? fetch;
-
   return (
     request: BaseFetchRequest,
   ): ResultAsync<HttpResponse<unknown>, Error> => {
-    const method = request.method ?? "GET";
-    const requestMeta: HttpRequestMeta = { method, url: request.url };
+    const req: HttpRequest = {
+      method: request.method ?? "GET",
+      url: request.url,
+    };
 
-    return performFetch(fetcher, request)
-      .andThen((response) => deserializeBody(response, requestMeta))
+    return performFetch(options.fetch ?? fetch, request)
+      .andThen((res) => deserializeBody(res, req))
       .mapErr((cause) => {
-        // Pass through structured errors from newFetchError
-        if (cause instanceof Error && isStructuredError(cause)) {
-          return cause;
-        }
+        if (isStructuredError(cause)) return cause;
 
         return newFetchError({
           action: "FetchExternalApi",
           cause,
-          request: requestMeta,
+          request: req,
         });
       });
   };
@@ -55,14 +52,14 @@ export function createBaseFetch(
 
 function deserializeBody(
   response: Response,
-  requestMeta: HttpRequestMeta,
-): ResultAsync<HttpResponse<unknown>, Error> {
+  request: HttpRequest,
+): ResultAsync<HttpResponse, Error> {
   return ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
     newFetchError({
       action: "DeserializeResponseBody",
       cause,
       kind: "BadGateway",
-      request: requestMeta,
+      request,
     }),
   ).map((data) => buildHttpResponse(data, response));
 }
@@ -88,10 +85,10 @@ function performFetch(
   const { cleanup, signal } = resolveSignal(request.signal, request.timeoutMs);
 
   const init: RequestInit = {
-    ...(request.method ? { method: request.method } : {}),
-    ...(request.headers ? { headers: request.headers } : {}),
+    ...(request.method !== undefined ? { method: request.method } : {}),
+    ...(request.headers !== undefined ? { headers: request.headers } : {}),
     ...(request.body !== undefined ? { body: request.body } : {}),
-    ...(signal ? { signal } : {}),
+    ...(signal !== undefined ? { signal } : {}),
   };
 
   return ResultAsync.fromPromise(fetcher(request.url, init), (cause) =>

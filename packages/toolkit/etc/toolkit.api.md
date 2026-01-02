@@ -156,7 +156,7 @@ export type FormatHttpStatusReasonOptions = {
 export function formatPayloadPreview(payload: unknown): string;
 
 // @public
-export type HttpRequestMeta = {
+export type HttpRequest = {
     method: string;
     url: string;
 };

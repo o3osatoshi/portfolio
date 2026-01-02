@@ -1,4 +1,9 @@
 {
+  "compilerOptions": {
+    "paths": {
+      "@o3osatoshi/toolkit": ["../toolkit/src"]
+    }
+  },
   "extends": "@o3osatoshi/config/tsconfig/node.json",
   "include": ["src"]
 }

@@ -3,7 +3,7 @@
  *
  * @public
  */
-export type HttpRequestMeta = {
+export type HttpRequest = {
   /** HTTP method (for example "GET"). */
   method: string;
   /** Fully qualified request URL. */
