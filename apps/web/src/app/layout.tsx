@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
+import { defaultLocale } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   description: "o3osatoshi portfolio",
@@ -42,15 +43,14 @@ export const metadata: Metadata = {
 
 interface Props {
   children: ReactNode;
-  params?: Promise<{ locale?: string }>;
+  params: Promise<{ locale?: string }>;
 }
 
 export default async function Layout({ children, params }: Props) {
-  const resolvedParams = await params;
-  const locale = resolvedParams?.locale ?? "en";
+  const { locale } = await params;
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale ?? defaultLocale} suppressHydrationWarning>
       <GoogleAnalytics gaId="G-QFX9PV6BLQ" />
       <body
         className={`${fontSans.variable} ${fontMono.variable} ${jetbrainsMono.variable} font-sans antialiased`}
