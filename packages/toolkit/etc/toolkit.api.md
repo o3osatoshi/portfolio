@@ -157,7 +157,7 @@ export function formatPayloadPreview(payload: unknown): string;
 
 // @public
 export type HttpRequest = {
-    method: string;
+    method?: string;
     url: string;
 };
 

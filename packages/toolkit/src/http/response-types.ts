@@ -5,7 +5,7 @@
  */
 export type HttpRequest = {
   /** HTTP method (for example "GET"). */
-  method: string;
+  method?: string;
   /** Fully qualified request URL. */
   url: string;
 };

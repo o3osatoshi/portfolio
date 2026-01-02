@@ -3,12 +3,8 @@ import type { z } from "zod";
 import { parseWith } from "@o3osatoshi/toolkit";
 
 import { createBaseFetch } from "./base-fetch";
-import type {
-  SmartFetch,
-  SmartFetchCacheOptions,
-  SmartFetchRequest,
-} from "./smart-fetch-types";
-import { withCache } from "./with-cache";
+import type { SmartFetch, SmartFetchRequest } from "./types";
+import { type SmartFetchCacheOptions, withCache } from "./with-cache";
 import type { SmartFetchLoggingOptions } from "./with-logging";
 import { withLogging } from "./with-logging";
 import type { SmartFetchRetryOptions } from "./with-retry";

@@ -1,12 +1,21 @@
+import type { CacheStore } from "@repo/domain";
 import { okAsync, Result } from "neverthrow";
 import type { z } from "zod";
 
 import type {
   SmartFetch,
-  SmartFetchCacheOptions,
   SmartFetchRequest,
   SmartFetchResponse,
-} from "./smart-fetch-types";
+} from "./types";
+
+export type SmartFetchCacheOptions<T = unknown> = {
+  deserialize?: (data: unknown) => null | T;
+  getKey?: (request: SmartFetchRequest) => string | undefined;
+  serialize?: (data: T) => unknown;
+  shouldCache?: (response: SmartFetchResponse<T>) => boolean;
+  store?: CacheStore | undefined;
+  ttlMs?: number;
+};
 
 export function withCache(
   next: SmartFetch,

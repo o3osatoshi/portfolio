@@ -3,11 +3,7 @@ import type { z } from "zod";
 import type { Attributes, Logger } from "@o3osatoshi/logging";
 import { parseErrorName } from "@o3osatoshi/toolkit";
 
-import type {
-  SmartFetch,
-  SmartFetchRequest,
-  SmartFetchRequestMeta,
-} from "./smart-fetch-types";
+import type { SmartFetch, SmartFetchRequest } from "./types";
 
 export type SmartFetchLoggingOptions = {
   logger?: Logger | undefined;
@@ -94,7 +90,7 @@ export function withLogging(
 }
 
 function buildErrorEventAttributes(
-  request: SmartFetchRequestMeta,
+  request: SmartFetchRequest,
   error: Error,
   redactUrl: (url: string) => string,
   requestName?: string,
@@ -116,7 +112,7 @@ function buildErrorEventAttributes(
 }
 
 function buildEventAttributes(
-  request: SmartFetchRequestMeta,
+  request: SmartFetchRequest,
   result: {
     cache?: { hit: boolean };
     response: { status: number };
@@ -144,7 +140,7 @@ function buildMetricsAttributes({
 }: {
   error?: Error | undefined;
   redactUrl: (url: string) => string;
-  request: SmartFetchRequestMeta;
+  request: SmartFetchRequest;
   requestName?: string | undefined;
   result?:
     | {
@@ -184,7 +180,7 @@ function emitMetrics({
   error?: Error;
   logger: Logger;
   redactUrl: (url: string) => string;
-  request: SmartFetchRequestMeta;
+  request: SmartFetchRequest;
   requestName?: string | undefined;
   result?:
     | {

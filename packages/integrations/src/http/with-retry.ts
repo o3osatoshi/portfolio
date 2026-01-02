@@ -6,9 +6,8 @@ import { parseErrorName } from "@o3osatoshi/toolkit";
 import type {
   SmartFetch,
   SmartFetchRequest,
-  SmartFetchRequestMeta,
   SmartFetchResponse,
-} from "./smart-fetch-types";
+} from "./types";
 
 export type SmartFetchRetryOptions = {
   baseDelayMs?: number;
@@ -24,7 +23,7 @@ type RetryCheckInput = {
   attempt: number;
   error?: Error;
   maxAttempts: number;
-  request: SmartFetchRequestMeta;
+  request: SmartFetchRequest;
   response?: { headers?: Headers; status?: number } | undefined;
 };
 
