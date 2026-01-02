@@ -14,10 +14,6 @@ import { withLogging } from "./with-logging";
 import type { SmartFetchRetryOptions } from "./with-retry";
 import { withRetry } from "./with-retry";
 
-export type ApiSmartFetchClientOptions = {
-  cache?: SmartFetchCacheOptions;
-} & Omit<CreateSmartFetchOptions, "cache">;
-
 export type CreateSmartFetchOptions = {
   cache?: SmartFetchCacheOptions | undefined;
   fetch?: typeof fetch | undefined;

@@ -11,8 +11,8 @@ import {
 } from "@o3osatoshi/toolkit";
 
 import {
-  type ApiSmartFetchClientOptions,
   createSmartFetch,
+  type CreateSmartFetchOptions,
   type SmartFetch,
   type SmartFetchCacheOptions,
   type SmartFetchResponse,
@@ -26,7 +26,7 @@ const CACHE_KEY_PREFIX = "fx:rate";
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
-} & ApiSmartFetchClientOptions;
+} & CreateSmartFetchOptions;
 
 /**
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
