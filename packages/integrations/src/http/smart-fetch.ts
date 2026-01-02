@@ -1,6 +1,6 @@
 import type { z } from "zod";
 
-import { parseAsyncWith } from "@o3osatoshi/toolkit";
+import { parseWith } from "@o3osatoshi/toolkit";
 
 import { createBaseFetch } from "./base-fetch";
 import type {
@@ -28,7 +28,6 @@ export type CreateSmartFetchOptions = {
 export function createSmartFetch(
   options: CreateSmartFetchOptions = {},
 ): SmartFetch {
-  // Create base fetch function with Zod parsing adapter
   const smartFetch: SmartFetch = <S extends z.ZodType>(
     request: SmartFetchRequest<S>,
   ) => {
@@ -39,19 +38,13 @@ export function createSmartFetch(
     );
 
     return baseFetch(baseRequest).andThen((response) => {
-      const decodeContext = decode.context ?? {
-        action: "ParseExternalApiResponse",
-        layer: "External" as const,
-      };
-
-      return parseAsyncWith(
-        decode.schema,
-        decodeContext,
-      )(response.data).map((data) => ({ ...response, data }));
+      return parseWith(decode.schema, {
+        action: decode.context?.action ?? "DecodeResponseBody",
+        layer: decode.context?.layer ?? ("External" as const),
+      })(response.data).map((data) => ({ ...response, data }));
     });
   };
 
-  // Apply middleware layers
   let fetch = smartFetch;
 
   if (options.retry !== undefined) {
