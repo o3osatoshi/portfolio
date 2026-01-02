@@ -6,9 +6,9 @@ import { newIntegrationError } from "../integration-error";
 
 export type UpstashRedisClient = Pick<UpstashRedis, "get" | "set">;
 /**
- * Connection options for Upstash Redis.
+ * Connection configuration for Upstash Redis.
  */
-export type UpstashRedisOptions = {
+export type UpstashRedisConfig = {
   token?: string;
   url?: string;
 };

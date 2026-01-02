@@ -22,16 +22,20 @@ export const api = onRequest(async (req, res) => {
           })
         : undefined;
     const logger = getFunctionsLogger();
-    const fxQuoteProvider = new ExchangeRateApi({
-      apiKey: env.EXCHANGE_RATE_API_KEY,
-      baseUrl: env.EXCHANGE_RATE_BASE_URL,
-      cache: {
-        store,
+    const fxQuoteProvider = new ExchangeRateApi(
+      {
+        apiKey: env.EXCHANGE_RATE_API_KEY,
+        baseUrl: env.EXCHANGE_RATE_BASE_URL,
       },
-      logging: {
-        logger,
+      {
+        cache: {
+          store,
+        },
+        logging: {
+          logger,
+        },
       },
-    });
+    );
 
     const client = createPrismaClient({
       connectionString: env.DATABASE_URL,

@@ -35,7 +35,7 @@ describe("integrations/upstash createEdgeUpstashRedis (edge)", () => {
     });
   });
 
-  it("passes undefined token and url when options are omitted", () => {
+  it("passes undefined token and url when config is omitted", () => {
     createEdgeUpstashRedis();
 
     expect(h.EdgeRedisMock).toHaveBeenCalledTimes(1);

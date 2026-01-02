@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { parseErrorMessage } from "@o3osatoshi/toolkit";
 
-import type { ExchangeRateApiConfig } from "./provider";
+import type { ExchangeRateApiConfig, ExchangeRateApiOptions } from "./provider";
 import { ExchangeRateApi } from "./provider";
 
 type MockResponseOptions = {
@@ -51,11 +51,17 @@ const query = {
   quote: "JPY",
 } as FxQuoteQuery;
 
-const buildProvider = (overrides: Partial<ExchangeRateApiConfig> = {}) =>
-  new ExchangeRateApi({
-    ...DEFAULT_CONFIG,
-    ...overrides,
-  });
+const buildProvider = (
+  overrides: Partial<ExchangeRateApiConfig> = {},
+  options: ExchangeRateApiOptions = {},
+) =>
+  new ExchangeRateApi(
+    {
+      ...DEFAULT_CONFIG,
+      ...overrides,
+    },
+    options,
+  );
 
 describe("integrations/exchange-rate-api ExchangeRateApi", () => {
   beforeEach(() => {
@@ -78,10 +84,14 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      baseUrl: "https://example.test/api",
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {
+        baseUrl: "https://example.test/api",
+      },
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -113,9 +123,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -145,9 +158,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       statusText: "Not Found",
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -163,9 +179,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       jsonError: new Error("bad json"),
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -184,9 +203,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -205,9 +227,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -227,9 +252,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -250,9 +278,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    const provider = buildProvider(
+      {},
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await provider.getRate(query);
 
@@ -278,12 +309,15 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     // @ts-expect-error
     cacheStore.set = vi.fn(() => okAsync("OK"));
     const fetchMock = vi.fn(async () => buildResponse({ json: cachedPayload }));
-    const provider = buildProvider({
-      cache: {
-        store: cacheStore,
+    const provider = buildProvider(
+      {},
+      {
+        cache: {
+          store: cacheStore,
+        },
+        fetch: fetchMock as unknown as typeof fetch,
       },
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    );
 
     const result = await provider.getRate(query);
 
@@ -314,12 +348,15 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
       },
     });
     const fetchMock = vi.fn(async () => response);
-    const provider = buildProvider({
-      cache: {
-        store: cacheStore,
+    const provider = buildProvider(
+      {},
+      {
+        cache: {
+          store: cacheStore,
+        },
+        fetch: fetchMock as unknown as typeof fetch,
       },
-      fetch: fetchMock as unknown as typeof fetch,
-    });
+    );
 
     const result = await provider.getRate(query);
 

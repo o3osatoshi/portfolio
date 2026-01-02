@@ -37,7 +37,7 @@ describe("integrations/upstash createUpstashRedis (node)", () => {
     expect(typeof store.set).toBe("function");
   });
 
-  it("passes undefined token and url when options are omitted", () => {
+  it("passes undefined token and url when config is omitted", () => {
     createUpstashRedis();
 
     expect(h.RedisMock).toHaveBeenCalledTimes(1);

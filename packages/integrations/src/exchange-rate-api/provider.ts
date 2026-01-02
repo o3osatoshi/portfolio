@@ -26,7 +26,9 @@ const CACHE_KEY_PREFIX = "fx:rate";
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
-} & CreateSmartFetchOptions;
+};
+
+export type ExchangeRateApiOptions = CreateSmartFetchOptions;
 
 /**
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
@@ -37,21 +39,24 @@ export class ExchangeRateApi implements FxQuoteProvider {
   private readonly cache: SmartFetchCacheOptions | undefined;
   private readonly sFetch: SmartFetch;
 
-  constructor(config: ExchangeRateApiConfig) {
+  constructor(
+    config: ExchangeRateApiConfig,
+    options: ExchangeRateApiOptions = {},
+  ) {
     this.apiKey = config.apiKey;
     this.baseUrl = normalizeBaseUrl(config.baseUrl);
 
-    this.cache = config.cache
+    this.cache = options.cache
       ? {
-          ...config.cache,
+          ...options.cache,
           getKey: (request) => buildCacheKey(request.url),
           ttlMs: CACHE_TTL_MS,
         }
       : undefined;
 
-    const logging = config.logging
+    const logging = options.logging
       ? {
-          ...config.logging,
+          ...options.logging,
           redactUrl: createUrlRedactor({ secrets: [config.apiKey] }),
           requestName: "exchange_rate",
         }
@@ -59,9 +64,9 @@ export class ExchangeRateApi implements FxQuoteProvider {
 
     this.sFetch = createSmartFetch({
       cache: this.cache,
-      fetch: config.fetch,
+      fetch: options.fetch,
       logging,
-      retry: config.retry,
+      retry: options.retry,
     });
   }
 
