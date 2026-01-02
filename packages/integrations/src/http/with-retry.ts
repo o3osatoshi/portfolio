@@ -10,14 +10,8 @@ import type {
 } from "./types";
 
 export type SmartFetchRequestRetryOptions<S extends z.ZodType> = {
-  baseDelayMs?: number;
-  maxAttempts?: number;
-  maxDelayMs?: number;
-  respectRetryAfter?: boolean;
-  retryOnMethods?: string[];
-  retryOnStatuses?: number[];
   shouldRetry?: (input: RetryCheckInput<S>) => boolean;
-};
+} & SmartFetchRetryOptions;
 
 export type SmartFetchRetryOptions = {
   baseDelayMs?: number;
