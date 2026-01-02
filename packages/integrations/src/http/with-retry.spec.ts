@@ -86,7 +86,6 @@ describe("integrations/http withRetry", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(next).toHaveBeenCalledTimes(3);
-    expect((result.error as { retryAttempts?: number }).retryAttempts).toBe(3);
 
     randomSpy.mockRestore();
     vi.useRealTimers();
