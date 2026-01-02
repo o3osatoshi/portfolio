@@ -15,7 +15,7 @@ vi.mock("@upstash/redis", () => ({
   Redis: h.RedisMock,
 }));
 
-import { createUpstashRedis } from "./redis.node";
+import { createUpstashRedis } from "./redis-node";
 
 describe("integrations/upstash createUpstashRedis (node)", () => {
   beforeEach(() => {

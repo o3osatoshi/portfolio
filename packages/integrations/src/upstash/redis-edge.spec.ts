@@ -15,7 +15,7 @@ vi.mock("@upstash/redis/cloudflare", () => ({
   Redis: h.EdgeRedisMock,
 }));
 
-import { createEdgeUpstashRedis } from "./redis.edge";
+import { createEdgeUpstashRedis } from "./redis-edge";
 
 describe("integrations/upstash createEdgeUpstashRedis (edge)", () => {
   beforeEach(() => {
