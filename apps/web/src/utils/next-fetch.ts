@@ -4,7 +4,6 @@ import { env } from "@/env/client";
 import {
   buildHttpResponse,
   deserializeResponseBody,
-  type HttpRequest,
   type HttpResponse,
   newFetchError,
 } from "@o3osatoshi/toolkit";
@@ -55,7 +54,6 @@ export function nextFetch(
 ): ResultAsync<HttpResponse, Error> {
   const queryPath = getQueryPath(request.path, request.search);
   const url = new URL(queryPath, env.NEXT_PUBLIC_API_BASE_URL);
-  const requestMeta: HttpRequest = { method: "GET", url: url.href };
 
   const _tags =
     request.tags === undefined ? [queryPath] : [...request.tags, queryPath];
@@ -75,7 +73,7 @@ export function nextFetch(
       newFetchError({
         action: `Fetch ${queryPath}`,
         cause,
-        request: requestMeta,
+        request: { method: "GET", url: url.href },
       }),
   ).andThen((response) =>
     ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
@@ -83,7 +81,7 @@ export function nextFetch(
         action: `Deserialize body for ${queryPath}`,
         cause,
         kind: "Serialization",
-        request: requestMeta,
+        request: { method: "GET", url: url.href },
       }),
     ).map((data) =>
       buildHttpResponse(data, response, {
