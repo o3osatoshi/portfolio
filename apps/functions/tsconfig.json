@@ -7,6 +7,7 @@
       "@o3osatoshi/logging/*": ["../../packages/logging/src/*"],
       "@o3osatoshi/toolkit": ["../../packages/toolkit/src"],
       "@repo/auth": ["../../packages/auth/src"],
+      "@repo/integrations": ["../../packages/integrations/src"],
       "@repo/interface/*": ["../../packages/interface/src/*"],
       "@repo/prisma": ["../../packages/prisma/src"]
     }
