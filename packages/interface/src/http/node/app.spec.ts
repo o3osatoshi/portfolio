@@ -1,6 +1,9 @@
-import type { GetTransactionsRequest } from "@repo/application";
+import type {
+  GetFxQuoteRequest,
+  GetTransactionsRequest,
+} from "@repo/application";
 import type { AuthConfig } from "@repo/auth";
-import type { TransactionRepository } from "@repo/domain";
+import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import type { Context, Next } from "hono";
 import { err, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -32,6 +35,19 @@ vi.mock("@repo/auth/middleware", () => ({
 
 // Mock application layer for deterministic behavior
 const a = vi.hoisted(() => {
+  const parseGetFxQuoteRequest = vi.fn(
+    (input: GetFxQuoteRequest): Result<GetFxQuoteRequest, Error> => ok(input),
+  );
+  class GetFxQuoteUseCase {
+    execute() {
+      return okAsync({
+        asOf: new Date(0),
+        base: "USD",
+        quote: "JPY",
+        rate: "150.0",
+      });
+    }
+  }
   const parseGetTransactionsRequest = vi.fn(
     (input: GetTransactionsRequest): Result<GetTransactionsRequest, Error> =>
       ok(input),
@@ -53,11 +69,18 @@ const a = vi.hoisted(() => {
       ]);
     }
   }
-  return { GetTransactionsUseCase, parseGetTransactionsRequest };
+  return {
+    GetFxQuoteUseCase,
+    GetTransactionsUseCase,
+    parseGetFxQuoteRequest,
+    parseGetTransactionsRequest,
+  };
 });
 
 vi.mock("@repo/application", () => ({
+  GetFxQuoteUseCase: a.GetFxQuoteUseCase,
   GetTransactionsUseCase: a.GetTransactionsUseCase,
+  parseGetFxQuoteRequest: a.parseGetFxQuoteRequest,
   parseGetTransactionsRequest: a.parseGetTransactionsRequest,
 }));
 
@@ -68,6 +91,7 @@ describe("http/node app", () => {
 
   function build() {
     const app = buildApp({
+      fxQuoteProvider: {} as FxQuoteProvider,
       authConfig: {} as AuthConfig,
       // repo is unused because use case is mocked
       transactionRepo: {} as TransactionRepository,
@@ -106,5 +130,19 @@ describe("http/node app", () => {
     const res = await build().request("/api/auth/some-route");
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toEqual({ auth: true });
+  });
+
+  it("GET /api/public/exchange-rate returns the latest FX quote", async () => {
+    const res = await build().request(
+      "/api/public/exchange-rate?base=usd&quote=jpy",
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.base).toBe("USD");
+    expect(body.quote).toBe("JPY");
+    expect(a.parseGetFxQuoteRequest).toHaveBeenCalledWith({
+      base: "usd",
+      quote: "jpy",
+    });
   });
 });

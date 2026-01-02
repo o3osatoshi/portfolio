@@ -6,6 +6,8 @@ This document reflects the current state of the repository. Commands listed belo
 - **Domain (`@repo/domain`)**: Value objects, entities, and ports. Only depends on `@o3osatoshi/toolkit`.
 - **Application (`@repo/application`)**: DTO validation and use cases. Depends on the domain ports/value objects.
 - **Infrastructure (`@repo/prisma`)**: Prisma-backed implementations of domain ports plus DB client utilities.
+- **Integrations (`@repo/integrations`)**: External service adapters (APIs, caches) implementing domain ports.
+- **Logging (`@o3osatoshi/logging`)**: Axiom-first logging helpers for Node/Edge/Browser runtimes.
 - **Auth (`@repo/auth`)**: Shared Auth.js/Hono configuration and React helpers consumed by HTTP interface and delivery layers.
 - **HTTP Interface (`@repo/interface`)**: Hono-based HTTP interface (Node/Edge apps and typed client) that wires auth + use cases without owning business logic.
 - **Delivery (`apps/web`, `apps/functions`, `apps/edge`)**: HTTP entry points (Next.js API routes, Firebase Functions, Cloudflare Workers) that inject infrastructure adapters into application use cases.
@@ -19,6 +21,7 @@ This document reflects the current state of the repository. Commands listed belo
 - `apps/storybook`: Vite-powered Storybook for UI review and visual testing.
 - `packages/domain`, `packages/application`: Clean architecture core (Vitest).
 - `packages/prisma`: Prisma schema, adapters, and DB scripts.
+- `packages/integrations`: External service adapters (APIs, caches) for provider implementations.
 - `packages/auth`: Auth.js + Hono configuration and React helpers shared across delivery layers.
 - `packages/interface`: Runtime-agnostic HTTP interface (Hono app + typed RPC client) for Node/Edge.
 - `packages/logging`: Axiom-first logging helpers for Node/Edge/Browser runtimes.
@@ -44,6 +47,7 @@ This document reflects the current state of the repository. Commands listed belo
 - Deploy Edge (prod): `pnpm deploy:edge`.
 - Deploy Edge (prv): `pnpm deploy:edge:prv`.
 - Refine (style → build → check → API extract): `pnpm refine`.
+- API extractor: `pnpm api:extract`, `pnpm api:report`.
 - Release workflow helpers (Changesets):
   - Open interactive changeset editor: `pnpm release:log`.
   - Apply pending changesets and bump versions: `pnpm release:version`.

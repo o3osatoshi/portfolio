@@ -15,6 +15,7 @@
     "@repo/edge",
     "@repo/eth",
     "@repo/functions",
+    "@repo/integrations",
     "@repo/interface",
     "@repo/prisma",
     "@repo/storybook",

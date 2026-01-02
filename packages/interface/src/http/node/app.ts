@@ -1,11 +1,16 @@
 import {
+  GetFxQuoteUseCase,
   GetTransactionsUseCase,
+  parseGetFxQuoteRequest,
   parseGetTransactionsRequest,
 } from "@repo/application";
-import type { GetTransactionsResponse } from "@repo/application";
+import type {
+  GetFxQuoteResponse,
+  GetTransactionsResponse,
+} from "@repo/application";
 import { type AuthConfig, getAuthUserId } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
-import type { TransactionRepository } from "@repo/domain";
+import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -28,6 +33,8 @@ export type AppType = ReturnType<typeof buildApp>;
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
+  /** Provider required by FX-quote use cases. */
+  fxQuoteProvider: FxQuoteProvider;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -60,7 +67,7 @@ export function buildApp(deps: Deps) {
       initAuthConfig(() => deps.authConfig),
     )
     .route("/auth", buildAuthRoutes())
-    .route("/public", buildPublicRoutes())
+    .route("/public", buildPublicRoutes(deps))
     .route("/private", buildPrivateRoutes(deps));
 }
 
@@ -75,19 +82,28 @@ export function buildApp(deps: Deps) {
  * ```ts
  * // app/api/[...route]/route.ts
  * import { createAuthConfig } from "@repo/auth";
+ * import { ExchangeRateApi } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
  * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
  * export const runtime = "nodejs";
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
  * const transactionRepo = new PrismaTransactionRepository(prisma);
+ * const fxQuoteProvider = new ExchangeRateApi({
+ *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
+ *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
+ * });
  * const authConfig = createAuthConfig({
  *   providers: { google: { clientId: process.env.AUTH_GOOGLE_ID!, clientSecret: process.env.AUTH_GOOGLE_SECRET! } },
  *   prismaClient: prisma,
  *   secret: process.env.AUTH_SECRET!,
  * });
  *
- * export const { GET, POST } = buildHandler({ authConfig, transactionRepo });
+ * export const { GET, POST } = buildHandler({
+ *   authConfig,
+ *   fxQuoteProvider,
+ *   transactionRepo,
+ * });
  * ```
  */
 export function buildHandler(deps: Deps) {
@@ -114,6 +130,17 @@ function buildPrivateRoutes(deps: Deps) {
     });
 }
 
-function buildPublicRoutes() {
-  return new Hono<ContextEnv>().get("/healthz", (c) => c.json({ ok: true }));
+function buildPublicRoutes(deps: Deps) {
+  return new Hono<ContextEnv>()
+    .get("/healthz", (c) => c.json({ ok: true }))
+    .get("/exchange-rate", (c) => {
+      const query = c.req.query();
+      const getFxQuote = new GetFxQuoteUseCase(deps.fxQuoteProvider);
+      return respondAsync<GetFxQuoteResponse>(c)(
+        parseGetFxQuoteRequest({
+          base: query["base"],
+          quote: query["quote"],
+        }).asyncAndThen((res) => getFxQuote.execute(res)),
+      );
+    });
 }

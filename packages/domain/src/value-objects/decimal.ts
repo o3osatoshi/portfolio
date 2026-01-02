@@ -20,6 +20,25 @@ export function isDecimal(v: unknown): v is DecimalString {
   }
 }
 
+export function isNonNegativeDecimal(value: DecimalString): boolean {
+  try {
+    return new DecimalJs(value).gte(0);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check whether a decimal string represents a value strictly greater than zero.
+ */
+export function isPositiveDecimal(value: DecimalString): boolean {
+  try {
+    return new DecimalJs(value).gt(0);
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Normalize arbitrary numeric input into a {@link DecimalString}.
  */

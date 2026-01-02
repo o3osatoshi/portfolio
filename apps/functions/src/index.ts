@@ -1,4 +1,5 @@
 import { createAuthConfig } from "@repo/auth";
+import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import {
   buildApp,
   createExpressRequestHandler,
@@ -7,14 +8,32 @@ import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
 import { env } from "./env";
-import { initFunctionsLogger } from "./logger";
+import { getFunctionsLogger } from "./logger";
 
 let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
 
-initFunctionsLogger();
-
 export const api = onRequest(async (req, res) => {
   if (!handler) {
+    const store =
+      env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
+        ? createUpstashRedis({
+            token: env.UPSTASH_REDIS_REST_TOKEN,
+            url: env.UPSTASH_REDIS_REST_URL,
+          })
+        : undefined;
+    const logger = getFunctionsLogger();
+    const fxQuoteProvider = new ExchangeRateApi(
+      {
+        apiKey: env.EXCHANGE_RATE_API_KEY,
+        baseUrl: env.EXCHANGE_RATE_BASE_URL,
+      },
+      {
+        ...(store ? { cache: { store } } : {}),
+        logging: { logger },
+        retry: true,
+      },
+    );
+
     const client = createPrismaClient({
       connectionString: env.DATABASE_URL,
     });
@@ -28,8 +47,14 @@ export const api = onRequest(async (req, res) => {
       prismaClient: client,
       secret: env.AUTH_SECRET,
     });
-    const repo = new PrismaTransactionRepository(client);
-    const app = buildApp({ authConfig, transactionRepo: repo });
+
+    const transactionRepo = new PrismaTransactionRepository(client);
+
+    const app = buildApp({
+      fxQuoteProvider,
+      authConfig,
+      transactionRepo,
+    });
     handler = createExpressRequestHandler(app);
   }
   await handler(req, res);
