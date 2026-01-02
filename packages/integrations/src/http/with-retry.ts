@@ -3,6 +3,7 @@ import type { z } from "zod";
 
 import { parseErrorName, sleep } from "@o3osatoshi/toolkit";
 
+import { newIntegrationError } from "../integration-error";
 import type {
   SmartFetch,
   SmartFetchRequest,
@@ -138,11 +139,24 @@ export function withRetry(
         }
 
         throw attachRetryAttempts(
-          lastError ?? new Error("Retry attempts exhausted"),
+          lastError ??
+            newIntegrationError({
+              action: "RetryExternalApi",
+              kind: "Unknown",
+              reason: "Retry attempts exhausted",
+            }),
           attempts,
         );
       })(),
-      (cause) => (cause instanceof Error ? cause : new Error(String(cause))),
+      (cause) =>
+        cause instanceof Error
+          ? cause
+          : newIntegrationError({
+              action: "RetryExternalApi",
+              cause,
+              kind: "Unknown",
+              reason: "Retry failed with a non-error value",
+            }),
     );
 }
 
