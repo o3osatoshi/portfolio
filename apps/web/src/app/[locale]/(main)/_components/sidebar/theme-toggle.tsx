@@ -14,7 +14,7 @@ import {
 } from "@o3osatoshi/ui/client";
 
 export default function ThemeToggle() {
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
   const { isMobile } = useSidebar();
   const t = useTranslations("Settings");
 
@@ -28,13 +28,22 @@ export default function ThemeToggle() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent side={isMobile ? "bottom" : "right"} align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem
+          disabled={theme === "light"}
+          onClick={() => setTheme("light")}
+        >
           {t("light")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem
+          disabled={theme === "dark"}
+          onClick={() => setTheme("dark")}
+        >
           {t("dark")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem
+          disabled={theme === "system"}
+          onClick={() => setTheme("system")}
+        >
           {t("system")}
         </DropdownMenuItem>
       </DropdownMenuContent>
