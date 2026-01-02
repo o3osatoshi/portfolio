@@ -37,16 +37,9 @@ export function createBaseFetch(
       url: request.url,
     };
 
-    return performFetch(options.fetch ?? fetch, request)
-      .andThen((res) => deserializeBody(res, req))
-      .mapErr((cause) => {
-        if (isStructuredError(cause)) return cause;
-        return newFetchError({
-          action: "FetchExternalApi",
-          cause,
-          request: req,
-        });
-      });
+    return performFetch(options.fetch ?? fetch, request).andThen((res) =>
+      deserializeBody(res, req),
+    );
   };
 }
 
@@ -62,20 +55,6 @@ function deserializeBody(
       request,
     }),
   ).map((data) => buildHttpResponse(data, response));
-}
-
-function isStructuredError(error: Error): boolean {
-  return (
-    error.name.includes("BadGateway") ||
-    error.name.includes("Validation") ||
-    error.name.includes("NotFound") ||
-    error.name.includes("Unauthorized") ||
-    error.name.includes("Forbidden") ||
-    error.name.includes("RateLimit") ||
-    error.name.includes("Unavailable") ||
-    error.name.includes("Timeout") ||
-    error.name.includes("Serialization")
-  );
 }
 
 function performFetch(
