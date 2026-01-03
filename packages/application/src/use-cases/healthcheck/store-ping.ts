@@ -49,7 +49,7 @@ export class StorePingUseCase {
   execute(context: StorePingRunContext): ResultAsync<StorePingResult, Error> {
     const startedAt = Date.now();
 
-    const createResult = createTransaction({
+    const result = createTransaction({
       amount: "1",
       currency: "USD",
       datetime: context.runAt,
@@ -57,10 +57,10 @@ export class StorePingUseCase {
       type: "BUY",
       userId: this.userId,
     });
-    if (createResult.isErr()) return errAsync(createResult.error);
+    if (result.isErr()) return errAsync(result.error);
 
     return this.transactionRepo
-      .create(createResult.value)
+      .create(result.value)
       .andThen((created) =>
         this.transactionRepo.findById(created.id).andThen((found) => {
           if (!found) {
@@ -81,50 +81,38 @@ export class StorePingUseCase {
           .map(() => ({ created, found })),
       )
       .andThen(({ created, found }) =>
-        this.updateCache(context).map((redisSummary) => {
-          const durationMs = Date.now() - startedAt;
-          const dbSummary = buildDbSummary(created.id, found.id, created.id);
-          return {
-            ...context,
-            db: dbSummary,
-            durationMs,
-            redis: redisSummary,
-          };
-        }),
+        this.cache
+          .get<StorePingCacheEntry[]>(REDIS_KEY)
+          .map((value) => value ?? [])
+          .andThen((entries) => {
+            const updatedEntries = updateRecentEntries(entries, {
+              runAt: context.runAt.toISOString(),
+              runKey: context.runKey,
+              slot: context.slot,
+              status: "success",
+            });
+            return this.cache
+              .set(REDIS_KEY, updatedEntries, { ttlMs: REDIS_TTL_MS })
+              .map(() => ({
+                key: REDIS_KEY,
+                size: updatedEntries.length,
+              }));
+          })
+          .map((redisSummary) => {
+            const durationMs = Date.now() - startedAt;
+            return {
+              ...context,
+              db: {
+                createdId: created.id,
+                deletedId: created.id,
+                readId: found.id,
+              },
+              durationMs,
+              redis: redisSummary,
+            };
+          }),
       )
-      .orElse((error) => errAsync(this.normalizeError(error)));
-  }
-
-  private normalizeError(error: unknown): Error {
-    if (error instanceof Error) return error;
-    return newApplicationError({
-      action: "StorePing",
-      cause: error,
-      kind: "Unknown",
-      reason: "StorePing failed with non-error value",
-    });
-  }
-
-  private updateCache(
-    context: StorePingRunContext,
-  ): ResultAsync<StorePingRedisSummary, Error> {
-    return this.cache
-      .get<StorePingCacheEntry[]>(REDIS_KEY)
-      .map((value) => value ?? [])
-      .andThen((entries) => {
-        const updatedEntries = updateRecentEntries(entries, {
-          runAt: context.runAt.toISOString(),
-          runKey: context.runKey,
-          slot: context.slot,
-          status: "success",
-        });
-        return this.cache
-          .set(REDIS_KEY, updatedEntries, { ttlMs: REDIS_TTL_MS })
-          .map(() => ({
-            key: REDIS_KEY,
-            size: updatedEntries.length,
-          }));
-      });
+      .orElse((error) => errAsync(error));
   }
 }
 
@@ -150,18 +138,6 @@ export function resolveStorePingRunContext(now: Date): StorePingRunContext {
     runAt: now,
     runKey: `${date}@${slot}`,
     slot,
-  };
-}
-
-function buildDbSummary(
-  createdId: string,
-  readId: string,
-  deletedId: string,
-): StorePingDbSummary {
-  return {
-    createdId,
-    deletedId,
-    readId,
   };
 }
 
