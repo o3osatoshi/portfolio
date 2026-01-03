@@ -1,5 +1,5 @@
-import DeleteButton from "@/app/(main)/labs/server-crud/_components/delete-button";
-import EditDialog from "@/app/(main)/labs/server-crud/_components/edit-dialog";
+import DeleteButton from "@/app/[locale]/(main)/labs/server-crud/_components/delete-button";
+import EditDialog from "@/app/[locale]/(main)/labs/server-crud/_components/edit-dialog";
 import type { Transaction } from "@/services/get-transactions";
 import {
   Card,

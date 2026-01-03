@@ -1,8 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import React from "react";
 
+import { Link, usePathname } from "@/i18n/navigation";
 import { findNavs } from "@/utils/nav-handler";
 import {
   Breadcrumb,
@@ -40,8 +40,8 @@ export default function BreadcrumbHeader() {
               return (
                 <React.Fragment key={nav.alias}>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href={nav.pathName}>
-                      {nav.data.label}
+                    <BreadcrumbLink asChild>
+                      <Link href={nav.pathName}>{nav.data.label}</Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />

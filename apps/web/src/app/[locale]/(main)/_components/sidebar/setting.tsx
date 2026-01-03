@@ -5,6 +5,7 @@ import {
   SidebarMenuItem,
 } from "@o3osatoshi/ui/client";
 
+import LanguageToggle from "./language-toggle";
 import ThemeToggle from "./theme-toggle";
 
 export default function Setting() {
@@ -14,6 +15,9 @@ export default function Setting() {
         <SidebarMenu>
           <SidebarMenuItem>
             <ThemeToggle />
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <LanguageToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>

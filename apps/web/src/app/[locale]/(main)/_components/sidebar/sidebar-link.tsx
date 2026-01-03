@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import type { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
+import { Link } from "@/i18n/navigation";
 import { useSidebar } from "@o3osatoshi/ui/client";
 
 interface SidebarLinkProps extends ComponentProps<typeof Link> {

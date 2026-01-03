@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import RedisCacheDemoCard from "@/app/(main)/toolkit/redis-cache/_components/redis-cache-demo";
+import RedisCacheDemoCard from "@/app/[locale]/(main)/toolkit/redis-cache/_components/redis-cache-demo";
+import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
 
 export const metadata: Metadata = {

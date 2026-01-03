@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
 
 export const metadata: Metadata = {

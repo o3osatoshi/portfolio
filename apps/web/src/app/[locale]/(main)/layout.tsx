@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-import BreadcrumbHeader from "@/app/(main)/_components/breadcrumb-header";
-import Sidebar from "@/app/(main)/_components/sidebar";
+import BreadcrumbHeader from "@/app/[locale]/(main)/_components/breadcrumb-header";
+import Sidebar from "@/app/[locale]/(main)/_components/sidebar";
 import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/client";
 
 interface Props {

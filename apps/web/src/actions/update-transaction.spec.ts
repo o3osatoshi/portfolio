@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const h = vi.hoisted(() => {
   return {
     createPrismaClientMock: vi.fn(),
+    getLocaleMock: vi.fn(),
     getMeMock: vi.fn(),
     parseUpdateTransactionRequestMock: vi.fn(),
     prismaRepoCtorMock: vi.fn(),
@@ -48,8 +49,12 @@ vi.mock("next/cache", () => ({
   updateTag: h.updateTagMock,
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/i18n/navigation", () => ({
   redirect: h.redirectMock,
+}));
+
+vi.mock("next-intl/server", () => ({
+  getLocale: h.getLocaleMock,
 }));
 
 vi.mock("@/env/server", () => ({
@@ -65,6 +70,7 @@ import { updateTransaction } from "./update-transaction";
 describe("actions/update-transaction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    h.getLocaleMock.mockResolvedValue("en");
   });
 
   it("revalidates transactions tag and redirects on success", async () => {
@@ -100,7 +106,10 @@ describe("actions/update-transaction", () => {
     const expectedTag = getTag("labs-transactions", { userId: me.id });
     expect(h.updateTagMock).toHaveBeenCalledWith(expectedTag);
     const expectedPath = getPath("labs-server-crud");
-    expect(h.redirectMock).toHaveBeenCalledWith(expectedPath);
+    expect(h.redirectMock).toHaveBeenCalledWith({
+      href: expectedPath,
+      locale: "en",
+    });
   });
 
   it("returns ActionState error when getMe fails", async () => {
@@ -111,10 +120,10 @@ describe("actions/update-transaction", () => {
 
     const state = await updateTransaction(undefined, formData);
 
-    expect(state.ok).toBe(false);
-    if (state.ok) return;
+    expect(state?.ok).toBe(false);
+    if (state?.ok) return;
 
-    expect(state.error.message).toBe("not authenticated");
+    expect(state?.error.message).toBe("not authenticated");
     expect(h.parseUpdateTransactionRequestMock).not.toHaveBeenCalled();
     expect(h.updateTransactionExecuteMock).not.toHaveBeenCalled();
     expect(h.updateTagMock).not.toHaveBeenCalled();
@@ -134,11 +143,11 @@ describe("actions/update-transaction", () => {
 
     const state = await updateTransaction(undefined, formData);
 
-    expect(state.ok).toBe(false);
-    if (state.ok) return;
+    expect(state?.ok).toBe(false);
+    if (state?.ok) return;
 
-    expect(state.error.message).toBe("invalid payload");
-    expect(state.error.name).toBe("Error");
+    expect(state?.error.message).toBe("invalid payload");
+    expect(state?.error.name).toBe("Error");
     expect(h.updateTransactionExecuteMock).not.toHaveBeenCalled();
     expect(h.updateTagMock).not.toHaveBeenCalled();
     expect(h.redirectMock).not.toHaveBeenCalled();
