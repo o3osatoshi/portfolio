@@ -9,15 +9,9 @@ import { newApplicationError } from "../../application-error";
 import { noopStepRunner, type StepRunner } from "../../services";
 
 const JOB_KEY = "store-ping" as const;
-const JST_TIME_ZONE = "Asia/Tokyo";
 const RECENT_RUN_LIMIT = 3;
 const CACHE_KEY = "store-ping";
 const CACHE_TTL_MS = 26 * 60 * 60 * 1_000;
-const STEP_CACHE_GET = "store-ping-cache-get";
-const STEP_CACHE_SET = "store-ping-cache-set";
-const STEP_DB_CREATE = "store-ping-db-create";
-const STEP_DB_DELETE = "store-ping-db-delete";
-const STEP_DB_READ = "store-ping-db-read";
 
 export type StorePingContext = {
   jobKey: typeof JOB_KEY;
@@ -78,11 +72,11 @@ export class StorePingUseCase {
     });
     if (transactionInput.isErr()) return errAsync(transactionInput.error);
 
-    return step(STEP_DB_CREATE, () =>
+    return step("store-ping-db-create", () =>
       this.transactionRepo.create(transactionInput.value),
     )
       .andThen((created) =>
-        step(STEP_DB_READ, () =>
+        step("store-ping-db-read", () =>
           this.transactionRepo.findById(created.id).andThen((found) => {
             if (!found) {
               return errAsync(
@@ -98,14 +92,14 @@ export class StorePingUseCase {
         ),
       )
       .andThen(({ created, found }) =>
-        step(STEP_DB_DELETE, () =>
+        step("store-ping-db-delete", () =>
           this.transactionRepo
             .delete(created.id, created.userId)
             .map(() => ({ created, found })),
         ),
       )
       .andThen(({ created, found }) =>
-        step(STEP_CACHE_GET, () =>
+        step("store-ping-cache-get", () =>
           this.cache
             .get<StorePingCacheEntry[]>(CACHE_KEY)
             .map((entries) => entries ?? []),
@@ -120,7 +114,7 @@ export class StorePingUseCase {
             newEntry,
             ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
           ].slice(0, RECENT_RUN_LIMIT);
-          return step(STEP_CACHE_SET, () =>
+          return step("store-ping-cache-set", () =>
             this.cache
               .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
               .map(() => ({
@@ -151,7 +145,7 @@ export function generateStorePingContext(now: Date): StorePingContext {
     hour: "2-digit",
     hour12: false,
     month: "2-digit",
-    timeZone: JST_TIME_ZONE,
+    timeZone: "Asia/Tokyo",
     year: "numeric",
   }).formatToParts(now);
 
