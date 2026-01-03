@@ -61,11 +61,52 @@ export class StorePingUseCase {
       slot: context.slot,
     };
 
-    return this.runFlow(context, baseRun, startedAt).orElse((error) =>
-      this.recordFailure(baseRun, startedAt, error).andThen(() =>
-        errAsync(this.normalizeError(error)),
-      ),
-    );
+    return this.repo
+      .upsert({ ...baseRun, status: "running" })
+      .andThen(() => this.repo.findLatest(context.jobKey))
+      .andThen((latest) =>
+        this.repo
+          .count(context.jobKey)
+          .map((totalCount) => ({ latest, totalCount })),
+      )
+      .andThen(({ latest, totalCount }) =>
+        this.pruneOldRuns(context.jobKey, totalCount).map((prune) => ({
+          latest,
+          ...prune,
+        })),
+      )
+      .andThen(({ latest, prunedId, totalCount }) => {
+        const dbSummary = buildDbSummary(latest, prunedId, totalCount);
+        return this.updateCache(context).map((redisSummary) => ({
+          dbSummary,
+          redisSummary,
+        }));
+      })
+      .andThen(({ dbSummary, redisSummary }) => {
+        const durationMs = Date.now() - startedAt;
+        const summary: StorePingRunSummary = {
+          db: dbSummary,
+          redis: redisSummary,
+        };
+        return this.repo
+          .upsert({
+            ...baseRun,
+            durationMs,
+            status: "success",
+            summary,
+          })
+          .map(() => ({
+            ...context,
+            db: dbSummary,
+            durationMs,
+            redis: redisSummary,
+          }));
+      })
+      .orElse((error) =>
+        this.recordFailure(baseRun, startedAt, error).andThen(() =>
+          errAsync(this.normalizeError(error)),
+        ),
+      );
   }
 
   private normalizeError(error: unknown): Error {
@@ -122,54 +163,6 @@ export class StorePingUseCase {
       })
       .orElse(() => okAsync(null))
       .map(() => null);
-  }
-
-  private runFlow(
-    context: StorePingRunContext,
-    baseRun: StorePingRunContext,
-    startedAt: number,
-  ): ResultAsync<StorePingResult, Error> {
-    return this.repo
-      .upsert({ ...baseRun, status: "running" })
-      .andThen(() => this.repo.findLatest(context.jobKey))
-      .andThen((latest) =>
-        this.repo
-          .count(context.jobKey)
-          .map((totalCount) => ({ latest, totalCount })),
-      )
-      .andThen(({ latest, totalCount }) =>
-        this.pruneOldRuns(context.jobKey, totalCount).map((prune) => ({
-          latest,
-          ...prune,
-        })),
-      )
-      .andThen(({ latest, prunedId, totalCount }) => {
-        const dbSummary = buildDbSummary(latest, prunedId, totalCount);
-        return this.updateCache(context).map((redisSummary) => ({
-          dbSummary,
-          redisSummary,
-        }));
-      })
-      .andThen(({ dbSummary, redisSummary }) => {
-        const durationMs = Date.now() - startedAt;
-        const summary: StorePingRunSummary = {
-          db: dbSummary,
-          redis: redisSummary,
-        };
-        return this.repo
-          .upsert({
-            ...baseRun,
-            durationMs,
-            status: "success",
-            summary,
-          })
-          .map(() => ({
-            ...context,
-            db: dbSummary,
-            durationMs,
-            redis: redisSummary,
-          }));
-      });
   }
 
   private updateCache(
