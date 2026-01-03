@@ -22,10 +22,17 @@ export type SlackClientConfig = {
   token: string;
 };
 
-export type SlackMessage = {
-  channel?: string | undefined;
-  text?: string | undefined;
-} & SlackMessageOverrides;
+export type SlackMessage =
+  | ({
+      blocks: unknown[];
+      channel: string;
+      text?: string | undefined;
+    } & SlackMessageOverrides)
+  | ({
+      blocks?: undefined | unknown[];
+      channel: string;
+      text: string | undefined;
+    } & SlackMessageOverrides);
 
 export type SlackMessageOverrides = {
   attachments?: undefined | unknown[];
@@ -49,15 +56,44 @@ export type SlackPostMessageResponse = z.infer<
   typeof SlackPostMessageResponseSchema
 >;
 
+const SlackMessageSchema = z
+  .object({
+    blocks: z.array(z.unknown()).min(1).optional(),
+    channel: z.string().min(1),
+    text: z.string().min(1).optional(),
+  })
+  .passthrough()
+  .superRefine((value, ctx) => {
+    if (!value.text && !value.blocks) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Slack message must include text or blocks.",
+        path: ["text"],
+      });
+    }
+  });
+
 export function createSlackClient(config: SlackClientConfig): SlackClient {
   const baseUrl = config.apiBaseUrl ?? "https://slack.com/api";
   const fetcher = config.fetch ?? fetch;
 
   return {
-    postMessage: (message) =>
-      ResultAsync.fromPromise(
+    postMessage: (message) => {
+      const parsed = SlackMessageSchema.safeParse(message);
+      if (!parsed.success) {
+        return errAsync(
+          newIntegrationError({
+            action: "SlackPostMessage",
+            cause: parsed.error,
+            kind: "Validation",
+            reason: "Slack message validation failed",
+          }),
+        );
+      }
+
+      return ResultAsync.fromPromise(
         fetcher(`${baseUrl}/chat.postMessage`, {
-          body: JSON.stringify(message),
+          body: JSON.stringify(parsed.data),
           headers: {
             Authorization: `Bearer ${config.token}`,
             "Content-Type": "application/json; charset=utf-8",
@@ -73,7 +109,8 @@ export function createSlackClient(config: SlackClientConfig): SlackClient {
             kind: "Unavailable",
             reason: "Slack API request failed",
           }),
-      ).andThen((response) => parseResponse(response)),
+      ).andThen((response) => parseResponse(response));
+    },
   };
 }
 
@@ -102,21 +139,31 @@ function parseResponse(
   response: Response,
 ): ResultAsync<SlackPostMessageResponse, Error> {
   if (!response.ok) {
-    return ResultAsync.fromPromise(response.text(), () =>
+    return ResultAsync.fromPromise(response.text(), (cause) =>
       newIntegrationError({
         action: "SlackPostMessage",
+        cause,
         kind: mapStatusToKind(response.status),
         reason: `Slack API responded with ${response.status}`,
       }),
-    ).andThen((body) =>
-      errAsync(
+    ).andThen((body) => {
+      const slackError = parseSlackError(body);
+      const kind = slackError
+        ? mapSlackErrorToKind(slackError)
+        : mapStatusToKind(response.status);
+      const reason = slackError
+        ? `Slack API responded with ${response.status}: ${slackError}`
+        : body
+          ? `Slack API responded with ${response.status}: ${body}`
+          : `Slack API responded with ${response.status}`;
+      return errAsync(
         newIntegrationError({
           action: "SlackPostMessage",
-          kind: mapStatusToKind(response.status),
-          reason: `Slack API responded with ${response.status}: ${body}`,
+          kind,
+          reason,
         }),
-      ),
-    );
+      );
+    });
   }
 
   return ResultAsync.fromPromise(response.json(), (cause) =>
@@ -149,4 +196,19 @@ function parseResponse(
     }
     return okAsync(parsed.data);
   });
+}
+
+function parseSlackError(body: string): string | undefined {
+  try {
+    const data = JSON.parse(body);
+    const parsed = SlackPostMessageResponseSchema.safeParse(data);
+    if (parsed.success) return parsed.data.error;
+    if (typeof data === "object" && data && "error" in data) {
+      const candidate = (data as { error?: unknown }).error;
+      if (typeof candidate === "string") return candidate;
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
 }

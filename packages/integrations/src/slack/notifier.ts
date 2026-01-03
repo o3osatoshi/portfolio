@@ -44,9 +44,10 @@ function applyOverrides(
 ): SlackMessage {
   if (!overrides) return base;
   const merged = { ...base, ...overrides };
-  if (merged.channel === undefined) merged.channel = base.channel;
-  if (merged.text === undefined) merged.text = base.text;
-  return merged;
+  const channel = merged.channel ?? base.channel;
+  const text = merged.text ?? base.text;
+  const result: SlackMessage = { ...merged, channel, text };
+  return result;
 }
 
 function buildFallbackText(payload: NotificationPayload): string {
