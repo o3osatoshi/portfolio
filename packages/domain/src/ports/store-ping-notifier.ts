@@ -1,17 +1,17 @@
 import type { ResultAsync } from "neverthrow";
 
 import type {
+  StorePingCacheSummary,
   StorePingDbSummary,
-  StorePingRedisSummary,
   StorePingRunSlot,
 } from "./store-ping.types";
 
 export type StorePingNotification = {
+  cache?: StorePingCacheSummary | undefined;
   db?: StorePingDbSummary | undefined;
   durationMs?: number | undefined;
   error?: { message: string } | undefined;
   jobKey: "store-ping";
-  redis?: StorePingRedisSummary | undefined;
   runAt: Date;
   runKey: string;
   slot: StorePingRunSlot;

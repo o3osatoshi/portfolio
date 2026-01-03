@@ -1,12 +1,12 @@
+export type StorePingCacheSummary = {
+  key: string;
+  size: number;
+};
+
 export type StorePingDbSummary = {
   createdId: string;
   deletedId: string;
   readId: string;
-};
-
-export type StorePingRedisSummary = {
-  key: string;
-  size: number;
 };
 
 /**

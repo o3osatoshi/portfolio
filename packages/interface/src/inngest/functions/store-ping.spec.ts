@@ -16,6 +16,10 @@ type NotifyResult = ReturnType<StorePingNotifier["notify"]>;
 type StepRun = (id: string, fn: () => Promise<unknown>) => Promise<unknown>;
 
 const baseResult: StorePingResult = {
+  cache: {
+    key: "store-ping:recent",
+    size: 1,
+  },
   db: {
     createdId: "tx-1",
     deletedId: "tx-1",
@@ -23,10 +27,6 @@ const baseResult: StorePingResult = {
   },
   durationMs: 120,
   jobKey: "store-ping",
-  redis: {
-    key: "store-ping:recent",
-    size: 1,
-  },
   runAt: new Date("2024-01-01T00:30:00.000Z"),
   runKey: "2024-01-01@00",
   slot: "00",

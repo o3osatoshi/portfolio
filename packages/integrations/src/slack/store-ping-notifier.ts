@@ -62,9 +62,9 @@ function buildBlocks(payload: StorePingNotification): unknown[] {
     fields.push(field("DB Deleted", payload.db.deletedId));
   }
 
-  if (payload.redis) {
-    fields.push(field("Redis Key", payload.redis.key));
-    fields.push(field("Redis Size", `${payload.redis.size}`));
+  if (payload.cache) {
+    fields.push(field("Cache Key", payload.cache.key));
+    fields.push(field("Cache Size", `${payload.cache.size}`));
   }
 
   const blocks: unknown[] = [

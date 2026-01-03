@@ -111,10 +111,10 @@ function buildSuccessNotification(
   result: StorePingResult,
 ): StorePingNotification {
   return {
+    cache: result.cache,
     db: result.db,
     durationMs: result.durationMs,
     jobKey: result.jobKey,
-    redis: result.redis,
     runAt: result.runAt,
     runKey: result.runKey,
     slot: result.slot,

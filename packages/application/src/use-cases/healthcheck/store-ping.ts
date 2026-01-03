@@ -1,8 +1,8 @@
 import {
   type CacheStore,
   createTransaction,
+  type StorePingCacheSummary,
   type StorePingDbSummary,
-  type StorePingRedisSummary,
   type StorePingRunSlot,
   type TransactionRepository,
 } from "@repo/domain";
@@ -13,8 +13,8 @@ import { newApplicationError } from "../../application-error";
 const JOB_KEY = "store-ping" as const;
 const JST_TIME_ZONE = "Asia/Tokyo";
 const RECENT_RUN_LIMIT = 3;
-const REDIS_KEY = "store-ping";
-const REDIS_TTL_MS = 26 * 60 * 60 * 1_000;
+const CACHE_KEY = "store-ping";
+const CACHE_TTL_MS = 26 * 60 * 60 * 1_000;
 
 export type StorePingContext = {
   jobKey: typeof JOB_KEY;
@@ -24,9 +24,9 @@ export type StorePingContext = {
 };
 
 export type StorePingResult = {
+  cache: StorePingCacheSummary;
   db: StorePingDbSummary;
   durationMs: number;
-  redis: StorePingRedisSummary;
 } & StorePingContext;
 
 type StorePingCacheEntry = {
@@ -82,7 +82,7 @@ export class StorePingUseCase {
       )
       .andThen(({ created, found }) =>
         this.cache
-          .get<StorePingCacheEntry[]>(REDIS_KEY)
+          .get<StorePingCacheEntry[]>(CACHE_KEY)
           .map((entries) => entries ?? [])
           .andThen((entries) => {
             const newEntry: StorePingCacheEntry = {
@@ -96,23 +96,23 @@ export class StorePingUseCase {
               ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
             ].slice(0, RECENT_RUN_LIMIT);
             return this.cache
-              .set(REDIS_KEY, newEntries, { ttlMs: REDIS_TTL_MS })
+              .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
               .map(() => ({
-                key: REDIS_KEY,
+                key: CACHE_KEY,
                 size: newEntries.length,
               }));
           })
-          .map((redis) => {
+          .map((cache) => {
             const durationMs = Date.now() - startedAt;
             return {
               ...context,
+              cache,
               db: {
                 createdId: created.id,
                 deletedId: created.id,
                 readId: found.id,
               },
               durationMs,
-              redis,
             };
           }),
       )
