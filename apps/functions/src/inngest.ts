@@ -5,11 +5,11 @@ import {
 } from "@repo/integrations";
 import {
   createInngestClient,
+  createInngestExpressHandler,
   createInngestFunctions,
 } from "@repo/interface/inngest";
 import { PrismaStorePingRunRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
-import { serve } from "inngest/express";
 
 import { env } from "./env";
 import { getFunctionsLogger } from "./logger";
@@ -17,7 +17,7 @@ import { getPrismaClient } from "./prisma";
 
 const INNGEST_APP_ID = "portfolio-functions";
 
-let handler: ReturnType<typeof serve> | undefined;
+let handler: ReturnType<typeof createInngestExpressHandler> | undefined;
 
 export const inngest = onRequest(async (req, res) => {
   if (!handler) {
@@ -58,7 +58,7 @@ export const inngest = onRequest(async (req, res) => {
       },
     });
 
-    handler = serve({
+    handler = createInngestExpressHandler({
       client: inngestClient,
       functions,
     });
