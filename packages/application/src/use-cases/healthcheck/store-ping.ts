@@ -13,21 +13,21 @@ import { newApplicationError } from "../../application-error";
 const JOB_KEY = "store-ping" as const;
 const JST_TIME_ZONE = "Asia/Tokyo";
 const RECENT_RUN_LIMIT = 3;
-const REDIS_KEY = "store-ping:recent";
+const REDIS_KEY = "store-ping";
 const REDIS_TTL_MS = 26 * 60 * 60 * 1_000;
 
-export type StorePingResult = {
-  db: StorePingDbSummary;
-  durationMs: number;
-  redis: StorePingRedisSummary;
-} & StorePingRunContext;
-
-export type StorePingRunContext = {
+export type StorePingContext = {
   jobKey: typeof JOB_KEY;
   runAt: Date;
   runKey: string;
   slot: StorePingRunSlot;
 };
+
+export type StorePingResult = {
+  db: StorePingDbSummary;
+  durationMs: number;
+  redis: StorePingRedisSummary;
+} & StorePingContext;
 
 type StorePingCacheEntry = {
   runAt: string;
@@ -46,7 +46,7 @@ export class StorePingUseCase {
   /**
    * Execute store-ping using a precomputed JST run context.
    */
-  execute(context: StorePingRunContext): ResultAsync<StorePingResult, Error> {
+  execute(context: StorePingContext): ResultAsync<StorePingResult, Error> {
     const startedAt = Date.now();
 
     const result = createTransaction({
@@ -83,22 +83,26 @@ export class StorePingUseCase {
       .andThen(({ created, found }) =>
         this.cache
           .get<StorePingCacheEntry[]>(REDIS_KEY)
-          .map((value) => value ?? [])
+          .map((entries) => entries ?? [])
           .andThen((entries) => {
-            const updatedEntries = updateRecentEntries(entries, {
+            const newEntry: StorePingCacheEntry = {
               runAt: context.runAt.toISOString(),
               runKey: context.runKey,
               slot: context.slot,
               status: "success",
-            });
+            };
+            const newEntries = [
+              newEntry,
+              ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
+            ].slice(0, RECENT_RUN_LIMIT);
             return this.cache
-              .set(REDIS_KEY, updatedEntries, { ttlMs: REDIS_TTL_MS })
+              .set(REDIS_KEY, newEntries, { ttlMs: REDIS_TTL_MS })
               .map(() => ({
                 key: REDIS_KEY,
-                size: updatedEntries.length,
+                size: newEntries.length,
               }));
           })
-          .map((redisSummary) => {
+          .map((redis) => {
             const durationMs = Date.now() - startedAt;
             return {
               ...context,
@@ -108,7 +112,7 @@ export class StorePingUseCase {
                 readId: found.id,
               },
               durationMs,
-              redis: redisSummary,
+              redis,
             };
           }),
       )
@@ -116,7 +120,7 @@ export class StorePingUseCase {
   }
 }
 
-export function resolveStorePingRunContext(now: Date): StorePingRunContext {
+export function generateStorePingContext(now: Date): StorePingContext {
   const parts = new Intl.DateTimeFormat("en-CA", {
     day: "2-digit",
     hour: "2-digit",
@@ -154,12 +158,4 @@ function readPart(
     });
   }
   return part.value;
-}
-
-function updateRecentEntries(
-  entries: StorePingCacheEntry[],
-  next: StorePingCacheEntry,
-): StorePingCacheEntry[] {
-  const withoutDupes = entries.filter((entry) => entry.runKey !== next.runKey);
-  return [next, ...withoutDupes].slice(0, RECENT_RUN_LIMIT);
 }

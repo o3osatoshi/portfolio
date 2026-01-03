@@ -1,7 +1,7 @@
 import {
-  resolveStorePingRunContext,
+  generateStorePingContext,
+  type StorePingContext,
   type StorePingResult,
-  type StorePingRunContext,
   StorePingUseCase,
 } from "@repo/application";
 import type {
@@ -61,7 +61,7 @@ export function createStorePingFunctionWithUseCase(
     },
     { cron: STORE_PING_CRON },
     async ({ step }) => {
-      const runContext = resolveStorePingRunContext(new Date());
+      const runContext = generateStorePingContext(new Date());
 
       try {
         const result = await step.run("store-ping-run", () =>
@@ -94,7 +94,7 @@ export function createStorePingFunctionWithUseCase(
 }
 
 function buildFailureNotification(
-  context: StorePingRunContext,
+  context: StorePingContext,
   error: unknown,
 ): StorePingNotification {
   return {
