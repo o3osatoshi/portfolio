@@ -9,7 +9,7 @@ import {
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import { newApplicationError } from "../../application-error";
-import { noopStepRunner, type StepRunner } from "../toolkit";
+import { noopStepRunner, type StepRunner } from "../../services";
 
 const JOB_KEY = "store-ping" as const;
 const JST_TIME_ZONE = "Asia/Tokyo";

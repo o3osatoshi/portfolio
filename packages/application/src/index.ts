@@ -5,4 +5,5 @@
  * - Use cases orchestrate domain services and repositories.
  */
 export * from "./dtos";
+export * from "./services";
 export * from "./use-cases";
