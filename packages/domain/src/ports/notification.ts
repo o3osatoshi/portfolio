@@ -7,9 +7,11 @@ export type NotificationField = {
 
 export type NotificationLevel = "error" | "info" | "success" | "warning";
 
-export type NotificationOverrides = {
-  slack?: SlackMessageOverrides | undefined;
-};
+/**
+ * Transport-specific overrides keyed by channel name (e.g. "slack", "email").
+ * The shape is intentionally loose to avoid leaking vendor details into domain.
+ */
+export type NotificationOverrides = Record<string, Record<string, unknown>>;
 
 export type NotificationPayload = {
   error?: { message: string } | undefined;
@@ -27,21 +29,3 @@ export type NotificationPayload = {
 export interface Notifier {
   notify(payload: NotificationPayload): ResultAsync<void, Error>;
 }
-
-export type SlackMessageOverrides = {
-  attachments?: undefined | unknown[];
-  blocks?: undefined | unknown[];
-  channel?: string | undefined;
-  icon_emoji?: string | undefined;
-  icon_url?: string | undefined;
-  link_names?: boolean | undefined;
-  metadata?: Record<string, unknown> | undefined;
-  mrkdwn?: boolean | undefined;
-  parse?: "full" | "none" | undefined;
-  reply_broadcast?: boolean | undefined;
-  text?: string | undefined;
-  thread_ts?: string | undefined;
-  unfurl_links?: boolean | undefined;
-  unfurl_media?: boolean | undefined;
-  username?: string | undefined;
-};

@@ -2,12 +2,15 @@ import type {
   NotificationField,
   NotificationPayload,
   Notifier,
-  SlackMessageOverrides,
 } from "@repo/domain";
 import { errAsync } from "neverthrow";
 
 import { newIntegrationError } from "../integration-error";
-import type { SlackClient, SlackMessage } from "./client";
+import type {
+  SlackClient,
+  SlackMessage,
+  SlackMessageOverrides,
+} from "./client";
 
 export type SlackNotifierConfig = {
   channelId: string;
@@ -123,7 +126,7 @@ function buildMessage(
     text: buildFallbackText(payload),
   };
 
-  return applyOverrides(baseMessage, payload.overrides?.slack);
+  return applyOverrides(baseMessage, resolveSlackOverrides(payload));
 }
 
 function field(label: string, value: string): { text: string; type: string } {
@@ -131,4 +134,12 @@ function field(label: string, value: string): { text: string; type: string } {
     text: `*${label}*\n${value}`,
     type: "mrkdwn",
   };
+}
+
+function resolveSlackOverrides(
+  payload: NotificationPayload,
+): SlackMessageOverrides | undefined {
+  const overrides = payload.overrides?.["slack"];
+  if (!overrides || typeof overrides !== "object") return undefined;
+  return overrides as SlackMessageOverrides;
 }
