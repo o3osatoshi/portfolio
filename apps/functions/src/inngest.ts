@@ -1,10 +1,12 @@
-import { StorePingUseCase } from "@repo/application";
-import { createInngestClient, createStorePingFunction } from "@repo/inngest";
 import {
   createSlackClient,
   createStorePingSlackNotifier,
   createUpstashRedis,
 } from "@repo/integrations";
+import {
+  createInngestClient,
+  createInngestFunctions,
+} from "@repo/interface/inngest";
 import { PrismaStorePingRunRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 import { serve } from "inngest/express";
@@ -34,7 +36,6 @@ export const inngest = onRequest(async (req, res) => {
 
     const prisma = getPrismaClient();
     const storePingRepo = new PrismaStorePingRunRepository(prisma);
-    const storePingUseCase = new StorePingUseCase(storePingRepo, cacheStore);
 
     const slackClient = createSlackClient({
       token: env.SLACK_BOT_TOKEN,
@@ -49,14 +50,17 @@ export const inngest = onRequest(async (req, res) => {
       eventKey: env.INNGEST_EVENT_KEY,
     });
 
-    const storePing = createStorePingFunction(inngestClient, {
-      notifier: slackNotifier,
-      storePing: storePingUseCase,
+    const functions = createInngestFunctions(inngestClient, {
+      storePing: {
+        cache: cacheStore,
+        notifier: slackNotifier,
+        repo: storePingRepo,
+      },
     });
 
     handler = serve({
       client: inngestClient,
-      functions: [storePing],
+      functions,
     });
 
     logger.info("Inngest handler initialized", { appId: INNGEST_APP_ID });

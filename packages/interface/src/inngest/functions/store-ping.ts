@@ -2,9 +2,14 @@ import {
   resolveStorePingRunContext,
   type StorePingResult,
   type StorePingRunContext,
-  type StorePingUseCase,
+  StorePingUseCase,
 } from "@repo/application";
-import type { StorePingNotification, StorePingNotifier } from "@repo/domain";
+import type {
+  CacheStore,
+  StorePingNotification,
+  StorePingNotifier,
+  StorePingRunRepository,
+} from "@repo/domain";
 import type { Inngest } from "inngest";
 import type { ResultAsync } from "neverthrow";
 
@@ -14,6 +19,12 @@ const STORE_PING_JOB_ID = "store-ping";
 const NOTIFY_ATTEMPTS = 2;
 
 export type StorePingFunctionDeps = {
+  cache: CacheStore;
+  notifier: StorePingNotifier;
+  repo: StorePingRunRepository;
+};
+
+type StorePingFunctionUseCaseDeps = {
   notifier: StorePingNotifier;
   storePing: StorePingUseCase;
 };
@@ -25,6 +36,17 @@ type StorePingResultSerialized = {
 export function createStorePingFunction(
   inngest: Inngest,
   deps: StorePingFunctionDeps,
+) {
+  const storePing = new StorePingUseCase(deps.repo, deps.cache);
+  return createStorePingFunctionWithUseCase(inngest, {
+    notifier: deps.notifier,
+    storePing,
+  });
+}
+
+export function createStorePingFunctionWithUseCase(
+  inngest: Inngest,
+  deps: StorePingFunctionUseCaseDeps,
 ) {
   return inngest.createFunction(
     {

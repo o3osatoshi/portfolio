@@ -4,7 +4,7 @@ import type { Inngest } from "inngest";
 import { errAsync, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { createStorePingFunction } from "./store-ping";
+import { createStorePingFunctionWithUseCase } from "./store-ping";
 
 type CreatedFunction = {
   config: Record<string, unknown>;
@@ -68,7 +68,7 @@ function createHarness(options: {
   const inngest = { createFunction } as unknown as Inngest;
 
   // @ts-expect-error
-  const created = createStorePingFunction(inngest, {
+  const created = createStorePingFunctionWithUseCase(inngest, {
     notifier,
     storePing,
   }) as CreatedFunction;
@@ -98,7 +98,7 @@ function createHarness(options: {
   };
 }
 
-describe("createStorePingFunction", () => {
+describe("createStorePingFunctionWithUseCase", () => {
   afterEach(() => {
     vi.useRealTimers();
   });
