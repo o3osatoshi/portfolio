@@ -8,7 +8,7 @@ import {
   createInngestExpressHandler,
   createInngestFunctions,
 } from "@repo/interface/inngest";
-import { PrismaStorePingRunRepository } from "@repo/prisma";
+import { PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
 import { env } from "./env";
@@ -35,7 +35,7 @@ export const inngest = onRequest(async (req, res) => {
     });
 
     const prisma = getPrismaClient();
-    const storePingRepo = new PrismaStorePingRunRepository(prisma);
+    const transactionRepo = new PrismaTransactionRepository(prisma);
 
     const slackClient = createSlackClient({
       token: env.SLACK_BOT_TOKEN,
@@ -54,7 +54,8 @@ export const inngest = onRequest(async (req, res) => {
       storePing: {
         cache: cacheStore,
         notifier: slackNotifier,
-        repo: storePingRepo,
+        transactionRepo,
+        userId: env.STORE_PING_USER_ID,
       },
     });
 

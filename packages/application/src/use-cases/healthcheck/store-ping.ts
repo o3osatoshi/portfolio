@@ -1,10 +1,10 @@
-import type {
-  CacheStore,
-  StorePingDbSummary,
-  StorePingRedisSummary,
-  StorePingRunRepository,
-  StorePingRunSlot,
-  StorePingRunSummary,
+import {
+  type CacheStore,
+  createTransaction,
+  type StorePingDbSummary,
+  type StorePingRedisSummary,
+  type StorePingRunSlot,
+  type TransactionRepository,
 } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
@@ -17,16 +17,9 @@ const REDIS_KEY = "store-ping:recent";
 const REDIS_TTL_MS = 26 * 60 * 60 * 1_000;
 
 export type StorePingResult = {
-  db: {
-    latestId: null | string;
-    prunedId: null | string;
-    totalCount: number;
-  };
+  db: StorePingDbSummary;
   durationMs: number;
-  redis: {
-    key: string;
-    size: number;
-  };
+  redis: StorePingRedisSummary;
 } & StorePingRunContext;
 
 export type StorePingRunContext = {
@@ -45,8 +38,9 @@ type StorePingCacheEntry = {
 
 export class StorePingUseCase {
   constructor(
-    private readonly repo: StorePingRunRepository,
+    private readonly transactionRepo: TransactionRepository,
     private readonly cache: CacheStore,
+    private readonly userId: string,
   ) {}
 
   /**
@@ -54,59 +48,51 @@ export class StorePingUseCase {
    */
   execute(context: StorePingRunContext): ResultAsync<StorePingResult, Error> {
     const startedAt = Date.now();
-    const baseRun: StorePingRunContext = {
-      jobKey: context.jobKey,
-      runAt: context.runAt,
-      runKey: context.runKey,
-      slot: context.slot,
-    };
 
-    return this.repo
-      .upsert({ ...baseRun, status: "running" })
-      .andThen(() => this.repo.findLatest(context.jobKey))
-      .andThen((latest) =>
-        this.repo
-          .count(context.jobKey)
-          .map((totalCount) => ({ latest, totalCount })),
+    const createResult = createTransaction({
+      amount: "1",
+      currency: "USD",
+      datetime: context.runAt,
+      price: "1",
+      type: "BUY",
+      userId: this.userId,
+    });
+    if (createResult.isErr()) return errAsync(createResult.error);
+
+    return this.transactionRepo
+      .create(createResult.value)
+      .andThen((created) =>
+        this.transactionRepo.findById(created.id).andThen((found) => {
+          if (!found) {
+            return errAsync(
+              newApplicationError({
+                action: "StorePing",
+                kind: "NotFound",
+                reason: "Transaction readback returned no record",
+              }),
+            );
+          }
+          return okAsync({ created, found });
+        }),
       )
-      .andThen(({ latest, totalCount }) =>
-        this.pruneOldRuns(context.jobKey, totalCount).map((prune) => ({
-          latest,
-          ...prune,
-        })),
+      .andThen(({ created, found }) =>
+        this.transactionRepo
+          .delete(created.id, created.userId)
+          .map(() => ({ created, found })),
       )
-      .andThen(({ latest, prunedId, totalCount }) => {
-        const dbSummary = buildDbSummary(latest, prunedId, totalCount);
-        return this.updateCache(context).map((redisSummary) => ({
-          dbSummary,
-          redisSummary,
-        }));
-      })
-      .andThen(({ dbSummary, redisSummary }) => {
-        const durationMs = Date.now() - startedAt;
-        const summary: StorePingRunSummary = {
-          db: dbSummary,
-          redis: redisSummary,
-        };
-        return this.repo
-          .upsert({
-            ...baseRun,
-            durationMs,
-            status: "success",
-            summary,
-          })
-          .map(() => ({
+      .andThen(({ created, found }) =>
+        this.updateCache(context).map((redisSummary) => {
+          const durationMs = Date.now() - startedAt;
+          const dbSummary = buildDbSummary(created.id, found.id, created.id);
+          return {
             ...context,
             db: dbSummary,
             durationMs,
             redis: redisSummary,
-          }));
-      })
-      .orElse((error) =>
-        this.recordFailure(baseRun, startedAt, error).andThen(() =>
-          errAsync(this.normalizeError(error)),
-        ),
-      );
+          };
+        }),
+      )
+      .orElse((error) => errAsync(this.normalizeError(error)));
   }
 
   private normalizeError(error: unknown): Error {
@@ -117,52 +103,6 @@ export class StorePingUseCase {
       kind: "Unknown",
       reason: "StorePing failed with non-error value",
     });
-  }
-
-  private pruneOldRuns(
-    jobKey: string,
-    totalCount: number,
-  ): ResultAsync<{ prunedId: null | string; totalCount: number }, Error> {
-    const pruneOnce = (
-      count: number,
-      lastPrunedId: null | string,
-    ): ResultAsync<{ prunedId: null | string; totalCount: number }, Error> => {
-      if (count <= RECENT_RUN_LIMIT) {
-        return okAsync({ prunedId: lastPrunedId, totalCount: count });
-      }
-
-      return this.repo.findOldest(jobKey).andThen((oldest) => {
-        if (!oldest) {
-          return okAsync({ prunedId: lastPrunedId, totalCount: count });
-        }
-
-        return this.repo
-          .deleteById(oldest.id)
-          .andThen(() => pruneOnce(count - 1, oldest.id));
-      });
-    };
-
-    return pruneOnce(totalCount, null);
-  }
-
-  private recordFailure(
-    baseRun: StorePingRunContext,
-    startedAt: number,
-    error: unknown,
-  ): ResultAsync<null, Error> {
-    const durationMs = Date.now() - startedAt;
-    const summary: StorePingRunSummary = {
-      error: { message: errorMessage(error) },
-    };
-    return this.repo
-      .upsert({
-        ...baseRun,
-        durationMs,
-        status: "failure",
-        summary,
-      })
-      .orElse(() => okAsync(null))
-      .map(() => null);
   }
 
   private updateCache(
@@ -214,20 +154,15 @@ export function resolveStorePingRunContext(now: Date): StorePingRunContext {
 }
 
 function buildDbSummary(
-  latest: { id: string } | null,
-  prunedId: null | string,
-  totalCount: number,
+  createdId: string,
+  readId: string,
+  deletedId: string,
 ): StorePingDbSummary {
   return {
-    latestId: latest?.id ?? null,
-    prunedId,
-    totalCount,
+    createdId,
+    deletedId,
+    readId,
   };
-}
-
-function errorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  return "Unknown error";
 }
 
 function readPart(

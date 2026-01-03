@@ -57,9 +57,9 @@ function buildBlocks(payload: StorePingNotification): unknown[] {
   }
 
   if (payload.db) {
-    fields.push(field("DB Latest", payload.db.latestId ?? "n/a"));
-    fields.push(field("DB Pruned", payload.db.prunedId ?? "none"));
-    fields.push(field("DB Count", `${payload.db.totalCount}`));
+    fields.push(field("DB Created", payload.db.createdId));
+    fields.push(field("DB Read", payload.db.readId));
+    fields.push(field("DB Deleted", payload.db.deletedId));
   }
 
   if (payload.redis) {

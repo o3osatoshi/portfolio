@@ -8,7 +8,7 @@ import type {
   CacheStore,
   StorePingNotification,
   StorePingNotifier,
-  StorePingRunRepository,
+  TransactionRepository,
 } from "@repo/domain";
 import type { Inngest } from "inngest";
 import type { ResultAsync } from "neverthrow";
@@ -21,7 +21,8 @@ const NOTIFY_ATTEMPTS = 2;
 export type StorePingFunctionDeps = {
   cache: CacheStore;
   notifier: StorePingNotifier;
-  repo: StorePingRunRepository;
+  transactionRepo: TransactionRepository;
+  userId: string;
 };
 
 type StorePingFunctionUseCaseDeps = {
@@ -37,7 +38,11 @@ export function createStorePingFunction(
   inngest: Inngest,
   deps: StorePingFunctionDeps,
 ) {
-  const storePing = new StorePingUseCase(deps.repo, deps.cache);
+  const storePing = new StorePingUseCase(
+    deps.transactionRepo,
+    deps.cache,
+    deps.userId,
+  );
   return createStorePingFunctionWithUseCase(inngest, {
     notifier: deps.notifier,
     storePing,

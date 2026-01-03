@@ -15,6 +15,7 @@ export const env = createLazyEnv(
     INNGEST_SIGNING_KEY: z.string().min(1),
     SLACK_BOT_TOKEN: z.string().min(1),
     SLACK_CHANNEL_ID: z.string().min(1),
+    STORE_PING_USER_ID: z.string().min(1),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
     UPSTASH_REDIS_REST_URL: z.string().min(1).optional(),
   },

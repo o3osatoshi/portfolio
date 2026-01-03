@@ -17,9 +17,9 @@ type StepRun = (id: string, fn: () => Promise<unknown>) => Promise<unknown>;
 
 const baseResult: StorePingResult = {
   db: {
-    latestId: "run-1",
-    prunedId: null,
-    totalCount: 1,
+    createdId: "tx-1",
+    deletedId: "tx-1",
+    readId: "tx-1",
   },
   durationMs: 120,
   jobKey: "store-ping",
