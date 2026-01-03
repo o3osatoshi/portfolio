@@ -81,13 +81,12 @@ export class StorePingUseCase {
       let prunedId: null | string = null;
       let countAfter = totalCount;
 
-      if (totalCount > RECENT_RUN_LIMIT) {
+      while (countAfter > RECENT_RUN_LIMIT) {
         const oldest = await unwrap(this.repo.findOldest(context.jobKey));
-        if (oldest) {
-          await unwrap(this.repo.deleteById(oldest.id));
-          prunedId = oldest.id;
-          countAfter = totalCount - 1;
-        }
+        if (!oldest) break;
+        await unwrap(this.repo.deleteById(oldest.id));
+        prunedId = oldest.id;
+        countAfter -= 1;
       }
 
       const entries = await unwrap(
