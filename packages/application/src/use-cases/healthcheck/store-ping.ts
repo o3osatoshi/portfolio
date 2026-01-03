@@ -1,9 +1,6 @@
 import {
   type CacheStore,
   createTransaction,
-  type StorePingCacheSummary,
-  type StorePingDbSummary,
-  type StorePingRunSlot,
   type TransactionRepository,
 } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
@@ -41,6 +38,19 @@ type StorePingCacheEntry = {
   slot: StorePingRunSlot;
   status: "failure" | "success";
 };
+
+type StorePingCacheSummary = {
+  key: string;
+  size: number;
+};
+
+type StorePingDbSummary = {
+  createdId: string;
+  deletedId: string;
+  readId: string;
+};
+
+type StorePingRunSlot = "00" | "12";
 
 export class StorePingUseCase {
   constructor(

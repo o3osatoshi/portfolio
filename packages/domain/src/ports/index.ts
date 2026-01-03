@@ -2,5 +2,4 @@
 export * from "./cache-store";
 export * from "./fx-quote.provider";
 export * from "./notification";
-export * from "./store-ping.types";
 export * from "./transaction.repository";
