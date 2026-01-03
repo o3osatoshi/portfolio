@@ -12,7 +12,7 @@ const JOB_KEY = "store-ping" as const;
 const JST_TIME_ZONE = "Asia/Tokyo";
 const RECENT_RUN_LIMIT = 3;
 const REDIS_KEY = "store-ping:recent";
-const REDIS_TTL_MS = 36 * 60 * 60 * 1_000;
+const REDIS_TTL_MS = 26 * 60 * 60 * 1_000;
 
 export type StorePingResult = {
   db: {
