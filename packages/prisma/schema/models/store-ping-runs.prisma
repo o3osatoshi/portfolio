@@ -1,0 +1,16 @@
+model StorePingRun {
+  id         String   @id @default(cuid())
+  jobKey     String
+  runKey     String
+  runAt      DateTime
+  slot       String
+  status     String
+  durationMs Int?
+  summary    Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([jobKey, runKey])
+  @@index([jobKey, runAt])
+}

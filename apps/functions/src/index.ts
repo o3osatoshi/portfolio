@@ -59,3 +59,5 @@ export const api = onRequest(async (req, res) => {
   }
   await handler(req, res);
 });
+
+export { inngest } from "./inngest";

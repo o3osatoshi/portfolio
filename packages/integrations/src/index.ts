@@ -4,4 +4,5 @@
 export * from "./exchange-rate-api";
 export * from "./http";
 export * from "./integration-error";
+export * from "./slack";
 export * from "./upstash";

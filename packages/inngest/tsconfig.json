@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@repo/application": ["../application/src"],
+      "@repo/domain": ["../domain/src"]
+    }
+  },
+  "extends": "@o3osatoshi/config/tsconfig/node.json",
+  "include": ["src"]
+}
