@@ -1,5 +1,5 @@
 import type { StorePingResult, StorePingUseCase } from "@repo/application";
-import type { StorePingNotification, StorePingNotifier } from "@repo/domain";
+import type { NotificationPayload, Notifier } from "@repo/domain";
 import type { Inngest } from "inngest";
 import { errAsync, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -12,7 +12,7 @@ type CreatedFunction = {
   trigger: Record<string, unknown>;
 };
 
-type NotifyResult = ReturnType<StorePingNotifier["notify"]>;
+type NotifyResult = ReturnType<Notifier["notify"]>;
 type StepRun = (id: string, fn: () => Promise<unknown>) => Promise<unknown>;
 
 const baseResult: StorePingResult = {
@@ -34,22 +34,21 @@ const baseResult: StorePingResult = {
 
 function createHarness(options: {
   notifyResults?: NotifyResult[];
-  serializeRunAt?: boolean;
   storePingError?: Error;
   storePingResult?: StorePingResult;
 }) {
-  const notifyCalls: StorePingNotification[] = [];
+  const notifyCalls: NotificationPayload[] = [];
   const notifyQueue: NotifyResult[] = [
     ...(options.notifyResults ?? [okAsync(undefined)]),
   ];
-  const notifier: StorePingNotifier = {
+  const notifier: Notifier = {
     notify: (payload) => {
       notifyCalls.push(payload);
       return notifyQueue.shift() ?? okAsync(undefined);
     },
   };
 
-  const execute = vi.fn((_context) => {
+  const execute = vi.fn((_context, _step) => {
     if (options.storePingError) {
       return errAsync(options.storePingError);
     }
@@ -77,15 +76,7 @@ function createHarness(options: {
   const step: { run: StepRun } = {
     run: async (id, fn) => {
       stepIds.push(id);
-      const value = await fn();
-      if (id === "store-ping-run" && options.serializeRunAt) {
-        const cast = value as StorePingResult;
-        return {
-          ...cast,
-          runAt: cast.runAt.toISOString(),
-        };
-      }
-      return value;
+      return fn();
     },
   };
 
@@ -116,12 +107,10 @@ describe("createStorePingFunctionWithUseCase", () => {
     });
   });
 
-  it("hydrates runAt and notifies success", async () => {
+  it("notifies success", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2024-01-01T00:30:00.000Z"));
-    const { created, execute, notifyCalls, step } = createHarness({
-      serializeRunAt: true,
-    });
+    const { created, execute, notifyCalls, step } = createHarness({});
 
     const result = await created.handler({ step });
 
@@ -132,8 +121,7 @@ describe("createStorePingFunctionWithUseCase", () => {
     expect(calledContext?.jobKey).toBe("store-ping");
     expect(calledContext?.runAt).toBeInstanceOf(Date);
     expect(notifyCalls).toHaveLength(1);
-    expect(notifyCalls[0]?.status).toBe("success");
-    expect(notifyCalls[0]?.runAt).toBeInstanceOf(Date);
+    expect(notifyCalls[0]?.level).toBe("success");
   });
 
   it("retries notification once before succeeding", async () => {
@@ -155,7 +143,7 @@ describe("createStorePingFunctionWithUseCase", () => {
 
     await expect(created.handler({ step })).rejects.toThrow("db down");
     expect(notifyCalls).toHaveLength(1);
-    expect(notifyCalls[0]?.status).toBe("failure");
+    expect(notifyCalls[0]?.level).toBe("error");
     expect(notifyCalls[0]?.error?.message).toBe("db down");
   });
 });

@@ -1,13 +1,14 @@
 import {
   generateStorePingContext,
+  type StepRunner,
   type StorePingContext,
   type StorePingResult,
   StorePingUseCase,
 } from "@repo/application";
 import type {
   CacheStore,
-  StorePingNotification,
-  StorePingNotifier,
+  NotificationPayload,
+  Notifier,
   TransactionRepository,
 } from "@repo/domain";
 import type { Inngest } from "inngest";
@@ -20,17 +21,17 @@ const NOTIFY_ATTEMPTS = 2;
 
 export type StorePingFunctionDeps = {
   cache: CacheStore;
-  notifier: StorePingNotifier;
+  notifier: Notifier;
   transactionRepo: TransactionRepository;
   userId: string;
 };
 
-type StepRunner = {
+type InngestStepRunner = {
   run: <T>(id: string, fn: () => Promise<T>) => Promise<unknown>;
 };
 
 type StorePingFunctionUseCaseDeps = {
-  notifier: StorePingNotifier;
+  notifier: Notifier;
   storePing: StorePingUseCase;
 };
 
@@ -66,29 +67,23 @@ export function createStorePingFunctionWithUseCase(
     { cron: STORE_PING_CRON },
     async ({ step }) => {
       const runContext = generateStorePingContext(new Date());
-
-      const runResult = runStepResult(
-        step,
-        "store-ping-run",
-        deps.storePing.execute(runContext),
-      ).map(hydrateStorePingResult);
+      const stepRunner = createInngestStepRunner(step);
+      const runResult = deps.storePing
+        .execute(runContext, stepRunner)
+        .map(hydrateStorePingResult);
 
       return runResult
         .andThen((result) =>
-          runStepResult(
-            step,
-            "store-ping-notify-success",
+          stepRunner("store-ping-notify-success", () =>
             notifyWithRetry(
               deps.notifier,
               buildSuccessNotification(result),
               NOTIFY_ATTEMPTS,
-            ),
-          ).map(() => result),
+            ).map(() => result),
+          ),
         )
         .orElse((error) =>
-          runStepResult(
-            step,
-            "store-ping-notify-failure",
+          stepRunner("store-ping-notify-failure", () =>
             notifyWithRetry(
               deps.notifier,
               buildFailureNotification(runContext, error),
@@ -106,33 +101,56 @@ export function createStorePingFunctionWithUseCase(
   );
 }
 
+function baseNotificationFields(context: StorePingContext): Array<{
+  label: string;
+  value: string;
+}> {
+  return [
+    { label: "Job", value: context.jobKey },
+    { label: "Run Key", value: context.runKey },
+    { label: "Slot", value: context.slot },
+    { label: "Run At", value: context.runAt.toISOString() },
+  ];
+}
+
 function buildFailureNotification(
   context: StorePingContext,
   error: unknown,
-): StorePingNotification {
+): NotificationPayload {
   return {
     error: { message: errorMessage(error) },
-    jobKey: context.jobKey,
-    runAt: context.runAt,
-    runKey: context.runKey,
-    slot: context.slot,
-    status: "failure",
+    fields: baseNotificationFields(context),
+    level: "error",
+    message: "Store ping failed",
+    title: "Store Ping",
   };
 }
 
 function buildSuccessNotification(
   result: StorePingResult,
-): StorePingNotification {
+): NotificationPayload {
   return {
-    cache: result.cache,
-    db: result.db,
-    durationMs: result.durationMs,
-    jobKey: result.jobKey,
-    runAt: result.runAt,
-    runKey: result.runKey,
-    slot: result.slot,
-    status: "success",
+    fields: [
+      ...baseNotificationFields(result),
+      { label: "Duration", value: `${result.durationMs}ms` },
+      { label: "DB Created", value: result.db.createdId },
+      { label: "DB Read", value: result.db.readId },
+      { label: "DB Deleted", value: result.db.deletedId },
+      { label: "Cache Key", value: result.cache.key },
+      { label: "Cache Size", value: `${result.cache.size}` },
+    ],
+    level: "success",
+    message: "Store ping completed",
+    title: "Store Ping",
   };
+}
+
+function createInngestStepRunner(step: InngestStepRunner): StepRunner {
+  return <T>(id: string, task: () => ResultAsync<T, Error>) =>
+    ResultAsync.fromPromise(
+      step.run(id, () => unwrapResult(task())).then((value) => value as T),
+      normalizeError,
+    );
 }
 
 function errorMessage(error: unknown): string {
@@ -162,8 +180,8 @@ function normalizeError(error: unknown): Error {
 }
 
 function notifyWithRetry(
-  notifier: StorePingNotifier,
-  payload: StorePingNotification,
+  notifier: Notifier,
+  payload: NotificationPayload,
   attempts: number,
 ): ResultAsync<void, Error> {
   if (attempts <= 0) {
@@ -177,17 +195,6 @@ function notifyWithRetry(
     });
 
   return attemptNotify(attempts);
-}
-
-function runStepResult<T>(
-  step: StepRunner,
-  id: string,
-  result: ResultAsync<T, Error>,
-): ResultAsync<T, Error> {
-  return ResultAsync.fromPromise(
-    step.run(id, () => unwrapResult(result)).then((value) => value as T),
-    normalizeError,
-  );
 }
 
 async function unwrapResult<T>(result: ResultAsync<T, Error>): Promise<T> {

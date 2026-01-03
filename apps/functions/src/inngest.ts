@@ -1,6 +1,6 @@
 import {
   createSlackClient,
-  createStorePingSlackNotifier,
+  createSlackNotifier,
   createUpstashRedis,
 } from "@repo/integrations";
 import {
@@ -40,7 +40,7 @@ export const inngest = onRequest(async (req, res) => {
     const slackClient = createSlackClient({
       token: env.SLACK_BOT_TOKEN,
     });
-    const slackNotifier = createStorePingSlackNotifier({
+    const slackNotifier = createSlackNotifier({
       channelId: env.SLACK_CHANNEL_ID,
       client: slackClient,
     });

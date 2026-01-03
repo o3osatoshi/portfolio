@@ -9,12 +9,18 @@ import {
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import { newApplicationError } from "../../application-error";
+import { noopStepRunner, type StepRunner } from "../toolkit";
 
 const JOB_KEY = "store-ping" as const;
 const JST_TIME_ZONE = "Asia/Tokyo";
 const RECENT_RUN_LIMIT = 3;
 const CACHE_KEY = "store-ping";
 const CACHE_TTL_MS = 26 * 60 * 60 * 1_000;
+const STEP_CACHE_GET = "store-ping-cache-get";
+const STEP_CACHE_SET = "store-ping-cache-set";
+const STEP_DB_CREATE = "store-ping-db-create";
+const STEP_DB_DELETE = "store-ping-db-delete";
+const STEP_DB_READ = "store-ping-db-read";
 
 export type StorePingContext = {
   jobKey: typeof JOB_KEY;
@@ -46,10 +52,13 @@ export class StorePingUseCase {
   /**
    * Execute store-ping using a precomputed JST run context.
    */
-  execute(context: StorePingContext): ResultAsync<StorePingResult, Error> {
+  execute(
+    context: StorePingContext,
+    step: StepRunner = noopStepRunner,
+  ): ResultAsync<StorePingResult, Error> {
     const startedAt = Date.now();
 
-    const result = createTransaction({
+    const transactionInput = createTransaction({
       amount: "1",
       currency: "USD",
       datetime: context.runAt,
@@ -57,52 +66,58 @@ export class StorePingUseCase {
       type: "BUY",
       userId: this.userId,
     });
-    if (result.isErr()) return errAsync(result.error);
+    if (transactionInput.isErr()) return errAsync(transactionInput.error);
 
-    return this.transactionRepo
-      .create(result.value)
+    return step(STEP_DB_CREATE, () =>
+      this.transactionRepo.create(transactionInput.value),
+    )
       .andThen((created) =>
-        this.transactionRepo.findById(created.id).andThen((found) => {
-          if (!found) {
-            return errAsync(
-              newApplicationError({
-                action: "StorePing",
-                kind: "NotFound",
-                reason: "Transaction readback returned no record",
-              }),
-            );
-          }
-          return okAsync({ created, found });
-        }),
+        step(STEP_DB_READ, () =>
+          this.transactionRepo.findById(created.id).andThen((found) => {
+            if (!found) {
+              return errAsync(
+                newApplicationError({
+                  action: "StorePing",
+                  kind: "NotFound",
+                  reason: "Transaction readback returned no record",
+                }),
+              );
+            }
+            return okAsync({ created, found });
+          }),
+        ),
       )
       .andThen(({ created, found }) =>
-        this.transactionRepo
-          .delete(created.id, created.userId)
-          .map(() => ({ created, found })),
+        step(STEP_DB_DELETE, () =>
+          this.transactionRepo
+            .delete(created.id, created.userId)
+            .map(() => ({ created, found })),
+        ),
       )
       .andThen(({ created, found }) =>
-        this.cache
-          .get<StorePingCacheEntry[]>(CACHE_KEY)
-          .map((entries) => entries ?? [])
-          .andThen((entries) => {
-            const newEntry: StorePingCacheEntry = {
-              runAt: context.runAt.toISOString(),
-              runKey: context.runKey,
-              slot: context.slot,
-              status: "success",
-            };
-            const newEntries = [
-              newEntry,
-              ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
-            ].slice(0, RECENT_RUN_LIMIT);
-            return this.cache
+        step(STEP_CACHE_GET, () =>
+          this.cache
+            .get<StorePingCacheEntry[]>(CACHE_KEY)
+            .map((entries) => entries ?? []),
+        ).andThen((entries) => {
+          const newEntry: StorePingCacheEntry = {
+            runAt: context.runAt.toISOString(),
+            runKey: context.runKey,
+            slot: context.slot,
+            status: "success",
+          };
+          const newEntries = [
+            newEntry,
+            ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
+          ].slice(0, RECENT_RUN_LIMIT);
+          return step(STEP_CACHE_SET, () =>
+            this.cache
               .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
               .map(() => ({
                 key: CACHE_KEY,
                 size: newEntries.length,
-              }));
-          })
-          .map((cache) => {
+              })),
+          ).map((cache) => {
             const durationMs = Date.now() - startedAt;
             return {
               ...context,
@@ -114,9 +129,9 @@ export class StorePingUseCase {
               },
               durationMs,
             };
-          }),
-      )
-      .orElse((error) => errAsync(error));
+          });
+        }),
+      );
   }
 }
 

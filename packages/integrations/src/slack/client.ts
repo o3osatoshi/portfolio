@@ -1,3 +1,4 @@
+import type { SlackMessageOverrides } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
@@ -23,10 +24,9 @@ export type SlackClientConfig = {
 };
 
 export type SlackMessage = {
-  blocks?: undefined | unknown[];
-  channel: string;
-  text: string;
-};
+  channel?: string | undefined;
+  text?: string | undefined;
+} & SlackMessageOverrides;
 
 export type SlackPostMessageResponse = z.infer<
   typeof SlackPostMessageResponseSchema
