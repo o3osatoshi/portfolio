@@ -5,12 +5,13 @@ import {
   createStorePingSlackNotifier,
   createUpstashRedis,
 } from "@repo/integrations";
-import { createPrismaClient, PrismaStorePingRunRepository } from "@repo/prisma";
+import { PrismaStorePingRunRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 import { serve } from "inngest/express";
 
 import { env } from "./env";
 import { getFunctionsLogger } from "./logger";
+import { getPrismaClient } from "./prisma";
 
 const INNGEST_APP_ID = "portfolio-functions";
 
@@ -31,9 +32,7 @@ export const inngest = onRequest(async (req, res) => {
       url: env.UPSTASH_REDIS_REST_URL,
     });
 
-    const prisma = createPrismaClient({
-      connectionString: env.DATABASE_URL,
-    });
+    const prisma = getPrismaClient();
     const storePingRepo = new PrismaStorePingRunRepository(prisma);
     const storePingUseCase = new StorePingUseCase(storePingRepo, cacheStore);
 

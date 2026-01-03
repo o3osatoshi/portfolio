@@ -4,11 +4,12 @@ import {
   buildApp,
   createExpressRequestHandler,
 } from "@repo/interface/http/node";
-import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+import { PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
 import { env } from "./env";
 import { getFunctionsLogger } from "./logger";
+import { getPrismaClient } from "./prisma";
 
 let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
 
@@ -34,9 +35,7 @@ export const api = onRequest(async (req, res) => {
       },
     );
 
-    const client = createPrismaClient({
-      connectionString: env.DATABASE_URL,
-    });
+    const client = getPrismaClient();
     const authConfig = createAuthConfig({
       providers: {
         google: {
