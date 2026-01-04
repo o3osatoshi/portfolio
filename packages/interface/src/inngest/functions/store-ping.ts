@@ -3,7 +3,7 @@ import type { CacheStore, Notifier, TransactionRepository } from "@repo/domain";
 import type { Inngest } from "inngest";
 import { err } from "neverthrow";
 
-import { retriableNotify } from "../shared/notify-with-retry";
+import { retriableNotify } from "../shared/retriable-notify";
 import { createInngestStepRunner } from "../shared/step-runner";
 
 const NOTIFY_ATTEMPTS = 2;
