@@ -1,5 +1,7 @@
 import { Axiom, AxiomWithoutBatching, type ClientOptions } from "@axiomhq/js";
 
+import { deserializeError } from "@o3osatoshi/toolkit";
+
 import type { LogEvent, Transport } from "../types";
 
 /**
@@ -70,19 +72,11 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
       const result = client.ingest(dataset, logEvents);
       if (result && typeof result.catch === "function") {
         void result.catch((error) => {
-          if (error instanceof Error) {
-            onError(error);
-          } else {
-            onError(new Error("Axiom ingest failed"));
-          }
+          onError(deserializeError(error));
         });
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        onError(error);
-      } else {
-        onError(new Error("Axiom ingest failed"));
-      }
+      onError(deserializeError(error));
     }
   };
 

@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
-import { newError } from "../error";
+import { deserializeError, newError } from "../error";
 
 /**
  * Options accepted by {@link sleep}.
@@ -33,16 +33,17 @@ export function sleep(
   ms: number,
   { signal }: SleepOptions = {},
 ): ResultAsync<void, Error> {
-  const mapErr = (err: unknown): Error =>
-    err instanceof Error
-      ? err
-      : newError({
+  const mapErr = (error: unknown): Error =>
+    deserializeError(error, {
+      fallback: (cause) =>
+        newError({
           action: "Sleep",
-          cause: err,
+          cause,
           kind: "Unknown",
           layer: "Infra",
           reason: "sleep rejected with non-error value",
-        });
+        }),
+    });
 
   if (!signal) {
     return ResultAsync.fromPromise(

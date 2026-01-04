@@ -72,7 +72,12 @@ export function createUrlRedactor(options: UrlRedactorOptions): (url: string) =>
 export function decode(value: string): Result<JsonContainer, Error>;
 
 // @public
-export function deserializeError(input: unknown): Error;
+export function deserializeError(input: unknown, options?: DeserializeErrorOptions): Error;
+
+// @public
+export type DeserializeErrorOptions = {
+    fallback?: ((input: unknown) => Error) | undefined;
+};
 
 // @public
 export function deserializeResponseBody(response: Response): Promise<unknown>;
@@ -357,6 +362,9 @@ export function truncate(value: string, maxLen?: null | number): string;
 export type UnknownRecord = Record<string, unknown>;
 
 // @public
+export function unwrapResultAsyncOrThrow<T, E extends Error>(result: ResultAsync<T, E>): Promise<T>;
+
+// @public
 export type UrlRedactorOptions = {
     placeholder?: string;
     secrets: Array<string | undefined>;
@@ -367,7 +375,7 @@ export function userMessageFromError(error: Error): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1018:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1046:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

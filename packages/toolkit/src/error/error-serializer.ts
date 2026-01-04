@@ -44,6 +44,20 @@ const serializedErrorSchema: z.ZodType<SerializedError> = z
   .strip();
 
 /**
+ * Options for {@link deserializeError}.
+ *
+ * @public
+ */
+export type DeserializeErrorOptions = {
+  /**
+   * Optional fallback builder used when the input cannot be parsed as a
+   * {@link SerializedError}. The fallback is not used for actual Error
+   * instances or successfully parsed payloads.
+   */
+  fallback?: ((input: unknown) => Error) | undefined;
+};
+
+/**
  * Tuning knobs for {@link serializeError}.
  *
  * @public
@@ -66,15 +80,22 @@ export type SerializeOptions = {
  *
  * @public
  * @param input - Unknown value expected to represent a serialized error.
+ * @param options - Optional fallback behavior for non-Error, non-serialized inputs.
  * @returns Rehydrated `Error` with best-effort `cause` restoration.
  */
-export function deserializeError(input: unknown): Error {
+export function deserializeError(
+  input: unknown,
+  options?: DeserializeErrorOptions,
+): Error {
   // If input is already an Error instance, return it as-is
   if (input instanceof Error) return input;
 
   const parsed = serializedErrorSchema.safeParse(input);
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
+    if (options?.fallback) {
+      return options.fallback(input);
+    }
     const name = extractErrorName(input) ?? "UnknownError";
     const message = coerceErrorMessage(input);
     const e = new Error(message);
