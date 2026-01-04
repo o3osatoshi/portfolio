@@ -167,6 +167,9 @@ importers:
       '@o3osatoshi/logging':
         specifier: workspace:*
         version: link:../../packages/logging
+      '@o3osatoshi/toolkit':
+        specifier: workspace:*
+        version: link:../../packages/toolkit
       '@repo/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -472,6 +475,9 @@ importers:
       '@hono/auth-js':
         specifier: ^1.1.0
         version: 1.1.0(@auth/core@0.34.3)(hono@4.11.1)(react@19.2.3)
+      '@o3osatoshi/toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
       hono:
         specifier: ^4.0.0
         version: 4.11.1

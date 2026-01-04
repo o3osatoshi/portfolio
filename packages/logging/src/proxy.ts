@@ -149,12 +149,11 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
     }
 
     const result = proxyPayloadSchema.safeParse(rawPayload);
-    const payload = result.success ? result.data : undefined;
-
-    if (!payload) {
-      onError(new Error("invalid proxy payload"));
+    if (!result.success) {
+      onError(result.error);
       return json({ message: "invalid_proxy_payload", status: "error" }, 400);
     }
+    const payload = result.data;
 
     if (payload.eventSets.length > maxEvents) {
       return json({ message: "too_many_events", status: "error" }, 413);

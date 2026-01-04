@@ -31,6 +31,18 @@ export interface SerializedError {
   stack?: string | undefined;
 }
 
+// Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
+const serializedErrorSchema: z.ZodType<SerializedError> = z
+  .object({
+    name: z.string(),
+    cause: z
+      .union([z.string(), z.lazy(() => serializedErrorSchema)])
+      .optional(),
+    message: z.string(),
+    stack: z.string().optional(),
+  })
+  .strip();
+
 /**
  * Tuning knobs for {@link serializeError}.
  *
@@ -60,7 +72,7 @@ export function deserializeError(input: unknown): Error {
   // If input is already an Error instance, return it as-is
   if (input instanceof Error) return input;
 
-  const parsed = SerializedErrorSchema.safeParse(input);
+  const parsed = serializedErrorSchema.safeParse(input);
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
     const name = extractErrorName(input) ?? "UnknownError";
@@ -199,15 +211,3 @@ function serializeCause(
     return name;
   }
 }
-
-// Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
-const SerializedErrorSchema: z.ZodType<SerializedError> = z
-  .object({
-    name: z.string(),
-    cause: z
-      .union([z.string(), z.lazy(() => SerializedErrorSchema)])
-      .optional(),
-    message: z.string(),
-    stack: z.string().optional(),
-  })
-  .strip();

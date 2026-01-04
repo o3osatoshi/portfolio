@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { LoggingDatasets } from "@o3osatoshi/logging";
 import { initEdgeLogger } from "@o3osatoshi/logging/edge";
+import { summarizeZodIssue } from "@o3osatoshi/toolkit";
 
 const loggingDatasets = {
   events: "events",
@@ -26,9 +27,9 @@ export function initEdgeLogging(rawEnv: unknown) {
 
   const result = edgeLoggerEnvSchema.safeParse(rawEnv ?? {});
   if (!result.success) {
-    const issues = result.error.issues
-      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-      .join(", ");
+    const issues = result.error.issues.length
+      ? result.error.issues.map(summarizeZodIssue).join(", ")
+      : result.error.message;
     throw new Error(`Invalid edge env: ${issues}`);
   }
   const env = result.data;

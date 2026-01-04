@@ -8,7 +8,6 @@ import { Result } from 'neverthrow';
 import { ResultAsync } from 'neverthrow';
 import { z } from 'zod';
 import { ZodError } from 'zod';
-import { ZodIssue } from 'zod';
 
 // @public
 export type ActionData<TBase extends UnknownRecord = UnknownRecord> = null | TBase | undefined;
@@ -371,6 +370,10 @@ export type UrlRedactorOptions = {
 
 // @public
 export function userMessageFromError(error: Error): string;
+
+// Warnings were encountered during analysis:
+//
+// dist/index.d.ts:1018:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
