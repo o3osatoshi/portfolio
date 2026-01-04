@@ -3,7 +3,10 @@ import { z } from "zod";
 
 import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
 
-import { newIntegrationError } from "../integration-error";
+import {
+  type IntegrationKind,
+  newIntegrationError,
+} from "../integration-error";
 
 const slackPostMessageResponseSchema = z.object({
   channel: z.string().optional(),
@@ -118,17 +121,6 @@ export function createSlackClient(config: SlackClientConfig): SlackClient {
   };
 }
 
-function mapSlackErrorToKind(error?: string) {
-  if (!error) return "Unknown";
-  if (error.includes("invalid_auth") || error.includes("not_authed")) {
-    return "Unauthorized";
-  }
-  if (error.includes("channel_not_found")) return "NotFound";
-  if (error.includes("ratelimited")) return "RateLimit";
-  if (error.includes("not_in_channel")) return "Forbidden";
-  return "BadRequest";
-}
-
 function parseResponse(
   response: Response,
 ): ResultAsync<SlackPostMessageResponse, Error> {
@@ -145,7 +137,8 @@ function parseResponse(
         return err(
           newIntegrationError({
             action: "SlackPostMessage",
-            kind: httpStatusToKind(response.status),
+            kind:
+              slackErrorToKind(res.error) ?? httpStatusToKind(response.status),
             reason: `Slack API responded with ${response.status}: ${res.error ?? "unknown error"}`,
           }),
         );
@@ -166,7 +159,8 @@ function parseResponse(
         return err(
           newIntegrationError({
             action: "SlackPostMessage",
-            kind: mapSlackErrorToKind(res.error),
+            kind:
+              slackErrorToKind(res.error) ?? httpStatusToKind(response.status),
             reason: res.error ?? "Slack API returned ok=false",
           }),
         );
@@ -174,4 +168,21 @@ function parseResponse(
       return ok(res);
     }),
   );
+}
+
+function slackErrorToKind(error?: string | undefined): IntegrationKind {
+  if (!error) return "Unknown";
+
+  const SLACK_ERROR_KIND_MAP: ReadonlyArray<[string, IntegrationKind]> = [
+    ["invalid_auth", "Unauthorized"],
+    ["not_authed", "Unauthorized"],
+    ["channel_not_found", "NotFound"],
+    ["ratelimited", "RateLimit"],
+    ["not_in_channel", "Forbidden"],
+  ];
+
+  const matchedMap = SLACK_ERROR_KIND_MAP.find(([code]) =>
+    error.toLowerCase().includes(code),
+  );
+  return matchedMap ? matchedMap[1] : "BadRequest";
 }
