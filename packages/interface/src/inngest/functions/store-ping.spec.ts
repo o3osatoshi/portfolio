@@ -162,7 +162,7 @@ describe("createStorePingFunction", () => {
       concurrency: 1,
     });
     expect(created.trigger).toEqual({
-      cron: "CRON_TZ=Asia/Tokyo 0 0,12 * * *",
+      cron: "TZ=Asia/Tokyo 0 0,12 * * *",
     });
   });
 
