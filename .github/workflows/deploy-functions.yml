@@ -87,6 +87,11 @@ jobs:
           printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" >> apps/functions/.env
           printf "EXCHANGE_RATE_API_KEY=%s\n" "${{ secrets.EXCHANGE_RATE_API_KEY }}" >> apps/functions/.env
           printf "EXCHANGE_RATE_BASE_URL=%s\n" "${{ secrets.EXCHANGE_RATE_BASE_URL }}" >> apps/functions/.env
+          printf "INNGEST_EVENT_KEY=%s\n" "${{ secrets.INNGEST_EVENT_KEY }}" >> apps/functions/.env
+          printf "INNGEST_SIGNING_KEY=%s\n" "${{ secrets.INNGEST_SIGNING_KEY }}" >> apps/functions/.env
+          printf "SLACK_BOT_TOKEN=%s\n" "${{ secrets.SLACK_BOT_TOKEN }}" >> apps/functions/.env
+          printf "SLACK_CHANNEL_ID=%s\n" "${{ secrets.SLACK_CHANNEL_ID }}" >> apps/functions/.env
+          printf "STORE_PING_USER_ID=%s\n" "${{ secrets.STORE_PING_USER_ID }}" >> apps/functions/.env
           printf "UPSTASH_REDIS_REST_TOKEN=%s\n" "${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> apps/functions/.env
           printf "UPSTASH_REDIS_REST_URL=%s\n" "${{ secrets.UPSTASH_REDIS_REST_URL }}" >> apps/functions/.env
 
