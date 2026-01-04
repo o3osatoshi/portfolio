@@ -1,6 +1,6 @@
 import type { FxQuoteProvider } from "@repo/domain";
 import { newCurrencyCode } from "@repo/domain";
-import { errAsync, type ResultAsync } from "neverthrow";
+import { Result, type ResultAsync } from "neverthrow";
 
 import type { GetFxQuoteRequest, GetFxQuoteResponse } from "../../dtos";
 import { toFxQuoteResponse } from "../../dtos";
@@ -18,16 +18,11 @@ export class GetFxQuoteUseCase {
    * @returns ResultAsync with a typed response or a structured error.
    */
   execute(req: GetFxQuoteRequest): ResultAsync<GetFxQuoteResponse, Error> {
-    const base = newCurrencyCode(req.base);
-    if (base.isErr()) return errAsync(base.error);
-    const quote = newCurrencyCode(req.quote);
-    if (quote.isErr()) return errAsync(quote.error);
-
-    return this.provider
-      .getRate({
-        base: base.value,
-        quote: quote.value,
-      })
-      .map(toFxQuoteResponse);
+    return Result.combine([
+      newCurrencyCode(req.base),
+      newCurrencyCode(req.quote),
+    ]).asyncAndThen(([base, quote]) =>
+      this.provider.getRate({ base, quote }).map(toFxQuoteResponse),
+    );
   }
 }

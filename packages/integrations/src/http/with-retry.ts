@@ -1,7 +1,7 @@
 import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import { parseErrorName, sleep } from "@o3osatoshi/toolkit";
+import { deserializeError, parseErrorName, sleep } from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
 import type {
@@ -148,15 +148,16 @@ export function withRetry(
           })
         );
       })(),
-      (cause) =>
-        cause instanceof Error
-          ? cause
-          : newIntegrationError({
+      (error) =>
+        deserializeError(error, {
+          fallback: (cause) =>
+            newIntegrationError({
               action: "RetryExternalApi",
               cause,
               kind: "Unknown",
               reason: `Retry failed with a non-error value (attempts: ${attempts}).`,
             }),
+        }),
     );
   };
 }

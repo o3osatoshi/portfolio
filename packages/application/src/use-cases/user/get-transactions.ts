@@ -1,6 +1,6 @@
 import type { TransactionRepository } from "@repo/domain";
 import { newUserId } from "@repo/domain";
-import { errAsync, type ResultAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 
 import {
   type GetTransactionsRequest,
@@ -24,9 +24,8 @@ export class GetTransactionsUseCase {
   execute(
     req: GetTransactionsRequest,
   ): ResultAsync<GetTransactionsResponse, Error> {
-    const res = newUserId(req.userId);
-    if (res.isErr()) return errAsync(res.error);
-
-    return this.repo.findByUserId(res.value).map(toTransactionsResponse);
+    return newUserId(req.userId).asyncAndThen((userId) =>
+      this.repo.findByUserId(userId).map(toTransactionsResponse),
+    );
   }
 }

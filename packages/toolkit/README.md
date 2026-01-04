@@ -33,16 +33,12 @@ throw newError({
 
 ```ts
 import { z } from "zod";
-import { parseWith, parseAsyncWith, newZodError } from "@o3osatoshi/toolkit";
+import { parseWith, newZodError } from "@o3osatoshi/toolkit";
 
 const userSchema = z.object({ name: z.string(), age: z.number().min(0) });
 
 const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
 const res = parseUser({ name: "alice", age: 20 }); // Result<User, Error>
-
-// Async
-const parseUserAsync = parseAsyncWith(userSchema, { action: "ParseUser", layer: "UI" });
-const resAsync = await parseUserAsync({ name: "alice", age: 20 }); // ResultAsync<User, Error>
 
 // When you catch a ZodError and want a normalized Error:
 try {
@@ -89,8 +85,8 @@ Note: Some gateways use non‑standard 499 (Client Closed Request). The default 
   - Human‑readable messages for common Zod issues.
 - `newZodError(opts)`
   - Wraps a `ZodError` (or issues array) into a structured `Error` via `newError`.
-- `parseWith(schema, ctx)` / `parseAsyncWith(schema, ctx)`
-  - Create functions returning `neverthrow` `Result` / `ResultAsync` from a Zod schema. Errors are normalized via `newZodError`.
+- `parseWith(schema, ctx)`
+  - Create a function returning `neverthrow` `Result` from a Zod schema. Errors are normalized via `newZodError`.
 - `createEnv(schema, opts?)`
   - Validate environment variables with Zod and return a fully typed configuration object. Accepts an optional `name` label (used in error messages) and `source` map (useful for tests or SSR).
 - `Env`

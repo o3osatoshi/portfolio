@@ -9,6 +9,7 @@
     "clean": "rimraf dist",
     "deploy": "firebase deploy --only functions",
     "dev": "tsup --watch",
+    "env:pull": "doppler secrets download --project portfolio-functions --config dev --no-file --format env > ./.env.local",
     "logs": "firebase functions:log",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
@@ -17,7 +18,7 @@
   },
   "dependencies": {
     "firebase-admin": "^13.6.0",
-    "firebase-functions": "^7.0.1",
+    "firebase-functions": "^6.6.0",
     "zod": "^4.2.0"
   },
   "devDependencies": {

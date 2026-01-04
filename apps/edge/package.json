@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@o3osatoshi/logging": "workspace:*",
+    "@o3osatoshi/toolkit": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/integrations": "workspace:*",
     "@repo/interface": "workspace:*",

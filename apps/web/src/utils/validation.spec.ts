@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 
+import { parseWith } from "@o3osatoshi/toolkit";
+
 import { createTransactionSchema, updateTransactionSchema } from "./validation";
+
+const parseCreateTransaction = parseWith(createTransactionSchema, {
+  action: "ParseCreateTransaction",
+});
+const parseUpdateTransaction = parseWith(updateTransactionSchema, {
+  action: "ParseUpdateTransaction",
+});
 
 describe("utils/validation createTransactionSchema", () => {
   it("parses valid payload with string fields", () => {
@@ -13,13 +22,16 @@ describe("utils/validation createTransactionSchema", () => {
       type: "BUY",
     };
 
-    const res = createTransactionSchema.parse(input);
+    const res = parseCreateTransaction(input);
 
-    expect(res.amount).toBe("1.23");
-    expect(res.price).toBe("100.00");
-    expect(res.currency).toBe("USD");
-    expect(res.type).toBe("BUY");
-    expect(res.datetime instanceof Date).toBe(true);
+    expect(res.isOk()).toBe(true);
+    if (res.isOk()) {
+      expect(res.value.amount).toBe("1.23");
+      expect(res.value.price).toBe("100.00");
+      expect(res.value.currency).toBe("USD");
+      expect(res.value.type).toBe("BUY");
+      expect(res.value.datetime instanceof Date).toBe(true);
+    }
   });
 
   it("parses valid payload with numeric decimal fields and optionals", () => {
@@ -35,15 +47,18 @@ describe("utils/validation createTransactionSchema", () => {
       type: "SELL",
     };
 
-    const res = createTransactionSchema.parse(input);
+    const res = parseCreateTransaction(input);
 
-    expect(res.amount).toBe("1.5");
-    expect(res.price).toBe("10");
-    expect(res.fee).toBe("0.1");
-    expect(res.profitLoss).toBe("-0.25");
-    expect(res.feeCurrency).toBe("JPY");
-    expect(res.type).toBe("SELL");
-    expect(res.datetime instanceof Date).toBe(true);
+    expect(res.isOk()).toBe(true);
+    if (res.isOk()) {
+      expect(res.value.amount).toBe("1.5");
+      expect(res.value.price).toBe("10");
+      expect(res.value.fee).toBe("0.1");
+      expect(res.value.profitLoss).toBe("-0.25");
+      expect(res.value.feeCurrency).toBe("JPY");
+      expect(res.value.type).toBe("SELL");
+      expect(res.value.datetime instanceof Date).toBe(true);
+    }
   });
 
   it("rejects invalid decimal strings", () => {
@@ -56,39 +71,45 @@ describe("utils/validation createTransactionSchema", () => {
       type: "BUY",
     };
 
-    expect(() => createTransactionSchema.parse(input)).toThrow();
+    const res = parseCreateTransaction(input);
+    expect(res.isErr()).toBe(true);
   });
 });
 
 describe("utils/validation updateTransactionSchema", () => {
   it("parses minimal valid payload with id only", () => {
-    const res = updateTransactionSchema.parse({
+    const res = parseUpdateTransaction({
       id: "tx-1",
     });
 
-    expect(res.id).toBe("tx-1");
+    expect(res.isOk()).toBe(true);
+    if (res.isOk()) {
+      expect(res.value.id).toBe("tx-1");
+    }
   });
 
   it("parses partial update with numeric fields", () => {
     const now = new Date();
-    const res = updateTransactionSchema.parse({
+    const res = parseUpdateTransaction({
       id: "tx-2",
       amount: 2,
       datetime: now.toISOString(),
       price: 200,
     });
 
-    expect(res.id).toBe("tx-2");
-    expect(res.amount).toBe("2");
-    expect(res.price).toBe("200");
-    expect(res.datetime instanceof Date).toBe(true);
+    expect(res.isOk()).toBe(true);
+    if (res.isOk()) {
+      expect(res.value.id).toBe("tx-2");
+      expect(res.value.amount).toBe("2");
+      expect(res.value.price).toBe("200");
+      expect(res.value.datetime instanceof Date).toBe(true);
+    }
   });
 
   it("rejects payload without id", () => {
-    expect(() =>
-      updateTransactionSchema.parse({
-        amount: "1.0",
-      } as unknown),
-    ).toThrow();
+    const res = parseUpdateTransaction({
+      amount: "1.0",
+    } as unknown);
+    expect(res.isErr()).toBe(true);
   });
 });

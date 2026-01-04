@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { summarizeZodIssue } from "./zod";
+
 /**
  * Options for {@link createEnv}.
  *
@@ -83,9 +85,9 @@ export function createEnv<T extends EnvSchema>(
   const result = z.object(schema).safeParse(src);
   if (!result.success) {
     const where = opts.name ? `${opts.name} env` : "env";
-    const issues = result.error.issues
-      .map((i) => `${i.path.join(".")}: ${i.message}`)
-      .join(", ");
+    const issues = result.error.issues.length
+      ? result.error.issues.map(summarizeZodIssue).join(", ")
+      : result.error.message;
     throw new Error(`Invalid ${where}: ${issues}`);
   }
   return result.data as EnvOf<T>;

@@ -31,6 +31,32 @@ export interface SerializedError {
   stack?: string | undefined;
 }
 
+// Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
+const serializedErrorSchema: z.ZodType<SerializedError> = z
+  .object({
+    name: z.string(),
+    cause: z
+      .union([z.string(), z.lazy(() => serializedErrorSchema)])
+      .optional(),
+    message: z.string(),
+    stack: z.string().optional(),
+  })
+  .strip();
+
+/**
+ * Options for {@link deserializeError}.
+ *
+ * @public
+ */
+export type DeserializeErrorOptions = {
+  /**
+   * Optional fallback builder used when the input cannot be parsed as a
+   * {@link SerializedError}. The fallback is not used for actual Error
+   * instances or successfully parsed payloads.
+   */
+  fallback?: ((input: unknown) => Error) | undefined;
+};
+
 /**
  * Tuning knobs for {@link serializeError}.
  *
@@ -54,15 +80,22 @@ export type SerializeOptions = {
  *
  * @public
  * @param input - Unknown value expected to represent a serialized error.
+ * @param options - Optional fallback behavior for non-Error, non-serialized inputs.
  * @returns Rehydrated `Error` with best-effort `cause` restoration.
  */
-export function deserializeError(input: unknown): Error {
+export function deserializeError(
+  input: unknown,
+  options?: DeserializeErrorOptions,
+): Error {
   // If input is already an Error instance, return it as-is
   if (input instanceof Error) return input;
 
-  const parsed = SerializedErrorSchema.safeParse(input);
+  const parsed = serializedErrorSchema.safeParse(input);
   if (!parsed.success) {
     // Fallback: build a best-effort Error from unknown input
+    if (options?.fallback) {
+      return options.fallback(input);
+    }
     const name = extractErrorName(input) ?? "UnknownError";
     const message = coerceErrorMessage(input);
     const e = new Error(message);
@@ -199,15 +232,3 @@ function serializeCause(
     return name;
   }
 }
-
-// Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
-const SerializedErrorSchema: z.ZodType<SerializedError> = z
-  .object({
-    name: z.string(),
-    cause: z
-      .union([z.string(), z.lazy(() => SerializedErrorSchema)])
-      .optional(),
-    message: z.string(),
-    stack: z.string().optional(),
-  })
-  .strip();

@@ -1,4 +1,4 @@
-import { z, type ZodError, type ZodIssue } from "zod";
+import { z, type ZodError } from "zod";
 
 import { type Layer, newError } from "../error";
 
@@ -25,6 +25,8 @@ export type NewZodError = {
   /** Architectural layer responsible for validation (default `"Application"`). */
   layer?: Layer | undefined;
 };
+
+type ZodIssue = z.core.$ZodIssue;
 
 /**
  * Determines whether a value came from Zod validation.

@@ -215,4 +215,20 @@ describe("error-serializer", () => {
     const e3 = deserializeError(already);
     expect(e3).toBe(already);
   });
+
+  it("uses fallback when input is not deserializable", () => {
+    const payload = { foo: "bar" };
+    const fallback = (cause: unknown) => {
+      const err = new Error("fallback");
+      err.name = "FallbackError";
+      err.cause = cause;
+      return err;
+    };
+
+    const err = deserializeError(payload, { fallback });
+
+    expect(err.name).toBe("FallbackError");
+    expect(err.message).toBe("fallback");
+    expect(err.cause).toBe(payload);
+  });
 });

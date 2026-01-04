@@ -28,7 +28,19 @@ export function handleResponse<T>(
         kind: "Serialization",
         request,
       }),
-    ).andThen((body) => errAsync(deserializeError(body)));
+    ).andThen((body) =>
+      errAsync(
+        deserializeError(body, {
+          fallback: (cause) =>
+            newFetchError({
+              action: `Deserialize error body for ${context}`,
+              cause,
+              kind: "BadGateway",
+              request,
+            }),
+        }),
+      ),
+    );
   }
 
   return ResultAsync.fromPromise(res.json(), (cause) =>
