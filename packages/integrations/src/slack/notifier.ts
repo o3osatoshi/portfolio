@@ -11,15 +11,11 @@ import type {
   SlackClient,
   SlackMessage,
 } from "./client";
+import type { SlackBlock, SlackTextObject } from "./types";
 
 export type SlackNotifierConfig = {
   channelId: string;
   client: SlackClient;
-};
-
-type SlackMessageField = {
-  text: string;
-  type: string;
 };
 
 export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
@@ -58,7 +54,7 @@ function buildMessage(
   const headerText = `${payload.title} ${payload.level.toUpperCase()}`;
   const fields = buildSlackMessageFields(payload);
 
-  const blocks: unknown[] = [
+  const blocks: SlackBlock[] = [
     {
       text: {
         text: headerText,
@@ -106,7 +102,7 @@ function buildMessage(
 
 function buildSlackMessageFields(
   payload: NotificationPayload,
-): SlackMessageField[] {
+): SlackTextObject[] {
   const fields: NotificationField[] = [];
 
   if (payload.timestamp) {
@@ -128,9 +124,11 @@ function overrideMessage(
   prioritizedMessage?: OverridableSlackMessage,
 ): SlackMessage {
   if (!prioritizedMessage) return message;
+  const blocks = prioritizedMessage.blocks ?? message.blocks;
   return {
     ...message,
     ...prioritizedMessage,
+    blocks,
     channel: prioritizedMessage.channel ?? message.channel,
     text: prioritizedMessage.text ?? message.text,
   };
@@ -144,7 +142,7 @@ function resolveSlackOverrides(
   return overrides as OverridableSlackMessage;
 }
 
-function toSlackMessageField(label: string, value: string): SlackMessageField {
+function toSlackMessageField(label: string, value: string): SlackTextObject {
   return {
     text: `*${label}*\n${value}`,
     type: "mrkdwn",

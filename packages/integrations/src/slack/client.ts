@@ -7,13 +7,20 @@ import {
   type IntegrationKind,
   newIntegrationError,
 } from "../integration-error";
+import type {
+  SlackBlock,
+  SlackMessage,
+  SlackPostMessageResponse,
+} from "./types";
 
-const slackPostMessageResponseSchema = z.object({
-  channel: z.string().optional(),
-  error: z.string().optional(),
-  ok: z.boolean(),
-  ts: z.string().optional(),
-});
+const slackPostMessageResponseSchema: z.ZodType<SlackPostMessageResponse> = z
+  .object({
+    channel: z.string().optional(),
+    error: z.string().optional(),
+    ok: z.boolean(),
+    ts: z.string().optional(),
+  })
+  .loose();
 
 const parseSlackPostMessageResponse = parseWith(
   slackPostMessageResponseSchema,
@@ -23,23 +30,9 @@ const parseSlackPostMessageResponse = parseWith(
   },
 );
 
-export type OverridableSlackMessage = {
-  attachments?: undefined | unknown[];
-  blocks?: undefined | unknown[];
-  channel?: string | undefined;
-  icon_emoji?: string | undefined;
-  icon_url?: string | undefined;
-  link_names?: boolean | undefined;
-  metadata?: Record<string, unknown> | undefined;
-  mrkdwn?: boolean | undefined;
-  parse?: "full" | "none" | undefined;
-  reply_broadcast?: boolean | undefined;
-  text?: string | undefined;
-  thread_ts?: string | undefined;
-  unfurl_links?: boolean | undefined;
-  unfurl_media?: boolean | undefined;
-  username?: string | undefined;
-};
+export type { SlackMessage, SlackPostMessageResponse } from "./types";
+
+export type OverridableSlackMessage = Partial<SlackMessage>;
 
 export type SlackClient = {
   postMessage: (
@@ -53,31 +46,24 @@ export type SlackClientConfig = {
   token: string;
 };
 
-export type SlackMessage =
-  | ({
-      blocks: unknown[];
-      channel: string;
-      text?: string | undefined;
-    } & OverridableSlackMessage)
-  | ({
-      blocks?: undefined | unknown[];
-      channel: string;
-      text: string | undefined;
-    } & OverridableSlackMessage);
-
-export type SlackPostMessageResponse = z.infer<
-  typeof slackPostMessageResponseSchema
->;
-
-const SlackMessageSchema = z
+const SlackMessageSchema: z.ZodType<SlackMessage> = z
   .object({
-    blocks: z.array(z.unknown()).min(1).optional(),
+    blocks: z.array(z.custom<SlackBlock>()).min(1).optional(),
     channel: z.string().min(1),
     text: z.string().min(1).optional(),
   })
   .loose()
   .superRefine((value, ctx) => {
-    if (!value.text && !value.blocks) {
+    const hasText =
+      "text" in value &&
+      typeof value.text === "string" &&
+      value.text.length > 0;
+    const hasBlocks =
+      "blocks" in value &&
+      Array.isArray(value.blocks) &&
+      value.blocks.length > 0;
+
+    if (!hasText && !hasBlocks) {
       ctx.addIssue({
         code: "custom",
         message: "Slack message must include text or blocks.",
