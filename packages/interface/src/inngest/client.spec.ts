@@ -29,14 +29,12 @@ describe("createInngestClient", () => {
     });
   });
 
-  it("allows creating a client without an event key", () => {
+  it("rejects creating a client without an event key", () => {
     lastOptions = undefined;
     // @ts-expect-error
-    createInngestClient({ id: "store-ping-app" });
-
-    expect(lastOptions).toEqual({
-      id: "store-ping-app",
-      eventKey: undefined,
-    });
+    expect(() => createInngestClient({ id: "store-ping-app" })).toThrow(
+      "Inngest event key is required",
+    );
+    expect(lastOptions).toBeUndefined();
   });
 });
