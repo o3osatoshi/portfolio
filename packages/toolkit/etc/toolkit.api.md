@@ -286,12 +286,6 @@ export function normalizeBaseUrl(baseUrl: string): string;
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 
 // @public
-export function parseAsyncWith<T extends z.ZodType>(schema: T, ctx: {
-    action: string;
-    layer?: Layer;
-}): (input: unknown) => ResultAsync<z.infer<T>, Error>;
-
-// @public
 export function parseErrorMessage(message: string | undefined): ErrorMessageParts;
 
 // @public
