@@ -87,6 +87,8 @@ jobs:
           printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL }}" >> apps/functions/.env
           printf "EXCHANGE_RATE_API_KEY=%s\n" "${{ secrets.EXCHANGE_RATE_API_KEY }}" >> apps/functions/.env
           printf "EXCHANGE_RATE_BASE_URL=%s\n" "${{ secrets.EXCHANGE_RATE_BASE_URL }}" >> apps/functions/.env
+          printf "UPSTASH_REDIS_REST_TOKEN=%s\n" "${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> apps/functions/.env
+          printf "UPSTASH_REDIS_REST_URL=%s\n" "${{ secrets.UPSTASH_REDIS_REST_URL }}" >> apps/functions/.env
 
       - name: Deploy functions
         run: pnpm deploy:functions
