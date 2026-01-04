@@ -93,39 +93,28 @@ export function createSlackClient(config: SlackClientConfig): SlackClient {
   const fetcher = config.fetch ?? fetch;
 
   return {
-    postMessage: (message) => {
-      const result = parseSlackMessage(message);
-      if (result.isErr()) {
-        return errAsync(
-          newIntegrationError({
-            action: "SlackPostMessage",
-            cause: result.error,
-            kind: "Validation",
-            reason: "Slack message validation failed",
+    postMessage: (message) =>
+      parseSlackMessage(message).asyncAndThen((validated) =>
+        ResultAsync.fromPromise(
+          fetcher(`${baseUrl}/chat.postMessage`, {
+            body: JSON.stringify(validated),
+            headers: {
+              Authorization: `Bearer ${config.token}`,
+              "Content-Type": "application/json; charset=utf-8",
+            },
+            method: "POST",
           }),
-        );
-      }
-
-      return ResultAsync.fromPromise(
-        fetcher(`${baseUrl}/chat.postMessage`, {
-          body: JSON.stringify(result.value),
-          headers: {
-            Authorization: `Bearer ${config.token}`,
-            "Content-Type": "application/json; charset=utf-8",
-          },
-          method: "POST",
-        }),
-        (cause) =>
-          newIntegrationError({
-            action: "SlackPostMessage",
-            cause,
-            hint: "Check Slack API connectivity and token validity.",
-            impact: "notification could not be delivered",
-            kind: "Unavailable",
-            reason: "Slack API request failed",
-          }),
-      ).andThen((response) => parseResponse(response));
-    },
+          (cause) =>
+            newIntegrationError({
+              action: "SlackPostMessage",
+              cause,
+              hint: "Check Slack API connectivity and token validity.",
+              impact: "notification could not be delivered",
+              kind: "Unavailable",
+              reason: "Slack API request failed",
+            }),
+        ).andThen((response) => parseResponse(response)),
+      ),
   };
 }
 
@@ -181,14 +170,7 @@ function parseResponse(
   ).andThen((data) => {
     const parsed = parseSlackPostMessageResponse(data);
     if (parsed.isErr()) {
-      return errAsync(
-        newIntegrationError({
-          action: "SlackPostMessage",
-          cause: parsed.error,
-          kind: "Serialization",
-          reason: "Slack API response shape mismatch",
-        }),
-      );
+      return errAsync(parsed.error);
     }
     if (!parsed.value.ok) {
       return errAsync(
