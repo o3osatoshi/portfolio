@@ -62,80 +62,79 @@ export class StorePingUseCase {
   ): ResultAsync<StorePingResult, Error> {
     const startedAt = Date.now();
 
-    const transactionInput = createTransaction({
+    return createTransaction({
       amount: "1",
       currency: "USD",
       datetime: context.runAt,
       price: "1",
       type: "BUY",
       userId: this.userId,
-    });
-    if (transactionInput.isErr()) return errAsync(transactionInput.error);
-
-    return step("store-ping-db-create", () =>
-      this.transactionRepo.create(transactionInput.value),
-    )
-      .andThen((created) =>
-        step("store-ping-db-read", () =>
-          this.transactionRepo.findById(created.id).andThen((found) => {
-            if (!found) {
-              return errAsync(
-                newApplicationError({
-                  action: "StorePing",
-                  kind: "NotFound",
-                  reason: "Transaction readback returned no record",
-                }),
-              );
-            }
-            return okAsync({ created, found });
+    }).asyncAndThen((transactionInput) =>
+      step("store-ping-db-create", () =>
+        this.transactionRepo.create(transactionInput),
+      )
+        .andThen((created) =>
+          step("store-ping-db-read", () =>
+            this.transactionRepo.findById(created.id).andThen((found) => {
+              if (!found) {
+                return errAsync(
+                  newApplicationError({
+                    action: "StorePing",
+                    kind: "NotFound",
+                    reason: "Transaction readback returned no record",
+                  }),
+                );
+              }
+              return okAsync({ created, found });
+            }),
+          ),
+        )
+        .andThen(({ created, found }) =>
+          step("store-ping-db-delete", () =>
+            this.transactionRepo
+              .delete(created.id, created.userId)
+              .map(() => ({ created, found })),
+          ),
+        )
+        .andThen(({ created, found }) =>
+          step("store-ping-cache-get", () =>
+            this.cache
+              .get<StorePingCacheEntry[]>(CACHE_KEY)
+              .map((entries) => entries ?? []),
+          ).andThen((entries) => {
+            const newEntry: StorePingCacheEntry = {
+              runAt: context.runAt.toISOString(),
+              runKey: context.runKey,
+              slot: context.slot,
+              status: "success",
+            };
+            const newEntries = [
+              newEntry,
+              ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
+            ].slice(0, RECENT_RUN_LIMIT);
+            return step("store-ping-cache-set", () =>
+              this.cache
+                .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
+                .map(() => ({
+                  key: CACHE_KEY,
+                  size: newEntries.length,
+                })),
+            ).map((cache) => {
+              const durationMs = Date.now() - startedAt;
+              return {
+                ...context,
+                cache,
+                db: {
+                  createdId: created.id,
+                  deletedId: created.id,
+                  readId: found.id,
+                },
+                durationMs,
+              };
+            });
           }),
         ),
-      )
-      .andThen(({ created, found }) =>
-        step("store-ping-db-delete", () =>
-          this.transactionRepo
-            .delete(created.id, created.userId)
-            .map(() => ({ created, found })),
-        ),
-      )
-      .andThen(({ created, found }) =>
-        step("store-ping-cache-get", () =>
-          this.cache
-            .get<StorePingCacheEntry[]>(CACHE_KEY)
-            .map((entries) => entries ?? []),
-        ).andThen((entries) => {
-          const newEntry: StorePingCacheEntry = {
-            runAt: context.runAt.toISOString(),
-            runKey: context.runKey,
-            slot: context.slot,
-            status: "success",
-          };
-          const newEntries = [
-            newEntry,
-            ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
-          ].slice(0, RECENT_RUN_LIMIT);
-          return step("store-ping-cache-set", () =>
-            this.cache
-              .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
-              .map(() => ({
-                key: CACHE_KEY,
-                size: newEntries.length,
-              })),
-          ).map((cache) => {
-            const durationMs = Date.now() - startedAt;
-            return {
-              ...context,
-              cache,
-              db: {
-                createdId: created.id,
-                deletedId: created.id,
-                readId: found.id,
-              },
-              durationMs,
-            };
-          });
-        }),
-      );
+    );
   }
 }
 
