@@ -1,4 +1,4 @@
-import { err, errAsync, ok, ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
@@ -133,31 +133,24 @@ function parseResponse(
   response: Response,
 ): ResultAsync<SlackPostMessageResponse, Error> {
   if (!response.ok) {
-    return ResultAsync.fromPromise(response.text(), (cause) =>
+    return ResultAsync.fromPromise(response.json(), (cause) =>
       newIntegrationError({
         action: "SlackPostMessage",
         cause,
         kind: httpStatusToKind(response.status),
         reason: `Slack API responded with ${response.status}`,
       }),
-    ).andThen((body) => {
-      const slackError = parseSlackError(body);
-      const kind = slackError
-        ? mapSlackErrorToKind(slackError)
-        : httpStatusToKind(response.status);
-      const reason = slackError
-        ? `Slack API responded with ${response.status}: ${slackError}`
-        : body
-          ? `Slack API responded with ${response.status}: ${body}`
-          : `Slack API responded with ${response.status}`;
-      return errAsync(
-        newIntegrationError({
-          action: "SlackPostMessage",
-          kind,
-          reason,
-        }),
-      );
-    });
+    ).andThen((data) =>
+      parseSlackPostMessageResponse(data).andThen((res) => {
+        return err(
+          newIntegrationError({
+            action: "SlackPostMessage",
+            kind: httpStatusToKind(response.status),
+            reason: `Slack API responded with ${response.status}: ${res.error ?? "unknown error"}`,
+          }),
+        );
+      }),
+    );
   }
 
   return ResultAsync.fromPromise(response.json(), (cause) =>
@@ -181,19 +174,4 @@ function parseResponse(
       return ok(res);
     }),
   );
-}
-
-function parseSlackError(body: string): string | undefined {
-  try {
-    const data = JSON.parse(body);
-    const parsed = parseSlackPostMessageResponse(data);
-    if (parsed.isOk()) return parsed.value.error;
-    if (typeof data === "object" && data && "error" in data) {
-      const candidate = (data as { error?: unknown }).error;
-      if (typeof candidate === "string") return candidate;
-    }
-  } catch {
-    return undefined;
-  }
-  return undefined;
 }
