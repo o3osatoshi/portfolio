@@ -1,4 +1,4 @@
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
@@ -167,22 +167,20 @@ function parseResponse(
       kind: "Serialization",
       reason: "Failed to parse Slack API response",
     }),
-  ).andThen((data) => {
-    const parsed = parseSlackPostMessageResponse(data);
-    if (parsed.isErr()) {
-      return errAsync(parsed.error);
-    }
-    if (!parsed.value.ok) {
-      return errAsync(
-        newIntegrationError({
-          action: "SlackPostMessage",
-          kind: mapSlackErrorToKind(parsed.value.error),
-          reason: parsed.value.error ?? "Slack API returned ok=false",
-        }),
-      );
-    }
-    return okAsync(parsed.value);
-  });
+  ).andThen((data) =>
+    parseSlackPostMessageResponse(data).andThen((res) => {
+      if (!res.ok) {
+        return err(
+          newIntegrationError({
+            action: "SlackPostMessage",
+            kind: mapSlackErrorToKind(res.error),
+            reason: res.error ?? "Slack API returned ok=false",
+          }),
+        );
+      }
+      return ok(res);
+    }),
+  );
 }
 
 function parseSlackError(body: string): string | undefined {
