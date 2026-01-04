@@ -213,38 +213,45 @@ describe("createStorePingFunction", () => {
     });
   });
 
-  it("retries notification once before succeeding", async () => {
+  it("notifies failure when success notification fails", async () => {
     const notifyError = new Error("temporary slack failure");
     const { created, notifyCalls, step, stepIds } = createHarness({
       notifyResults: [errAsync(notifyError), okAsync(undefined)],
     });
 
-    const result = await created.handler({ step });
-
-    expect(result).toEqual(baseResult);
-    expect(stepIds).toEqual(["store-ping-notify-success"]);
-    expect(notifyCalls).toHaveLength(2);
-    expect(notifyCalls[0]?.level).toBe("success");
-  });
-
-  it("throws when notification fails after retries", async () => {
-    const notifyError = new Error("slack outage");
-    const { created, notifyCalls, step, stepIds } = createHarness({
-      notifyResults: [errAsync(new Error("first")), errAsync(notifyError)],
-    });
-
-    await expect(created.handler({ step })).rejects.toThrow("slack outage");
+    await expect(created.handler({ step })).rejects.toThrow(
+      "temporary slack failure",
+    );
     expect(stepIds).toEqual([
       "store-ping-notify-success",
       "store-ping-notify-failure",
     ]);
-    expect(notifyCalls).toHaveLength(3);
-    expect(notifyCalls[2]).toMatchObject({
+    expect(notifyCalls).toHaveLength(2);
+    expect(notifyCalls[0]?.level).toBe("success");
+    expect(notifyCalls[1]).toMatchObject({
       level: "error",
       message: "Store ping failed",
       title: "Store Ping",
     });
-    expect(notifyCalls[2]?.error?.message).toBe("slack outage");
+    expect(notifyCalls[1]?.error?.message).toBe("temporary slack failure");
+  });
+
+  it("throws when failure notification fails", async () => {
+    const notifyError = new Error("slack outage");
+    const { created, notifyCalls, step, stepIds } = createHarness({
+      notifyResults: [errAsync(notifyError)],
+      storePingError: new Error("db down"),
+    });
+
+    await expect(created.handler({ step })).rejects.toThrow("slack outage");
+    expect(stepIds).toEqual(["store-ping-notify-failure"]);
+    expect(notifyCalls).toHaveLength(1);
+    expect(notifyCalls[0]).toMatchObject({
+      level: "error",
+      message: "Store ping failed",
+      title: "Store Ping",
+    });
+    expect(notifyCalls[0]?.error?.message).toBe("db down");
   });
 
   it("notifies failure and rethrows the job error", async () => {

@@ -3,10 +3,7 @@ import type { CacheStore, Notifier, TransactionRepository } from "@repo/domain";
 import type { Inngest } from "inngest";
 import { err } from "neverthrow";
 
-import { retriableNotify } from "../shared/retriable-notify";
 import { createInngestStepRunner } from "../shared/step-runner";
-
-const NOTIFY_ATTEMPTS = 2;
 
 export type StorePingFunctionDeps = {
   cache: CacheStore;
@@ -46,9 +43,8 @@ export function createStorePingFunction(
         .execute(context, stepRunner)
         .andThen((result) => {
           return stepRunner("store-ping-notify-success", () =>
-            retriableNotify(
-              deps.notifier,
-              {
+            deps.notifier
+              .notify({
                 fields: [
                   ...fields,
                   { label: "Duration", value: `${result.durationMs}ms` },
@@ -61,24 +57,19 @@ export function createStorePingFunction(
                 level: "success" as const,
                 message: "Store ping completed",
                 title: "Store Ping",
-              },
-              NOTIFY_ATTEMPTS,
-            ).map(() => result),
+              })
+              .map(() => result),
           );
         })
         .orElse((error) => {
           return stepRunner("store-ping-notify-failure", () =>
-            retriableNotify(
-              deps.notifier,
-              {
-                error: { message: error.message ?? "Unknown error" },
-                fields,
-                level: "error" as const,
-                message: "Store ping failed",
-                title: "Store Ping",
-              },
-              NOTIFY_ATTEMPTS,
-            ),
+            deps.notifier.notify({
+              error: { message: error.message ?? "Unknown error" },
+              fields,
+              level: "error" as const,
+              message: "Store ping failed",
+              title: "Store Ping",
+            }),
           ).andThen(() => err(error));
         })
         .match(
