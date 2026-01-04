@@ -30,8 +30,6 @@ const parseSlackPostMessageResponse = parseWith(
   },
 );
 
-export type { SlackMessage, SlackPostMessageResponse } from "./types";
-
 export type OverridableSlackMessage = Partial<SlackMessage>;
 
 export type SlackClient = {
@@ -46,7 +44,7 @@ export type SlackClientConfig = {
   token: string;
 };
 
-const SlackMessageSchema: z.ZodType<SlackMessage> = z
+const slackMessageSchema: z.ZodType<SlackMessage> = z
   .object({
     blocks: z.array(z.custom<SlackBlock>()).min(1).optional(),
     channel: z.string().min(1),
@@ -72,7 +70,7 @@ const SlackMessageSchema: z.ZodType<SlackMessage> = z
     }
   });
 
-const parseSlackMessage = parseWith(SlackMessageSchema, {
+const parseSlackMessage = parseWith(slackMessageSchema, {
   action: "SlackPostMessage",
   layer: "External",
 });
