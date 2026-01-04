@@ -1,6 +1,8 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
+import { httpStatusToKind } from "@o3osatoshi/toolkit";
+
 import { newIntegrationError } from "../integration-error";
 
 const SlackPostMessageResponseSchema = z.object({
@@ -62,11 +64,11 @@ const SlackMessageSchema = z
     channel: z.string().min(1),
     text: z.string().min(1).optional(),
   })
-  .passthrough()
+  .loose()
   .superRefine((value, ctx) => {
     if (!value.text && !value.blocks) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         message: "Slack message must include text or blocks.",
         path: ["text"],
       });
@@ -79,12 +81,12 @@ export function createSlackClient(config: SlackClientConfig): SlackClient {
 
   return {
     postMessage: (message) => {
-      const parsed = SlackMessageSchema.safeParse(message);
-      if (!parsed.success) {
+      const result = SlackMessageSchema.safeParse(message);
+      if (!result.success) {
         return errAsync(
           newIntegrationError({
             action: "SlackPostMessage",
-            cause: parsed.error,
+            cause: result.error,
             kind: "Validation",
             reason: "Slack message validation failed",
           }),
@@ -93,7 +95,7 @@ export function createSlackClient(config: SlackClientConfig): SlackClient {
 
       return ResultAsync.fromPromise(
         fetcher(`${baseUrl}/chat.postMessage`, {
-          body: JSON.stringify(parsed.data),
+          body: JSON.stringify(result.data),
           headers: {
             Authorization: `Bearer ${config.token}`,
             "Content-Type": "application/json; charset=utf-8",
@@ -125,16 +127,6 @@ function mapSlackErrorToKind(error?: string) {
   return "BadRequest";
 }
 
-function mapStatusToKind(status: number) {
-  if (status === 401) return "Unauthorized";
-  if (status === 403) return "Forbidden";
-  if (status === 404) return "NotFound";
-  if (status === 408) return "Timeout";
-  if (status === 429) return "RateLimit";
-  if (status >= 500) return "BadGateway";
-  return "BadRequest";
-}
-
 function parseResponse(
   response: Response,
 ): ResultAsync<SlackPostMessageResponse, Error> {
@@ -143,14 +135,14 @@ function parseResponse(
       newIntegrationError({
         action: "SlackPostMessage",
         cause,
-        kind: mapStatusToKind(response.status),
+        kind: httpStatusToKind(response.status),
         reason: `Slack API responded with ${response.status}`,
       }),
     ).andThen((body) => {
       const slackError = parseSlackError(body);
       const kind = slackError
         ? mapSlackErrorToKind(slackError)
-        : mapStatusToKind(response.status);
+        : httpStatusToKind(response.status);
       const reason = slackError
         ? `Slack API responded with ${response.status}: ${slackError}`
         : body

@@ -34,9 +34,6 @@ export const inngest = onRequest(async (req, res) => {
       url: env.UPSTASH_REDIS_REST_URL,
     });
 
-    const prisma = getPrismaClient();
-    const transactionRepo = new PrismaTransactionRepository(prisma);
-
     const slackClient = createSlackClient({
       token: env.SLACK_BOT_TOKEN,
     });
@@ -44,6 +41,9 @@ export const inngest = onRequest(async (req, res) => {
       channelId: env.SLACK_CHANNEL_ID,
       client: slackClient,
     });
+
+    const prisma = getPrismaClient();
+    const transactionRepo = new PrismaTransactionRepository(prisma);
 
     const inngestClient = createInngestClient({
       id: INNGEST_APP_ID,
