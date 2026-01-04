@@ -3,18 +3,23 @@ import type {
   NotificationPayload,
   Notifier,
 } from "@repo/domain";
-import { errAsync } from "neverthrow";
+import { err } from "neverthrow";
 
 import { newIntegrationError } from "../integration-error";
 import type {
+  OverridableSlackMessage,
   SlackClient,
   SlackMessage,
-  SlackMessageOverrides,
 } from "./client";
 
 export type SlackNotifierConfig = {
   channelId: string;
   client: SlackClient;
+};
+
+type SlackMessageField = {
+  text: string;
+  type: string;
 };
 
 export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
@@ -24,7 +29,7 @@ export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
         .postMessage(buildMessage(config.channelId, payload))
         .map(() => undefined)
         .orElse((cause) =>
-          errAsync(
+          err(
             newIntegrationError({
               action: "Notify",
               cause,
@@ -38,18 +43,6 @@ export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
   };
 }
 
-function applyOverrides(
-  base: SlackMessage,
-  overrides?: SlackMessageOverrides,
-): SlackMessage {
-  if (!overrides) return base;
-  const merged = { ...base, ...overrides };
-  const channel = merged.channel ?? base.channel;
-  const text = merged.text ?? base.text;
-  const result: SlackMessage = { ...merged, channel, text };
-  return result;
-}
-
 function buildFallbackText(payload: NotificationPayload): string {
   const status = payload.level.toUpperCase();
   const segments = [`${payload.title} ${status}`];
@@ -58,31 +51,12 @@ function buildFallbackText(payload: NotificationPayload): string {
   return segments.join(" - ");
 }
 
-function buildFields(
-  payload: NotificationPayload,
-): Array<{ text: string; type: string }> {
-  const fields: NotificationField[] = [];
-
-  if (payload.timestamp) {
-    fields.push({
-      label: "Timestamp",
-      value: payload.timestamp.toISOString(),
-    });
-  }
-
-  if (payload.fields) {
-    fields.push(...payload.fields);
-  }
-
-  return fields.map((entry) => field(entry.label, entry.value));
-}
-
 function buildMessage(
   channelId: string,
   payload: NotificationPayload,
 ): SlackMessage {
   const headerText = `${payload.title} ${payload.level.toUpperCase()}`;
-  const fields = buildFields(payload);
+  const fields = buildSlackMessageFields(payload);
 
   const blocks: unknown[] = [
     {
@@ -121,26 +95,58 @@ function buildMessage(
     });
   }
 
-  const baseMessage: SlackMessage = {
+  const message: SlackMessage = {
     blocks,
     channel: channelId,
     text: buildFallbackText(payload),
   };
 
-  return applyOverrides(baseMessage, resolveSlackOverrides(payload));
+  return overrideMessage(message, resolveSlackOverrides(payload));
 }
 
-function field(label: string, value: string): { text: string; type: string } {
+function buildSlackMessageFields(
+  payload: NotificationPayload,
+): SlackMessageField[] {
+  const fields: NotificationField[] = [];
+
+  if (payload.timestamp) {
+    fields.push({
+      label: "Timestamp",
+      value: payload.timestamp.toISOString(),
+    });
+  }
+
+  if (payload.fields) {
+    fields.push(...payload.fields);
+  }
+
+  return fields.map((entry) => toSlackMessageField(entry.label, entry.value));
+}
+
+function overrideMessage(
+  message: SlackMessage,
+  prioritizedMessage?: OverridableSlackMessage,
+): SlackMessage {
+  if (!prioritizedMessage) return message;
   return {
-    text: `*${label}*\n${value}`,
-    type: "mrkdwn",
+    ...message,
+    ...prioritizedMessage,
+    channel: prioritizedMessage.channel ?? message.channel,
+    text: prioritizedMessage.text ?? message.text,
   };
 }
 
 function resolveSlackOverrides(
   payload: NotificationPayload,
-): SlackMessageOverrides | undefined {
+): OverridableSlackMessage | undefined {
   const overrides = payload.overrides?.["slack"];
   if (!overrides || typeof overrides !== "object") return undefined;
-  return overrides as SlackMessageOverrides;
+  return overrides as OverridableSlackMessage;
+}
+
+function toSlackMessageField(label: string, value: string): SlackMessageField {
+  return {
+    text: `*${label}*\n${value}`,
+    type: "mrkdwn",
+  };
 }
