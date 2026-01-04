@@ -30,7 +30,7 @@ export function createStorePingFunction(
       name: "Store Ping",
       concurrency: 1,
     },
-    { cron: "CRON_TZ=Asia/Tokyo 0 0,12 * * *" },
+    { cron: "TZ=Asia/Tokyo 0 0,12 * * *" },
     async ({ step }) => {
       const context = generateStorePingContext(new Date());
       const stepRunner = createInngestStepRunner(step);
