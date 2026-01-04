@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 
-import { deserializeError } from "@o3osatoshi/toolkit";
+import { deserializeError, newError } from "@o3osatoshi/toolkit";
 
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
@@ -144,7 +144,18 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
     try {
       rawPayload = await req.json();
     } catch (error: unknown) {
-      onError(deserializeError(error));
+      onError(
+        deserializeError(error, {
+          fallback: (cause) =>
+            newError({
+              action: "LoggingProxyParseRequest",
+              cause,
+              kind: "Unknown",
+              layer: "Infra",
+              reason: "proxy payload parsing failed with a non-error value",
+            }),
+        }),
+      );
       return json({ message: "invalid_json", status: "error" }, 400);
     }
 
@@ -180,7 +191,18 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       await options.transport.flush?.();
       return json({ accepted: payload.eventSets.length, status: "ok" }, 200);
     } catch (error) {
-      onError(deserializeError(error));
+      onError(
+        deserializeError(error, {
+          fallback: (cause) =>
+            newError({
+              action: "LoggingProxyEmit",
+              cause,
+              kind: "Unknown",
+              layer: "Infra",
+              reason: "proxy emission failed with a non-error value",
+            }),
+        }),
+      );
       return json({ message: "proxy_failed", status: "error" }, 500);
     }
   };
@@ -278,7 +300,18 @@ export function createProxyTransport(
         }
       } catch (error: unknown) {
         eventSets = _eventSets.concat(eventSets);
-        onError(deserializeError(error));
+        onError(
+          deserializeError(error, {
+            fallback: (cause) =>
+              newError({
+                action: "LoggingProxyTransportFlush",
+                cause,
+                kind: "Unknown",
+                layer: "Infra",
+                reason: "proxy transport flush failed with a non-error value",
+              }),
+          }),
+        );
       } finally {
         inflight = undefined;
       }
