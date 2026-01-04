@@ -1,10 +1,44 @@
-import type { StorePingResult, StorePingUseCase } from "@repo/application";
-import type { NotificationPayload, Notifier } from "@repo/domain";
+import type { StorePingContext, StorePingResult } from "@repo/application";
+import type {
+  CacheStore,
+  NotificationPayload,
+  Notifier,
+  TransactionRepository,
+} from "@repo/domain";
 import type { Inngest } from "inngest";
 import { errAsync, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { createStorePingFunctionWithUseCase } from "./store-ping";
+import { createStorePingFunction } from "./store-ping";
+
+const applicationMocks = vi.hoisted(() => {
+  const execute = vi.fn();
+  const generateStorePingContext = vi.fn();
+  const storePingCtor = vi.fn();
+  class StorePingUseCase {
+    constructor(
+      transactionRepo: TransactionRepository,
+      cache: CacheStore,
+      userId: string,
+    ) {
+      storePingCtor(transactionRepo, cache, userId);
+    }
+    execute(context: unknown, step: unknown) {
+      return execute(context, step);
+    }
+  }
+  return {
+    execute,
+    generateStorePingContext,
+    storePingCtor,
+    StorePingUseCase,
+  };
+});
+
+vi.mock("@repo/application", () => ({
+  generateStorePingContext: applicationMocks.generateStorePingContext,
+  StorePingUseCase: applicationMocks.StorePingUseCase,
+}));
 
 type CreatedFunction = {
   config: Record<string, unknown>;
@@ -12,10 +46,25 @@ type CreatedFunction = {
   trigger: Record<string, unknown>;
 };
 
+type HarnessOptions = {
+  context?: StorePingContext;
+  notifyResults?: NotifyResult[];
+  storePingError?: Error;
+  storePingResult?: StorePingResult;
+};
 type NotifyResult = ReturnType<Notifier["notify"]>;
+
 type StepRun = (id: string, fn: () => Promise<unknown>) => Promise<unknown>;
 
+const baseContext: StorePingContext = {
+  jobKey: "store-ping",
+  runAt: new Date("2024-01-01T00:30:00.000Z"),
+  runKey: "2024-01-01@00",
+  slot: "00",
+};
+
 const baseResult: StorePingResult = {
+  ...baseContext,
   cache: {
     key: "store-ping:recent",
     size: 1,
@@ -26,17 +75,13 @@ const baseResult: StorePingResult = {
     readId: "tx-1",
   },
   durationMs: 120,
-  jobKey: "store-ping",
-  runAt: new Date("2024-01-01T00:30:00.000Z"),
-  runKey: "2024-01-01@00",
-  slot: "00",
 };
 
-function createHarness(options: {
-  notifyResults?: NotifyResult[];
-  storePingError?: Error;
-  storePingResult?: StorePingResult;
-}) {
+function createHarness(options: HarnessOptions) {
+  const cache = {} as CacheStore;
+  const transactionRepo = {} as TransactionRepository;
+  const userId = "user-1";
+
   const notifyCalls: NotificationPayload[] = [];
   const notifyQueue: NotifyResult[] = [
     ...(options.notifyResults ?? [okAsync(undefined)]),
@@ -48,29 +93,31 @@ function createHarness(options: {
     },
   };
 
-  const execute = vi.fn((_context, _step) => {
+  applicationMocks.execute.mockImplementation((_context, _step) => {
     if (options.storePingError) {
       return errAsync(options.storePingError);
     }
     return okAsync(options.storePingResult ?? baseResult);
   });
-  // @ts-expect-error
-  const storePing = { execute } as StorePingUseCase;
+  applicationMocks.generateStorePingContext.mockReturnValue(
+    options.context ?? baseContext,
+  );
 
   const createFunction = vi.fn(
     (
       config: Record<string, unknown>,
       trigger: Record<string, unknown>,
-      handler,
+      handler: CreatedFunction["handler"],
     ) => ({ config, handler, trigger }) as CreatedFunction,
   );
   const inngest = { createFunction } as unknown as Inngest;
 
-  // @ts-expect-error
-  const created = createStorePingFunctionWithUseCase(inngest, {
+  const created = createStorePingFunction(inngest, {
+    cache,
     notifier,
-    storePing,
-  }) as CreatedFunction;
+    transactionRepo,
+    userId,
+  }) as unknown as CreatedFunction;
 
   const stepIds: string[] = [];
   const step: { run: StepRun } = {
@@ -81,22 +128,34 @@ function createHarness(options: {
   };
 
   return {
+    cache,
     created,
-    execute,
+    createFunction,
+    execute: applicationMocks.execute,
+    generateStorePingContext: applicationMocks.generateStorePingContext,
     notifyCalls,
     step,
     stepIds,
+    transactionRepo,
+    userId,
   };
 }
 
-describe("createStorePingFunctionWithUseCase", () => {
+function toFieldMap(fields: NotificationPayload["fields"]) {
+  return Object.fromEntries(
+    (fields ?? []).map((field) => [field.label, field.value]),
+  );
+}
+
+describe("createStorePingFunction", () => {
   afterEach(() => {
-    vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   it("registers the JST cron schedule and metadata", () => {
-    const { created } = createHarness({});
+    const { created, createFunction } = createHarness({});
 
+    expect(createFunction).toHaveBeenCalledTimes(1);
     expect(created.config).toMatchObject({
       id: "store-ping",
       name: "Store Ping",
@@ -107,43 +166,101 @@ describe("createStorePingFunctionWithUseCase", () => {
     });
   });
 
-  it("notifies success", async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2024-01-01T00:30:00.000Z"));
-    const { created, execute, notifyCalls, step } = createHarness({});
+  it("notifies success and returns the result", async () => {
+    const {
+      cache,
+      created,
+      execute,
+      generateStorePingContext,
+      notifyCalls,
+      step,
+      stepIds,
+      transactionRepo,
+      userId,
+    } = createHarness({});
 
     const result = await created.handler({ step });
 
-    expect(result).toBeDefined();
-    expect(result.runAt).toBeInstanceOf(Date);
-    expect(execute).toHaveBeenCalledTimes(1);
-    const calledContext = execute.mock.calls[0]?.[0];
-    expect(calledContext?.jobKey).toBe("store-ping");
-    expect(calledContext?.runAt).toBeInstanceOf(Date);
+    expect(applicationMocks.storePingCtor).toHaveBeenCalledWith(
+      transactionRepo,
+      cache,
+      userId,
+    );
+    expect(generateStorePingContext).toHaveBeenCalledWith(expect.any(Date));
+    expect(execute).toHaveBeenCalledWith(baseContext, expect.any(Function));
+    expect(result).toEqual(baseResult);
+
+    expect(stepIds).toEqual(["store-ping-notify-success"]);
     expect(notifyCalls).toHaveLength(1);
-    expect(notifyCalls[0]?.level).toBe("success");
+    expect(notifyCalls[0]).toMatchObject({
+      level: "success",
+      message: "Store ping completed",
+      title: "Store Ping",
+    });
+
+    const fieldMap = toFieldMap(notifyCalls[0]?.fields);
+    expect(fieldMap).toMatchObject({
+      "Cache Key": baseResult.cache.key,
+      "Cache Size": `${baseResult.cache.size}`,
+      "DB Created": baseResult.db.createdId,
+      "DB Deleted": baseResult.db.deletedId,
+      "DB Read": baseResult.db.readId,
+      Duration: `${baseResult.durationMs}ms`,
+      Job: baseContext.jobKey,
+      "Run At": baseContext.runAt.toISOString(),
+      "Run Key": baseContext.runKey,
+      Slot: baseContext.slot,
+    });
   });
 
   it("retries notification once before succeeding", async () => {
     const notifyError = new Error("temporary slack failure");
-    const { created, notifyCalls, step } = createHarness({
+    const { created, notifyCalls, step, stepIds } = createHarness({
       notifyResults: [errAsync(notifyError), okAsync(undefined)],
     });
 
-    await created.handler({ step });
+    const result = await created.handler({ step });
 
+    expect(result).toEqual(baseResult);
+    expect(stepIds).toEqual(["store-ping-notify-success"]);
     expect(notifyCalls).toHaveLength(2);
+    expect(notifyCalls[0]?.level).toBe("success");
+  });
+
+  it("throws when notification fails after retries", async () => {
+    const notifyError = new Error("slack outage");
+    const { created, notifyCalls, step, stepIds } = createHarness({
+      notifyResults: [errAsync(new Error("first")), errAsync(notifyError)],
+    });
+
+    await expect(created.handler({ step })).rejects.toThrow("slack outage");
+    expect(stepIds).toEqual([
+      "store-ping-notify-success",
+      "store-ping-notify-failure",
+    ]);
+    expect(notifyCalls).toHaveLength(3);
+    expect(notifyCalls[2]).toMatchObject({
+      level: "error",
+      message: "Store ping failed",
+      title: "Store Ping",
+    });
+    expect(notifyCalls[2]?.error?.message).toBe("slack outage");
   });
 
   it("notifies failure and rethrows the job error", async () => {
     const jobError = new Error("db down");
-    const { created, notifyCalls, step } = createHarness({
+    const { created, notifyCalls, step, stepIds } = createHarness({
       storePingError: jobError,
     });
 
     await expect(created.handler({ step })).rejects.toThrow("db down");
+    expect(stepIds).toEqual(["store-ping-notify-failure"]);
     expect(notifyCalls).toHaveLength(1);
-    expect(notifyCalls[0]?.level).toBe("error");
+    expect(notifyCalls[0]).toMatchObject({
+      level: "error",
+      message: "Store ping failed",
+      title: "Store Ping",
+    });
     expect(notifyCalls[0]?.error?.message).toBe("db down");
   });
 });
