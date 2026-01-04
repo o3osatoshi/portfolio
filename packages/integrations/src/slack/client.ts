@@ -1,16 +1,24 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { httpStatusToKind } from "@o3osatoshi/toolkit";
+import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
 
-const SlackPostMessageResponseSchema = z.object({
+const slackPostMessageResponseSchema = z.object({
   channel: z.string().optional(),
   error: z.string().optional(),
   ok: z.boolean(),
   ts: z.string().optional(),
 });
+
+const parseSlackPostMessageResponse = parseWith(
+  slackPostMessageResponseSchema,
+  {
+    action: "SlackPostMessageResponse",
+    layer: "External",
+  },
+);
 
 export type SlackClient = {
   postMessage: (
@@ -55,7 +63,7 @@ export type SlackMessageOverrides = {
 };
 
 export type SlackPostMessageResponse = z.infer<
-  typeof SlackPostMessageResponseSchema
+  typeof slackPostMessageResponseSchema
 >;
 
 const SlackMessageSchema = z
@@ -75,14 +83,19 @@ const SlackMessageSchema = z
     }
   });
 
+const parseSlackMessage = parseWith(SlackMessageSchema, {
+  action: "SlackPostMessage",
+  layer: "External",
+});
+
 export function createSlackClient(config: SlackClientConfig): SlackClient {
   const baseUrl = config.apiBaseUrl ?? "https://slack.com/api";
   const fetcher = config.fetch ?? fetch;
 
   return {
     postMessage: (message) => {
-      const result = SlackMessageSchema.safeParse(message);
-      if (!result.success) {
+      const result = parseSlackMessage(message);
+      if (result.isErr()) {
         return errAsync(
           newIntegrationError({
             action: "SlackPostMessage",
@@ -95,7 +108,7 @@ export function createSlackClient(config: SlackClientConfig): SlackClient {
 
       return ResultAsync.fromPromise(
         fetcher(`${baseUrl}/chat.postMessage`, {
-          body: JSON.stringify(result.data),
+          body: JSON.stringify(result.value),
           headers: {
             Authorization: `Bearer ${config.token}`,
             "Content-Type": "application/json; charset=utf-8",
@@ -166,8 +179,8 @@ function parseResponse(
       reason: "Failed to parse Slack API response",
     }),
   ).andThen((data) => {
-    const parsed = SlackPostMessageResponseSchema.safeParse(data);
-    if (!parsed.success) {
+    const parsed = parseSlackPostMessageResponse(data);
+    if (parsed.isErr()) {
       return errAsync(
         newIntegrationError({
           action: "SlackPostMessage",
@@ -177,24 +190,24 @@ function parseResponse(
         }),
       );
     }
-    if (!parsed.data.ok) {
+    if (!parsed.value.ok) {
       return errAsync(
         newIntegrationError({
           action: "SlackPostMessage",
-          kind: mapSlackErrorToKind(parsed.data.error),
-          reason: parsed.data.error ?? "Slack API returned ok=false",
+          kind: mapSlackErrorToKind(parsed.value.error),
+          reason: parsed.value.error ?? "Slack API returned ok=false",
         }),
       );
     }
-    return okAsync(parsed.data);
+    return okAsync(parsed.value);
   });
 }
 
 function parseSlackError(body: string): string | undefined {
   try {
     const data = JSON.parse(body);
-    const parsed = SlackPostMessageResponseSchema.safeParse(data);
-    if (parsed.success) return parsed.data.error;
+    const parsed = parseSlackPostMessageResponse(data);
+    if (parsed.isOk()) return parsed.value.error;
     if (typeof data === "object" && data && "error" in data) {
       const candidate = (data as { error?: unknown }).error;
       if (typeof candidate === "string") return candidate;
