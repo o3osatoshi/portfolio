@@ -62,6 +62,7 @@ export const inngest = onRequest(async (req, res) => {
     handler = createInngestExpressHandler({
       client: inngestClient,
       functions,
+      signingKey: env.INNGEST_SIGNING_KEY,
     });
 
     logger.info("Inngest handler initialized", { appId: INNGEST_APP_ID });
