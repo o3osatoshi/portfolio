@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency:
   group: deploy-functions-${{ github.ref }}
@@ -29,6 +30,10 @@ jobs:
       - name: Detect affected functions
         id: functions
         run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "affected=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if npx turbo-ignore @repo/functions --task=build; then
             echo "affected=false" >> "$GITHUB_OUTPUT"
           else
