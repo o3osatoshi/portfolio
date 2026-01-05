@@ -3,7 +3,7 @@ import type { CacheStore, Notifier, TransactionRepository } from "@repo/domain";
 import type { Inngest } from "inngest";
 import { err } from "neverthrow";
 
-import { createInngestStepRunner } from "../shared/step-runner";
+import { createInngestStepRunner } from "../step-runner";
 
 export type StorePingFunctionDeps = {
   cache: CacheStore;
