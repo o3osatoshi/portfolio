@@ -6,7 +6,7 @@
 
 # Function: functionsBundlePreset()
 
-> **functionsBundlePreset**(`opts`): `Promise`\<`Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>\>
+> **functionsBundlePreset**(`opts`): `Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>
 
 Defined in: [packages/config/src/tsup/index.ts:66](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/tsup/index.ts#L66)
 
@@ -22,7 +22,7 @@ Additional tsup options to override the preset defaults.
 
 ## Returns
 
-`Promise`\<`Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>\>
+`Options` \| `Options`[] \| (`overrideOptions`) => `MaybePromise`\<`Options` \| `Options`[]\>
 
 Resolved configuration object that can be passed directly to the tsup CLI.
 

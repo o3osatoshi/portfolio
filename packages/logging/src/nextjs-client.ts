@@ -5,7 +5,6 @@
  * @remarks
  * Import from `@o3osatoshi/logging/nextjs/client` inside client components.
  */
-"use client";
 
 import { Logger as AxiomLogger } from "@axiomhq/logging";
 import { nextJsFormatters } from "@axiomhq/nextjs/client";

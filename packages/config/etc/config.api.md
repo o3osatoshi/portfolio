@@ -13,13 +13,13 @@ import { ViteUserConfig } from 'vitest/config';
 export function baseTestPreset(opts?: Options): ViteUserConfig;
 
 // @public
-export function browserBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
+export function browserBundlePreset(opts?: Options_2): Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>);
 
 // @public
 export function browserTestPreset(opts?: Options): ViteUserConfig;
 
 // @public
-export function functionsBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
+export function functionsBundlePreset(opts?: Options_2): Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>);
 
 // @public
 export type Options = {
@@ -30,7 +30,7 @@ export type Options = {
 };
 
 // @public
-export function publicDualBundlePreset(opts?: Options_2): Promise<Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>)>;
+export function publicDualBundlePreset(opts?: Options_2): Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>);
 
 // @public
 export function storybookTestPreset(opts?: Options): ViteUserConfig;
