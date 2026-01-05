@@ -8,12 +8,11 @@ import {
   createInngestExpressHandler,
   createInngestFunctions,
 } from "@repo/interface/inngest";
-import { PrismaTransactionRepository } from "@repo/prisma";
+import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
 import { env } from "./env";
 import { getFunctionsLogger } from "./logger";
-import { getPrismaClient } from "./prisma";
 
 const INNGEST_APP_ID = "portfolio-functions";
 
@@ -42,7 +41,9 @@ export const inngest = onRequest(async (req, res) => {
       client: slackClient,
     });
 
-    const prisma = getPrismaClient();
+    const prisma = createPrismaClient({
+      connectionString: env.DATABASE_URL,
+    });
     const transactionRepo = new PrismaTransactionRepository(prisma);
 
     const inngestClient = createInngestClient({
