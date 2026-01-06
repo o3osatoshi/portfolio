@@ -22,12 +22,6 @@ export const inngest = onRequest(async (req, res) => {
   if (!handler) {
     const logger = getFunctionsLogger();
 
-    if (!env.UPSTASH_REDIS_REST_TOKEN || !env.UPSTASH_REDIS_REST_URL) {
-      throw new Error(
-        "Missing UPSTASH_REDIS_REST_TOKEN/UPSTASH_REDIS_REST_URL",
-      );
-    }
-
     const cacheStore = createUpstashRedis({
       token: env.UPSTASH_REDIS_REST_TOKEN,
       url: env.UPSTASH_REDIS_REST_URL,
