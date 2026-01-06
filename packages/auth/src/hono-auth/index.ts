@@ -15,6 +15,11 @@ export type CreateAuthConfigOptions = {
     };
   };
   secret: string;
+  /**
+   * Session strategy. This repo defaults to JWT sessions and does not use the
+   * database session table. If you switch to database sessions, store a hash or
+   * encrypted form of session tokens in the adapter.
+   */
   session?: { strategy?: "database" | "jwt" };
 };
 
