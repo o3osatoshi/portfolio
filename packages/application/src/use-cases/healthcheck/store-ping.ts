@@ -8,7 +8,7 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import { newApplicationError } from "../../application-error";
 import { noopStepRunner, type StepRunner } from "../../services";
 
-const JOB_KEY = "store-ping" as const;
+const JOB_KEY = "store-ping";
 const RECENT_RUN_LIMIT = 3;
 const CACHE_KEY = "store-ping";
 const CACHE_TTL_MS = 26 * 60 * 60 * 1_000;
