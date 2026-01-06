@@ -17,8 +17,8 @@ import type { JsonContainer, JsonValue } from "./types";
  */
 export function decode(value: string): Result<JsonContainer, Error> {
   return _decode(value).andThen((v) => {
-    if (Array.isArray(v) || (typeof v === "object" && v !== null)) {
-      return ok<JsonContainer, Error>(v as JsonContainer);
+    if (isJsonContainer(v)) {
+      return ok<JsonContainer, Error>(v);
     }
     return err<JsonContainer, Error>(
       newError({
@@ -64,7 +64,7 @@ export function encode(value: unknown): Result<string, Error> {
 
 function _decode(value: string): Result<JsonValue, Error> {
   try {
-    return ok<JsonValue, Error>(JSON.parse(value) as JsonValue);
+    return ok<JsonValue, Error>(JSON.parse(value));
   } catch (cause) {
     return err<JsonValue, Error>(
       newError({
@@ -77,4 +77,8 @@ function _decode(value: string): Result<JsonValue, Error> {
       }),
     );
   }
+}
+
+function isJsonContainer(value: JsonValue): value is JsonContainer {
+  return Array.isArray(value) || (typeof value === "object" && value !== null);
 }

@@ -60,7 +60,7 @@ export class ExchangeRateApi implements FxQuoteProvider {
       decode: {
         context: {
           action: "ParseExchangeRateApiResponse",
-          layer: "External" as const,
+          layer: "External",
         },
         schema: exchangeRateApiPairSchema,
       },

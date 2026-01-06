@@ -130,7 +130,8 @@ export function createLazyEnv<T extends EnvSchema>(
 
   const shouldBypass = (prop: PropertyKey) => prop === "then";
 
-  return new Proxy({} as Env, {
+  const target: Env = Object.create(null);
+  return new Proxy(target, {
     defineProperty() {
       throw new Error("Cannot define properties on env object");
     },

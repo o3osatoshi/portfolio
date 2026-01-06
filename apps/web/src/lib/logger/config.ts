@@ -10,7 +10,7 @@ export const loggingServices = {
   browser: "portfolio-web-browser",
   edge: "portfolio-web-edge",
   node: "portfolio-web",
-} as const;
+};
 
 export function resolveLoggerEnv(): Env {
   const nodeEnv = process.env.NODE_ENV;

@@ -37,7 +37,7 @@ export function createSmartFetch(
     return baseFetch(baseRequest).andThen((response) => {
       return parseWith(decode.schema, {
         action: decode.context?.action ?? "DecodeResponseBody",
-        layer: decode.context?.layer ?? ("External" as const),
+        layer: decode.context?.layer ?? "External",
       })(response.data).map((data) => ({ ...response, data }));
     });
   };
