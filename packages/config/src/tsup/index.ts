@@ -28,7 +28,7 @@ interface PackageJson {
  * @returns Resolved configuration object that can be passed directly to the tsup CLI.
  * @public
  */
-export async function browserBundlePreset(opts: Options = {}) {
+export function browserBundlePreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
@@ -63,7 +63,7 @@ export async function browserBundlePreset(opts: Options = {}) {
  * @returns Resolved configuration object that can be passed directly to the tsup CLI.
  * @public
  */
-export async function functionsBundlePreset(opts: Options = {}) {
+export function functionsBundlePreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,
@@ -95,7 +95,7 @@ export async function functionsBundlePreset(opts: Options = {}) {
  * @returns Resolved configuration object that can be passed directly to the tsup CLI.
  * @public
  */
-export async function publicDualBundlePreset(opts: Options = {}) {
+export function publicDualBundlePreset(opts: Options = {}) {
   return defineConfig({
     treeshake: true,
     ...opts,

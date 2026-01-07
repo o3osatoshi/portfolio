@@ -61,7 +61,6 @@
     "./nextjs/client": {
       "types": "./dist/nextjs-client.d.ts",
       "import": "./dist/nextjs-client.js",
-      "require": "./dist/nextjs-client.cjs",
       "default": "./dist/nextjs-client.js"
     },
     "./proxy": {

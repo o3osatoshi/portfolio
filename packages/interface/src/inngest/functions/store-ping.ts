@@ -3,7 +3,7 @@ import type { CacheStore, Notifier, TransactionRepository } from "@repo/domain";
 import type { Inngest } from "inngest";
 import { err } from "neverthrow";
 
-import { createInngestStepRunner } from "../shared/step-runner";
+import { createInngestStepRunner } from "../step-runner";
 
 export type StorePingFunctionDeps = {
   cache: CacheStore;
@@ -54,7 +54,7 @@ export function createStorePingFunction(
                   { label: "Cache Key", value: result.cache.key },
                   { label: "Cache Size", value: `${result.cache.size}` },
                 ],
-                level: "success" as const,
+                level: "success",
                 message: "Store ping completed",
                 title: "Store Ping",
               })
@@ -66,7 +66,7 @@ export function createStorePingFunction(
             deps.notifier.notify({
               error: { message: error.message ?? "Unknown error" },
               fields,
-              level: "error" as const,
+              level: "error",
               message: "Store ping failed",
               title: "Store Ping",
             }),

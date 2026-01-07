@@ -37,13 +37,14 @@ export function isZodError(e: unknown): e is ZodError {
   // Prefer instanceof when the same Zod instance is used
   if (e instanceof z.ZodError) return true;
   // Fallback: duck typing for cross-instance or core error class
-  const anyE = e as { issues?: unknown; name?: unknown } | null | undefined;
+  const anyE = isRecord(e) ? e : undefined;
   return (
     !!anyE &&
-    (anyE.name === "ZodError" || anyE.name === "$ZodError") &&
-    Array.isArray(anyE.issues)
+    (anyE["name"] === "ZodError" || anyE["name"] === "$ZodError") &&
+    Array.isArray(anyE["issues"])
   );
 }
+
 /**
  * Wraps a Zod validation error and returns a structured toolkit error.
  *
@@ -123,6 +124,9 @@ function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
     default:
       return undefined;
   }
+}
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
 }
 /** Generate a concise message for a single Zod issue. */
 function issueMessage(issue: ZodIssue): string {

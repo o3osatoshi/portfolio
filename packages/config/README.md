@@ -38,14 +38,14 @@ Import presets from `@o3osatoshi/config/tsup` and export a config in `tsup.confi
 import { browserBundlePreset, publicDualBundlePreset, functionsBundlePreset } from "@o3osatoshi/config/tsup";
 
 // Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
-export default await browserBundlePreset({ entry: { index: "src/index.tsx" }, dts: true });
+export default browserBundlePreset({ entry: { index: "src/index.tsx" }, dts: true });
 
 // Public library (ESM + CJS, with DTS).
 //    Default sourcemap: enabled in production/CI, disabled in dev.
-// export default await publicDualBundlePreset({ entry: { index: "src/index.ts" } });
+// export default publicDualBundlePreset({ entry: { index: "src/index.ts" } });
 
 // Firebase Functions (ESM, Node target). Adjust target per runtime.
-// export default await functionsBundlePreset({ entry: { index: "src/index.ts" } });
+// export default functionsBundlePreset({ entry: { index: "src/index.ts" } });
 ```
 
 Notes

@@ -145,6 +145,12 @@ export function parseErrorName(name: string | undefined): ErrorNameParts {
   return kind ? { kind, layer } : { layer };
 }
 
+function isErrorMessagePayload(
+  value: Record<string, unknown>,
+): value is ErrorMessagePayload {
+  return isString(value["summary"]);
+}
+
 function isJsonRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value);
 }
@@ -164,7 +170,6 @@ function parsePayload(
     return undefined;
   }
   if (!isJsonRecord(data)) return undefined;
-  const summary = data["summary"];
-  if (!isString(summary)) return undefined;
-  return data as ErrorMessagePayload;
+  if (!isErrorMessagePayload(data)) return undefined;
+  return data;
 }

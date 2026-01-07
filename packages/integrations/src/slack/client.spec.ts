@@ -11,11 +11,15 @@ describe("integrations/slack createSlackClient", () => {
       }),
     );
 
-    const client = createSlackClient({
-      apiBaseUrl: "https://example.test",
-      fetch: fetchMock,
-      token: "token-123",
-    });
+    const client = createSlackClient(
+      {
+        apiBaseUrl: "https://example.test",
+        token: "token-123",
+      },
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await client.postMessage({
       channel: "C1",
@@ -39,10 +43,14 @@ describe("integrations/slack createSlackClient", () => {
 
   it("rejects messages without text or blocks", async () => {
     const fetchMock = vi.fn();
-    const client = createSlackClient({
-      fetch: fetchMock,
-      token: "token-123",
-    });
+    const client = createSlackClient(
+      {
+        token: "token-123",
+      },
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await client.postMessage({ channel: "C1" });
 
@@ -55,10 +63,14 @@ describe("integrations/slack createSlackClient", () => {
 
   it("wraps fetch failures as ExternalUnavailableError", async () => {
     const fetchMock = vi.fn().mockRejectedValue(new Error("network down"));
-    const client = createSlackClient({
-      fetch: fetchMock,
-      token: "token-123",
-    });
+    const client = createSlackClient(
+      {
+        token: "token-123",
+      },
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await client.postMessage({
       channel: "C1",
@@ -78,10 +90,14 @@ describe("integrations/slack createSlackClient", () => {
         status: 429,
       }),
     );
-    const client = createSlackClient({
-      fetch: fetchMock,
-      token: "token-123",
-    });
+    const client = createSlackClient(
+      {
+        token: "token-123",
+      },
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await client.postMessage({
       channel: "C1",
@@ -101,10 +117,14 @@ describe("integrations/slack createSlackClient", () => {
         status: 200,
       }),
     );
-    const client = createSlackClient({
-      fetch: fetchMock,
-      token: "token-123",
-    });
+    const client = createSlackClient(
+      {
+        token: "token-123",
+      },
+      {
+        fetch: fetchMock as unknown as typeof fetch,
+      },
+    );
 
     const result = await client.postMessage({
       channel: "C1",
