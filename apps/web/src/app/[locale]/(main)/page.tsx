@@ -5,7 +5,15 @@ import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
-import { Button } from "@o3osatoshi/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@o3osatoshi/ui";
 
 export async function generateMetadata({
   params,
@@ -30,33 +38,45 @@ export default async function Page() {
 
       <PageSection title={t("siteStructure")}>
         <div className="space-y-4">
-          <div className="rounded-lg border p-4">
-            <h3 className="mb-2 font-semibold">{t("portfolioTitle")}</h3>
-            <p className="mb-3 text-neutral-600">{t("portfolioDescription")}</p>
-            <ul className="mb-4 list-disc space-y-1 pl-6 text-neutral-600 text-sm">
-              <li>{t("portfolioItems.intro")}</li>
-              <li>{t("portfolioItems.blog")}</li>
-              <li>{t("portfolioItems.projects")}</li>
-            </ul>
-            <Button asChild variant="outline">
-              <Link href={getPath("portfolio-about")}>
-                {t("portfolioLink")}
-              </Link>
-            </Button>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("portfolioTitle")}</CardTitle>
+              <CardDescription>{t("portfolioDescription")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
+                <li>{t("portfolioItems.intro")}</li>
+                <li>{t("portfolioItems.blog")}</li>
+                <li>{t("portfolioItems.projects")}</li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button asChild variant="outline">
+                <Link href={getPath("portfolio-about")}>
+                  {t("portfolioLink")}
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
 
-          <div className="rounded-lg border p-4">
-            <h3 className="mb-2 font-semibold">{t("labsTitle")}</h3>
-            <p className="mb-3 text-neutral-600">{t("labsDescription")}</p>
-            <ul className="mb-4 list-disc space-y-1 pl-6 text-neutral-600 text-sm">
-              <li>{t("labsItems.crud")}</li>
-              <li>{t("labsItems.web3")}</li>
-              <li>{t("labsItems.latest")}</li>
-            </ul>
-            <Button asChild variant="outline">
-              <Link href={getPath("labs-server-crud")}>{t("labsLink")}</Link>
-            </Button>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("labsTitle")}</CardTitle>
+              <CardDescription>{t("labsDescription")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
+                <li>{t("labsItems.crud")}</li>
+                <li>{t("labsItems.web3")}</li>
+                <li>{t("labsItems.latest")}</li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button asChild variant="outline">
+                <Link href={getPath("labs-server-crud")}>{t("labsLink")}</Link>
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       </PageSection>
 

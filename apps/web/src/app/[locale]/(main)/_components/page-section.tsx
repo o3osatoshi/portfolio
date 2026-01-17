@@ -19,7 +19,9 @@ export default function PageSection({ children, description, title }: Props) {
           {title}
         </Heading>
       ) : null}
-      {description ? <p className="text-neutral-600">{description}</p> : null}
+      {description ? (
+        <p className="text-muted-foreground">{description}</p>
+      ) : null}
       {children}
     </section>
   );

@@ -11,6 +11,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Message,
 } from "@o3osatoshi/ui";
 
 type DemoStatus = "error" | "idle" | "loading" | "success";
@@ -99,11 +100,11 @@ export default function RedisCacheDemoCard() {
       <CardContent className="space-y-4">
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.status")}</dt>
+            <dt className="text-muted-foreground">{t("labels.status")}</dt>
             <dd className="font-medium">{statusLabel}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.source")}</dt>
+            <dt className="text-muted-foreground">{t("labels.source")}</dt>
             <dd className="font-medium">
               {fromCache === null
                 ? notAvailableLabel
@@ -113,15 +114,19 @@ export default function RedisCacheDemoCard() {
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.serverDuration")}</dt>
+            <dt className="text-muted-foreground">
+              {t("labels.serverDuration")}
+            </dt>
             <dd className="font-medium">{notAvailableLabel}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.clientDuration")}</dt>
+            <dt className="text-muted-foreground">
+              {t("labels.clientDuration")}
+            </dt>
             <dd className="font-medium">{formatMs(clientDurationMs)}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.cachedAt")}</dt>
+            <dt className="text-muted-foreground">{t("labels.cachedAt")}</dt>
             <dd className="font-medium">
               {timestamp
                 ? new Date(timestamp).toLocaleTimeString()
@@ -129,7 +134,7 @@ export default function RedisCacheDemoCard() {
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.value")}</dt>
+            <dt className="text-muted-foreground">{t("labels.value")}</dt>
             <dd className="break-all font-mono text-xs">
               {timestamp ?? notAvailableLabel}
             </dd>
@@ -137,9 +142,9 @@ export default function RedisCacheDemoCard() {
         </dl>
 
         {errorMessage ? (
-          <p className="text-red-600 text-sm">
+          <Message variant="destructive">
             {tCommon("errorWithMessage", { message: errorMessage })}
-          </p>
+          </Message>
         ) : null}
 
         <div className="flex flex-wrap gap-2">

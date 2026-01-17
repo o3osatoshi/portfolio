@@ -14,7 +14,9 @@ export default function PageHeader({ actions, description, title }: Props) {
       <Heading className="text-3xl md:text-4xl lg:text-4xl" level="h1">
         {title}
       </Heading>
-      {description ? <p className="text-neutral-600">{description}</p> : null}
+      {description ? (
+        <p className="text-muted-foreground">{description}</p>
+      ) : null}
       {actions ? <div className="pt-2">{actions}</div> : null}
     </header>
   );

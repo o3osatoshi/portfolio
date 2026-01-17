@@ -4,8 +4,6 @@ import { getTranslations } from "next-intl/server";
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import RedisCacheDemoCard from "@/app/[locale]/(main)/toolkit/redis-cache/_components/redis-cache-demo";
-import { Link } from "@/i18n/navigation";
-import { getPath } from "@/utils/nav-handler";
 
 export async function generateMetadata({
   params,
@@ -23,8 +21,6 @@ export async function generateMetadata({
 
 export default async function Page() {
   const t = await getTranslations("ToolkitRedisCache");
-  const tToolkit = await getTranslations("Toolkit");
-
   return (
     <>
       <PageHeader
@@ -38,12 +34,6 @@ export default async function Page() {
       <PageSection description={t("sectionIntro")} title={t("sectionTitle")}>
         <RedisCacheDemoCard />
       </PageSection>
-
-      <footer className="text-neutral-600 text-sm">
-        <Link href={getPath("toolkit")} className="underline">
-          {tToolkit("backToIndex")}
-        </Link>
-      </footer>
     </>
   );
 }

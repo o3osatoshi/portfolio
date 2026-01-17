@@ -5,6 +5,7 @@ import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
+import { Button } from "@o3osatoshi/ui";
 
 export async function generateMetadata({
   params,
@@ -33,16 +34,20 @@ export default async function Page() {
       />
 
       <PageSection title={t("availableDemos")}>
-        <ul className="list-disc space-y-2 pl-5 text-neutral-600">
+        <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
-            <Link href={getPath("toolkit-asynchronous")} className="underline">
-              {t("asynchronousLink")}
-            </Link>
+            <Button asChild className="h-auto p-0" variant="link">
+              <Link href={getPath("toolkit-asynchronous")}>
+                {t("asynchronousLink")}
+              </Link>
+            </Button>
           </li>
           <li>
-            <Link href={getPath("toolkit-redis-cache")} className="underline">
-              {t("redisCacheLink")}
-            </Link>
+            <Button asChild className="h-auto p-0" variant="link">
+              <Link href={getPath("toolkit-redis-cache")}>
+                {t("redisCacheLink")}
+              </Link>
+            </Button>
           </li>
         </ul>
       </PageSection>

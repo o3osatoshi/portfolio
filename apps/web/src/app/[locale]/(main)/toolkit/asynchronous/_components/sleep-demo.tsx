@@ -11,6 +11,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Message,
 } from "@o3osatoshi/ui";
 
 type DemoStatus = "canceled" | "completed" | "error" | "idle" | "running";
@@ -114,23 +115,23 @@ export default function SleepDemoCard() {
       <CardContent className="space-y-4">
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.status")}</dt>
+            <dt className="text-muted-foreground">{t("labels.status")}</dt>
             <dd className="font-medium">{statusLabel}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.progress")}</dt>
+            <dt className="text-muted-foreground">{t("labels.progress")}</dt>
             <dd className="font-medium">
               {t("progressPercent", { value: progress })}
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.elapsed")}</dt>
+            <dt className="text-muted-foreground">{t("labels.elapsed")}</dt>
             <dd className="font-medium">
               {t("secondsShort", { value: secondsElapsed })}
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">{t("labels.duration")}</dt>
+            <dt className="text-muted-foreground">{t("labels.duration")}</dt>
             <dd className="font-medium">
               {t("secondsShort", { value: durationSeconds })}
             </dd>
@@ -138,9 +139,9 @@ export default function SleepDemoCard() {
         </dl>
 
         {errorMessage ? (
-          <p className="text-red-600 text-sm">
+          <Message variant="destructive">
             {tCommon("errorWithMessage", { message: errorMessage })}
-          </p>
+          </Message>
         ) : null}
 
         <div className="flex flex-wrap gap-2">

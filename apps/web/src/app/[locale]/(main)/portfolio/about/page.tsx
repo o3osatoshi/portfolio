@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
+import { Button } from "@o3osatoshi/ui";
 export async function generateMetadata({
   params,
 }: {
@@ -25,18 +26,30 @@ export default async function Page() {
       <PageHeader description={t("intro")} title={t("title")} />
 
       <PageSection title={t("skillsTitle")}>
-        <ul className="list-disc space-y-2 pl-6">
-          <li>
-            <strong>{t("skills.frontend")}</strong> {t("skills.frontendItems")}
+        <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
+          <li className="flex flex-wrap gap-1">
+            <span className="font-medium text-foreground">
+              {t("skills.frontend")}
+            </span>
+            <span>{t("skills.frontendItems")}</span>
           </li>
-          <li>
-            <strong>{t("skills.web3")}</strong> {t("skills.web3Items")}
+          <li className="flex flex-wrap gap-1">
+            <span className="font-medium text-foreground">
+              {t("skills.web3")}
+            </span>
+            <span>{t("skills.web3Items")}</span>
           </li>
-          <li>
-            <strong>{t("skills.backend")}</strong> {t("skills.backendItems")}
+          <li className="flex flex-wrap gap-1">
+            <span className="font-medium text-foreground">
+              {t("skills.backend")}
+            </span>
+            <span>{t("skills.backendItems")}</span>
           </li>
-          <li>
-            <strong>{t("skills.quality")}</strong> {t("skills.qualityItems")}
+          <li className="flex flex-wrap gap-1">
+            <span className="font-medium text-foreground">
+              {t("skills.quality")}
+            </span>
+            <span>{t("skills.qualityItems")}</span>
           </li>
         </ul>
       </PageSection>
@@ -44,26 +57,34 @@ export default async function Page() {
       <PageSection title={t("experienceTitle")}>
         <ul className="space-y-4">
           <li>
-            <strong>{t("experience.napierTitle")}</strong>
-            <div className="text-neutral-600">
+            <span className="font-medium text-foreground">
+              {t("experience.napierTitle")}
+            </span>
+            <div className="text-muted-foreground">
               {t("experience.napierDescription")}
             </div>
           </li>
           <li>
-            <strong>{t("experience.salonTitle")}</strong>
-            <div className="text-neutral-600">
+            <span className="font-medium text-foreground">
+              {t("experience.salonTitle")}
+            </span>
+            <div className="text-muted-foreground">
               {t("experience.salonDescription")}
             </div>
           </li>
           <li>
-            <strong>{t("experience.softbankResearchTitle")}</strong>
-            <div className="text-neutral-600">
+            <span className="font-medium text-foreground">
+              {t("experience.softbankResearchTitle")}
+            </span>
+            <div className="text-muted-foreground">
               {t("experience.softbankResearchDescription")}
             </div>
           </li>
           <li>
-            <strong>{t("experience.softbankPmTitle")}</strong>
-            <div className="text-neutral-600">
+            <span className="font-medium text-foreground">
+              {t("experience.softbankPmTitle")}
+            </span>
+            <div className="text-muted-foreground">
               {t("experience.softbankPmDescription")}
             </div>
           </li>
@@ -71,57 +92,61 @@ export default async function Page() {
       </PageSection>
 
       <PageSection title={t("educationTitle")}>
-        <ul className="list-disc space-y-2 pl-6">
+        <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
           <li>{t("education.tokyo")}</li>
           <li>{t("education.rikkyo")}</li>
         </ul>
       </PageSection>
 
       <PageSection title={t("linksTitle")}>
-        <ul className="list-disc space-y-2 pl-6">
-          <li>
-            {t("links.github")}{" "}
-            <a
-              href="https://github.com/o3osatoshi"
-              className="underline"
-              rel="noreferrer"
-              target="_blank"
-            >
-              @o3osatoshi
-            </a>
+        <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
+          <li className="flex flex-wrap items-center gap-1">
+            <span>{t("links.github")}</span>
+            <Button asChild className="h-auto p-0" variant="link">
+              <a
+                href="https://github.com/o3osatoshi"
+                rel="noreferrer"
+                target="_blank"
+              >
+                @o3osatoshi
+              </a>
+            </Button>
           </li>
-          <li>
-            {t("links.blog")}{" "}
-            <a
-              href="https://o3osatoshi.github.io"
-              className="underline"
-              rel="noreferrer"
-              target="_blank"
-            >
-              o3osatoshi.github.io
-            </a>
+          <li className="flex flex-wrap items-center gap-1">
+            <span>{t("links.blog")}</span>
+            <Button asChild className="h-auto p-0" variant="link">
+              <a
+                href="https://o3osatoshi.github.io"
+                rel="noreferrer"
+                target="_blank"
+              >
+                o3osatoshi.github.io
+              </a>
+            </Button>
           </li>
-          <li>
-            {t("links.linkedin")}{" "}
-            <a
-              href="https://www.linkedin.com/in/satoshi-ogura-189479135/"
-              className="underline"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Satoshi Ogura
-            </a>
+          <li className="flex flex-wrap items-center gap-1">
+            <span>{t("links.linkedin")}</span>
+            <Button asChild className="h-auto p-0" variant="link">
+              <a
+                href="https://www.linkedin.com/in/satoshi-ogura-189479135/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Satoshi Ogura
+              </a>
+            </Button>
           </li>
-          <li>
-            {t("links.x")}{" "}
-            <a
-              href="https://x.com/o3osatoshi"
-              className="underline"
-              rel="noreferrer"
-              target="_blank"
-            >
-              @o3osatoshi
-            </a>
+          <li className="flex flex-wrap items-center gap-1">
+            <span>{t("links.x")}</span>
+            <Button asChild className="h-auto p-0" variant="link">
+              <a
+                href="https://x.com/o3osatoshi"
+                rel="noreferrer"
+                target="_blank"
+              >
+                @o3osatoshi
+              </a>
+            </Button>
           </li>
         </ul>
       </PageSection>
