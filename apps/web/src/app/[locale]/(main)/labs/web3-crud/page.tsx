@@ -1,6 +1,4 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 // import "@rainbow-me/rainbowkit/styles.css";
 //
@@ -8,11 +6,12 @@ import { useTranslations } from "next-intl";
 //
 // import Web3Provider from "@/app/[locale]/(main)/labs/web3-crud/_components/web3-provider";
 // import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
+import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 
-export default function Page() {
-  const t = useTranslations("LabsWeb3Crud");
+export default async function Page() {
+  const t = await getTranslations("LabsWeb3Crud");
 
-  return <div>{t("title")}</div>;
+  return <PageHeader title={t("title")} />;
   // return (
   //   <Web3Provider>
   //     <div className="flex flex-col gap-6">

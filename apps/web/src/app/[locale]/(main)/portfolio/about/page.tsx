@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import PageHeader from "@/app/[locale]/(main)/_components/page-header";
+import PageSection from "@/app/[locale]/(main)/_components/page-section";
 export async function generateMetadata({
   params,
 }: {
@@ -19,14 +21,10 @@ export default async function Page() {
   const t = await getTranslations("PortfolioAbout");
 
   return (
-    <div className="container mx-auto max-w-3xl space-y-8 px-4 py-10">
-      <header>
-        <h1 className="font-bold text-3xl">{t("title")}</h1>
-        <p className="mt-2 text-neutral-600">{t("intro")}</p>
-      </header>
+    <>
+      <PageHeader description={t("intro")} title={t("title")} />
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">{t("skillsTitle")}</h2>
+      <PageSection title={t("skillsTitle")}>
         <ul className="list-disc space-y-2 pl-6">
           <li>
             <strong>{t("skills.frontend")}</strong> {t("skills.frontendItems")}
@@ -41,10 +39,9 @@ export default async function Page() {
             <strong>{t("skills.quality")}</strong> {t("skills.qualityItems")}
           </li>
         </ul>
-      </section>
+      </PageSection>
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">{t("experienceTitle")}</h2>
+      <PageSection title={t("experienceTitle")}>
         <ul className="space-y-4">
           <li>
             <strong>{t("experience.napierTitle")}</strong>
@@ -71,18 +68,16 @@ export default async function Page() {
             </div>
           </li>
         </ul>
-      </section>
+      </PageSection>
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">{t("educationTitle")}</h2>
+      <PageSection title={t("educationTitle")}>
         <ul className="list-disc space-y-2 pl-6">
           <li>{t("education.tokyo")}</li>
           <li>{t("education.rikkyo")}</li>
         </ul>
-      </section>
+      </PageSection>
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">{t("linksTitle")}</h2>
+      <PageSection title={t("linksTitle")}>
         <ul className="list-disc space-y-2 pl-6">
           <li>
             {t("links.github")}{" "}
@@ -129,7 +124,7 @@ export default async function Page() {
             </a>
           </li>
         </ul>
-      </section>
-    </div>
+      </PageSection>
+    </>
   );
 }

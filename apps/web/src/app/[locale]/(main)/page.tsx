@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import PageHeader from "@/app/[locale]/(main)/_components/page-header";
+import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
+import { Button } from "@o3osatoshi/ui";
 
 export async function generateMetadata({
   params,
@@ -22,15 +25,10 @@ export default async function Page() {
   const t = await getTranslations("Home");
 
   return (
-    <div className="container mx-auto max-w-3xl space-y-8 px-4 py-10">
-      <header>
-        <h1 className="font-bold text-3xl">{t("title")}</h1>
-        <p className="mt-2 text-neutral-600">{t("intro")}</p>
-      </header>
+    <>
+      <PageHeader description={t("intro")} title={t("title")} />
 
-      <section className="space-y-6">
-        <h2 className="font-semibold text-xl">{t("siteStructure")}</h2>
-
+      <PageSection title={t("siteStructure")}>
         <div className="space-y-4">
           <div className="rounded-lg border p-4">
             <h3 className="mb-2 font-semibold">{t("portfolioTitle")}</h3>
@@ -40,12 +38,11 @@ export default async function Page() {
               <li>{t("portfolioItems.blog")}</li>
               <li>{t("portfolioItems.projects")}</li>
             </ul>
-            <Link
-              href={getPath("portfolio-about")}
-              className="inline-block rounded border px-4 py-2 underline"
-            >
-              {t("portfolioLink")}
-            </Link>
+            <Button asChild variant="outline">
+              <Link href={getPath("portfolio-about")}>
+                {t("portfolioLink")}
+              </Link>
+            </Button>
           </div>
 
           <div className="rounded-lg border p-4">
@@ -56,28 +53,27 @@ export default async function Page() {
               <li>{t("labsItems.web3")}</li>
               <li>{t("labsItems.latest")}</li>
             </ul>
-            <Link
-              href={getPath("labs-server-crud")}
-              className="inline-block rounded border px-4 py-2 underline"
-            >
-              {t("labsLink")}
-            </Link>
+            <Button asChild variant="outline">
+              <Link href={getPath("labs-server-crud")}>{t("labsLink")}</Link>
+            </Button>
           </div>
         </div>
-      </section>
+      </PageSection>
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">{t("sourceCodeTitle")}</h2>
-        <p className="text-neutral-600">{t("sourceCodeDescription")}</p>
-        <a
-          href="https://github.com/o3osatoshi/portfolio"
-          className="inline-block rounded border px-4 py-2 underline"
-          rel="noreferrer"
-          target="_blank"
-        >
-          {t("sourceCodeLink")}
-        </a>
-      </section>
-    </div>
+      <PageSection
+        description={t("sourceCodeDescription")}
+        title={t("sourceCodeTitle")}
+      >
+        <Button asChild variant="outline">
+          <a
+            href="https://github.com/o3osatoshi/portfolio"
+            rel="noreferrer"
+            target="_blank"
+          >
+            {t("sourceCodeLink")}
+          </a>
+        </Button>
+      </PageSection>
+    </>
   );
 }

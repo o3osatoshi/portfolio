@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import PageHeader from "@/app/[locale]/(main)/_components/page-header";
+import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
 
@@ -22,18 +24,15 @@ export default async function Page() {
   const t = await getTranslations("ToolkitIndex");
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="space-y-2">
-        <h1 className="font-semibold text-3xl">{t("title")}</h1>
-        <p className="text-neutral-600">
-          {t.rich("intro", {
-            toolkit: (chunks) => <code>{chunks}</code>,
-          })}
-        </p>
-      </header>
+    <>
+      <PageHeader
+        description={t.rich("intro", {
+          toolkit: (chunks) => <code>{chunks}</code>,
+        })}
+        title={t("title")}
+      />
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">{t("availableDemos")}</h2>
+      <PageSection title={t("availableDemos")}>
         <ul className="list-disc space-y-2 pl-5 text-neutral-600">
           <li>
             <Link href={getPath("toolkit-asynchronous")} className="underline">
@@ -46,7 +45,7 @@ export default async function Page() {
             </Link>
           </li>
         </ul>
-      </section>
-    </div>
+      </PageSection>
+    </>
   );
 }
