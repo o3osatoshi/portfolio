@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import TransactionCard from "@/app/[locale]/(main)/labs/_components/transaction-card";
 import CreateForm from "@/app/[locale]/(main)/labs/server-crud/_components/create-form";
 import { getTransactions } from "@/services/get-transactions";
@@ -19,6 +21,7 @@ import { getTransactions } from "@/services/get-transactions";
 //   });
 
 export default async function Page() {
+  const t = await getTranslations("Transactions");
   const result = await getTransactions();
   const transactions = result.isErr() ? [] : result.value;
 
@@ -26,7 +29,7 @@ export default async function Page() {
     <div className="flex flex-col gap-6">
       <CreateForm />
       {transactions.length === 0 ? (
-        "no transactions yet"
+        t("empty")
       ) : (
         <div className="flex flex-col gap-2">
           {transactions.map((tx) => {

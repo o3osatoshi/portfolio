@@ -2,6 +2,7 @@
 
 import { signIn, signOut, useUser } from "@repo/auth/react";
 import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   Avatar,
@@ -20,6 +21,8 @@ import {
 export default function User() {
   const { isMobile } = useSidebar();
   const user = useUser();
+  const t = useTranslations("UserMenu");
+  const fallbackLabel = t("fallback");
 
   return (
     <SidebarMenu>
@@ -36,7 +39,7 @@ export default function User() {
               </AvatarFallback>
             </Avatar>
             <span className="text-left font-medium text-sm leading-tight">
-              Sign in
+              {t("signIn")}
             </span>
           </SidebarMenuButton>
         ) : (
@@ -48,7 +51,9 @@ export default function User() {
               >
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage alt={user.name ?? ""} src={user.image ?? ""} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {fallbackLabel}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -65,7 +70,7 @@ export default function User() {
             >
               <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut />
-                Sign out
+                {t("signOut")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

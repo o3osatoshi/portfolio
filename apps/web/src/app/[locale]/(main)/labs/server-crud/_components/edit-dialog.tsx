@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -25,10 +26,21 @@ interface Props {
 }
 
 export default function EditDialog({ transaction }: Props) {
+  const t = useTranslations("Transactions");
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
   >(updateTransaction, undefined);
+  const labels = {
+    amount: t("fields.amount"),
+    currency: t("fields.currency"),
+    datetime: t("fields.datetime"),
+    fee: t("fields.fee"),
+    feeCurrency: t("fields.feeCurrency"),
+    price: t("fields.price"),
+    profitLoss: t("fields.profitLoss"),
+    type: t("fields.type"),
+  };
 
   const {
     formState: { errors },
@@ -56,16 +68,14 @@ export default function EditDialog({ transaction }: Props) {
         <form action={dispatch} onSubmit={validate}>
           <input value={transaction.id} {...register("id")} type="hidden" />
           <DialogHeader>
-            <DialogTitle>Edit transaction</DialogTitle>
-            <DialogDescription>
-              Make changes to your transaction here.
-            </DialogDescription>
+            <DialogTitle>{t("edit.title")}</DialogTitle>
+            <DialogDescription>{t("edit.description")}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <FormInput
               id="type"
               defaultValue={transaction.type}
-              label="Type"
+              label={labels.type}
               {...register("type")}
               errorMessage={errors.type?.message}
               type="text"
@@ -75,7 +85,7 @@ export default function EditDialog({ transaction }: Props) {
               defaultValue={new Date(transaction.datetime)
                 .toISOString()
                 .slice(0, 16)}
-              label="Datetime"
+              label={labels.datetime}
               {...register("datetime")}
               errorMessage={errors.datetime?.message}
               type="datetime-local"
@@ -83,7 +93,7 @@ export default function EditDialog({ transaction }: Props) {
             <FormInput
               id="amount"
               defaultValue={transaction.amount}
-              label="Amount"
+              label={labels.amount}
               {...register("amount")}
               errorMessage={errors.amount?.message}
               type="number"
@@ -91,7 +101,7 @@ export default function EditDialog({ transaction }: Props) {
             <FormInput
               id="price"
               defaultValue={transaction.price}
-              label="Price"
+              label={labels.price}
               {...register("price")}
               errorMessage={errors.price?.message}
               type="number"
@@ -99,7 +109,7 @@ export default function EditDialog({ transaction }: Props) {
             <FormInput
               id="currency"
               defaultValue={transaction.currency}
-              label="Currency"
+              label={labels.currency}
               {...register("currency")}
               errorMessage={errors.currency?.message}
               type="text"
@@ -107,7 +117,7 @@ export default function EditDialog({ transaction }: Props) {
             <FormInput
               id="profitLoss"
               defaultValue={transaction.profitLoss ?? ""}
-              label="Profit Loss"
+              label={labels.profitLoss}
               {...register("profitLoss")}
               errorMessage={errors.profitLoss?.message}
               type="text"
@@ -115,7 +125,7 @@ export default function EditDialog({ transaction }: Props) {
             <FormInput
               id="fee"
               defaultValue={transaction.fee ?? ""}
-              label="Fee"
+              label={labels.fee}
               {...register("fee")}
               errorMessage={errors.fee?.message}
               type="number"
@@ -123,7 +133,7 @@ export default function EditDialog({ transaction }: Props) {
             <FormInput
               id="feeCurrency"
               defaultValue={transaction.feeCurrency ?? ""}
-              label="Fee Currency"
+              label={labels.feeCurrency}
               {...register("feeCurrency")}
               errorMessage={errors.feeCurrency?.message}
               type="text"
@@ -139,7 +149,7 @@ export default function EditDialog({ transaction }: Props) {
                 disabled={Object.keys(errors).length > 0 || isPending}
                 type="submit"
               >
-                Save changes
+                {t("edit.save")}
               </Button>
             </div>
           </DialogFooter>

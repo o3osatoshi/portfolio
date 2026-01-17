@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -10,10 +11,21 @@ import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 
 export default function CreateForm() {
+  const t = useTranslations("Transactions");
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
   >(createTransaction, undefined);
+  const labels = {
+    amount: t("fields.amount"),
+    currency: t("fields.currency"),
+    datetime: t("fields.datetime"),
+    fee: t("fields.fee"),
+    feeCurrency: t("fields.feeCurrency"),
+    price: t("fields.price"),
+    profitLoss: t("fields.profitLoss"),
+    type: t("fields.type"),
+  };
 
   const {
     formState: { errors },
@@ -35,66 +47,66 @@ export default function CreateForm() {
       <div className="flex flex-col gap-2">
         <FormInput
           id="type"
-          label="Type"
+          label={labels.type}
           {...register("type")}
           errorMessage={errors.type?.message}
-          placeholder="Type"
+          placeholder={labels.type}
           type="text"
         />
         <FormInput
           id="datetime"
-          label="Datetime"
+          label={labels.datetime}
           {...register("datetime")}
           errorMessage={errors.datetime?.message}
-          placeholder="Datetime"
+          placeholder={labels.datetime}
           type="datetime-local"
         />
         <FormInput
           id="amount"
-          label="Amount"
+          label={labels.amount}
           {...register("amount")}
           errorMessage={errors.amount?.message}
-          placeholder="Amount"
+          placeholder={labels.amount}
           type="number"
         />
         <FormInput
           id="price"
-          label="Price"
+          label={labels.price}
           {...register("price")}
           errorMessage={errors.price?.message}
-          placeholder="Price"
+          placeholder={labels.price}
           type="number"
         />
         <FormInput
           id="currency"
-          label="Currency"
+          label={labels.currency}
           {...register("currency")}
           errorMessage={errors.currency?.message}
-          placeholder="Currency"
+          placeholder={labels.currency}
           type="text"
         />
         <FormInput
           id="profitLoss"
-          label="Profit Loss"
+          label={labels.profitLoss}
           {...register("profitLoss")}
           errorMessage={errors.profitLoss?.message}
-          placeholder="Profit Loss"
+          placeholder={labels.profitLoss}
           type="number"
         />
         <FormInput
           id="fee"
-          label="Fee"
+          label={labels.fee}
           {...register("fee")}
           errorMessage={errors.fee?.message}
-          placeholder="Fee"
+          placeholder={labels.fee}
           type="number"
         />
         <FormInput
           id="feeCurrency"
-          label="Fee Currency"
+          label={labels.feeCurrency}
           {...register("feeCurrency")}
           errorMessage={errors.feeCurrency?.message}
-          placeholder="Fee Currency"
+          placeholder={labels.feeCurrency}
           type="text"
         />
         {state?.ok === false && (
@@ -104,7 +116,7 @@ export default function CreateForm() {
           disabled={Object.keys(errors).length > 0 || isPending}
           type="submit"
         >
-          Create Transaction
+          {t("create")}
         </Button>
       </div>
     </form>

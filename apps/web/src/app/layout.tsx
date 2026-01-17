@@ -2,13 +2,13 @@ import "@o3osatoshi/ui/globals.css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { fontMono, fontSans, jetbrainsMono } from "@/app/fonts";
 import { defaultLocale } from "@/i18n/routing";
 
-export const metadata: Metadata = {
-  description: "o3osatoshi portfolio",
+const baseMetadata: Metadata = {
   icons: {
     apple: [
       {
@@ -38,12 +38,29 @@ export const metadata: Metadata = {
       { rel: "manifest", url: "/site.webmanifest" },
     ],
   },
-  title: "o3osatoshi",
 };
 
 interface Props {
   children: ReactNode;
   params: Promise<{ locale?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale?: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({
+    namespace: "Site",
+    locale: locale ?? defaultLocale,
+  });
+
+  return {
+    ...baseMetadata,
+    description: t("description"),
+    title: t("title"),
+  };
 }
 
 export default async function Layout({ children, params }: Props) {

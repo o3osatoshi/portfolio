@@ -7,7 +7,7 @@ vi.mock("@/env/client", () => ({
   },
 }));
 
-import { findNavs, getLabel, getPath, getTag } from "./nav-handler";
+import { findNavs, getPath, getTag } from "./nav-handler";
 
 describe("utils/nav-handler findNavs", () => {
   it("returns breadcrumb chain for nested web route", () => {
@@ -26,23 +26,6 @@ describe("utils/nav-handler findNavs", () => {
   it("returns undefined for api-only paths", () => {
     expect(findNavs("/api/private/labs/transactions")).toBeUndefined();
     expect(findNavs("/edge/private/me")).toBeUndefined();
-  });
-});
-
-describe("utils/nav-handler getLabel", () => {
-  it("returns label for top-level web nav", () => {
-    expect(getLabel("labs")).toBe("Labs");
-    expect(getLabel("portfolio")).toBe("Portfolio");
-  });
-
-  it("returns label for nested web nav", () => {
-    expect(getLabel("toolkit-asynchronous")).toBe("Asynchronous");
-  });
-
-  it("throws when alias is not a web nav", () => {
-    expect(() => getLabel("labs-transactions" as never)).toThrowError(
-      "alias not web",
-    );
   });
 });
 

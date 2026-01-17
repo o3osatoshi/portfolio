@@ -1,4 +1,133 @@
 {
+  "Brand": {
+    "name": "o3osatoshi"
+  },
+  "Common": {
+    "errorWithMessage": "Error: {message}",
+    "notAvailable": "—",
+    "toggle": "Toggle"
+  },
+  "Home": {
+    "intro": "This is my portfolio site where I share technical learning and experiments. A place to output daily technical insights and contribute to the tech community through new technology validation, experimental feature implementation, and knowledge sharing.",
+    "labsDescription": "Technical validation and experimental features",
+    "labsItems": {
+      "crud": "Server-side CRUD operations",
+      "latest": "Latest technology validation and implementation",
+      "web3": "Web3 and blockchain integration"
+    },
+    "labsLink": "Explore Labs",
+    "labsTitle": "Labs",
+    "metadata": {
+      "description": "Portfolio site for technical learning and knowledge sharing. Featuring portfolio content and experimental labs.",
+      "title": "Satoshi Ogura"
+    },
+    "portfolioDescription": "Information about the site author and creator",
+    "portfolioItems": {
+      "blog": "Technical blog articles",
+      "intro": "Personal introduction and skill set",
+      "projects": "Project history and experience"
+    },
+    "portfolioLink": "View Portfolio",
+    "portfolioTitle": "Portfolio",
+    "siteStructure": "Site Structure",
+    "sourceCodeDescription": "The source code for this portfolio site is publicly available on GitHub.",
+    "sourceCodeLink": "View on GitHub",
+    "sourceCodeTitle": "Source Code",
+    "title": "Welcome to o3osatoshi portfolio"
+  },
+  "LabsWeb3Crud": {
+    "title": "Web3 CRUD Lab"
+  },
+  "Nav": {
+    "labs": "Labs",
+    "labs-server-crud": "Server Side CRUD",
+    "labs-web3-crud": "Web3 CRUD",
+    "portfolio": "Portfolio",
+    "portfolio-about": "About",
+    "portfolio-blog": "Blog",
+    "toolkit": "Toolkit",
+    "toolkit-asynchronous": "Asynchronous",
+    "toolkit-redis-cache": "Redis cache"
+  },
+  "PortfolioAbout": {
+    "education": {
+      "rikkyo": "Rikkyo University, Faculty of Science (GPA 3.72)",
+      "tokyo": "The University of Tokyo, Graduate School of Frontier Sciences"
+    },
+    "educationTitle": "Education",
+    "experience": {
+      "napierDescription": "Built V2 web frontend for an EVM DeFi protocol, largely solo. Tech: TypeScript, Next.js, Tailwind, wagmi, viem, GraphQL, Zod, Neverthrow, Vercel, Sentry.",
+      "napierTitle": "Napier Labs — Frontend Engineer (2024-08 → 2025-04)",
+      "salonDescription": "Built a CRM 0→1 across frontend/backend. Tech: TypeScript, Next.js, Tailwind, Express, Firebase.",
+      "salonTitle": "Salon Brain Inc. — Full-stack Engineer (2023-03 → 2024-07)",
+      "softbankPmDescription": "Gateway design bridging consortium chain and legacy payments.",
+      "softbankPmTitle": "SoftBank Corp. — Technical PM (2017-06 → 2022-03)",
+      "softbankResearchDescription": "Researched corporate Web3 strategy (Uniswap, AA, contract wallets), delivered POCs and internal reports.",
+      "softbankResearchTitle": "SoftBank Corp. — Tech Researcher (2021-04 → 2023-10)"
+    },
+    "experienceTitle": "Experience (Highlights)",
+    "intro": "Full-stack engineer. I work across Web3 (DeFi, Solidity, wagmi/viem) and Web2 (CRM, Firebase, Express). I care about type safety, tests, CI/CD, and clean UX. Recently supported an EVM-based DeFi protocol frontend from zero to $40M+ TVL.",
+    "links": {
+      "blog": "Blog:",
+      "github": "GitHub:",
+      "linkedin": "LinkedIn:",
+      "x": "X (Twitter):"
+    },
+    "linksTitle": "Links",
+    "metadata": {
+      "description": "Full-stack engineer specializing in Next.js, TypeScript, and Web3/DeFi. Focused on type safety, testing, and CI/CD.",
+      "title": "About — Satoshi Ogura"
+    },
+    "skills": {
+      "backend": "Backend/Infra:",
+      "backendItems": "Node.js, Express, Prisma, PostgreSQL, Firebase, AWS, Docker, Vercel",
+      "frontend": "Frontend:",
+      "frontendItems": "TypeScript, React, Next.js, Tailwind CSS",
+      "quality": "Quality/Tooling:",
+      "qualityItems": "Zod, Neverthrow, Jest/Playwright, Sentry, Turborepo, GitHub Actions, Figma",
+      "web3": "Web3:",
+      "web3Items": "Solidity, wagmi, viem, The Graph"
+    },
+    "skillsTitle": "Skills",
+    "title": "About"
+  },
+  "PortfolioBlog": {
+    "intro": "I publish detailed explanations for Labs demos and ongoing research notes on my blog.",
+    "metadata": {
+      "description": "Latest technical notes and write-ups. Detailed explanations for Labs demos are published on the blog.",
+      "title": "Blog — Satoshi Ogura"
+    },
+    "title": "Blog",
+    "visitBlog": "Visit Blog"
+  },
+  "RedisCacheDemo": {
+    "buttons": {
+      "fetch": "Fetch via cache",
+      "reset": "Reset"
+    },
+    "description": "Call a deliberately slow API endpoint (<endpoint>/edge/public/heavy</endpoint>) via the interface service and cache the result in Redis. Subsequent requests within the TTL should be served from cache and return much faster.",
+    "labels": {
+      "cachedAt": "Cached at",
+      "clientDuration": "Client duration",
+      "serverDuration": "Server duration",
+      "source": "Source",
+      "status": "Status",
+      "value": "Value"
+    },
+    "millisecondsShort": "{value} ms",
+    "sourceValues": {
+      "redisCache": "Redis cache",
+      "slowApi": "Slow API"
+    },
+    "status": {
+      "error": "Failed",
+      "idle": "Idle",
+      "loading": "Loading…",
+      "success": "Loaded"
+    },
+    "title": "Redis cache demo",
+    "unknownError": "Unknown error"
+  },
   "Settings": {
     "dark": "Dark",
     "english": "English",
@@ -7,5 +136,95 @@
     "light": "Light",
     "system": "System",
     "theme": "Theme"
+  },
+  "Site": {
+    "description": "o3osatoshi portfolio",
+    "title": "o3osatoshi"
+  },
+  "SleepDemo": {
+    "buttons": {
+      "cancel": "Cancel",
+      "start": "Start {seconds}s sleep"
+    },
+    "description": "Simulate a cancellable pause that rejects with an infrastructure error when aborted.",
+    "labels": {
+      "duration": "Duration",
+      "elapsed": "Elapsed",
+      "progress": "Progress",
+      "status": "Status"
+    },
+    "progressPercent": "{value}%",
+    "reasons": {
+      "canceledByUser": "canceled by user",
+      "componentUnmounted": "component unmounted",
+      "restarted": "restarted"
+    },
+    "secondsShort": "{value}s",
+    "status": {
+      "canceled": "Canceled",
+      "completed": "Completed",
+      "error": "Failed",
+      "idle": "Idle",
+      "running": "Running sleep…"
+    },
+    "title": "Sleep helper demo"
+  },
+  "Toolkit": {
+    "backToIndex": "Back to Toolkit index"
+  },
+  "ToolkitAsynchronous": {
+    "intro": "Explore helpers for cancellable timers and infrastructure-friendly error handling. The example below shows how <sleep>sleep</sleep> produces an Infra-layer error when aborted.",
+    "metadata": {
+      "description": "Demonstration of the cancellable sleep helper from @o3osatoshi/toolkit.",
+      "title": "Toolkit · Asynchronous utilities"
+    },
+    "sectionIntro": "Start the demo to run a three-second delay. Abort the operation to see the helper reject with an <infraError>InfraCanceledError</infraError> that preserves the abort reason.",
+    "sectionTitle": "Cancellable sleep",
+    "title": "Asynchronous utilities"
+  },
+  "ToolkitIndex": {
+    "asynchronousLink": "Asynchronous utilities: cancellable sleep helper",
+    "availableDemos": "Available demos",
+    "intro": "Shared utilities from <toolkit>@o3osatoshi/toolkit</toolkit> can be explored here. Browse the sections below for interactive demos and usage patterns.",
+    "metadata": {
+      "description": "Index of shared toolkit examples for the o3osatoshi portfolio project.",
+      "title": "Toolkit"
+    },
+    "redisCacheLink": "Redis cache: speeding up a slow API with Upstash",
+    "title": "Toolkit examples"
+  },
+  "ToolkitRedisCache": {
+    "intro": "This demo calls a deliberately slow API endpoint exposed by the interface service at <endpoint>/edge/public/heavy</endpoint> and uses the Upstash cache adapter from <integrations>@repo/integrations</integrations> to cache the response. Requests within the TTL are served from cache; once the TTL expires, the next request recomputes the value by hitting the slow API again.",
+    "metadata": {
+      "description": "Demonstration of using the Upstash cache adapter from @repo/integrations to cache a slow API response.",
+      "title": "Toolkit · Redis cache"
+    },
+    "sectionIntro": "Press the button below multiple times. The first request should take roughly three seconds as it hits the slow API. Subsequent requests within the cache TTL will be significantly faster and marked as \"Redis cache\"; after the TTL expires, the next request will become slow again and refresh the cached value.",
+    "sectionTitle": "Cached slow endpoint",
+    "title": "Redis cache"
+  },
+  "Transactions": {
+    "create": "Create Transaction",
+    "edit": {
+      "description": "Make changes to your transaction here.",
+      "save": "Save changes",
+      "title": "Edit transaction"
+    },
+    "empty": "no transactions yet",
+    "fields": {
+      "amount": "Amount",
+      "currency": "Currency",
+      "datetime": "Datetime",
+      "fee": "Fee",
+      "feeCurrency": "Fee Currency",
+      "price": "Price",
+      "profitLoss": "Profit Loss",
+      "type": "Type"
+    }
+  },
+  "UserMenu": {
+    "fallback": "CN",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
   }
 }

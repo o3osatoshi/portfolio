@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronRight,
   Construction,
@@ -6,8 +8,9 @@ import {
   PocketKnife,
   User,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import { getLabel, getPath } from "@/utils/nav-handler";
+import { getPath } from "@/utils/nav-handler";
 import {
   Collapsible,
   CollapsibleContent,
@@ -29,10 +32,10 @@ type NavigateOption = {
   isActive?: boolean;
   items?: {
     isWIP?: boolean;
-    title: string;
+    titleKey: string;
     url: string;
   }[];
-  title: string;
+  titleKey: string;
   url: string;
 };
 
@@ -42,15 +45,15 @@ const navigateOptions: NavigateOption[] = [
     isActive: true,
     items: [
       {
-        title: getLabel("portfolio-about"),
+        titleKey: "portfolio-about",
         url: getPath("portfolio-about"),
       },
       {
-        title: getLabel("portfolio-blog"),
+        titleKey: "portfolio-blog",
         url: getPath("portfolio-blog"),
       },
     ],
-    title: getLabel("portfolio"),
+    titleKey: "portfolio",
     url: "#",
   },
   {
@@ -58,16 +61,16 @@ const navigateOptions: NavigateOption[] = [
     isActive: true,
     items: [
       {
-        title: getLabel("labs-server-crud"),
+        titleKey: "labs-server-crud",
         url: getPath("labs-server-crud"),
       },
       {
         isWIP: true,
-        title: getLabel("labs-web3-crud"),
+        titleKey: "labs-web3-crud",
         url: getPath("labs-web3-crud"),
       },
     ],
-    title: getLabel("labs"),
+    titleKey: "labs",
     url: "#",
   },
   {
@@ -75,34 +78,37 @@ const navigateOptions: NavigateOption[] = [
     isActive: true,
     items: [
       {
-        title: getLabel("toolkit-asynchronous"),
+        titleKey: "toolkit-asynchronous",
         url: getPath("toolkit-asynchronous"),
       },
       {
-        title: getLabel("toolkit-redis-cache"),
+        titleKey: "toolkit-redis-cache",
         url: getPath("toolkit-redis-cache"),
       },
     ],
-    title: getLabel("toolkit"),
+    titleKey: "toolkit",
     url: "#",
   },
 ];
 
 export default function Navigation() {
+  const t = useTranslations("Nav");
+  const tCommon = useTranslations("Common");
+
   return (
     <SidebarGroup>
       <SidebarMenu>
         {navigateOptions.map((opt) => (
           <Collapsible
-            key={opt.title}
+            key={opt.titleKey}
             asChild
             defaultOpen={opt.isActive === true}
           >
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={opt.title}>
+              <SidebarMenuButton asChild tooltip={t(opt.titleKey)}>
                 <a href={opt.url}>
                   <opt.icon />
-                  <span>{opt.title}</span>
+                  <span>{t(opt.titleKey)}</span>
                 </a>
               </SidebarMenuButton>
               {opt.items?.length ? (
@@ -110,22 +116,22 @@ export default function Navigation() {
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">
                       <ChevronRight />
-                      <span className="sr-only">Toggle</span>
+                      <span className="sr-only">{tCommon("toggle")}</span>
                     </SidebarMenuAction>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {opt.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubItem key={subItem.titleKey}>
                           {subItem.isWIP ? (
                             <SidebarMenuSubButton aria-disabled="true">
                               <Construction />
-                              <span>{subItem.title}</span>
+                              <span>{t(subItem.titleKey)}</span>
                             </SidebarMenuSubButton>
                           ) : (
                             <SidebarMenuSubButton asChild>
                               <SidebarLink href={subItem.url}>
-                                <span>{subItem.title}</span>
+                                <span>{t(subItem.titleKey)}</span>
                               </SidebarLink>
                             </SidebarMenuSubButton>
                           )}

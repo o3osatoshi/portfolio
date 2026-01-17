@@ -1,40 +1,52 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import SleepDemoCard from "@/app/[locale]/(main)/toolkit/asynchronous/_components/sleep-demo";
 import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
 
-export const metadata: Metadata = {
-  description:
-    "Demonstration of the cancellable sleep helper from @o3osatoshi/toolkit.",
-  title: "Toolkit · Asynchronous utilities",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "ToolkitAsynchronous", locale });
 
-export default function Page() {
+  return {
+    description: t("metadata.description"),
+    title: t("metadata.title"),
+  };
+}
+
+export default async function Page() {
+  const t = await getTranslations("ToolkitAsynchronous");
+  const tToolkit = await getTranslations("Toolkit");
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="space-y-2">
-        <h1 className="font-semibold text-3xl">Asynchronous utilities</h1>
+        <h1 className="font-semibold text-3xl">{t("title")}</h1>
         <p className="text-neutral-600">
-          Explore helpers for cancellable timers and infrastructure-friendly
-          error handling. The example below shows how `sleep` produces an
-          Infra-layer error when aborted.
+          {t.rich("intro", {
+            sleep: (chunks) => <code>{chunks}</code>,
+          })}
         </p>
       </header>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-xl">Cancellable sleep</h2>
+        <h2 className="font-semibold text-xl">{t("sectionTitle")}</h2>
         <p className="text-neutral-600">
-          Start the demo to run a three-second delay. Abort the operation to see
-          the helper reject with an `InfraCanceledError` that preserves the
-          abort reason.
+          {t.rich("sectionIntro", {
+            infraError: (chunks) => <code>{chunks}</code>,
+          })}
         </p>
         <SleepDemoCard />
       </section>
 
       <footer className="text-neutral-600 text-sm">
         <Link href={getPath("toolkit")} className="underline">
-          Back to Toolkit index
+          {tToolkit("backToIndex")}
         </Link>
       </footer>
     </div>

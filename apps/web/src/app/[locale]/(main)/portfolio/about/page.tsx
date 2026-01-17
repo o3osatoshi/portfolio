@@ -1,95 +1,91 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  description:
-    "Full-stack engineer specializing in Next.js, TypeScript, and Web3/DeFi. Focused on type safety, testing, and CI/CD.",
-  title: "About — Satoshi Ogura",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "PortfolioAbout", locale });
+
+  return {
+    description: t("metadata.description"),
+    title: t("metadata.title"),
+  };
+}
 
 export default async function Page() {
+  const t = await getTranslations("PortfolioAbout");
+
   return (
     <div className="container mx-auto max-w-3xl space-y-8 px-4 py-10">
       <header>
-        <h1 className="font-bold text-3xl">About</h1>
-        <p className="mt-2 text-neutral-600">
-          Full-stack engineer. I work across Web3 (DeFi, Solidity, wagmi/viem)
-          and Web2 (CRM, Firebase, Express). I care about type safety, tests,
-          CI/CD, and clean UX. Recently supported an EVM-based DeFi protocol
-          frontend from zero to $40M+ TVL.
-        </p>
+        <h1 className="font-bold text-3xl">{t("title")}</h1>
+        <p className="mt-2 text-neutral-600">{t("intro")}</p>
       </header>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-xl">Skills</h2>
+        <h2 className="font-semibold text-xl">{t("skillsTitle")}</h2>
         <ul className="list-disc space-y-2 pl-6">
           <li>
-            <strong>Frontend:</strong> TypeScript, React, Next.js, Tailwind CSS
+            <strong>{t("skills.frontend")}</strong> {t("skills.frontendItems")}
           </li>
           <li>
-            <strong>Web3:</strong> Solidity, wagmi, viem, The Graph
+            <strong>{t("skills.web3")}</strong> {t("skills.web3Items")}
           </li>
           <li>
-            <strong>Backend/Infra:</strong> Node.js, Express, Prisma,
-            PostgreSQL, Firebase, AWS, Docker, Vercel
+            <strong>{t("skills.backend")}</strong> {t("skills.backendItems")}
           </li>
           <li>
-            <strong>Quality/Tooling:</strong> Zod, Neverthrow, Jest/Playwright,
-            Sentry, Turborepo, GitHub Actions, Figma
+            <strong>{t("skills.quality")}</strong> {t("skills.qualityItems")}
           </li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-xl">Experience (Highlights)</h2>
+        <h2 className="font-semibold text-xl">{t("experienceTitle")}</h2>
         <ul className="space-y-4">
           <li>
-            <strong>Napier Labs — Frontend Engineer (2024-08 → 2025-04)</strong>
+            <strong>{t("experience.napierTitle")}</strong>
             <div className="text-neutral-600">
-              Built V2 web frontend for an EVM DeFi protocol, largely solo.
-              Tech: TypeScript, Next.js, Tailwind, wagmi, viem, GraphQL, Zod,
-              Neverthrow, Vercel, Sentry.
+              {t("experience.napierDescription")}
             </div>
           </li>
           <li>
-            <strong>
-              Salon Brain Inc. — Full-stack Engineer (2023-03 → 2024-07)
-            </strong>
+            <strong>{t("experience.salonTitle")}</strong>
             <div className="text-neutral-600">
-              Built a CRM 0→1 across frontend/backend. Tech: TypeScript,
-              Next.js, Tailwind, Express, Firebase.
+              {t("experience.salonDescription")}
             </div>
           </li>
           <li>
-            <strong>
-              SoftBank Corp. — Tech Researcher (2021-04 → 2023-10)
-            </strong>
+            <strong>{t("experience.softbankResearchTitle")}</strong>
             <div className="text-neutral-600">
-              Researched corporate Web3 strategy (Uniswap, AA, contract
-              wallets), delivered POCs and internal reports.
+              {t("experience.softbankResearchDescription")}
             </div>
           </li>
           <li>
-            <strong>SoftBank Corp. — Technical PM (2017-06 → 2022-03)</strong>
+            <strong>{t("experience.softbankPmTitle")}</strong>
             <div className="text-neutral-600">
-              Gateway design bridging consortium chain and legacy payments.
+              {t("experience.softbankPmDescription")}
             </div>
           </li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-xl">Education</h2>
+        <h2 className="font-semibold text-xl">{t("educationTitle")}</h2>
         <ul className="list-disc space-y-2 pl-6">
-          <li>The University of Tokyo, Graduate School of Frontier Sciences</li>
-          <li>Rikkyo University, Faculty of Science (GPA 3.72)</li>
+          <li>{t("education.tokyo")}</li>
+          <li>{t("education.rikkyo")}</li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-xl">Links</h2>
+        <h2 className="font-semibold text-xl">{t("linksTitle")}</h2>
         <ul className="list-disc space-y-2 pl-6">
           <li>
-            GitHub:{" "}
+            {t("links.github")}{" "}
             <a
               href="https://github.com/o3osatoshi"
               className="underline"
@@ -100,7 +96,7 @@ export default async function Page() {
             </a>
           </li>
           <li>
-            Blog:{" "}
+            {t("links.blog")}{" "}
             <a
               href="https://o3osatoshi.github.io"
               className="underline"
@@ -111,7 +107,7 @@ export default async function Page() {
             </a>
           </li>
           <li>
-            LinkedIn:{" "}
+            {t("links.linkedin")}{" "}
             <a
               href="https://www.linkedin.com/in/satoshi-ogura-189479135/"
               className="underline"
@@ -122,7 +118,7 @@ export default async function Page() {
             </a>
           </li>
           <li>
-            X (Twitter):{" "}
+            {t("links.x")}{" "}
             <a
               href="https://x.com/o3osatoshi"
               className="underline"

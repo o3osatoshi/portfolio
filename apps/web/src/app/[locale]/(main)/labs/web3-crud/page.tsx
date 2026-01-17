@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 // import "@rainbow-me/rainbowkit/styles.css";
 //
 // import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -8,7 +10,9 @@
 // import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
 
 export default function Page() {
-  return <div>Web3 CRUD Lab</div>;
+  const t = useTranslations("LabsWeb3Crud");
+
+  return <div>{t("title")}</div>;
   // return (
   //   <Web3Provider>
   //     <div className="flex flex-col gap-6">

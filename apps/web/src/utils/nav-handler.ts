@@ -27,7 +27,6 @@ interface WebNav {
   alias: WebAlias;
   data: {
     hierarchy: number;
-    label: string;
     parentAlias?: WebAlias;
   };
   pathName: string;
@@ -39,7 +38,6 @@ const navs: Nav[] = [
     alias: "portfolio",
     data: {
       hierarchy: 1,
-      label: "Portfolio",
     },
     pathName: "/portfolio",
     type: "web",
@@ -48,7 +46,6 @@ const navs: Nav[] = [
     alias: "portfolio-about",
     data: {
       hierarchy: 2,
-      label: "About",
       parentAlias: "portfolio",
     },
     pathName: "/portfolio/about",
@@ -58,7 +55,6 @@ const navs: Nav[] = [
     alias: "portfolio-blog",
     data: {
       hierarchy: 2,
-      label: "Blog",
       parentAlias: "portfolio",
     },
     pathName: "/portfolio/blog",
@@ -68,7 +64,6 @@ const navs: Nav[] = [
     alias: "labs",
     data: {
       hierarchy: 1,
-      label: "Labs",
     },
     pathName: "/labs",
     type: "web",
@@ -77,7 +72,6 @@ const navs: Nav[] = [
     alias: "labs-server-crud",
     data: {
       hierarchy: 2,
-      label: "Server Side CRUD",
       parentAlias: "labs",
     },
     pathName: "/labs/server-crud",
@@ -102,7 +96,6 @@ const navs: Nav[] = [
     alias: "labs-web3-crud",
     data: {
       hierarchy: 2,
-      label: "Web3 CRUD",
       parentAlias: "labs",
     },
     pathName: "/labs/web3-crud",
@@ -112,7 +105,6 @@ const navs: Nav[] = [
     alias: "toolkit",
     data: {
       hierarchy: 1,
-      label: "Toolkit",
     },
     pathName: "/toolkit",
     type: "web",
@@ -121,7 +113,6 @@ const navs: Nav[] = [
     alias: "toolkit-asynchronous",
     data: {
       hierarchy: 2,
-      label: "Asynchronous",
       parentAlias: "toolkit",
     },
     pathName: "/toolkit/asynchronous",
@@ -131,7 +122,6 @@ const navs: Nav[] = [
     alias: "toolkit-redis-cache",
     data: {
       hierarchy: 2,
-      label: "Redis cache",
       parentAlias: "toolkit",
     },
     pathName: "/toolkit/redis-cache",
@@ -154,13 +144,6 @@ export function findNavs(pathName: string): undefined | WebNav[] {
   }
 
   return _navs.reverse();
-}
-
-export function getLabel(alias: WebAlias): string {
-  const _nav = navs.find((n) => n.alias === alias);
-  if (_nav === undefined) throw new Error("alias not found");
-  if (_nav.type !== "web") throw new Error("alias not web");
-  return _nav.data.label;
 }
 
 export function getPath(alias: Alias): string {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 import { Link, usePathname } from "@/i18n/navigation";
@@ -15,6 +16,7 @@ import {
 import { Separator, SidebarTrigger } from "@o3osatoshi/ui/client";
 
 export default function BreadcrumbHeader() {
+  const t = useTranslations("Nav");
   const pathname = usePathname();
   const navs = findNavs(pathname);
 
@@ -32,7 +34,7 @@ export default function BreadcrumbHeader() {
               if (index === navs.length - 1) {
                 return (
                   <BreadcrumbItem key={nav.alias}>
-                    <BreadcrumbPage>{nav.data.label}</BreadcrumbPage>
+                    <BreadcrumbPage>{t(nav.alias)}</BreadcrumbPage>
                   </BreadcrumbItem>
                 );
               }
@@ -41,7 +43,7 @@ export default function BreadcrumbHeader() {
                 <React.Fragment key={nav.alias}>
                   <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink asChild>
-                      <Link href={nav.pathName}>{nav.data.label}</Link>
+                      <Link href={nav.pathName}>{t(nav.alias)}</Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
