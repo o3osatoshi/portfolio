@@ -9,53 +9,90 @@
   },
   "Home": {
     "header": {
-      "description": "This is my portfolio site where I share technical learning and experiments. A place to output daily technical insights and contribute to the tech community through new technology validation, experimental feature implementation, and knowledge sharing.",
-      "title": "Welcome to o3osatoshi portfolio"
+      "description": "Full-stack engineer focused on product web and Web3. This site collects my profile, experiments, and shared utilities, with concise notes on what I build and learn.",
+      "title": "Satoshi Ogura"
     },
     "metadata": {
-      "description": "Portfolio site for technical learning and knowledge sharing. Featuring portfolio content and experimental labs.",
-      "title": "Satoshi Ogura"
+      "description": "Portfolio of Satoshi Ogura—product-focused full-stack engineer across Web3 and Web2. Includes profile, labs, and shared utilities.",
+      "title": "o3osatoshi — Portfolio"
     },
     "sections": {
       "siteStructure": {
         "cards": {
           "labs": {
-            "cta": "Explore Labs",
-            "description": "Technical validation and experimental features",
+            "cta": "Open Labs",
+            "description": "Experiments that validate ideas, infra, and UX.",
             "items": {
-              "crud": "Server-side CRUD operations",
-              "latest": "Latest technology validation and implementation",
-              "web3": "Web3 and blockchain integration"
+              "experiments": "In-progress prototypes and spikes.",
+              "serverCrud": "Server-side CRUD with validation and DB writes.",
+              "web3Crud": "Web3 CRUD patterns and wallet flows."
             },
             "title": "Labs"
           },
           "portfolio": {
-            "cta": "View Portfolio",
-            "description": "Information about the site author and creator",
+            "cta": "Open Portfolio",
+            "description": "Profile, writing, and curated links to my work and presence.",
             "items": {
-              "blog": "Technical blog articles",
-              "intro": "Personal introduction and skill set",
-              "projects": "Project history and experience"
+              "about": "About & background, with skills and experience.",
+              "blog": "Writing and notes on experiments and UI.",
+              "links": "External links to my sites and profiles."
             },
             "title": "Portfolio"
+          },
+          "toolkit": {
+            "cta": "Open Toolkit",
+            "description": "Reusable helpers and infra demos distilled from production work.",
+            "items": {
+              "asynchronous": "Cancellable sleep helper for safe timers.",
+              "patterns": "Patterns and utilities used across apps.",
+              "redisCache": "Redis cache demo with timing comparison."
+            },
+            "title": "Toolkit"
           }
         },
-        "title": "Site Structure"
+        "title": "Explore"
       },
       "sourceCode": {
         "cta": "View on GitHub",
-        "description": "The source code for this portfolio site is publicly available on GitHub.",
-        "title": "Source Code"
+        "description": "This site is open source and built as a real project. Feel free to explore the code, structure, and tooling choices.",
+        "title": "Open source"
+      }
+    }
+  },
+  "Labs": {
+    "header": {
+      "description": "Small experiments that validate ideas, infrastructure, and UX before they become products.",
+      "title": "Labs"
+    },
+    "metadata": {
+      "description": "Experiments and prototypes that validate ideas, infra, and UX with small, focused demos.",
+      "title": "Labs — Satoshi Ogura"
+    },
+    "sections": {
+      "experiments": {
+        "description": "Short demos and prototypes that capture a single hypothesis.",
+        "items": {
+          "serverCrud": {
+            "description": "Server actions, validation, and DB writes in a single flow.",
+            "title": "Server CRUD"
+          },
+          "web3Crud": {
+            "description": "On-chain CRUD patterns and wallet flows (WIP).",
+            "title": "Web3 CRUD"
+          }
+        },
+        "title": "Current labs"
       }
     }
   },
   "LabsServerCrud": {
     "header": {
+      "description": "A focused CRUD flow using server actions, schema validation, and DB writes. Useful for checking ergonomics and error handling.",
       "title": "Server Side CRUD"
     },
     "metadata": {
-      "description": "Server-side CRUD demo backed by the portfolio database.",
-      "title": "Labs · Server Side CRUD"
+      "description": "Server-side CRUD demo with validation and database flows.",
+      "title": "Labs · Server CRUD"
     },
     "sections": {
       "transactions": {
@@ -83,10 +120,11 @@
   },
   "LabsWeb3Crud": {
     "header": {
-      "title": "Web3 CRUD Lab"
+      "description": "On-chain CRUD experiment exploring wallet flows and contract updates. Still in progress.",
+      "title": "Web3 CRUD"
     },
     "metadata": {
-      "description": "Experimental Web3 CRUD demo.",
+      "description": "Experimental Web3 CRUD flow (WIP).",
       "title": "Labs · Web3 CRUD"
     }
   },
@@ -101,13 +139,71 @@
     "toolkit-asynchronous": "Asynchronous",
     "toolkit-redis-cache": "Redis cache"
   },
+  "Portfolio": {
+    "header": {
+      "description": "A quick overview of my background, where I write, and where I share updates.",
+      "title": "Portfolio"
+    },
+    "metadata": {
+      "description": "Guide to my profile, writing, and external links across sites and social profiles.",
+      "title": "Portfolio — Satoshi Ogura"
+    },
+    "sections": {
+      "pages": {
+        "description": "Start with About for background and skills, then move to the blog for longer notes.",
+        "items": {
+          "about": {
+            "description": "Background, skills, and recent work highlights.",
+            "title": "About"
+          },
+          "blog": {
+            "description": "Long-form notes on experiments, UI, and product learnings.",
+            "title": "Blog"
+          }
+        },
+        "title": "Pages"
+      },
+      "sites": {
+        "description": "Independent sites where I publish deeper notes and UI work.",
+        "items": {
+          "blog": {
+            "description": "Long-form writing, case notes, and experiments.",
+            "label": "Blog"
+          },
+          "ui": {
+            "description": "Component docs, UI experiments, and design system checks.",
+            "label": "UI Library"
+          }
+        },
+        "title": "Sites"
+      },
+      "socials": {
+        "description": "Primary social and profile destinations.",
+        "items": {
+          "github": {
+            "label": "GitHub"
+          },
+          "linkedin": {
+            "label": "LinkedIn"
+          },
+          "x": {
+            "label": "X (Twitter)"
+          },
+          "youtrust": {
+            "label": "YOUTRUST"
+          }
+        },
+        "title": "Social"
+      }
+    }
+  },
   "PortfolioAbout": {
     "header": {
-      "description": "Full-stack engineer. I work across Web3 (DeFi, Solidity, wagmi/viem) and Web2 (CRM, Firebase, Express). I care about type safety, tests, CI/CD, and clean UX. Recently supported an EVM-based DeFi protocol frontend from zero to $40M+ TVL.",
+      "description": "Product-focused full-stack engineer across Web3 and Web2. I care about type safety, DX, and clean UX, and I like shipping small, reliable systems.",
       "title": "About"
     },
     "metadata": {
-      "description": "Full-stack engineer specializing in Next.js, TypeScript, and Web3/DeFi. Focused on type safety, testing, and CI/CD.",
+      "description": "Full-stack engineer focused on product web and Web3.",
       "title": "About — Satoshi Ogura"
     },
     "sections": {
@@ -121,45 +217,28 @@
       "experience": {
         "items": {
           "napier": {
-            "description": "Built V2 web frontend for an EVM DeFi protocol, largely solo. Tech: TypeScript, Next.js, Tailwind, wagmi, viem, GraphQL, Zod, Neverthrow, Vercel, Sentry.",
+            "description": "Built V2 DeFi frontend, shipped design iterations, and maintained the delivery pipeline.",
             "title": "Napier Labs — Frontend Engineer (2024-08 → 2025-04)"
           },
           "salon": {
-            "description": "Built a CRM 0→1 across frontend/backend. Tech: TypeScript, Next.js, Tailwind, Express, Firebase.",
+            "description": "Built a CRM 0→1 across frontend/backend, including auth and admin tools.",
             "title": "Salon Brain Inc. — Full-stack Engineer (2023-03 → 2024-07)"
           },
           "softbankPm": {
-            "description": "Gateway design bridging consortium chain and legacy payments.",
+            "description": "Designed a payment gateway bridging consortium chain and legacy payments.",
             "title": "SoftBank Corp. — Technical PM (2017-06 → 2022-03)"
           },
           "softbankResearch": {
-            "description": "Researched corporate Web3 strategy (Uniswap, AA, contract wallets), delivered POCs and internal reports.",
+            "description": "Researched Web3 strategy, shipped internal POCs, and delivered reports.",
             "title": "SoftBank Corp. — Tech Researcher (2021-04 → 2023-10)"
           }
         },
         "title": "Experience (Highlights)"
       },
-      "links": {
-        "items": {
-          "blog": {
-            "label": "Blog:"
-          },
-          "github": {
-            "label": "GitHub:"
-          },
-          "linkedin": {
-            "label": "LinkedIn:"
-          },
-          "x": {
-            "label": "X (Twitter):"
-          }
-        },
-        "title": "Links"
-      },
       "skills": {
         "items": {
           "backend": {
-            "details": "Node.js, Express, Prisma, PostgreSQL, Firebase, AWS, Docker, Vercel",
+            "details": "Node.js, Prisma, PostgreSQL, Firebase, AWS",
             "label": "Backend/Infra:"
           },
           "frontend": {
@@ -167,7 +246,7 @@
             "label": "Frontend:"
           },
           "quality": {
-            "details": "Zod, Neverthrow, Jest/Playwright, Sentry, Turborepo, GitHub Actions, Figma",
+            "details": "Zod, Neverthrow, Vitest/Playwright, Sentry, GitHub Actions",
             "label": "Quality/Tooling:"
           },
           "web3": {
@@ -175,20 +254,20 @@
             "label": "Web3:"
           }
         },
-        "title": "Skills"
+        "title": "Focus"
       }
     }
   },
   "PortfolioBlog": {
     "header": {
       "actions": {
-        "visit": "Visit Blog"
+        "visit": "Visit blog"
       },
-      "description": "I publish detailed explanations for Labs demos and ongoing research notes on my blog.",
+      "description": "Long-form notes on Labs, UI, and experiments—focused on what worked, what didn’t, and why.",
       "title": "Blog"
     },
     "metadata": {
-      "description": "Latest technical notes and write-ups. Detailed explanations for Labs demos are published on the blog.",
+      "description": "Long-form notes on Labs, UI, and experiments, with what worked and what didn’t.",
       "title": "Blog — Satoshi Ogura"
     }
   },
@@ -207,11 +286,11 @@
   },
   "ToolkitAsynchronous": {
     "header": {
-      "description": "Explore helpers for cancellable timers and infrastructure-friendly error handling. The example below shows how <sleep>sleep</sleep> produces an Infra-layer error when aborted.",
+      "description": "Explore cancellable timers and infra-friendly errors with a small demo you can start and cancel.",
       "title": "Asynchronous utilities"
     },
     "metadata": {
-      "description": "Demonstration of the cancellable sleep helper from @o3osatoshi/toolkit.",
+      "description": "Cancellable timers and infra-friendly errors for safe async flows.",
       "title": "Toolkit · Asynchronous utilities"
     },
     "sections": {
@@ -221,7 +300,7 @@
             "cancel": "Cancel",
             "start": "Start {seconds}s sleep"
           },
-          "description": "Simulate a cancellable pause that rejects with an infrastructure error when aborted.",
+          "description": "Simulate a cancellable pause, watch progress, and inspect status transitions.",
           "labels": {
             "duration": "Duration",
             "elapsed": "Elapsed",
@@ -244,37 +323,41 @@
           },
           "title": "Sleep helper demo"
         },
-        "description": "Start the demo to run a three-second delay. Abort the operation to see the helper reject with an <infraError>InfraCanceledError</infraError> that preserves the abort reason.",
+        "description": "Run a short sleep, cancel it, and observe InfraCanceledError with the reason preserved.",
         "title": "Cancellable sleep"
       }
     }
   },
   "ToolkitIndex": {
     "header": {
-      "description": "Shared utilities from <toolkit>@o3osatoshi/toolkit</toolkit> can be explored here. Browse the sections below for interactive demos and usage patterns.",
-      "title": "Toolkit examples"
+      "description": "Reusable helpers and infrastructure patterns used across the stack, kept small and easy to test.",
+      "title": "Toolkit"
     },
     "metadata": {
-      "description": "Index of shared toolkit examples for the o3osatoshi portfolio project.",
-      "title": "Toolkit"
+      "description": "Reusable helpers and infrastructure demos distilled from production use.",
+      "title": "Toolkit — Satoshi Ogura"
     },
     "sections": {
       "demos": {
         "items": {
-          "asynchronous": "Asynchronous utilities: cancellable sleep helper",
-          "redisCache": "Redis cache: speeding up a slow API with Upstash"
+          "asynchronous": "Cancellable sleep helper with progress and cancel flow.",
+          "redisCache": "Redis cache demo with Upstash and timing comparison."
         },
-        "title": "Available demos"
+        "title": "Demos"
+      },
+      "purpose": {
+        "description": "Lightweight demos for shared utilities and infra patterns, focusing on behavior and error handling.",
+        "title": "Intent"
       }
     }
   },
   "ToolkitRedisCache": {
     "header": {
-      "description": "This demo calls a deliberately slow API endpoint exposed by the interface service at <endpoint>/edge/public/heavy</endpoint> and uses the Upstash cache adapter from <integrations>@repo/integrations</integrations> to cache the response. Requests within the TTL are served from cache; once the TTL expires, the next request recomputes the value by hitting the slow API again.",
+      "description": "Cache a slow API response via Upstash and compare timing differences across requests.",
       "title": "Redis cache"
     },
     "metadata": {
-      "description": "Demonstration of using the Upstash cache adapter from @repo/integrations to cache a slow API response.",
+      "description": "Cache a slow API response with Upstash and compare timing differences.",
       "title": "Toolkit · Redis cache"
     },
     "sections": {
@@ -284,7 +367,7 @@
             "fetch": "Fetch via cache",
             "reset": "Reset"
           },
-          "description": "Call a deliberately slow API endpoint (<endpoint>/edge/public/heavy</endpoint>) via the interface service and cache the result in Redis. Subsequent requests within the TTL should be served from cache and return much faster.",
+          "description": "Fetch a slow endpoint through cache and compare timings across cache hits and misses.",
           "labels": {
             "cachedAt": "Cached at",
             "clientDuration": "Client duration",
@@ -307,7 +390,7 @@
           "title": "Redis cache demo",
           "unknownError": "Unknown error"
         },
-        "description": "Press the button below multiple times. The first request should take roughly three seconds as it hits the slow API. Subsequent requests within the cache TTL will be significantly faster and marked as \"Redis cache\"; after the TTL expires, the next request will become slow again and refresh the cached value.",
+        "description": "First request is slow; subsequent requests within TTL are fast and labeled as cached.",
         "title": "Cached slow endpoint"
       }
     }

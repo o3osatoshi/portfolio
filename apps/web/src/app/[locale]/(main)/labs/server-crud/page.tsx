@@ -43,7 +43,10 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader title={t("header.title")} />
+      <PageHeader
+        description={t("header.description")}
+        title={t("header.title")}
+      />
       <div className="flex flex-col gap-6">
         <CreateForm />
         {transactions.length === 0 ? (

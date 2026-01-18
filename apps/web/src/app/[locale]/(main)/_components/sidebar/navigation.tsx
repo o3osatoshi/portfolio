@@ -54,7 +54,7 @@ const navigateOptions: NavigateOption[] = [
       },
     ],
     titleKey: "portfolio",
-    url: "#",
+    url: getPath("portfolio"),
   },
   {
     icon: FlaskConical,
@@ -71,7 +71,7 @@ const navigateOptions: NavigateOption[] = [
       },
     ],
     titleKey: "labs",
-    url: "#",
+    url: getPath("labs"),
   },
   {
     icon: PocketKnife,
@@ -87,7 +87,7 @@ const navigateOptions: NavigateOption[] = [
       },
     ],
     titleKey: "toolkit",
-    url: "#",
+    url: getPath("toolkit"),
   },
 ];
 

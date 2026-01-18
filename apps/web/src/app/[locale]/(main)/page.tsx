@@ -53,19 +53,19 @@ export default async function Page() {
             <CardContent>
               <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
                 <li>
-                  {t("sections.siteStructure.cards.portfolio.items.intro")}
+                  {t("sections.siteStructure.cards.portfolio.items.about")}
                 </li>
                 <li>
                   {t("sections.siteStructure.cards.portfolio.items.blog")}
                 </li>
                 <li>
-                  {t("sections.siteStructure.cards.portfolio.items.projects")}
+                  {t("sections.siteStructure.cards.portfolio.items.links")}
                 </li>
               </ul>
             </CardContent>
             <CardFooter>
               <Button asChild variant="outline">
-                <Link href={getPath("portfolio-about")}>
+                <Link href={getPath("portfolio")}>
                   {t("sections.siteStructure.cards.portfolio.cta")}
                 </Link>
               </Button>
@@ -83,15 +83,50 @@ export default async function Page() {
             </CardHeader>
             <CardContent>
               <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
-                <li>{t("sections.siteStructure.cards.labs.items.crud")}</li>
-                <li>{t("sections.siteStructure.cards.labs.items.web3")}</li>
-                <li>{t("sections.siteStructure.cards.labs.items.latest")}</li>
+                <li>
+                  {t("sections.siteStructure.cards.labs.items.serverCrud")}
+                </li>
+                <li>{t("sections.siteStructure.cards.labs.items.web3Crud")}</li>
+                <li>
+                  {t("sections.siteStructure.cards.labs.items.experiments")}
+                </li>
               </ul>
             </CardContent>
             <CardFooter>
               <Button asChild variant="outline">
-                <Link href={getPath("labs-server-crud")}>
+                <Link href={getPath("labs")}>
                   {t("sections.siteStructure.cards.labs.cta")}
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {t("sections.siteStructure.cards.toolkit.title")}
+              </CardTitle>
+              <CardDescription>
+                {t("sections.siteStructure.cards.toolkit.description")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
+                <li>
+                  {t("sections.siteStructure.cards.toolkit.items.asynchronous")}
+                </li>
+                <li>
+                  {t("sections.siteStructure.cards.toolkit.items.redisCache")}
+                </li>
+                <li>
+                  {t("sections.siteStructure.cards.toolkit.items.patterns")}
+                </li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button asChild variant="outline">
+                <Link href={getPath("toolkit")}>
+                  {t("sections.siteStructure.cards.toolkit.cta")}
                 </Link>
               </Button>
             </CardFooter>

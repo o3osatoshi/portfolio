@@ -27,7 +27,7 @@ export default async function Page() {
         actions={
           <Button asChild variant="outline">
             <Link
-              href="https://o3osatoshi.github.io"
+              href="https://blog.o3osatoshi.engr.work"
               rel="noreferrer"
               target="_blank"
             >

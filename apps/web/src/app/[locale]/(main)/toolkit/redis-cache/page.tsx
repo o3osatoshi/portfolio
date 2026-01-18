@@ -24,10 +24,7 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        description={t.rich("header.description", {
-          endpoint: (chunks) => <code>{chunks}</code>,
-          integrations: (chunks) => <code>{chunks}</code>,
-        })}
+        description={t("header.description")}
         title={t("header.title")}
       />
 

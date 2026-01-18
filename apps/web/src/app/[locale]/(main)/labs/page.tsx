@@ -13,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ namespace: "ToolkitIndex", locale });
+  const t = await getTranslations({ namespace: "Labs", locale });
 
   return {
     description: t("metadata.description"),
@@ -22,7 +22,7 @@ export async function generateMetadata({
 }
 
 export default async function Page() {
-  const t = await getTranslations("ToolkitIndex");
+  const t = await getTranslations("Labs");
 
   return (
     <>
@@ -31,27 +31,30 @@ export default async function Page() {
         title={t("header.title")}
       />
 
-      <PageSection title={t("sections.purpose.title")}>
-        <p className="text-muted-foreground">
-          {t("sections.purpose.description")}
-        </p>
-      </PageSection>
-
-      <PageSection title={t("sections.demos.title")}>
-        <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-          <li>
+      <PageSection
+        description={t("sections.experiments.description")}
+        title={t("sections.experiments.title")}
+      >
+        <ul className="space-y-3">
+          <li className="space-y-1">
             <Button asChild className="h-auto p-0" variant="link">
-              <Link href={getPath("toolkit-asynchronous")}>
-                {t("sections.demos.items.asynchronous")}
+              <Link href={getPath("labs-server-crud")}>
+                {t("sections.experiments.items.serverCrud.title")}
               </Link>
             </Button>
+            <p className="text-muted-foreground text-sm">
+              {t("sections.experiments.items.serverCrud.description")}
+            </p>
           </li>
-          <li>
+          <li className="space-y-1">
             <Button asChild className="h-auto p-0" variant="link">
-              <Link href={getPath("toolkit-redis-cache")}>
-                {t("sections.demos.items.redisCache")}
+              <Link href={getPath("labs-web3-crud")}>
+                {t("sections.experiments.items.web3Crud.title")}
               </Link>
             </Button>
+            <p className="text-muted-foreground text-sm">
+              {t("sections.experiments.items.web3Crud.description")}
+            </p>
           </li>
         </ul>
       </PageSection>

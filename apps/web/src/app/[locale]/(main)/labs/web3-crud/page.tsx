@@ -26,7 +26,12 @@ export async function generateMetadata({
 export default async function Page() {
   const t = await getTranslations("LabsWeb3Crud");
 
-  return <PageHeader title={t("header.title")} />;
+  return (
+    <PageHeader
+      description={t("header.description")}
+      title={t("header.title")}
+    />
+  );
   // return (
   //   <Web3Provider>
   //     <div className="flex flex-col gap-6">
