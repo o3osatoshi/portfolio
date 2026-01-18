@@ -3,9 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
-import { Link } from "@/i18n/navigation";
-import { getPath } from "@/utils/nav-handler";
-import { Button } from "@o3osatoshi/ui";
+import TextBlock from "@/app/[locale]/(main)/_components/text-block";
 
 export async function generateMetadata({
   params,
@@ -31,32 +29,12 @@ export default async function Page() {
         title={t("header.title")}
       />
 
-      <PageSection
-        description={t("sections.experiments.description")}
-        title={t("sections.experiments.title")}
-      >
-        <ul className="space-y-3">
-          <li className="space-y-1">
-            <Button asChild className="h-auto p-0" variant="link">
-              <Link href={getPath("labs-server-crud")}>
-                {t("sections.experiments.items.serverCrud.title")}
-              </Link>
-            </Button>
-            <p className="text-muted-foreground text-sm">
-              {t("sections.experiments.items.serverCrud.description")}
-            </p>
-          </li>
-          <li className="space-y-1">
-            <Button asChild className="h-auto p-0" variant="link">
-              <Link href={getPath("labs-web3-crud")}>
-                {t("sections.experiments.items.web3Crud.title")}
-              </Link>
-            </Button>
-            <p className="text-muted-foreground text-sm">
-              {t("sections.experiments.items.web3Crud.description")}
-            </p>
-          </li>
-        </ul>
+      <PageSection>
+        <TextBlock>
+          <p>{t("sections.summary.paragraphs.first")}</p>
+          <p>{t("sections.summary.paragraphs.second")}</p>
+          <p>{t("sections.summary.paragraphs.note")}</p>
+        </TextBlock>
       </PageSection>
     </>
   );

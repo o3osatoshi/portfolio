@@ -9,79 +9,55 @@
   },
   "Home": {
     "header": {
-      "description": "プロダクト志向のフルスタックエンジニア。プロフィール、実験、共通ユーティリティと、学びのメモをまとめています。",
-      "title": "Satoshi Ogura"
+      "description": "このサイトでは、実務での開発、技術検証、OSS 公開といった活動を <strong>ポートフォリオ / ラボ / ツールキット</strong> の3つの形で整理しています。",
+      "title": "ソフトウェアエンジニアの活動まとめ"
     },
     "metadata": {
-      "description": "Satoshi Ogura のポートフォリオ。Web3 と Web2 を横断するプロダクト志向のフルスタックエンジニアで、プロフィール・ラボ・共通ユーティリティをまとめています。",
-      "title": "o3osatoshi — ポートフォリオ"
+      "description": "実務、技術検証、OSS 公開をまとめたポートフォリオサイト。",
+      "title": "o3osatoshi — ソフトウェアエンジニアの取り組み"
     },
     "sections": {
-      "siteStructure": {
-        "cards": {
-          "labs": {
-            "cta": "ラボへ",
-            "description": "アイデア・インフラ・UXを検証する実験。",
-            "items": {
-              "experiments": "進行中の検証とプロトタイプ。",
-              "serverCrud": "Server Actions と DB 更新の CRUD 検証。",
-              "web3Crud": "ウォレット連携を含む Web3 CRUD 検証。"
-            },
-            "title": "ラボ"
-          },
-          "portfolio": {
-            "cta": "ポートフォリオへ",
-            "description": "プロフィール、執筆、外部リンクを整理しています。",
-            "items": {
-              "about": "経歴・スキル・経験の要約。",
-              "blog": "実験や UI に関する執筆・メモ。",
-              "links": "運営サイトやプロフィールへのリンク。"
-            },
-            "title": "ポートフォリオ"
-          },
-          "toolkit": {
-            "cta": "ツールキットへ",
-            "description": "実運用で使うヘルパーとインフラデモ。",
-            "items": {
-              "asynchronous": "キャンセル可能な sleep と中断の扱い。",
-              "patterns": "共通パターンと小さな検証。",
-              "redisCache": "Redis キャッシュと速度比較。"
-            },
-            "title": "ツールキット"
-          }
-        },
-        "title": "案内"
+      "labs": {
+        "cta": "→ ラボを見る",
+        "description": "新しい技術や設計手法を試し、仮説・実装・検証を行うための実験的な取り組みをまとめています。",
+        "detail": "学習の過程や試行錯誤も含めて記録しています。",
+        "title": "Labs"
+      },
+      "portfolio": {
+        "cta": "→ ポートフォリオを見る",
+        "description": "これまでの経歴や経験、対応してきた領域やスキルをまとめています。",
+        "detail": "ソフトウェアエンジニアとしての職務経歴や能力を整理したページです。",
+        "title": "Portfolio"
       },
       "sourceCode": {
-        "cta": "GitHub で見る",
-        "description": "このサイトはオープンソースで運用しています。構成や実装も参考にできます。",
-        "title": "オープンソース"
+        "cta": "→ GitHub リポジトリを見る",
+        "description": "このサイトで紹介している内容は、すべて GitHub 上でコードとして公開しています。",
+        "title": "ソースコード"
+      },
+      "toolkit": {
+        "cta": "→ ツールキットを見る",
+        "description": "汎用的に利用できる機能をまとめた OSS ライブラリを公開しています。",
+        "detail": "一般的な用途で使えるツールについて、実際の挙動を確認できるデモページを用意しています。",
+        "title": "Toolkit"
       }
     }
   },
   "Labs": {
     "header": {
-      "description": "アイデア、インフラ、UXを検証する小さな実験。",
-      "title": "ラボ"
+      "description": "新しい技術や設計手法を試すための実験と学習の記録です。",
+      "title": "Labs"
     },
     "metadata": {
-      "description": "アイデアやインフラ、UXを検証する小さな実験。",
+      "description": "新しい技術や設計手法を試すための実験と学習の記録。",
       "title": "ラボ — Satoshi Ogura"
     },
     "sections": {
-      "experiments": {
-        "description": "短いデモとプロトタイプで仮説を検証します。",
-        "items": {
-          "serverCrud": {
-            "description": "Server Actions、バリデーション、DB 更新を通した CRUD フロー。",
-            "title": "サーバーCRUD"
-          },
-          "web3Crud": {
-            "description": "オンチェーン CRUD とウォレットフローの検証（WIP）。",
-            "title": "Web3 CRUD"
-          }
-        },
-        "title": "現在のラボ"
+      "summary": {
+        "paragraphs": {
+          "first": "業務ではすぐに採用できない技術や構成について、仮説を立てて実装し、検証した結果をまとめています。",
+          "note": "※ ここに掲載している内容は、学習・検証を目的としたものであり、完成品ではありません。",
+          "second": "うまくいったことだけでなく、試行錯誤の過程や学びも含めて記録しています。"
+        }
       }
     }
   },
@@ -141,59 +117,19 @@
   },
   "Portfolio": {
     "header": {
-      "description": "プロフィール、執筆、発信先をコンパクトにまとめています。",
-      "title": "ポートフォリオ"
+      "description": "経歴、経験、スキルを整理したソフトウェアエンジニアとしてのプロフィールです。",
+      "title": "Portfolio"
     },
     "metadata": {
-      "description": "プロフィール、執筆、外部リンクをまとめた案内ページ。",
-      "title": "ポートフォリオ — Satoshi Ogura"
+      "description": "経歴・経験・スキルを整理したソフトウェアエンジニアのプロフィール。",
+      "title": "Portfolio — Satoshi Ogura"
     },
     "sections": {
-      "pages": {
-        "description": "概要で背景を掴み、ブログで長文メモを読むのがおすすめです。",
-        "items": {
-          "about": {
-            "description": "経歴・スキル・最近の仕事の要約。",
-            "title": "概要"
-          },
-          "blog": {
-            "description": "実験と UI の長文メモ、検証の記録。",
-            "title": "ブログ"
-          }
-        },
-        "title": "ページ"
-      },
-      "sites": {
-        "description": "運営している外部サイトと公開先。",
-        "items": {
-          "blog": {
-            "description": "長文の技術メモや検証ログ。",
-            "label": "ブログ"
-          },
-          "ui": {
-            "description": "UI コンポーネントと実験のカタログ。",
-            "label": "UI ライブラリ"
-          }
-        },
-        "title": "サイト"
-      },
-      "socials": {
-        "description": "主な発信先とプロフィール。",
-        "items": {
-          "github": {
-            "label": "GitHub"
-          },
-          "linkedin": {
-            "label": "LinkedIn"
-          },
-          "x": {
-            "label": "X (Twitter)"
-          },
-          "youtrust": {
-            "label": "YOUTRUST"
-          }
-        },
-        "title": "SNS"
+      "summary": {
+        "paragraphs": {
+          "first": "これまでの職務経歴や担当してきた領域、対応可能な技術やスキルをまとめています。",
+          "second": "事実ベースの情報を中心に、経歴や能力を一覧できる構成としています。"
+        }
       }
     }
   },
@@ -330,24 +266,45 @@
   },
   "ToolkitIndex": {
     "header": {
-      "description": "共通ユーティリティとインフラパターンを、小さなデモで共有します。",
-      "title": "ツールキット"
+      "description": "汎用的に利用できる機能をまとめた OSS ライブラリを公開しています。",
+      "title": "Toolkit"
     },
     "metadata": {
-      "description": "共通ユーティリティとインフラデモを実運用から抽出。",
+      "description": "汎用的な OSS ライブラリとデモページをまとめています。",
       "title": "ツールキット — Satoshi Ogura"
     },
     "sections": {
-      "demos": {
+      "oss": {
         "items": {
-          "asynchronous": "キャンセル可能な sleep の挙動確認",
-          "redisCache": "Upstash でのキャッシュと速度比較"
+          "config": {
+            "description": "アプリケーション設定を管理するための共通コンフィグ",
+            "name": "@o3osatoshi/config",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/config"
+          },
+          "logging": {
+            "description": "アプリケーション向けのロギングユーティリティ",
+            "name": "@o3osatoshi/logging",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/logging"
+          },
+          "toolkit": {
+            "description": "汎用的なユーティリティをまとめたツールキット",
+            "name": "@o3osatoshi/toolkit",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/toolkit"
+          },
+          "ui": {
+            "description": "再利用可能な UI コンポーネントライブラリ",
+            "name": "@o3osatoshi/ui",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/ui"
+          }
         },
-        "title": "デモ"
+        "note": "フィードバックや Issue は歓迎します。",
+        "title": "公開している OSS"
       },
-      "purpose": {
-        "description": "実際に使っているヘルパーとパターンを、短いデモで確認できます。",
-        "title": "目的"
+      "summary": {
+        "paragraphs": {
+          "first": "特定の業務に依存しない形で設計した、一般的な用途で利用可能なツール群をまとめています。",
+          "second": "各ライブラリについて、実際の動作を確認できるデモページを用意しています。"
+        }
       }
     }
   },

@@ -3,8 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
-import { Link } from "@/i18n/navigation";
-import { getPath } from "@/utils/nav-handler";
+import TextBlock from "@/app/[locale]/(main)/_components/text-block";
 import { Button } from "@o3osatoshi/ui";
 
 export async function generateMetadata({
@@ -24,6 +23,29 @@ export async function generateMetadata({
 export default async function Page() {
   const t = await getTranslations("ToolkitIndex");
 
+  const ossItems = [
+    {
+      name: t("sections.oss.items.logging.name"),
+      description: t("sections.oss.items.logging.description"),
+      url: t("sections.oss.items.logging.url"),
+    },
+    {
+      name: t("sections.oss.items.ui.name"),
+      description: t("sections.oss.items.ui.description"),
+      url: t("sections.oss.items.ui.url"),
+    },
+    {
+      name: t("sections.oss.items.toolkit.name"),
+      description: t("sections.oss.items.toolkit.description"),
+      url: t("sections.oss.items.toolkit.url"),
+    },
+    {
+      name: t("sections.oss.items.config.name"),
+      description: t("sections.oss.items.config.description"),
+      url: t("sections.oss.items.config.url"),
+    },
+  ];
+
   return (
     <>
       <PageHeader
@@ -31,29 +53,29 @@ export default async function Page() {
         title={t("header.title")}
       />
 
-      <PageSection title={t("sections.purpose.title")}>
-        <p className="text-muted-foreground">
-          {t("sections.purpose.description")}
-        </p>
+      <PageSection>
+        <TextBlock>
+          <p>{t("sections.summary.paragraphs.first")}</p>
+          <p>{t("sections.summary.paragraphs.second")}</p>
+        </TextBlock>
       </PageSection>
 
-      <PageSection title={t("sections.demos.title")}>
-        <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-          <li>
-            <Button asChild className="h-auto p-0" variant="link">
-              <Link href={getPath("toolkit-asynchronous")}>
-                {t("sections.demos.items.asynchronous")}
-              </Link>
-            </Button>
-          </li>
-          <li>
-            <Button asChild className="h-auto p-0" variant="link">
-              <Link href={getPath("toolkit-redis-cache")}>
-                {t("sections.demos.items.redisCache")}
-              </Link>
-            </Button>
-          </li>
-        </ul>
+      <PageSection title={t("sections.oss.title")}>
+        <TextBlock>
+          <ul className="space-y-3">
+            {ossItems.map((item) => (
+              <li key={item.name} className="space-y-1">
+                <Button asChild className="h-auto p-0" variant="link">
+                  <a href={item.url} rel="noreferrer" target="_blank">
+                    {item.name}
+                  </a>
+                </Button>
+                <p>{item.description}</p>
+              </li>
+            ))}
+          </ul>
+          <p>{t("sections.oss.note")}</p>
+        </TextBlock>
       </PageSection>
     </>
   );

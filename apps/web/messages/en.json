@@ -9,79 +9,55 @@
   },
   "Home": {
     "header": {
-      "description": "Full-stack engineer focused on product web and Web3. This site collects my profile, experiments, and shared utilities, with concise notes on what I build and learn.",
-      "title": "Satoshi Ogura"
+      "description": "This site organizes professional development, technical validation, and OSS work into three areas: <strong>Portfolio / Labs / Toolkit</strong>.",
+      "title": "A software engineer’s work, summarized"
     },
     "metadata": {
-      "description": "Portfolio of Satoshi Ogura—product-focused full-stack engineer across Web3 and Web2. Includes profile, labs, and shared utilities.",
-      "title": "o3osatoshi — Portfolio"
+      "description": "Portfolio of Satoshi Ogura covering professional development, technical experiments, and OSS.",
+      "title": "o3osatoshi — Software Engineer Portfolio"
     },
     "sections": {
-      "siteStructure": {
-        "cards": {
-          "labs": {
-            "cta": "Open Labs",
-            "description": "Experiments that validate ideas, infra, and UX.",
-            "items": {
-              "experiments": "In-progress prototypes and spikes.",
-              "serverCrud": "Server-side CRUD with validation and DB writes.",
-              "web3Crud": "Web3 CRUD patterns and wallet flows."
-            },
-            "title": "Labs"
-          },
-          "portfolio": {
-            "cta": "Open Portfolio",
-            "description": "Profile, writing, and curated links to my work and presence.",
-            "items": {
-              "about": "About & background, with skills and experience.",
-              "blog": "Writing and notes on experiments and UI.",
-              "links": "External links to my sites and profiles."
-            },
-            "title": "Portfolio"
-          },
-          "toolkit": {
-            "cta": "Open Toolkit",
-            "description": "Reusable helpers and infra demos distilled from production work.",
-            "items": {
-              "asynchronous": "Cancellable sleep helper for safe timers.",
-              "patterns": "Patterns and utilities used across apps.",
-              "redisCache": "Redis cache demo with timing comparison."
-            },
-            "title": "Toolkit"
-          }
-        },
-        "title": "Explore"
+      "labs": {
+        "cta": "→ View Labs",
+        "description": "Collects experimental efforts to try new technologies and design approaches, then form hypotheses, implement, and validate.",
+        "detail": "Includes learning notes and trial-and-error along the way.",
+        "title": "Labs"
+      },
+      "portfolio": {
+        "cta": "→ View Portfolio",
+        "description": "Summarizes my career and experience, including the domains and skills I have worked on.",
+        "detail": "It organizes my work history and capabilities as a software engineer.",
+        "title": "Portfolio"
       },
       "sourceCode": {
-        "cta": "View on GitHub",
-        "description": "This site is open source and built as a real project. Feel free to explore the code, structure, and tooling choices.",
-        "title": "Open source"
+        "cta": "→ View GitHub repository",
+        "description": "Everything described on this site is published as code on GitHub.",
+        "title": "Source code"
+      },
+      "toolkit": {
+        "cta": "→ View Toolkit",
+        "description": "I publish OSS libraries that bundle reusable, general-purpose functionality.",
+        "detail": "For tools intended for common use, I provide demo pages that show real behavior.",
+        "title": "Toolkit"
       }
     }
   },
   "Labs": {
     "header": {
-      "description": "Small experiments that validate ideas, infrastructure, and UX before they become products.",
+      "description": "A record of experiments and learning to try new technologies and design approaches.",
       "title": "Labs"
     },
     "metadata": {
-      "description": "Experiments and prototypes that validate ideas, infra, and UX with small, focused demos.",
+      "description": "Experiments and learning notes for new technologies and design approaches.",
       "title": "Labs — Satoshi Ogura"
     },
     "sections": {
-      "experiments": {
-        "description": "Short demos and prototypes that capture a single hypothesis.",
-        "items": {
-          "serverCrud": {
-            "description": "Server actions, validation, and DB writes in a single flow.",
-            "title": "Server CRUD"
-          },
-          "web3Crud": {
-            "description": "On-chain CRUD patterns and wallet flows (WIP).",
-            "title": "Web3 CRUD"
-          }
-        },
-        "title": "Current labs"
+      "summary": {
+        "paragraphs": {
+          "first": "For technologies and architectures that cannot be adopted immediately in production, I form hypotheses, implement, and summarize validation results.",
+          "note": "Note: The content here is for learning and validation, not finished products.",
+          "second": "I record not only what worked but also the trial-and-error process and learnings."
+        }
       }
     }
   },
@@ -141,59 +117,19 @@
   },
   "Portfolio": {
     "header": {
-      "description": "A quick overview of my background, where I write, and where I share updates.",
+      "description": "A profile of my career, experience, and skills as a software engineer.",
       "title": "Portfolio"
     },
     "metadata": {
-      "description": "Guide to my profile, writing, and external links across sites and social profiles.",
+      "description": "A factual profile of my career, experience, and skills as a software engineer.",
       "title": "Portfolio — Satoshi Ogura"
     },
     "sections": {
-      "pages": {
-        "description": "Start with About for background and skills, then move to the blog for longer notes.",
-        "items": {
-          "about": {
-            "description": "Background, skills, and recent work highlights.",
-            "title": "About"
-          },
-          "blog": {
-            "description": "Long-form notes on experiments, UI, and product learnings.",
-            "title": "Blog"
-          }
-        },
-        "title": "Pages"
-      },
-      "sites": {
-        "description": "Independent sites where I publish deeper notes and UI work.",
-        "items": {
-          "blog": {
-            "description": "Long-form writing, case notes, and experiments.",
-            "label": "Blog"
-          },
-          "ui": {
-            "description": "Component docs, UI experiments, and design system checks.",
-            "label": "UI Library"
-          }
-        },
-        "title": "Sites"
-      },
-      "socials": {
-        "description": "Primary social and profile destinations.",
-        "items": {
-          "github": {
-            "label": "GitHub"
-          },
-          "linkedin": {
-            "label": "LinkedIn"
-          },
-          "x": {
-            "label": "X (Twitter)"
-          },
-          "youtrust": {
-            "label": "YOUTRUST"
-          }
-        },
-        "title": "Social"
+      "summary": {
+        "paragraphs": {
+          "first": "Summarizes my work history, the domains I have handled, and the technologies and skills I can support.",
+          "second": "Focused on factual information, so you can scan my background and capabilities at a glance."
+        }
       }
     }
   },
@@ -330,24 +266,45 @@
   },
   "ToolkitIndex": {
     "header": {
-      "description": "Reusable helpers and infrastructure patterns used across the stack, kept small and easy to test.",
+      "description": "I publish OSS libraries that bundle reusable, general-purpose functionality.",
       "title": "Toolkit"
     },
     "metadata": {
-      "description": "Reusable helpers and infrastructure demos distilled from production use.",
+      "description": "OSS libraries and demos for reusable utilities.",
       "title": "Toolkit — Satoshi Ogura"
     },
     "sections": {
-      "demos": {
+      "oss": {
         "items": {
-          "asynchronous": "Cancellable sleep helper with progress and cancel flow.",
-          "redisCache": "Redis cache demo with Upstash and timing comparison."
+          "config": {
+            "description": "Shared configuration for application settings.",
+            "name": "@o3osatoshi/config",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/config"
+          },
+          "logging": {
+            "description": "Logging utilities for applications.",
+            "name": "@o3osatoshi/logging",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/logging"
+          },
+          "toolkit": {
+            "description": "Toolkit of general-purpose utilities.",
+            "name": "@o3osatoshi/toolkit",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/toolkit"
+          },
+          "ui": {
+            "description": "Reusable UI component library.",
+            "name": "@o3osatoshi/ui",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/ui"
+          }
         },
-        "title": "Demos"
+        "note": "Feedback and issues are welcome.",
+        "title": "Published OSS"
       },
-      "purpose": {
-        "description": "Lightweight demos for shared utilities and infra patterns, focusing on behavior and error handling.",
-        "title": "Intent"
+      "summary": {
+        "paragraphs": {
+          "first": "These tools are designed to be independent of any specific product and usable in general contexts.",
+          "second": "Each library has a demo page where you can check real behavior."
+        }
       }
     }
   },

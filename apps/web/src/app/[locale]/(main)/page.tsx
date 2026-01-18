@@ -5,15 +5,7 @@ import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@o3osatoshi/ui";
+import { Button } from "@o3osatoshi/ui";
 
 export async function generateMetadata({
   params,
@@ -35,118 +27,65 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        description={t("header.description")}
+        description={t.rich("header.description", {
+          strong: (chunks) => <strong>{chunks}</strong>,
+        })}
         title={t("header.title")}
       />
 
-      <PageSection title={t("sections.siteStructure.title")}>
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {t("sections.siteStructure.cards.portfolio.title")}
-              </CardTitle>
-              <CardDescription>
-                {t("sections.siteStructure.cards.portfolio.description")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
-                <li>
-                  {t("sections.siteStructure.cards.portfolio.items.about")}
-                </li>
-                <li>
-                  {t("sections.siteStructure.cards.portfolio.items.blog")}
-                </li>
-                <li>
-                  {t("sections.siteStructure.cards.portfolio.items.links")}
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button asChild variant="outline">
-                <Link href={getPath("portfolio")}>
-                  {t("sections.siteStructure.cards.portfolio.cta")}
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {t("sections.siteStructure.cards.labs.title")}
-              </CardTitle>
-              <CardDescription>
-                {t("sections.siteStructure.cards.labs.description")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
-                <li>
-                  {t("sections.siteStructure.cards.labs.items.serverCrud")}
-                </li>
-                <li>{t("sections.siteStructure.cards.labs.items.web3Crud")}</li>
-                <li>
-                  {t("sections.siteStructure.cards.labs.items.experiments")}
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button asChild variant="outline">
-                <Link href={getPath("labs")}>
-                  {t("sections.siteStructure.cards.labs.cta")}
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {t("sections.siteStructure.cards.toolkit.title")}
-              </CardTitle>
-              <CardDescription>
-                {t("sections.siteStructure.cards.toolkit.description")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
-                <li>
-                  {t("sections.siteStructure.cards.toolkit.items.asynchronous")}
-                </li>
-                <li>
-                  {t("sections.siteStructure.cards.toolkit.items.redisCache")}
-                </li>
-                <li>
-                  {t("sections.siteStructure.cards.toolkit.items.patterns")}
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button asChild variant="outline">
-                <Link href={getPath("toolkit")}>
-                  {t("sections.siteStructure.cards.toolkit.cta")}
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
+      <PageSection title={t("sections.portfolio.title")}>
+        <div className="space-y-2 text-muted-foreground">
+          <p>{t("sections.portfolio.description")}</p>
+          <p>{t("sections.portfolio.detail")}</p>
+        </div>
+        <div className="pt-2">
+          <Button asChild className="h-auto p-0" variant="link">
+            <Link href={getPath("portfolio")}>
+              {t("sections.portfolio.cta")}
+            </Link>
+          </Button>
         </div>
       </PageSection>
 
-      <PageSection
-        description={t("sections.sourceCode.description")}
-        title={t("sections.sourceCode.title")}
-      >
-        <Button asChild variant="outline">
-          <a
-            href="https://github.com/o3osatoshi/portfolio"
-            rel="noreferrer"
-            target="_blank"
-          >
-            {t("sections.sourceCode.cta")}
-          </a>
-        </Button>
+      <PageSection title={t("sections.labs.title")}>
+        <div className="space-y-2 text-muted-foreground">
+          <p>{t("sections.labs.description")}</p>
+          <p>{t("sections.labs.detail")}</p>
+        </div>
+        <div className="pt-2">
+          <Button asChild className="h-auto p-0" variant="link">
+            <Link href={getPath("labs")}>{t("sections.labs.cta")}</Link>
+          </Button>
+        </div>
+      </PageSection>
+
+      <PageSection title={t("sections.toolkit.title")}>
+        <div className="space-y-2 text-muted-foreground">
+          <p>{t("sections.toolkit.description")}</p>
+          <p>{t("sections.toolkit.detail")}</p>
+        </div>
+        <div className="pt-2">
+          <Button asChild className="h-auto p-0" variant="link">
+            <Link href={getPath("toolkit")}>{t("sections.toolkit.cta")}</Link>
+          </Button>
+        </div>
+      </PageSection>
+
+      <PageSection title={t("sections.sourceCode.title")}>
+        <p className="text-muted-foreground">
+          {t("sections.sourceCode.description")}
+        </p>
+        <div className="pt-2">
+          <Button asChild className="h-auto p-0" variant="link">
+            <a
+              href="https://github.com/o3osatoshi/portfolio"
+              rel="noreferrer"
+              target="_blank"
+            >
+              {t("sections.sourceCode.cta")}
+            </a>
+          </Button>
+        </div>
       </PageSection>
     </>
   );
