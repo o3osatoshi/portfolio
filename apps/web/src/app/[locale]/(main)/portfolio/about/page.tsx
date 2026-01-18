@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
+import TextBlock from "@/app/[locale]/(main)/_components/text-block";
 export async function generateMetadata({
   params,
 }: {
@@ -19,6 +20,12 @@ export async function generateMetadata({
 
 export default async function Page() {
   const t = await getTranslations("PortfolioAbout");
+  const interests = [
+    t("sections.interests.items.frontend"),
+    t("sections.interests.items.web3"),
+    t("sections.interests.items.product"),
+    t("sections.interests.items.tools"),
+  ];
 
   return (
     <>
@@ -27,76 +34,17 @@ export default async function Page() {
         title={t("header.title")}
       />
 
-      <PageSection title={t("sections.skills.title")}>
-        <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
-          <li className="flex flex-wrap gap-1">
-            <span className="font-medium text-foreground">
-              {t("sections.skills.items.frontend.label")}
-            </span>
-            <span>{t("sections.skills.items.frontend.details")}</span>
-          </li>
-          <li className="flex flex-wrap gap-1">
-            <span className="font-medium text-foreground">
-              {t("sections.skills.items.web3.label")}
-            </span>
-            <span>{t("sections.skills.items.web3.details")}</span>
-          </li>
-          <li className="flex flex-wrap gap-1">
-            <span className="font-medium text-foreground">
-              {t("sections.skills.items.backend.label")}
-            </span>
-            <span>{t("sections.skills.items.backend.details")}</span>
-          </li>
-          <li className="flex flex-wrap gap-1">
-            <span className="font-medium text-foreground">
-              {t("sections.skills.items.quality.label")}
-            </span>
-            <span>{t("sections.skills.items.quality.details")}</span>
-          </li>
-        </ul>
+      <PageSection>
+        <TextBlock>
+          <p>{t("sections.summary.paragraphs.first")}</p>
+        </TextBlock>
       </PageSection>
 
-      <PageSection title={t("sections.experience.title")}>
-        <ul className="space-y-4">
-          <li>
-            <span className="font-medium text-foreground">
-              {t("sections.experience.items.napier.title")}
-            </span>
-            <div className="text-muted-foreground">
-              {t("sections.experience.items.napier.description")}
-            </div>
-          </li>
-          <li>
-            <span className="font-medium text-foreground">
-              {t("sections.experience.items.salon.title")}
-            </span>
-            <div className="text-muted-foreground">
-              {t("sections.experience.items.salon.description")}
-            </div>
-          </li>
-          <li>
-            <span className="font-medium text-foreground">
-              {t("sections.experience.items.softbankResearch.title")}
-            </span>
-            <div className="text-muted-foreground">
-              {t("sections.experience.items.softbankResearch.description")}
-            </div>
-          </li>
-          <li>
-            <span className="font-medium text-foreground">
-              {t("sections.experience.items.softbankPm.title")}
-            </span>
-            <div className="text-muted-foreground">
-              {t("sections.experience.items.softbankPm.description")}
-            </div>
-          </li>
-        </ul>
-      </PageSection>
-
-      <PageSection title={t("sections.education.title")}>
+      <PageSection title={t("sections.interests.title")}>
         <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
-          <li>{t("sections.education.items.tokyo")}</li>
-          <li>{t("sections.education.items.rikkyo")}</li>
+          {interests.map((interest) => (
+            <li key={interest}>{interest}</li>
+          ))}
         </ul>
       </PageSection>
     </>

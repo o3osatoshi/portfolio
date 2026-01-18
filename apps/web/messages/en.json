@@ -111,6 +111,10 @@
     "portfolio": "Portfolio",
     "portfolio-about": "About",
     "portfolio-blog": "Blog",
+    "portfolio-education": "Education",
+    "portfolio-experiences": "Experiences",
+    "portfolio-links": "Links",
+    "portfolio-skills": "Skills",
     "toolkit": "Toolkit",
     "toolkit-asynchronous": "Asynchronous",
     "toolkit-redis-cache": "Redis cache"
@@ -135,62 +139,27 @@
   },
   "PortfolioAbout": {
     "header": {
-      "description": "Product-focused full-stack engineer across Web3 and Web2. I care about type safety, DX, and clean UX, and I like shipping small, reliable systems.",
+      "description": "As a software engineer, I’ve built experience across web frontend, full-stack development, and Web3.",
       "title": "About"
     },
     "metadata": {
-      "description": "Full-stack engineer focused on product web and Web3.",
+      "description": "Profile and areas of interest.",
       "title": "About — Satoshi Ogura"
     },
     "sections": {
-      "education": {
+      "interests": {
         "items": {
-          "rikkyo": "Rikkyo University, Faculty of Science (GPA 3.72)",
-          "tokyo": "The University of Tokyo, Graduate School of Frontier Sciences"
+          "frontend": "Web frontend development with TypeScript / React / Next.js",
+          "product": "Validation and iteration in early product phases",
+          "tools": "Designing and organizing reusable libraries and tools",
+          "web3": "Product and UX in Web3 and DeFi"
         },
-        "title": "Education"
+        "title": "Interests"
       },
-      "experience": {
-        "items": {
-          "napier": {
-            "description": "Built V2 DeFi frontend, shipped design iterations, and maintained the delivery pipeline.",
-            "title": "Napier Labs — Frontend Engineer (2024-08 → 2025-04)"
-          },
-          "salon": {
-            "description": "Built a CRM 0→1 across frontend/backend, including auth and admin tools.",
-            "title": "Salon Brain Inc. — Full-stack Engineer (2023-03 → 2024-07)"
-          },
-          "softbankPm": {
-            "description": "Designed a payment gateway bridging consortium chain and legacy payments.",
-            "title": "SoftBank Corp. — Technical PM (2017-06 → 2022-03)"
-          },
-          "softbankResearch": {
-            "description": "Researched Web3 strategy, shipped internal POCs, and delivered reports.",
-            "title": "SoftBank Corp. — Tech Researcher (2021-04 → 2023-10)"
-          }
-        },
-        "title": "Experience (Highlights)"
-      },
-      "skills": {
-        "items": {
-          "backend": {
-            "details": "Node.js, Prisma, PostgreSQL, Firebase, AWS",
-            "label": "Backend/Infra:"
-          },
-          "frontend": {
-            "details": "TypeScript, React, Next.js, Tailwind CSS",
-            "label": "Frontend:"
-          },
-          "quality": {
-            "details": "Zod, Neverthrow, Vitest/Playwright, Sentry, GitHub Actions",
-            "label": "Quality/Tooling:"
-          },
-          "web3": {
-            "details": "Solidity, wagmi, viem, The Graph",
-            "label": "Web3:"
-          }
-        },
-        "title": "Focus"
+      "summary": {
+        "paragraphs": {
+          "first": "From startups to large enterprises, I’ve worked on new product launches, technical exploration, and growth phases."
+        }
       }
     }
   },
@@ -205,6 +174,212 @@
     "metadata": {
       "description": "Long-form notes on Labs, UI, and experiments, with what worked and what didn’t.",
       "title": "Blog — Satoshi Ogura"
+    }
+  },
+  "PortfolioEducation": {
+    "header": {
+      "description": "Education history and research summaries.",
+      "title": "Education"
+    },
+    "metadata": {
+      "description": "Education history and research focus.",
+      "title": "Education — Satoshi Ogura"
+    },
+    "sections": {
+      "items": {
+        "rikkyo": {
+          "details": {
+            "first": "Orbit visualization design for the Mars atmospheric escape explorer",
+            "second": "Kawakatsu Lab (JAXA)",
+            "third": "GPA: 3.72"
+          },
+          "period": "Apr 2010 – Mar 2014",
+          "title": "Rikkyo University, Faculty of Science"
+        },
+        "tokyo": {
+          "details": {
+            "first": "Advanced Energy Engineering",
+            "second": "Kawakatsu Lab (JAXA)",
+            "third": "Research on orbit optimization and satellite operations"
+          },
+          "period": "Apr 2014 – Mar 2016",
+          "title": "The University of Tokyo, Graduate School of Frontier Sciences"
+        }
+      }
+    }
+  },
+  "PortfolioExperiences": {
+    "header": {
+      "description": "Roles and responsibilities organized chronologically.",
+      "title": "Experiences"
+    },
+    "metadata": {
+      "description": "Work history, responsibilities, and tech stacks.",
+      "title": "Experiences — Satoshi Ogura"
+    },
+    "sections": {
+      "items": {
+        "innoventure": {
+          "period": "Jun 2017 – Oct 2019",
+          "product": "A mobile app that auto-organizes screenshots to support brainstorming and task management.",
+          "responsibilities": {
+            "first": "Led the 0→1 launch across technology and team building."
+          },
+          "stack": "JavaScript, React, Python, Firebase",
+          "title": "Team Lead / Tech Lead — SB Innoventure Inc."
+        },
+        "napier": {
+          "period": "Aug 2024 – Apr 2025",
+          "product": "A permissionless modular DeFi protocol on EVM that enables yield tokenization and fixed-rate trading.",
+          "responsibilities": {
+            "first": "Built the Napier V2 web frontend from scratch.",
+            "second": "Grew TVL from 0 to over $40M.",
+            "third": "Designed and refined frontend UX with DeFi usability in mind."
+          },
+          "stack": "TypeScript, Next.js, Tailwind CSS, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma",
+          "title": "Frontend Engineer — Napier Labs"
+        },
+        "salon": {
+          "period": "Mar 2023 – Jul 2024",
+          "product": "A CRM platform using LINE to automate customer engagement and improve salon retention.",
+          "responsibilities": {
+            "first": "Built frontend and backend from scratch.",
+            "second": "Supported MVP validation, growing contracted salons to 100+."
+          },
+          "stack": "TypeScript, Next.js, Tailwind CSS, React Firebase Hooks, Express, Firebase",
+          "title": "Full-stack Engineer — Salon Brain Inc."
+        },
+        "softbankPm": {
+          "period": "Jun 2017 – Mar 2022",
+          "product": "A gateway connecting the TBCASoft consortium blockchain (HIVEX) with legacy payment systems.",
+          "responsibilities": {
+            "first": "Designed system architecture and interface specs.",
+            "second": "Coordinated development with internal and external engineers.",
+            "third": "Owned schedules and task management."
+          },
+          "stack": "Java, Spring Boot, PostgreSQL, Docker, AWS",
+          "title": "Technical PM — SoftBank Corp."
+        },
+        "softbankResearch": {
+          "period": "Apr 2021 – Oct 2023",
+          "product": "Technical research and validation for enterprise Web3 strategy.",
+          "responsibilities": {
+            "first": "Researched technologies such as Uniswap and Account Abstraction.",
+            "second": "Built POCs for NFT ticketing and stamp rally apps.",
+            "third": "Reviewed and reported Web3 adoption strategies."
+          },
+          "stack": "Solidity, The Graph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS",
+          "title": "Technical Researcher — SoftBank Corp."
+        }
+      },
+      "labels": {
+        "product": "Product / Project",
+        "responsibilities": "Responsibilities",
+        "stack": "Tech stack"
+      }
+    }
+  },
+  "PortfolioLinks": {
+    "header": {
+      "description": "Social and personal links.",
+      "title": "Links"
+    },
+    "metadata": {
+      "description": "Links to social profiles and sites.",
+      "title": "Links — Satoshi Ogura"
+    },
+    "sections": {
+      "sites": {
+        "items": {
+          "blog": {
+            "name": "Blog",
+            "url": "https://blog.o3osatoshi.engr.work"
+          },
+          "ui": {
+            "name": "UI",
+            "url": "https://ui.o3osatoshi.engr.work"
+          }
+        },
+        "title": "Personal Sites"
+      },
+      "social": {
+        "items": {
+          "github": {
+            "name": "GitHub",
+            "url": "https://github.com/o3osatoshi"
+          },
+          "linkedin": {
+            "name": "LinkedIn",
+            "url": "https://www.linkedin.com/in/satoshi-ogura-189479135"
+          },
+          "x": {
+            "name": "X (Twitter)",
+            "url": "https://x.com/o3osatoshi"
+          },
+          "youtrust": {
+            "name": "YOUTRUST",
+            "url": "https://youtrust.jp/users/c2186226cda82bbea6bff600ab9e471c"
+          }
+        },
+        "title": "Social"
+      }
+    }
+  },
+  "PortfolioSkills": {
+    "header": {
+      "description": "Skills and technologies organized by category.",
+      "title": "Skills"
+    },
+    "metadata": {
+      "description": "Skills grouped by category.",
+      "title": "Skills — Satoshi Ogura"
+    },
+    "sections": {
+      "backend": {
+        "items": {
+          "first": "Node.js",
+          "second": "Express",
+          "third": "Firebase"
+        },
+        "title": "Backend"
+      },
+      "frontend": {
+        "items": {
+          "fifth": "GraphQL",
+          "first": "TypeScript",
+          "fourth": "Tailwind CSS",
+          "second": "React",
+          "third": "Next.js"
+        },
+        "title": "Frontend"
+      },
+      "infrastructure": {
+        "items": {
+          "first": "AWS",
+          "fourth": "Sentry",
+          "second": "Vercel",
+          "third": "Docker"
+        },
+        "title": "Infrastructure / Platform"
+      },
+      "tools": {
+        "items": {
+          "first": "Zod",
+          "second": "Neverthrow",
+          "third": "Figma"
+        },
+        "title": "Tools"
+      },
+      "web3": {
+        "items": {
+          "fifth": "Chainlink",
+          "first": "Solidity",
+          "fourth": "IPFS",
+          "second": "Wagmi / Viem",
+          "third": "The Graph"
+        },
+        "title": "Web3"
+      }
     }
   },
   "Settings": {

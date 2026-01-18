@@ -18,6 +18,10 @@ type WebAlias =
   | "labs"
   | "portfolio-about"
   | "portfolio-blog"
+  | "portfolio-education"
+  | "portfolio-experiences"
+  | "portfolio-links"
+  | "portfolio-skills"
   | "portfolio"
   | "toolkit-asynchronous"
   | "toolkit-redis-cache"
@@ -49,6 +53,42 @@ const navs: Nav[] = [
       parentAlias: "portfolio",
     },
     pathName: "/portfolio/about",
+    type: "web",
+  },
+  {
+    alias: "portfolio-experiences",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/experiences",
+    type: "web",
+  },
+  {
+    alias: "portfolio-skills",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/skills",
+    type: "web",
+  },
+  {
+    alias: "portfolio-education",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/education",
+    type: "web",
+  },
+  {
+    alias: "portfolio-links",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/links",
     type: "web",
   },
   {

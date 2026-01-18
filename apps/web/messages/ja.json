@@ -111,6 +111,10 @@
     "portfolio": "ポートフォリオ",
     "portfolio-about": "概要",
     "portfolio-blog": "ブログ",
+    "portfolio-education": "学歴",
+    "portfolio-experiences": "経歴",
+    "portfolio-links": "リンク",
+    "portfolio-skills": "スキル",
     "toolkit": "ツールキット",
     "toolkit-asynchronous": "非同期",
     "toolkit-redis-cache": "Redis キャッシュ"
@@ -135,62 +139,27 @@
   },
   "PortfolioAbout": {
     "header": {
-      "description": "プロダクト志向のフルスタックエンジニア。型安全性、DX、クリーンなUXを重視し、小さく確実に積み上げます。",
-      "title": "概要"
+      "description": "ソフトウェアエンジニアとして、Web フロントエンド、フルスタック開発、Web3 領域を中心に経験を積んできました。",
+      "title": "About"
     },
     "metadata": {
-      "description": "プロダクト志向のフルスタックエンジニア（Web3 / Web2）。",
-      "title": "概要 — Satoshi Ogura"
+      "description": "プロフィールと関心領域の概要。",
+      "title": "About — Satoshi Ogura"
     },
     "sections": {
-      "education": {
+      "interests": {
         "items": {
-          "rikkyo": "立教大学 理学部 (GPA 3.72)",
-          "tokyo": "東京大学 新領域創成科学研究科"
+          "frontend": "TypeScript / React / Next.js を用いた Web フロントエンド開発",
+          "product": "プロダクト初期フェーズでの検証と改善",
+          "tools": "汎用的なライブラリやツールの設計・整理",
+          "web3": "Web3・DeFi 領域におけるプロダクト・UX"
         },
-        "title": "学歴"
+        "title": "関心領域"
       },
-      "experience": {
-        "items": {
-          "napier": {
-            "description": "DeFi フロントエンドの V2 を構築し、デリバリーと運用の基盤を整備。",
-            "title": "Napier Labs — フロントエンドエンジニア (2024-08 → 2025-04)"
-          },
-          "salon": {
-            "description": "CRM を 0→1 で構築し、運用まで担当。",
-            "title": "Salon Brain Inc. — フルスタックエンジニア (2023-03 → 2024-07)"
-          },
-          "softbankPm": {
-            "description": "コンソーシアムチェーン連携の決済ゲートウェイ設計と要件整理。",
-            "title": "SoftBank Corp. — テクニカル PM (2017-06 → 2022-03)"
-          },
-          "softbankResearch": {
-            "description": "Web3 戦略の調査、社内 POC、レポート作成を推進。",
-            "title": "SoftBank Corp. — テックリサーチャー (2021-04 → 2023-10)"
-          }
-        },
-        "title": "経験（ハイライト）"
-      },
-      "skills": {
-        "items": {
-          "backend": {
-            "details": "Node.js, Prisma, PostgreSQL, Firebase, AWS",
-            "label": "バックエンド/インフラ:"
-          },
-          "frontend": {
-            "details": "TypeScript, React, Next.js, Tailwind CSS",
-            "label": "フロントエンド:"
-          },
-          "quality": {
-            "details": "Zod, Neverthrow, Vitest/Playwright, Sentry, GitHub Actions",
-            "label": "品質/ツール:"
-          },
-          "web3": {
-            "details": "Solidity, wagmi, viem, The Graph",
-            "label": "Web3:"
-          }
-        },
-        "title": "フォーカス"
+      "summary": {
+        "paragraphs": {
+          "first": "スタートアップから大企業まで、新規プロダクトの立ち上げや技術検証、サービスの成長フェーズに関わってきました。"
+        }
       }
     }
   },
@@ -205,6 +174,212 @@
     "metadata": {
       "description": "Labs、UI、実験の長文メモと検証記録。",
       "title": "ブログ — Satoshi Ogura"
+    }
+  },
+  "PortfolioEducation": {
+    "header": {
+      "description": "学歴と研究内容の概要です。",
+      "title": "Education"
+    },
+    "metadata": {
+      "description": "学歴と研究内容の概要。",
+      "title": "Education — Satoshi Ogura"
+    },
+    "sections": {
+      "items": {
+        "rikkyo": {
+          "details": {
+            "first": "火星大気散逸探査機の軌道可視化設計",
+            "second": "JAXA 川勝研究室",
+            "third": "GPA: 3.72"
+          },
+          "period": "2010年4月 – 2014年3月",
+          "title": "立教大学 理学部 物理学科"
+        },
+        "tokyo": {
+          "details": {
+            "first": "先端エネルギー工学専攻",
+            "second": "JAXA 川勝研究室",
+            "third": "軌道最適化および人工衛星運用に関する研究"
+          },
+          "period": "2014年4月 – 2016年3月",
+          "title": "東京大学 大学院 新領域創成科学研究科"
+        }
+      }
+    }
+  },
+  "PortfolioExperiences": {
+    "header": {
+      "description": "職務経歴と担当内容を時系列で整理しています。",
+      "title": "Experiences"
+    },
+    "metadata": {
+      "description": "職務経歴と担当内容、技術スタックの一覧。",
+      "title": "Experiences — Satoshi Ogura"
+    },
+    "sections": {
+      "items": {
+        "innoventure": {
+          "period": "2017年6月 – 2019年10月",
+          "product": "スクリーンショットを自動整理し、ブレインストーミングやタスク管理を支援するモバイルアプリ",
+          "responsibilities": {
+            "first": "0→1 の事業立ち上げを技術・チーム両面で担当"
+          },
+          "stack": "JavaScript, React, Python, Firebase",
+          "title": "チーム / テックリード — SB Innoventure 株式会社"
+        },
+        "napier": {
+          "period": "2024年8月 – 2025年4月",
+          "product": "EVM 上で動作する、パーミッションレスな利回りトークン化と固定利回り取引を可能にする Modular DeFi プロトコル",
+          "responsibilities": {
+            "first": "Napier V2 Web フロントエンドをゼロから構築",
+            "second": "TVL を 0 から 4,000 万ドル以上まで拡大",
+            "third": "DeFi UX を意識したフロントエンド設計・改善"
+          },
+          "stack": "TypeScript, Next.js, Tailwind CSS, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma",
+          "title": "フロントエンドエンジニア — Napier Labs"
+        },
+        "salon": {
+          "period": "2023年3月 – 2024年7月",
+          "product": "LINE を活用して顧客対応を自動化し、美容サロンのリピート率向上を支援する CRM プラットフォーム",
+          "responsibilities": {
+            "first": "フロントエンド・バックエンドをゼロから構築",
+            "second": "MVP 検証を支援し、契約サロン数を 100 店舗以上まで拡大"
+          },
+          "stack": "TypeScript, Next.js, Tailwind CSS, React Firebase Hooks, Express, Firebase",
+          "title": "フルスタックエンジニア — Salon Brain 株式会社"
+        },
+        "softbankPm": {
+          "period": "2017年6月 – 2022年3月",
+          "product": "TBCASoft コンソーシアムブロックチェーン（HIVEX）と既存決済システムを接続するゲートウェイ",
+          "responsibilities": {
+            "first": "システム設計およびインターフェース仕様の調整",
+            "second": "社内外エンジニアとの開発調整",
+            "third": "スケジュールおよびタスク管理"
+          },
+          "stack": "Java, Spring Boot, PostgreSQL, Docker, AWS",
+          "title": "テクニカル PM — ソフトバンク株式会社"
+        },
+        "softbankResearch": {
+          "period": "2021年4月 – 2023年10月",
+          "product": "エンタープライズ向け Web3 戦略立案のための技術調査・検証",
+          "responsibilities": {
+            "first": "Uniswap、Account Abstraction 等の技術調査",
+            "second": "NFT チケット／スタンプラリーの POC 開発",
+            "third": "Web3 活用戦略の検討および報告"
+          },
+          "stack": "Solidity, The Graph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS",
+          "title": "技術リサーチャー — ソフトバンク株式会社"
+        }
+      },
+      "labels": {
+        "product": "プロダクト / プロジェクト",
+        "responsibilities": "担当内容",
+        "stack": "技術スタック"
+      }
+    }
+  },
+  "PortfolioLinks": {
+    "header": {
+      "description": "SNS と関連サイトへのリンク集です。",
+      "title": "Links"
+    },
+    "metadata": {
+      "description": "SNS と関連サイトへのリンク集。",
+      "title": "Links — Satoshi Ogura"
+    },
+    "sections": {
+      "sites": {
+        "items": {
+          "blog": {
+            "name": "Blog",
+            "url": "https://blog.o3osatoshi.engr.work"
+          },
+          "ui": {
+            "name": "UI",
+            "url": "https://ui.o3osatoshi.engr.work"
+          }
+        },
+        "title": "個人サイト"
+      },
+      "social": {
+        "items": {
+          "github": {
+            "name": "GitHub",
+            "url": "https://github.com/o3osatoshi"
+          },
+          "linkedin": {
+            "name": "LinkedIn",
+            "url": "https://www.linkedin.com/in/satoshi-ogura-189479135"
+          },
+          "x": {
+            "name": "X (Twitter)",
+            "url": "https://x.com/o3osatoshi"
+          },
+          "youtrust": {
+            "name": "YOUTRUST",
+            "url": "https://youtrust.jp/users/c2186226cda82bbea6bff600ab9e471c"
+          }
+        },
+        "title": "SNS"
+      }
+    }
+  },
+  "PortfolioSkills": {
+    "header": {
+      "description": "対応可能な技術・領域をカテゴリ別に整理しています。",
+      "title": "Skills"
+    },
+    "metadata": {
+      "description": "対応可能な技術や領域をカテゴリ別に整理。",
+      "title": "Skills — Satoshi Ogura"
+    },
+    "sections": {
+      "backend": {
+        "items": {
+          "first": "Node.js",
+          "second": "Express",
+          "third": "Firebase"
+        },
+        "title": "バックエンド"
+      },
+      "frontend": {
+        "items": {
+          "fifth": "GraphQL",
+          "first": "TypeScript",
+          "fourth": "Tailwind CSS",
+          "second": "React",
+          "third": "Next.js"
+        },
+        "title": "フロントエンド"
+      },
+      "infrastructure": {
+        "items": {
+          "first": "AWS",
+          "fourth": "Sentry",
+          "second": "Vercel",
+          "third": "Docker"
+        },
+        "title": "インフラ / プラットフォーム"
+      },
+      "tools": {
+        "items": {
+          "first": "Zod",
+          "second": "Neverthrow",
+          "third": "Figma"
+        },
+        "title": "ツール"
+      },
+      "web3": {
+        "items": {
+          "fifth": "Chainlink",
+          "first": "Solidity",
+          "fourth": "IPFS",
+          "second": "Wagmi / Viem",
+          "third": "The Graph"
+        },
+        "title": "Web3"
+      }
     }
   },
   "Settings": {

@@ -49,8 +49,20 @@ const navigateOptions: NavigateOption[] = [
         url: getPath("portfolio-about"),
       },
       {
-        titleKey: "portfolio-blog",
-        url: getPath("portfolio-blog"),
+        titleKey: "portfolio-experiences",
+        url: getPath("portfolio-experiences"),
+      },
+      {
+        titleKey: "portfolio-skills",
+        url: getPath("portfolio-skills"),
+      },
+      {
+        titleKey: "portfolio-education",
+        url: getPath("portfolio-education"),
+      },
+      {
+        titleKey: "portfolio-links",
+        url: getPath("portfolio-links"),
       },
     ],
     titleKey: "portfolio",
