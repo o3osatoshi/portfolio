@@ -34,26 +34,39 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader description={t("intro")} title={t("title")} />
+      <PageHeader
+        description={t("header.description")}
+        title={t("header.title")}
+      />
 
-      <PageSection title={t("siteStructure")}>
+      <PageSection title={t("sections.siteStructure.title")}>
         <div className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>{t("portfolioTitle")}</CardTitle>
-              <CardDescription>{t("portfolioDescription")}</CardDescription>
+              <CardTitle>
+                {t("sections.siteStructure.cards.portfolio.title")}
+              </CardTitle>
+              <CardDescription>
+                {t("sections.siteStructure.cards.portfolio.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
-                <li>{t("portfolioItems.intro")}</li>
-                <li>{t("portfolioItems.blog")}</li>
-                <li>{t("portfolioItems.projects")}</li>
+                <li>
+                  {t("sections.siteStructure.cards.portfolio.items.intro")}
+                </li>
+                <li>
+                  {t("sections.siteStructure.cards.portfolio.items.blog")}
+                </li>
+                <li>
+                  {t("sections.siteStructure.cards.portfolio.items.projects")}
+                </li>
               </ul>
             </CardContent>
             <CardFooter>
               <Button asChild variant="outline">
                 <Link href={getPath("portfolio-about")}>
-                  {t("portfolioLink")}
+                  {t("sections.siteStructure.cards.portfolio.cta")}
                 </Link>
               </Button>
             </CardFooter>
@@ -61,19 +74,25 @@ export default async function Page() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{t("labsTitle")}</CardTitle>
-              <CardDescription>{t("labsDescription")}</CardDescription>
+              <CardTitle>
+                {t("sections.siteStructure.cards.labs.title")}
+              </CardTitle>
+              <CardDescription>
+                {t("sections.siteStructure.cards.labs.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="list-disc space-y-1 pl-6 text-muted-foreground text-sm">
-                <li>{t("labsItems.crud")}</li>
-                <li>{t("labsItems.web3")}</li>
-                <li>{t("labsItems.latest")}</li>
+                <li>{t("sections.siteStructure.cards.labs.items.crud")}</li>
+                <li>{t("sections.siteStructure.cards.labs.items.web3")}</li>
+                <li>{t("sections.siteStructure.cards.labs.items.latest")}</li>
               </ul>
             </CardContent>
             <CardFooter>
               <Button asChild variant="outline">
-                <Link href={getPath("labs-server-crud")}>{t("labsLink")}</Link>
+                <Link href={getPath("labs-server-crud")}>
+                  {t("sections.siteStructure.cards.labs.cta")}
+                </Link>
               </Button>
             </CardFooter>
           </Card>
@@ -81,8 +100,8 @@ export default async function Page() {
       </PageSection>
 
       <PageSection
-        description={t("sourceCodeDescription")}
-        title={t("sourceCodeTitle")}
+        description={t("sections.sourceCode.description")}
+        title={t("sections.sourceCode.title")}
       >
         <Button asChild variant="outline">
           <a
@@ -90,7 +109,7 @@ export default async function Page() {
             rel="noreferrer"
             target="_blank"
           >
-            {t("sourceCodeLink")}
+            {t("sections.sourceCode.cta")}
           </a>
         </Button>
       </PageSection>

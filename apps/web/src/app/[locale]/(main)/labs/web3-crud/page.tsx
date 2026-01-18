@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 // import "@rainbow-me/rainbowkit/styles.css";
@@ -8,10 +9,24 @@ import { getTranslations } from "next-intl/server";
 // import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "LabsWeb3Crud", locale });
+
+  return {
+    description: t("metadata.description"),
+    title: t("metadata.title"),
+  };
+}
+
 export default async function Page() {
   const t = await getTranslations("LabsWeb3Crud");
 
-  return <PageHeader title={t("title")} />;
+  return <PageHeader title={t("header.title")} />;
   // return (
   //   <Web3Provider>
   //     <div className="flex flex-col gap-6">

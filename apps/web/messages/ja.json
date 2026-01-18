@@ -8,35 +8,87 @@
     "toggle": "切り替え"
   },
   "Home": {
-    "intro": "技術学習や実験の内容を共有するポートフォリオサイトです。新しい技術の検証、実験的な機能実装、知見の共有を通じて日々のアウトプットを行い、技術コミュニティに貢献します。",
-    "labsDescription": "技術検証と実験的な機能",
-    "labsItems": {
-      "crud": "サーバー側 CRUD の検証",
-      "latest": "最新技術の検証と実装",
-      "web3": "Web3・ブロックチェーン連携"
+    "header": {
+      "description": "技術学習や実験の内容を共有するポートフォリオサイトです。新しい技術の検証、実験的な機能実装、知見の共有を通じて日々のアウトプットを行い、技術コミュニティに貢献します。",
+      "title": "o3osatoshi ポートフォリオへようこそ"
     },
-    "labsLink": "ラボを見る",
-    "labsTitle": "ラボ",
     "metadata": {
       "description": "技術学習と知識共有のためのポートフォリオサイト。ポートフォリオと実験的なラボを掲載。",
       "title": "Satoshi Ogura"
     },
-    "portfolioDescription": "サイト作者・制作者について",
-    "portfolioItems": {
-      "blog": "技術ブログ記事",
-      "intro": "自己紹介とスキルセット",
-      "projects": "プロジェクトの経歴・経験"
+    "sections": {
+      "siteStructure": {
+        "cards": {
+          "labs": {
+            "cta": "ラボを見る",
+            "description": "技術検証と実験的な機能",
+            "items": {
+              "crud": "サーバー側 CRUD の検証",
+              "latest": "最新技術の検証と実装",
+              "web3": "Web3・ブロックチェーン連携"
+            },
+            "title": "ラボ"
+          },
+          "portfolio": {
+            "cta": "ポートフォリオを見る",
+            "description": "サイト作者・制作者について",
+            "items": {
+              "blog": "技術ブログ記事",
+              "intro": "自己紹介とスキルセット",
+              "projects": "プロジェクトの経歴・経験"
+            },
+            "title": "ポートフォリオ"
+          }
+        },
+        "title": "サイト構成"
+      },
+      "sourceCode": {
+        "cta": "GitHub で見る",
+        "description": "このポートフォリオサイトのソースコードは GitHub で公開しています。",
+        "title": "ソースコード"
+      }
+    }
+  },
+  "LabsServerCrud": {
+    "header": {
+      "title": "サーバーCRUD"
     },
-    "portfolioLink": "ポートフォリオを見る",
-    "portfolioTitle": "ポートフォリオ",
-    "siteStructure": "サイト構成",
-    "sourceCodeDescription": "このポートフォリオサイトのソースコードは GitHub で公開しています。",
-    "sourceCodeLink": "GitHub で見る",
-    "sourceCodeTitle": "ソースコード",
-    "title": "o3osatoshi ポートフォリオへようこそ"
+    "metadata": {
+      "description": "ポートフォリオのデータベースを使ったサーバー側 CRUD のデモ。",
+      "title": "ラボ · サーバーCRUD"
+    },
+    "sections": {
+      "transactions": {
+        "actions": {
+          "create": "取引を作成"
+        },
+        "editDialog": {
+          "description": "ここで取引内容を変更できます。",
+          "save": "変更を保存",
+          "title": "取引を編集"
+        },
+        "empty": "取引はまだありません",
+        "fields": {
+          "amount": "数量",
+          "currency": "通貨",
+          "datetime": "日時",
+          "fee": "手数料",
+          "feeCurrency": "手数料通貨",
+          "price": "価格",
+          "profitLoss": "損益",
+          "type": "種別"
+        }
+      }
+    }
   },
   "LabsWeb3Crud": {
-    "title": "Web3 CRUD ラボ"
+    "header": {
+      "title": "Web3 CRUD ラボ"
+    },
+    "metadata": {
+      "description": "Web3 CRUD の実験的なデモ。",
+      "title": "ラボ · Web3 CRUD"
+    }
   },
   "Nav": {
     "labs": "ラボ",
@@ -50,83 +102,95 @@
     "toolkit-redis-cache": "Redis キャッシュ"
   },
   "PortfolioAbout": {
-    "education": {
-      "rikkyo": "立教大学 理学部 (GPA 3.72)",
-      "tokyo": "東京大学 新領域創成科学研究科"
+    "header": {
+      "description": "フルスタックエンジニア。Web3（DeFi, Solidity, wagmi/viem）と Web2（CRM, Firebase, Express）の両方に取り組んでいます。型安全性、テスト、CI/CD、クリーンなUXを重視しています。直近では EVM ベースの DeFi プロトコルのフロントエンドを 0 から $40M+ TVL まで支援しました。",
+      "title": "概要"
     },
-    "educationTitle": "学歴",
-    "experience": {
-      "napierDescription": "EVM DeFi プロトコルの V2 フロントエンドをほぼ単独で構築。Tech: TypeScript, Next.js, Tailwind, wagmi, viem, GraphQL, Zod, Neverthrow, Vercel, Sentry.",
-      "napierTitle": "Napier Labs — フロントエンドエンジニア (2024-08 → 2025-04)",
-      "salonDescription": "CRM を 0→1 で構築。Tech: TypeScript, Next.js, Tailwind, Express, Firebase.",
-      "salonTitle": "Salon Brain Inc. — フルスタックエンジニア (2023-03 → 2024-07)",
-      "softbankPmDescription": "コンソーシアムチェーンと既存決済をつなぐゲートウェイ設計。",
-      "softbankPmTitle": "SoftBank Corp. — テクニカル PM (2017-06 → 2022-03)",
-      "softbankResearchDescription": "企業向け Web3 戦略（Uniswap、AA、コントラクトウォレット）を調査し、POC と社内レポートを提供。",
-      "softbankResearchTitle": "SoftBank Corp. — テックリサーチャー (2021-04 → 2023-10)"
-    },
-    "experienceTitle": "経験（ハイライト）",
-    "intro": "フルスタックエンジニア。Web3（DeFi, Solidity, wagmi/viem）と Web2（CRM, Firebase, Express）の両方に取り組んでいます。型安全性、テスト、CI/CD、クリーンなUXを重視しています。直近では EVM ベースの DeFi プロトコルのフロントエンドを 0 から $40M+ TVL まで支援しました。",
-    "links": {
-      "blog": "ブログ:",
-      "github": "GitHub:",
-      "linkedin": "LinkedIn:",
-      "x": "X (Twitter):"
-    },
-    "linksTitle": "リンク",
     "metadata": {
       "description": "Next.js、TypeScript、Web3/DeFi に特化したフルスタックエンジニア。型安全性、テスト、CI/CD に注力。",
       "title": "概要 — Satoshi Ogura"
     },
-    "skills": {
-      "backend": "バックエンド/インフラ:",
-      "backendItems": "Node.js, Express, Prisma, PostgreSQL, Firebase, AWS, Docker, Vercel",
-      "frontend": "フロントエンド:",
-      "frontendItems": "TypeScript, React, Next.js, Tailwind CSS",
-      "quality": "品質/ツール:",
-      "qualityItems": "Zod, Neverthrow, Jest/Playwright, Sentry, Turborepo, GitHub Actions, Figma",
-      "web3": "Web3:",
-      "web3Items": "Solidity, wagmi, viem, The Graph"
-    },
-    "skillsTitle": "スキル",
-    "title": "概要"
+    "sections": {
+      "education": {
+        "items": {
+          "rikkyo": "立教大学 理学部 (GPA 3.72)",
+          "tokyo": "東京大学 新領域創成科学研究科"
+        },
+        "title": "学歴"
+      },
+      "experience": {
+        "items": {
+          "napier": {
+            "description": "EVM DeFi プロトコルの V2 フロントエンドをほぼ単独で構築。Tech: TypeScript, Next.js, Tailwind, wagmi, viem, GraphQL, Zod, Neverthrow, Vercel, Sentry.",
+            "title": "Napier Labs — フロントエンドエンジニア (2024-08 → 2025-04)"
+          },
+          "salon": {
+            "description": "CRM を 0→1 で構築。Tech: TypeScript, Next.js, Tailwind, Express, Firebase.",
+            "title": "Salon Brain Inc. — フルスタックエンジニア (2023-03 → 2024-07)"
+          },
+          "softbankPm": {
+            "description": "コンソーシアムチェーンと既存決済をつなぐゲートウェイ設計。",
+            "title": "SoftBank Corp. — テクニカル PM (2017-06 → 2022-03)"
+          },
+          "softbankResearch": {
+            "description": "企業向け Web3 戦略（Uniswap、AA、コントラクトウォレット）を調査し、POC と社内レポートを提供。",
+            "title": "SoftBank Corp. — テックリサーチャー (2021-04 → 2023-10)"
+          }
+        },
+        "title": "経験（ハイライト）"
+      },
+      "links": {
+        "items": {
+          "blog": {
+            "label": "ブログ:"
+          },
+          "github": {
+            "label": "GitHub:"
+          },
+          "linkedin": {
+            "label": "LinkedIn:"
+          },
+          "x": {
+            "label": "X (Twitter):"
+          }
+        },
+        "title": "リンク"
+      },
+      "skills": {
+        "items": {
+          "backend": {
+            "details": "Node.js, Express, Prisma, PostgreSQL, Firebase, AWS, Docker, Vercel",
+            "label": "バックエンド/インフラ:"
+          },
+          "frontend": {
+            "details": "TypeScript, React, Next.js, Tailwind CSS",
+            "label": "フロントエンド:"
+          },
+          "quality": {
+            "details": "Zod, Neverthrow, Jest/Playwright, Sentry, Turborepo, GitHub Actions, Figma",
+            "label": "品質/ツール:"
+          },
+          "web3": {
+            "details": "Solidity, wagmi, viem, The Graph",
+            "label": "Web3:"
+          }
+        },
+        "title": "スキル"
+      }
+    }
   },
   "PortfolioBlog": {
-    "intro": "Labs デモの詳細解説や継続的な調査メモをブログで公開しています。",
+    "header": {
+      "actions": {
+        "visit": "ブログを見る"
+      },
+      "description": "Labs デモの詳細解説や継続的な調査メモをブログで公開しています。",
+      "title": "ブログ"
+    },
     "metadata": {
       "description": "最新の技術メモと解説。Labs デモの詳細はブログで公開しています。",
       "title": "ブログ — Satoshi Ogura"
-    },
-    "title": "ブログ",
-    "visitBlog": "ブログを見る"
-  },
-  "RedisCacheDemo": {
-    "buttons": {
-      "fetch": "キャッシュ経由で取得",
-      "reset": "リセット"
-    },
-    "description": "意図的に遅い API エンドポイント（<endpoint>/edge/public/heavy</endpoint>）をインターフェースサービス経由で呼び出し、結果を Redis にキャッシュします。TTL 内の後続リクエストはキャッシュから返り、より高速になります。",
-    "labels": {
-      "cachedAt": "キャッシュ時刻",
-      "clientDuration": "クライアント所要時間",
-      "serverDuration": "サーバー所要時間",
-      "source": "取得元",
-      "status": "状態",
-      "value": "値"
-    },
-    "millisecondsShort": "{value} ms",
-    "sourceValues": {
-      "redisCache": "Redis キャッシュ",
-      "slowApi": "遅い API"
-    },
-    "status": {
-      "error": "失敗",
-      "idle": "待機中",
-      "loading": "読み込み中…",
-      "success": "読み込み完了"
-    },
-    "title": "Redis キャッシュデモ",
-    "unknownError": "不明なエラー"
+    }
   },
   "Settings": {
     "dark": "ダーク",
@@ -141,85 +205,111 @@
     "description": "o3osatoshi ポートフォリオ",
     "title": "o3osatoshi"
   },
-  "SleepDemo": {
-    "buttons": {
-      "cancel": "キャンセル",
-      "start": "{seconds}秒の sleep を開始"
-    },
-    "description": "中断時にインフラ層のエラーで失敗する、キャンセル可能な待機を再現します。",
-    "labels": {
-      "duration": "所要時間",
-      "elapsed": "経過",
-      "progress": "進捗",
-      "status": "状態"
-    },
-    "progressPercent": "{value}%",
-    "reasons": {
-      "canceledByUser": "ユーザーがキャンセルしました",
-      "componentUnmounted": "コンポーネントがアンマウントされました",
-      "restarted": "再起動しました"
-    },
-    "secondsShort": "{value}秒",
-    "status": {
-      "canceled": "キャンセル",
-      "completed": "完了",
-      "error": "失敗",
-      "idle": "待機中",
-      "running": "sleep 実行中…"
-    },
-    "title": "sleep ヘルパーのデモ"
-  },
-  "Toolkit": {
-    "backToIndex": "ツールキット一覧へ戻る"
-  },
   "ToolkitAsynchronous": {
-    "intro": "キャンセル可能なタイマーやインフラ層のエラー処理ヘルパーを確認できます。下の例では <sleep>sleep</sleep> が中断時に Infra 層のエラーを返す様子を示します。",
+    "header": {
+      "description": "キャンセル可能なタイマーやインフラ層のエラー処理ヘルパーを確認できます。下の例では <sleep>sleep</sleep> が中断時に Infra 層のエラーを返す様子を示します。",
+      "title": "非同期ユーティリティ"
+    },
     "metadata": {
       "description": "@o3osatoshi/toolkit のキャンセル可能な sleep ヘルパーのデモ。",
       "title": "ツールキット · 非同期ユーティリティ"
     },
-    "sectionIntro": "デモを開始すると 3 秒の遅延が走ります。中断すると、理由を保持した <infraError>InfraCanceledError</infraError> が返ることを確認できます。",
-    "sectionTitle": "キャンセル可能な sleep",
-    "title": "非同期ユーティリティ"
+    "sections": {
+      "demo": {
+        "card": {
+          "buttons": {
+            "cancel": "キャンセル",
+            "start": "{seconds}秒の sleep を開始"
+          },
+          "description": "中断時にインフラ層のエラーで失敗する、キャンセル可能な待機を再現します。",
+          "labels": {
+            "duration": "所要時間",
+            "elapsed": "経過",
+            "progress": "進捗",
+            "status": "状態"
+          },
+          "progressPercent": "{value}%",
+          "reasons": {
+            "canceledByUser": "ユーザーがキャンセルしました",
+            "componentUnmounted": "コンポーネントがアンマウントされました",
+            "restarted": "再起動しました"
+          },
+          "secondsShort": "{value}秒",
+          "status": {
+            "canceled": "キャンセル",
+            "completed": "完了",
+            "error": "失敗",
+            "idle": "待機中",
+            "running": "sleep 実行中…"
+          },
+          "title": "sleep ヘルパーのデモ"
+        },
+        "description": "デモを開始すると 3 秒の遅延が走ります。中断すると、理由を保持した <infraError>InfraCanceledError</infraError> が返ることを確認できます。",
+        "title": "キャンセル可能な sleep"
+      }
+    }
   },
   "ToolkitIndex": {
-    "asynchronousLink": "非同期ユーティリティ: キャンセル可能な sleep ヘルパー",
-    "availableDemos": "利用可能なデモ",
-    "intro": "ここでは <toolkit>@o3osatoshi/toolkit</toolkit> の共通ユーティリティを確認できます。下のセクションからインタラクティブなデモや利用例を参照してください。",
+    "header": {
+      "description": "ここでは <toolkit>@o3osatoshi/toolkit</toolkit> の共通ユーティリティを確認できます。下のセクションからインタラクティブなデモや利用例を参照してください。",
+      "title": "ツールキットの例"
+    },
     "metadata": {
       "description": "o3osatoshi ポートフォリオのツールキット例一覧。",
       "title": "ツールキット"
     },
-    "redisCacheLink": "Redis キャッシュ: Upstash で遅い API を高速化",
-    "title": "ツールキットの例"
+    "sections": {
+      "demos": {
+        "items": {
+          "asynchronous": "非同期ユーティリティ: キャンセル可能な sleep ヘルパー",
+          "redisCache": "Redis キャッシュ: Upstash で遅い API を高速化"
+        },
+        "title": "利用可能なデモ"
+      }
+    }
   },
   "ToolkitRedisCache": {
-    "intro": "このデモはインターフェースサービスが公開する <endpoint>/edge/public/heavy</endpoint> の遅い API を呼び出し、<integrations>@repo/integrations</integrations> の Upstash キャッシュアダプターで応答をキャッシュします。TTL 内のリクエストはキャッシュから返り、TTL が切れると次のリクエストで再度遅い API を呼び出して値を再計算します。",
+    "header": {
+      "description": "このデモはインターフェースサービスが公開する <endpoint>/edge/public/heavy</endpoint> の遅い API を呼び出し、<integrations>@repo/integrations</integrations> の Upstash キャッシュアダプターで応答をキャッシュします。TTL 内のリクエストはキャッシュから返り、TTL が切れると次のリクエストで再度遅い API を呼び出して値を再計算します。",
+      "title": "Redis キャッシュ"
+    },
     "metadata": {
       "description": "@repo/integrations の Upstash キャッシュアダプターで遅い API の応答をキャッシュするデモ。",
       "title": "ツールキット · Redis キャッシュ"
     },
-    "sectionIntro": "下のボタンを複数回押してください。最初のリクエストは遅い API に到達するため約 3 秒かかります。TTL 内の後続リクエストは大幅に高速になり「Redis キャッシュ」と表示されます。TTL が切れると次のリクエストは再び遅くなり、キャッシュを更新します。",
-    "sectionTitle": "キャッシュされた遅いエンドポイント",
-    "title": "Redis キャッシュ"
-  },
-  "Transactions": {
-    "create": "取引を作成",
-    "edit": {
-      "description": "ここで取引内容を変更できます。",
-      "save": "変更を保存",
-      "title": "取引を編集"
-    },
-    "empty": "取引はまだありません",
-    "fields": {
-      "amount": "数量",
-      "currency": "通貨",
-      "datetime": "日時",
-      "fee": "手数料",
-      "feeCurrency": "手数料通貨",
-      "price": "価格",
-      "profitLoss": "損益",
-      "type": "種別"
+    "sections": {
+      "demo": {
+        "card": {
+          "buttons": {
+            "fetch": "キャッシュ経由で取得",
+            "reset": "リセット"
+          },
+          "description": "意図的に遅い API エンドポイント（<endpoint>/edge/public/heavy</endpoint>）をインターフェースサービス経由で呼び出し、結果を Redis にキャッシュします。TTL 内の後続リクエストはキャッシュから返り、より高速になります。",
+          "labels": {
+            "cachedAt": "キャッシュ時刻",
+            "clientDuration": "クライアント所要時間",
+            "serverDuration": "サーバー所要時間",
+            "source": "取得元",
+            "status": "状態",
+            "value": "値"
+          },
+          "millisecondsShort": "{value} ms",
+          "sourceValues": {
+            "redisCache": "Redis キャッシュ",
+            "slowApi": "遅い API"
+          },
+          "status": {
+            "error": "失敗",
+            "idle": "待機中",
+            "loading": "読み込み中…",
+            "success": "読み込み完了"
+          },
+          "title": "Redis キャッシュデモ",
+          "unknownError": "不明なエラー"
+        },
+        "description": "下のボタンを複数回押してください。最初のリクエストは遅い API に到達するため約 3 秒かかります。TTL 内の後続リクエストは大幅に高速になり「Redis キャッシュ」と表示されます。TTL が切れると次のリクエストは再び遅くなり、キャッシュを更新します。",
+        "title": "キャッシュされた遅いエンドポイント"
+      }
     }
   },
   "UserMenu": {

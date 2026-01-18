@@ -31,12 +31,12 @@ export default async function Page() {
               rel="noreferrer"
               target="_blank"
             >
-              {t("visitBlog")}
+              {t("header.actions.visit")}
             </Link>
           </Button>
         }
-        description={t("intro")}
-        title={t("title")}
+        description={t("header.description")}
+        title={t("header.title")}
       />
       {/* Optional: fetch and render latest 3–5 posts via RSS on the server */}
     </>

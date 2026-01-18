@@ -24,17 +24,17 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        description={t.rich("intro", {
+        description={t.rich("header.description", {
           sleep: (chunks) => <code>{chunks}</code>,
         })}
-        title={t("title")}
+        title={t("header.title")}
       />
 
       <PageSection
-        description={t.rich("sectionIntro", {
+        description={t.rich("sections.demo.description", {
           infraError: (chunks) => <code>{chunks}</code>,
         })}
-        title={t("sectionTitle")}
+        title={t("sections.demo.title")}
       >
         <SleepDemoCard />
       </PageSection>

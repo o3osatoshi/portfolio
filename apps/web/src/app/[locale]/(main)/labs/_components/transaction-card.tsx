@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default async function TransactionCard({ transaction }: Props) {
-  const t = await getTranslations("Transactions");
+  const t = await getTranslations("LabsServerCrud");
 
   return (
     <Card>
@@ -41,31 +41,31 @@ export default async function TransactionCard({ transaction }: Props) {
       <CardContent>
         <div className="flex flex-col gap-2">
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.type")}: </span>
+            <span>{t("sections.transactions.fields.type")}: </span>
             <span>{transaction.type}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.amount")}: </span>
+            <span>{t("sections.transactions.fields.amount")}: </span>
             <span>{transaction.amount}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.price")}: </span>
+            <span>{t("sections.transactions.fields.price")}: </span>
             <span>{transaction.price}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.currency")}: </span>
+            <span>{t("sections.transactions.fields.currency")}: </span>
             <span>{transaction.currency}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.profitLoss")}: </span>
+            <span>{t("sections.transactions.fields.profitLoss")}: </span>
             <span>{transaction.profitLoss}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.fee")}: </span>
+            <span>{t("sections.transactions.fields.fee")}: </span>
             <span>{transaction.fee}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            <span>{t("fields.feeCurrency")}: </span>
+            <span>{t("sections.transactions.fields.feeCurrency")}: </span>
             <span>{transaction.feeCurrency}</span>
           </div>
         </div>

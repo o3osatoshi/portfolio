@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
@@ -21,19 +22,32 @@ import { getTransactions } from "@/services/get-transactions";
 //     });
 //   });
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "LabsServerCrud", locale });
+
+  return {
+    description: t("metadata.description"),
+    title: t("metadata.title"),
+  };
+}
+
 export default async function Page() {
-  const tNav = await getTranslations("Nav");
-  const t = await getTranslations("Transactions");
+  const t = await getTranslations("LabsServerCrud");
   const result = await getTransactions();
   const transactions = result.isErr() ? [] : result.value;
 
   return (
     <>
-      <PageHeader title={tNav("labs-server-crud")} />
+      <PageHeader title={t("header.title")} />
       <div className="flex flex-col gap-6">
         <CreateForm />
         {transactions.length === 0 ? (
-          t("empty")
+          t("sections.transactions.empty")
         ) : (
           <div className="flex flex-col gap-2">
             {transactions.map((tx) => {

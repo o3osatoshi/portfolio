@@ -24,14 +24,17 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        description={t.rich("intro", {
+        description={t.rich("header.description", {
           endpoint: (chunks) => <code>{chunks}</code>,
           integrations: (chunks) => <code>{chunks}</code>,
         })}
-        title={t("title")}
+        title={t("header.title")}
       />
 
-      <PageSection description={t("sectionIntro")} title={t("sectionTitle")}>
+      <PageSection
+        description={t("sections.demo.description")}
+        title={t("sections.demo.title")}
+      >
         <RedisCacheDemoCard />
       </PageSection>
     </>

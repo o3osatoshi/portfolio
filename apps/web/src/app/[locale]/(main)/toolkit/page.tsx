@@ -27,25 +27,25 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        description={t.rich("intro", {
+        description={t.rich("header.description", {
           toolkit: (chunks) => <code>{chunks}</code>,
         })}
-        title={t("title")}
+        title={t("header.title")}
       />
 
-      <PageSection title={t("availableDemos")}>
+      <PageSection title={t("sections.demos.title")}>
         <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
             <Button asChild className="h-auto p-0" variant="link">
               <Link href={getPath("toolkit-asynchronous")}>
-                {t("asynchronousLink")}
+                {t("sections.demos.items.asynchronous")}
               </Link>
             </Button>
           </li>
           <li>
             <Button asChild className="h-auto p-0" variant="link">
               <Link href={getPath("toolkit-redis-cache")}>
-                {t("redisCacheLink")}
+                {t("sections.demos.items.redisCache")}
               </Link>
             </Button>
           </li>

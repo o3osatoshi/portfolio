@@ -23,85 +23,88 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader description={t("intro")} title={t("title")} />
+      <PageHeader
+        description={t("header.description")}
+        title={t("header.title")}
+      />
 
-      <PageSection title={t("skillsTitle")}>
+      <PageSection title={t("sections.skills.title")}>
         <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
           <li className="flex flex-wrap gap-1">
             <span className="font-medium text-foreground">
-              {t("skills.frontend")}
+              {t("sections.skills.items.frontend.label")}
             </span>
-            <span>{t("skills.frontendItems")}</span>
+            <span>{t("sections.skills.items.frontend.details")}</span>
           </li>
           <li className="flex flex-wrap gap-1">
             <span className="font-medium text-foreground">
-              {t("skills.web3")}
+              {t("sections.skills.items.web3.label")}
             </span>
-            <span>{t("skills.web3Items")}</span>
+            <span>{t("sections.skills.items.web3.details")}</span>
           </li>
           <li className="flex flex-wrap gap-1">
             <span className="font-medium text-foreground">
-              {t("skills.backend")}
+              {t("sections.skills.items.backend.label")}
             </span>
-            <span>{t("skills.backendItems")}</span>
+            <span>{t("sections.skills.items.backend.details")}</span>
           </li>
           <li className="flex flex-wrap gap-1">
             <span className="font-medium text-foreground">
-              {t("skills.quality")}
+              {t("sections.skills.items.quality.label")}
             </span>
-            <span>{t("skills.qualityItems")}</span>
+            <span>{t("sections.skills.items.quality.details")}</span>
           </li>
         </ul>
       </PageSection>
 
-      <PageSection title={t("experienceTitle")}>
+      <PageSection title={t("sections.experience.title")}>
         <ul className="space-y-4">
           <li>
             <span className="font-medium text-foreground">
-              {t("experience.napierTitle")}
+              {t("sections.experience.items.napier.title")}
             </span>
             <div className="text-muted-foreground">
-              {t("experience.napierDescription")}
+              {t("sections.experience.items.napier.description")}
             </div>
           </li>
           <li>
             <span className="font-medium text-foreground">
-              {t("experience.salonTitle")}
+              {t("sections.experience.items.salon.title")}
             </span>
             <div className="text-muted-foreground">
-              {t("experience.salonDescription")}
+              {t("sections.experience.items.salon.description")}
             </div>
           </li>
           <li>
             <span className="font-medium text-foreground">
-              {t("experience.softbankResearchTitle")}
+              {t("sections.experience.items.softbankResearch.title")}
             </span>
             <div className="text-muted-foreground">
-              {t("experience.softbankResearchDescription")}
+              {t("sections.experience.items.softbankResearch.description")}
             </div>
           </li>
           <li>
             <span className="font-medium text-foreground">
-              {t("experience.softbankPmTitle")}
+              {t("sections.experience.items.softbankPm.title")}
             </span>
             <div className="text-muted-foreground">
-              {t("experience.softbankPmDescription")}
+              {t("sections.experience.items.softbankPm.description")}
             </div>
           </li>
         </ul>
       </PageSection>
 
-      <PageSection title={t("educationTitle")}>
+      <PageSection title={t("sections.education.title")}>
         <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
-          <li>{t("education.tokyo")}</li>
-          <li>{t("education.rikkyo")}</li>
+          <li>{t("sections.education.items.tokyo")}</li>
+          <li>{t("sections.education.items.rikkyo")}</li>
         </ul>
       </PageSection>
 
-      <PageSection title={t("linksTitle")}>
+      <PageSection title={t("sections.links.title")}>
         <ul className="list-disc space-y-2 pl-6 text-muted-foreground">
           <li className="flex flex-wrap items-center gap-1">
-            <span>{t("links.github")}</span>
+            <span>{t("sections.links.items.github.label")}</span>
             <Button asChild className="h-auto p-0" variant="link">
               <a
                 href="https://github.com/o3osatoshi"
@@ -113,7 +116,7 @@ export default async function Page() {
             </Button>
           </li>
           <li className="flex flex-wrap items-center gap-1">
-            <span>{t("links.blog")}</span>
+            <span>{t("sections.links.items.blog.label")}</span>
             <Button asChild className="h-auto p-0" variant="link">
               <a
                 href="https://o3osatoshi.github.io"
@@ -125,7 +128,7 @@ export default async function Page() {
             </Button>
           </li>
           <li className="flex flex-wrap items-center gap-1">
-            <span>{t("links.linkedin")}</span>
+            <span>{t("sections.links.items.linkedin.label")}</span>
             <Button asChild className="h-auto p-0" variant="link">
               <a
                 href="https://www.linkedin.com/in/satoshi-ogura-189479135/"
@@ -137,7 +140,7 @@ export default async function Page() {
             </Button>
           </li>
           <li className="flex flex-wrap items-center gap-1">
-            <span>{t("links.x")}</span>
+            <span>{t("sections.links.items.x.label")}</span>
             <Button asChild className="h-auto p-0" variant="link">
               <a
                 href="https://x.com/o3osatoshi"

@@ -26,20 +26,20 @@ interface Props {
 }
 
 export default function EditDialog({ transaction }: Props) {
-  const t = useTranslations("Transactions");
+  const t = useTranslations("LabsServerCrud");
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
   >(updateTransaction, undefined);
   const labels = {
-    amount: t("fields.amount"),
-    currency: t("fields.currency"),
-    datetime: t("fields.datetime"),
-    fee: t("fields.fee"),
-    feeCurrency: t("fields.feeCurrency"),
-    price: t("fields.price"),
-    profitLoss: t("fields.profitLoss"),
-    type: t("fields.type"),
+    amount: t("sections.transactions.fields.amount"),
+    currency: t("sections.transactions.fields.currency"),
+    datetime: t("sections.transactions.fields.datetime"),
+    fee: t("sections.transactions.fields.fee"),
+    feeCurrency: t("sections.transactions.fields.feeCurrency"),
+    price: t("sections.transactions.fields.price"),
+    profitLoss: t("sections.transactions.fields.profitLoss"),
+    type: t("sections.transactions.fields.type"),
   };
 
   const {
@@ -68,8 +68,12 @@ export default function EditDialog({ transaction }: Props) {
         <form action={dispatch} onSubmit={validate}>
           <input value={transaction.id} {...register("id")} type="hidden" />
           <DialogHeader>
-            <DialogTitle>{t("edit.title")}</DialogTitle>
-            <DialogDescription>{t("edit.description")}</DialogDescription>
+            <DialogTitle>
+              {t("sections.transactions.editDialog.title")}
+            </DialogTitle>
+            <DialogDescription>
+              {t("sections.transactions.editDialog.description")}
+            </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <FormInput
@@ -149,7 +153,7 @@ export default function EditDialog({ transaction }: Props) {
                 disabled={Object.keys(errors).length > 0 || isPending}
                 type="submit"
               >
-                {t("edit.save")}
+                {t("sections.transactions.editDialog.save")}
               </Button>
             </div>
           </DialogFooter>

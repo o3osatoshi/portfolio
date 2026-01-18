@@ -11,20 +11,20 @@ import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 
 export default function CreateForm() {
-  const t = useTranslations("Transactions");
+  const t = useTranslations("LabsServerCrud");
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
   >(createTransaction, undefined);
   const labels = {
-    amount: t("fields.amount"),
-    currency: t("fields.currency"),
-    datetime: t("fields.datetime"),
-    fee: t("fields.fee"),
-    feeCurrency: t("fields.feeCurrency"),
-    price: t("fields.price"),
-    profitLoss: t("fields.profitLoss"),
-    type: t("fields.type"),
+    amount: t("sections.transactions.fields.amount"),
+    currency: t("sections.transactions.fields.currency"),
+    datetime: t("sections.transactions.fields.datetime"),
+    fee: t("sections.transactions.fields.fee"),
+    feeCurrency: t("sections.transactions.fields.feeCurrency"),
+    price: t("sections.transactions.fields.price"),
+    profitLoss: t("sections.transactions.fields.profitLoss"),
+    type: t("sections.transactions.fields.type"),
   };
 
   const {
@@ -116,7 +116,7 @@ export default function CreateForm() {
           disabled={Object.keys(errors).length > 0 || isPending}
           type="submit"
         >
-          {t("create")}
+          {t("sections.transactions.actions.create")}
         </Button>
       </div>
     </form>

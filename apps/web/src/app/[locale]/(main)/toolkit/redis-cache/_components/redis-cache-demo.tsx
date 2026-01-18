@@ -17,26 +17,27 @@ import {
 type DemoStatus = "error" | "idle" | "loading" | "success";
 
 export default function RedisCacheDemoCard() {
-  const t = useTranslations("RedisCacheDemo");
+  const t = useTranslations("ToolkitRedisCache");
   const tCommon = useTranslations("Common");
+  const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [clientDurationMs, setClientDurationMs] = useState<null | number>(null);
   const [fromCache, setFromCache] = useState<boolean | null>(null);
   const [timestamp, setTimestamp] = useState<null | string>(null);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const notAvailableLabel = tCommon("notAvailable");
-  const unknownErrorLabel = t("unknownError");
+  const unknownErrorLabel = t(`${cardKey}.unknownError`);
 
   const statusLabel = useMemo(() => {
     switch (status) {
       case "idle":
-        return t("status.idle");
+        return t(`${cardKey}.status.idle`);
       case "loading":
-        return t("status.loading");
+        return t(`${cardKey}.status.loading`);
       case "success":
-        return t("status.success");
+        return t(`${cardKey}.status.success`);
       case "error":
-        return t("status.error");
+        return t(`${cardKey}.status.error`);
       default:
         return status;
     }
@@ -83,16 +84,16 @@ export default function RedisCacheDemoCard() {
     (ms: null | number) =>
       ms === null
         ? notAvailableLabel
-        : t("millisecondsShort", { value: ms.toFixed(0) }),
+        : t(`${cardKey}.millisecondsShort`, { value: ms.toFixed(0) }),
     [notAvailableLabel, t],
   );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
+        <CardTitle>{t(`${cardKey}.title`)}</CardTitle>
         <CardDescription>
-          {t.rich("description", {
+          {t.rich(`${cardKey}.description`, {
             endpoint: (chunks) => <code>{chunks}</code>,
           })}
         </CardDescription>
@@ -100,33 +101,39 @@ export default function RedisCacheDemoCard() {
       <CardContent className="space-y-4">
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div className="space-y-1">
-            <dt className="text-muted-foreground">{t("labels.status")}</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.status`)}
+            </dt>
             <dd className="font-medium">{statusLabel}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-muted-foreground">{t("labels.source")}</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.source`)}
+            </dt>
             <dd className="font-medium">
               {fromCache === null
                 ? notAvailableLabel
                 : fromCache
-                  ? t("sourceValues.redisCache")
-                  : t("sourceValues.slowApi")}
+                  ? t(`${cardKey}.sourceValues.redisCache`)
+                  : t(`${cardKey}.sourceValues.slowApi`)}
             </dd>
           </div>
           <div className="space-y-1">
             <dt className="text-muted-foreground">
-              {t("labels.serverDuration")}
+              {t(`${cardKey}.labels.serverDuration`)}
             </dt>
             <dd className="font-medium">{notAvailableLabel}</dd>
           </div>
           <div className="space-y-1">
             <dt className="text-muted-foreground">
-              {t("labels.clientDuration")}
+              {t(`${cardKey}.labels.clientDuration`)}
             </dt>
             <dd className="font-medium">{formatMs(clientDurationMs)}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-muted-foreground">{t("labels.cachedAt")}</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.cachedAt`)}
+            </dt>
             <dd className="font-medium">
               {timestamp
                 ? new Date(timestamp).toLocaleTimeString()
@@ -134,7 +141,9 @@ export default function RedisCacheDemoCard() {
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-muted-foreground">{t("labels.value")}</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.value`)}
+            </dt>
             <dd className="break-all font-mono text-xs">
               {timestamp ?? notAvailableLabel}
             </dd>
@@ -149,7 +158,7 @@ export default function RedisCacheDemoCard() {
 
         <div className="flex flex-wrap gap-2">
           <Button disabled={status === "loading"} onClick={handleFetch}>
-            {t("buttons.fetch")}
+            {t(`${cardKey}.buttons.fetch`)}
           </Button>
           <Button
             disabled={status === "loading"}
@@ -157,7 +166,7 @@ export default function RedisCacheDemoCard() {
             type="button"
             variant="outline"
           >
-            {t("buttons.reset")}
+            {t(`${cardKey}.buttons.reset`)}
           </Button>
         </div>
       </CardContent>
