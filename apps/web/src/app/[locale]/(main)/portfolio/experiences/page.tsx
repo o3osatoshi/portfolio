@@ -3,12 +3,18 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
+import { Button } from "@o3osatoshi/ui";
 
 type ExperienceItem = {
+  contributions: string[];
   key: string;
+  knowledge: string[];
+  links?: {
+    name: string;
+    url?: string;
+  }[];
   period: string;
   product: string;
-  responsibilities: string[];
   stack: string;
   title: string;
 };
@@ -33,65 +39,97 @@ export async function generateMetadata({
 export default async function Page() {
   const t = await getTranslations("PortfolioExperiences");
   const labels = {
+    contributions: t("sections.labels.contributions"),
+    knowledge: t("sections.labels.knowledge"),
+    links: t("sections.labels.links"),
     product: t("sections.labels.product"),
-    responsibilities: t("sections.labels.responsibilities"),
     stack: t("sections.labels.stack"),
   };
   const experiences: ExperienceItem[] = [
     {
+      contributions: [
+        t("sections.items.napier.contributions.first"),
+        t("sections.items.napier.contributions.second"),
+      ],
       key: "napier",
+      knowledge: [
+        t("sections.items.napier.knowledge.first"),
+        t("sections.items.napier.knowledge.second"),
+        t("sections.items.napier.knowledge.third"),
+        t("sections.items.napier.knowledge.fourth"),
+      ],
       period: t("sections.items.napier.period"),
       product: t("sections.items.napier.product"),
-      responsibilities: [
-        t("sections.items.napier.responsibilities.first"),
-        t("sections.items.napier.responsibilities.second"),
-        t("sections.items.napier.responsibilities.third"),
-      ],
       stack: t("sections.items.napier.stack"),
       title: t("sections.items.napier.title"),
     },
     {
+      contributions: [
+        t("sections.items.salon.contributions.first"),
+        t("sections.items.salon.contributions.second"),
+      ],
       key: "salon",
+      knowledge: [
+        t("sections.items.salon.knowledge.first"),
+        t("sections.items.salon.knowledge.second"),
+        t("sections.items.salon.knowledge.third"),
+      ],
       period: t("sections.items.salon.period"),
       product: t("sections.items.salon.product"),
-      responsibilities: [
-        t("sections.items.salon.responsibilities.first"),
-        t("sections.items.salon.responsibilities.second"),
-      ],
       stack: t("sections.items.salon.stack"),
       title: t("sections.items.salon.title"),
     },
     {
+      contributions: [
+        t("sections.items.softbankResearch.contributions.first"),
+        t("sections.items.softbankResearch.contributions.second"),
+        t("sections.items.softbankResearch.contributions.third"),
+      ],
       key: "softbank-research",
+      knowledge: [
+        t("sections.items.softbankResearch.knowledge.first"),
+        t("sections.items.softbankResearch.knowledge.second"),
+      ],
+      links: [
+        {
+          name: t("sections.items.softbankResearch.links.first"),
+        },
+        {
+          name: t("sections.items.softbankResearch.links.second"),
+        },
+      ],
       period: t("sections.items.softbankResearch.period"),
       product: t("sections.items.softbankResearch.product"),
-      responsibilities: [
-        t("sections.items.softbankResearch.responsibilities.first"),
-        t("sections.items.softbankResearch.responsibilities.second"),
-        t("sections.items.softbankResearch.responsibilities.third"),
-      ],
       stack: t("sections.items.softbankResearch.stack"),
       title: t("sections.items.softbankResearch.title"),
     },
     {
+      contributions: [
+        t("sections.items.softbankPm.contributions.first"),
+        t("sections.items.softbankPm.contributions.second"),
+      ],
       key: "softbank-pm",
+      knowledge: [
+        t("sections.items.softbankPm.knowledge.first"),
+        t("sections.items.softbankPm.knowledge.second"),
+        t("sections.items.softbankPm.knowledge.third"),
+      ],
       period: t("sections.items.softbankPm.period"),
       product: t("sections.items.softbankPm.product"),
-      responsibilities: [
-        t("sections.items.softbankPm.responsibilities.first"),
-        t("sections.items.softbankPm.responsibilities.second"),
-        t("sections.items.softbankPm.responsibilities.third"),
-      ],
       stack: t("sections.items.softbankPm.stack"),
       title: t("sections.items.softbankPm.title"),
     },
     {
+      contributions: [t("sections.items.innoventure.contributions.first")],
       key: "innoventure",
+      knowledge: [
+        t("sections.items.innoventure.knowledge.first"),
+        t("sections.items.innoventure.knowledge.second"),
+        t("sections.items.innoventure.knowledge.third"),
+        t("sections.items.innoventure.knowledge.fourth"),
+      ],
       period: t("sections.items.innoventure.period"),
       product: t("sections.items.innoventure.product"),
-      responsibilities: [
-        t("sections.items.innoventure.responsibilities.first"),
-      ],
       stack: t("sections.items.innoventure.stack"),
       title: t("sections.items.innoventure.title"),
     },
@@ -117,11 +155,11 @@ export default async function Page() {
             </div>
             <div>
               <dt className="font-medium text-foreground">
-                {labels.responsibilities}
+                {labels.contributions}
               </dt>
               <dd>
                 <ul className="mt-2 list-disc space-y-2 pl-6">
-                  {experience.responsibilities.map((item, index) => (
+                  {experience.contributions.map((item, index) => (
                     <li key={`${experience.key}-${index}`}>{item}</li>
                   ))}
                 </ul>
@@ -131,6 +169,40 @@ export default async function Page() {
               <dt className="font-medium text-foreground">{labels.stack}</dt>
               <dd>{experience.stack}</dd>
             </div>
+            <div>
+              <dt className="font-medium text-foreground">
+                {labels.knowledge}
+              </dt>
+              <dd>
+                <ul className="mt-2 list-disc space-y-2 pl-6">
+                  {experience.knowledge.map((item, index) => (
+                    <li key={`${experience.key}-knowledge-${index}`}>{item}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+            {experience.links?.length ? (
+              <div>
+                <dt className="font-medium text-foreground">{labels.links}</dt>
+                <dd>
+                  <ul className="mt-2 space-y-2">
+                    {experience.links.map((link) => (
+                      <li key={`${experience.key}-${link.name}`}>
+                        {link.url ? (
+                          <Button asChild className="h-auto p-0" variant="link">
+                            <a href={link.url} rel="noreferrer" target="_blank">
+                              {link.name}
+                            </a>
+                          </Button>
+                        ) : (
+                          <p>{link.name}</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            ) : null}
           </dl>
         </PageSection>
       ))}

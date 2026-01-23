@@ -210,71 +210,101 @@
   },
   "PortfolioExperiences": {
     "header": {
-      "description": "職務経歴と担当内容を時系列で整理しています。",
-      "title": "Experiences"
+      "description": "職務経歴と担当内容、得られた知見を整理しています。",
+      "title": "経歴"
     },
     "metadata": {
-      "description": "職務経歴と担当内容、技術スタックの一覧。",
-      "title": "Experiences — Satoshi Ogura"
+      "description": "職務経歴、担当内容、知見、技術スタックの一覧。",
+      "title": "経歴 — Satoshi Ogura"
     },
     "sections": {
       "items": {
         "innoventure": {
-          "period": "2017年6月 – 2019年10月",
-          "product": "スクリーンショットを自動整理し、ブレインストーミングやタスク管理を支援するモバイルアプリ",
-          "responsibilities": {
-            "first": "0→1 の事業立ち上げを技術・チーム両面で担当"
+          "contributions": {
+            "first": "チーム/技術リードとして、0→1 の消費者向け事業立ち上げに挑戦。"
           },
+          "knowledge": {
+            "first": "リーンスタートアップ",
+            "fourth": "チームマネジメント",
+            "second": "ソリューション・プロダクトフィットの探索",
+            "third": "アジャイル開発"
+          },
+          "period": "2017年6月 - 2019年10月",
+          "product": "スクリーンショットを自動でタグ付け・整理し、ブレインストーミングやタスク管理を支援するモバイルアプリ",
           "stack": "JavaScript, React, Python, Firebase",
           "title": "チーム / テックリード — SB Innoventure 株式会社"
         },
         "napier": {
-          "period": "2024年8月 – 2025年4月",
-          "product": "EVM 上で動作する、パーミッションレスな利回りトークン化と固定利回り取引を可能にする Modular DeFi プロトコル",
-          "responsibilities": {
-            "first": "Napier V2 Web フロントエンドをゼロから構築",
-            "second": "TVL を 0 から 4,000 万ドル以上まで拡大",
-            "third": "DeFi UX を意識したフロントエンド設計・改善"
+          "contributions": {
+            "first": "Napier V2 の Web フロントエンドをほぼ単独でゼロから構築。",
+            "second": "プロトコルの成長を支援し、TVL を 0 から 4,000 万ドル超まで拡大。"
           },
-          "stack": "TypeScript, Next.js, Tailwind CSS, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma",
+          "knowledge": {
+            "first": "利回りトークン化",
+            "fourth": "スマートコントラクトとのインタラクション",
+            "second": "固定利回りメカニクス",
+            "third": "DeFi の UX パターン"
+          },
+          "period": "2024年8月 - 2025年4月",
+          "product": "EVM 上で動作する、パーミッションレスな利回りトークン化と固定利回り取引を可能にする Modular DeFi プロトコル",
+          "stack": "TypeScript, Next.js, Tailwind, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma",
           "title": "フロントエンドエンジニア — Napier Labs"
         },
         "salon": {
-          "period": "2023年3月 – 2024年7月",
-          "product": "LINE を活用して顧客対応を自動化し、美容サロンのリピート率向上を支援する CRM プラットフォーム",
-          "responsibilities": {
-            "first": "フロントエンド・バックエンドをゼロから構築",
-            "second": "MVP 検証を支援し、契約サロン数を 100 店舗以上まで拡大"
+          "contributions": {
+            "first": "Salon Brain のフロントエンドとバックエンドをほぼゼロから構築。",
+            "second": "MVP 検証を支援し、契約サロン数を 0 から 100 店舗以上まで拡大。"
           },
-          "stack": "TypeScript, Next.js, Tailwind CSS, React Firebase Hooks, Express, Firebase",
+          "knowledge": {
+            "first": "マルチテナントアーキテクチャ",
+            "second": "MVP 開発と検証",
+            "third": "美容サロン向け CRM 戦略"
+          },
+          "period": "2023年3月 - 2024年7月",
+          "product": "LINE を活用して顧客対応を自動化し、美容サロンのリピート率向上を支援する CRM プラットフォーム",
+          "stack": "TypeScript, Next.js, Tailwind, React Firebase Hooks, Express, Firebase",
           "title": "フルスタックエンジニア — Salon Brain 株式会社"
         },
         "softbankPm": {
-          "period": "2017年6月 – 2022年3月",
-          "product": "TBCASoft コンソーシアムブロックチェーン（HIVEX）と既存決済システムを接続するゲートウェイ",
-          "responsibilities": {
-            "first": "システム設計およびインターフェース仕様の調整",
-            "second": "社内外エンジニアとの開発調整",
-            "third": "スケジュールおよびタスク管理"
+          "contributions": {
+            "first": "社内外エンジニアと連携し、システム設計とインターフェース仕様を調整。",
+            "second": "外部パートナーを含む開発スケジュールとタスクを管理。"
           },
+          "knowledge": {
+            "first": "決済システムアーキテクチャ",
+            "second": "ブロックチェーン相互運用",
+            "third": "クロスカンパニーの開発調整"
+          },
+          "period": "2017年6月 - 2022年3月",
+          "product": "TBCASoft コンソーシアムブロックチェーン（HIVEX）と既存決済システムを接続するゲートウェイ",
           "stack": "Java, Spring Boot, PostgreSQL, Docker, AWS",
           "title": "テクニカル PM — ソフトバンク株式会社"
         },
         "softbankResearch": {
-          "period": "2021年4月 – 2023年10月",
-          "product": "エンタープライズ向け Web3 戦略立案のための技術調査・検証",
-          "responsibilities": {
-            "first": "Uniswap、Account Abstraction 等の技術調査",
-            "second": "NFT チケット／スタンプラリーの POC 開発",
-            "third": "Web3 活用戦略の検討および報告"
+          "contributions": {
+            "first": "Uniswap、コントラクトウォレット、Account Abstraction などの技術メカニズムを調査。",
+            "second": "NFT チケット／スタンプラリーの POC を開発し、実装可能性を検証。",
+            "third": "ウォレット中心の Web3 戦略を検討し、定期的に経営層へ報告。"
           },
-          "stack": "Solidity, The Graph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS",
+          "knowledge": {
+            "first": "Web3 の基礎アーキテクチャ",
+            "second": "Web2 企業における Web3 事業戦略"
+          },
+          "links": {
+            "first": "記事（インタビュー）",
+            "second": "記事（Tech Fes）"
+          },
+          "period": "2021年4月 - 2023年10月",
+          "product": "エンタープライズ向け Web3 戦略の策定に向けた技術調査と検証を実施",
+          "stack": "Solidity, TheGraph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS",
           "title": "技術リサーチャー — ソフトバンク株式会社"
         }
       },
       "labels": {
+        "contributions": "担当内容",
+        "knowledge": "知見",
+        "links": "リンク",
         "product": "プロダクト / プロジェクト",
-        "responsibilities": "担当内容",
         "stack": "技術スタック"
       }
     }
