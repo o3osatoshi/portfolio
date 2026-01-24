@@ -367,28 +367,29 @@
     "sections": {
       "backend": {
         "items": {
-          "first": "Node.js",
-          "second": "Express",
-          "third": "Firebase"
+          "first": "Hono",
+          "second": "Express"
         },
         "title": "バックエンド"
       },
       "frontend": {
         "items": {
-          "fifth": "GraphQL",
-          "first": "TypeScript",
-          "fourth": "Tailwind CSS",
+          "first": "Next.js",
+          "fourth": "GraphQL",
           "second": "React",
-          "third": "Next.js"
+          "third": "Tailwind CSS"
         },
         "title": "フロントエンド"
       },
       "infrastructure": {
         "items": {
-          "first": "AWS",
-          "fourth": "Sentry",
+          "first": "GCP/Firebase",
+          "fourth": "Neon",
+          "fifth": "Inngest",
           "second": "Vercel",
-          "third": "Docker"
+          "seventh": "Doppler",
+          "sixth": "Upstash",
+          "third": "AWS"
         },
         "title": "インフラ / プラットフォーム"
       },
@@ -402,11 +403,10 @@
       },
       "web3": {
         "items": {
-          "fifth": "Chainlink",
-          "first": "Solidity",
-          "fourth": "IPFS",
-          "second": "Wagmi / Viem",
-          "third": "The Graph"
+          "first": "Wagmi / Viem",
+          "fourth": "Chainlink",
+          "second": "The Graph",
+          "third": "IPFS"
         },
         "title": "Web3"
       }
