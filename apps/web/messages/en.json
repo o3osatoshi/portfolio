@@ -334,6 +334,9 @@
     }
   },
   "PortfolioLinks": {
+    "actions": {
+      "visit": "Visit"
+    },
     "header": {
       "description": "Social and personal links.",
       "title": "Links"
@@ -346,10 +349,12 @@
       "sites": {
         "items": {
           "blog": {
+            "description": "Personal blog",
             "name": "Blog",
             "url": "https://blog.o3osatoshi.engr.work"
           },
           "ui": {
+            "description": "OSS UI components",
             "name": "UI",
             "url": "https://ui.o3osatoshi.engr.work"
           }
@@ -359,18 +364,22 @@
       "social": {
         "items": {
           "github": {
+            "description": "@o3osatoshi",
             "name": "GitHub",
             "url": "https://github.com/o3osatoshi"
           },
           "linkedin": {
+            "description": "Career profile (English)",
             "name": "LinkedIn",
             "url": "https://www.linkedin.com/in/satoshi-ogura-189479135"
           },
           "x": {
-            "name": "X (Twitter)",
+            "description": "@o3osatoshi",
+            "name": "X",
             "url": "https://x.com/o3osatoshi"
           },
           "youtrust": {
+            "description": "Career profile (Japanese)",
             "name": "YOUTRUST",
             "url": "https://youtrust.jp/users/c2186226cda82bbea6bff600ab9e471c"
           }
@@ -407,9 +416,9 @@
       },
       "infrastructure": {
         "items": {
+          "fifth": "Inngest",
           "first": "GCP/Firebase",
           "fourth": "Neon",
-          "fifth": "Inngest",
           "second": "Vercel",
           "seventh": "Doppler",
           "sixth": "Upstash",
