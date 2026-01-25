@@ -4,9 +4,14 @@ import { getTranslations } from "next-intl/server";
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import TextBlock from "@/app/[locale]/(main)/_components/text-block";
+import { Button } from "@o3osatoshi/ui";
 
 type EducationItem = {
-  details: string[];
+  details: {
+    label?: string;
+    text: string;
+    url?: string;
+  }[];
   key: string;
   period: string;
   title: string;
@@ -31,9 +36,21 @@ export default async function Page() {
   const items: EducationItem[] = [
     {
       details: [
-        t("sections.items.tokyo.details.first"),
-        t("sections.items.tokyo.details.second"),
-        t("sections.items.tokyo.details.third"),
+        {
+          label: t("sections.items.tokyo.details.first.label"),
+          text: t("sections.items.tokyo.details.first.text"),
+          url: t("sections.items.tokyo.details.first.url"),
+        },
+        {
+          label: t("sections.items.tokyo.details.second.label"),
+          text: t("sections.items.tokyo.details.second.text"),
+          url: t("sections.items.tokyo.details.second.url"),
+        },
+        {
+          label: t("sections.items.tokyo.details.third.label"),
+          text: t("sections.items.tokyo.details.third.text"),
+          url: t("sections.items.tokyo.details.third.url"),
+        },
       ],
       key: "tokyo",
       period: t("sections.items.tokyo.period"),
@@ -41,9 +58,21 @@ export default async function Page() {
     },
     {
       details: [
-        t("sections.items.rikkyo.details.first"),
-        t("sections.items.rikkyo.details.second"),
-        t("sections.items.rikkyo.details.third"),
+        {
+          label: t("sections.items.rikkyo.details.first.label"),
+          text: t("sections.items.rikkyo.details.first.text"),
+          url: t("sections.items.rikkyo.details.first.url"),
+        },
+        {
+          label: t("sections.items.rikkyo.details.second.label"),
+          text: t("sections.items.rikkyo.details.second.text"),
+          url: t("sections.items.rikkyo.details.second.url"),
+        },
+        {
+          label: t("sections.items.rikkyo.details.third.label"),
+          text: t("sections.items.rikkyo.details.third.text"),
+          url: t("sections.items.rikkyo.details.third.url"),
+        },
       ],
       key: "rikkyo",
       period: t("sections.items.rikkyo.period"),
@@ -66,7 +95,19 @@ export default async function Page() {
         >
           <TextBlock>
             {item.details.map((detail, index) => (
-              <p key={`${item.key}-${index}`}>{detail}</p>
+              <div
+                key={`${item.key}-${index}`}
+                className="flex flex-wrap items-center gap-2"
+              >
+                <span>{detail.text}</span>
+                {detail.url && detail.label ? (
+                  <Button asChild className="h-auto p-0" variant="link">
+                    <a href={detail.url} rel="noreferrer" target="_blank">
+                      {detail.label}
+                    </a>
+                  </Button>
+                ) : null}
+              </div>
             ))}
           </TextBlock>
         </PageSection>

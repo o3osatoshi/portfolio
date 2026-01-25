@@ -189,21 +189,45 @@
       "items": {
         "rikkyo": {
           "details": {
-            "first": "Orbit visualization design for the Mars atmospheric escape explorer",
-            "second": "Kawakatsu Lab (JAXA)",
-            "third": "GPA: 3.72"
+            "first": {
+              "label": "",
+              "text": "Kawakatsu Lab, JAXA",
+              "url": ""
+            },
+            "second": {
+              "label": "Paper",
+              "text": "Visual orbit design for the Mars atmospheric escape explorer",
+              "url": "https://jaxa.repo.nii.ac.jp/records/9405"
+            },
+            "third": {
+              "label": "",
+              "text": "GPA: 3.72",
+              "url": ""
+            }
           },
-          "period": "Apr 2010 – Mar 2014",
-          "title": "Rikkyo University, Faculty of Science"
+          "period": "Apr 2010 - Mar 2014",
+          "title": "Rikkyo University, Faculty of Science, Department of Physics"
         },
         "tokyo": {
           "details": {
-            "first": "Advanced Energy Engineering",
-            "second": "Kawakatsu Lab (JAXA)",
-            "third": "Research on orbit optimization and satellite operations"
+            "first": {
+              "label": "",
+              "text": "Kawakatsu Lab, JAXA",
+              "url": ""
+            },
+            "second": {
+              "label": "Paper (PDF)",
+              "text": "Modeling of low-thrust trajectories with coasting and application to VILM",
+              "url": "https://repository.dl.itc.u-tokyo.ac.jp/record/8862/files/K-05791-a.pdf"
+            },
+            "third": {
+              "label": "Project page",
+              "text": "PROCYON ultra-small deep space exploration demonstrator, orbit team",
+              "url": "https://www.isas.jaxa.jp/missions/spacecraft/past/procyon.html"
+            }
           },
-          "period": "Apr 2014 – Mar 2016",
-          "title": "The University of Tokyo, Graduate School of Frontier Sciences"
+          "period": "Apr 2014 - Mar 2016",
+          "title": "The University of Tokyo, Graduate School of Frontier Sciences, Department of Advanced Energy Engineering"
         }
       }
     }

@@ -189,21 +189,45 @@
       "items": {
         "rikkyo": {
           "details": {
-            "first": "火星大気散逸探査機の軌道可視化設計",
-            "second": "JAXA 川勝研究室",
-            "third": "GPA: 3.72"
+            "first": {
+              "label": "",
+              "text": "JAXA 川勝研究室",
+              "url": ""
+            },
+            "second": {
+              "label": "論文",
+              "text": "火星大気散逸探査機の視覚的軌道設計",
+              "url": "https://jaxa.repo.nii.ac.jp/records/9405"
+            },
+            "third": {
+              "label": "",
+              "text": "GPA: 3.72",
+              "url": ""
+            }
           },
-          "period": "2010年4月 – 2014年3月",
+          "period": "2010年4月 - 2014年3月",
           "title": "立教大学 理学部 物理学科"
         },
         "tokyo": {
           "details": {
-            "first": "先端エネルギー工学専攻",
-            "second": "JAXA 川勝研究室",
-            "third": "軌道最適化および人工衛星運用に関する研究"
+            "first": {
+              "label": "",
+              "text": "JAXA 川勝研究室",
+              "url": ""
+            },
+            "second": {
+              "label": "論文PDF",
+              "text": "コースティングを含んだ低推力軌道のモデル化とVILMへの応用",
+              "url": "https://repository.dl.itc.u-tokyo.ac.jp/record/8862/files/K-05791-a.pdf"
+            },
+            "third": {
+              "label": "プロジェクトページ",
+              "text": "超小型深宇宙探査実証機 PROCYON 軌道系チーム",
+              "url": "https://www.isas.jaxa.jp/missions/spacecraft/past/procyon.html"
+            }
           },
-          "period": "2014年4月 – 2016年3月",
-          "title": "東京大学 大学院 新領域創成科学研究科"
+          "period": "2014年4月 - 2016年3月",
+          "title": "東京大学大学院 新領域創成科学研究科 先端エネルギー工学専攻"
         }
       }
     }
