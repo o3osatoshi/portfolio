@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
-import DeleteButton from "@/app/[locale]/(main)/labs/server-crud/_components/delete-button";
-import EditDialog from "@/app/[locale]/(main)/labs/server-crud/_components/edit-dialog";
+import DeleteButton from "@/app/[locale]/(main)/labs/server-actions-crud/_components/delete-button";
+import EditDialog from "@/app/[locale]/(main)/labs/server-actions-crud/_components/edit-dialog";
 import type { Transaction } from "@/services/get-transactions";
 import {
   Card,

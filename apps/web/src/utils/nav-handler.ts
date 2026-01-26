@@ -13,7 +13,7 @@ interface ApiNav {
 type Nav = ApiNav | WebNav;
 
 type WebAlias =
-  | "labs-server-crud"
+  | "labs-server-actions-crud"
   | "labs-web3-crud"
   | "labs"
   | "portfolio-about"
@@ -109,12 +109,12 @@ const navs: Nav[] = [
     type: "web",
   },
   {
-    alias: "labs-server-crud",
+    alias: "labs-server-actions-crud",
     data: {
       hierarchy: 2,
       parentAlias: "labs",
     },
-    pathName: "/labs/server-crud",
+    pathName: "/labs/server-actions-crud",
     type: "web",
   },
   {

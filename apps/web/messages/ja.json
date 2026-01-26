@@ -63,12 +63,12 @@
   },
   "LabsServerCrud": {
     "header": {
-      "description": "Server Actions とバリデーション、DB 更新の流れを一通り確認します。",
-      "title": "サーバーCRUD"
+      "description": "useActionState を使った作成・編集・削除と、Server Components でのデータ取得を検証するデモです。",
+      "title": "Server Actions CRUD"
     },
     "metadata": {
-      "description": "バリデーションとDB更新を含むサーバーCRUDデモ。",
-      "title": "ラボ · サーバーCRUD"
+      "description": "Server Actions（useActionState）による CRUD と Server Components のデータ取得デモ。",
+      "title": "ラボ · Server Actions CRUD"
     },
     "sections": {
       "transactions": {
@@ -106,7 +106,7 @@
   },
   "Nav": {
     "labs": "ラボ",
-    "labs-server-crud": "サーバーCRUD",
+    "labs-server-actions-crud": "Server Actions CRUD",
     "labs-web3-crud": "Web3 CRUD",
     "portfolio": "ポートフォリオ",
     "portfolio-about": "概要",

@@ -73,8 +73,8 @@ const navigateOptions: NavigateOption[] = [
     isActive: true,
     items: [
       {
-        titleKey: "labs-server-crud",
-        url: getPath("labs-server-crud"),
+        titleKey: "labs-server-actions-crud",
+        url: getPath("labs-server-actions-crud"),
       },
       {
         isWIP: true,

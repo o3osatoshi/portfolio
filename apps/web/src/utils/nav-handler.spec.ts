@@ -11,11 +11,14 @@ import { findNavs, getPath, getTag } from "./nav-handler";
 
 describe("utils/nav-handler findNavs", () => {
   it("returns breadcrumb chain for nested web route", () => {
-    const navs = findNavs("/labs/server-crud");
+    const navs = findNavs("/labs/server-actions-crud");
     expect(navs).toBeDefined();
     if (!navs) return;
 
-    expect(navs.map((n) => n.alias)).toEqual(["labs", "labs-server-crud"]);
+    expect(navs.map((n) => n.alias)).toEqual([
+      "labs",
+      "labs-server-actions-crud",
+    ]);
   });
 
   it("returns undefined for unknown path", () => {
@@ -31,7 +34,9 @@ describe("utils/nav-handler findNavs", () => {
 
 describe("utils/nav-handler getPath", () => {
   it("returns path for web alias", () => {
-    expect(getPath("labs-server-crud")).toBe("/labs/server-crud");
+    expect(getPath("labs-server-actions-crud")).toBe(
+      "/labs/server-actions-crud",
+    );
   });
 
   it("returns path for api alias", () => {

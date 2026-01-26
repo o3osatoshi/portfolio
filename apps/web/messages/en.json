@@ -63,12 +63,12 @@
   },
   "LabsServerCrud": {
     "header": {
-      "description": "A focused CRUD flow using server actions, schema validation, and DB writes. Useful for checking ergonomics and error handling.",
-      "title": "Server Side CRUD"
+      "description": "A CRUD demo using Server Actions (useActionState) for create/edit/delete and Server Components for data fetching.",
+      "title": "Server Actions CRUD"
     },
     "metadata": {
-      "description": "Server-side CRUD demo with validation and database flows.",
-      "title": "Labs · Server CRUD"
+      "description": "CRUD demo with Server Actions (useActionState) and Server Components data fetching.",
+      "title": "Labs · Server Actions CRUD"
     },
     "sections": {
       "transactions": {
@@ -106,7 +106,7 @@
   },
   "Nav": {
     "labs": "Labs",
-    "labs-server-crud": "Server Side CRUD",
+    "labs-server-actions-crud": "Server Actions CRUD",
     "labs-web3-crud": "Web3 CRUD",
     "portfolio": "Portfolio",
     "portfolio-about": "About",
