@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
-import RedisCacheDemoCard from "@/app/[locale]/(main)/toolkit/redis-cache/_components/redis-cache-demo";
+import RedisCacheDemoCard from "@/app/[locale]/(main)/labs/edge-redis-cache/_components/redis-cache-demo";
 
 export async function generateMetadata({
   params,
@@ -11,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ namespace: "ToolkitRedisCache", locale });
+  const t = await getTranslations({ namespace: "LabsEdgeRedisCache", locale });
 
   return {
     description: t("metadata.description"),
@@ -20,7 +20,8 @@ export async function generateMetadata({
 }
 
 export default async function Page() {
-  const t = await getTranslations("ToolkitRedisCache");
+  const t = await getTranslations("LabsEdgeRedisCache");
+
   return (
     <>
       <PageHeader

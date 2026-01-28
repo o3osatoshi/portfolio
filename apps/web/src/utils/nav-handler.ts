@@ -13,6 +13,7 @@ interface ApiNav {
 type Nav = ApiNav | WebNav;
 
 type WebAlias =
+  | "labs-edge-redis-cache"
   | "labs-server-actions-crud"
   | "labs-web3-crud"
   | "labs"
@@ -24,7 +25,6 @@ type WebAlias =
   | "portfolio-skills"
   | "portfolio"
   | "toolkit-asynchronous"
-  | "toolkit-redis-cache"
   | "toolkit";
 
 interface WebNav {
@@ -109,6 +109,15 @@ const navs: Nav[] = [
     type: "web",
   },
   {
+    alias: "labs-edge-redis-cache",
+    data: {
+      hierarchy: 2,
+      parentAlias: "labs",
+    },
+    pathName: "/labs/edge-redis-cache",
+    type: "web",
+  },
+  {
     alias: "labs-server-actions-crud",
     data: {
       hierarchy: 2,
@@ -156,15 +165,6 @@ const navs: Nav[] = [
       parentAlias: "toolkit",
     },
     pathName: "/toolkit/asynchronous",
-    type: "web",
-  },
-  {
-    alias: "toolkit-redis-cache",
-    data: {
-      hierarchy: 2,
-      parentAlias: "toolkit",
-    },
-    pathName: "/toolkit/redis-cache",
     type: "web",
   },
 ];

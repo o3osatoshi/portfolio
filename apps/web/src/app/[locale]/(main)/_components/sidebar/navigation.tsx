@@ -77,6 +77,10 @@ const navigateOptions: NavigateOption[] = [
         url: getPath("labs-server-actions-crud"),
       },
       {
+        titleKey: "labs-edge-redis-cache",
+        url: getPath("labs-edge-redis-cache"),
+      },
+      {
         isWIP: true,
         titleKey: "labs-web3-crud",
         url: getPath("labs-web3-crud"),
@@ -92,10 +96,6 @@ const navigateOptions: NavigateOption[] = [
       {
         titleKey: "toolkit-asynchronous",
         url: getPath("toolkit-asynchronous"),
-      },
-      {
-        titleKey: "toolkit-redis-cache",
-        url: getPath("toolkit-redis-cache"),
       },
     ],
     titleKey: "toolkit",

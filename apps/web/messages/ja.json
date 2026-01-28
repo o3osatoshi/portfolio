@@ -61,6 +61,50 @@
       }
     }
   },
+  "LabsEdgeRedisCache": {
+    "header": {
+      "description": "Edge環境でUpstash Redisを使い、遅いAPIをキャッシュして応答時間を比較します。",
+      "title": "Edge Redis キャッシュ"
+    },
+    "metadata": {
+      "description": "EdgeでUpstash Redisを使ったキャッシュ挙動を確認するデモ。",
+      "title": "ラボ · Edge Redis キャッシュ"
+    },
+    "sections": {
+      "demo": {
+        "card": {
+          "buttons": {
+            "fetch": "キャッシュ経由で取得",
+            "reset": "リセット"
+          },
+          "description": "遅いエンドポイントをキャッシュ経由で取得し、キャッシュの当たり外れを比較します。",
+          "labels": {
+            "cachedAt": "キャッシュ時刻",
+            "clientDuration": "クライアント所要時間",
+            "serverDuration": "サーバー所要時間",
+            "source": "取得元",
+            "status": "状態",
+            "value": "値"
+          },
+          "millisecondsShort": "{value} ms",
+          "sourceValues": {
+            "redisCache": "Redis キャッシュ",
+            "slowApi": "遅い API"
+          },
+          "status": {
+            "error": "失敗",
+            "idle": "待機中",
+            "loading": "読み込み中…",
+            "success": "読み込み完了"
+          },
+          "title": "Edge Redis キャッシュデモ",
+          "unknownError": "不明なエラー"
+        },
+        "description": "最初は遅く、TTL内のリクエストは高速かつキャッシュ表示になります。",
+        "title": "キャッシュされた遅いエンドポイント"
+      }
+    }
+  },
   "LabsServerCrud": {
     "header": {
       "description": "useActionState を使った作成・編集・削除と、Server Components でのデータ取得を検証するデモです。",
@@ -106,6 +150,7 @@
   },
   "Nav": {
     "labs": "ラボ",
+    "labs-edge-redis-cache": "Edge Redis キャッシュ",
     "labs-server-actions-crud": "Server Actions CRUD",
     "labs-web3-crud": "Web3 CRUD",
     "portfolio": "ポートフォリオ",
@@ -116,8 +161,7 @@
     "portfolio-links": "リンク",
     "portfolio-skills": "スキル",
     "toolkit": "ツールキット",
-    "toolkit-asynchronous": "非同期",
-    "toolkit-redis-cache": "Redis キャッシュ"
+    "toolkit-asynchronous": "非同期"
   },
   "Portfolio": {
     "header": {
@@ -543,50 +587,6 @@
           "first": "特定の業務に依存しない形で設計した、一般的な用途で利用可能なツール群をまとめています。",
           "second": "各ライブラリについて、実際の動作を確認できるデモページを用意しています。"
         }
-      }
-    }
-  },
-  "ToolkitRedisCache": {
-    "header": {
-      "description": "Upstash で遅い API をキャッシュし、速度差を比較します。",
-      "title": "Redis キャッシュ"
-    },
-    "metadata": {
-      "description": "Upstash で遅い API をキャッシュし、速度差を比較します。",
-      "title": "ツールキット · Redis キャッシュ"
-    },
-    "sections": {
-      "demo": {
-        "card": {
-          "buttons": {
-            "fetch": "キャッシュ経由で取得",
-            "reset": "リセット"
-          },
-          "description": "遅い API をキャッシュ経由で取得し、キャッシュの当たり外れを比較します。",
-          "labels": {
-            "cachedAt": "キャッシュ時刻",
-            "clientDuration": "クライアント所要時間",
-            "serverDuration": "サーバー所要時間",
-            "source": "取得元",
-            "status": "状態",
-            "value": "値"
-          },
-          "millisecondsShort": "{value} ms",
-          "sourceValues": {
-            "redisCache": "Redis キャッシュ",
-            "slowApi": "遅い API"
-          },
-          "status": {
-            "error": "失敗",
-            "idle": "待機中",
-            "loading": "読み込み中…",
-            "success": "読み込み完了"
-          },
-          "title": "Redis キャッシュデモ",
-          "unknownError": "不明なエラー"
-        },
-        "description": "最初は遅く、TTL 内のリクエストは高速かつキャッシュ表示になります。",
-        "title": "キャッシュされた遅いエンドポイント"
       }
     }
   },

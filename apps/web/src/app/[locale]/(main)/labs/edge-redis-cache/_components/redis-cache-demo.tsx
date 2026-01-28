@@ -17,7 +17,7 @@ import {
 type DemoStatus = "error" | "idle" | "loading" | "success";
 
 export default function RedisCacheDemoCard() {
-  const t = useTranslations("ToolkitRedisCache");
+  const t = useTranslations("LabsEdgeRedisCache");
   const tCommon = useTranslations("Common");
   const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");

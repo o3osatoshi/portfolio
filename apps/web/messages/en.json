@@ -61,6 +61,50 @@
       }
     }
   },
+  "LabsEdgeRedisCache": {
+    "header": {
+      "description": "Use Upstash Redis on the Edge to cache a slow endpoint and compare response times.",
+      "title": "Edge Redis cache"
+    },
+    "metadata": {
+      "description": "Demo of Edge caching behavior with Upstash Redis.",
+      "title": "Labs · Edge Redis cache"
+    },
+    "sections": {
+      "demo": {
+        "card": {
+          "buttons": {
+            "fetch": "Fetch via cache",
+            "reset": "Reset"
+          },
+          "description": "Fetch a slow endpoint through cache and compare timings across cache hits and misses.",
+          "labels": {
+            "cachedAt": "Cached at",
+            "clientDuration": "Client duration",
+            "serverDuration": "Server duration",
+            "source": "Source",
+            "status": "Status",
+            "value": "Value"
+          },
+          "millisecondsShort": "{value} ms",
+          "sourceValues": {
+            "redisCache": "Redis cache",
+            "slowApi": "Slow API"
+          },
+          "status": {
+            "error": "Failed",
+            "idle": "Idle",
+            "loading": "Loading…",
+            "success": "Loaded"
+          },
+          "title": "Edge Redis cache demo",
+          "unknownError": "Unknown error"
+        },
+        "description": "First request is slow; subsequent requests within TTL are fast and labeled as cached.",
+        "title": "Cached slow endpoint"
+      }
+    }
+  },
   "LabsServerCrud": {
     "header": {
       "description": "A CRUD demo using Server Actions (useActionState) for create/edit/delete and Server Components for data fetching.",
@@ -106,6 +150,7 @@
   },
   "Nav": {
     "labs": "Labs",
+    "labs-edge-redis-cache": "Edge Redis cache",
     "labs-server-actions-crud": "Server Actions CRUD",
     "labs-web3-crud": "Web3 CRUD",
     "portfolio": "Portfolio",
@@ -116,8 +161,7 @@
     "portfolio-links": "Links",
     "portfolio-skills": "Skills",
     "toolkit": "Toolkit",
-    "toolkit-asynchronous": "Asynchronous",
-    "toolkit-redis-cache": "Redis cache"
+    "toolkit-asynchronous": "Asynchronous"
   },
   "Portfolio": {
     "header": {
@@ -543,50 +587,6 @@
           "first": "These tools are designed to be independent of any specific product and usable in general contexts.",
           "second": "Each library has a demo page where you can check real behavior."
         }
-      }
-    }
-  },
-  "ToolkitRedisCache": {
-    "header": {
-      "description": "Cache a slow API response via Upstash and compare timing differences across requests.",
-      "title": "Redis cache"
-    },
-    "metadata": {
-      "description": "Cache a slow API response with Upstash and compare timing differences.",
-      "title": "Toolkit · Redis cache"
-    },
-    "sections": {
-      "demo": {
-        "card": {
-          "buttons": {
-            "fetch": "Fetch via cache",
-            "reset": "Reset"
-          },
-          "description": "Fetch a slow endpoint through cache and compare timings across cache hits and misses.",
-          "labels": {
-            "cachedAt": "Cached at",
-            "clientDuration": "Client duration",
-            "serverDuration": "Server duration",
-            "source": "Source",
-            "status": "Status",
-            "value": "Value"
-          },
-          "millisecondsShort": "{value} ms",
-          "sourceValues": {
-            "redisCache": "Redis cache",
-            "slowApi": "Slow API"
-          },
-          "status": {
-            "error": "Failed",
-            "idle": "Idle",
-            "loading": "Loading…",
-            "success": "Loaded"
-          },
-          "title": "Redis cache demo",
-          "unknownError": "Unknown error"
-        },
-        "description": "First request is slow; subsequent requests within TTL are fast and labeled as cached.",
-        "title": "Cached slow endpoint"
       }
     }
   },
