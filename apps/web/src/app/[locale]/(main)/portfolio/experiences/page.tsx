@@ -6,6 +6,7 @@ import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import { Button } from "@o3osatoshi/ui";
 
 type ExperienceItem = {
+  company: string;
   contributions: string[];
   key: string;
   knowledge: string[];
@@ -15,8 +16,8 @@ type ExperienceItem = {
   }[];
   period: string;
   product: string;
+  role: string;
   stack: string;
-  title: string;
 };
 
 export async function generateMetadata({
@@ -47,6 +48,7 @@ export default async function Page() {
   };
   const experiences: ExperienceItem[] = [
     {
+      company: t("sections.items.napier.company"),
       contributions: [
         t("sections.items.napier.contributions.first"),
         t("sections.items.napier.contributions.second"),
@@ -60,10 +62,11 @@ export default async function Page() {
       ],
       period: t("sections.items.napier.period"),
       product: t("sections.items.napier.product"),
+      role: t("sections.items.napier.role"),
       stack: t("sections.items.napier.stack"),
-      title: t("sections.items.napier.title"),
     },
     {
+      company: t("sections.items.salon.company"),
       contributions: [
         t("sections.items.salon.contributions.first"),
         t("sections.items.salon.contributions.second"),
@@ -76,10 +79,11 @@ export default async function Page() {
       ],
       period: t("sections.items.salon.period"),
       product: t("sections.items.salon.product"),
+      role: t("sections.items.salon.role"),
       stack: t("sections.items.salon.stack"),
-      title: t("sections.items.salon.title"),
     },
     {
+      company: t("sections.items.softbankResearch.company"),
       contributions: [
         t("sections.items.softbankResearch.contributions.first"),
         t("sections.items.softbankResearch.contributions.second"),
@@ -100,10 +104,11 @@ export default async function Page() {
       ],
       period: t("sections.items.softbankResearch.period"),
       product: t("sections.items.softbankResearch.product"),
+      role: t("sections.items.softbankResearch.role"),
       stack: t("sections.items.softbankResearch.stack"),
-      title: t("sections.items.softbankResearch.title"),
     },
     {
+      company: t("sections.items.softbankPm.company"),
       contributions: [
         t("sections.items.softbankPm.contributions.first"),
         t("sections.items.softbankPm.contributions.second"),
@@ -116,10 +121,11 @@ export default async function Page() {
       ],
       period: t("sections.items.softbankPm.period"),
       product: t("sections.items.softbankPm.product"),
+      role: t("sections.items.softbankPm.role"),
       stack: t("sections.items.softbankPm.stack"),
-      title: t("sections.items.softbankPm.title"),
     },
     {
+      company: t("sections.items.innoventure.company"),
       contributions: [t("sections.items.innoventure.contributions.first")],
       key: "innoventure",
       knowledge: [
@@ -130,8 +136,8 @@ export default async function Page() {
       ],
       period: t("sections.items.innoventure.period"),
       product: t("sections.items.innoventure.product"),
+      role: t("sections.items.innoventure.role"),
       stack: t("sections.items.innoventure.stack"),
-      title: t("sections.items.innoventure.title"),
     },
   ];
 
@@ -145,8 +151,8 @@ export default async function Page() {
       {experiences.map((experience) => (
         <PageSection
           key={experience.key}
-          description={experience.period}
-          title={experience.title}
+          description={`${experience.period} / ${experience.company}`}
+          title={experience.role}
         >
           <dl className="space-y-4 text-muted-foreground">
             <div>

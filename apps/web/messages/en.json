@@ -288,6 +288,7 @@
     "sections": {
       "items": {
         "innoventure": {
+          "company": "SB Innoventure Corp.",
           "contributions": {
             "first": "Took on the challenge of 0-to-1 consumer business creation as the team and technical leader."
           },
@@ -299,10 +300,11 @@
           },
           "period": "Jun 2017 - Oct 2019",
           "product": "Mobile app that auto-tags and organizes screenshots to support brainstorming and task reminders",
-          "stack": "JavaScript, React, Python, Firebase",
-          "title": "Team/Tech Lead SB Innoventure Corp."
+          "role": "Team/Tech Lead",
+          "stack": "JavaScript, React, Python, Firebase"
         },
         "napier": {
+          "company": "Napier Labs",
           "contributions": {
             "first": "Built the Napier V2 web frontend from scratch, largely on my own.",
             "second": "Supported the protocol’s growth, helping total value locked (TVL) scale from $0 to $40 million+."
@@ -315,10 +317,11 @@
           },
           "period": "Aug 2024 - Apr 2025",
           "product": "Modular DeFi protocol on EVM enabling permission-less yield tokenization and fixed-yield trading",
-          "stack": "TypeScript, Next.js, Tailwind, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma",
-          "title": "Frontend Engineer Napier Labs"
+          "role": "Frontend Engineer",
+          "stack": "TypeScript, Next.js, Tailwind, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma"
         },
         "salon": {
+          "company": "Salon Brain Inc.",
           "contributions": {
             "first": "Built both the frontend and backend of the Salon Brain platform almost entirely on my own from scratch.",
             "second": "Supported MVP validation and helped scale the service from zero to 100+ contracted salons."
@@ -330,10 +333,11 @@
           },
           "period": "Mar 2023 - Jul 2024",
           "product": "CRM platform for beauty salons using LINE to automate customer engagement and improve retention",
-          "stack": "TypeScript, Next.js, Tailwind, React Firebase Hooks, LIFF, Express, Firebase",
-          "title": "Fullstack Engineer Salon Brain Inc."
+          "role": "Fullstack Engineer",
+          "stack": "TypeScript, Next.js, Tailwind, React Firebase Hooks, LIFF, Express, Firebase"
         },
         "softbankPm": {
+          "company": "SoftBank Corp.",
           "contributions": {
             "first": "Coordinated system design and interface specifications with internal and external engineers.",
             "second": "Managed development schedules and cross-team tasks, taking external partners into account."
@@ -345,10 +349,11 @@
           },
           "period": "Jun 2017 - Mar 2022",
           "product": "Gateway connecting the TBCASoft consortium blockchain (HIVEX) and legacy payment systems",
-          "stack": "Java, Spring Boot, PostgreSQL, Docker, AWS",
-          "title": "Technical PM SoftBank Corp."
+          "role": "Technical PM",
+          "stack": "Java, Spring Boot, PostgreSQL, Docker, AWS"
         },
         "softbankResearch": {
+          "company": "SoftBank Corp.",
           "contributions": {
             "first": "Investigated the technical mechanisms of Uniswap, contract wallets, account abstraction, etc.",
             "second": "Developed POC prototypes for ticket and stamp rally NFTs for real-world implementation.",
@@ -364,8 +369,8 @@
           },
           "period": "Apr 2021 - Oct 2023",
           "product": "Conducted technical research and validation to formulate and plan enterprise Web3 strategy",
-          "stack": "Solidity, TheGraph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS",
-          "title": "Tech Researcher SoftBank Corp."
+          "role": "Tech Researcher",
+          "stack": "Solidity, TheGraph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS"
         }
       },
       "labels": {
