@@ -289,7 +289,7 @@
       "items": {
         "innoventure": {
           "contributions": {
-            "first": "チーム/技術リードとして、0→1 の消費者向け事業立ち上げに挑戦。"
+            "first": "チーム/技術リードとして、0→1 の消費者向け事業立ち上げに挑戦"
           },
           "knowledge": {
             "first": "リーンスタートアップ",
@@ -304,8 +304,8 @@
         },
         "napier": {
           "contributions": {
-            "first": "Napier V2 の Web フロントエンドをほぼ単独でゼロから構築。",
-            "second": "プロトコルの成長を支援し、TVL を 0 から 4,000 万ドル超まで拡大。"
+            "first": "Napier V2 の Web フロントエンドをほぼ単独でゼロから構築",
+            "second": "プロトコルの成長を支援し、TVL を 0 から 4,000 万ドル超まで拡大"
           },
           "knowledge": {
             "first": "利回りトークン化",
@@ -320,8 +320,8 @@
         },
         "salon": {
           "contributions": {
-            "first": "Salon Brain のフロントエンドとバックエンドをほぼゼロから構築。",
-            "second": "MVP 検証を支援し、契約サロン数を 0 から 100 店舗以上まで拡大。"
+            "first": "Salon Brain のフロントエンドとバックエンドをほぼゼロから構築",
+            "second": "MVP 検証を支援し、契約サロン数を 0 から 100 店舗以上まで拡大"
           },
           "knowledge": {
             "first": "マルチテナントアーキテクチャ",
@@ -335,8 +335,8 @@
         },
         "softbankPm": {
           "contributions": {
-            "first": "社内外エンジニアと連携し、システム設計とインターフェース仕様を調整。",
-            "second": "外部パートナーを含む開発スケジュールとタスクを管理。"
+            "first": "社内外エンジニアと連携し、システム設計とインターフェース仕様を調整",
+            "second": "外部パートナーを含む開発スケジュールとタスクを管理"
           },
           "knowledge": {
             "first": "決済システムアーキテクチャ",
@@ -350,9 +350,9 @@
         },
         "softbankResearch": {
           "contributions": {
-            "first": "Uniswap、コントラクトウォレット、Account Abstraction などの技術メカニズムを調査。",
-            "second": "NFT チケット／スタンプラリーの POC を開発し、実装可能性を検証。",
-            "third": "ウォレット中心の Web3 戦略を検討し、定期的に経営層へ報告。"
+            "first": "Uniswap、コントラクトウォレット、Account Abstraction などの技術メカニズムを調査",
+            "second": "NFT チケット／スタンプラリーの POC を開発し、実装可能性を検証",
+            "third": "ウォレット中心の Web3 戦略を検討し、定期的に経営層へ報告"
           },
           "knowledge": {
             "first": "Web3 の基礎アーキテクチャ",
