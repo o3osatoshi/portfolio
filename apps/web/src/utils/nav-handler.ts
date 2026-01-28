@@ -18,7 +18,6 @@ type WebAlias =
   | "labs-web3-crud"
   | "labs"
   | "portfolio-about"
-  | "portfolio-blog"
   | "portfolio-education"
   | "portfolio-experiences"
   | "portfolio-links"
@@ -89,15 +88,6 @@ const navs: Nav[] = [
       parentAlias: "portfolio",
     },
     pathName: "/portfolio/links",
-    type: "web",
-  },
-  {
-    alias: "portfolio-blog",
-    data: {
-      hierarchy: 2,
-      parentAlias: "portfolio",
-    },
-    pathName: "/portfolio/blog",
     type: "web",
   },
   {
