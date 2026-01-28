@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
-import SleepDemoCard from "@/app/[locale]/(main)/toolkit/asynchronous/_components/sleep-demo";
+import SleepDemoCard from "@/app/[locale]/(main)/toolkit/abortable-sleep/_components/sleep-demo";
 
 export async function generateMetadata({
   params,
@@ -11,7 +11,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ namespace: "ToolkitAsynchronous", locale });
+  const t = await getTranslations({
+    namespace: "ToolkitAbortableSleep",
+    locale,
+  });
 
   return {
     description: t("metadata.description"),
@@ -20,7 +23,7 @@ export async function generateMetadata({
 }
 
 export default async function Page() {
-  const t = await getTranslations("ToolkitAsynchronous");
+  const t = await getTranslations("ToolkitAbortableSleep");
   return (
     <>
       <PageHeader

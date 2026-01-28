@@ -94,8 +94,8 @@ const navigateOptions: NavigateOption[] = [
     isActive: true,
     items: [
       {
-        titleKey: "toolkit-asynchronous",
-        url: getPath("toolkit-asynchronous"),
+        titleKey: "toolkit-abortable-sleep",
+        url: getPath("toolkit-abortable-sleep"),
       },
     ],
     titleKey: "toolkit",

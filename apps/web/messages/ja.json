@@ -161,7 +161,7 @@
     "portfolio-links": "リンク",
     "portfolio-skills": "スキル",
     "toolkit": "ツールキット",
-    "toolkit-asynchronous": "非同期"
+    "toolkit-abortable-sleep": "中断可能な sleep"
   },
   "Portfolio": {
     "header": {
@@ -502,14 +502,14 @@
     "description": "o3osatoshi ポートフォリオ",
     "title": "o3osatoshi"
   },
-  "ToolkitAsynchronous": {
+  "ToolkitAbortableSleep": {
     "header": {
-      "description": "キャンセル可能なタイマーとエラー処理を、デモで確認します。",
-      "title": "非同期ユーティリティ"
+      "description": "AbortController で中断できる sleep を実行し、InfraCanceledError に理由が残る挙動を確認します。",
+      "title": "中断可能な sleep"
     },
     "metadata": {
-      "description": "キャンセル可能なタイマーとインフラ層のエラー処理。",
-      "title": "ツールキット · 非同期ユーティリティ"
+      "description": "AbortController で中断できる sleep と InfraCanceledError の挙動をまとめています。",
+      "title": "ツールキット · 中断可能な sleep"
     },
     "sections": {
       "demo": {
@@ -518,7 +518,7 @@
             "cancel": "キャンセル",
             "start": "{seconds}秒の sleep を開始"
           },
-          "description": "キャンセル可能な待機の進捗と状態変化を確認します。",
+          "description": "中断可能な待機の進捗と状態変化を確認します。",
           "labels": {
             "duration": "所要時間",
             "elapsed": "経過",
@@ -542,7 +542,7 @@
           "title": "sleep ヘルパーのデモ"
         },
         "description": "短い sleep を実行し、中断時の InfraCanceledError と理由を確認します。",
-        "title": "キャンセル可能な sleep"
+        "title": "中断可能な sleep デモ"
       }
     }
   },

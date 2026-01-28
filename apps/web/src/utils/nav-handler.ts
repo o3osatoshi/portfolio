@@ -24,7 +24,7 @@ type WebAlias =
   | "portfolio-links"
   | "portfolio-skills"
   | "portfolio"
-  | "toolkit-asynchronous"
+  | "toolkit-abortable-sleep"
   | "toolkit";
 
 interface WebNav {
@@ -159,12 +159,12 @@ const navs: Nav[] = [
     type: "web",
   },
   {
-    alias: "toolkit-asynchronous",
+    alias: "toolkit-abortable-sleep",
     data: {
       hierarchy: 2,
       parentAlias: "toolkit",
     },
-    pathName: "/toolkit/asynchronous",
+    pathName: "/toolkit/abortable-sleep",
     type: "web",
   },
 ];

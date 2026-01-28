@@ -19,7 +19,7 @@ type DemoStatus = "canceled" | "completed" | "error" | "idle" | "running";
 const DURATION_MS = 3000;
 
 export default function SleepDemoCard() {
-  const t = useTranslations("ToolkitAsynchronous");
+  const t = useTranslations("ToolkitAbortableSleep");
   const tCommon = useTranslations("Common");
   const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");

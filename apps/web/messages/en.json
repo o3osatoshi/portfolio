@@ -161,7 +161,7 @@
     "portfolio-links": "Links",
     "portfolio-skills": "Skills",
     "toolkit": "Toolkit",
-    "toolkit-asynchronous": "Asynchronous"
+    "toolkit-abortable-sleep": "Abortable sleep"
   },
   "Portfolio": {
     "header": {
@@ -502,14 +502,14 @@
     "description": "o3osatoshi portfolio",
     "title": "o3osatoshi"
   },
-  "ToolkitAsynchronous": {
+  "ToolkitAbortableSleep": {
     "header": {
-      "description": "Explore cancellable timers and infra-friendly errors with a small demo you can start and cancel.",
-      "title": "Asynchronous utilities"
+      "description": "Run an abortable sleep, abort it, and see InfraCanceledError preserve the reason.",
+      "title": "Abortable sleep"
     },
     "metadata": {
-      "description": "Cancellable timers and infra-friendly errors for safe async flows.",
-      "title": "Toolkit · Asynchronous utilities"
+      "description": "Abortable sleep helper with AbortController-friendly errors.",
+      "title": "Toolkit · Abortable sleep"
     },
     "sections": {
       "demo": {
@@ -518,7 +518,7 @@
             "cancel": "Cancel",
             "start": "Start {seconds}s sleep"
           },
-          "description": "Simulate a cancellable pause, watch progress, and inspect status transitions.",
+          "description": "Simulate an abortable pause, watch progress, and inspect status transitions.",
           "labels": {
             "duration": "Duration",
             "elapsed": "Elapsed",
@@ -541,8 +541,8 @@
           },
           "title": "Sleep helper demo"
         },
-        "description": "Run a short sleep, cancel it, and observe InfraCanceledError with the reason preserved.",
-        "title": "Cancellable sleep"
+        "description": "Run a short sleep, abort it, and observe InfraCanceledError with the reason preserved.",
+        "title": "Abortable sleep demo"
       }
     }
   },
