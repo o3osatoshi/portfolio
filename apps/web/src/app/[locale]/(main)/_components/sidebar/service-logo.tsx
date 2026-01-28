@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -6,14 +8,16 @@ import {
 
 import SidebarLink from "./sidebar-link";
 
-export default function ServiceLogo() {
+export default async function ServiceLogo() {
+  const t = await getTranslations("Brand");
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton asChild size="lg">
           <SidebarLink href="/">
             <span className="truncate font-code text-xl leading-tight md:text-2xl">
-              o3osatoshi
+              {t("name")}
             </span>
           </SidebarLink>
         </SidebarMenuButton>

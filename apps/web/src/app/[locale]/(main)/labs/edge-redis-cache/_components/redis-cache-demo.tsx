@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useState } from "react";
 
 import { getHeavyProcessCached } from "@/services/get-heavy-process-cached";
@@ -10,31 +11,37 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Message,
 } from "@o3osatoshi/ui";
 
 type DemoStatus = "error" | "idle" | "loading" | "success";
 
 export default function RedisCacheDemoCard() {
+  const t = useTranslations("LabsEdgeRedisCache");
+  const tCommon = useTranslations("Common");
+  const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [clientDurationMs, setClientDurationMs] = useState<null | number>(null);
   const [fromCache, setFromCache] = useState<boolean | null>(null);
   const [timestamp, setTimestamp] = useState<null | string>(null);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
+  const notAvailableLabel = tCommon("notAvailable");
+  const unknownErrorLabel = t(`${cardKey}.unknownError`);
 
   const statusLabel = useMemo(() => {
     switch (status) {
       case "idle":
-        return "Idle";
+        return t(`${cardKey}.status.idle`);
       case "loading":
-        return "Loading…";
+        return t(`${cardKey}.status.loading`);
       case "success":
-        return "Loaded";
+        return t(`${cardKey}.status.success`);
       case "error":
-        return "Failed";
+        return t(`${cardKey}.status.error`);
       default:
         return status;
     }
-  }, [status]);
+  }, [status, t]);
 
   const handleFetch = useCallback(async () => {
     if (status === "loading") return;
@@ -54,7 +61,7 @@ export default function RedisCacheDemoCard() {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : String(error ?? "Unknown error"),
+          : String(error ?? unknownErrorLabel),
       );
       return;
     }
@@ -63,7 +70,7 @@ export default function RedisCacheDemoCard() {
     setStatus("success");
     setFromCache(body.cached);
     setTimestamp(body.timestamp);
-  }, [status]);
+  }, [status, unknownErrorLabel]);
 
   const handleReset = useCallback(() => {
     setStatus("idle");
@@ -73,62 +80,85 @@ export default function RedisCacheDemoCard() {
     setErrorMessage(null);
   }, []);
 
-  const formatMs = (ms: null | number) =>
-    ms === null ? "—" : `${ms.toFixed(0)} ms`;
+  const formatMs = useCallback(
+    (ms: null | number) =>
+      ms === null
+        ? notAvailableLabel
+        : t(`${cardKey}.millisecondsShort`, { value: ms.toFixed(0) }),
+    [notAvailableLabel, t],
+  );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Redis cache demo</CardTitle>
+        <CardTitle>{t(`${cardKey}.title`)}</CardTitle>
         <CardDescription>
-          Call a deliberately slow API endpoint (`/edge/public/heavy`) via the
-          interface service and cache the result in Redis. Subsequent requests
-          within the TTL should be served from cache and return much faster.
+          {t.rich(`${cardKey}.description`, {
+            endpoint: (chunks) => <code>{chunks}</code>,
+          })}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div className="space-y-1">
-            <dt className="text-neutral-500">Status</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.status`)}
+            </dt>
             <dd className="font-medium">{statusLabel}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">Source</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.source`)}
+            </dt>
             <dd className="font-medium">
               {fromCache === null
-                ? "—"
+                ? notAvailableLabel
                 : fromCache
-                  ? "Redis cache"
-                  : "Slow API"}
+                  ? t(`${cardKey}.sourceValues.redisCache`)
+                  : t(`${cardKey}.sourceValues.slowApi`)}
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">Server duration</dt>
-            <dd className="font-medium">—</dd>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.serverDuration`)}
+            </dt>
+            <dd className="font-medium">{notAvailableLabel}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">Client duration</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.clientDuration`)}
+            </dt>
             <dd className="font-medium">{formatMs(clientDurationMs)}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">Cached at</dt>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.cachedAt`)}
+            </dt>
             <dd className="font-medium">
-              {timestamp ? new Date(timestamp).toLocaleTimeString() : "—"}
+              {timestamp
+                ? new Date(timestamp).toLocaleTimeString()
+                : notAvailableLabel}
             </dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-neutral-500">Value</dt>
-            <dd className="break-all font-mono text-xs">{timestamp ?? "—"}</dd>
+            <dt className="text-muted-foreground">
+              {t(`${cardKey}.labels.value`)}
+            </dt>
+            <dd className="break-all font-mono text-xs">
+              {timestamp ?? notAvailableLabel}
+            </dd>
           </div>
         </dl>
 
         {errorMessage ? (
-          <p className="text-red-600 text-sm">Error: {errorMessage}</p>
+          <Message variant="destructive">
+            {tCommon("errorWithMessage", { message: errorMessage })}
+          </Message>
         ) : null}
 
         <div className="flex flex-wrap gap-2">
           <Button disabled={status === "loading"} onClick={handleFetch}>
-            Fetch via cache
+            {t(`${cardKey}.buttons.fetch`)}
           </Button>
           <Button
             disabled={status === "loading"}
@@ -136,7 +166,7 @@ export default function RedisCacheDemoCard() {
             type="button"
             variant="outline"
           >
-            Reset
+            {t(`${cardKey}.buttons.reset`)}
           </Button>
         </div>
       </CardContent>

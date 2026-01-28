@@ -35,7 +35,7 @@ export const deleteTransaction = async (
     .match<undefined, ActionState>(
       (req) => {
         updateTag(getTag("labs-transactions", { userId: req.userId }));
-        redirect({ href: getPath("labs-server-crud"), locale });
+        redirect({ href: getPath("labs-server-actions-crud"), locale });
       },
       (error) => err(error),
     );

@@ -1,4 +1,480 @@
 {
+  "Brand": {
+    "name": "o3osatoshi"
+  },
+  "Common": {
+    "errorWithMessage": "エラー: {message}",
+    "notAvailable": "—",
+    "toggle": "切り替え"
+  },
+  "Home": {
+    "header": {
+      "description": "このサイトでは、実務での開発、技術検証、OSS 公開といった活動を <strong>ポートフォリオ / ラボ / ツールキット</strong> の3つの形で整理しています。",
+      "title": "ソフトウェアエンジニアの活動まとめ"
+    },
+    "metadata": {
+      "description": "実務、技術検証、OSS 公開をまとめたポートフォリオサイト。",
+      "title": "o3osatoshi — ソフトウェアエンジニアの取り組み"
+    },
+    "sections": {
+      "labs": {
+        "cta": "→ ラボを見る",
+        "description": "新しい技術や設計手法を試し、仮説・実装・検証を行うための実験的な取り組みをまとめています。",
+        "detail": "学習の過程や試行錯誤も含めて記録しています。",
+        "title": "ラボ"
+      },
+      "portfolio": {
+        "cta": "→ ポートフォリオを見る",
+        "description": "これまでの経歴や経験、対応してきた領域やスキルをまとめています。",
+        "detail": "ソフトウェアエンジニアとしての職務経歴や能力を整理したページです。",
+        "title": "ポートフォリオ"
+      },
+      "sourceCode": {
+        "cta": "→ GitHub リポジトリを見る",
+        "description": "このサイトで紹介している内容は、すべて GitHub 上でコードとして公開しています。",
+        "title": "ソースコード"
+      },
+      "toolkit": {
+        "cta": "→ ツールキットを見る",
+        "description": "汎用的に利用できる機能をまとめた OSS ライブラリを公開しています。",
+        "detail": "一般的な用途で使えるツールについて、実際の挙動を確認できるデモページを用意しています。",
+        "title": "ツールキット"
+      }
+    }
+  },
+  "Labs": {
+    "header": {
+      "description": "新しい技術や設計手法を試すための実験と学習の記録です。",
+      "title": "ラボ"
+    },
+    "metadata": {
+      "description": "新しい技術や設計手法を試すための実験と学習の記録。",
+      "title": "ラボ — Satoshi Ogura"
+    },
+    "sections": {
+      "summary": {
+        "paragraphs": {
+          "first": "業務ではすぐに採用できない技術や構成について、仮説を立てて実装し、検証した結果をまとめています。",
+          "note": "※ ここに掲載している内容は、学習・検証を目的としたものであり、完成品ではありません。",
+          "second": "うまくいったことだけでなく、試行錯誤の過程や学びも含めて記録しています。"
+        }
+      }
+    }
+  },
+  "LabsEdgeRedisCache": {
+    "header": {
+      "description": "Edge環境でUpstash Redisを使い、遅いAPIをキャッシュして応答時間を比較します。",
+      "title": "Edge Redis キャッシュ"
+    },
+    "metadata": {
+      "description": "EdgeでUpstash Redisを使ったキャッシュ挙動を確認するデモ。",
+      "title": "ラボ · Edge Redis キャッシュ"
+    },
+    "sections": {
+      "demo": {
+        "card": {
+          "buttons": {
+            "fetch": "キャッシュ経由で取得",
+            "reset": "リセット"
+          },
+          "description": "遅いエンドポイントをキャッシュ経由で取得し、キャッシュの当たり外れを比較します。",
+          "labels": {
+            "cachedAt": "キャッシュ時刻",
+            "clientDuration": "クライアント所要時間",
+            "serverDuration": "サーバー所要時間",
+            "source": "取得元",
+            "status": "状態",
+            "value": "値"
+          },
+          "millisecondsShort": "{value} ms",
+          "sourceValues": {
+            "redisCache": "Redis キャッシュ",
+            "slowApi": "遅い API"
+          },
+          "status": {
+            "error": "失敗",
+            "idle": "待機中",
+            "loading": "読み込み中…",
+            "success": "読み込み完了"
+          },
+          "title": "Edge Redis キャッシュデモ",
+          "unknownError": "不明なエラー"
+        },
+        "description": "最初は遅く、TTL内のリクエストは高速かつキャッシュ表示になります。",
+        "title": "キャッシュされた遅いエンドポイント"
+      }
+    }
+  },
+  "LabsServerCrud": {
+    "header": {
+      "description": "useActionState を使った作成・編集・削除と、Server Components でのデータ取得を検証するデモです。",
+      "title": "Server Actions CRUD"
+    },
+    "metadata": {
+      "description": "Server Actions（useActionState）による CRUD と Server Components のデータ取得デモ。",
+      "title": "ラボ · Server Actions CRUD"
+    },
+    "sections": {
+      "transactions": {
+        "actions": {
+          "create": "取引を作成"
+        },
+        "editDialog": {
+          "description": "ここで取引内容を変更できます。",
+          "save": "変更を保存",
+          "title": "取引を編集"
+        },
+        "empty": "取引はまだありません",
+        "fields": {
+          "amount": "数量",
+          "currency": "通貨",
+          "datetime": "日時",
+          "fee": "手数料",
+          "feeCurrency": "手数料通貨",
+          "price": "価格",
+          "profitLoss": "損益",
+          "type": "種別"
+        }
+      }
+    }
+  },
+  "LabsWeb3Crud": {
+    "header": {
+      "description": "オンチェーン CRUD の実験。ウォレット連携も含めて検証中です。",
+      "title": "Web3 CRUD"
+    },
+    "metadata": {
+      "description": "Web3 CRUD の実験的なフロー（WIP）。",
+      "title": "ラボ · Web3 CRUD"
+    }
+  },
+  "Nav": {
+    "labs": "ラボ",
+    "labs-edge-redis-cache": "Edge Redis キャッシュ",
+    "labs-server-actions-crud": "Server Actions CRUD",
+    "labs-web3-crud": "Web3 CRUD",
+    "portfolio": "ポートフォリオ",
+    "portfolio-about": "概要",
+    "portfolio-education": "学歴",
+    "portfolio-experiences": "経歴",
+    "portfolio-links": "リンク",
+    "portfolio-skills": "スキル",
+    "toolkit": "ツールキット",
+    "toolkit-abortable-sleep": "中断可能な sleep"
+  },
+  "Portfolio": {
+    "header": {
+      "description": "経歴、経験、スキルを整理したソフトウェアエンジニアとしてのプロフィールです。",
+      "title": "ポートフォリオ"
+    },
+    "metadata": {
+      "description": "経歴・経験・スキルを整理したソフトウェアエンジニアのプロフィール。",
+      "title": "ポートフォリオ — Satoshi Ogura"
+    },
+    "sections": {
+      "summary": {
+        "paragraphs": {
+          "first": "これまでの職務経歴や担当してきた領域、対応可能な技術やスキルをまとめています。",
+          "second": "事実ベースの情報を中心に、経歴や能力を一覧できる構成としています。"
+        }
+      }
+    }
+  },
+  "PortfolioAbout": {
+    "header": {
+      "description": "ソフトウェアエンジニアとして、Web フロントエンド、フルスタック開発、Web3 領域を中心に経験を積んできました。",
+      "title": "概要"
+    },
+    "metadata": {
+      "description": "プロフィールと関心領域の概要。",
+      "title": "概要 — Satoshi Ogura"
+    },
+    "sections": {
+      "interests": {
+        "items": {
+          "frontend": "TypeScript / React / Next.js を用いた Web フロントエンド開発",
+          "product": "プロダクト初期フェーズでの検証と改善",
+          "tools": "汎用的なライブラリやツールの設計・整理",
+          "web3": "Web3・DeFi 領域におけるプロダクト・UX"
+        },
+        "title": "関心領域"
+      },
+      "summary": {
+        "paragraphs": {
+          "first": "スタートアップから大企業まで、新規プロダクトの立ち上げや技術検証、サービスの成長フェーズに関わってきました。"
+        }
+      }
+    }
+  },
+  "PortfolioEducation": {
+    "header": {
+      "description": "学歴と研究内容の概要です。",
+      "title": "学歴"
+    },
+    "metadata": {
+      "description": "学歴と研究内容の概要。",
+      "title": "学歴 — Satoshi Ogura"
+    },
+    "sections": {
+      "items": {
+        "rikkyo": {
+          "details": {
+            "first": {
+              "label": "",
+              "text": "JAXA 川勝研究室",
+              "url": ""
+            },
+            "second": {
+              "label": "論文",
+              "text": "火星大気散逸探査機の視覚的軌道設計",
+              "url": "https://jaxa.repo.nii.ac.jp/records/9405"
+            },
+            "third": {
+              "label": "",
+              "text": "GPA: 3.72",
+              "url": ""
+            }
+          },
+          "period": "2010年4月 - 2014年3月",
+          "title": "立教大学 理学部 物理学科"
+        },
+        "tokyo": {
+          "details": {
+            "first": {
+              "label": "",
+              "text": "JAXA 川勝研究室",
+              "url": ""
+            },
+            "second": {
+              "label": "論文PDF",
+              "text": "コースティングを含んだ低推力軌道のモデル化とVILMへの応用",
+              "url": "https://repository.dl.itc.u-tokyo.ac.jp/record/8862/files/K-05791-a.pdf"
+            },
+            "third": {
+              "label": "プロジェクトページ",
+              "text": "超小型深宇宙探査実証機 PROCYON 軌道系チーム",
+              "url": "https://www.isas.jaxa.jp/missions/spacecraft/past/procyon.html"
+            }
+          },
+          "period": "2014年4月 - 2016年3月",
+          "title": "東京大学大学院 新領域創成科学研究科 先端エネルギー工学専攻"
+        }
+      }
+    }
+  },
+  "PortfolioExperiences": {
+    "header": {
+      "description": "職務経歴と担当内容、得られた知見を整理しています。",
+      "title": "経歴"
+    },
+    "metadata": {
+      "description": "職務経歴、担当内容、知見、技術スタックの一覧。",
+      "title": "経歴 — Satoshi Ogura"
+    },
+    "sections": {
+      "items": {
+        "innoventure": {
+          "company": "SB Innoventure 株式会社",
+          "contributions": {
+            "first": "チーム/技術リードとして、0→1 の消費者向け事業立ち上げに挑戦"
+          },
+          "knowledge": {
+            "first": "リーンスタートアップ",
+            "fourth": "チームマネジメント",
+            "second": "ソリューション・プロダクトフィットの探索",
+            "third": "アジャイル開発"
+          },
+          "period": "2017年6月 - 2019年10月",
+          "product": "スクリーンショットを自動でタグ付け・整理し、ブレインストーミングやタスク管理を支援するモバイルアプリ",
+          "role": "チーム / テックリード",
+          "stack": "JavaScript, React, Python, Firebase"
+        },
+        "napier": {
+          "company": "Napier Labs",
+          "contributions": {
+            "first": "Napier V2 の Web フロントエンドをほぼ単独でゼロから構築",
+            "second": "プロトコルの成長を支援し、TVL を 0 から 4,000 万ドル超まで拡大"
+          },
+          "knowledge": {
+            "first": "利回りトークン化",
+            "fourth": "スマートコントラクトとのインタラクション",
+            "second": "固定利回りメカニクス",
+            "third": "DeFi の UX パターン"
+          },
+          "period": "2024年8月 - 2025年4月",
+          "product": "EVM 上で動作する、パーミッションレスな利回りトークン化と固定利回り取引を可能にする Modular DeFi プロトコル",
+          "role": "フロントエンドエンジニア",
+          "stack": "TypeScript, Next.js, Tailwind, Wagmi, Viem, GraphQL, Zod, Neverthrow, Vercel, Sentry, Figma"
+        },
+        "salon": {
+          "company": "Salon Brain 株式会社",
+          "contributions": {
+            "first": "Salon Brain のフロントエンドとバックエンドをゼロからほぼ単独で構築",
+            "second": "MVP 検証を支援し、契約サロン数を 0 から 100 店舗以上まで拡大"
+          },
+          "knowledge": {
+            "first": "マルチテナントアーキテクチャ",
+            "second": "MVP 開発と検証",
+            "third": "美容サロン向け CRM 戦略"
+          },
+          "period": "2023年3月 - 2024年7月",
+          "product": "LINE を活用して顧客対応を自動化し、美容サロンのリピート率向上を支援する CRM プラットフォーム",
+          "role": "フルスタックエンジニア",
+          "stack": "TypeScript, Next.js, Tailwind, React Firebase Hooks, LIFF, Express, Firebase"
+        },
+        "softbankPm": {
+          "company": "ソフトバンク株式会社",
+          "contributions": {
+            "first": "社内外エンジニアと連携し、システム設計とインターフェース仕様を調整",
+            "second": "外部パートナーを含む開発スケジュールとタスクを管理"
+          },
+          "knowledge": {
+            "first": "決済システムアーキテクチャ",
+            "second": "ブロックチェーン相互運用",
+            "third": "クロスカンパニーの開発調整"
+          },
+          "period": "2017年6月 - 2022年3月",
+          "product": "TBCASoft コンソーシアムブロックチェーン（HIVEX）と既存決済システムを接続するゲートウェイ",
+          "role": "テクニカル PM",
+          "stack": "Java, Spring Boot, PostgreSQL, Docker, AWS"
+        },
+        "softbankResearch": {
+          "company": "ソフトバンク株式会社",
+          "contributions": {
+            "first": "Uniswap、コントラクトウォレット、Account Abstraction などの技術メカニズムを調査",
+            "second": "NFT チケット／スタンプラリーの POC を開発し、実装可能性を検証",
+            "third": "ウォレット中心の Web3 戦略を検討し、定期的に経営層へ報告"
+          },
+          "knowledge": {
+            "first": "Web3 の基礎アーキテクチャ",
+            "second": "Web2 企業における Web3 事業戦略"
+          },
+          "period": "2021年4月 - 2023年10月",
+          "product": "エンタープライズ向け Web3 戦略の策定に向けた技術調査と検証を実施",
+          "role": "技術リサーチャー",
+          "stack": "Solidity, TheGraph, IPFS, Chainlink, TypeScript, React, Express, Amplify, AWS"
+        }
+      },
+      "labels": {
+        "contributions": "担当内容",
+        "knowledge": "知見",
+        "product": "プロダクト / プロジェクト",
+        "stack": "技術スタック"
+      }
+    }
+  },
+  "PortfolioLinks": {
+    "actions": {
+      "visit": "開く"
+    },
+    "header": {
+      "description": "SNS と関連サイトへのリンク集です。",
+      "title": "リンク"
+    },
+    "metadata": {
+      "description": "SNS と関連サイトへのリンク集。",
+      "title": "リンク — Satoshi Ogura"
+    },
+    "sections": {
+      "sites": {
+        "items": {
+          "blog": {
+            "description": "個人ブロク",
+            "name": "Blog",
+            "url": "https://blog.o3osatoshi.engr.work"
+          },
+          "ui": {
+            "description": "OSS UI コンポーネント集",
+            "name": "UI",
+            "url": "https://ui.o3osatoshi.engr.work"
+          }
+        },
+        "title": "個人サイト"
+      },
+      "social": {
+        "items": {
+          "github": {
+            "description": "@o3osatoshi",
+            "name": "GitHub",
+            "url": "https://github.com/o3osatoshi"
+          },
+          "linkedin": {
+            "description": "キャリアプロフィール（英語）",
+            "name": "LinkedIn",
+            "url": "https://www.linkedin.com/in/satoshi-ogura-189479135"
+          },
+          "x": {
+            "description": "@o3osatoshi",
+            "name": "X",
+            "url": "https://x.com/o3osatoshi"
+          },
+          "youtrust": {
+            "description": "キャリアプロフィール（日本語）",
+            "name": "YOUTRUST",
+            "url": "https://youtrust.jp/users/c2186226cda82bbea6bff600ab9e471c"
+          }
+        },
+        "title": "SNS"
+      }
+    }
+  },
+  "PortfolioSkills": {
+    "header": {
+      "description": "対応可能な技術・領域をカテゴリ別に整理しています。",
+      "title": "スキル"
+    },
+    "metadata": {
+      "description": "対応可能な技術や領域をカテゴリ別に整理。",
+      "title": "スキル — Satoshi Ogura"
+    },
+    "sections": {
+      "backend": {
+        "items": {
+          "first": "Hono",
+          "second": "Express"
+        },
+        "title": "バックエンド"
+      },
+      "frontend": {
+        "items": {
+          "first": "Next.js",
+          "fourth": "GraphQL",
+          "second": "React",
+          "third": "Tailwind CSS"
+        },
+        "title": "フロントエンド"
+      },
+      "infrastructure": {
+        "items": {
+          "fifth": "Inngest",
+          "first": "GCP/Firebase",
+          "fourth": "Neon",
+          "second": "Vercel",
+          "seventh": "Doppler",
+          "sixth": "Upstash",
+          "third": "AWS"
+        },
+        "title": "インフラ / プラットフォーム"
+      },
+      "tools": {
+        "items": {
+          "first": "Zod",
+          "second": "Neverthrow",
+          "third": "Figma"
+        },
+        "title": "ツール"
+      },
+      "web3": {
+        "items": {
+          "first": "Wagmi / Viem",
+          "fourth": "Chainlink",
+          "second": "The Graph",
+          "third": "IPFS"
+        },
+        "title": "Web3"
+      }
+    }
+  },
   "Settings": {
     "dark": "ダーク",
     "english": "English",
@@ -7,5 +483,102 @@
     "light": "ライト",
     "system": "システム",
     "theme": "テーマ"
+  },
+  "Site": {
+    "description": "o3osatoshi ポートフォリオ",
+    "title": "o3osatoshi"
+  },
+  "ToolkitAbortableSleep": {
+    "header": {
+      "description": "AbortController で中断できる sleep を実行し、InfraCanceledError に理由が残る挙動を確認します。",
+      "title": "中断可能な sleep"
+    },
+    "metadata": {
+      "description": "AbortController で中断できる sleep と InfraCanceledError の挙動をまとめています。",
+      "title": "ツールキット · 中断可能な sleep"
+    },
+    "sections": {
+      "demo": {
+        "card": {
+          "buttons": {
+            "cancel": "キャンセル",
+            "start": "{seconds}秒の sleep を開始"
+          },
+          "description": "中断可能な待機の進捗と状態変化を確認します。",
+          "labels": {
+            "duration": "所要時間",
+            "elapsed": "経過",
+            "progress": "進捗",
+            "status": "状態"
+          },
+          "progressPercent": "{value}%",
+          "reasons": {
+            "canceledByUser": "ユーザーがキャンセルしました",
+            "componentUnmounted": "コンポーネントがアンマウントされました",
+            "restarted": "再起動しました"
+          },
+          "secondsShort": "{value}秒",
+          "status": {
+            "canceled": "キャンセル",
+            "completed": "完了",
+            "error": "失敗",
+            "idle": "待機中",
+            "running": "sleep 実行中…"
+          },
+          "title": "sleep ヘルパーのデモ"
+        },
+        "description": "短い sleep を実行し、中断時の InfraCanceledError と理由を確認します。",
+        "title": "中断可能な sleep デモ"
+      }
+    }
+  },
+  "ToolkitIndex": {
+    "header": {
+      "description": "汎用的に利用できる機能をまとめた OSS ライブラリを公開しています。",
+      "title": "ツールキット"
+    },
+    "metadata": {
+      "description": "汎用的な OSS ライブラリとデモページをまとめています。",
+      "title": "ツールキット — Satoshi Ogura"
+    },
+    "sections": {
+      "oss": {
+        "items": {
+          "config": {
+            "description": "アプリケーション設定を管理するための共通コンフィグ",
+            "name": "@o3osatoshi/config",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/config"
+          },
+          "logging": {
+            "description": "アプリケーション向けのロギングユーティリティ",
+            "name": "@o3osatoshi/logging",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/logging"
+          },
+          "toolkit": {
+            "description": "汎用的なユーティリティをまとめたツールキット",
+            "name": "@o3osatoshi/toolkit",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/toolkit"
+          },
+          "ui": {
+            "description": "再利用可能な UI コンポーネントライブラリ",
+            "name": "@o3osatoshi/ui",
+            "url": "https://www.npmjs.com/package/@o3osatoshi/ui"
+          }
+        },
+        "note": "フィードバックや Issue は歓迎します。",
+        "title": "公開している OSS"
+      },
+      "summary": {
+        "paragraphs": {
+          "first": "特定の業務に依存しない形で設計した、一般的な用途で利用可能なツール群をまとめています。",
+          "second": "各ライブラリについて、実際の動作を確認できるデモページを用意しています。"
+        }
+      }
+    }
+  },
+  "UserMenu": {
+    "fallback": "CN",
+    "signIn": "サインイン",
+    "signOut": "サインアウト"
   }
 }

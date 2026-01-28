@@ -119,6 +119,10 @@ Environment files (Prisma):
 
 Typically, you use the values from the `*.local` files (for example, fetched via Doppler) as a template, then copy or merge the desired configuration into `packages/prisma/.env` before running Prisma CLI commands (at minimum, `DATABASE_URL` must be set).
 
+**Database providers:**
+- **Production/Development**: Neon PostgreSQL (managed via Doppler secrets)
+- **Local development with Docker**: `postgresql://postgres:postgres@localhost:54329/postgres?schema=public`
+
 ## Code generation
 - Prisma client:
   - Local/Manual: `pnpm -C packages/prisma build`
@@ -138,7 +142,7 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 ## Technology stack
 - **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.
 - **Backend**: Hono-based HTTP interface delivered via Next.js route handlers, Firebase Functions (Node 22), and a Cloudflare Worker.
-- **Database**: Prisma ORM on PostgreSQL (adapter-pg).
+- **Database**: Prisma ORM on PostgreSQL (adapter-pg) via Neon for production/development.
 - **Web3**: Wagmi, RainbowKit, Viem with generated contract hooks.
 - **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`, `@o3osatoshi/logging`, `@repo/auth`, `@repo/interface`, `@repo/integrations`.
 - **Tooling**: Turborepo, pnpm workspaces, Biome, ESLint (flat config), TypeDoc, Changesets, Renovate.

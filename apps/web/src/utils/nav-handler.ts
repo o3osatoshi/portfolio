@@ -13,21 +13,23 @@ interface ApiNav {
 type Nav = ApiNav | WebNav;
 
 type WebAlias =
-  | "labs-server-crud"
+  | "labs-edge-redis-cache"
+  | "labs-server-actions-crud"
   | "labs-web3-crud"
   | "labs"
   | "portfolio-about"
-  | "portfolio-blog"
+  | "portfolio-education"
+  | "portfolio-experiences"
+  | "portfolio-links"
+  | "portfolio-skills"
   | "portfolio"
-  | "toolkit-asynchronous"
-  | "toolkit-redis-cache"
+  | "toolkit-abortable-sleep"
   | "toolkit";
 
 interface WebNav {
   alias: WebAlias;
   data: {
     hierarchy: number;
-    label: string;
     parentAlias?: WebAlias;
   };
   pathName: string;
@@ -39,7 +41,6 @@ const navs: Nav[] = [
     alias: "portfolio",
     data: {
       hierarchy: 1,
-      label: "Portfolio",
     },
     pathName: "/portfolio",
     type: "web",
@@ -48,39 +49,71 @@ const navs: Nav[] = [
     alias: "portfolio-about",
     data: {
       hierarchy: 2,
-      label: "About",
       parentAlias: "portfolio",
     },
     pathName: "/portfolio/about",
     type: "web",
   },
   {
-    alias: "portfolio-blog",
+    alias: "portfolio-experiences",
     data: {
       hierarchy: 2,
-      label: "Blog",
       parentAlias: "portfolio",
     },
-    pathName: "/portfolio/blog",
+    pathName: "/portfolio/experiences",
+    type: "web",
+  },
+  {
+    alias: "portfolio-skills",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/skills",
+    type: "web",
+  },
+  {
+    alias: "portfolio-education",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/education",
+    type: "web",
+  },
+  {
+    alias: "portfolio-links",
+    data: {
+      hierarchy: 2,
+      parentAlias: "portfolio",
+    },
+    pathName: "/portfolio/links",
     type: "web",
   },
   {
     alias: "labs",
     data: {
       hierarchy: 1,
-      label: "Labs",
     },
     pathName: "/labs",
     type: "web",
   },
   {
-    alias: "labs-server-crud",
+    alias: "labs-edge-redis-cache",
     data: {
       hierarchy: 2,
-      label: "Server Side CRUD",
       parentAlias: "labs",
     },
-    pathName: "/labs/server-crud",
+    pathName: "/labs/edge-redis-cache",
+    type: "web",
+  },
+  {
+    alias: "labs-server-actions-crud",
+    data: {
+      hierarchy: 2,
+      parentAlias: "labs",
+    },
+    pathName: "/labs/server-actions-crud",
     type: "web",
   },
   {
@@ -102,7 +135,6 @@ const navs: Nav[] = [
     alias: "labs-web3-crud",
     data: {
       hierarchy: 2,
-      label: "Web3 CRUD",
       parentAlias: "labs",
     },
     pathName: "/labs/web3-crud",
@@ -112,29 +144,17 @@ const navs: Nav[] = [
     alias: "toolkit",
     data: {
       hierarchy: 1,
-      label: "Toolkit",
     },
     pathName: "/toolkit",
     type: "web",
   },
   {
-    alias: "toolkit-asynchronous",
+    alias: "toolkit-abortable-sleep",
     data: {
       hierarchy: 2,
-      label: "Asynchronous",
       parentAlias: "toolkit",
     },
-    pathName: "/toolkit/asynchronous",
-    type: "web",
-  },
-  {
-    alias: "toolkit-redis-cache",
-    data: {
-      hierarchy: 2,
-      label: "Redis cache",
-      parentAlias: "toolkit",
-    },
-    pathName: "/toolkit/redis-cache",
+    pathName: "/toolkit/abortable-sleep",
     type: "web",
   },
 ];
@@ -154,13 +174,6 @@ export function findNavs(pathName: string): undefined | WebNav[] {
   }
 
   return _navs.reverse();
-}
-
-export function getLabel(alias: WebAlias): string {
-  const _nav = navs.find((n) => n.alias === alias);
-  if (_nav === undefined) throw new Error("alias not found");
-  if (_nav.type !== "web") throw new Error("alias not web");
-  return _nav.data.label;
 }
 
 export function getPath(alias: Alias): string {

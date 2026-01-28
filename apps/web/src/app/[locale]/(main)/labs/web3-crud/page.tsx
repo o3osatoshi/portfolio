@@ -1,4 +1,5 @@
-"use client";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 // import "@rainbow-me/rainbowkit/styles.css";
 //
@@ -6,9 +7,31 @@
 //
 // import Web3Provider from "@/app/[locale]/(main)/labs/web3-crud/_components/web3-provider";
 // import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
+import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 
-export default function Page() {
-  return <div>Web3 CRUD Lab</div>;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "LabsWeb3Crud", locale });
+
+  return {
+    description: t("metadata.description"),
+    title: t("metadata.title"),
+  };
+}
+
+export default async function Page() {
+  const t = await getTranslations("LabsWeb3Crud");
+
+  return (
+    <PageHeader
+      description={t("header.description")}
+      title={t("header.title")}
+    />
+  );
   // return (
   //   <Web3Provider>
   //     <div className="flex flex-col gap-6">

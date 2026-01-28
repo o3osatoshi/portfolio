@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import BreadcrumbHeader from "@/app/[locale]/(main)/_components/breadcrumb-header";
+import PageMain from "@/app/[locale]/(main)/_components/page-main";
 import Sidebar from "@/app/[locale]/(main)/_components/sidebar";
 import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/client";
 
@@ -14,7 +15,7 @@ export default function Layout({ children }: Props) {
       <Sidebar />
       <SidebarInset>
         <BreadcrumbHeader />
-        <div className="p-4 pt-0">{children}</div>
+        <PageMain>{children}</PageMain>
       </SidebarInset>
     </SidebarProvider>
   );

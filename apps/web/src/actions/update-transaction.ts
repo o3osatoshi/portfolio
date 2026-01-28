@@ -34,7 +34,7 @@ export const updateTransaction = async (
     .match<undefined, ActionState>(
       (me) => {
         updateTag(getTag("labs-transactions", { userId: me.id }));
-        redirect({ href: getPath("labs-server-crud"), locale });
+        redirect({ href: getPath("labs-server-actions-crud"), locale });
       },
       (error) => err(error),
     );

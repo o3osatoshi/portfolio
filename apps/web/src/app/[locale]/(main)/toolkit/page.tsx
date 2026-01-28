@@ -1,41 +1,82 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
-import { Link } from "@/i18n/navigation";
-import { getPath } from "@/utils/nav-handler";
+import PageHeader from "@/app/[locale]/(main)/_components/page-header";
+import PageSection from "@/app/[locale]/(main)/_components/page-section";
+import TextBlock from "@/app/[locale]/(main)/_components/text-block";
+import { Button } from "@o3osatoshi/ui";
 
-export const metadata: Metadata = {
-  description:
-    "Index of shared toolkit examples for the o3osatoshi portfolio project.",
-  title: "Toolkit",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "ToolkitIndex", locale });
 
-export default function Page() {
+  return {
+    description: t("metadata.description"),
+    title: t("metadata.title"),
+  };
+}
+
+export default async function Page() {
+  const t = await getTranslations("ToolkitIndex");
+
+  const ossItems = [
+    {
+      name: t("sections.oss.items.logging.name"),
+      description: t("sections.oss.items.logging.description"),
+      url: t("sections.oss.items.logging.url"),
+    },
+    {
+      name: t("sections.oss.items.ui.name"),
+      description: t("sections.oss.items.ui.description"),
+      url: t("sections.oss.items.ui.url"),
+    },
+    {
+      name: t("sections.oss.items.toolkit.name"),
+      description: t("sections.oss.items.toolkit.description"),
+      url: t("sections.oss.items.toolkit.url"),
+    },
+    {
+      name: t("sections.oss.items.config.name"),
+      description: t("sections.oss.items.config.description"),
+      url: t("sections.oss.items.config.url"),
+    },
+  ];
+
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="space-y-2">
-        <h1 className="font-semibold text-3xl">Toolkit examples</h1>
-        <p className="text-neutral-600">
-          Shared utilities from <code>@o3osatoshi/toolkit</code> can be explored
-          here. Browse the sections below for interactive demos and usage
-          patterns.
-        </p>
-      </header>
+    <>
+      <PageHeader
+        description={t("header.description")}
+        title={t("header.title")}
+      />
 
-      <section className="space-y-3">
-        <h2 className="font-semibold text-xl">Available demos</h2>
-        <ul className="list-disc space-y-2 pl-5 text-neutral-600">
-          <li>
-            <Link href={getPath("toolkit-asynchronous")} className="underline">
-              Asynchronous utilities: cancellable sleep helper
-            </Link>
-          </li>
-          <li>
-            <Link href={getPath("toolkit-redis-cache")} className="underline">
-              Redis cache: speeding up a slow API with Upstash
-            </Link>
-          </li>
-        </ul>
-      </section>
-    </div>
+      <PageSection>
+        <TextBlock>
+          <p>{t("sections.summary.paragraphs.first")}</p>
+          <p>{t("sections.summary.paragraphs.second")}</p>
+        </TextBlock>
+      </PageSection>
+
+      <PageSection title={t("sections.oss.title")}>
+        <TextBlock>
+          <ul className="space-y-3">
+            {ossItems.map((item) => (
+              <li key={item.name} className="space-y-1">
+                <Button asChild className="h-auto p-0" variant="link">
+                  <a href={item.url} rel="noreferrer" target="_blank">
+                    {item.name}
+                  </a>
+                </Button>
+                <p>{item.description}</p>
+              </li>
+            ))}
+          </ul>
+          <p>{t("sections.oss.note")}</p>
+        </TextBlock>
+      </PageSection>
+    </>
   );
 }

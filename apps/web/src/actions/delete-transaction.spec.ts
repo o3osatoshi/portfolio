@@ -101,7 +101,7 @@ describe("actions/delete-transaction", () => {
 
     const expectedTag = getTag("labs-transactions", { userId: me.id });
     expect(h.updateTagMock).toHaveBeenCalledWith(expectedTag);
-    const expectedPath = getPath("labs-server-crud");
+    const expectedPath = getPath("labs-server-actions-crud");
     expect(h.redirectMock).toHaveBeenCalledWith({
       href: expectedPath,
       locale: "en",
