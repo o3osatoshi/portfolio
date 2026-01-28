@@ -320,7 +320,7 @@
         },
         "salon": {
           "contributions": {
-            "first": "Salon Brain のフロントエンドとバックエンドをほぼゼロから構築",
+            "first": "Salon Brain のフロントエンドとバックエンドをゼロからほぼ単独で構築",
             "second": "MVP 検証を支援し、契約サロン数を 0 から 100 店舗以上まで拡大"
           },
           "knowledge": {
