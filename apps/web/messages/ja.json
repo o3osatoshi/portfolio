@@ -330,7 +330,7 @@
           },
           "period": "2023年3月 - 2024年7月",
           "product": "LINE を活用して顧客対応を自動化し、美容サロンのリピート率向上を支援する CRM プラットフォーム",
-          "stack": "TypeScript, Next.js, Tailwind, React Firebase Hooks, Express, Firebase",
+          "stack": "TypeScript, Next.js, Tailwind, React Firebase Hooks, LIFF, Express, Firebase",
           "title": "フルスタックエンジニア — Salon Brain 株式会社"
         },
         "softbankPm": {
