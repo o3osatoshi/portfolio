@@ -363,10 +363,6 @@
             "first": "Web3 fundamental architecture",
             "second": "Web3 business strategy in Web2 enterprises"
           },
-          "links": {
-            "first": "Article (Interview)",
-            "second": "Article (Tech Fes)"
-          },
           "period": "Apr 2021 - Oct 2023",
           "product": "Conducted technical research and validation to formulate and plan enterprise Web3 strategy",
           "role": "Tech Researcher",
@@ -376,7 +372,6 @@
       "labels": {
         "contributions": "Contributions",
         "knowledge": "Knowledge",
-        "links": "Links",
         "product": "Product / Project",
         "stack": "Tech Stack"
       }

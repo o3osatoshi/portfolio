@@ -3,17 +3,12 @@ import { getTranslations } from "next-intl/server";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
-import { Button } from "@o3osatoshi/ui";
 
 type ExperienceItem = {
   company: string;
   contributions: string[];
   key: string;
   knowledge: string[];
-  links?: {
-    name: string;
-    url?: string;
-  }[];
   period: string;
   product: string;
   role: string;
@@ -42,7 +37,6 @@ export default async function Page() {
   const labels = {
     contributions: t("sections.labels.contributions"),
     knowledge: t("sections.labels.knowledge"),
-    links: t("sections.labels.links"),
     product: t("sections.labels.product"),
     stack: t("sections.labels.stack"),
   };
@@ -94,14 +88,6 @@ export default async function Page() {
         t("sections.items.softbankResearch.knowledge.first"),
         t("sections.items.softbankResearch.knowledge.second"),
       ],
-      links: [
-        {
-          name: t("sections.items.softbankResearch.links.first"),
-        },
-        {
-          name: t("sections.items.softbankResearch.links.second"),
-        },
-      ],
       period: t("sections.items.softbankResearch.period"),
       product: t("sections.items.softbankResearch.product"),
       role: t("sections.items.softbankResearch.role"),
@@ -148,70 +134,54 @@ export default async function Page() {
         title={t("header.title")}
       />
 
-      {experiences.map((experience) => (
-        <PageSection
-          key={experience.key}
-          description={`${experience.period} / ${experience.company}`}
-          title={experience.role}
-        >
-          <dl className="space-y-4 text-muted-foreground">
-            <div>
-              <dt className="font-medium text-foreground">{labels.product}</dt>
-              <dd>{experience.product}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-foreground">
-                {labels.contributions}
-              </dt>
-              <dd>
-                <ul className="mt-2 list-disc space-y-2 pl-6">
-                  {experience.contributions.map((item, index) => (
-                    <li key={`${experience.key}-${index}`}>{item}</li>
-                  ))}
-                </ul>
-              </dd>
-            </div>
-            <div>
-              <dt className="font-medium text-foreground">{labels.stack}</dt>
-              <dd>{experience.stack}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-foreground">
-                {labels.knowledge}
-              </dt>
-              <dd>
-                <ul className="mt-2 list-disc space-y-2 pl-6">
-                  {experience.knowledge.map((item, index) => (
-                    <li key={`${experience.key}-knowledge-${index}`}>{item}</li>
-                  ))}
-                </ul>
-              </dd>
-            </div>
-            {experience.links?.length ? (
+      <div className="space-y-8">
+        {experiences.map((experience) => (
+          <PageSection
+            key={experience.key}
+            description={`${experience.period} / ${experience.company}`}
+            title={experience.role}
+          >
+            <dl className="space-y-4 text-muted-foreground">
               <div>
-                <dt className="font-medium text-foreground">{labels.links}</dt>
+                <dt className="font-medium text-foreground">
+                  {labels.product}
+                </dt>
+                <dd>{experience.product}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-foreground">
+                  {labels.contributions}
+                </dt>
                 <dd>
-                  <ul className="mt-2 space-y-2">
-                    {experience.links.map((link) => (
-                      <li key={`${experience.key}-${link.name}`}>
-                        {link.url ? (
-                          <Button asChild className="h-auto p-0" variant="link">
-                            <a href={link.url} rel="noreferrer" target="_blank">
-                              {link.name}
-                            </a>
-                          </Button>
-                        ) : (
-                          <p>{link.name}</p>
-                        )}
+                  <ul className="mt-2 list-disc space-y-2 pl-6">
+                    {experience.contributions.map((item, index) => (
+                      <li key={`${experience.key}-${index}`}>{item}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-foreground">{labels.stack}</dt>
+                <dd>{experience.stack}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-foreground">
+                  {labels.knowledge}
+                </dt>
+                <dd>
+                  <ul className="mt-2 list-disc space-y-2 pl-6">
+                    {experience.knowledge.map((item, index) => (
+                      <li key={`${experience.key}-knowledge-${index}`}>
+                        {item}
                       </li>
                     ))}
                   </ul>
                 </dd>
               </div>
-            ) : null}
-          </dl>
-        </PageSection>
-      ))}
+            </dl>
+          </PageSection>
+        ))}
+      </div>
     </>
   );
 }

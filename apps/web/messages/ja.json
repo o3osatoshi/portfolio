@@ -363,10 +363,6 @@
             "first": "Web3 の基礎アーキテクチャ",
             "second": "Web2 企業における Web3 事業戦略"
           },
-          "links": {
-            "first": "記事（インタビュー）",
-            "second": "記事（Tech Fes）"
-          },
           "period": "2021年4月 - 2023年10月",
           "product": "エンタープライズ向け Web3 戦略の策定に向けた技術調査と検証を実施",
           "role": "技術リサーチャー",
@@ -376,7 +372,6 @@
       "labels": {
         "contributions": "担当内容",
         "knowledge": "知見",
-        "links": "リンク",
         "product": "プロダクト / プロジェクト",
         "stack": "技術スタック"
       }
