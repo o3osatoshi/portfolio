@@ -155,7 +155,6 @@
     "labs-web3-crud": "Web3 CRUD",
     "portfolio": "ポートフォリオ",
     "portfolio-about": "概要",
-    "portfolio-blog": "ブログ",
     "portfolio-education": "学歴",
     "portfolio-experiences": "経歴",
     "portfolio-links": "リンク",
@@ -205,19 +204,6 @@
           "first": "スタートアップから大企業まで、新規プロダクトの立ち上げや技術検証、サービスの成長フェーズに関わってきました。"
         }
       }
-    }
-  },
-  "PortfolioBlog": {
-    "header": {
-      "actions": {
-        "visit": "ブログを見る"
-      },
-      "description": "Labs、UI、実験の長文メモをまとめています。うまくいった点と課題も記録。",
-      "title": "ブログ"
-    },
-    "metadata": {
-      "description": "Labs、UI、実験の長文メモと検証記録。",
-      "title": "ブログ — Satoshi Ogura"
     }
   },
   "PortfolioEducation": {

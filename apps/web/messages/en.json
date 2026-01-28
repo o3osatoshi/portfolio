@@ -155,7 +155,6 @@
     "labs-web3-crud": "Web3 CRUD",
     "portfolio": "Portfolio",
     "portfolio-about": "About",
-    "portfolio-blog": "Blog",
     "portfolio-education": "Education",
     "portfolio-experiences": "Experiences",
     "portfolio-links": "Links",
@@ -205,19 +204,6 @@
           "first": "From startups to large enterprises, I’ve worked on new product launches, technical exploration, and growth phases."
         }
       }
-    }
-  },
-  "PortfolioBlog": {
-    "header": {
-      "actions": {
-        "visit": "Visit blog"
-      },
-      "description": "Long-form notes on Labs, UI, and experiments—focused on what worked, what didn’t, and why.",
-      "title": "Blog"
-    },
-    "metadata": {
-      "description": "Long-form notes on Labs, UI, and experiments, with what worked and what didn’t.",
-      "title": "Blog — Satoshi Ogura"
     }
   },
   "PortfolioEducation": {
