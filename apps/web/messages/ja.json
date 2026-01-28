@@ -21,13 +21,13 @@
         "cta": "→ ラボを見る",
         "description": "新しい技術や設計手法を試し、仮説・実装・検証を行うための実験的な取り組みをまとめています。",
         "detail": "学習の過程や試行錯誤も含めて記録しています。",
-        "title": "Labs"
+        "title": "ラボ"
       },
       "portfolio": {
         "cta": "→ ポートフォリオを見る",
         "description": "これまでの経歴や経験、対応してきた領域やスキルをまとめています。",
         "detail": "ソフトウェアエンジニアとしての職務経歴や能力を整理したページです。",
-        "title": "Portfolio"
+        "title": "ポートフォリオ"
       },
       "sourceCode": {
         "cta": "→ GitHub リポジトリを見る",
@@ -38,14 +38,14 @@
         "cta": "→ ツールキットを見る",
         "description": "汎用的に利用できる機能をまとめた OSS ライブラリを公開しています。",
         "detail": "一般的な用途で使えるツールについて、実際の挙動を確認できるデモページを用意しています。",
-        "title": "Toolkit"
+        "title": "ツールキット"
       }
     }
   },
   "Labs": {
     "header": {
       "description": "新しい技術や設計手法を試すための実験と学習の記録です。",
-      "title": "Labs"
+      "title": "ラボ"
     },
     "metadata": {
       "description": "新しい技術や設計手法を試すための実験と学習の記録。",
@@ -166,11 +166,11 @@
   "Portfolio": {
     "header": {
       "description": "経歴、経験、スキルを整理したソフトウェアエンジニアとしてのプロフィールです。",
-      "title": "Portfolio"
+      "title": "ポートフォリオ"
     },
     "metadata": {
       "description": "経歴・経験・スキルを整理したソフトウェアエンジニアのプロフィール。",
-      "title": "Portfolio — Satoshi Ogura"
+      "title": "ポートフォリオ — Satoshi Ogura"
     },
     "sections": {
       "summary": {
@@ -184,11 +184,11 @@
   "PortfolioAbout": {
     "header": {
       "description": "ソフトウェアエンジニアとして、Web フロントエンド、フルスタック開発、Web3 領域を中心に経験を積んできました。",
-      "title": "About"
+      "title": "概要"
     },
     "metadata": {
       "description": "プロフィールと関心領域の概要。",
-      "title": "About — Satoshi Ogura"
+      "title": "概要 — Satoshi Ogura"
     },
     "sections": {
       "interests": {
@@ -223,11 +223,11 @@
   "PortfolioEducation": {
     "header": {
       "description": "学歴と研究内容の概要です。",
-      "title": "Education"
+      "title": "学歴"
     },
     "metadata": {
       "description": "学歴と研究内容の概要。",
-      "title": "Education — Satoshi Ogura"
+      "title": "学歴 — Satoshi Ogura"
     },
     "sections": {
       "items": {
@@ -383,11 +383,11 @@
     },
     "header": {
       "description": "SNS と関連サイトへのリンク集です。",
-      "title": "Links"
+      "title": "リンク"
     },
     "metadata": {
       "description": "SNS と関連サイトへのリンク集。",
-      "title": "Links — Satoshi Ogura"
+      "title": "リンク — Satoshi Ogura"
     },
     "sections": {
       "sites": {
@@ -435,11 +435,11 @@
   "PortfolioSkills": {
     "header": {
       "description": "対応可能な技術・領域をカテゴリ別に整理しています。",
-      "title": "Skills"
+      "title": "スキル"
     },
     "metadata": {
       "description": "対応可能な技術や領域をカテゴリ別に整理。",
-      "title": "Skills — Satoshi Ogura"
+      "title": "スキル — Satoshi Ogura"
     },
     "sections": {
       "backend": {
@@ -549,7 +549,7 @@
   "ToolkitIndex": {
     "header": {
       "description": "汎用的に利用できる機能をまとめた OSS ライブラリを公開しています。",
-      "title": "Toolkit"
+      "title": "ツールキット"
     },
     "metadata": {
       "description": "汎用的な OSS ライブラリとデモページをまとめています。",
