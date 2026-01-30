@@ -18,6 +18,7 @@ Exports
 - `@o3osatoshi/config/tsconfig/*`
 - `@o3osatoshi/config/biome/*`
 - `@o3osatoshi/config/eslint/*`
+- `@o3osatoshi/config/vitest`
 
 ## Installation
 
@@ -103,6 +104,37 @@ Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).
   "extends": "@o3osatoshi/config/tsconfig/storybook.json"
 }
 ```
+
+## Vitest presets
+
+Import presets from `@o3osatoshi/config/vitest` and export a config in `vitest.config.ts`.
+
+```ts
+import { fileURLToPath } from "node:url";
+
+import tsconfigPaths from "vite-tsconfig-paths";
+import { browserTestPreset } from "@o3osatoshi/config/vitest";
+
+export default browserTestPreset({
+  plugins: [tsconfigPaths()],
+  resolve: {
+    alias: {
+      "server-only": fileURLToPath(
+        new URL("./src/test/server-only.ts", import.meta.url),
+      ),
+    },
+  },
+  test: {
+    coverage: {
+      exclude: ["next.config.mjs", "postcss.config.mjs"],
+    },
+  },
+});
+```
+
+Notes
+- `resolve` is forwarded to Vite, so you can define aliases without wrapping `mergeConfig`.
+- Coverage options are rebuilt by the preset; specify all desired coverage fields when overriding.
 
 ## ESLint (flat config)
 

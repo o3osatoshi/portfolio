@@ -11,12 +11,14 @@ import type { CoverageV8Options, InlineConfig } from "vitest/node";
  * Supported overrides for the shared Vitest presets.
  *
  * Provides a thin wrapper allowing consumers to forward a `test` InlineConfig from `vitest/node` alongside
- * optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]`.
+ * optional Vite/Vitest plugins exposed via `ViteUserConfig["plugins"]` and Vite resolve settings via
+ * `ViteUserConfig["resolve"]`.
  *
  * @public
  */
 export type Options = {
   plugins?: ViteUserConfig["plugins"];
+  resolve?: ViteUserConfig["resolve"];
   test?: {
     coverage?: CoverageV8Options;
   } & InlineConfig;
@@ -34,6 +36,7 @@ export type Options = {
  * - The test environment defaults to `node`, and the JUnit reporter writes to `.reports/junit.xml`
  *   unless `opts.test?.environment` or `opts.test?.outputFile` override those values.
  * - Any Vite/Vitest `opts.plugins` values are forwarded directly to `defineConfig`.
+ * - Vite resolve settings can be forwarded through `opts.resolve` (aliases, extensions, etc.).
  * Additional InlineConfig fields provided via `opts.test` remain untouched unless they collide with the
  * enforced defaults above.
  *
@@ -45,6 +48,7 @@ export function baseTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
+    ...(opts.resolve ? { resolve: opts.resolve } : {}),
     test: {
       ...opts.test,
       coverage: {
@@ -81,6 +85,7 @@ export function baseTestPreset(opts: Options = {}) {
  * - The environment defaults to `jsdom`, though any fields supplied via `opts.test` override the
  *   preset after defaults are applied.
  * - Additional Vite/Vitest plugins can be registered through `opts.plugins`.
+ * - Vite resolve settings can be forwarded through `opts.resolve` (aliases, extensions, etc.).
  *
  * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
  * @returns Vitest configuration produced via `defineConfig`.
@@ -90,6 +95,7 @@ export function browserTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
+    ...(opts.resolve ? { resolve: opts.resolve } : {}),
     test: {
       ...opts.test,
       coverage: {
@@ -122,7 +128,8 @@ export function browserTestPreset(opts: Options = {}) {
  * Chromium. Any InlineConfig projects passed through `opts.test?.projects` are converted into inline
  * configurations with the Storybook defaults applied, while non-inline entries remain untouched.
  * Coverage retains the shared defaults unless fully redefined via `opts.test?.coverage`. Additional
- * Vite/Vitest plugins cascade through `opts.plugins`.
+ * Vite/Vitest plugins cascade through `opts.plugins`, and Vite resolve settings can be supplied via
+ * `opts.resolve`.
  *
  * @param opts - Optional InlineConfig details and plugin registrations to merge into the preset.
  * @returns Vitest configuration produced via `defineConfig`.
@@ -132,6 +139,7 @@ export function storybookTestPreset(opts: Options = {}) {
   const cvrg = opts.test?.coverage;
   return defineConfig({
     ...(opts.plugins ? { plugins: opts.plugins } : {}),
+    ...(opts.resolve ? { resolve: opts.resolve } : {}),
     test: {
       ...(opts.test?.projects
         ? {

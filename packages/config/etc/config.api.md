@@ -24,6 +24,7 @@ export function functionsBundlePreset(opts?: Options_2): Options_2 | Options_2[]
 // @public
 export type Options = {
     plugins?: ViteUserConfig["plugins"];
+    resolve?: ViteUserConfig["resolve"];
     test?: {
         coverage?: CoverageV8Options;
     } & InlineConfig;
