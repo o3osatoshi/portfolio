@@ -6,8 +6,6 @@ import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 import { env } from "@/env/server";
 import { getWebNodeLogger } from "@/lib/logger/node";
 
-export const runtime = "nodejs";
-
 const store = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
   url: env.UPSTASH_REDIS_REST_URL,
