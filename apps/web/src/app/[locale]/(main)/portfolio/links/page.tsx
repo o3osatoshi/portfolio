@@ -13,6 +13,10 @@ type LinkItem = {
   url: string;
 };
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -27,8 +31,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("PortfolioLinks");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "PortfolioLinks", locale });
   const actionLabel = t("actions.visit");
   const socialLinks: LinkItem[] = [
     {

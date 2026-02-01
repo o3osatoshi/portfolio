@@ -7,12 +7,15 @@ import { SidebarInset, SidebarProvider } from "@o3osatoshi/ui/client";
 
 interface Props {
   children: ReactNode;
+  params: Promise<{ locale: string }>;
 }
 
-export default function Layout({ children }: Props) {
+export default async function Layout({ children, params }: Props) {
+  const { locale } = await params;
+
   return (
     <SidebarProvider>
-      <Sidebar />
+      <Sidebar locale={locale} />
       <SidebarInset>
         <BreadcrumbHeader />
         <PageMain>{children}</PageMain>

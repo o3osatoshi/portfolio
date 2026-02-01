@@ -4,6 +4,10 @@ import { getTranslations } from "next-intl/server";
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 type SkillSection = {
   items: string[];
   key: string;
@@ -24,8 +28,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("PortfolioSkills");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "PortfolioSkills", locale });
   const sections: SkillSection[] = [
     {
       items: [

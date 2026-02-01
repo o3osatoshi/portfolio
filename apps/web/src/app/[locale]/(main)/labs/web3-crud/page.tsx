@@ -9,6 +9,10 @@ import { getTranslations } from "next-intl/server";
 // import { AmountInput, Card, CardContent, Heading } from "@o3osatoshi/ui";
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,8 +27,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("LabsWeb3Crud");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "LabsWeb3Crud", locale });
 
   return (
     <PageHeader

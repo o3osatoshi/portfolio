@@ -6,6 +6,10 @@ import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import TextBlock from "@/app/[locale]/(main)/_components/text-block";
 import { Button } from "@o3osatoshi/ui";
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -20,8 +24,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("ToolkitIndex");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "ToolkitIndex", locale });
 
   const ossItems = [
     {

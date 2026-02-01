@@ -4,6 +4,11 @@ import { getTranslations } from "next-intl/server";
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import TextBlock from "@/app/[locale]/(main)/_components/text-block";
+
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -18,8 +23,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("PortfolioAbout");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "PortfolioAbout", locale });
   const interests = [
     t("sections.interests.items.frontend"),
     t("sections.interests.items.web3"),
