@@ -10,8 +10,6 @@ import * as React$1 from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { VariantProps } from 'class-variance-authority';
 
-// Warning: (ae-forgotten-export) The symbol "alertVariants" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function Alert(input: React$1.ComponentProps<"div"> & VariantProps<typeof alertVariants>): react_jsx_runtime.JSX.Element;
 
@@ -20,6 +18,11 @@ export function AlertDescription(input: React$1.ComponentProps<"div">): react_js
 
 // @public
 export function AlertTitle(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+
+// @public
+export const alertVariants: (props?: ({
+    variant?: "default" | "destructive" | null | undefined;
+} & class_variance_authority_types.ClassProp) | undefined) => string;
 
 // @public
 export function AmountInput(input: AmountInputProps): react_jsx_runtime.JSX.Element;
