@@ -4,6 +4,7 @@ import { Suspense } from "react";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import TransactionCard from "@/app/[locale]/(main)/labs/_components/transaction-card";
+import TransactionCardSkeleton from "@/app/[locale]/(main)/labs/_components/transaction-card-skeleton";
 import CreateForm from "@/app/[locale]/(main)/labs/server-actions-crud/_components/create-form";
 import { getTransactions } from "@/server/get-transactions";
 import { userMessageFromError } from "@o3osatoshi/toolkit";
@@ -51,7 +52,7 @@ export default async function Page({ params }: Props) {
       />
       <div className="flex flex-col gap-6">
         <CreateForm />
-        <Suspense fallback={null}>
+        <Suspense fallback={<TransactionCardSkeleton />}>
           <TransactionsSection locale={locale} />
         </Suspense>
       </div>
