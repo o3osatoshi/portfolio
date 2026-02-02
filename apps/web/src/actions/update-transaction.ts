@@ -10,7 +10,7 @@ import { updateTag } from "next/cache";
 
 import { env } from "@/env/server";
 import { redirect } from "@/i18n/navigation";
-import { getMe } from "@/services/get-me";
+import { getUserId } from "@/server/auth";
 import { getPath, getTag } from "@/utils/nav-handler";
 import { type ActionState, err } from "@o3osatoshi/toolkit";
 
@@ -24,16 +24,18 @@ export const updateTransaction = async (
 ): Promise<ActionState | undefined> => {
   const locale = await getLocale();
 
-  return getMe()
-    .andThen((me) =>
+  return getUserId()
+    .andThen((userId) =>
       parseUpdateTransactionRequest({
         ...Object.fromEntries(formData),
-      }).map((req) => ({ me, req })),
+      }).map((req) => ({ req, userId })),
     )
-    .andThen(({ me, req }) => usecase.execute(req, me.id).map(() => me))
+    .andThen(({ req, userId }) =>
+      usecase.execute(req, userId).map(() => userId),
+    )
     .match<undefined, ActionState>(
-      (me) => {
-        updateTag(getTag("labs-transactions", { userId: me.id }));
+      (userId) => {
+        updateTag(getTag("labs-transactions", { userId }));
         redirect({ href: getPath("labs-server-actions-crud"), locale });
       },
       (error) => err(error),
