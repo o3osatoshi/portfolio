@@ -7,7 +7,7 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/actions/update-transaction";
-import type { Transaction } from "@/services/get-transactions";
+import type { Transaction } from "@/server/get-transactions";
 import { updateTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";

@@ -75,4 +75,5 @@ export function getAuthUserId(authUser?: AuthUser): string | undefined {
 }
 
 export type { AuthConfig };
+export * from "./jwt";
 export * from "./types";
