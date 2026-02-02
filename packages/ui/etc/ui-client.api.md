@@ -17,146 +17,146 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { VariantProps } from 'class-variance-authority';
 
 // @public
-export function Avatar({ className, ...props }: React$1.ComponentProps<typeof AvatarPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Avatar(input: React$1.ComponentProps<typeof AvatarPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function AvatarFallback({ className, ...props }: React$1.ComponentProps<typeof AvatarPrimitive.Fallback>): react_jsx_runtime.JSX.Element;
+export function AvatarFallback(input: React$1.ComponentProps<typeof AvatarPrimitive.Fallback>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function AvatarImage({ className, ...props }: React$1.ComponentProps<typeof AvatarPrimitive.Image>): react_jsx_runtime.JSX.Element;
+export function AvatarImage(input: React$1.ComponentProps<typeof AvatarPrimitive.Image>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Collapsible({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Collapsible(input: React.ComponentProps<typeof CollapsiblePrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CollapsibleContent({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>): react_jsx_runtime.JSX.Element;
+export function CollapsibleContent(input: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CollapsibleTrigger({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>): react_jsx_runtime.JSX.Element;
+export function CollapsibleTrigger(input: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Dialog({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Dialog(input: React$1.ComponentProps<typeof DialogPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogClose({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Close>): react_jsx_runtime.JSX.Element;
+export function DialogClose(input: React$1.ComponentProps<typeof DialogPrimitive.Close>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogContent({ children, className, ...props }: React$1.ComponentProps<typeof DialogPrimitive.Content>): react_jsx_runtime.JSX.Element;
+export function DialogContent(input: React$1.ComponentProps<typeof DialogPrimitive.Content>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogDescription({ className, ...props }: React$1.ComponentProps<typeof DialogPrimitive.Description>): react_jsx_runtime.JSX.Element;
+export function DialogDescription(input: React$1.ComponentProps<typeof DialogPrimitive.Description>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogFooter({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function DialogFooter(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogHeader({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function DialogHeader(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogOverlay({ className, ...props }: React$1.ComponentProps<typeof DialogPrimitive.Overlay>): react_jsx_runtime.JSX.Element;
+export function DialogOverlay(input: React$1.ComponentProps<typeof DialogPrimitive.Overlay>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogPortal({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Portal>): react_jsx_runtime.JSX.Element;
+export function DialogPortal(input: React$1.ComponentProps<typeof DialogPrimitive.Portal>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogTitle({ className, ...props }: React$1.ComponentProps<typeof DialogPrimitive.Title>): react_jsx_runtime.JSX.Element;
+export function DialogTitle(input: React$1.ComponentProps<typeof DialogPrimitive.Title>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DialogTrigger({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
+export function DialogTrigger(input: React$1.ComponentProps<typeof DialogPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenu({ ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function DropdownMenu(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuCheckboxItem({ checked, children, className, ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuCheckboxItem(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuContent({ sideOffset, className, ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Content>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuContent(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Content>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuGroup({ ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Group>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuGroup(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Group>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuItem({ className, inset, variant, ...props }: {
+export function DropdownMenuItem(input: {
     inset?: boolean;
     variant?: "default" | "destructive";
 } & React$1.ComponentProps<typeof DropdownMenuPrimitive.Item>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuLabel({ className, inset, ...props }: {
+export function DropdownMenuLabel(input: {
     inset?: boolean;
 } & React$1.ComponentProps<typeof DropdownMenuPrimitive.Label>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuPortal({ ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Portal>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuPortal(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Portal>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuRadioGroup({ ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuRadioGroup(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuRadioItem({ children, className, ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuRadioItem(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuSeparator({ className, ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Separator>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuSeparator(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Separator>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuShortcut({ className, ...props }: React$1.ComponentProps<"span">): react_jsx_runtime.JSX.Element;
+export function DropdownMenuShortcut(input: React$1.ComponentProps<"span">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuSub({ ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Sub>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuSub(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Sub>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuSubContent({ className, ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.SubContent>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuSubContent(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.SubContent>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuSubTrigger({ children, className, inset, ...props }: {
+export function DropdownMenuSubTrigger(input: {
     inset?: boolean;
 } & React$1.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function DropdownMenuTrigger({ ...props }: React$1.ComponentProps<typeof DropdownMenuPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
+export function DropdownMenuTrigger(input: React$1.ComponentProps<typeof DropdownMenuPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Label({ className, ...props }: React$1.ComponentProps<typeof LabelPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Label(input: React$1.ComponentProps<typeof LabelPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Separator({ className, decorative, orientation, ...props }: React$1.ComponentProps<typeof SeparatorPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Separator(input: React$1.ComponentProps<typeof SeparatorPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Sheet({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Sheet(input: React$1.ComponentProps<typeof DialogPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetClose({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Close>): react_jsx_runtime.JSX.Element;
+export function SheetClose(input: React$1.ComponentProps<typeof DialogPrimitive.Close>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetContent({ side, children, className, ...props }: {
+export function SheetContent(input: {
     side?: "bottom" | "left" | "right" | "top";
 } & React$1.ComponentProps<typeof DialogPrimitive.Content>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetDescription({ className, ...props }: React$1.ComponentProps<typeof DialogPrimitive.Description>): react_jsx_runtime.JSX.Element;
+export function SheetDescription(input: React$1.ComponentProps<typeof DialogPrimitive.Description>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetFooter({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SheetFooter(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetHeader({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SheetHeader(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetTitle({ className, ...props }: React$1.ComponentProps<typeof DialogPrimitive.Title>): react_jsx_runtime.JSX.Element;
+export function SheetTitle(input: React$1.ComponentProps<typeof DialogPrimitive.Title>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SheetTrigger({ ...props }: React$1.ComponentProps<typeof DialogPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
+export function SheetTrigger(input: React$1.ComponentProps<typeof DialogPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Sidebar({ side, children, className, collapsible, variant, ...props }: {
+export function Sidebar(input: {
     collapsible?: "icon" | "none" | "offcanvas";
     side?: "left" | "right";
     variant?: "floating" | "inset" | "sidebar";
 } & React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarContent({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SidebarContent(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
 export type SidebarContextProps = {
@@ -170,106 +170,106 @@ export type SidebarContextProps = {
 };
 
 // @public
-export function SidebarFooter({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SidebarFooter(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarGroup({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SidebarGroup(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarGroupAction({ asChild, className, ...props }: {
+export function SidebarGroupAction(input: {
     asChild?: boolean;
 } & React$1.ComponentProps<"button">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarGroupContent({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SidebarGroupContent(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarGroupLabel({ asChild, className, ...props }: {
+export function SidebarGroupLabel(input: {
     asChild?: boolean;
 } & React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarHeader({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SidebarHeader(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "Input" needs to be exported by the entry point index.d.ts
 //
 // @public
-export function SidebarInput({ className, ...props }: React$1.ComponentProps<typeof Input>): react_jsx_runtime.JSX.Element;
+export function SidebarInput(input: React$1.ComponentProps<typeof Input>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarInset({ className, ...props }: React$1.ComponentProps<"main">): react_jsx_runtime.JSX.Element;
+export function SidebarInset(input: React$1.ComponentProps<"main">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenu({ className, ...props }: React$1.ComponentProps<"ul">): react_jsx_runtime.JSX.Element;
+export function SidebarMenu(input: React$1.ComponentProps<"ul">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuAction({ asChild, className, showOnHover, ...props }: {
+export function SidebarMenuAction(input: {
     asChild?: boolean;
     showOnHover?: boolean;
 } & React$1.ComponentProps<"button">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuBadge({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function SidebarMenuBadge(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "sidebarMenuButtonVariants" needs to be exported by the entry point index.d.ts
 //
 // @public
-export function SidebarMenuButton({ asChild, className, isActive, size, tooltip, variant, ...props }: {
+export function SidebarMenuButton(input: {
     asChild?: boolean;
     isActive?: boolean;
     tooltip?: React$1.ComponentProps<typeof TooltipContent> | string;
 } & React$1.ComponentProps<"button"> & VariantProps<typeof sidebarMenuButtonVariants>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuItem({ className, ...props }: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
+export function SidebarMenuItem(input: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuSkeleton({ className, showIcon, ...props }: {
+export function SidebarMenuSkeleton(input: {
     showIcon?: boolean;
 } & React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuSub({ className, ...props }: React$1.ComponentProps<"ul">): react_jsx_runtime.JSX.Element;
+export function SidebarMenuSub(input: React$1.ComponentProps<"ul">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuSubButton({ asChild, className, isActive, size, ...props }: {
+export function SidebarMenuSubButton(input: {
     asChild?: boolean;
     isActive?: boolean;
     size?: "md" | "sm";
 } & React$1.ComponentProps<"a">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarMenuSubItem({ className, ...props }: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
+export function SidebarMenuSubItem(input: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarProvider({ children, className, defaultOpen, onOpenChange: setOpenProp, open: openProp, style, ...props }: {
+export function SidebarProvider(input: {
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean) => void;
     open?: boolean;
 } & React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarRail({ className, ...props }: React$1.ComponentProps<"button">): react_jsx_runtime.JSX.Element;
+export function SidebarRail(input: React$1.ComponentProps<"button">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function SidebarSeparator({ className, ...props }: React$1.ComponentProps<typeof Separator>): react_jsx_runtime.JSX.Element;
+export function SidebarSeparator(input: React$1.ComponentProps<typeof Separator>): react_jsx_runtime.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "Button" needs to be exported by the entry point index.d.ts
 //
 // @public
-export function SidebarTrigger({ className, onClick, ...props }: React$1.ComponentProps<typeof Button>): react_jsx_runtime.JSX.Element;
+export function SidebarTrigger(input: React$1.ComponentProps<typeof Button>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Tooltip({ ...props }: React$1.ComponentProps<typeof TooltipPrimitive.Root>): react_jsx_runtime.JSX.Element;
+export function Tooltip(input: React$1.ComponentProps<typeof TooltipPrimitive.Root>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function TooltipContent({ sideOffset, children, className, ...props }: React$1.ComponentProps<typeof TooltipPrimitive.Content>): react_jsx_runtime.JSX.Element;
+export function TooltipContent(input: React$1.ComponentProps<typeof TooltipPrimitive.Content>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function TooltipProvider({ delayDuration, ...props }: React$1.ComponentProps<typeof TooltipPrimitive.Provider>): react_jsx_runtime.JSX.Element;
+export function TooltipProvider(input: React$1.ComponentProps<typeof TooltipPrimitive.Provider>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function TooltipTrigger({ ...props }: React$1.ComponentProps<typeof TooltipPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
+export function TooltipTrigger(input: React$1.ComponentProps<typeof TooltipPrimitive.Trigger>): react_jsx_runtime.JSX.Element;
 
 // @public
 export function useSidebar(): SidebarContextProps;

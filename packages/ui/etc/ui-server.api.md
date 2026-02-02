@@ -13,16 +13,16 @@ import { VariantProps } from 'class-variance-authority';
 // Warning: (ae-forgotten-export) The symbol "alertVariants" needs to be exported by the entry point index.d.ts
 //
 // @public
-export function Alert({ className, variant, ...props }: React$1.ComponentProps<"div"> & VariantProps<typeof alertVariants>): react_jsx_runtime.JSX.Element;
+export function Alert(input: React$1.ComponentProps<"div"> & VariantProps<typeof alertVariants>): react_jsx_runtime.JSX.Element;
 
 // @public
-export function AlertDescription({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function AlertDescription(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function AlertTitle({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function AlertTitle(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function AmountInput({ disabled, placeholder, type, }: AmountInputProps): react_jsx_runtime.JSX.Element;
+export function AmountInput(input: AmountInputProps): react_jsx_runtime.JSX.Element;
 
 // @public
 export interface AmountInputProps {
@@ -35,30 +35,30 @@ export interface AmountInputProps {
 }
 
 // @public
-export function Breadcrumb({ ...props }: React$1.ComponentProps<"nav">): react_jsx_runtime.JSX.Element;
+export function Breadcrumb(input: React$1.ComponentProps<"nav">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function BreadcrumbEllipsis({ className, ...props }: React$1.ComponentProps<"span">): react_jsx_runtime.JSX.Element;
+export function BreadcrumbEllipsis(input: React$1.ComponentProps<"span">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function BreadcrumbItem({ className, ...props }: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
+export function BreadcrumbItem(input: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function BreadcrumbLink({ asChild, className, ...props }: {
+export function BreadcrumbLink(input: {
     asChild?: boolean;
 } & React$1.ComponentProps<"a">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function BreadcrumbList({ className, ...props }: React$1.ComponentProps<"ol">): react_jsx_runtime.JSX.Element;
+export function BreadcrumbList(input: React$1.ComponentProps<"ol">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function BreadcrumbPage({ className, ...props }: React$1.ComponentProps<"span">): react_jsx_runtime.JSX.Element;
+export function BreadcrumbPage(input: React$1.ComponentProps<"span">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function BreadcrumbSeparator({ children, className, ...props }: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
+export function BreadcrumbSeparator(input: React$1.ComponentProps<"li">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Button({ asChild, className, size, variant, ...props }: {
+export function Button(input: {
     asChild?: boolean;
 } & React$1.ComponentProps<"button"> & VariantProps<typeof buttonVariants>): react_jsx_runtime.JSX.Element;
 
@@ -69,31 +69,31 @@ export const buttonVariants: (props?: ({
 } & class_variance_authority_types.ClassProp) | undefined) => string;
 
 // @public
-export function Card({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function Card(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CardAction({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function CardAction(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CardContent({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function CardContent(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CardDescription({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function CardDescription(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CardFooter({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function CardFooter(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CardHeader({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function CardHeader(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function CardTitle({ className, ...props }: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function CardTitle(input: React$1.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
 export function cn(...inputs: ClassValue[]): string;
 
 // @public
-export function FormInput({ id, className, errorMessage, label, type, ...props }: FormInputProps): react_jsx_runtime.JSX.Element;
+export function FormInput(input: FormInputProps): react_jsx_runtime.JSX.Element;
 
 // @public
 export type FormInputProps = {
@@ -102,7 +102,7 @@ export type FormInputProps = {
 } & React$1.ComponentProps<"input">;
 
 // @public
-export function Heading({ align, children, className, level, ...props }: HeadingProps): react_jsx_runtime.JSX.Element;
+export function Heading(input: HeadingProps): react_jsx_runtime.JSX.Element;
 
 // @public
 export type HeadingProps = React$1.HTMLAttributes<HTMLHeadingElement> & VariantProps<typeof headingVariants>;
@@ -114,10 +114,10 @@ export const headingVariants: (props?: ({
 } & class_variance_authority_types.ClassProp) | undefined) => string;
 
 // @public
-export function Input({ className, type, ...props }: React$1.ComponentProps<"input">): react_jsx_runtime.JSX.Element;
+export function Input(input: React$1.ComponentProps<"input">): react_jsx_runtime.JSX.Element;
 
 // @public
-export function Message({ children, variant }: MessageProps): react_jsx_runtime.JSX.Element | null;
+export function Message(input: MessageProps): react_jsx_runtime.JSX.Element | null;
 
 // @public
 export interface MessageProps {
@@ -128,7 +128,7 @@ export interface MessageProps {
 }
 
 // @public
-export function Skeleton({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+export function Skeleton(input: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
 
 // @public
 export function useIsMobile(): boolean;
