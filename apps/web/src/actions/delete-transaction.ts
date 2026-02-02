@@ -10,7 +10,7 @@ import { updateTag } from "next/cache";
 
 import { env } from "@/env/server";
 import { redirect } from "@/i18n/navigation";
-import { getMe } from "@/services/get-me";
+import { getUserId } from "@/server/auth";
 import { getPath, getTag } from "@/utils/nav-handler";
 import { type ActionState, err } from "@o3osatoshi/toolkit";
 
@@ -24,11 +24,11 @@ export const deleteTransaction = async (
 ): Promise<ActionState | undefined> => {
   const locale = await getLocale();
 
-  return getMe()
-    .andThen((me) =>
+  return getUserId()
+    .andThen((userId) =>
       parseDeleteTransactionRequest({
         ...Object.fromEntries(formData),
-        userId: me.id,
+        userId,
       }),
     )
     .andThen((req) => usecase.execute(req).map(() => req))

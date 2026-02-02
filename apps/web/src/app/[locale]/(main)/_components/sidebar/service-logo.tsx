@@ -8,8 +8,12 @@ import {
 
 import SidebarLink from "./sidebar-link";
 
-export default async function ServiceLogo() {
-  const t = await getTranslations("Brand");
+interface Props {
+  locale: string;
+}
+
+export default async function ServiceLogo({ locale }: Props) {
+  const t = await getTranslations({ namespace: "Brand", locale });
 
   return (
     <SidebarMenu>

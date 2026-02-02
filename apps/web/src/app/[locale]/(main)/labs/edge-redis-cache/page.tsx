@@ -5,6 +5,10 @@ import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
 import RedisCacheDemoCard from "@/app/[locale]/(main)/labs/edge-redis-cache/_components/redis-cache-demo";
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -19,8 +23,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("LabsEdgeRedisCache");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "LabsEdgeRedisCache", locale });
 
   return (
     <>

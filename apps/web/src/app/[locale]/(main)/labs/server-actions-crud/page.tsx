@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import TransactionCard from "@/app/[locale]/(main)/labs/_components/transaction-card";
+import TransactionCardSkeleton from "@/app/[locale]/(main)/labs/_components/transaction-card-skeleton";
 import CreateForm from "@/app/[locale]/(main)/labs/server-actions-crud/_components/create-form";
-import { getTransactions } from "@/services/get-transactions";
+import { getTransactions } from "@/server/get-transactions";
+import { userMessageFromError } from "@o3osatoshi/toolkit";
+import { Message } from "@o3osatoshi/ui";
+
+interface Props {
+  params: Promise<{ locale: string }>;
+}
 
 // const getTransactions: () => Promise<(Transaction & { author: Pick<User, "name"> })[]> =
 //   cache(async () => {
@@ -22,11 +30,7 @@ import { getTransactions } from "@/services/get-transactions";
 //     });
 //   });
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ namespace: "LabsServerCrud", locale });
 
@@ -36,10 +40,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("LabsServerCrud");
-  const result = await getTransactions();
-  const transactions = result.isErr() ? [] : result.value;
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "LabsServerCrud", locale });
 
   return (
     <>
@@ -49,16 +52,35 @@ export default async function Page() {
       />
       <div className="flex flex-col gap-6">
         <CreateForm />
-        {transactions.length === 0 ? (
-          t("sections.transactions.empty")
-        ) : (
-          <div className="flex flex-col gap-2">
-            {transactions.map((tx) => {
-              return <TransactionCard key={tx.id} transaction={tx} />;
-            })}
-          </div>
-        )}
+        <Suspense fallback={<TransactionCardSkeleton />}>
+          <TransactionsSection locale={locale} />
+        </Suspense>
       </div>
     </>
+  );
+}
+
+async function TransactionsSection({ locale }: { locale: string }) {
+  const t = await getTranslations({ namespace: "LabsServerCrud", locale });
+  const result = await getTransactions();
+  const transactions = result.isOk() ? result.value : [];
+  const errorMessage = result.isErr()
+    ? userMessageFromError(result.error)
+    : undefined;
+
+  if (errorMessage) {
+    return <Message variant="destructive">{errorMessage}</Message>;
+  }
+
+  if (transactions.length === 0) {
+    return t("sections.transactions.empty");
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      {transactions.map((tx) => {
+        return <TransactionCard key={tx.id} locale={locale} transaction={tx} />;
+      })}
+    </div>
   );
 }

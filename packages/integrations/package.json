@@ -16,7 +16,7 @@
     "@o3osatoshi/logging": "workspace:*",
     "@o3osatoshi/toolkit": "workspace:*",
     "@repo/domain": "workspace:*",
-    "@upstash/redis": "^1.35.7",
+    "@upstash/redis": "^1.36.1",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },

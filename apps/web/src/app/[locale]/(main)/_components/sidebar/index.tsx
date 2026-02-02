@@ -10,11 +10,15 @@ import Navigation from "./navigation";
 import Setting from "./setting";
 import User from "./user";
 
-export default function Sidebar() {
+interface Props {
+  locale: string;
+}
+
+export default function Sidebar({ locale }: Props) {
   return (
     <UiSidebar variant="inset">
       <SidebarHeader>
-        <ServiceLogo />
+        <ServiceLogo locale={locale} />
       </SidebarHeader>
       <SidebarContent className="justify-between">
         <Navigation />

@@ -6,7 +6,7 @@ const h = vi.hoisted(() => {
     createPrismaClientMock: vi.fn(),
     deleteTransactionExecuteMock: vi.fn(),
     getLocaleMock: vi.fn(),
-    getMeMock: vi.fn(),
+    getUserIdMock: vi.fn(),
     parseDeleteTransactionRequestMock: vi.fn(),
     prismaRepoCtorMock: vi.fn(),
     redirectMock: vi.fn(),
@@ -21,8 +21,8 @@ vi.mock("@/env/client", () => ({
   },
 }));
 
-vi.mock("@/services/get-me", () => ({
-  getMe: h.getMeMock,
+vi.mock("@/server/auth", () => ({
+  getUserId: h.getUserIdMock,
 }));
 
 vi.mock("@repo/application", () => ({
@@ -74,13 +74,13 @@ describe("actions/delete-transaction", () => {
   });
 
   it("revalidates transactions tag and redirects on success", async () => {
-    const me = { id: "u1" };
+    const userId = "u1";
     const parsedReq = {
       id: "t1",
-      userId: me.id,
+      userId,
     };
 
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
+    h.getUserIdMock.mockReturnValueOnce(okAsync(userId));
     h.parseDeleteTransactionRequestMock.mockReturnValueOnce(ok(parsedReq));
     h.deleteTransactionExecuteMock.mockReturnValueOnce(okAsync(undefined));
 
@@ -89,17 +89,17 @@ describe("actions/delete-transaction", () => {
 
     await deleteTransaction(undefined, formData);
 
-    expect(h.getMeMock).toHaveBeenCalledTimes(1);
+    expect(h.getUserIdMock).toHaveBeenCalledTimes(1);
     expect(h.parseDeleteTransactionRequestMock).toHaveBeenCalledTimes(1);
     expect(h.parseDeleteTransactionRequestMock).toHaveBeenCalledWith(
       expect.objectContaining({
         id: "t1",
-        userId: me.id,
+        userId,
       }),
     );
     expect(h.deleteTransactionExecuteMock).toHaveBeenCalledWith(parsedReq);
 
-    const expectedTag = getTag("labs-transactions", { userId: me.id });
+    const expectedTag = getTag("labs-transactions", { userId });
     expect(h.updateTagMock).toHaveBeenCalledWith(expectedTag);
     const expectedPath = getPath("labs-server-actions-crud");
     expect(h.redirectMock).toHaveBeenCalledWith({
@@ -108,9 +108,9 @@ describe("actions/delete-transaction", () => {
     });
   });
 
-  it("returns ActionState error when getMe fails", async () => {
+  it("returns ActionState error when getUserId fails", async () => {
     const authError = new Error("not authenticated");
-    h.getMeMock.mockReturnValueOnce(errAsync(authError));
+    h.getUserIdMock.mockReturnValueOnce(errAsync(authError));
 
     const formData = new FormData();
 
@@ -127,10 +127,10 @@ describe("actions/delete-transaction", () => {
   });
 
   it("returns ActionState error when request parsing fails", async () => {
-    const me = { id: "u1" };
+    const userId = "u1";
     const parseError = new Error("invalid payload");
 
-    h.getMeMock.mockReturnValueOnce(okAsync(me));
+    h.getUserIdMock.mockReturnValueOnce(okAsync(userId));
     h.parseDeleteTransactionRequestMock.mockReturnValueOnce(err(parseError));
 
     const formData = new FormData();

@@ -7,6 +7,10 @@ import { Link } from "@/i18n/navigation";
 import { getPath } from "@/utils/nav-handler";
 import { Button } from "@o3osatoshi/ui";
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -21,8 +25,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("Home");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "Home", locale });
 
   return (
     <>

@@ -17,6 +17,10 @@ type EducationItem = {
   title: string;
 };
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -31,8 +35,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("PortfolioEducation");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ namespace: "PortfolioEducation", locale });
   const items: EducationItem[] = [
     {
       details: [

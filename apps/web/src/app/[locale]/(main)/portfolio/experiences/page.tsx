@@ -15,6 +15,10 @@ type ExperienceItem = {
   stack: string;
 };
 
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -32,8 +36,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page() {
-  const t = await getTranslations("PortfolioExperiences");
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({
+    namespace: "PortfolioExperiences",
+    locale,
+  });
   const labels = {
     contributions: t("sections.labels.contributions"),
     knowledge: t("sections.labels.knowledge"),

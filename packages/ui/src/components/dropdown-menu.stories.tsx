@@ -61,6 +61,12 @@ export const Default: Story = {
     await waitFor(() => {
       expect(rightPanel).toHaveAttribute("aria-checked", "true");
     });
+
+    await userEvent.keyboard("{Escape}");
+
+    await waitFor(() => {
+      expect(body.queryByRole("menu")).toBeNull();
+    });
   },
   render: () => {
     const [statusBar, setStatusBar] = React.useState(true);

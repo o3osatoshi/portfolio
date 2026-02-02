@@ -141,12 +141,12 @@ export type FetchRequest = {
 };
 
 // @public
-export function formatFetchTarget({ request, }: {
+export function formatFetchTarget(input: {
     request?: FetchRequest | undefined;
 }): string | undefined;
 
 // @public
-export function formatHttpStatusReason({ maxPayloadLength, payload, response, serviceName, }: FormatHttpStatusReasonOptions): string;
+export function formatHttpStatusReason(input: FormatHttpStatusReasonOptions): string;
 
 // @public
 export type FormatHttpStatusReasonOptions = {
@@ -269,7 +269,7 @@ export type NewFetchError = {
 };
 
 // @public
-export function newFetchError({ action, cause, hint, impact, kind, request, }: NewFetchError): Error;
+export function newFetchError(input: NewFetchError): Error;
 
 // @public
 export type NewZodError = {
@@ -339,7 +339,7 @@ export type SerializeOptions = {
 };
 
 // @public
-export function sleep(ms: number, { signal }?: SleepOptions): ResultAsync<void, Error>;
+export function sleep(ms: number, input?: SleepOptions): ResultAsync<void, Error>;
 
 // @public
 export type SleepOptions = {

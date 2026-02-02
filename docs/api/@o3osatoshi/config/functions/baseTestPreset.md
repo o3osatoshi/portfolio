@@ -8,7 +8,7 @@
 
 > **baseTestPreset**(`opts`): `UserConfig`
 
-Defined in: [packages/config/src/vitest/index.ts:44](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/vitest/index.ts#L44)
+Defined in: [packages/config/src/vitest/index.ts:47](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/config/src/vitest/index.ts#L47)
 
 Creates the shared Vitest configuration for workspace packages with consistent reporting defaults.
 
@@ -36,5 +36,6 @@ coverage, environment, and reporting paths so the baseline remains consistent.
 - The test environment defaults to `node`, and the JUnit reporter writes to `.reports/junit.xml`
   unless `opts.test?.environment` or `opts.test?.outputFile` override those values.
 - Any Vite/Vitest `opts.plugins` values are forwarded directly to `defineConfig`.
+- Vite resolve settings can be forwarded through `opts.resolve` (aliases, extensions, etc.).
 Additional InlineConfig fields provided via `opts.test` remain untouched unless they collide with the
 enforced defaults above.

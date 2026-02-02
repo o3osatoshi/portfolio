@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import DeleteButton from "@/app/[locale]/(main)/labs/server-actions-crud/_components/delete-button";
 import EditDialog from "@/app/[locale]/(main)/labs/server-actions-crud/_components/edit-dialog";
-import type { Transaction } from "@/services/get-transactions";
+import type { Transaction } from "@/server/get-transactions";
 import {
   Card,
   CardAction,
@@ -13,11 +13,12 @@ import {
 } from "@o3osatoshi/ui";
 
 interface Props {
+  locale: string;
   transaction: Transaction;
 }
 
-export default async function TransactionCard({ transaction }: Props) {
-  const t = await getTranslations("LabsServerCrud");
+export default async function TransactionCard({ locale, transaction }: Props) {
+  const t = await getTranslations({ namespace: "LabsServerCrud", locale });
 
   return (
     <Card>
