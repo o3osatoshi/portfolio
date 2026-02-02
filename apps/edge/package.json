@@ -20,7 +20,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "wrangler": "^4.54.0"
+    "wrangler": "^4.61.1"
   },
   "engines": {
     "node": "22.x"

@@ -24,14 +24,14 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@hono/node-server": "^1.19.7",
-    "@hono/zod-validator": "^0.7.5",
+    "@hono/node-server": "^1.19.9",
+    "@hono/zod-validator": "^0.7.6",
     "@o3osatoshi/logging": "workspace:*",
     "@o3osatoshi/toolkit": "workspace:*",
     "@repo/application": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/domain": "workspace:*",
-    "hono": "^4.11.0",
+    "hono": "^4.11.7",
     "inngest": "catalog:",
     "neverthrow": "catalog:",
     "zod": "catalog:"
