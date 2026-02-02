@@ -45,9 +45,9 @@ Personal portfolio and experimentation platform for **Satoshi Ogura**. The codeb
 ```
 ⏺ root/
   ├── 📁 apps/
-  │   ├── 📁 web/              # Next.js 15 portfolio app (React 19, App Router)
-  │   ├── 📁 edge/             # Cloudflare Worker (Wrangler) exposing the Edge HTTP API
-  │   ├── 📁 functions/        # Firebase Cloud Functions delivery layer
+  │   ├── 📁 web/              # Next.js 16 portfolio app (React 19, App Router)
+  │   ├── 📁 edge/             # Cloudflare Worker (Wrangler v4) exposing the Edge HTTP API
+  │   ├── 📁 functions/        # Firebase Cloud Functions delivery layer (tsup, Node 22)
   │   └── 📁 storybook/        # Vite Storybook for @o3osatoshi/ui
   ├── 📁 packages/
   │   ├── 📁 domain/           # Core entities, value objects, ports
@@ -84,24 +84,29 @@ pnpm install
 
 ### Workspace commands
 - `pnpm dev` – Run all dev targets via Turbo (web, Storybook, functions watch, etc.).
+- `pnpm dev:web` / `pnpm dev:edge` / `pnpm dev:functions` / `pnpm dev:storybook` – Run a single dev target via Turbo filters.
 - `pnpm build` – Build every package/app respecting task dependencies.
+- `pnpm build:web` / `pnpm build:edge` / `pnpm build:functions` / `pnpm build:storybook` – Scoped builds.
 - `pnpm check` – Run type-checks and tests (`check:type` + `check:test`).
 - `pnpm check:type` – Workspace-wide TypeScript compilation with `noEmit`.
 - `pnpm check:test` / `pnpm check:test:cvrg` – Execute package `test` scripts (Vitest) with optional coverage.
 - `pnpm style` – Package sort → ESLint (fix) → Biome (write).
+- `pnpm style:pure` – Package sort → ESLint → Biome (check-only).
 - `pnpm clean` – Remove build artifacts across packages.
-- `pnpm env:pull` – Run `env:pull` scripts only in packages/apps that define them (updates local `.env*` files).
-- Docs: To update API docs, run `npx typedoc`.
+- `pnpm env:pull` – Run `env:pull` scripts only in packages/apps that define them.
 - `pnpm deploy:functions` – Deploy Firebase Cloud Functions.
+- `pnpm deploy:edge` / `pnpm deploy:edge:prv` – Deploy the Cloudflare Worker.
 - `pnpm api:extract` / `pnpm api:report` – Run API extractor across publishable libraries.
+- `pnpm refine` – Style → build → check → API extract.
+- Docs: To update API docs, run `npx typedoc`.
 
 ### App and package targets
 - Web app: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
 - Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
-- Firebase functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
+- Firebase functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`.
 - Edge Worker: `pnpm dev:edge`, `pnpm build:edge`, `pnpm deploy:edge`, `pnpm deploy:edge:prv`.
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
-- Domain/Application/Toolkit: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
+- Package-level checks: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
 
 ## Database workflow (Prisma)
 - Development migrate: `pnpm -C packages/prisma migrate:dev`
@@ -115,12 +120,13 @@ pnpm install
 Environment files (Prisma):
 - `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
 - `packages/prisma/.env.development.local`
+- `packages/prisma/.env.test.local`
 - `packages/prisma/.env.production.local`
 
 Typically, you use the values from the `*.local` files (for example, fetched via Doppler) as a template, then copy or merge the desired configuration into `packages/prisma/.env` before running Prisma CLI commands (at minimum, `DATABASE_URL` must be set).
 
 **Database providers:**
-- **Production/Development**: Neon PostgreSQL (managed via Doppler secrets)
+- **Production/Development**: PostgreSQL configured via environment secrets (provider is not hardcoded in this repo).
 - **Local development with Docker**: `postgresql://postgres:postgres@localhost:54329/postgres?schema=public`
 
 ## Code generation
@@ -133,22 +139,22 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 ## Testing & Quality
 
 - Primary framework: **Vitest** with colocated `*.spec.ts(x)` files.
-- CI (`.github/workflows/ci.yml`) runs `pnpm check:test:cvrg` on each push/PR and uploads JUnit + coverage reports to Codecov (see CI/Coverage badges at the top of this README).
+- CI (`.github/workflows/ci.yml`) runs `pnpm style:pure`, `pnpm turbo run build --affected`, `pnpm turbo run typecheck --affected`, and `pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit`, then uploads JUnit + coverage reports to Codecov.
 - Coverage is tracked with Codecov, including per-package components and flags; see `docs/quality/README.md` for detailed tables and SVG graphs.
 - Quick commands:
   - Workspace tests: `pnpm check:test` / `pnpm check:test:cvrg`
   - Package tests: `pnpm -C packages/<name> test` / `pnpm -C packages/<name> test:cvrg`
 
 ## Technology stack
-- **Frontend**: Next.js 15, React 19, Tailwind CSS, App Router.
+- **Frontend**: Next.js 16, React 19, Tailwind CSS, App Router.
 - **Backend**: Hono-based HTTP interface delivered via Next.js route handlers, Firebase Functions (Node 22), and a Cloudflare Worker.
-- **Database**: Prisma ORM on PostgreSQL (adapter-pg) via Neon for production/development.
+- **Database**: Prisma ORM on PostgreSQL (adapter-pg).
 - **Web3**: Wagmi, RainbowKit, Viem with generated contract hooks.
 - **Shared libraries**: `@o3osatoshi/ui`, `@o3osatoshi/toolkit`, `@o3osatoshi/config`, `@o3osatoshi/logging`, `@repo/auth`, `@repo/interface`, `@repo/integrations`.
 - **Tooling**: Turborepo, pnpm workspaces, Biome, ESLint (flat config), TypeDoc, Changesets, Renovate.
 
 ## Deployment & hosting
-- Frontend served from modern edge-ready hosting (Vercel-like setup).
+- Web app deployment is handled by the platform running `apps/web` (not codified in this repo).
 - Serverless APIs via Firebase Cloud Functions (`pnpm deploy:functions`).
 - Edge HTTP API via Cloudflare Workers (`pnpm deploy:edge` / `pnpm deploy:edge:prv`).
 - Database managed separately; migrations deployed through Prisma scripts.
@@ -156,10 +162,11 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 
 ## Environment variables
 - `apps/web`: `.env.local` (Next.js runtime + Auth.js, database client, Web3 providers).
+- `apps/functions`: `.env.local` (Firebase Functions).
 - `apps/edge`: `.env.local` for local Wrangler dev (synced from Doppler); production secrets are managed as Cloudflare Worker secrets (synced via `pnpm -C apps/edge env:sync`).
 - `packages/prisma`:
   - `.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
-  - `.env.development.local`, `.env.production.local` (local templates)
+  - `.env.development.local`, `.env.test.local`, `.env.production.local` (local templates)
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
 
@@ -168,16 +175,20 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 - Authenticate with Doppler before pulling secrets: run `doppler login` (or set a `DOPPLER_TOKEN`).
 - Update env files from Doppler:
   - Workspace convenience: `pnpm env:pull` (executes only in packages/apps that define `env:pull`).
+  - Web app: `pnpm -C apps/web env:pull` → writes `apps/web/.env.local`.
+  - Functions: `pnpm -C apps/functions env:pull` → writes `apps/functions/.env.local`.
   - Prisma package:
     - `pnpm -C packages/prisma env:pull:dev` → writes `packages/prisma/.env.development.local`
     - `pnpm -C packages/prisma env:pull:lcl` → writes `packages/prisma/.env.test.local`
     - `pnpm -C packages/prisma env:pull:prd` → writes `packages/prisma/.env.production.local`
-- Edge Worker:
-  - `pnpm -C apps/edge env:pull` → writes `apps/edge/.env.local` for local Wrangler dev.
-  - `pnpm -C apps/edge env:sync` → syncs secrets from Doppler to Cloudflare Worker via `wrangler secret bulk`.
+  - Edge Worker:
+    - `pnpm -C apps/edge env:pull` → writes `apps/edge/.env.local` for local Wrangler dev.
+    - `pnpm -C apps/edge env:sync` → syncs secrets from Doppler to Cloudflare Worker via `wrangler secret bulk`.
 - Current Doppler setup includes:
+  - Web: project `portfolio-web` with config `dev`.
+  - Functions: project `portfolio-functions` with config `dev`.
   - Prisma: project `portfolio-prisma` with configs `dev`, `lcl`, `prd`.
-  - Edge: project `portfolio-edge` with configs such as `dev`, `prd`.
+  - Edge: project `portfolio-edge` with configs `dev`, `prd`.
 
 ## Releases & dependency updates
 - Package versioning and changelog generation are handled by **Changesets**:
