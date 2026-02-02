@@ -5,7 +5,6 @@ const h = vi.hoisted(() => {
   return {
     cacheLifeMock: vi.fn(),
     cacheTagMock: vi.fn(),
-    cookiesMock: vi.fn(),
     createPrismaClientMock: vi.fn(),
     getUserIdMock: vi.fn(),
     parseGetTransactionsRequestMock: vi.fn(),
@@ -14,7 +13,7 @@ const h = vi.hoisted(() => {
   };
 });
 
-vi.mock("@repo/auth", () => ({
+vi.mock("@/server/auth", () => ({
   getUserId: h.getUserIdMock,
 }));
 
@@ -43,10 +42,6 @@ vi.mock("next/cache", () => ({
   cacheTag: h.cacheTagMock,
 }));
 
-vi.mock("next/headers", () => ({
-  cookies: h.cookiesMock,
-}));
-
 vi.mock("@/env/client", () => ({
   env: {
     NEXT_PUBLIC_API_BASE_URL: "https://example.com",
@@ -62,6 +57,7 @@ vi.mock("@/env/server", () => ({
 }));
 
 import { getTag } from "@/utils/nav-handler";
+import { webUnauthorizedError } from "@/utils/web-error";
 import { newError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
@@ -92,12 +88,7 @@ describe("getTransactions", () => {
       },
     ];
 
-    h.cookiesMock.mockReturnValueOnce(
-      Promise.resolve({
-        toString: () => "__Secure-authjs.session-token=token",
-      }),
-    );
-    h.getUserIdMock.mockResolvedValueOnce(userId);
+    h.getUserIdMock.mockReturnValueOnce(okAsync(userId));
     h.parseGetTransactionsRequestMock.mockReturnValueOnce(ok({ userId }));
     h.transactionsExecuteMock.mockReturnValueOnce(okAsync(response));
 
@@ -118,19 +109,18 @@ describe("getTransactions", () => {
         expire: ONE_DAY_SECONDS,
       }),
     );
-    expect(h.getUserIdMock).toHaveBeenCalledWith({
-      cookie: "__Secure-authjs.session-token=token",
-      secret: "test-secret",
-    });
+    expect(h.getUserIdMock).toHaveBeenCalledWith();
   });
 
   it("returns Err when token is missing", async () => {
-    h.cookiesMock.mockReturnValueOnce(
-      Promise.resolve({
-        toString: () => "",
-      }),
+    h.getUserIdMock.mockReturnValueOnce(
+      errAsync(
+        webUnauthorizedError({
+          action: "DecodeAuthToken",
+          reason: "Session token is missing a user id.",
+        }),
+      ),
     );
-    h.getUserIdMock.mockResolvedValueOnce(undefined);
 
     const res = await getTransactions();
 
@@ -149,12 +139,7 @@ describe("getTransactions", () => {
       reason: "Database unavailable",
     });
 
-    h.cookiesMock.mockReturnValueOnce(
-      Promise.resolve({
-        toString: () => "authjs.session-token=token",
-      }),
-    );
-    h.getUserIdMock.mockResolvedValueOnce(userId);
+    h.getUserIdMock.mockReturnValueOnce(okAsync(userId));
     h.parseGetTransactionsRequestMock.mockReturnValueOnce(ok({ userId }));
     h.transactionsExecuteMock.mockReturnValueOnce(errAsync(error));
 
