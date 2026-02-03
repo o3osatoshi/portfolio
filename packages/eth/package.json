@@ -44,6 +44,7 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch",
+    "env:pull": "doppler secrets download --project portfolio --config prd --no-file --format env > ./.env.local",
     "generate": "dotenv -e .env.local -- wagmi generate",
     "prepublishOnly": "pnpm clean && pnpm generate && pnpm typecheck && NODE_ENV=production pnpm build",
     "test": "vitest run",
