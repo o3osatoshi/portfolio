@@ -27,9 +27,6 @@ const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const repo = new PrismaTransactionRepository(client);
 const usecase = new GetTransactionsUseCase(repo);
 
-const SUCCESS_CACHE_SECONDS = 60 * 60 * 24;
-const ERROR_CACHE_SECONDS = 60;
-
 type CachedTransactionsResult =
   | { data: Transactions; ok: true }
   | { error: SerializedError; ok: false };
@@ -62,19 +59,11 @@ async function getTransactionsCached(
     .asyncAndThen((req) => usecase.execute(req))
     .match<CachedTransactionsResult>(
       (data) => {
-        cacheLife({
-          revalidate: SUCCESS_CACHE_SECONDS,
-          expire: SUCCESS_CACHE_SECONDS,
-          stale: 0,
-        });
+        cacheLife("dataLong");
         return { data, ok: true };
       },
       (error) => {
-        cacheLife({
-          revalidate: ERROR_CACHE_SECONDS,
-          expire: ERROR_CACHE_SECONDS,
-          stale: 0,
-        });
+        cacheLife("errorShort");
         return { error: serializeError(error), ok: false };
       },
     );

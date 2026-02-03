@@ -5,6 +5,8 @@ import { buildEdgeHandler } from "@repo/interface/http/edge";
 import { env } from "@/env/server";
 import { initWebEdgeLogger } from "@/lib/logger/edge";
 
+export const runtime = "edge";
+
 initWebEdgeLogger();
 
 const authConfig = createAuthConfig({
