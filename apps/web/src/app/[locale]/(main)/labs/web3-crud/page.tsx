@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import { getTranslations } from "next-intl/server";
+import { cacheLife } from "next/cache";
 
 // import "@rainbow-me/rainbowkit/styles.css";
 //

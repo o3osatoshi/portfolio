@@ -8,18 +8,18 @@ const nextConfig = {
   experimental: {
     cacheLife: {
       dataLong: {
-        expire: 60 * 60 * 24,
         revalidate: 60 * 60 * 24,
+        expire: 60 * 60 * 24,
         stale: 0,
       },
       errorShort: {
-        expire: 60,
         revalidate: 60,
+        expire: 60,
         stale: 0,
       },
       staticPage: {
-        expire: 60 * 60 * 24 * 30,
         revalidate: 60 * 60 * 24 * 7,
+        expire: 60 * 60 * 24 * 30,
         stale: 0,
       },
     },
