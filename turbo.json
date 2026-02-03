@@ -4,7 +4,7 @@
     "api:extract": {
       "cache": true,
       "dependsOn": ["^build", "build"],
-      "outputs": ["packages/*/dist/**", "packages/*/etc/**"]
+      "outputs": ["dist/**", "etc/**"]
     },
     "api:report": {
       "cache": false,
