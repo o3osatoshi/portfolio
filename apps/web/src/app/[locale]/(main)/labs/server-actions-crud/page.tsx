@@ -3,9 +3,9 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
-import TransactionCard from "@/app/[locale]/(main)/labs/_components/transaction-card";
-import TransactionCardSkeleton from "@/app/[locale]/(main)/labs/_components/transaction-card-skeleton";
 import CreateForm from "@/app/[locale]/(main)/labs/server-actions-crud/_components/create-form";
+import TransactionCard from "@/app/[locale]/(main)/labs/server-actions-crud/_components/transaction-card";
+import TransactionCardSkeleton from "@/app/[locale]/(main)/labs/server-actions-crud/_components/transaction-card-skeleton";
 import { getTransactions } from "@/server/get-transactions";
 import { userMessageFromError } from "@o3osatoshi/toolkit";
 import { Message } from "@o3osatoshi/ui";

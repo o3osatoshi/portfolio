@@ -3,19 +3,19 @@
 This document reflects the current state of the repository. Commands listed below come directly from existing `package.json` files, so please keep them in sync after making changes.
 
 ## Architecture Overview
-- **Domain (`@repo/domain`)**: Value objects, entities, and ports. Only depends on `@o3osatoshi/toolkit`.
-- **Application (`@repo/application`)**: DTO validation and use cases. Depends on the domain ports/value objects.
+- **Domain (`@repo/domain`)**: Value objects, entities, and ports. Internal dependencies are limited to `@o3osatoshi/toolkit` (plus external libs only).
+- **Application (`@repo/application`)**: DTO validation and use cases. Depends on domain ports/value objects and `@o3osatoshi/toolkit`.
 - **Infrastructure (`@repo/prisma`)**: Prisma-backed implementations of domain ports plus DB client utilities.
 - **Integrations (`@repo/integrations`)**: External service adapters (APIs, caches) implementing domain ports.
 - **Logging (`@o3osatoshi/logging`)**: Axiom-first logging helpers for Node/Edge/Browser runtimes.
 - **Auth (`@repo/auth`)**: Shared Auth.js/Hono configuration and React helpers consumed by HTTP interface and delivery layers.
 - **HTTP Interface (`@repo/interface`)**: Hono-based HTTP interface (Node/Edge apps and typed client) that wires auth + use cases without owning business logic.
-- **Delivery (`apps/web`, `apps/functions`, `apps/edge`)**: HTTP entry points (Next.js API routes, Firebase Functions, Cloudflare Workers) that inject infrastructure adapters into application use cases.
+- **Delivery (`apps/web`, `apps/functions`, `apps/edge`)**: Next.js route handlers, Firebase Functions, and a Cloudflare Worker that inject infrastructure adapters into application use cases.
 - **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: Reusable UI library and documentation surface that stay free from domain concerns.
 - **Shared Tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)**: Build presets, lint configs, and error-handling utilities consumed across the stack.
 
 ## Project Structure
-- `apps/web`: Next.js 15 portfolio app (React 19, server actions, API routes).
+- `apps/web`: Next.js 16 portfolio app (React 19, App Router).
 - `apps/functions`: Firebase Cloud Functions bundled via `tsup` (Node 22 runtime).
 - `apps/edge`: Cloudflare Worker (Wrangler v4) exposing the Edge HTTP API via `@repo/interface/http/edge`.
 - `apps/storybook`: Vite-powered Storybook for UI review and visual testing.
@@ -27,25 +27,30 @@ This document reflects the current state of the repository. Commands listed belo
 - `packages/logging`: Axiom-first logging helpers for Node/Edge/Browser runtimes.
 - `packages/ui`: Published React component library with split server/client builds.
 - `packages/toolkit`: Zod/Neverthrow helpers for consistent error handling.
-- `packages/eth`: Wagmi CLI generated contract types/hooks (requires local `.env`).
+- `packages/eth`: Wagmi CLI generated contract types/hooks (requires `packages/eth/.env.local`).
 - `packages/config`: Shared tsconfig/biome/eslint/tsup presets.
 - `packages/supabase`: Supabase CLI configuration (not a workspace package).
 
 ## Setup & Root Scripts
 - Install dependencies: `pnpm install` (requires Node >= 22).
 - Start all dev targets: `pnpm dev`.
+- Start scoped dev targets: `pnpm dev:web`, `pnpm dev:edge`, `pnpm dev:functions`, `pnpm dev:storybook`.
 - Build all packages/apps: `pnpm build`.
 - Build scoped targets: `pnpm build:web`, `pnpm build:functions`, `pnpm build:storybook`, `pnpm build:edge`.
 - Type-check the workspace: `pnpm check:type`.
 - Run all tests: `pnpm check:test`.
 - Run tests with coverage: `pnpm check:test:cvrg`.
 - Combined check (types + tests): `pnpm check`.
-- Lint/format/package sorting: `pnpm style`.
+- Lint/format/package sorting (write): `pnpm style`.
+- Lint/format/package sorting (check-only): `pnpm style:pure`.
+- Biome only: `pnpm style:biome` (write) or `pnpm style:biome:fix` (unsafe write) or `pnpm style:biome:pure` (check).
+- ESLint only: `pnpm style:eslint` (fix) or `pnpm style:eslint:pure` (cache-only).
+- Package.json sorting only: `pnpm style:pkg` (write) or `pnpm style:pkg:pure` (check).
 - Clean build artifacts: `pnpm clean`.
 - Update env files (runs only where `env:pull` script exists): `pnpm env:pull`.
 - Deploy Firebase functions: `pnpm deploy:functions`.
 - Deploy Edge (prod): `pnpm deploy:edge`.
-- Deploy Edge (prv): `pnpm deploy:edge:prv`.
+- Deploy Edge (preview): `pnpm deploy:edge:prv`.
 - Refine (style → build → check → API extract): `pnpm refine`.
 - API extractor: `pnpm api:extract`, `pnpm api:report`.
 - Release workflow helpers (Changesets):
@@ -56,15 +61,15 @@ This document reflects the current state of the repository. Commands listed belo
 ## Per-App / Package Commands
 - Web: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
 - Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
-- Functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`.
+- Functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`.
 - Edge: `pnpm -C apps/edge dev`, `pnpm -C apps/edge build`, `pnpm -C apps/edge deploy`, `pnpm -C apps/edge deploy:prv`.
-- Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma seed`, `pnpm -C packages/prisma studio`.
+- Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma migrate:reset`, `pnpm -C packages/prisma migrate:status`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma db:seed`, `pnpm -C packages/prisma studio`.
 - Eth codegen: `pnpm -C packages/eth generate` (requires `packages/eth/.env.local`).
 - UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
-- Toolkit/domain/application: `pnpm -C <package> test`, `pnpm -C <package> typecheck`.
+- Core packages (domain/application/auth/interface/integrations/logging/toolkit/eth): `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
 
 ## Code Generation
-- Prisma client: `pnpm -C packages/prisma build`  
+- Prisma client: `pnpm -C packages/prisma build`
   - Turbo runs this script as part of `build` pipelines, so Prisma Client is generated automatically when building.
 - Wagmi/ETH hooks: `pnpm -C packages/eth generate`.
 - Run every available `generate` script: `pnpm -r run generate` (only executes where defined).
@@ -72,7 +77,7 @@ This document reflects the current state of the repository. Commands listed belo
 ## Database (Prisma)
 - Environment files:
   - `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
-  - `packages/prisma/.env.development.local`, `.env.production.local` (local templates)
+  - `packages/prisma/.env.development.local`, `.env.test.local`, `.env.production.local` (local templates)
 - Use the `packages/prisma` scripts for all schema/migration/seed tasks (see commands above). There are no root-level DB scripts.
 
 ## Testing
@@ -83,7 +88,7 @@ This document reflects the current state of the repository. Commands listed belo
 
 ## Coding Style & Conventions
 - Run `pnpm style` to execute package sort + ESLint + Biome in sequence.
-- Biome only: `pnpm style:biome` (write) or `pnpm style:biome:pure` (check).
+- Biome only: `pnpm style:biome` (write), `pnpm style:biome:fix` (unsafe write), `pnpm style:biome:pure` (check).
 - ESLint only: `pnpm style:eslint` (fix) or `pnpm style:eslint:pure` (cache-only).
 - Imports are auto-organized via Biome + `eslint-plugin-perfectionist`.
 - Strings: double quotes; indentation: spaces (Biome enforced).
@@ -93,7 +98,9 @@ This document reflects the current state of the repository. Commands listed belo
 ## Security & Configuration
 - Environment variables live in `.env.*` within consuming apps/packages.
   - `apps/web`: `.env.local` (Next.js).
-  - `packages/prisma`: `.env.development.local` / `.env.production.local`.
+  - `apps/functions`: `.env.local` (Firebase Functions).
+  - `apps/edge`: `.env.local` for local Wrangler dev.
+  - `packages/prisma`: `.env` (CLI), `.env.development.local`, `.env.test.local`, `.env.production.local`.
   - `packages/eth`: `.env.local` for Wagmi CLI.
 - Firebase CLI commands assume you are authenticated (`pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`).
 - Minimum Node version is 22 for every workspace; `apps/functions` pins `engines.node` to `22`.
