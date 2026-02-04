@@ -22,10 +22,11 @@ import {
 } from "@o3osatoshi/ui/client";
 
 interface Props {
+  locale: string;
   transaction: Transaction;
 }
 
-export default function EditDialog({ transaction }: Props) {
+export default function EditDialog({ locale, transaction }: Props) {
   const t = useTranslations("LabsServerCrud");
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
@@ -67,6 +68,7 @@ export default function EditDialog({ transaction }: Props) {
       <DialogContent className="sm:max-w-[425px]">
         <form action={dispatch} onSubmit={validate}>
           <input value={transaction.id} {...register("id")} type="hidden" />
+          <input name="locale" type="hidden" value={locale} />
           <DialogHeader>
             <DialogTitle>
               {t("sections.transactions.editDialog.title")}
