@@ -179,7 +179,6 @@ Typically, you use the values from the `*.local` files (for example, fetched via
   - Functions: `pnpm -C apps/functions env:pull` → writes `apps/functions/.env.local`.
   - Prisma package:
     - `pnpm -C packages/prisma env:pull:dev` → writes `packages/prisma/.env.development.local`
-    - `pnpm -C packages/prisma env:pull:lcl` → writes `packages/prisma/.env.test.local`
     - `pnpm -C packages/prisma env:pull:prd` → writes `packages/prisma/.env.production.local`
   - Edge Worker:
     - `pnpm -C apps/edge env:pull` → writes `apps/edge/.env.local` for local Wrangler dev.
@@ -187,7 +186,7 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 - Current Doppler setup includes:
   - Web: project `portfolio-web` with config `dev`.
   - Functions: project `portfolio-functions` with config `dev`.
-  - Prisma: project `portfolio-prisma` with configs `dev`, `lcl`, `prd`.
+  - Prisma: project `portfolio` with configs `dev`, `prd`.
   - Edge: project `portfolio-edge` with configs `dev`, `prd`.
 
 ## Releases & dependency updates
