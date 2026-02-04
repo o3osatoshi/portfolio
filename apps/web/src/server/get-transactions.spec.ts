@@ -62,9 +62,6 @@ import { newError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
 
-const ONE_DAY_SECONDS = 60 * 60 * 24;
-const ERROR_SECONDS = 60;
-
 describe("getTransactions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -103,12 +100,7 @@ describe("getTransactions", () => {
 
     const expectedTag = getTag("labs-transactions", { userId });
     expect(h.cacheTagMock).toHaveBeenCalledWith(expectedTag);
-    expect(h.cacheLifeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        revalidate: ONE_DAY_SECONDS,
-        expire: ONE_DAY_SECONDS,
-      }),
-    );
+    expect(h.cacheLifeMock).toHaveBeenCalledWith("dataLong");
     expect(h.getUserIdMock).toHaveBeenCalledWith();
   });
 
@@ -149,11 +141,6 @@ describe("getTransactions", () => {
     if (!res.isErr()) return;
 
     expect(res.error.name).toBe(error.name);
-    expect(h.cacheLifeMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        revalidate: ERROR_SECONDS,
-        expire: ERROR_SECONDS,
-      }),
-    );
+    expect(h.cacheLifeMock).toHaveBeenCalledWith("errorShort");
   });
 });

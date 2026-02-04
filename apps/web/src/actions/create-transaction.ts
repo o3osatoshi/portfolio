@@ -5,11 +5,12 @@ import {
   parseCreateTransactionRequest,
 } from "@repo/application";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-import { getLocale } from "next-intl/server";
+import { hasLocale } from "next-intl";
 import { updateTag } from "next/cache";
 
 import { env } from "@/env/server";
 import { redirect } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { getUserId } from "@/server/auth";
 import { getPath, getTag } from "@/utils/nav-handler";
 import { type ActionState, err } from "@o3osatoshi/toolkit";
@@ -22,7 +23,11 @@ export const createTransaction = async (
   _: ActionState | undefined,
   formData: FormData,
 ): Promise<ActionState | undefined> => {
-  const locale = await getLocale();
+  const formLocale = formData.get("locale");
+  const locale =
+    typeof formLocale === "string" && hasLocale(routing.locales, formLocale)
+      ? formLocale
+      : routing.defaultLocale;
 
   return getUserId()
     .andThen((userId) =>

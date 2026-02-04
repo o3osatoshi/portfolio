@@ -373,9 +373,8 @@ export type UrlRedactorOptions = {
 // @public
 export function userMessageFromError(error: Error): string;
 
-// Warnings were encountered during analysis:
-//
-// dist/index.d.ts:1046:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// @public
+export type ZodIssue = z.core.$ZodIssue;
 
 // (No @packageDocumentation comment for this package)
 

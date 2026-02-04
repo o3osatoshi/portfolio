@@ -34,8 +34,8 @@ export default async function TransactionCard({ locale, transaction }: Props) {
         </CardDescription>
         <CardAction>
           <div className="flex gap-1">
-            <EditDialog transaction={transaction} />
-            <DeleteButton id={transaction.id} />
+            <EditDialog locale={locale} transaction={transaction} />
+            <DeleteButton id={transaction.id} locale={locale} />
           </div>
         </CardAction>
       </CardHeader>

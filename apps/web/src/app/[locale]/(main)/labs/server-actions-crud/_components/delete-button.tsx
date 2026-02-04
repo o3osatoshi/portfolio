@@ -9,9 +9,10 @@ import { Button } from "@o3osatoshi/ui";
 
 interface Props {
   id: string;
+  locale: string;
 }
 
-export default function DeleteButton({ id }: Props) {
+export default function DeleteButton({ id, locale }: Props) {
   const [_, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
@@ -20,6 +21,7 @@ export default function DeleteButton({ id }: Props) {
   return (
     <form action={dispatch}>
       <input name="id" type="hidden" value={id} />
+      <input name="locale" type="hidden" value={locale} />
       <Button disabled={isPending} size="icon" type="submit" variant="ghost">
         <Trash2 />
       </Button>

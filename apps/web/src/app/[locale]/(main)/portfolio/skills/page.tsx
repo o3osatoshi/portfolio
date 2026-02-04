@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { cacheLife } from "next/cache";
 
 import PageHeader from "@/app/[locale]/(main)/_components/page-header";
 import PageSection from "@/app/[locale]/(main)/_components/page-section";
@@ -29,6 +30,8 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: Props) {
+  "use cache";
+  cacheLife("staticPage");
   const { locale } = await params;
   const t = await getTranslations({ namespace: "PortfolioSkills", locale });
   const sections: SkillSection[] = [

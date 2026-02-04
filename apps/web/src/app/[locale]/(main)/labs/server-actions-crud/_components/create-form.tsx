@@ -10,7 +10,11 @@ import { createTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 
-export default function CreateForm() {
+interface Props {
+  locale: string;
+}
+
+export default function CreateForm({ locale }: Props) {
   const t = useTranslations("LabsServerCrud");
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
@@ -44,6 +48,7 @@ export default function CreateForm() {
 
   return (
     <form action={dispatch} onSubmit={validate}>
+      <input name="locale" type="hidden" value={locale} />
       <div className="flex flex-col gap-2">
         <FormInput
           id="type"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { cacheLife } from "next/cache";
 
 // import "@rainbow-me/rainbowkit/styles.css";
 //
@@ -28,6 +29,8 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: Props) {
+  "use cache";
+  cacheLife("staticPage");
   const { locale } = await params;
   const t = await getTranslations({ namespace: "LabsWeb3Crud", locale });
 
