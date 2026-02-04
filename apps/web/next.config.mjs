@@ -7,19 +7,19 @@ const nextConfig = {
   cacheComponents: true,
   cacheLife: {
     dataLong: {
-      revalidate: 60 * 60 * 24,
+      revalidate: 60 * 60 * 12,
       expire: 60 * 60 * 24,
       stale: 0,
     },
     errorShort: {
       revalidate: 60,
-      expire: 60,
+      expire: 60 * 3,
       stale: 0,
     },
     staticPage: {
-      revalidate: 60 * 60 * 24 * 7,
-      expire: 60 * 60 * 24 * 30,
-      stale: 0,
+      revalidate: 60 * 60 * 12,
+      expire: 60 * 60 * 24,
+      stale: 60 * 60 * 6,
     },
   },
   experimental: {
