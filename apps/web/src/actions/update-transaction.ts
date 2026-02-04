@@ -23,10 +23,10 @@ export const updateTransaction = async (
   _: ActionState | undefined,
   formData: FormData,
 ): Promise<ActionState | undefined> => {
-  const value = formData.get("locale");
+  const formLocale = formData.get("locale");
   const locale =
-    typeof value === "string" && hasLocale(routing.locales, value)
-      ? value
+    typeof formLocale === "string" && hasLocale(routing.locales, formLocale)
+      ? formLocale
       : routing.defaultLocale;
 
   return getUserId()
