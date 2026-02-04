@@ -4,7 +4,6 @@
   },
   "Common": {
     "errorWithMessage": "Error: {message}",
-    "loading": "Loading…",
     "notAvailable": "—",
     "toggle": "Toggle"
   },
