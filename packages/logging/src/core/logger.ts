@@ -1,9 +1,8 @@
 import {
   extractErrorMessage,
-  extractErrorName,
+  isRichError,
   type JsonValue,
-  parseErrorMessage,
-  parseErrorName,
+  resolveErrorInfo,
 } from "@o3osatoshi/toolkit";
 
 import type {
@@ -231,18 +230,24 @@ function normalizeValue(value: unknown): JsonValue | undefined {
 }
 
 function toErrorAttributes(error: unknown): Attributes {
-  const name = extractErrorName(error);
-  const message = extractErrorMessage(error);
-  const nParts = parseErrorName(name);
-  const mParts = parseErrorMessage(message);
+  const info = resolveErrorInfo(error);
+  const rich = isRichError(error) ? error : undefined;
+  const details = rich?.details;
+  const causeText = extractErrorMessage(
+    rich?.cause ?? (error instanceof Error ? error.cause : undefined),
+  );
 
   return {
-    ...(nParts.kind ? { "error.kind": nParts.kind } : {}),
-    ...(nParts.layer ? { "error.layer": nParts.layer } : {}),
-    ...(mParts.action ? { "error.action": mParts.action } : {}),
-    ...(mParts.causeText ? { "error.causeText": mParts.causeText } : {}),
-    ...(mParts.hint ? { "error.hint": mParts.hint } : {}),
-    ...(mParts.impact ? { "error.impact": mParts.impact } : {}),
-    ...(mParts.reason ? { "error.reason": mParts.reason } : {}),
+    ...(info.kind ? { "error.kind": info.kind } : {}),
+    ...(info.layer ? { "error.layer": info.layer } : {}),
+    ...(details?.action ? { "error.action": details.action } : {}),
+    ...(details?.hint ? { "error.hint": details.hint } : {}),
+    ...(details?.impact ? { "error.impact": details.impact } : {}),
+    ...(details?.reason ? { "error.reason": details.reason } : {}),
+    ...(causeText ? { "error.causeText": causeText } : {}),
+    ...(rich?.code ? { "error.code": rich.code } : {}),
+    ...(rich?.i18n?.key ? { "error.i18n.key": rich.i18n.key } : {}),
+    ...(rich?.i18n?.params ? { "error.i18n.params": rich.i18n.params } : {}),
+    ...(rich?.meta ? { "error.meta": rich.meta } : {}),
   };
 }

@@ -1,4 +1,8 @@
-import { newError } from "@o3osatoshi/toolkit";
+import {
+  type NewRichError,
+  newRichError,
+  type RichErrorDetails,
+} from "@o3osatoshi/toolkit";
 
 import { Prisma } from "../generated/prisma/client";
 
@@ -6,17 +10,14 @@ import { Prisma } from "../generated/prisma/client";
  * Context passed to {@link newPrismaError} before classifying the Prisma error.
  */
 type NewPrismaError = {
-  action?: string;
-  cause?: unknown;
-  hint?: string;
-  impact?: string;
-};
+  details?: RichErrorDetails | undefined;
+} & Omit<NewRichError, "details" | "kind" | "layer">;
 
 /**
- * Prisma-aware newError override.
+ * Prisma-aware newRichError override.
  *
  * Maps common Prisma error classes/codes to a stable error shape and delegates
- * to `@o3osatoshi/toolkit`'s `newError` with `layer: "DB"` and an appropriate `kind`.
+ * to `@o3osatoshi/toolkit`'s `newRichError` with `layer: "DB"` and an appropriate `kind`.
  *
  * Major mappings
  * - P2002: kind=Integrity, reason=Unique constraint violation (meta.target is shown if present)
@@ -31,20 +32,31 @@ type NewPrismaError = {
  * - PrismaClientRustPanicError: kind=Unknown
  *
  * Notes
- * - This helper summarizes the original cause into the message. It does not attach the raw cause object.
+ * - The original cause is preserved on the returned error.
  *
  * @param action - High-level operation name (e.g., "CreateUser").
  * @param impact - Optional description of effect on the system.
  * @param hint - Optional remediation tip for operators/users.
  * @param cause - The original Prisma error (or unknown) to classify.
- * @returns Error shaped by `@o3osatoshi/toolkit`'s `newError` with layer `DB`.
+ * @returns Error shaped by `@o3osatoshi/toolkit`'s `newRichError` with layer `DB`.
  */
 export function newPrismaError({
-  action,
   cause,
-  hint,
-  impact,
+  details,
+  ...rest
 }: NewPrismaError): Error {
+  const mergeDetails = ({
+    hint,
+    reason,
+  }: {
+    hint?: string | undefined;
+    reason: string;
+  }): RichErrorDetails => ({
+    ...details,
+    hint: details?.hint ?? hint,
+    reason: details?.reason ?? reason,
+  });
+
   if (isKnownRequestError(cause)) {
     const code = cause.code;
     switch (code) {
@@ -52,14 +64,15 @@ export function newPrismaError({
         // Value too long for column
         const meta = cause.meta as { column_name?: string } | undefined;
         const column = meta?.column_name;
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint: hint ?? "Shorten value or alter schema.",
-          impact,
+          details: mergeDetails({
+            hint: "Shorten value or alter schema.",
+            reason: column ? `Value too long for ${column}` : "Value too long",
+          }),
           kind: "Validation",
           layer: "DB",
-          reason: column ? `Value too long for ${column}` : "Value too long",
         });
       }
       case "P2002": {
@@ -68,93 +81,101 @@ export function newPrismaError({
         const target = Array.isArray(meta?.target)
           ? meta?.target.join(", ")
           : meta?.target;
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint: hint ?? "Use a different value for unique fields.",
-          impact,
+          details: mergeDetails({
+            hint: "Use a different value for unique fields.",
+            reason: target
+              ? `Unique constraint violation on ${target}`
+              : "Unique constraint violation",
+          }),
           kind: "Integrity",
           layer: "DB",
-          reason: target
-            ? `Unique constraint violation on ${target}`
-            : "Unique constraint violation",
         });
       }
       case "P2003": {
         // Foreign key constraint failed
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint: hint ?? "Ensure related records exist before linking.",
-          impact,
+          details: mergeDetails({
+            hint: "Ensure related records exist before linking.",
+            reason: "Foreign key constraint failed",
+          }),
           kind: "Integrity",
           layer: "DB",
-          reason: "Foreign key constraint failed",
         });
       }
       case "P2005": // Value out of range for the type
       case "P2006": {
         // Invalid value
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint: hint ?? "Check data types and constraints.",
-          impact,
+          details: mergeDetails({
+            hint: "Check data types and constraints.",
+            reason: code === "P2005" ? "Value out of range" : "Invalid value",
+          }),
           kind: "Validation",
           layer: "DB",
-          reason: code === "P2005" ? "Value out of range" : "Invalid value",
         });
       }
       case "P2021": // Table does not exist
       case "P2022": {
         // Column does not exist
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint: hint ?? "Run migrations or verify schema.",
-          impact,
+          details: mergeDetails({
+            hint: "Run migrations or verify schema.",
+            reason:
+              code === "P2021"
+                ? "Table does not exist"
+                : "Column does not exist",
+          }),
           kind: "Config",
           layer: "DB",
-          reason:
-            code === "P2021" ? "Table does not exist" : "Column does not exist",
         });
       }
       case "P2025": {
         // Record not found
         const m = metaString(cause.meta, "cause");
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint: hint ?? "Verify where conditions or record id.",
-          impact,
+          details: mergeDetails({
+            hint: "Verify where conditions or record id.",
+            reason: m ?? "Record not found",
+          }),
           kind: "NotFound",
           layer: "DB",
-          reason: m ?? "Record not found",
         });
       }
       default: {
-        return newError({
-          action,
+        return newRichError({
+          ...rest,
           cause,
-          hint,
-          impact,
+          details: mergeDetails({
+            reason: `Known request error ${code}`,
+          }),
           kind: "Unknown",
           layer: "DB",
-          reason: `Known request error ${code}`,
         });
       }
     }
   }
 
   if (isValidationError(cause)) {
-    return newError({
-      action,
+    return newRichError({
+      ...rest,
       cause,
-      hint: hint ?? "Check schema types and provided data.",
-      impact,
+      details: mergeDetails({
+        hint: "Check schema types and provided data.",
+        reason: "Invalid Prisma query or data",
+      }),
       kind: "Validation",
       layer: "DB",
-      reason: "Invalid Prisma query or data",
     });
   }
 
@@ -179,32 +200,33 @@ export function newPrismaError({
               ? "Forbidden"
               : "Unknown";
 
-    return newError({
-      action,
+    return newRichError({
+      ...rest,
       cause,
-      hint:
-        hint ??
-        (kind === "Unavailable"
-          ? "Ensure database is reachable and running."
-          : kind === "Timeout"
-            ? "Check database connectivity and network."
-            : undefined),
-      impact,
+      details: mergeDetails({
+        hint:
+          kind === "Unavailable"
+            ? "Ensure database is reachable and running."
+            : kind === "Timeout"
+              ? "Check database connectivity and network."
+              : undefined,
+        reason: msg,
+      }),
       kind,
       layer: "DB",
-      reason: msg,
     });
   }
 
   if (isRustPanicError(cause)) {
-    return newError({
-      action,
+    return newRichError({
+      ...rest,
       cause,
-      hint: hint ?? "Inspect logs; restart the process.",
-      impact,
+      details: mergeDetails({
+        hint: "Inspect logs; restart the process.",
+        reason: "Prisma engine panic",
+      }),
       kind: "Unknown",
       layer: "DB",
-      reason: "Prisma engine panic",
     });
   }
 
@@ -217,26 +239,26 @@ export function newPrismaError({
           lower.includes("serialization failure")
         ? "Serialization"
         : "Unknown";
-    return newError({
-      action,
+    return newRichError({
+      ...rest,
       cause,
-      hint,
-      impact,
+      details: mergeDetails({
+        reason: msg,
+      }),
       kind,
       layer: "DB",
-      reason: msg,
     });
   }
 
-  // Fallback for non-Prisma errors: delegate to base newError with a sensible default.
-  return newError({
-    action,
+  // Fallback for non-Prisma errors: delegate to base newRichError with a sensible default.
+  return newRichError({
+    ...rest,
     cause,
-    hint,
-    impact,
+    details: mergeDetails({
+      reason: "Unexpected error",
+    }),
     kind: "Unknown",
     layer: "DB",
-    reason: "Unexpected error",
   });
 }
 

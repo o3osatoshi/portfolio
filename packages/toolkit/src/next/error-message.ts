@@ -1,4 +1,4 @@
-import { type Kind, parseErrorMessage, parseErrorName } from "../error";
+import { isRichError, type Kind, resolveErrorInfo } from "../error";
 
 const KIND_MESSAGE_MAP: Record<Kind, string> = {
   Forbidden: "You do not have permission to perform this action.",
@@ -37,29 +37,25 @@ const NAME_KIND_FALLBACKS: Partial<Record<string, Kind>> = {
  * @remarks
  * Ordering rules:
  * - If the error `name` yields a `kind`, return the mapped friendly text.
- * - Append parsed `reason` / `impact` / `hint` when present in `composeErrorMessage` JSON.
- * - If no kind is detected but structured message fields exist, join them.
+ * - Append details (reason/impact/hint) when present on {@link RichError}.
+ * - If no kind is detected but RichError details exist, join them.
  * - Otherwise use the raw `error.message` when it is not JSON-like; fall back to a stable generic string.
  *
  * @public
- * @param error - An Error, ideally created via `newError`.
+ * @param error - An Error, ideally created via `newRichError`.
  * @returns A concise, user-friendly message.
  */
 export function userMessageFromError(error: Error): string {
-  const nameParts = parseErrorName(error.name);
-  const kind = nameParts.kind ?? NAME_KIND_FALLBACKS[error.name];
+  const info = resolveErrorInfo(error);
+  const kind = info.kind ?? NAME_KIND_FALLBACKS[error.name];
   const baseMessage = kind ? KIND_MESSAGE_MAP[kind] : undefined;
 
   const detailMessages: string[] = [];
-  const messageParts = parseErrorMessage(error.message);
-  if (messageParts.reason) {
-    detailMessages.push(messageParts.reason);
-  }
-  if (messageParts.impact) {
-    detailMessages.push(`Impact: ${messageParts.impact}`);
-  }
-  if (messageParts.hint) {
-    detailMessages.push(`Hint: ${messageParts.hint}`);
+  if (isRichError(error) && error.details) {
+    const { hint, impact, reason } = error.details;
+    if (reason) detailMessages.push(reason);
+    if (impact) detailMessages.push(`Impact: ${impact}`);
+    if (hint) detailMessages.push(`Hint: ${hint}`);
   }
 
   if (baseMessage) {

@@ -28,6 +28,9 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends ActionEr
 } | never;
 
 // @public
+export function buildErrorSummary(details: RichErrorDetails | undefined): string | undefined;
+
+// @public
 export function buildHttpResponse<T = unknown>(data: T, response: Response, options?: BuildHttpResponseOptions): HttpResponse<T>;
 
 // @public
@@ -43,9 +46,6 @@ export type BuildHttpResponseOptions = {
 
 // @public
 export function coerceErrorMessage(cause: unknown): string | undefined;
-
-// @public
-export function composeErrorMessage(parts: ErrorMessageParts): string;
 
 // @public
 export function composeErrorName(layer: Layer, kind: Kind): string;
@@ -104,20 +104,6 @@ export type ErrorHttpResponse = {
     body: SerializedError;
     statusCode: ErrorStatusCode;
 };
-
-// @public
-export type ErrorMessageParts = {
-    action?: string | undefined;
-    causeText?: string | undefined;
-    hint?: string | undefined;
-    impact?: string | undefined;
-    reason?: string | undefined;
-};
-
-// @public
-export type ErrorMessagePayload = {
-    summary: string;
-} & ErrorMessageParts;
 
 // @public
 export type ErrorNameParts = {
@@ -204,6 +190,9 @@ export function isDeserializableBody(res: Response): boolean;
 export function isDeserializableResponse(response: Response): boolean;
 
 // @public
+export function isRichError(value: unknown): value is RichError;
+
+// @public
 export function isSerializedError(v: unknown): v is SerializedError;
 
 // @public
@@ -245,41 +234,38 @@ export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Confli
 export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
 
 // @public
-export type NewError = {
-    action?: string | undefined;
-    cause?: undefined | unknown;
-    hint?: string | undefined;
-    impact?: string | undefined;
-    kind: Kind;
-    layer: Layer;
-    reason?: string | undefined;
-};
-
-// @public
-export function newError(params: NewError): Error;
-
-// @public
 export type NewFetchError = {
-    action?: string;
     cause?: unknown;
-    hint?: string;
-    impact?: string;
-    kind?: Kind;
+    details?: RichErrorDetails | undefined;
+    kind?: Kind | undefined;
     request?: FetchRequest | undefined;
-};
+} & Omit<NewRichError, "details" | "kind" | "layer">;
 
 // @public
 export function newFetchError(input: NewFetchError): Error;
 
 // @public
+export type NewRichError = {
+    cause?: unknown;
+    code?: string | undefined;
+    details?: RichErrorDetails | undefined;
+    i18n?: RichErrorI18n | undefined;
+    isOperational?: boolean | undefined;
+    kind: Kind;
+    layer: Layer;
+    meta?: JsonObject | undefined;
+};
+
+// @public
+export function newRichError(params: NewRichError): RichError;
+
+// @public
 export type NewZodError = {
-    action?: string | undefined;
     cause?: undefined | unknown;
-    hint?: string | undefined;
-    impact?: string | undefined;
+    details?: RichErrorDetails | undefined;
     issues?: undefined | ZodIssue[];
     layer?: Layer | undefined;
-};
+} & Omit<NewRichError, "details" | "kind" | "layer">;
 
 // @public
 export function newZodError(options: NewZodError): Error;
@@ -289,9 +275,6 @@ export function normalizeBaseUrl(baseUrl: string): string;
 
 // @public
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
-
-// @public
-export function parseErrorMessage(message: string | undefined): ErrorMessageParts;
 
 // @public
 export function parseErrorName(name: string | undefined): ErrorNameParts;
@@ -319,12 +302,66 @@ export type ResolvedAbortSignal = {
 };
 
 // @public
+export function resolveErrorInfo(error: unknown): {
+    kind?: Kind;
+    layer?: Layer;
+};
+
+// @public
+export function resolveErrorKind(error: unknown): Kind | undefined;
+
+// @public
+export function resolveErrorLayer(error: unknown): Layer | undefined;
+
+// @public
+export class RichError extends Error {
+    // (undocumented)
+    readonly [RICH_ERROR_BRAND] = true;
+    constructor(params: NewRichError, messageOverride?: string);
+    // (undocumented)
+    readonly code: string | undefined;
+    // (undocumented)
+    readonly details: RichErrorDetails | undefined;
+    // (undocumented)
+    readonly i18n: RichErrorI18n | undefined;
+    // (undocumented)
+    readonly isOperational: boolean;
+    // (undocumented)
+    readonly kind: Kind;
+    // (undocumented)
+    readonly layer: Layer;
+    // (undocumented)
+    readonly meta: JsonObject | undefined;
+}
+
+// @public
+export type RichErrorDetails = {
+    action?: string | undefined;
+    hint?: string | undefined;
+    impact?: string | undefined;
+    reason?: string | undefined;
+};
+
+// @public
+export type RichErrorI18n = {
+    key: string;
+    params?: Record<string, boolean | number | string> | undefined;
+};
+
+// @public
 export type SerializedCause = SerializedError | string;
 
 // @public
 export interface SerializedError {
     cause?: SerializedCause | undefined;
+    code?: string | undefined;
+    details?: RichErrorDetails | undefined;
+    i18n?: RichErrorI18n | undefined;
+    isOperational?: boolean | undefined;
+    kind?: Kind | undefined;
+    layer?: Layer | undefined;
     message: string;
+    meta?: JsonObject | undefined;
     name: string;
     stack?: string | undefined;
 }
@@ -356,6 +393,9 @@ export function summarizeZodIssue(issue: ZodIssue): string;
 export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
+export function toRichError(input: unknown, fallback?: Partial<NewRichError>): RichError;
+
+// @public
 export function truncate(value: string, maxLen?: null | number): string;
 
 // @public
@@ -375,7 +415,7 @@ export function userMessageFromError(error: Error): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1046:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1053:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

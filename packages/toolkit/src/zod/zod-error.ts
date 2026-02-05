@@ -1,30 +1,31 @@
 import { z, type ZodError } from "zod";
 
-import { type Layer, newError } from "../error";
+import {
+  type Layer,
+  type NewRichError,
+  newRichError,
+  type RichErrorDetails,
+} from "../error";
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.
- * Designed to mirror {@link NewError} while providing Zod-specific hooks.
+ * Designed to mirror {@link NewRichError} while providing Zod-specific hooks.
  *
  * @public
  */
 export type NewZodError = {
-  /** Logical operation being validated when the failure occurred. */
-  action?: string | undefined;
   /**
    * Original throwable (ideally a `ZodError`) used to derive issues.
    * Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
    */
   cause?: undefined | unknown;
-  /** Suggested remediation; falls back to an inferred hint when omitted. */
-  hint?: string | undefined;
-  /** Description of the effect of the validation failure. */
-  impact?: string | undefined;
+  /** Optional diagnostic context that will be merged with inferred details. */
+  details?: RichErrorDetails | undefined;
   /** Explicit Zod issues list; inferred from the `cause` when absent. */
   issues?: undefined | ZodIssue[];
   /** Architectural layer responsible for validation (default `"Application"`). */
   layer?: Layer | undefined;
-};
+} & Omit<NewRichError, "details" | "kind" | "layer">;
 
 type ZodIssue = z.core.$ZodIssue;
 
@@ -52,14 +53,7 @@ export function isZodError(e: unknown): e is ZodError {
  * @public
  */
 export function newZodError(options: NewZodError): Error {
-  const {
-    action,
-    cause,
-    hint,
-    impact,
-    issues,
-    layer = "Application",
-  } = options;
+  const { cause, details, issues, layer = "Application", ...rest } = options;
   const zIssues: undefined | ZodIssue[] = issues
     ? issues
     : isZodError(cause)
@@ -71,17 +65,19 @@ export function newZodError(options: NewZodError): Error {
       ? zIssues.map(summarizeZodIssue).join("; ")
       : "Invalid request payload";
 
-  const effectiveHint =
-    hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
+  const hint =
+    details?.hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
 
-  return newError({
-    action,
+  return newRichError({
+    ...rest,
     cause,
-    hint: effectiveHint,
-    impact,
+    details: {
+      ...details,
+      hint,
+      reason: details?.reason ?? reason,
+    },
     kind: "Validation",
     layer,
-    reason,
   });
 }
 /**

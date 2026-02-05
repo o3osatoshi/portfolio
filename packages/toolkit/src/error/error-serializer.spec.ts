@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { isRichError, newRichError } from "./error";
 import {
   deserializeError,
   isSerializedError,
@@ -17,6 +18,39 @@ describe("error-serializer", () => {
     const d = deserializeError(s);
     expect(d.name).toBe("TestError");
     expect(d.message).toBe("oops");
+  });
+
+  it("serializes rich error fields and rehydrates RichError", () => {
+    const err = newRichError({
+      code: "user.invalid",
+      details: {
+        action: "CreateUser",
+        reason: "Email is invalid",
+      },
+      i18n: { key: "error.user_invalid", params: { id: 1 } },
+      kind: "Validation",
+      layer: "Application",
+      meta: { requestId: "req_1" },
+    });
+
+    const s = serializeError(err, { includeStack: false });
+    expect(s.kind).toBe("Validation");
+    expect(s.layer).toBe("Application");
+    expect(s.code).toBe("user.invalid");
+    expect(s.details?.action).toBe("CreateUser");
+    expect(s.i18n?.key).toBe("error.user_invalid");
+    expect(s.meta).toEqual({ requestId: "req_1" });
+
+    const d = deserializeError(s);
+    expect(isRichError(d)).toBe(true);
+    if (isRichError(d)) {
+      expect(d.kind).toBe("Validation");
+      expect(d.layer).toBe("Application");
+      expect(d.code).toBe("user.invalid");
+      expect(d.details?.reason).toBe("Email is invalid");
+      expect(d.i18n?.params).toEqual({ id: 1 });
+      expect(d.meta).toEqual({ requestId: "req_1" });
+    }
   });
 
   it("handles string cause", () => {

@@ -1,5 +1,6 @@
+import type { JsonObject } from "../types";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
-import { composeErrorMessage, composeErrorName } from "./error-format";
+import { composeErrorName, parseErrorName } from "./error-name";
 
 /**
  * Generic error classifications shared across application layers.
@@ -61,149 +62,231 @@ export type Layer =
   | "UI";
 
 /**
- * Structured descriptor passed into {@link newError}, exported for consumers
- * that want to build wrappers or share strongly typed error payloads.
+ * Input payload used when creating {@link RichError}.
  *
  * @public
  */
-export type NewError = {
-  /** Logical operation being performed when the error occurred. */
-  action?: string | undefined;
+export type NewRichError = {
   /** Original cause (any type) captured for diagnostic context. */
-  cause?: undefined | unknown;
-  /** Suggested follow-up or remediation for the caller. */
-  hint?: string | undefined;
-  /** Description of the resulting effect or blast radius. */
-  impact?: string | undefined;
+  cause?: unknown;
+  /** Machine-stable identifier (analytics / i18n routing / client logic). */
+  code?: string | undefined;
+  /** Additional human context intended for diagnostics. */
+  details?: RichErrorDetails | undefined;
+  /** UI-friendly i18n key + params (not translated here). */
+  i18n?: RichErrorI18n | undefined;
+  /** Indicates whether the error is an expected operational failure. */
+  isOperational?: boolean | undefined;
   /** High-level error classification shared across layers. */
   kind: Kind;
   /** Architectural layer where the failure originated. */
   layer: Layer;
+  /** JSON-safe metadata (diagnostics, debugging, metrics). */
+  meta?: JsonObject | undefined;
+};
+
+/**
+ * Structured descriptor for human context.
+ *
+ * @public
+ */
+export type RichErrorDetails = {
+  /** Logical operation being performed when the error occurred. */
+  action?: string | undefined;
+  /** Suggested follow-up or remediation for the caller. */
+  hint?: string | undefined;
+  /** Description of the resulting effect or blast radius. */
+  impact?: string | undefined;
   /** Short explanation of why the operation failed. */
   reason?: string | undefined;
 };
 
 /**
- * Creates a structured Error object with a consistent `name` and `message`.
- * Intended for use in Domain/Application/Infra/Auth/UI layers where you want
- * more context than a plain `new Error(...)`.
+ * i18n key + params for UI-facing messages.
  *
- * ## Error name
- * - Computed as `Layer + Kind + "Error"` (for example `DomainValidationError`).
- * - Useful for quick classification or HTTP mapping.
- *
- * ## Error message
- * - Built from the provided `action`, `reason`, `impact`, `hint`, and a
- *   summarized version of the original `cause` (if any).
- * - Order: action → reason → impact → hint → cause.
- * - Example: `"UpdateTransaction failed because transaction not found. Impact: no update applied. Hint: verify txId. Cause: DB timeout."`
- *
- * ## Cause handling
- * - If `cause` is an `Error`, its `.message` is extracted and appended as `Cause: ...`.
- * - If `cause` is a string, it is used directly.
- * - If `cause` is any other object, it is JSON stringified when possible.
- * - The original `cause` is also attached to the returned `Error` using native
- *   `ErrorOptions` when available or a non‑enumerable `cause` property as a
- *   fallback, so downstream code can inspect `err.cause`.
- *
- * ## Recommended usage
- * - Use `layer` and `kind` to categorize error origin (`Domain`, `Application`, `Infra`, `Auth`, `UI`, `DB`, `External`) and type (`Validation`, `Timeout`, `Unavailable`, `Integrity`, `Deadlock`, `Serialization`, etc.).
- * - Use `action` to describe what failed (e.g. "UpdateTransaction").
- * - Use `reason` to explain why (short, technical).
- * - Use `impact` to describe the consequence.
- * - Use `hint` to suggest a possible fix or next step.
- *
- * @remarks
- * The `params` object accepts the following fields:
- * - `layer`: Architectural layer where the failure happened (required).
- * - `kind`: High-level error classification (required).
- * - `action`: Logical operation being performed.
- * - `reason`: Short explanation of the failure cause.
- * - `impact`: Description of the resulting effect.
- * - `hint`: Suggested follow-up or remediation.
- * - `cause`: Original error or data that triggered the failure.
- *
- * @example
- * ```ts
- * throw newError(\{
- *   layer: "Domain",
- *   kind: "Validation",
- *   action: "CreateUser",
- *   reason: "email format is invalid",
- *   impact: "user cannot be registered",
- *   hint: "ensure email has @",
- *   cause: originalError,
- * \});
- * ```
- *
- * @param params - Structured descriptor for the error (see {@link NewError}).
- * @returns An Error with enriched `name` and `message`.
  * @public
  */
-export function newError(params: NewError): Error {
-  const { action, cause, hint, impact, kind, layer, reason } = params;
-  const name = composeErrorName(layer, kind);
+export type RichErrorI18n = {
+  /** Translation key for user-facing copy. */
+  key: string;
+  /** Parameter values used by the translation system. */
+  params?: Record<string, boolean | number | string> | undefined;
+};
 
-  const causeText = summarizeCause(cause);
-  const message = composeErrorMessage({
-    action,
-    causeText,
-    hint,
-    impact,
-    reason,
-  });
+const RICH_ERROR_BRAND = Symbol.for("@o3osatoshi/rich-error");
 
-  // Try to attach native `cause` (ErrorOptions) when available
-  let err: Error;
+const SUPPORTS_ERROR_CAUSE = (() => {
   try {
-    // Node >=16 supports ErrorOptions; TS may not know, so cast
-    err = new (
-      Error as unknown as new (
-        m?: string,
-        o?: { cause?: unknown },
-      ) => Error
-    )(message || name, cause !== undefined ? { cause } : undefined);
+    const ctor = Error as unknown as new (
+      m?: string,
+      o?: { cause?: unknown },
+    ) => Error;
+    new ctor("probe", { cause: "probe" });
+    return true;
   } catch {
-    err = new Error(message || name);
-    // As a fallback, attach cause as a non-enumerable property to avoid noisy JSON
-    if (cause !== undefined) {
-      try {
-        Object.defineProperty(err, "cause", {
-          enumerable: false,
-          value: cause,
-        });
-      } catch {
-        // ignore if defineProperty fails
+    return false;
+  }
+})();
+
+/**
+ * Structured Error subclass used across the monorepo.
+ *
+ * @public
+ */
+export class RichError extends Error {
+  readonly code: string | undefined;
+  readonly details: RichErrorDetails | undefined;
+  readonly i18n: RichErrorI18n | undefined;
+  readonly isOperational: boolean;
+  readonly kind: Kind;
+  readonly layer: Layer;
+  readonly meta: JsonObject | undefined;
+  readonly [RICH_ERROR_BRAND] = true;
+
+  constructor(params: NewRichError, messageOverride?: string) {
+    const name = composeErrorName(params.layer, params.kind);
+    const summary =
+      messageOverride ?? buildErrorSummary(params.details) ?? name;
+    const cause = params.cause;
+
+    if (SUPPORTS_ERROR_CAUSE) {
+      super(summary, cause !== undefined ? { cause } : undefined);
+    } else {
+      super(summary);
+      if (cause !== undefined) {
+        attachCause(this, cause);
       }
     }
-  }
-  err.name = name;
 
-  return err;
+    this.name = name;
+    this.kind = params.kind;
+    this.layer = params.layer;
+    this.code = params.code;
+    this.i18n = params.i18n;
+    this.details = params.details;
+    this.meta = params.meta;
+    this.isOperational = params.isOperational ?? true;
+  }
 }
 
-/** Convert an unknown cause into a safe string (prioritize `Error.message`). */
-function summarizeCause(cause: unknown): string | undefined {
-  if (cause == null) return;
+/**
+ * Build a simple, human-readable summary for an error.
+ *
+ * @public
+ */
+export function buildErrorSummary(
+  details: RichErrorDetails | undefined,
+): string | undefined {
+  if (!details) return undefined;
+  const action = details.action?.trim();
+  const reason = details.reason?.trim();
+  if (action && reason) return `${action} failed: ${reason}`;
+  if (action) return `${action} failed`;
+  if (reason) return reason;
+  if (details.impact) return details.impact;
+  if (details.hint) return details.hint;
+  return undefined;
+}
 
-  const name = extractErrorName(cause);
-  const message = extractErrorMessage(cause);
-  if (typeof message === "string") {
-    if (typeof name === "string" && name.length > 0 && name !== "Error") {
-      return `${name}: ${message}`;
-    }
-    return message;
-  }
-  if (typeof name === "string" && name.length > 0) {
-    return name;
+/**
+ * Type guard for {@link RichError}.
+ *
+ * @public
+ */
+export function isRichError(error: unknown): error is RichError {
+  if (!error || typeof error !== "object") return false;
+  if (error instanceof RichError) return true;
+  return (error as { [RICH_ERROR_BRAND]?: boolean })[RICH_ERROR_BRAND] === true;
+}
+
+/**
+ * Construct a {@link RichError}.
+ *
+ * @public
+ */
+export function newRichError(params: NewRichError): RichError {
+  return new RichError(params);
+}
+
+/**
+ * Resolve kind/layer from known error forms.
+ *
+ * @public
+ */
+export function resolveErrorInfo(error: unknown): {
+  kind?: Kind;
+  layer?: Layer;
+} {
+  if (isRichError(error)) {
+    return { kind: error.kind, layer: error.layer };
   }
 
+  const name = extractErrorName(error);
+  const { kind, layer } = parseErrorName(name);
+  if (kind || layer) {
+    return {
+      ...(kind ? { kind } : {}),
+      ...(layer ? { layer } : {}),
+    };
+  }
+
+  if (name === "ZodError") return { kind: "Validation" };
+  if (name === "AbortError") return { kind: "Canceled" };
+
+  return {};
+}
+
+/**
+ * Resolve just the {@link Kind} from an unknown error.
+ *
+ * @public
+ */
+export function resolveErrorKind(error: unknown): Kind | undefined {
+  return resolveErrorInfo(error).kind;
+}
+
+/**
+ * Resolve just the {@link Layer} from an unknown error.
+ *
+ * @public
+ */
+export function resolveErrorLayer(error: unknown): Layer | undefined {
+  return resolveErrorInfo(error).layer;
+}
+
+/**
+ * Normalize an unknown value into a {@link RichError}.
+ *
+ * @public
+ */
+export function toRichError(
+  error: unknown,
+  fallback: Partial<NewRichError> = {},
+): RichError {
+  if (isRichError(error)) return error;
+
+  const reason = fallback.details?.reason ?? extractErrorMessage(error);
+  const details = fallback.details ?? (reason ? { reason } : undefined);
+
+  return newRichError({
+    cause: error,
+    code: fallback.code,
+    details,
+    i18n: fallback.i18n,
+    isOperational: fallback.isOperational,
+    kind: fallback.kind ?? "Unknown",
+    layer: fallback.layer ?? "External",
+    meta: fallback.meta,
+  });
+}
+
+function attachCause(error: Error, cause: unknown) {
   try {
-    const serialized = JSON.stringify(cause);
-    if (!serialized) return;
-    return serialized;
+    Object.defineProperty(error, "cause", {
+      enumerable: false,
+      value: cause,
+    });
   } catch {
-    const fallback = String(cause);
-    return fallback || undefined;
+    // ignore defineProperty failure
   }
 }

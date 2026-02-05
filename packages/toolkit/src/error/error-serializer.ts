@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+import { type JsonObject, jsonObjectSchema } from "../types";
+import {
+  isRichError,
+  type Kind,
+  type Layer,
+  newRichError,
+  resolveErrorInfo,
+  type RichErrorDetails,
+  type RichErrorI18n,
+} from "./error";
 import { coerceErrorMessage, extractErrorName } from "./error-attributes";
 
 /**
@@ -23,13 +33,76 @@ export type SerializedCause = SerializedError | string;
 export interface SerializedError {
   /** Optional cause; can be a string or another serialized error. */
   cause?: SerializedCause | undefined;
+  /** Machine-stable identifier. */
+  code?: string | undefined;
+  /** Human context for diagnostics. */
+  details?: RichErrorDetails | undefined;
+  /** UI-friendly i18n payload. */
+  i18n?: RichErrorI18n | undefined;
+  /** Indicates whether this is an operational error. */
+  isOperational?: boolean | undefined;
+  /** Error classification (when available). */
+  kind?: Kind | undefined;
+  /** Architectural layer where the error originated (when available). */
+  layer?: Layer | undefined;
   /** Error message. */
   message: string;
+  /** JSON-safe metadata payload. */
+  meta?: JsonObject | undefined;
   /** Original error name (e.g. `TypeError`, `DomainValidationError`). */
   name: string;
   /** Optional stack trace (included only when `includeStack` is true). */
   stack?: string | undefined;
 }
+
+const kindSchema = z.enum([
+  "BadGateway",
+  "BadRequest",
+  "Canceled",
+  "Config",
+  "Conflict",
+  "Deadlock",
+  "Forbidden",
+  "Integrity",
+  "MethodNotAllowed",
+  "NotFound",
+  "RateLimit",
+  "Serialization",
+  "Timeout",
+  "Unauthorized",
+  "Unavailable",
+  "Unknown",
+  "Unprocessable",
+  "Validation",
+]);
+
+const layerSchema = z.enum([
+  "Application",
+  "Auth",
+  "DB",
+  "Domain",
+  "External",
+  "Infra",
+  "UI",
+]);
+
+const richErrorDetailsSchema = z
+  .object({
+    action: z.string().optional(),
+    hint: z.string().optional(),
+    impact: z.string().optional(),
+    reason: z.string().optional(),
+  })
+  .strip();
+
+const richErrorI18nSchema = z
+  .object({
+    key: z.string(),
+    params: z
+      .record(z.string(), z.union([z.string(), z.number(), z.boolean()]))
+      .optional(),
+  })
+  .strip();
 
 // Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
 const serializedErrorSchema: z.ZodType<SerializedError> = z
@@ -38,7 +111,14 @@ const serializedErrorSchema: z.ZodType<SerializedError> = z
     cause: z
       .union([z.string(), z.lazy(() => serializedErrorSchema)])
       .optional(),
+    code: z.string().optional(),
+    details: richErrorDetailsSchema.optional(),
+    i18n: richErrorI18nSchema.optional(),
+    isOperational: z.boolean().optional(),
+    kind: kindSchema.optional(),
+    layer: layerSchema.optional(),
     message: z.string(),
+    meta: jsonObjectSchema.optional(),
     stack: z.string().optional(),
   })
   .strip();
@@ -112,6 +192,22 @@ export function deserializeError(
         ? deserializeError(nested)
         : undefined;
 
+  if (value.kind && value.layer) {
+    const rich = newRichError({
+      cause,
+      code: value.code,
+      details: value.details,
+      i18n: value.i18n,
+      isOperational: value.isOperational,
+      kind: value.kind,
+      layer: value.layer,
+      meta: value.meta,
+    });
+    if (value.message) rich.message = value.message;
+    if (value.stack) rich.stack = value.stack;
+    return rich;
+  }
+
   let error: Error;
   try {
     error = new (
@@ -175,6 +271,16 @@ export function serializeError(
   const includeStack =
     opts.includeStack ?? process.env["NODE_ENV"] === "development";
   const depth = Math.max(0, opts.depth ?? 2);
+  const info = resolveErrorInfo(error);
+  const rich = isRichError(error)
+    ? {
+        code: error.code,
+        details: error.details,
+        i18n: error.i18n,
+        isOperational: error.isOperational,
+        meta: error.meta,
+      }
+    : undefined;
 
   return {
     name: error.name,
@@ -182,6 +288,9 @@ export function serializeError(
       depth: depth - 1,
       includeStack,
     }),
+    kind: info.kind,
+    layer: info.layer,
+    ...(rich ?? {}),
     message: error.message,
     stack: includeStack ? error.stack : undefined,
   };
