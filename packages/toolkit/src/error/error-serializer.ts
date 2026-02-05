@@ -1,16 +1,18 @@
 import { z } from "zod";
 
 import { type JsonObject, jsonObjectSchema } from "../types";
-import {
-  isRichError,
-  type Kind,
-  type Layer,
-  newRichError,
-  resolveErrorInfo,
-  type RichErrorDetails,
-  type RichErrorI18n,
-} from "./error";
+import { isRichError, newRichError, resolveErrorInfo } from "./error";
 import { coerceErrorMessage, extractErrorName } from "./error-attributes";
+import {
+  type Kind,
+  kindSchema,
+  type Layer,
+  layerSchema,
+  type RichErrorDetails,
+  richErrorDetailsSchema,
+  type RichErrorI18n,
+  richErrorI18nSchema,
+} from "./error-schema";
 
 /**
  * Union used to represent an error's `cause` in serialized form.
@@ -54,55 +56,6 @@ export interface SerializedError {
   /** Optional stack trace (included only when `includeStack` is true). */
   stack?: string | undefined;
 }
-
-const kindSchema = z.enum([
-  "BadGateway",
-  "BadRequest",
-  "Canceled",
-  "Config",
-  "Conflict",
-  "Deadlock",
-  "Forbidden",
-  "Integrity",
-  "MethodNotAllowed",
-  "NotFound",
-  "RateLimit",
-  "Serialization",
-  "Timeout",
-  "Unauthorized",
-  "Unavailable",
-  "Unknown",
-  "Unprocessable",
-  "Validation",
-]);
-
-const layerSchema = z.enum([
-  "Application",
-  "Auth",
-  "DB",
-  "Domain",
-  "External",
-  "Infra",
-  "UI",
-]);
-
-const richErrorDetailsSchema = z
-  .object({
-    action: z.string().optional(),
-    hint: z.string().optional(),
-    impact: z.string().optional(),
-    reason: z.string().optional(),
-  })
-  .strip();
-
-const richErrorI18nSchema = z
-  .object({
-    key: z.string(),
-    params: z
-      .record(z.string(), z.union([z.string(), z.number(), z.boolean()]))
-      .optional(),
-  })
-  .strip();
 
 // Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
 const serializedErrorSchema: z.ZodType<SerializedError> = z

@@ -1,65 +1,19 @@
 import type { JsonObject } from "../types";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
 import { composeErrorName, parseErrorName } from "./error-name";
+import type {
+  Kind,
+  Layer,
+  RichErrorDetails,
+  RichErrorI18n,
+} from "./error-schema";
 
-/**
- * Generic error classifications shared across application layers.
- *
- * Recommended meanings (and default HTTP mappings used by `toHttpErrorResponse()`):
- * - `"BadGateway"` → upstream dependency returned an invalid/5xx response (502).
- * - `"BadRequest"` → malformed payload or invalid query before validation (400).
- * - `"Canceled"` → caller canceled or aborted the request (408).
- * - `"Config"` → server-side misconfiguration detected (500).
- * - `"Conflict"` → state/version mismatch such as optimistic locking (409).
- * - `"Deadlock"` → concurrency deadlock detected by the data store (409).
- * - `"Forbidden"` → authenticated caller lacks permission (403).
- * - `"Integrity"` → constraint violations such as unique/index failures (409).
- * - `"MethodNotAllowed"` → HTTP verb not supported for the resource (405).
- * - `"NotFound"` → entity or route missing (404).
- * - `"RateLimit"` → throttling or quota exceeded (429).
- * - `"Serialization"` → encode/decode failures (500).
- * - `"Timeout"` → upstream or local job timed out (504).
- * - `"Unauthorized"` → authentication missing or invalid (401).
- * - `"Unavailable"` → dependency or subsystem temporarily down (503).
- * - `"Unknown"` → fallback for uncategorized errors (500).
- * - `"Unprocessable"` → semantically invalid input even though syntactically valid (422).
- * - `"Validation"` → domain/application validation error (400).
- *
- * @public
- */
-export type Kind =
-  | "BadGateway"
-  | "BadRequest"
-  | "Canceled"
-  | "Config"
-  | "Conflict"
-  | "Deadlock"
-  | "Forbidden"
-  | "Integrity"
-  | "MethodNotAllowed"
-  | "NotFound"
-  | "RateLimit"
-  | "Serialization"
-  | "Timeout"
-  | "Unauthorized"
-  | "Unavailable"
-  | "Unknown"
-  | "Unprocessable"
-  | "Validation";
-
-/**
- * Architectural layer where the error originated.
- *
- * @public
- */
-export type Layer =
-  | "Application"
-  | "Auth"
-  | "DB"
-  | "Domain"
-  | "External"
-  | "Infra"
-  | "UI";
+export type {
+  Kind,
+  Layer,
+  RichErrorDetails,
+  RichErrorI18n,
+} from "./error-schema";
 
 /**
  * Input payload used when creating {@link RichError}.
@@ -83,34 +37,6 @@ export type NewRichError = {
   layer: Layer;
   /** JSON-safe metadata (diagnostics, debugging, metrics). */
   meta?: JsonObject | undefined;
-};
-
-/**
- * Structured descriptor for human context.
- *
- * @public
- */
-export type RichErrorDetails = {
-  /** Logical operation being performed when the error occurred. */
-  action?: string | undefined;
-  /** Suggested follow-up or remediation for the caller. */
-  hint?: string | undefined;
-  /** Description of the resulting effect or blast radius. */
-  impact?: string | undefined;
-  /** Short explanation of why the operation failed. */
-  reason?: string | undefined;
-};
-
-/**
- * i18n key + params for UI-facing messages.
- *
- * @public
- */
-export type RichErrorI18n = {
-  /** Translation key for user-facing copy. */
-  key: string;
-  /** Parameter values used by the translation system. */
-  params?: Record<string, boolean | number | string> | undefined;
 };
 
 const RICH_ERROR_BRAND = Symbol.for("@o3osatoshi/rich-error");
