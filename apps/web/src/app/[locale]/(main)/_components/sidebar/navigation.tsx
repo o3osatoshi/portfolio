@@ -118,10 +118,10 @@ export default function Navigation() {
           >
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={t(opt.titleKey)}>
-                <a href={opt.url}>
+                <SidebarLink href={opt.url}>
                   <opt.icon />
                   <span>{t(opt.titleKey)}</span>
-                </a>
+                </SidebarLink>
               </SidebarMenuButton>
               {opt.items?.length ? (
                 <>
