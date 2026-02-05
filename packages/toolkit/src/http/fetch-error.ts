@@ -2,8 +2,9 @@ import {
   extractErrorMessage,
   extractErrorName,
   type Kind,
-  newError,
-  type NewError,
+  type NewRichError,
+  newRichError,
+  type RichErrorDetails,
 } from "../error";
 
 /** Minimal request metadata used to contextualize fetch failures.
@@ -17,20 +18,18 @@ export type FetchRequest = {
 
 /**
  * Payload accepted by {@link newFetchError} before shaping a toolkit error.
- * Mirrors {@link NewError} while adding fetch-specific request context.
+ * Mirrors {@link NewRichError} while adding fetch-specific request context.
  * When `kind` is omitted, the helper falls back to the classification derived
  * from the request metadata or underlying cause.
  *
  * @public
  */
 export type NewFetchError = {
-  action?: string;
   cause?: unknown;
-  hint?: string;
-  impact?: string;
-  kind?: Kind;
+  details?: RichErrorDetails | undefined;
+  kind?: Kind | undefined;
   request?: FetchRequest | undefined;
-};
+} & Omit<NewRichError, "details" | "kind" | "layer">;
 
 type Classification = {
   hint?: string;
@@ -69,12 +68,11 @@ export function formatFetchTarget({
  * @public
  */
 export function newFetchError({
-  action,
   cause,
-  hint,
-  impact,
+  details,
   kind,
   request,
+  ...rest
 }: NewFetchError): Error {
   const classification = classifyFetchFailure({
     cause,
@@ -88,14 +86,16 @@ export function newFetchError({
     ? `${target} ${classification.problem}`
     : classification.problem;
 
-  return newError({
-    action,
+  return newRichError({
+    ...rest,
     cause,
-    hint: hint ?? classification.hint,
-    impact,
+    details: {
+      ...details,
+      hint: details?.hint ?? classification.hint,
+      reason: details?.reason ?? reason,
+    },
     kind: kind ?? classification.kind,
     layer: "External",
-    reason,
   });
 }
 

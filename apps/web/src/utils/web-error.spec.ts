@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { isRichError } from "@o3osatoshi/toolkit";
+
 import {
   newWebError,
   webConflictError,
@@ -25,12 +27,13 @@ describe("utils/web-error newWebError", () => {
 
     expect(err).toBeInstanceOf(Error);
     expect(err.name).toBe("UIValidationError");
-    const payload = JSON.parse(err.message);
-    expect(payload.summary).toBe("SubmitForm failed");
-    expect(payload.action).toBe("SubmitForm");
-    expect(payload.reason).toBe("invalid payload");
-    expect(payload.impact).toBe("Form submission failed.");
-    expect(payload.hint).toBe("Check the form fields.");
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.action).toBe("SubmitForm");
+      expect(err.details?.reason).toBe("invalid payload");
+      expect(err.details?.impact).toBe("Form submission failed.");
+      expect(err.details?.hint).toBe("Check the form fields.");
+    }
   });
 });
 

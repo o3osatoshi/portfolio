@@ -1,6 +1,6 @@
 import { Axiom, AxiomWithoutBatching, type ClientOptions } from "@axiomhq/js";
 
-import { deserializeError, newError } from "@o3osatoshi/toolkit";
+import { deserializeError, newRichError } from "@o3osatoshi/toolkit";
 
 import type { LogEvent, Transport } from "../types";
 
@@ -75,12 +75,14 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
           onError(
             deserializeError(error, {
               fallback: (cause) =>
-                newError({
-                  action: "AxiomIngest",
+                newRichError({
                   cause,
+                  details: {
+                    action: "AxiomIngest",
+                    reason: "axiom ingest failed with a non-error value",
+                  },
                   kind: "Unknown",
                   layer: "External",
-                  reason: "axiom ingest failed with a non-error value",
                 }),
             }),
           );
@@ -90,12 +92,14 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
       onError(
         deserializeError(error, {
           fallback: (cause) =>
-            newError({
-              action: "AxiomIngest",
+            newRichError({
               cause,
+              details: {
+                action: "AxiomIngest",
+                reason: "axiom ingest failed with a non-error value",
+              },
               kind: "Unknown",
               layer: "External",
-              reason: "axiom ingest failed with a non-error value",
             }),
         }),
       );

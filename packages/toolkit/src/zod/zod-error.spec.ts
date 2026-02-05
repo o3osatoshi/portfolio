@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
+import { isRichError } from "../error";
 import {
   isZodError,
   newZodError,
@@ -82,36 +83,45 @@ describe("zod-error helpers (with real Zod)", () => {
   it("newZodError builds ApplicationValidationError with inferred hint", () => {
     const schema = z.object({ name: z.string() });
     const err = newZodError({
-      action: "ParseUser",
       cause: parseZodError(schema, { name: 123 }),
+      details: { action: "ParseUser" },
     });
     expect(err.name).toBe("ApplicationValidationError");
     const message = err.message;
-    expect(message).toContain("ParseUser failed");
-    expect(message).toContain("name: Expected string, received number");
-    expect(message).toContain("Check field types match the schema.");
+    expect(message).toContain(
+      "ParseUser failed: name: Expected string, received number",
+    );
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe("Check field types match the schema.");
+    }
   });
 
   it("newZodError supports custom layer and issues without cause (unrecognized_keys)", () => {
     const strictSchema = z.object({ a: z.string() }).strict();
     const errCause = parseZodError(strictSchema, { a: "x", extra: 1 });
     const err = newZodError({
-      action: "ValidateForm",
+      details: { action: "ValidateForm" },
       issues: errCause.issues,
       layer: "UI",
     });
     expect(err.name).toBe("UIValidationError");
     const message = err.message;
-    expect(message).toContain("ValidateForm failed");
+    expect(message).toContain("ValidateForm failed:");
     expect(message).toContain("Unrecognized keys:");
-    expect(message).toContain("Remove unknown fields from the payload.");
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe("Remove unknown fields from the payload.");
+    }
   });
 
   it("newZodError falls back to generic reason when no issues", () => {
-    const err = newZodError({ action: "Parse", cause: { message: "x" } });
+    const err = newZodError({
+      cause: { message: "x" },
+      details: { action: "Parse" },
+    });
     expect(err.name).toBe("ApplicationValidationError");
-    expect(err.message).toContain("Parse failed");
-    expect(err.message).toContain("Invalid request payload");
+    expect(err.message).toContain("Parse failed: Invalid request payload");
   });
 
   it("covers more codes: too_big, invalid_string(email), not_multiple_of, invalid_date, union", () => {

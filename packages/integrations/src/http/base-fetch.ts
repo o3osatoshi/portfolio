@@ -49,8 +49,8 @@ function deserializeBody(
 ): ResultAsync<HttpResponse, Error> {
   return ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
     newFetchError({
-      action: "DeserializeResponseBody",
       cause,
+      details: { action: "DeserializeResponseBody" },
       kind: "BadGateway",
       request,
     }),
@@ -75,8 +75,8 @@ function performFetch(
 
   return ResultAsync.fromPromise(fetcher(request.url, init), (cause) =>
     newFetchError({
-      action: "FetchExternalApi",
       cause,
+      details: { action: "FetchExternalApi" },
       request: { method: request.method ?? "GET", url: request.url },
     }),
   ).map((response) => {

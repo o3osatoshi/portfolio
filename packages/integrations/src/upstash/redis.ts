@@ -21,12 +21,14 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
     get: (key) =>
       ResultAsync.fromPromise(client.get(key), (cause) =>
         newIntegrationError({
-          action: "ReadCacheStore",
           cause,
-          hint: "Verify cache store connectivity or credentials.",
-          impact: "response served without cache",
+          details: {
+            action: "ReadCacheStore",
+            hint: "Verify cache store connectivity or credentials.",
+            impact: "response served without cache",
+            reason: "Cache store read failed",
+          },
           kind: "Unavailable",
-          reason: "Cache store read failed",
         }),
       ),
     set: (key, value, options: CacheSetOptions = {}) => {
@@ -40,12 +42,14 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
       };
       return ResultAsync.fromPromise(client.set(key, value, opts), (cause) =>
         newIntegrationError({
-          action: "WriteCacheStore",
           cause,
-          hint: "Verify cache store connectivity or credentials.",
-          impact: "response served without cache",
+          details: {
+            action: "WriteCacheStore",
+            hint: "Verify cache store connectivity or credentials.",
+            impact: "response served without cache",
+            reason: "Cache store write failed",
+          },
           kind: "Unavailable",
-          reason: "Cache store write failed",
         }),
       );
     },

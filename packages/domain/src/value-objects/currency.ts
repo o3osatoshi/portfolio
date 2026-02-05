@@ -21,16 +21,20 @@ export function newCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
   if (typeof v !== "string")
     return err(
       domainValidationError({
-        action: "NewCurrencyCode",
-        reason: "CurrencyCode must be string",
+        details: {
+          action: "NewCurrencyCode",
+          reason: "CurrencyCode must be string",
+        },
       }),
     );
   const code = v.toUpperCase();
   if (!CURRENCY_RE.test(code))
     return err(
       domainValidationError({
-        action: "NewCurrencyCode",
-        reason: "CurrencyCode must be A-Z 3 letters",
+        details: {
+          action: "NewCurrencyCode",
+          reason: "CurrencyCode must be A-Z 3 letters",
+        },
       }),
     );
   return ok(code as CurrencyCode);

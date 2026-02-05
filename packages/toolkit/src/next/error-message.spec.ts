@@ -1,15 +1,17 @@
 import { describe, expect, it } from "vitest";
 
-import { composeErrorMessage, newError } from "../error";
+import { newRichError } from "../error";
 import { userMessageFromError } from "./error-message";
 
 describe("userMessageFromError", () => {
   it("returns a kind-based message with details for Validation errors", () => {
-    const error = newError({
-      hint: "Include @ in email",
+    const error = newRichError({
+      details: {
+        hint: "Include @ in email",
+        reason: "Email format is invalid",
+      },
       kind: "Validation",
       layer: "Application",
-      reason: "Email format is invalid",
     });
 
     const message = userMessageFromError(error);
@@ -26,20 +28,6 @@ describe("userMessageFromError", () => {
 
     const message = userMessageFromError(error);
     expect(message).toBe("The operation was canceled.");
-  });
-
-  it("derives details from structured message when no kind exists", () => {
-    const serialized = composeErrorMessage({
-      hint: "Try again",
-      impact: "No changes were saved",
-      reason: "Unexpected format",
-    });
-    const error = new Error(serialized);
-
-    const message = userMessageFromError(error);
-    expect(message).toBe(
-      "Unexpected format Impact: No changes were saved Hint: Try again",
-    );
   });
 
   it("falls back to the raw message when not JSON-like", () => {

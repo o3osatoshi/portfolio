@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { newError } from "../error";
+import { newRichError } from "../error";
 import { type ActionError, err, ok } from "./action-state";
 
 describe("action-state ok/err", () => {
@@ -53,7 +53,7 @@ describe("action-state ok/err", () => {
   });
 
   it("uses toolkit metadata to produce a friendly message", () => {
-    const error = newError({ kind: "Forbidden", layer: "Application" });
+    const error = newRichError({ kind: "Forbidden", layer: "Application" });
     const state = err(error);
     expect(state.ok).toBe(false);
     if (state.ok) throw new Error("expected failure state");

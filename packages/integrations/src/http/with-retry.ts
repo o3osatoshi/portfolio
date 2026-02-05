@@ -1,7 +1,7 @@
 import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import { deserializeError, parseErrorName, sleep } from "@o3osatoshi/toolkit";
+import { deserializeError, resolveErrorKind, sleep } from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
 import type {
@@ -142,9 +142,11 @@ export function withRetry(
         throw (
           lastError ??
           newIntegrationError({
-            action: "RetryExternalApi",
+            details: {
+              action: "RetryExternalApi",
+              reason: `Retry attempts exhausted (attempts: ${attempts}).`,
+            },
             kind: "Unknown",
-            reason: `Retry attempts exhausted (attempts: ${attempts}).`,
           })
         );
       })(),
@@ -152,10 +154,12 @@ export function withRetry(
         deserializeError(error, {
           fallback: (cause) =>
             newIntegrationError({
-              action: "RetryExternalApi",
               cause,
+              details: {
+                action: "RetryExternalApi",
+                reason: `Retry failed with a non-error value (attempts: ${attempts}).`,
+              },
               kind: "Unknown",
-              reason: `Retry failed with a non-error value (attempts: ${attempts}).`,
             }),
         }),
     );
@@ -186,7 +190,7 @@ function defaultShouldRetry<S extends z.ZodType>({
 }
 
 function isRetryableError(error: Error): boolean {
-  const { kind } = parseErrorName(error.name);
+  const kind = resolveErrorKind(error);
   if (!kind) return false;
   return (
     kind === "Timeout" ||

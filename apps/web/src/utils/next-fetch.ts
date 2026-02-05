@@ -71,15 +71,15 @@ export function nextFetch(
     }),
     (cause) =>
       newFetchError({
-        action: `Fetch ${queryPath}`,
         cause,
+        details: { action: `Fetch ${queryPath}` },
         request: { method: "GET", url: url.href },
       }),
   ).andThen((response) =>
     ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
       newFetchError({
-        action: `Deserialize body for ${queryPath}`,
         cause,
+        details: { action: `Deserialize body for ${queryPath}` },
         kind: "Serialization",
         request: { method: "GET", url: url.href },
       }),

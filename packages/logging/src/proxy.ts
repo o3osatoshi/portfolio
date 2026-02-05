@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 
-import { deserializeError, newError } from "@o3osatoshi/toolkit";
+import { deserializeError, newRichError } from "@o3osatoshi/toolkit";
 
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
@@ -147,12 +147,14 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       onError(
         deserializeError(error, {
           fallback: (cause) =>
-            newError({
-              action: "LoggingProxyParseRequest",
+            newRichError({
               cause,
+              details: {
+                action: "LoggingProxyParseRequest",
+                reason: "proxy payload parsing failed with a non-error value",
+              },
               kind: "Unknown",
               layer: "Infra",
-              reason: "proxy payload parsing failed with a non-error value",
             }),
         }),
       );
@@ -194,12 +196,14 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       onError(
         deserializeError(error, {
           fallback: (cause) =>
-            newError({
-              action: "LoggingProxyEmit",
+            newRichError({
               cause,
+              details: {
+                action: "LoggingProxyEmit",
+                reason: "proxy emission failed with a non-error value",
+              },
               kind: "Unknown",
               layer: "Infra",
-              reason: "proxy emission failed with a non-error value",
             }),
         }),
       );
@@ -303,12 +307,14 @@ export function createProxyTransport(
         onError(
           deserializeError(error, {
             fallback: (cause) =>
-              newError({
-                action: "LoggingProxyTransportFlush",
+              newRichError({
                 cause,
+                details: {
+                  action: "LoggingProxyTransportFlush",
+                  reason: "proxy transport flush failed with a non-error value",
+                },
                 kind: "Unknown",
                 layer: "Infra",
-                reason: "proxy transport flush failed with a non-error value",
               }),
           }),
         );

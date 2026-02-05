@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { deserializeError, newError, serializeError } from "../error";
+import { deserializeError, newRichError, serializeError } from "../error";
 import { toHttpErrorResponse } from "./http-error-response";
 
 describe("toHttpErrorResponse", () => {
   it("uses provided status when specified", () => {
-    const err = newError({ kind: "Validation", layer: "Application" });
+    const err = newRichError({ kind: "Validation", layer: "Application" });
     const res = toHttpErrorResponse(err, 405);
     expect(res.statusCode).toBe(405);
     expect(res.body).toEqual(serializeError(err));
@@ -28,14 +28,14 @@ describe("toHttpErrorResponse", () => {
     ] as const;
 
     for (const { kind, layer, status } of cases) {
-      const err = newError({ kind, layer });
+      const err = newRichError({ kind, layer });
       const res = toHttpErrorResponse(err);
       expect(res.statusCode).toBe(status);
     }
   });
 
   it("maps canceled to 408 (client closed request)", () => {
-    const canceled = newError({ kind: "Canceled", layer: "Infra" });
+    const canceled = newRichError({ kind: "Canceled", layer: "Infra" });
     const res = toHttpErrorResponse(canceled);
     expect(res.statusCode).toBe(408);
   });

@@ -55,7 +55,7 @@ describe("sleep", () => {
     expect(result.error.name).toBe("InfraCanceledError");
     const message = result.error.message;
     expect(message).toContain("operation aborted by AbortSignal");
-    expect(message).toContain("pre-canceled");
+    expect(result.error).toHaveProperty("cause", abortReason);
   });
 
   it("rejects when the signal aborts while waiting", async () => {
@@ -76,7 +76,6 @@ describe("sleep", () => {
     expect(result.error.name).toBe("InfraCanceledError");
     const message = result.error.message;
     expect(message).toContain("operation aborted by AbortSignal");
-    expect(message).toContain("manual cancel");
     expect(result.error).toHaveProperty("cause", abortReason);
   });
 });

@@ -98,11 +98,13 @@ export function createSlackClient(
           if (!res.response.ok) {
             return err(
               newIntegrationError({
-                action: "SlackPostMessage",
+                details: {
+                  action: "SlackPostMessage",
+                  reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
+                },
                 kind:
                   slackErrorToKind(res.data.error) ??
                   httpStatusToKind(res.response.status),
-                reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
               }),
             );
           }
@@ -110,11 +112,13 @@ export function createSlackClient(
           if (!res.data.ok) {
             return err(
               newIntegrationError({
-                action: "SlackPostMessage",
+                details: {
+                  action: "SlackPostMessage",
+                  reason: res.data.error ?? "Slack API returned ok=false",
+                },
                 kind:
                   slackErrorToKind(res.data.error) ??
                   httpStatusToKind(res.response.status),
-                reason: res.data.error ?? "Slack API returned ok=false",
               }),
             );
           }

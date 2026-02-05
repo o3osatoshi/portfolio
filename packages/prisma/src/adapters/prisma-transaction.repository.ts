@@ -8,7 +8,7 @@ import type {
 import { newTransaction } from "@repo/domain";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import {
   Prisma,
@@ -32,9 +32,11 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }),
       (e) =>
         newPrismaError({
-          action: "CreateTransaction",
           cause: e,
-          hint: "Ensure related user exists and data types are valid.",
+          details: {
+            action: "CreateTransaction",
+            hint: "Ensure related user exists and data types are valid.",
+          },
         }),
     ).andThen(toEntity);
   }
@@ -47,19 +49,23 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }),
       (e) =>
         newPrismaError({
-          action: "DeleteTransaction",
           cause: e,
-          hint: "Verify ownership and record existence.",
+          details: {
+            action: "DeleteTransaction",
+            hint: "Verify ownership and record existence.",
+          },
         }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
         : err(
-            newError({
-              action: "DeleteTransaction",
+            newRichError({
+              details: {
+                action: "DeleteTransaction",
+                reason: "Transaction not found or not owned by user.",
+              },
               kind: "NotFound",
               layer: "DB",
-              reason: "Transaction not found or not owned by user.",
             }),
           ),
     );
@@ -73,8 +79,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }),
       (e) =>
         newPrismaError({
-          action: "FindTransactionById",
           cause: e,
+          details: {
+            action: "FindTransactionById",
+          },
         }),
     ).andThen((row) => (row ? toEntity(row) : ok(null)));
   }
@@ -87,8 +95,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }),
       (e) =>
         newPrismaError({
-          action: "FindTransactionsByUserId",
           cause: e,
+          details: {
+            action: "FindTransactionsByUserId",
+          },
         }),
     ).andThen((rows) => Result.combine(rows.map(toEntity)));
   }
@@ -102,19 +112,23 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }),
       (e) =>
         newPrismaError({
-          action: "UpdateTransaction",
           cause: e,
-          hint: "Verify ownership and payload schema.",
+          details: {
+            action: "UpdateTransaction",
+            hint: "Verify ownership and payload schema.",
+          },
         }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
         : err(
-            newError({
-              action: "UpdateTransaction",
+            newRichError({
+              details: {
+                action: "UpdateTransaction",
+                reason: "Transaction not found or not owned by user.",
+              },
               kind: "NotFound",
               layer: "DB",
-              reason: "Transaction not found or not owned by user.",
             }),
           ),
     );

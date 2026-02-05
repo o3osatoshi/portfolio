@@ -125,14 +125,16 @@ function toFxQuote(
   if (!res.response.ok) {
     return err(
       newIntegrationError({
-        action: "FetchExchangeRateApi",
         cause: res.data,
+        details: {
+          action: "FetchExchangeRateApi",
+          reason: formatHttpStatusReason({
+            payload: res.data,
+            response: res.response,
+            serviceName: "ExchangeRate API",
+          }),
+        },
         kind: httpStatusToKind(res.response.status),
-        reason: formatHttpStatusReason({
-          payload: res.data,
-          response: res.response,
-          serviceName: "ExchangeRate API",
-        }),
       }),
     );
   }
@@ -143,10 +145,12 @@ function toFxQuote(
     const detail = pair["error-type"] ?? "Unknown error";
     return err(
       newIntegrationError({
-        action: "FetchExchangeRateApi",
         cause: pair,
+        details: {
+          action: "FetchExchangeRateApi",
+          reason: `ExchangeRate API error: ${detail}`,
+        },
         kind: "BadGateway",
-        reason: `ExchangeRate API error: ${detail}`,
       }),
     );
   }
@@ -154,9 +158,11 @@ function toFxQuote(
   if (pair?.conversion_rate === undefined) {
     return err(
       newIntegrationError({
-        action: "ParseExchangeRateApiResponse",
+        details: {
+          action: "ParseExchangeRateApiResponse",
+          reason: "ExchangeRate API response missing conversion rate.",
+        },
         kind: "BadGateway",
-        reason: "ExchangeRate API response missing conversion rate.",
       }),
     );
   }

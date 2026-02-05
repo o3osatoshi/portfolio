@@ -2,7 +2,7 @@ import type { ClientOptions } from "@repo/interface/rpc-client";
 import { ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 /**
  * Create a lazily-evaluated `Cookie` header from the current request cookies.
@@ -13,16 +13,16 @@ import { newError } from "@o3osatoshi/toolkit";
  *
  * On success, the returned {@link ResultAsync} resolves to an object whose
  * `headers` function sets the `Cookie` header. On failure, it yields an
- * {@link Error} created by {@link newError} with Infra/Unknown metadata.
+ * {@link Error} created by {@link newRichError} with Infra/Unknown metadata.
  */
 export function createHeaders(): ResultAsync<
   Pick<ClientOptions, "headers">,
   Error
 > {
   return ResultAsync.fromPromise(cookies(), (cause) =>
-    newError({
-      action: "Call cookies",
+    newRichError({
       cause,
+      details: { action: "Call cookies" },
       kind: "Unknown",
       layer: "Infra",
     }),

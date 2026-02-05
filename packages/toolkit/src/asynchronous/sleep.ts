@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
-import { deserializeError, newError } from "../error";
+import { deserializeError, newRichError } from "../error";
 
 /**
  * Options accepted by {@link sleep}.
@@ -36,12 +36,14 @@ export function sleep(
   const mapErr = (error: unknown): Error =>
     deserializeError(error, {
       fallback: (cause) =>
-        newError({
-          action: "Sleep",
+        newRichError({
           cause,
+          details: {
+            action: "Sleep",
+            reason: "sleep rejected with non-error value",
+          },
           kind: "Unknown",
           layer: "Infra",
-          reason: "sleep rejected with non-error value",
         }),
     });
 
@@ -57,12 +59,14 @@ export function sleep(
   return ResultAsync.fromPromise(
     new Promise<void>((resolve, reject) => {
       const newCanceledError = () => {
-        return newError({
-          action: "Sleep",
+        return newRichError({
           cause: signal.reason,
+          details: {
+            action: "Sleep",
+            reason: "operation aborted by AbortSignal",
+          },
           kind: "Canceled",
           layer: "Infra",
-          reason: "operation aborted by AbortSignal",
         });
       };
 

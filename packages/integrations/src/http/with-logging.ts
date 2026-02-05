@@ -1,7 +1,7 @@
 import type { z } from "zod";
 
 import type { Attributes, Logger } from "@o3osatoshi/logging";
-import { parseErrorName } from "@o3osatoshi/toolkit";
+import { resolveErrorInfo } from "@o3osatoshi/toolkit";
 
 import type {
   SmartFetch,
@@ -113,7 +113,7 @@ function buildErrorAttributes<S extends z.ZodType>(
   redactUrl: (url: string) => string,
   requestName?: string,
 ): Attributes {
-  const { kind, layer } = parseErrorName(error.name);
+  const { kind, layer } = resolveErrorInfo(error);
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
     ...(kind ? { "error.kind": kind } : {}),
@@ -138,7 +138,7 @@ function buildMetricsAttributes<S extends z.ZodType>({
   requestName?: string | undefined;
   response?: SmartFetchResponse | undefined;
 }): Attributes {
-  const { kind, layer } = error ? parseErrorName(error.name) : {};
+  const { kind, layer } = error ? resolveErrorInfo(error) : {};
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
     ...(kind ? { "error.kind": kind } : {}),
@@ -187,7 +187,7 @@ function emitMetrics<S extends z.ZodType>({
 }
 
 function resolveErrorLevel(error: Error): "error" | "warn" {
-  const { kind } = parseErrorName(error.name);
+  const { kind } = resolveErrorInfo(error);
   if (!kind) return "error";
   if (
     kind === "BadRequest" ||

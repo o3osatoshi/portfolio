@@ -14,19 +14,24 @@ pnpm add -D typescript vitest               # dev (optional for typecheck/tests)
 ### Structured errors
 
 ```ts
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
-throw newError({
+throw newRichError({
   layer: "Application",
   kind: "Validation",
-  action: "CreateUser",
-  reason: "email format is invalid",
-  impact: "user cannot be registered",
-  hint: "ensure email has @",
+  code: "user.email_invalid",
+  i18n: { key: "error.user_email_invalid", params: { field: "email" } },
+  details: {
+    action: "CreateUser",
+    reason: "email format is invalid",
+    impact: "user cannot be registered",
+    hint: "ensure email has @",
+  },
   cause: new Error("zod: Expected string, received number"),
+  meta: { requestId: "req_123" },
 });
 // name: ApplicationValidationError
-// message example: "CreateUser failed because email format is invalid. Impact: user cannot be registered. Hint: ensure email has @. Cause: zod: Expected string, received number."
+// message example: "CreateUser failed: email format is invalid"
 ```
 
 ### Zod integration
@@ -37,20 +42,23 @@ import { parseWith, newZodError } from "@o3osatoshi/toolkit";
 
 const userSchema = z.object({ name: z.string(), age: z.number().min(0) });
 
-const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
+const parseUser = parseWith(userSchema, {
+  details: { action: "ParseUser" },
+  layer: "UI",
+});
 const res = parseUser({ name: "alice", age: 20 }); // Result<User, Error>
 
 // When you catch a ZodError and want a normalized Error:
 try {
   userSchema.parse({ name: 1 });
 } catch (e) {
-  throw newZodError({ action: "ParseUser", cause: e });
+  throw newZodError({ details: { action: "ParseUser" }, cause: e });
 }
 ```
 
 ### Error kinds
 
-`newError` expects a `kind` that conveys how callers or HTTP layers should react. The defaults below are what `toHttpErrorResponse` uses when translating errors into status codes (override as needed):
+`newRichError` expects a `kind` that conveys how callers or HTTP layers should react. The defaults below are what `toHttpErrorResponse` uses when translating errors into status codes (override as needed):
 
 | Kind             | Default HTTP status | Description |
 | ---------------- | ------------------- | ----------- |
@@ -77,14 +85,14 @@ Note: Some gateways use non‑standard 499 (Client Closed Request). The default 
 
 ## API
 
-- `newError(opts)`
-  - Builds an `Error` with a consistent `name` (`<Layer><Kind>Error`) and rich `message` composed from `action`, `reason`, `impact`, `hint`, and a summarized `cause`.
+- `newRichError(opts)`
+  - Builds a `RichError` with a consistent `name` (`<Layer><Kind>Error`) and a concise `message` summary derived from `details`.
 - `isZodError(e)`
   - Robust detection using `instanceof` or duck-typing fallback when Zod instances differ.
 - `summarizeZodIssue(issue)` / `summarizeZodError(err)`
   - Human‑readable messages for common Zod issues.
 - `newZodError(opts)`
-  - Wraps a `ZodError` (or issues array) into a structured `Error` via `newError`.
+  - Wraps a `ZodError` (or issues array) into a structured `RichError` via `newRichError`.
 - `parseWith(schema, ctx)`
   - Create a function returning `neverthrow` `Result` from a Zod schema. Errors are normalized via `newZodError`.
 - `createEnv(schema, opts?)`
@@ -124,7 +132,7 @@ export const createItem = async (
 
 - `err(error)` – accepts `Error | ActionError | string` and returns `{ ok: false, error }` with a user-friendly message derived from `@o3osatoshi/toolkit` errors (`kind`, `reason`, `hint`, `impact` are considered). Falls back to a generic safe message.
 - `ok(data)` – wraps success payload as `{ ok: true, data }`.
-- `userMessageFromError(error)` – converts an `Error` (ideally produced by `newError`) into user-facing copy, using kind-based defaults and any structured message fields.
+- `userMessageFromError(error)` – converts an `Error` (ideally produced by `newRichError`) into user-facing copy, using kind-based defaults and any structured details.
 
 ## Notes
 

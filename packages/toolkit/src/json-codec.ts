@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { newError } from "./error";
+import { newRichError } from "./error";
 import type { JsonContainer, JsonValue } from "./types";
 
 /**
@@ -21,13 +21,15 @@ export function decode(value: string): Result<JsonContainer, Error> {
       return ok<JsonContainer, Error>(v);
     }
     return err<JsonContainer, Error>(
-      newError({
-        action: "DecodeJsonContainer",
+      newRichError({
         cause: v,
-        hint: "Ensure the JSON string encodes an object (`{}`) or array (`[]`).",
+        details: {
+          action: "DecodeJsonContainer",
+          hint: "Ensure the JSON string encodes an object (`{}`) or array (`[]`).",
+          reason: "Expected top-level JSON object or array",
+        },
         kind: "Serialization",
         layer: "Infra",
-        reason: "Expected top-level JSON object or array",
       }),
     );
   });
@@ -50,13 +52,15 @@ export function encode(value: unknown): Result<string, Error> {
     return ok<string, Error>(JSON.stringify(value));
   } catch (cause) {
     return err<string, Error>(
-      newError({
-        action: "EncodeJson",
+      newRichError({
         cause,
-        hint: "Ensure the value is JSON-serializable.",
+        details: {
+          action: "EncodeJson",
+          hint: "Ensure the value is JSON-serializable.",
+          reason: "Failed to encode value as JSON",
+        },
         kind: "Serialization",
         layer: "Infra",
-        reason: "Failed to encode value as JSON",
       }),
     );
   }
@@ -67,13 +71,15 @@ function _decode(value: string): Result<JsonValue, Error> {
     return ok<JsonValue, Error>(JSON.parse(value));
   } catch (cause) {
     return err<JsonValue, Error>(
-      newError({
-        action: "DecodeJson",
+      newRichError({
         cause,
-        hint: "Ensure the input string is valid JSON.",
+        details: {
+          action: "DecodeJson",
+          hint: "Ensure the input string is valid JSON.",
+          reason: "Failed to decode value from JSON",
+        },
         kind: "Serialization",
         layer: "Infra",
-        reason: "Failed to decode value from JSON",
       }),
     );
   }

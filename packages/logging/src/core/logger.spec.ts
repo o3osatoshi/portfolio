@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import type { Attributes, LogEvent, Transport } from "../types";
 import { createLogger } from "./logger";
@@ -150,14 +150,16 @@ describe("createLogger", () => {
     });
 
     const child = logger.child({ "request.id": "req-1" });
-    const error = newError({
-      action: "CreateTransaction",
+    const error = newRichError({
       cause: new Error("timeout"),
-      hint: "verify input",
-      impact: "transaction not saved",
+      details: {
+        action: "CreateTransaction",
+        hint: "verify input",
+        impact: "transaction not saved",
+        reason: "amount is required",
+      },
       kind: "Validation",
       layer: "Domain",
-      reason: "amount is required",
     });
 
     child.error("request_failed", { "http.status_code": 500 }, error);

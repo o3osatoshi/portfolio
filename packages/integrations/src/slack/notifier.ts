@@ -23,12 +23,14 @@ export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
         .orElse((cause) =>
           err(
             newIntegrationError({
-              action: "Notify",
               cause,
-              hint: "Check Slack channel permissions and token scopes.",
-              impact: "notification could not be delivered",
+              details: {
+                action: "Notify",
+                hint: "Check Slack channel permissions and token scopes.",
+                impact: "notification could not be delivered",
+                reason: "Slack notification failed",
+              },
               kind: "BadGateway",
-              reason: "Slack notification failed",
             }),
           ),
         ),

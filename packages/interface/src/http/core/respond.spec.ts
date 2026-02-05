@@ -4,7 +4,7 @@ import { err, errAsync, ok, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import { respond, respondAsync, respondZodError } from "./respond";
 
@@ -24,11 +24,13 @@ describe("http/core/respond", () => {
       app.get("/e", (c) =>
         respond<never>(c)(
           err(
-            newError({
-              action: "LookupEntity",
+            newRichError({
+              details: {
+                action: "LookupEntity",
+                reason: "Entity missing",
+              },
               kind: "NotFound",
               layer: "Domain",
-              reason: "Entity missing",
             }),
           ),
         ),
@@ -88,11 +90,13 @@ describe("http/core/respond", () => {
       app.get("/e", (c) =>
         respondAsync<never>(c)(
           errAsync(
-            newError({
-              action: "LookupEntity",
+            newRichError({
+              details: {
+                action: "LookupEntity",
+                reason: "Entity missing",
+              },
               kind: "NotFound",
               layer: "Domain",
-              reason: "Entity missing",
             }),
           ),
         ),

@@ -202,8 +202,10 @@ export function updateTransaction(
   if (tx.id !== id) {
     return err(
       domainValidationError({
-        action: "UpdateTransaction",
-        reason: "Transaction ID mismatch",
+        details: {
+          action: "UpdateTransaction",
+          reason: "Transaction ID mismatch",
+        },
       }),
     );
   }

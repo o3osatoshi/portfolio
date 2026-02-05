@@ -57,8 +57,10 @@ export function newFxRate(v: unknown): Result<FxRate, Error> {
   if (!isPositiveDecimal(res.value)) {
     return err(
       domainValidationError({
-        action: "NewFxRate",
-        reason: "FX rate must be > 0",
+        details: {
+          action: "NewFxRate",
+          reason: "FX rate must be > 0",
+        },
       }),
     );
   }

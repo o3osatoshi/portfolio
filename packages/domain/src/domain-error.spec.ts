@@ -5,10 +5,12 @@ import { domainValidationError, newDomainError } from "./domain-error";
 describe("domain-error", () => {
   it("newDomainError shapes name and message", () => {
     const err = newDomainError({
-      action: "CreateTransaction",
-      hint: "use a new id",
+      details: {
+        action: "CreateTransaction",
+        hint: "use a new id",
+        reason: "duplicate id",
+      },
       kind: "Conflict",
-      reason: "duplicate id",
     });
     expect(err.name).toBe("DomainConflictError");
     expect(err.message).toContain("CreateTransaction failed");
@@ -16,7 +18,9 @@ describe("domain-error", () => {
   });
 
   it("domainValidationError helper sets kind Validation", () => {
-    const err = domainValidationError({ action: "Parse", reason: "bad" });
+    const err = domainValidationError({
+      details: { action: "Parse", reason: "bad" },
+    });
     expect(err.name).toBe("DomainValidationError");
     expect(err.message).toContain("Parse failed");
   });

@@ -48,8 +48,10 @@ export function newDecimal(v: unknown): Result<DecimalString, Error> {
     if (!d.isFinite()) {
       return err(
         domainValidationError({
-          action: "NewDecimal",
-          reason: "Decimal must be finite",
+          details: {
+            action: "NewDecimal",
+            reason: "Decimal must be finite",
+          },
         }),
       );
     }
@@ -57,8 +59,10 @@ export function newDecimal(v: unknown): Result<DecimalString, Error> {
   } catch {
     return err(
       domainValidationError({
-        action: "NewDecimal",
-        reason: "Invalid decimal input",
+        details: {
+          action: "NewDecimal",
+          reason: "Invalid decimal input",
+        },
       }),
     );
   }

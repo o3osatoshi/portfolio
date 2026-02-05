@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { isRichError } from "@o3osatoshi/toolkit";
+
 import { Prisma } from "../generated/prisma/client";
 import { newPrismaError } from "./prisma-error";
 
@@ -53,67 +55,107 @@ describe("prisma newPrismaError override", () => {
     const cause = fabricateKnownRequestError("P2000", {
       column_name: "description",
     });
-    const err = newPrismaError({ action: "SavePost", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "SavePost" },
+    });
     expect(err.name).toBe("DBValidationError");
     const message = err.message;
-    expect(message).toContain("SavePost failed");
-    expect(message).toContain("Value too long for description");
-    expect(message).toContain("Shorten value or alter schema.");
+    expect(message).toContain(
+      "SavePost failed: Value too long for description",
+    );
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe("Shorten value or alter schema.");
+    }
   });
 
   it("maps P2002 to DBIntegrityError with target", () => {
     const cause = fabricateKnownRequestError("P2002", { target: ["email"] });
-    const err = newPrismaError({ action: "CreateUser", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "CreateUser" },
+    });
     expect(err.name).toBe("DBIntegrityError");
     const message = err.message;
-    expect(message).toContain("CreateUser failed");
-    expect(message).toContain("Unique constraint violation on email");
-    expect(message).toContain("Use a different value for unique fields.");
+    expect(message).toContain(
+      "CreateUser failed: Unique constraint violation on email",
+    );
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe(
+        "Use a different value for unique fields.",
+      );
+    }
   });
 
   it("maps P2025 to DBNotFoundError and uses meta.cause if present", () => {
     const cause = fabricateKnownRequestError("P2025", {
       cause: "No record found for where condition",
     });
-    const err = newPrismaError({ action: "UpdateTransaction", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "UpdateTransaction" },
+    });
     expect(err.name).toBe("DBNotFoundError");
     const message = err.message;
-    expect(message).toContain("UpdateTransaction failed");
-    expect(message).toContain("No record found for where condition");
-    expect(message).toContain("Verify where conditions or record id.");
+    expect(message).toContain(
+      "UpdateTransaction failed: No record found for where condition",
+    );
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe("Verify where conditions or record id.");
+    }
   });
 
   it("falls back to a default reason when meta.cause is not a string", () => {
     const cause = fabricateKnownRequestError("P2025", { cause: 42 });
-    const err = newPrismaError({ action: "RemoveRecord", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "RemoveRecord" },
+    });
     expect(err.name).toBe("DBNotFoundError");
     expect(err.message).toContain("Record not found");
   });
 
   it("maps foreign key and invalid value errors appropriately", () => {
     const fk = fabricateKnownRequestError("P2003");
-    const fkErr = newPrismaError({ action: "LinkChild", cause: fk });
+    const fkErr = newPrismaError({
+      cause: fk,
+      details: { action: "LinkChild" },
+    });
     expect(fkErr.name).toBe("DBIntegrityError");
-    expect(fkErr.message).toContain("Foreign key constraint failed");
+    expect(fkErr.message).toContain(
+      "LinkChild failed: Foreign key constraint failed",
+    );
 
     const invalid = fabricateKnownRequestError("P2006");
-    const invalidErr = newPrismaError({ action: "InsertData", cause: invalid });
+    const invalidErr = newPrismaError({
+      cause: invalid,
+      details: { action: "InsertData" },
+    });
     expect(invalidErr.name).toBe("DBValidationError");
-    expect(invalidErr.message).toContain("Invalid value");
+    expect(invalidErr.message).toContain("InsertData failed: Invalid value");
   });
 
   it("maps schema configuration codes to DBConfigError", () => {
     const cause = fabricateKnownRequestError("P2021");
-    const err = newPrismaError({ action: "QueryTable", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "QueryTable" },
+    });
     expect(err.name).toBe("DBConfigError");
-    expect(err.message).toContain("Table does not exist");
+    expect(err.message).toContain("QueryTable failed: Table does not exist");
   });
 
   it("maps validation class to DBValidationError", () => {
     const cause = fabricateValidationError("Invalid query");
-    const err = newPrismaError({ action: "Query", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "Query" },
+    });
     expect(err.name).toBe("DBValidationError");
-    expect(err.message).toContain("Invalid Prisma query or data");
+    expect(err.message).toContain("Query failed: Invalid Prisma query or data");
   });
 
   it("classifies initialization errors by message", () => {
@@ -121,29 +163,38 @@ describe("prisma newPrismaError override", () => {
       "P1001: could not connect to server",
     );
     const unavailableErr = newPrismaError({
-      action: "Connect",
       cause: unavailable,
+      details: { action: "Connect" },
     });
     expect(unavailableErr.name).toBe("DBUnavailableError");
-    expect(unavailableErr.message).toContain(
-      "Ensure database is reachable and running.",
-    );
+    expect(isRichError(unavailableErr)).toBe(true);
+    if (isRichError(unavailableErr)) {
+      expect(unavailableErr.details?.hint).toBe(
+        "Ensure database is reachable and running.",
+      );
+    }
 
     const timeout = fabricateInitializationError(
       "P1002: timed out while connecting",
     );
-    const timeoutErr = newPrismaError({ action: "Init", cause: timeout });
+    const timeoutErr = newPrismaError({
+      cause: timeout,
+      details: { action: "Init" },
+    });
     expect(timeoutErr.name).toBe("DBTimeoutError");
-    expect(timeoutErr.message).toContain(
-      "Check database connectivity and network.",
-    );
+    expect(isRichError(timeoutErr)).toBe(true);
+    if (isRichError(timeoutErr)) {
+      expect(timeoutErr.details?.hint).toBe(
+        "Check database connectivity and network.",
+      );
+    }
 
     const unauthorized = fabricateInitializationError(
       "P1000: Authentication failed against database server",
     );
     const unauthorizedErr = newPrismaError({
-      action: "Init",
       cause: unauthorized,
+      details: { action: "Init" },
     });
     expect(unauthorizedErr.name).toBe("DBUnauthorizedError");
     expect(unauthorizedErr.message).not.toContain(
@@ -153,36 +204,47 @@ describe("prisma newPrismaError override", () => {
 
   it("maps unknown request errors to specific kinds", () => {
     const deadlock = fabricateUnknownRequestError("deadlock detected");
-    const deadlockErr = newPrismaError({ action: "TxCommit", cause: deadlock });
+    const deadlockErr = newPrismaError({
+      cause: deadlock,
+      details: { action: "TxCommit" },
+    });
     expect(deadlockErr.name).toBe("DBDeadlockError");
 
     const serialization = fabricateUnknownRequestError(
       "Could not serialize access due to read/write dependencies",
     );
     const serializationErr = newPrismaError({
-      action: "Commit",
       cause: serialization,
+      details: { action: "Commit" },
     });
     expect(serializationErr.name).toBe("DBSerializationError");
   });
 
   it("maps rust panics to DBUnknownError with a helpful hint", () => {
     const cause = fabricateRustPanicError();
-    const err = newPrismaError({ action: "Execute", cause });
+    const err = newPrismaError({
+      cause,
+      details: { action: "Execute" },
+    });
     expect(err.name).toBe("DBUnknownError");
     const message = err.message;
-    expect(message).toContain("Prisma engine panic");
-    expect(message).toContain("Inspect logs; restart the process.");
+    expect(message).toContain("Execute failed: Prisma engine panic");
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe("Inspect logs; restart the process.");
+    }
   });
 
   it("falls back to DBUnknownError for non-Prisma causes", () => {
     const err = newPrismaError({
-      action: "HandleMisc",
       cause: new Error("boom"),
-      hint: "Check logs",
+      details: { action: "HandleMisc", hint: "Check logs" },
     });
     expect(err.name).toBe("DBUnknownError");
-    expect(err.message).toContain("Unexpected error");
-    expect(err.message).toContain("Check logs");
+    expect(err.message).toContain("HandleMisc failed: Unexpected error");
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.details?.hint).toBe("Check logs");
+    }
   });
 });

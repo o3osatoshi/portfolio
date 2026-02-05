@@ -19,8 +19,10 @@ export function newTransactionType(v: unknown): Result<TransactionType, Error> {
   if (v === "BUY" || v === "SELL") return ok(v as TransactionType);
   return err(
     domainValidationError({
-      action: "NewTransactionType",
-      reason: "TransactionType must be BUY or SELL",
+      details: {
+        action: "NewTransactionType",
+        reason: "TransactionType must be BUY or SELL",
+      },
     }),
   );
 }

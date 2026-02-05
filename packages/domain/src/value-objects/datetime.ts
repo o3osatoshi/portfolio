@@ -19,15 +19,19 @@ export function newDateTime(v: unknown): Result<DateTime, Error> {
   if (!(v instanceof Date))
     return err(
       domainValidationError({
-        action: "NewDateTime",
-        reason: "DateTime must be a Date",
+        details: {
+          action: "NewDateTime",
+          reason: "DateTime must be a Date",
+        },
       }),
     );
   if (Number.isNaN(v.getTime()))
     return err(
       domainValidationError({
-        action: "NewDateTime",
-        reason: "DateTime is invalid",
+        details: {
+          action: "NewDateTime",
+          reason: "DateTime is invalid",
+        },
       }),
     );
   return ok(v as DateTime);

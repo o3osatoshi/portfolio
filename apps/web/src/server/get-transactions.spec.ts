@@ -58,7 +58,7 @@ vi.mock("@/env/server", () => ({
 
 import { getTag } from "@/utils/nav-handler";
 import { webUnauthorizedError } from "@/utils/web-error";
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
 
@@ -132,11 +132,13 @@ describe("getTransactions", () => {
 
   it("returns Err and uses short cache life when usecase fails", async () => {
     const userId = "u1";
-    const error = newError({
-      action: "FindTransactionsByUserId",
+    const error = newRichError({
+      details: {
+        action: "FindTransactionsByUserId",
+        reason: "Database unavailable",
+      },
       kind: "Unavailable",
       layer: "DB",
-      reason: "Database unavailable",
     });
 
     h.getUserIdMock.mockReturnValueOnce(okAsync(userId));

@@ -3,7 +3,7 @@ import { ResultAsync } from "neverthrow";
 
 import {
   deserializeError,
-  newError,
+  newRichError,
   unwrapResultAsyncOrThrow,
 } from "@o3osatoshi/toolkit";
 
@@ -18,12 +18,14 @@ export function createInngestStepRunner(step: InngestStepRunner): StepRunner {
       (error) =>
         deserializeError(error, {
           fallback: (cause) =>
-            newError({
-              action: "InngestStepRunner",
+            newRichError({
               cause,
+              details: {
+                action: "InngestStepRunner",
+                reason: "step.run rejected with a non-error value",
+              },
               kind: "Unknown",
               layer: "Infra",
-              reason: "step.run rejected with a non-error value",
             }),
         }),
     ).map((value) => value as T);

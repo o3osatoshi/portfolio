@@ -29,6 +29,6 @@ export function parseWith<T extends z.ZodType>(
   const { action, layer } = ctx;
   return Result.fromThrowable(
     (input: unknown) => schema.parse(input),
-    (cause) => newZodError({ action, cause, layer }),
+    (cause) => newZodError({ cause, details: { action }, layer }),
   );
 }

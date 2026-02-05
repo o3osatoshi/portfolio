@@ -29,7 +29,7 @@
  */
 import {
   type Kind,
-  parseErrorName,
+  resolveErrorKind,
   type SerializedError,
   serializeError,
   type SerializeOptions,
@@ -138,22 +138,7 @@ export function toHttpErrorResponse(
 
 /** @internal Derive HTTP status from an Error name (Kind heuristic). */
 function deriveStatusFromError(e: Error): ErrorStatusCode {
-  const kind = detectKindFromName(e.name);
+  const kind = resolveErrorKind(e);
   if (kind) return KIND_TO_STATUS[kind];
   return 500;
-}
-
-/**
- * @internal Detect a {@link Kind} value from an error `name`.
- *
- * - Prioritizes names produced by {@link newError}, whose names are built as
- *   `Layer + Kind + "Error"` (e.g. `DomainValidationError`).
- * - Special‑cases external errors: `ZodError` and `AbortError`.
- */
-function detectKindFromName(name: string): Kind | undefined {
-  const { kind } = parseErrorName(name);
-  if (kind) return kind;
-  if (name === "ZodError") return "Validation";
-  if (name === "AbortError") return "Canceled";
-  return undefined;
 }

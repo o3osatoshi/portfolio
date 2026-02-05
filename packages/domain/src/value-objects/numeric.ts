@@ -46,8 +46,10 @@ export function newAmount(v: unknown): Result<Amount, Error> {
   if (!isPositiveDecimal(r.value))
     return err(
       domainValidationError({
-        action: "NewAmount",
-        reason: "Amount must be > 0",
+        details: {
+          action: "NewAmount",
+          reason: "Amount must be > 0",
+        },
       }),
     );
   return ok(r.value as Amount);
@@ -62,8 +64,10 @@ export function newFee(v: unknown): Result<Fee, Error> {
   if (!isNonNegativeDecimal(r.value))
     return err(
       domainValidationError({
-        action: "NewFee",
-        reason: "Fee must be >= 0",
+        details: {
+          action: "NewFee",
+          reason: "Fee must be >= 0",
+        },
       }),
     );
   return ok(r.value as Fee);
@@ -78,8 +82,10 @@ export function newPrice(v: unknown): Result<Price, Error> {
   if (!isPositiveDecimal(r.value))
     return err(
       domainValidationError({
-        action: "NewPrice",
-        reason: "Price must be > 0",
+        details: {
+          action: "NewPrice",
+          reason: "Price must be > 0",
+        },
       }),
     );
   return ok(r.value as Price);

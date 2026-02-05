@@ -29,8 +29,10 @@ export function newTransactionId(v: unknown): Result<TransactionId, Error> {
   if (!nonEmptyString(v))
     return err(
       domainValidationError({
-        action: "NewTransactionId",
-        reason: "TransactionId must be non-empty",
+        details: {
+          action: "NewTransactionId",
+          reason: "TransactionId must be non-empty",
+        },
       }),
     );
   return ok(v as TransactionId);
@@ -43,8 +45,10 @@ export function newUserId(v: unknown): Result<UserId, Error> {
   if (!nonEmptyString(v))
     return err(
       domainValidationError({
-        action: "NewUserId",
-        reason: "UserId must be non-empty",
+        details: {
+          action: "NewUserId",
+          reason: "UserId must be non-empty",
+        },
       }),
     );
   return ok(v as UserId);

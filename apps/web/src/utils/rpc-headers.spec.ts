@@ -10,6 +10,8 @@ vi.mock("next/headers", () => ({
   cookies: h.cookiesMock,
 }));
 
+import { isRichError } from "@o3osatoshi/toolkit";
+
 import { createHeaders } from "./rpc-headers";
 
 describe("utils/rpc-headers createHeaders", () => {
@@ -69,7 +71,9 @@ describe("utils/rpc-headers createHeaders", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("InfraUnknownError");
-    const payload = JSON.parse(res.error.message);
-    expect(payload.summary).toBe("Call cookies failed");
+    expect(isRichError(res.error)).toBe(true);
+    if (isRichError(res.error)) {
+      expect(res.error.details?.action).toBe("Call cookies");
+    }
   });
 });

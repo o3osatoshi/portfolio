@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
-import { parseErrorMessage } from "@o3osatoshi/toolkit";
+import { isRichError } from "@o3osatoshi/toolkit";
 
 import { createSmartFetch } from "./smart-fetch";
 
@@ -86,8 +86,10 @@ describe("integrations/http createSmartFetch", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
-    const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("DeserializeResponseBody");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.action).toBe("DeserializeResponseBody");
+    }
   });
 
   it("wraps fetch failures as ExternalUnavailableError", async () => {
@@ -105,8 +107,10 @@ describe("integrations/http createSmartFetch", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalUnavailableError");
-    const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("FetchExternalApi");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.action).toBe("FetchExternalApi");
+    }
   });
 
   it("forwards method, headers, body, and signal", async () => {

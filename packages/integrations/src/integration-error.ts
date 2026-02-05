@@ -1,4 +1,8 @@
-import { type Kind, newError } from "@o3osatoshi/toolkit";
+import {
+  type Kind,
+  type NewRichError,
+  newRichError,
+} from "@o3osatoshi/toolkit";
 
 /**
  * Supported error categories emitted from the integrations layer.
@@ -28,33 +32,20 @@ export type IntegrationKind = Extract<
  * Additional context can be attached incrementally for better diagnostics.
  */
 export type NewIntegrationError = {
-  action?: string;
-  cause?: unknown;
-  hint?: string;
-  impact?: string;
   kind: IntegrationKind;
-  reason?: string;
-};
+} & Omit<NewRichError, "layer">;
 
 /**
  * Integrations-aware error constructor. Shapes an Error using @o3osatoshi/toolkit
- * with layer "External". Prefer this over `newError` in integrations code.
+ * with layer "External". Prefer this over `newRichError` in integrations code.
  */
 export function newIntegrationError({
-  action,
-  cause,
-  hint,
-  impact,
   kind,
-  reason,
+  ...rest
 }: NewIntegrationError): Error {
-  return newError({
-    action,
-    cause,
-    hint,
-    impact,
+  return newRichError({
+    ...rest,
     kind,
     layer: "External",
-    reason,
   });
 }

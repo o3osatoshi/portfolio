@@ -1,4 +1,8 @@
-import { type Kind, newError } from "@o3osatoshi/toolkit";
+import {
+  type Kind,
+  type NewRichError,
+  newRichError,
+} from "@o3osatoshi/toolkit";
 
 /**
  * Enumerates normalized error categories produced by the application layer.
@@ -22,34 +26,21 @@ export type ApplicationKind = Extract<
  * callers can progressively add context (action, impact, hints, etc.).
  */
 export type NewApplicationError = {
-  action?: string;
-  cause?: unknown;
-  hint?: string;
-  impact?: string;
   kind: ApplicationKind;
-  reason?: string;
-};
+} & Omit<NewRichError, "layer">;
 
 /**
  * Application-layer error constructor wrapping @o3osatoshi/toolkit with layer "Application".
  * Use in application/use-case orchestration for consistent error classification.
  */
 export function newApplicationError({
-  action,
-  cause,
-  hint,
-  impact,
   kind,
-  reason,
+  ...rest
 }: NewApplicationError): Error {
-  return newError({
-    action,
-    cause,
-    hint,
-    impact,
+  return newRichError({
+    ...rest,
     kind,
     layer: "Application",
-    reason,
   });
 }
 

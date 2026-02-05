@@ -34,8 +34,10 @@ export class UpdateTransactionUseCase {
           tx === null
             ? err(
                 applicationNotFoundError({
-                  action: "UpdateTransaction",
-                  reason: "Transaction not found",
+                  details: {
+                    action: "UpdateTransaction",
+                    reason: "Transaction not found",
+                  },
                 }),
               )
             : ok(tx),
@@ -44,8 +46,10 @@ export class UpdateTransactionUseCase {
           tx.userId !== userId
             ? err(
                 applicationForbiddenError({
-                  action: "UpdateTransaction",
-                  reason: "Transaction does not belong to user",
+                  details: {
+                    action: "UpdateTransaction",
+                    reason: "Transaction does not belong to user",
+                  },
                 }),
               )
             : ok(tx),

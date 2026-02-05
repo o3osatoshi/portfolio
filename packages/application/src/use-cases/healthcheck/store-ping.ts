@@ -79,9 +79,11 @@ export class StorePingUseCase {
               if (!found) {
                 return errAsync(
                   newApplicationError({
-                    action: "StorePing",
+                    details: {
+                      action: "StorePing",
+                      reason: "Transaction readback returned no record",
+                    },
                     kind: "NotFound",
-                    reason: "Transaction readback returned no record",
                   }),
                 );
               }
@@ -170,9 +172,11 @@ function readPart(
   const part = parts.find((entry) => entry.type === type);
   if (!part) {
     throw newApplicationError({
-      action: "StorePing",
+      details: {
+        action: "StorePing",
+        reason: `Missing date part: ${type}`,
+      },
       kind: "Unknown",
-      reason: `Missing date part: ${type}`,
     });
   }
   return part.value;

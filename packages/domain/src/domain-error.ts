@@ -1,4 +1,8 @@
-import { type Kind, newError } from "@o3osatoshi/toolkit";
+import {
+  type Kind,
+  type NewRichError,
+  newRichError,
+} from "@o3osatoshi/toolkit";
 
 /**
  * Supported error categories emitted from the domain layer.
@@ -21,34 +25,18 @@ export type DomainKind = Extract<
  * Additional context can be attached incrementally for better diagnostics.
  */
 export type NewDomainError = {
-  action?: string;
-  cause?: unknown;
-  hint?: string;
-  impact?: string;
   kind: DomainKind;
-  reason?: string;
-};
+} & Omit<NewRichError, "layer">;
 
 /**
  * Domain-aware error constructor. Shapes an Error using @o3osatoshi/toolkit with layer "Domain".
  * Prefer this over new Error(...) in domain code for consistent classification.
  */
-export function newDomainError({
-  action,
-  cause,
-  hint,
-  impact,
-  kind,
-  reason,
-}: NewDomainError): Error {
-  return newError({
-    action,
-    cause,
-    hint,
-    impact,
+export function newDomainError({ kind, ...rest }: NewDomainError): Error {
+  return newRichError({
+    ...rest,
     kind,
     layer: "Domain",
-    reason,
   });
 }
 

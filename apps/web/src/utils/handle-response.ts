@@ -23,8 +23,8 @@ export function handleResponse<T>(
   if (!res.ok) {
     return ResultAsync.fromPromise(res.json(), (cause) =>
       newFetchError({
-        action: `Deserialize error body for ${context}`,
         cause,
+        details: { action: `Deserialize error body for ${context}` },
         kind: "Serialization",
         request,
       }),
@@ -33,8 +33,8 @@ export function handleResponse<T>(
         deserializeError(body, {
           fallback: (cause) =>
             newFetchError({
-              action: `Deserialize error body for ${context}`,
               cause,
+              details: { action: `Deserialize error body for ${context}` },
               kind: "BadGateway",
               request,
             }),
@@ -45,8 +45,8 @@ export function handleResponse<T>(
 
   return ResultAsync.fromPromise(res.json(), (cause) =>
     newFetchError({
-      action: `Deserialize body for ${context}`,
       cause,
+      details: { action: `Deserialize body for ${context}` },
       kind: "Serialization",
       request,
     }),
