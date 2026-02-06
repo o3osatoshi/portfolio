@@ -1,93 +1,82 @@
-import { z } from "zod";
+import { err, ok, type Result } from "neverthrow";
+import type { ZodIssue } from "zod";
 
-import { type JsonObject, jsonObjectSchema } from "../types";
-import { isRichError, newRichError, resolveErrorInfo } from "./error";
+import type { JsonObject } from "../types";
+import {
+  isRichError,
+  newRichError,
+  resolveErrorInfo,
+  type RichError,
+} from "./error";
 import { coerceErrorMessage, extractErrorName } from "./error-attributes";
 import {
-  type Kind,
-  kindSchema,
   type Layer,
-  layerSchema,
-  type RichErrorDetails,
-  richErrorDetailsSchema,
-  type RichErrorI18n,
-  richErrorI18nSchema,
+  type SerializedCause,
+  type SerializedError,
+  serializedErrorSchema,
 } from "./error-schema";
 
-/**
- * Union used to represent an error's `cause` in serialized form.
- *
- * - A primitive `string` is preserved as-is.
- * - A nested {@link SerializedError} captures structured error details recursively.
- *
- * @public
- */
-export type SerializedCause = SerializedError | string;
+export type { SerializedCause, SerializedError } from "./error-schema";
 
 /**
- * JSON-friendly representation of an `Error` instance.
- *
- * Designed for cross-boundary transport (logs, workers, RPC) while keeping
- * payloads bounded and safe by default.
+ * Failure payload returned by {@link tryDeserializeRichError}.
  *
  * @public
  */
-export interface SerializedError {
-  /** Optional cause; can be a string or another serialized error. */
-  cause?: SerializedCause | undefined;
-  /** Machine-stable identifier. */
-  code?: string | undefined;
-  /** Human context for diagnostics. */
-  details?: RichErrorDetails | undefined;
-  /** UI-friendly i18n payload. */
-  i18n?: RichErrorI18n | undefined;
-  /** Indicates whether this is an operational error. */
-  isOperational?: boolean | undefined;
-  /** Error classification (when available). */
-  kind?: Kind | undefined;
-  /** Architectural layer where the error originated (when available). */
-  layer?: Layer | undefined;
-  /** Error message. */
+export type DeserializeRichErrorFailure = {
+  input: unknown;
+  issues: DeserializeRichErrorIssue[];
+};
+
+/**
+ * Single normalized validation issue produced while deserializing a RichError.
+ *
+ * @public
+ */
+export type DeserializeRichErrorIssue = {
+  code: string;
   message: string;
-  /** JSON-safe metadata payload. */
-  meta?: JsonObject | undefined;
-  /** Original error name (e.g. `TypeError`, `DomainValidationError`). */
-  name: string;
-  /** Optional stack trace (included only when `includeStack` is true). */
-  stack?: string | undefined;
-}
-
-// Zod schema for validating SerializedError payloads (recursive, strips unknown keys)
-const serializedErrorSchema: z.ZodType<SerializedError> = z
-  .object({
-    name: z.string(),
-    cause: z
-      .union([z.string(), z.lazy(() => serializedErrorSchema)])
-      .optional(),
-    code: z.string().optional(),
-    details: richErrorDetailsSchema.optional(),
-    i18n: richErrorI18nSchema.optional(),
-    isOperational: z.boolean().optional(),
-    kind: kindSchema.optional(),
-    layer: layerSchema.optional(),
-    message: z.string(),
-    meta: jsonObjectSchema.optional(),
-    stack: z.string().optional(),
-  })
-  .strip();
+  path: string;
+};
 
 /**
- * Options for {@link deserializeError}.
+ * Options for {@link deserializeRichError}.
  *
  * @public
  */
-export type DeserializeErrorOptions = {
+export type DeserializeRichErrorOptions = {
   /**
-   * Optional fallback builder used when the input cannot be parsed as a
-   * {@link SerializedError}. The fallback is not used for actual Error
-   * instances or successfully parsed payloads.
+   * Action label stored in the fallback RichError details.
+   *
+   * @defaultValue "DeserializeRichError"
    */
-  fallback?: ((input: unknown) => Error) | undefined;
+  action?: string | undefined;
+  /**
+   * Error code used when deserialization fails.
+   *
+   * @defaultValue "RICH_ERROR_DESERIALIZE_FAILED"
+   */
+  code?: string | undefined;
+  /**
+   * i18n key used when deserialization fails.
+   *
+   * @defaultValue "errors.transport.deserialize_failed"
+   */
+  i18nKey?: string | undefined;
+  /**
+   * Layer used for the fallback deserialization failure error.
+   *
+   * @defaultValue "External"
+   */
+  layer?: Layer | undefined;
+  /**
+   * Additional JSON-safe metadata merged into fallback deserialization errors.
+   */
+  meta?: JsonObject | undefined;
+  /**
+   * Optional source identifier added to fallback metadata.
+   */
+  source?: string | undefined;
 };
 
 /**
@@ -103,96 +92,50 @@ export type SerializeOptions = {
 };
 
 /**
- * Reconstruct an `Error` instance from unknown input.
+ * Deserialize a payload into {@link RichError}.
  *
- * - Validates the input against an internal Zod schema compatible with {@link SerializedError}.
- * - On schema success, restores `name`/`message`/`stack` and recursively rehydrates `cause`.
- * - On schema failure, builds a best-effort `Error` using {@link extractErrorName} and {@link coerceErrorMessage}.
- * - If `input` is already an `Error`, it is returned as-is.
- * - Uses native `ErrorOptions` (`new Error(message, { cause })`) when available; otherwise attaches `cause` via `defineProperty`.
+ * @remarks
+ * Uses {@link tryDeserializeRichError} internally. When strict deserialization
+ * fails, this returns a structured `Serialization` RichError describing the
+ * decode failure.
  *
  * @public
- * @param input - Unknown value expected to represent a serialized error.
- * @param options - Optional fallback behavior for non-Error, non-serialized inputs.
- * @returns Rehydrated `Error` with best-effort `cause` restoration.
  */
-export function deserializeError(
+export function deserializeRichError(
   input: unknown,
-  options?: DeserializeErrorOptions,
-): Error {
-  // If input is already an Error instance, return it as-is
-  if (input instanceof Error) return input;
+  options: DeserializeRichErrorOptions = {},
+): RichError {
+  const result = tryDeserializeRichError(input);
+  if (result.isOk()) return result.value;
 
-  const parsed = serializedErrorSchema.safeParse(input);
-  if (!parsed.success) {
-    // Fallback: build a best-effort Error from unknown input
-    if (options?.fallback) {
-      return options.fallback(input);
-    }
-    const name = extractErrorName(input) ?? "UnknownError";
-    const message = coerceErrorMessage(input);
-    const e = new Error(message);
-    e.name = name;
-    return e;
-  }
+  const issues = result.error.issues;
+  const metadata: JsonObject = {
+    ...(options.meta ?? {}),
+    ...(options.source ? { source: options.source } : {}),
+    inputType: resolveInputType(input),
+    issueCount: issues.length,
+    issues,
+  };
 
-  const value = parsed.data;
-  const nested = value.cause;
-  const cause =
-    typeof nested === "string"
-      ? nested
-      : nested
-        ? deserializeError(nested)
-        : undefined;
-
-  if (value.kind && value.layer) {
-    const rich = newRichError({
-      cause,
-      code: value.code,
-      details: value.details,
-      i18n: value.i18n,
-      isOperational: value.isOperational,
-      kind: value.kind,
-      layer: value.layer,
-      meta: value.meta,
-    });
-    if (value.message) rich.message = value.message;
-    if (value.stack) rich.stack = value.stack;
-    return rich;
-  }
-
-  let error: Error;
-  try {
-    error = new (
-      Error as unknown as new (
-        m?: string,
-        o?: { cause?: unknown },
-      ) => Error
-    )(value.message, cause !== undefined ? { cause } : undefined);
-  } catch {
-    error = new Error(value.message);
-    if (cause !== undefined) {
-      try {
-        Object.defineProperty(error, "cause", {
-          enumerable: false,
-          value: cause,
-        });
-      } catch {
-        // ignore defineProperty failure
-      }
-    }
-  }
-
-  error.name = value.name;
-  if (value.stack) error.stack = value.stack;
-  return error;
+  return newRichError({
+    cause: input,
+    code: options.code ?? "RICH_ERROR_DESERIALIZE_FAILED",
+    details: {
+      action: options.action ?? "DeserializeRichError",
+      reason: "Invalid serialized RichError payload.",
+    },
+    i18n: { key: options.i18nKey ?? "errors.transport.deserialize_failed" },
+    kind: "Serialization",
+    layer: options.layer ?? "External",
+    meta: metadata,
+  });
 }
 
 /**
  * Lightweight structural guard for {@link SerializedError}.
  *
  * - Checks only for minimal shape (`name` and `message`).
- * - For strict validation and nested `cause` guarantees, prefer {@link deserializeError}.
+ * - For strict RichError validation, prefer {@link tryDeserializeRichError}.
  *
  * @public
  */
@@ -210,7 +153,7 @@ export function isSerializedError(v: unknown): v is SerializedError {
  *
  * @example
  * const s = serializeError(err); // send to worker or log store
- * const e = deserializeError(s); // rehydrate in another process
+ * const e = deserializeRichError(s); // rehydrate when payload is serialized RichError
  *
  * @public
  * @param error - Error instance to serialize.
@@ -247,6 +190,148 @@ export function serializeError(
     message: error.message,
     stack: includeStack ? error.stack : undefined,
   };
+}
+
+/**
+ * Strictly deserialize a serialized RichError payload.
+ *
+ * @remarks
+ * - Accepts only payloads that satisfy {@link serializedErrorSchema} and include
+ *   both `kind` and `layer`.
+ * - Returns `Err` when the payload is invalid or does not represent a RichError.
+ * - Use {@link deserializeRichError} when you always need a `RichError` return value.
+ *
+ * @public
+ */
+export function tryDeserializeRichError(
+  input: unknown,
+): Result<RichError, DeserializeRichErrorFailure> {
+  if (isRichError(input)) return ok(input);
+
+  const parsed = serializedErrorSchema.safeParse(input);
+  if (!parsed.success) {
+    return err({
+      input,
+      issues: mapZodIssues(parsed.error.issues),
+    });
+  }
+
+  const value = parsed.data;
+  if (!value.kind || !value.layer) {
+    return err({
+      input,
+      issues: getMissingRichErrorFieldIssues(value),
+    });
+  }
+
+  const rich = newRichError({
+    cause: deserializeCause(value.cause),
+    code: value.code,
+    details: value.details,
+    i18n: value.i18n,
+    isOperational: value.isOperational,
+    kind: value.kind,
+    layer: value.layer,
+    meta: value.meta,
+  });
+
+  if (value.message) rich.message = value.message;
+  if (value.stack) rich.stack = value.stack;
+
+  return ok(rich);
+}
+
+function buildError(message: string, cause: unknown): Error {
+  try {
+    return new (
+      Error as unknown as new (
+        m?: string,
+        o?: { cause?: unknown },
+      ) => Error
+    )(message, cause !== undefined ? { cause } : undefined);
+  } catch {
+    const error = new Error(message);
+    if (cause !== undefined) {
+      try {
+        Object.defineProperty(error, "cause", {
+          enumerable: false,
+          value: cause,
+        });
+      } catch {
+        // ignore defineProperty failure
+      }
+    }
+    return error;
+  }
+}
+
+function deserializeCause(cause: SerializedCause | undefined): unknown {
+  if (cause === undefined) return undefined;
+  if (typeof cause === "string") return cause;
+  return deserializeSerializedError(cause);
+}
+
+function deserializeSerializedError(value: SerializedError): Error {
+  const cause = deserializeCause(value.cause);
+
+  if (value.kind && value.layer) {
+    const rich = newRichError({
+      cause,
+      code: value.code,
+      details: value.details,
+      i18n: value.i18n,
+      isOperational: value.isOperational,
+      kind: value.kind,
+      layer: value.layer,
+      meta: value.meta,
+    });
+    if (value.message) rich.message = value.message;
+    if (value.stack) rich.stack = value.stack;
+    return rich;
+  }
+
+  const error = buildError(value.message, cause);
+  error.name = value.name;
+  if (value.stack) error.stack = value.stack;
+  return error;
+}
+
+function getMissingRichErrorFieldIssues(
+  value: SerializedError,
+): DeserializeRichErrorIssue[] {
+  const issues: DeserializeRichErrorIssue[] = [];
+  if (!value.kind) {
+    issues.push({
+      code: "missing_required_field",
+      message: "Expected field 'kind' for serialized RichError payload.",
+      path: "kind",
+    });
+  }
+  if (!value.layer) {
+    issues.push({
+      code: "missing_required_field",
+      message: "Expected field 'layer' for serialized RichError payload.",
+      path: "layer",
+    });
+  }
+  return issues;
+}
+
+function mapZodIssues(issues: ZodIssue[]): DeserializeRichErrorIssue[] {
+  return issues.map((issue) => ({
+    code: issue.code,
+    message: issue.message,
+    path:
+      issue.path.length > 0
+        ? issue.path.map((segment) => String(segment)).join(".")
+        : "<root>",
+  }));
+}
+
+function resolveInputType(input: unknown): string {
+  if (input === null) return "null";
+  if (Array.isArray(input)) return "array";
+  return typeof input;
 }
 
 /**

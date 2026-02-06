@@ -191,6 +191,7 @@ export function toRichError(
 ): RichError {
   if (isRichError(error)) return error;
 
+  const resolved = resolveErrorInfo(error);
   const reason = fallback.details?.reason ?? extractErrorMessage(error);
   const details = fallback.details ?? (reason ? { reason } : undefined);
 
@@ -200,8 +201,8 @@ export function toRichError(
     details,
     i18n: fallback.i18n,
     isOperational: fallback.isOperational,
-    kind: fallback.kind ?? "Unknown",
-    layer: fallback.layer ?? "External",
+    kind: fallback.kind ?? resolved.kind ?? "Unknown",
+    layer: fallback.layer ?? resolved.layer ?? "External",
     meta: fallback.meta,
   });
 }

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { jsonObjectSchema } from "../types";
+
 /**
  * Generic error classifications shared across application layers.
  *
@@ -116,3 +118,52 @@ export const richErrorI18nSchema = z
  * @public
  */
 export type RichErrorI18n = z.infer<typeof richErrorI18nSchema>;
+
+/**
+ * JSON-friendly representation of an Error instance for cross-boundary transport.
+ *
+ * @public
+ */
+export const serializedErrorSchema: z.ZodType<{
+  cause?: string | undefined | z.infer<typeof serializedErrorSchema>;
+  code?: string | undefined;
+  details?: RichErrorDetails | undefined;
+  i18n?: RichErrorI18n | undefined;
+  isOperational?: boolean | undefined;
+  kind?: Kind | undefined;
+  layer?: Layer | undefined;
+  message: string;
+  meta?: undefined | z.infer<typeof jsonObjectSchema>;
+  name: string;
+  stack?: string | undefined;
+}> = z
+  .object({
+    name: z.string(),
+    cause: z
+      .union([z.string(), z.lazy(() => serializedErrorSchema)])
+      .optional(),
+    code: z.string().optional(),
+    details: richErrorDetailsSchema.optional(),
+    i18n: richErrorI18nSchema.optional(),
+    isOperational: z.boolean().optional(),
+    kind: kindSchema.optional(),
+    layer: layerSchema.optional(),
+    message: z.string(),
+    meta: jsonObjectSchema.optional(),
+    stack: z.string().optional(),
+  })
+  .strip();
+
+/**
+ * Serialized cause type inferred from {@link serializedErrorSchema}.
+ *
+ * @public
+ */
+export type SerializedCause = Exclude<SerializedError["cause"], undefined>;
+
+/**
+ * Serialized error type inferred from {@link serializedErrorSchema}.
+ *
+ * @public
+ */
+export type SerializedError = z.infer<typeof serializedErrorSchema>;
