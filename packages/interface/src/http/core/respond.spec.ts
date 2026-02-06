@@ -50,7 +50,13 @@ describe("http/core/respond", () => {
         respond<never>(c)(
           err(
             (() => {
-              const e = new Error("aborted");
+              const e = newRichError({
+                details: {
+                  reason: "aborted",
+                },
+                kind: "Canceled",
+                layer: "External",
+              });
               // Simulate a DOM-style AbortError without depending on DOMException
               e.name = "AbortError";
               return e;
@@ -67,7 +73,19 @@ describe("http/core/respond", () => {
 
     it("defaults unknown errors to 500", async () => {
       const app = new Hono();
-      app.get("/unknown", (c) => respond<never>(c)(err(new Error("boom"))));
+      app.get("/unknown", (c) =>
+        respond<never>(c)(
+          err(
+            newRichError({
+              details: {
+                reason: "boom",
+              },
+              kind: "Unknown",
+              layer: "External",
+            }),
+          ),
+        ),
+      );
       const res = await app.request("/unknown");
       expect(res.status).toBe(500);
     });
@@ -115,7 +133,13 @@ describe("http/core/respond", () => {
         respondAsync<never>(c)(
           errAsync(
             (() => {
-              const e = new Error("aborted");
+              const e = newRichError({
+                details: {
+                  reason: "aborted",
+                },
+                kind: "Canceled",
+                layer: "External",
+              });
               e.name = "AbortError";
               return e;
             })(),
@@ -132,7 +156,17 @@ describe("http/core/respond", () => {
     it("defaults unknown errors in ResultAsync to 500", async () => {
       const app = new Hono();
       app.get("/unknown", (c) =>
-        respondAsync<never>(c)(errAsync(new Error("boom"))),
+        respondAsync<never>(c)(
+          errAsync(
+            newRichError({
+              details: {
+                reason: "boom",
+              },
+              kind: "Unknown",
+              layer: "External",
+            }),
+          ),
+        ),
       );
       const res = await app.request("/unknown");
       expect(res.status).toBe(500);

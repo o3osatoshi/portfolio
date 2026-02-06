@@ -1,5 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -15,7 +17,7 @@ export function isDateTime(v: unknown): v is DateTime {
 /**
  * Validate unknown input and ensure it is a finite `Date` instance.
  */
-export function newDateTime(v: unknown): Result<DateTime, Error> {
+export function newDateTime(v: unknown): Result<DateTime, RichError> {
   if (!(v instanceof Date))
     return err(
       domainValidationError({

@@ -69,21 +69,39 @@ export type CreateLazyEnvOptions = CreateEnvOptions;
 export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
 
 // @public
-export function decode(value: string): Result<JsonContainer, Error>;
-
-// @public
-export function deserializeError(input: unknown, options?: DeserializeErrorOptions): Error;
-
-// @public
-export type DeserializeErrorOptions = {
-    fallback?: ((input: unknown) => Error) | undefined;
-};
+export function decode(value: string): Result<JsonContainer, RichError>;
 
 // @public
 export function deserializeResponseBody(response: Response): Promise<unknown>;
 
 // @public
-export function encode(value: unknown): Result<string, Error>;
+export function deserializeRichError(input: unknown, options?: DeserializeRichErrorOptions): RichError;
+
+// @public
+export type DeserializeRichErrorFailure = {
+    input: unknown;
+    issues: DeserializeRichErrorIssue[];
+};
+
+// @public
+export type DeserializeRichErrorIssue = {
+    code: string;
+    message: string;
+    path: string;
+};
+
+// @public
+export type DeserializeRichErrorOptions = {
+    action?: string | undefined;
+    code?: string | undefined;
+    i18nKey?: string | undefined;
+    layer?: Layer | undefined;
+    meta?: JsonObject | undefined;
+    source?: string | undefined;
+};
+
+// @public
+export function encode(value: unknown): Result<string, RichError>;
 
 // @public
 export type Env = "development" | "local" | "production" | "staging";
@@ -190,7 +208,7 @@ export function isDeserializableBody(res: Response): boolean;
 export function isDeserializableResponse(response: Response): boolean;
 
 // @public
-export function isRichError(value: unknown): value is RichError;
+export function isRichError(error: unknown): error is RichError;
 
 // @public
 export function isSerializedError(v: unknown): v is SerializedError;
@@ -228,10 +246,43 @@ export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 export const jsonValueSchema: z.ZodType<JsonValue>;
 
 // @public
-export type Kind = "BadGateway" | "BadRequest" | "Canceled" | "Config" | "Conflict" | "Deadlock" | "Forbidden" | "Integrity" | "MethodNotAllowed" | "NotFound" | "RateLimit" | "Serialization" | "Timeout" | "Unauthorized" | "Unavailable" | "Unknown" | "Unprocessable" | "Validation";
+export type Kind = z.infer<typeof kindSchema>;
 
 // @public
-export type Layer = "Application" | "Auth" | "DB" | "Domain" | "External" | "Infra" | "UI";
+export const kindSchema: z.ZodEnum<{
+    BadGateway: "BadGateway";
+    BadRequest: "BadRequest";
+    Canceled: "Canceled";
+    Config: "Config";
+    Conflict: "Conflict";
+    Deadlock: "Deadlock";
+    Forbidden: "Forbidden";
+    Integrity: "Integrity";
+    MethodNotAllowed: "MethodNotAllowed";
+    NotFound: "NotFound";
+    RateLimit: "RateLimit";
+    Serialization: "Serialization";
+    Timeout: "Timeout";
+    Unauthorized: "Unauthorized";
+    Unavailable: "Unavailable";
+    Unknown: "Unknown";
+    Unprocessable: "Unprocessable";
+    Validation: "Validation";
+}>;
+
+// @public
+export type Layer = z.infer<typeof layerSchema>;
+
+// @public
+export const layerSchema: z.ZodEnum<{
+    Application: "Application";
+    Auth: "Auth";
+    DB: "DB";
+    Domain: "Domain";
+    External: "External";
+    Infra: "Infra";
+    UI: "UI";
+}>;
 
 // @public
 export type NewFetchError = {
@@ -242,7 +293,7 @@ export type NewFetchError = {
 } & Omit<NewRichError, "details" | "kind" | "layer">;
 
 // @public
-export function newFetchError(input: NewFetchError): Error;
+export function newFetchError(input: NewFetchError): RichError;
 
 // @public
 export type NewRichError = {
@@ -268,7 +319,7 @@ export type NewZodError = {
 } & Omit<NewRichError, "details" | "kind" | "layer">;
 
 // @public
-export function newZodError(options: NewZodError): Error;
+export function newZodError(options: NewZodError): RichError;
 
 // @public
 export function normalizeBaseUrl(baseUrl: string): string;
@@ -283,7 +334,7 @@ export function parseErrorName(name: string | undefined): ErrorNameParts;
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
-}): (input: unknown) => Result<z.infer<T>, Error>;
+}): (input: unknown) => Result<z.infer<T>, RichError>;
 
 // @public
 export function resolveAbortSignal(options?: ResolveAbortSignalOptions): ResolvedAbortSignal;
@@ -335,25 +386,40 @@ export class RichError extends Error {
 }
 
 // @public
-export type RichErrorDetails = {
-    action?: string | undefined;
-    hint?: string | undefined;
-    impact?: string | undefined;
-    reason?: string | undefined;
-};
+export type RichErrorDetails = z.infer<typeof richErrorDetailsSchema>;
 
 // @public
-export type RichErrorI18n = {
-    key: string;
-    params?: Record<string, boolean | number | string> | undefined;
-};
+export const richErrorDetailsSchema: z.ZodObject<{
+    action: z.ZodOptional<z.ZodString>;
+    hint: z.ZodOptional<z.ZodString>;
+    impact: z.ZodOptional<z.ZodString>;
+    reason: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
 
 // @public
-export type SerializedCause = SerializedError | string;
+export type RichErrorI18n = z.infer<typeof richErrorI18nSchema>;
 
 // @public
-export interface SerializedError {
-    cause?: SerializedCause | undefined;
+export const richErrorI18nSchema: z.ZodObject<{
+    key: z.ZodString;
+    params: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
+}, z.core.$strip>;
+
+// @public
+export type RichResult<T> = Result<T, RichError>;
+
+// @public
+export type RichResultAsync<T> = ResultAsync<T, RichError>;
+
+// @public
+export type SerializedCause = Exclude<SerializedError["cause"], undefined>;
+
+// @public
+export type SerializedError = z.infer<typeof serializedErrorSchema>;
+
+// @public
+export const serializedErrorSchema: z.ZodType<{
+    cause?: string | undefined | z.infer<typeof serializedErrorSchema>;
     code?: string | undefined;
     details?: RichErrorDetails | undefined;
     i18n?: RichErrorI18n | undefined;
@@ -361,10 +427,10 @@ export interface SerializedError {
     kind?: Kind | undefined;
     layer?: Layer | undefined;
     message: string;
-    meta?: JsonObject | undefined;
+    meta?: undefined | z.infer<typeof jsonObjectSchema>;
     name: string;
     stack?: string | undefined;
-}
+}>;
 
 // @public
 export function serializeError(error: Error, opts?: SerializeOptions): SerializedError;
@@ -376,7 +442,7 @@ export type SerializeOptions = {
 };
 
 // @public
-export function sleep(ms: number, input?: SleepOptions): ResultAsync<void, Error>;
+export function sleep(ms: number, input?: SleepOptions): ResultAsync<void, RichError>;
 
 // @public
 export type SleepOptions = {
@@ -393,10 +459,13 @@ export function summarizeZodIssue(issue: ZodIssue): string;
 export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
-export function toRichError(input: unknown, fallback?: Partial<NewRichError>): RichError;
+export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;
 
 // @public
 export function truncate(value: string, maxLen?: null | number): string;
+
+// @public
+export function tryDeserializeRichError(input: unknown): Result<RichError, DeserializeRichErrorFailure>;
 
 // @public
 export type UnknownRecord = Record<string, unknown>;
@@ -415,7 +484,7 @@ export function userMessageFromError(error: Error): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1053:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1153:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

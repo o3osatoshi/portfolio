@@ -1,7 +1,7 @@
 import { Result } from "neverthrow";
 import type { z } from "zod";
 
-import type { Layer } from "../error";
+import type { Layer, RichError } from "../error";
 import { newZodError } from "./zod-error";
 
 /**
@@ -25,7 +25,7 @@ import { newZodError } from "./zod-error";
 export function parseWith<T extends z.ZodType>(
   schema: T,
   ctx: { action: string; layer?: Layer },
-): (input: unknown) => Result<z.infer<T>, Error> {
+): (input: unknown) => Result<z.infer<T>, RichError> {
   const { action, layer } = ctx;
   return Result.fromThrowable(
     (input: unknown) => schema.parse(input),

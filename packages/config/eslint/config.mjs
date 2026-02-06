@@ -12,6 +12,7 @@ export default [
       "**/.turbo/**",
       "**/.idea/**",
       "**/storybook-static/**",
+      "**/temp/*.api.json",
     ],
   },
   ...perfectionist,

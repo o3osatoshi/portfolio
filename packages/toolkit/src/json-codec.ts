@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { newRichError } from "./error";
+import { newRichError, type RichError } from "./error";
 import type { JsonContainer, JsonValue } from "./types";
 
 /**
@@ -15,12 +15,12 @@ import type { JsonContainer, JsonValue } from "./types";
  * @returns A neverthrow result containing a {@link JsonContainer} on success, or a structured error on failure.
  * @public
  */
-export function decode(value: string): Result<JsonContainer, Error> {
+export function decode(value: string): Result<JsonContainer, RichError> {
   return _decode(value).andThen((v) => {
     if (isJsonContainer(v)) {
-      return ok<JsonContainer, Error>(v);
+      return ok<JsonContainer, RichError>(v);
     }
-    return err<JsonContainer, Error>(
+    return err<JsonContainer, RichError>(
       newRichError({
         cause: v,
         details: {
@@ -47,11 +47,11 @@ export function decode(value: string): Result<JsonContainer, Error> {
  * @returns A neverthrow result containing the JSON string on success, or a structured error on failure.
  * @public
  */
-export function encode(value: unknown): Result<string, Error> {
+export function encode(value: unknown): Result<string, RichError> {
   try {
-    return ok<string, Error>(JSON.stringify(value));
+    return ok<string, RichError>(JSON.stringify(value));
   } catch (cause) {
-    return err<string, Error>(
+    return err<string, RichError>(
       newRichError({
         cause,
         details: {
@@ -66,11 +66,11 @@ export function encode(value: unknown): Result<string, Error> {
   }
 }
 
-function _decode(value: string): Result<JsonValue, Error> {
+function _decode(value: string): Result<JsonValue, RichError> {
   try {
-    return ok<JsonValue, Error>(JSON.parse(value));
+    return ok<JsonValue, RichError>(JSON.parse(value));
   } catch (cause) {
-    return err<JsonValue, Error>(
+    return err<JsonValue, RichError>(
       newRichError({
         cause,
         details: {

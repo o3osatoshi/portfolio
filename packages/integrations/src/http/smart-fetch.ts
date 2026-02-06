@@ -1,6 +1,7 @@
 import type { ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import { parseWith } from "@o3osatoshi/toolkit";
 
 import { createBaseFetch } from "./base-fetch";
@@ -27,7 +28,7 @@ export function createSmartFetch(
 ): SmartFetch {
   const smartFetch: SmartFetch = <S extends z.ZodType>(
     request: SmartFetchRequest<S>,
-  ): ResultAsync<SmartFetchResponse<z.infer<S>>, Error> => {
+  ): ResultAsync<SmartFetchResponse<z.infer<S>>, RichError> => {
     const { decode, ...baseRequest } = request;
 
     const baseFetch = createBaseFetch(

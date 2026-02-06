@@ -1,5 +1,7 @@
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import type { CurrencyCode, FxQuote } from "../value-objects";
 
 /**
@@ -7,7 +9,7 @@ import type { CurrencyCode, FxQuote } from "../value-objects";
  */
 export interface FxQuoteProvider {
   /** Fetch the latest FX quote for a currency pair. */
-  getRate(query: FxQuoteQuery): ResultAsync<FxQuote, Error>;
+  getRate(query: FxQuoteQuery): ResultAsync<FxQuote, RichError>;
 }
 
 /**

@@ -3,6 +3,7 @@ import { newFxQuote } from "@repo/domain";
 import type { Result } from "neverthrow";
 import { err } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import {
   createUrlRedactor,
   formatHttpStatusReason,
@@ -121,7 +122,7 @@ function resolveAsOf(pair: ExchangeRateApiPair): Date {
 function toFxQuote(
   res: SmartFetchResponse<ExchangeRateApiPair>,
   query: FxQuoteQuery,
-): Result<FxQuote, Error> {
+): Result<FxQuote, RichError> {
   if (!res.response.ok) {
     return err(
       newIntegrationError({

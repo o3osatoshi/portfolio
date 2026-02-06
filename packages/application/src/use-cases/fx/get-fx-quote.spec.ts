@@ -2,6 +2,7 @@ import { type FxQuoteProvider, newFxQuote } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { newApplicationError } from "../../application-error";
 import { GetFxQuoteUseCase } from "./get-fx-quote";
 
 const h = vi.hoisted(() => {
@@ -67,7 +68,13 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
   });
 
   it("propagates provider errors", async () => {
-    const providerError = new Error("provider failed");
+    const providerError = newApplicationError({
+      details: {
+        action: "GetFxQuoteUseCaseSpec",
+        reason: "provider failed",
+      },
+      kind: "Unavailable",
+    });
     h.getRateMock.mockReturnValueOnce(errAsync(providerError));
 
     const useCase = buildUseCase();

@@ -1,5 +1,7 @@
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 /**
  * Options for writing to a cache store.
  */
@@ -17,11 +19,11 @@ export type CacheSetOptions = {
  */
 export interface CacheStore {
   /** Retrieve a cached value or null when missing. */
-  get<T>(key: string): ResultAsync<null | T, Error>;
+  get<T>(key: string): ResultAsync<null | T, RichError>;
   /** Store a value with optional conditional and TTL settings. */
   set<T>(
     key: string,
     value: T,
     options?: CacheSetOptions,
-  ): ResultAsync<"OK" | null | T, Error>;
+  ): ResultAsync<"OK" | null | T, RichError>;
 }

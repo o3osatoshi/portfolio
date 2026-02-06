@@ -2,6 +2,8 @@ import type { TransactionRepository } from "@repo/domain";
 import { createTransaction } from "@repo/domain";
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import {
   type CreateTransactionRequest,
   type CreateTransactionResponse,
@@ -23,7 +25,7 @@ export class CreateTransactionUseCase {
    */
   execute(
     req: CreateTransactionRequest,
-  ): ResultAsync<CreateTransactionResponse, Error> {
+  ): ResultAsync<CreateTransactionResponse, RichError> {
     return createTransaction(req).asyncAndThen((transaction) =>
       this.repo.create(transaction).map(toTransactionResponse),
     );

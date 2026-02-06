@@ -1,5 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -15,7 +17,9 @@ export function isTransactionType(v: unknown): v is TransactionType {
 /**
  * Validate unknown input and coerce it into a {@link TransactionType}.
  */
-export function newTransactionType(v: unknown): Result<TransactionType, Error> {
+export function newTransactionType(
+  v: unknown,
+): Result<TransactionType, RichError> {
   if (v === "BUY" || v === "SELL") return ok(v as TransactionType);
   return err(
     domainValidationError({

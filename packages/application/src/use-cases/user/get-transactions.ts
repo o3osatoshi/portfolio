@@ -2,6 +2,8 @@ import type { TransactionRepository } from "@repo/domain";
 import { newUserId } from "@repo/domain";
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import {
   type GetTransactionsRequest,
   type GetTransactionsResponse,
@@ -23,7 +25,7 @@ export class GetTransactionsUseCase {
    */
   execute(
     req: GetTransactionsRequest,
-  ): ResultAsync<GetTransactionsResponse, Error> {
+  ): ResultAsync<GetTransactionsResponse, RichError> {
     return newUserId(req.userId).asyncAndThen((userId) =>
       this.repo.findByUserId(userId).map(toTransactionsResponse),
     );

@@ -1,5 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -25,7 +27,7 @@ export function isUserId(v: unknown): v is UserId {
 /**
  * Validate unknown input and return a sanitized {@link TransactionId}.
  */
-export function newTransactionId(v: unknown): Result<TransactionId, Error> {
+export function newTransactionId(v: unknown): Result<TransactionId, RichError> {
   if (!nonEmptyString(v))
     return err(
       domainValidationError({
@@ -41,7 +43,7 @@ export function newTransactionId(v: unknown): Result<TransactionId, Error> {
 /**
  * Validate unknown input and return a sanitized {@link UserId}.
  */
-export function newUserId(v: unknown): Result<UserId, Error> {
+export function newUserId(v: unknown): Result<UserId, RichError> {
   if (!nonEmptyString(v))
     return err(
       domainValidationError({

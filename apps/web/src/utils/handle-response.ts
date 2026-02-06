@@ -1,6 +1,10 @@
 import { errAsync, ResultAsync } from "neverthrow";
 
-import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
+import {
+  deserializeRichError,
+  newFetchError,
+  type RichError,
+} from "@o3osatoshi/toolkit";
 
 type HandleResponseOptions = {
   context: string;
@@ -15,7 +19,7 @@ type Request = {
 export function handleResponse<T>(
   res: Response,
   { context, request }: HandleResponseOptions,
-): ResultAsync<T, Error> {
+): ResultAsync<T, RichError> {
   if (res.status === 401) {
     return errAsync(newFetchError({ kind: "Unauthorized", request }));
   }
@@ -30,14 +34,15 @@ export function handleResponse<T>(
       }),
     ).andThen((body) =>
       errAsync(
-        deserializeError(body, {
-          fallback: (cause) =>
-            newFetchError({
-              cause,
-              details: { action: `Deserialize error body for ${context}` },
-              kind: "BadGateway",
-              request,
-            }),
+        deserializeRichError(body, {
+          action: `Deserialize error body for ${context}`,
+          layer: "External",
+          meta: {
+            context,
+            method: request.method,
+            url: request.url,
+          },
+          source: "web.handle-response",
         }),
       ),
     );

@@ -6,6 +6,7 @@ import {
   deserializeResponseBody,
   type HttpResponse,
   newFetchError,
+  type RichError,
 } from "@o3osatoshi/toolkit";
 
 export type NextFetchRequest = {
@@ -51,7 +52,7 @@ export function getQueryPath(path: string, search?: Search) {
  */
 export function nextFetch(
   request: NextFetchRequest,
-): ResultAsync<HttpResponse, Error> {
+): ResultAsync<HttpResponse, RichError> {
   const queryPath = getQueryPath(request.path, request.search);
   const url = new URL(queryPath, env.NEXT_PUBLIC_API_BASE_URL);
 

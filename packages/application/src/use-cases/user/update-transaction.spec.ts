@@ -2,17 +2,27 @@ import type { Transaction, TransactionRepository } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
 
+import { newApplicationError } from "../../application-error";
 import { UpdateTransactionUseCase } from "./update-transaction";
+
+const testError = (reason: string) =>
+  newApplicationError({
+    details: {
+      action: "UpdateTransactionUseCaseSpec",
+      reason,
+    },
+    kind: "Unknown",
+  });
 
 function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
-    create: () => errAsync(new Error("not used")),
-    delete: () => errAsync(new Error("not used")),
-    findById: () => errAsync(new Error("not implemented")),
-    findByUserId: () => errAsync(new Error("not used")),
-    update: () => errAsync(new Error("not implemented")),
+    create: () => errAsync(testError("not used")),
+    delete: () => errAsync(testError("not used")),
+    findById: () => errAsync(testError("not implemented")),
+    findByUserId: () => errAsync(testError("not used")),
+    update: () => errAsync(testError("not implemented")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }

@@ -1,5 +1,6 @@
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import { sleep } from "@o3osatoshi/toolkit";
 
 import type { HeavyProcessResponse } from "../../dtos/heavy-process.res.dto";
@@ -14,7 +15,7 @@ export class HeavyProcessUseCase {
    * @returns ResultAsync wrapping a {@link HeavyProcessResponse} containing the
    * current timestamp, or an {@link Error} if the sleep operation fails.
    */
-  execute(): ResultAsync<HeavyProcessResponse, Error> {
+  execute(): ResultAsync<HeavyProcessResponse, RichError> {
     return sleep(3_000).map(() => ({ timestamp: new Date() }));
   }
 }

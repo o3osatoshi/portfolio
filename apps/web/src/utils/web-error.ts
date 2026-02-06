@@ -1,4 +1,4 @@
-import { type Kind, newRichError } from "@o3osatoshi/toolkit";
+import { type Kind, newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 /**
  * Shape used to describe a UI-layer failure when constructing a structured {@link Error}.
@@ -39,7 +39,7 @@ export function newWebError({
   impact,
   kind,
   reason,
-}: NewWebError): Error {
+}: NewWebError): RichError {
   return newRichError({
     cause,
     details: {

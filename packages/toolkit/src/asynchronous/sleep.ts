@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
-import { deserializeError, newRichError } from "../error";
+import { newRichError, type RichError, toRichError } from "../error";
 
 /**
  * Options accepted by {@link sleep}.
@@ -32,19 +32,15 @@ export type SleepOptions = {
 export function sleep(
   ms: number,
   { signal }: SleepOptions = {},
-): ResultAsync<void, Error> {
-  const mapErr = (error: unknown): Error =>
-    deserializeError(error, {
-      fallback: (cause) =>
-        newRichError({
-          cause,
-          details: {
-            action: "Sleep",
-            reason: "sleep rejected with non-error value",
-          },
-          kind: "Unknown",
-          layer: "Infra",
-        }),
+): ResultAsync<void, RichError> {
+  const mapErr = (error: unknown): RichError =>
+    toRichError(error, {
+      details: {
+        action: "Sleep",
+        reason: "sleep rejected with an unexpected error value",
+      },
+      kind: "Unknown",
+      layer: "Infra",
     });
 
   if (!signal) {

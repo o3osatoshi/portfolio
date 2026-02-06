@@ -1,6 +1,8 @@
 import type { CacheStore } from "@repo/domain";
 import { okAsync, type ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
@@ -30,7 +32,7 @@ export class HeavyProcessCachedUseCase {
    * @returns ResultAsync wrapping a {@link HeavyProcessCachedResponse} or an
    * {@link Error} if the underlying heavy process fails.
    */
-  execute(): ResultAsync<HeavyProcessCachedResponse, Error> {
+  execute(): ResultAsync<HeavyProcessCachedResponse, RichError> {
     return this.cacheStore
       .get<HeavyProcessResponse>(CACHE_KEY_PREFIX)
       .orElse(() => okAsync(null))

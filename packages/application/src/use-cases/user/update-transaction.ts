@@ -2,6 +2,8 @@ import type { TransactionRepository } from "@repo/domain";
 import { newTransactionId, updateTransaction } from "@repo/domain";
 import { err, ok, type ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import {
   applicationForbiddenError,
   applicationNotFoundError,
@@ -26,7 +28,7 @@ export class UpdateTransactionUseCase {
   execute(
     req: UpdateTransactionRequest,
     userId: string,
-  ): ResultAsync<void, Error> {
+  ): ResultAsync<void, RichError> {
     return newTransactionId(req.id).asyncAndThen((id) =>
       this.repo
         .findById(id)

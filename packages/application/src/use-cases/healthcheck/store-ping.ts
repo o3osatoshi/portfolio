@@ -5,6 +5,8 @@ import {
 } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { newApplicationError } from "../../application-error";
 import { noopStepRunner, type StepRunner } from "../../services";
 
@@ -59,7 +61,7 @@ export class StorePingUseCase {
   execute(
     context: StorePingContext,
     step: StepRunner = noopStepRunner,
-  ): ResultAsync<StorePingResult, Error> {
+  ): ResultAsync<StorePingResult, RichError> {
     const startedAt = Date.now();
 
     return createTransaction({

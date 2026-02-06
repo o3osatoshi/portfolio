@@ -8,6 +8,8 @@ import type { Context, Next } from "hono";
 import { err, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+
 // Stub auth middlewares for Node app
 const h = vi.hoisted(() => {
   const initAuthConfigMock = vi.fn(
@@ -36,7 +38,8 @@ vi.mock("@repo/auth/middleware", () => ({
 // Mock application layer for deterministic behavior
 const a = vi.hoisted(() => {
   const parseGetFxQuoteRequest = vi.fn(
-    (input: GetFxQuoteRequest): Result<GetFxQuoteRequest, Error> => ok(input),
+    (input: GetFxQuoteRequest): Result<GetFxQuoteRequest, RichError> =>
+      ok(input),
   );
   class GetFxQuoteUseCase {
     execute() {
@@ -49,8 +52,9 @@ const a = vi.hoisted(() => {
     }
   }
   const parseGetTransactionsRequest = vi.fn(
-    (input: GetTransactionsRequest): Result<GetTransactionsRequest, Error> =>
-      ok(input),
+    (
+      input: GetTransactionsRequest,
+    ): Result<GetTransactionsRequest, RichError> => ok(input),
   );
   class GetTransactionsUseCase {
     execute() {
@@ -120,7 +124,15 @@ describe("http/node app", () => {
   it("GET /api/private/labs/transactions returns validation error when parser fails", async () => {
     // Make parser return Err
     a.parseGetTransactionsRequest.mockImplementationOnce(() =>
-      err<GetTransactionsRequest, Error>(new Error("bad")),
+      err<GetTransactionsRequest, RichError>(
+        newRichError({
+          details: {
+            reason: "bad",
+          },
+          kind: "Validation",
+          layer: "Application",
+        }),
+      ),
     );
     const res = await build().request("/api/private/labs/transactions");
     expect(res.status).toBeGreaterThanOrEqual(400);

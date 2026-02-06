@@ -6,8 +6,9 @@ import { cookies } from "next/headers";
 
 import { env } from "@/env/server";
 import { webUnauthorizedError, webUnknownError } from "@/utils/web-error";
+import type { RichError } from "@o3osatoshi/toolkit";
 
-export function getUserId(): ResultAsync<string, Error> {
+export function getUserId(): ResultAsync<string, RichError> {
   return ResultAsync.fromPromise(cookies(), (cause) =>
     webUnknownError({
       action: "ReadCookies",

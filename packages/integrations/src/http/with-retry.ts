@@ -1,7 +1,8 @@
 import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import { deserializeError, resolveErrorKind, sleep } from "@o3osatoshi/toolkit";
+import type { RichError } from "@o3osatoshi/toolkit";
+import { resolveErrorKind, sleep, toRichError } from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
 import type {
@@ -25,7 +26,7 @@ export type SmartFetchRetryOptions = {
 
 type RetryCheckInput<S extends z.ZodType> = {
   attempts: number;
-  error?: Error;
+  error?: RichError;
   maxAttempts: number;
   request: SmartFetchRequest<S>;
   response?: SmartFetchResponse<z.infer<S>> | undefined;
@@ -76,9 +77,9 @@ export function withRetry(
               retryOnStatuses,
             }));
 
-        let lastError: Error | undefined;
+        let lastError: RichError | undefined;
         let lastResult:
-          | Result<SmartFetchResponse<z.infer<S>>, Error>
+          | Result<SmartFetchResponse<z.infer<S>>, RichError>
           | undefined;
 
         while (attempts < maxAttempts) {
@@ -151,16 +152,13 @@ export function withRetry(
         );
       })(),
       (error) =>
-        deserializeError(error, {
-          fallback: (cause) =>
-            newIntegrationError({
-              cause,
-              details: {
-                action: "RetryExternalApi",
-                reason: `Retry failed with a non-error value (attempts: ${attempts}).`,
-              },
-              kind: "Unknown",
-            }),
+        toRichError(error, {
+          details: {
+            action: "RetryExternalApi",
+            reason: `Retry failed with an unexpected error value (attempts: ${attempts}).`,
+          },
+          kind: "Unknown",
+          layer: "External",
         }),
     );
   };
@@ -189,7 +187,7 @@ function defaultShouldRetry<S extends z.ZodType>({
   return retryOnStatuses.includes(status);
 }
 
-function isRetryableError(error: Error): boolean {
+function isRetryableError(error: RichError): boolean {
   const kind = resolveErrorKind(error);
   if (!kind) return false;
   return (

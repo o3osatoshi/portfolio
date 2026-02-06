@@ -2,6 +2,11 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Logger } from "@o3osatoshi/logging";
+import {
+  newRichError,
+  parseErrorName,
+  type RichError,
+} from "@o3osatoshi/toolkit";
 
 import { withLogging } from "./with-logging";
 
@@ -44,12 +49,23 @@ const buildResponse = (
     },
   });
 
-const buildError = (name: string, message: string, retryAttempts?: number) => {
-  const error = new Error(message);
+const buildError = (
+  name: string,
+  message: string,
+  retryAttempts?: number,
+): RichError => {
+  const info = parseErrorName(name);
+  const error = newRichError({
+    details: {
+      reason: message,
+    },
+    kind: info.kind ?? "Unknown",
+    layer: info.layer ?? "External",
+  });
   error.name = name;
   if (retryAttempts !== undefined) {
-    // @ts-expect-error adding custom property for testing
-    error.retryAttempts = retryAttempts;
+    (error as { retryAttempts?: number } & RichError).retryAttempts =
+      retryAttempts;
   }
   return error;
 };

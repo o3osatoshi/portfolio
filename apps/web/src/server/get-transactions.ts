@@ -14,7 +14,8 @@ import { getUserId } from "@/server/auth";
 import { getTag } from "@/utils/nav-handler";
 import { webUnknownError } from "@/utils/web-error";
 import {
-  deserializeError,
+  deserializeRichError,
+  type RichError,
   type SerializedError,
   serializeError,
 } from "@o3osatoshi/toolkit";
@@ -34,7 +35,7 @@ type CachedTransactionsResult =
   | { data: Transactions; ok: true }
   | { error: SerializedError; ok: false };
 
-export function getTransactions(): ResultAsync<Transactions, Error> {
+export function getTransactions(): ResultAsync<Transactions, RichError> {
   return getUserId()
     .andThen((userId) =>
       ResultAsync.fromPromise(getTransactionsCached(userId), (cause) =>
@@ -48,7 +49,7 @@ export function getTransactions(): ResultAsync<Transactions, Error> {
     .andThen((result) =>
       result.ok
         ? okAsync(result.data)
-        : errAsync(deserializeError(result.error)),
+        : errAsync(deserializeRichError(result.error)),
     );
 }
 

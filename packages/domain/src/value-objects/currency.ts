@@ -1,5 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -17,7 +19,7 @@ export function isCurrencyCode(v: unknown): v is CurrencyCode {
 /**
  * Validate unknown input and return a normalized uppercase currency code.
  */
-export function newCurrencyCode(v: unknown): Result<CurrencyCode, Error> {
+export function newCurrencyCode(v: unknown): Result<CurrencyCode, RichError> {
   if (typeof v !== "string")
     return err(
       domainValidationError({

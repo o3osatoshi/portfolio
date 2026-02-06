@@ -1,5 +1,7 @@
 import { err, ok, Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type {
   Amount,
@@ -105,7 +107,7 @@ export type UpdateTransactionInput = {
  */
 export function createTransaction(
   tx: CreateTransactionInput,
-): Result<CreateTransaction, Error> {
+): Result<CreateTransaction, RichError> {
   return Result.combine([
     newTransactionType(tx.type),
     newDateTime(tx.datetime),
@@ -145,7 +147,7 @@ export function createTransaction(
  */
 export function newTransaction(
   tx: NewTransactionInput,
-): Result<Transaction, Error> {
+): Result<Transaction, RichError> {
   return Result.combine([
     newTransactionId(tx.id),
     newTransactionType(tx.type),
@@ -194,7 +196,7 @@ export function newTransaction(
 export function updateTransaction(
   tx: Transaction,
   patch: UpdateTransactionInput,
-): Result<Transaction, Error> {
+): Result<Transaction, RichError> {
   const res = newTransactionId(patch.id);
   if (res.isErr()) return err(res.error);
   const id = res.value;

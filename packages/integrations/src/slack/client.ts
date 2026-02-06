@@ -1,6 +1,7 @@
 import { err, ok, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
 
 import { createSmartFetch, type CreateSmartFetchOptions } from "../http";
@@ -28,7 +29,7 @@ export type OverridableSlackMessage = Partial<SlackMessage>;
 export type SlackClient = {
   postMessage: (
     message: SlackMessage,
-  ) => ResultAsync<SlackPostMessageResponse, Error>;
+  ) => ResultAsync<SlackPostMessageResponse, RichError>;
 };
 
 export type SlackClientConfig = {

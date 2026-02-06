@@ -81,7 +81,7 @@ describe("getHeavyProcessCached", () => {
     expect(res.error.name).toBe("ExternalUnauthorizedError");
   });
 
-  it("returns Err with deserialized remote error when response is non-2xx", async () => {
+  it("returns Err Serialization when remote payload is not serialized RichError", async () => {
     const body = { name: "ApplicationUnknownError", message: "something bad" };
 
     const json = vi.fn().mockResolvedValueOnce(body);
@@ -97,8 +97,10 @@ describe("getHeavyProcessCached", () => {
     if (!res.isErr()) return;
 
     expect(res.error).toBeInstanceOf(Error);
-    expect(res.error.name).toBe("ApplicationUnknownError");
-    expect(res.error.message).toBe("something bad");
+    expect(res.error.name).toBe("ExternalSerializationError");
+    expect(res.error.message).toContain(
+      "Deserialize error body for getHeavyProcessCached",
+    );
   });
 
   it("returns Err when remote error body cannot be deserialized", async () => {

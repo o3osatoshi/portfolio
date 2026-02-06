@@ -1,7 +1,7 @@
 import type { ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import type { HttpResponse, Layer } from "@o3osatoshi/toolkit";
+import type { HttpResponse, Layer, RichError } from "@o3osatoshi/toolkit";
 
 import type { BaseFetchRequest } from "./base-fetch";
 import type { SmartFetchRequestCacheOptions } from "./with-cache";
@@ -10,7 +10,7 @@ import type { SmartFetchRequestRetryOptions } from "./with-retry";
 
 export type SmartFetch = <S extends z.ZodType>(
   request: SmartFetchRequest<S>,
-) => ResultAsync<SmartFetchResponse<z.infer<S>>, Error>;
+) => ResultAsync<SmartFetchResponse<z.infer<S>>, RichError>;
 
 export type SmartFetchRequest<S extends z.ZodType = z.ZodType<unknown>> = {
   cache?: SmartFetchRequestCacheOptions<S> | undefined;

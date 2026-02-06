@@ -1,6 +1,8 @@
 import { default as DecimalJs } from "decimal.js";
 import { err, ok, type Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 
@@ -42,7 +44,7 @@ export function isPositiveDecimal(value: DecimalString): boolean {
 /**
  * Normalize arbitrary numeric input into a {@link DecimalString}.
  */
-export function newDecimal(v: unknown): Result<DecimalString, Error> {
+export function newDecimal(v: unknown): Result<DecimalString, RichError> {
   try {
     const d = new DecimalJs(v as unknown as DecimalJs.Value);
     if (!d.isFinite()) {

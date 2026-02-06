@@ -1,5 +1,7 @@
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 export type NotificationField = {
   label: string;
   value: string;
@@ -27,5 +29,5 @@ export type NotificationPayload = {
  * Port for delivering notifications to external systems.
  */
 export interface Notifier {
-  notify(payload: NotificationPayload): ResultAsync<void, Error>;
+  notify(payload: NotificationPayload): ResultAsync<void, RichError>;
 }

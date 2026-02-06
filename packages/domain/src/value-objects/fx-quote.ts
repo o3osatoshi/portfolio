@@ -1,5 +1,7 @@
 import { err, ok, Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { domainValidationError } from "../domain-error";
 import type { Brand } from "./brand";
 import { type CurrencyCode, newCurrencyCode } from "./currency";
@@ -34,7 +36,7 @@ export type NewFxQuoteInput = {
 /**
  * Validate raw input into a domain {@link FxQuote}.
  */
-export function newFxQuote(input: NewFxQuoteInput): Result<FxQuote, Error> {
+export function newFxQuote(input: NewFxQuoteInput): Result<FxQuote, RichError> {
   return Result.combine([
     newCurrencyCode(input.base),
     newCurrencyCode(input.quote),
@@ -51,7 +53,7 @@ export function newFxQuote(input: NewFxQuoteInput): Result<FxQuote, Error> {
 /**
  * Normalize an unknown value into an {@link FxRate}, ensuring it is > 0.
  */
-export function newFxRate(v: unknown): Result<FxRate, Error> {
+export function newFxRate(v: unknown): Result<FxRate, RichError> {
   const res = newDecimal(v);
   if (res.isErr()) return err(res.error);
   if (!isPositiveDecimal(res.value)) {

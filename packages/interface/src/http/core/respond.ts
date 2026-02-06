@@ -4,6 +4,7 @@ import type { Result, ResultAsync } from "neverthrow";
 import {
   type ErrorStatusCode,
   newZodError,
+  type RichError,
   type SerializedError,
   toHttpErrorResponse,
 } from "@o3osatoshi/toolkit";
@@ -11,7 +12,7 @@ import {
 export type SuccessStatusCode = 200 | 201 | 202 | 203 | 206 | 207 | 208 | 226;
 
 export function respond<T>(c: Context) {
-  return (ra: Result<T, Error>) =>
+  return (ra: Result<T, RichError>) =>
     ra.match(
       (ok) => c.json<T, SuccessStatusCode>(ok),
       (err) => {
@@ -32,11 +33,11 @@ export function respond<T>(c: Context) {
  *   `@o3osatoshi/toolkit`) and returns a normalized JSON error with an
  *   appropriate status code.
  *
- * @returns A function that accepts a `ResultAsync<T, Error>` and yields a
+ * @returns A function that accepts a `ResultAsync<T, RichError>` and yields a
  * `Promise<Response>` suitable for Hono route handlers.
  */
 export function respondAsync<T>(c: Context) {
-  return (ra: ResultAsync<T, Error>) =>
+  return (ra: ResultAsync<T, RichError>) =>
     ra.match(
       (ok) => c.json<T, SuccessStatusCode>(ok),
       (err) => {

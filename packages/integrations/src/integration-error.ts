@@ -2,6 +2,7 @@ import {
   type Kind,
   type NewRichError,
   newRichError,
+  type RichError,
 } from "@o3osatoshi/toolkit";
 
 /**
@@ -42,7 +43,7 @@ export type NewIntegrationError = {
 export function newIntegrationError({
   kind,
   ...rest
-}: NewIntegrationError): Error {
+}: NewIntegrationError): RichError {
   return newRichError({
     ...rest,
     kind,

@@ -1,6 +1,7 @@
 import {
   type NewRichError,
   newRichError,
+  type RichError,
   type RichErrorDetails,
 } from "@o3osatoshi/toolkit";
 
@@ -44,7 +45,7 @@ export function newPrismaError({
   cause,
   details,
   ...rest
-}: NewPrismaError): Error {
+}: NewPrismaError): RichError {
   const mergeDetails = ({
     hint,
     reason,

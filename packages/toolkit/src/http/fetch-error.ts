@@ -4,6 +4,7 @@ import {
   type Kind,
   type NewRichError,
   newRichError,
+  type RichError,
   type RichErrorDetails,
 } from "../error";
 
@@ -73,7 +74,7 @@ export function newFetchError({
   kind,
   request,
   ...rest
-}: NewFetchError): Error {
+}: NewFetchError): RichError {
   const classification = classifyFetchFailure({
     cause,
     request,

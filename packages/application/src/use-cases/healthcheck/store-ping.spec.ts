@@ -6,13 +6,23 @@ import type {
 import { errAsync, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { newApplicationError } from "../../application-error";
 import type { StepRunner } from "../../services";
 import { generateStorePingContext, StorePingUseCase } from "./store-ping";
 
+const testError = (reason: string) =>
+  newApplicationError({
+    details: {
+      action: "StorePingUseCaseSpec",
+      reason,
+    },
+    kind: "Unknown",
+  });
+
 function makeCache(overrides: Partial<CacheStore> = {}): CacheStore {
   const base: CacheStore = {
-    get: () => errAsync(new Error("not implemented")),
-    set: () => errAsync(new Error("not implemented")),
+    get: () => errAsync(testError("not implemented")),
+    set: () => errAsync(testError("not implemented")),
   };
   return { ...base, ...overrides } as CacheStore;
 }
@@ -21,11 +31,11 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
-    create: () => errAsync(new Error("not implemented")),
-    delete: () => errAsync(new Error("not implemented")),
-    findById: () => errAsync(new Error("not implemented")),
-    findByUserId: () => errAsync(new Error("not implemented")),
-    update: () => errAsync(new Error("not implemented")),
+    create: () => errAsync(testError("not implemented")),
+    delete: () => errAsync(testError("not implemented")),
+    findById: () => errAsync(testError("not implemented")),
+    findByUserId: () => errAsync(testError("not implemented")),
+    update: () => errAsync(testError("not implemented")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }
@@ -52,7 +62,7 @@ describe("StorePingUseCase", () => {
   it("stores a transaction, updates cache, and returns a summary", async () => {
     const createMock = vi.fn(() => okAsync(baseTransaction));
     const findByIdMock = vi.fn(() => okAsync(baseTransaction));
-    const deleteMock = vi.fn(() => okAsync<void, Error>(undefined));
+    const deleteMock = vi.fn(() => okAsync<void>(undefined));
     const cacheGetMock = vi.fn(() => okAsync(null));
     const cacheSetMock = vi.fn(() => okAsync("OK"));
     const repo = makeRepo({
@@ -134,7 +144,7 @@ describe("StorePingUseCase", () => {
   it("dedupes and trims cached entries", async () => {
     const createMock = vi.fn(() => okAsync(baseTransaction));
     const findByIdMock = vi.fn(() => okAsync(baseTransaction));
-    const deleteMock = vi.fn(() => okAsync<void, Error>(undefined));
+    const deleteMock = vi.fn(() => okAsync<void>(undefined));
     const existingEntries = [
       {
         runAt: "2024-01-31T12:00:00.000Z",
@@ -199,7 +209,7 @@ describe("StorePingUseCase", () => {
   it("returns ApplicationNotFoundError when readback is missing", async () => {
     const createMock = vi.fn(() => okAsync(baseTransaction));
     const findByIdMock = vi.fn(() => okAsync(null));
-    const deleteMock = vi.fn(() => okAsync<void, Error>(undefined));
+    const deleteMock = vi.fn(() => okAsync<void>(undefined));
     const cacheGetMock = vi.fn(() => okAsync(null));
     const cacheSetMock = vi.fn(() => okAsync("OK"));
     const repo = makeRepo({

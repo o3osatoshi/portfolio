@@ -2,6 +2,7 @@ import {
   type Kind,
   type NewRichError,
   newRichError,
+  type RichError,
 } from "@o3osatoshi/toolkit";
 
 /**
@@ -36,7 +37,7 @@ export type NewApplicationError = {
 export function newApplicationError({
   kind,
   ...rest
-}: NewApplicationError): Error {
+}: NewApplicationError): RichError {
   return newRichError({
     ...rest,
     kind,

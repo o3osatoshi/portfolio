@@ -8,7 +8,7 @@ import type {
 import { newTransaction } from "@repo/domain";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
-import { newRichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   Prisma,
@@ -25,7 +25,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   constructor(private readonly db: Prisma.TransactionClient | PrismaClient) {}
 
   /** @inheritdoc */
-  create(tx: CreateTransaction): ResultAsync<Transaction, Error> {
+  create(tx: CreateTransaction): ResultAsync<Transaction, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.create({
         data: toCreateData(tx),
@@ -42,7 +42,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   /** @inheritdoc */
-  delete(id: TransactionId, userId: UserId): ResultAsync<void, Error> {
+  delete(id: TransactionId, userId: UserId): ResultAsync<void, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.deleteMany({
         where: { id, userId },
@@ -72,7 +72,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   /** @inheritdoc */
-  findById(id: TransactionId): ResultAsync<null | Transaction, Error> {
+  findById(id: TransactionId): ResultAsync<null | Transaction, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.findUnique({
         where: { id },
@@ -88,7 +88,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   /** @inheritdoc */
-  findByUserId(userId: UserId): ResultAsync<Transaction[], Error> {
+  findByUserId(userId: UserId): ResultAsync<Transaction[], RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.findMany({
         where: { userId },
@@ -104,7 +104,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   /** @inheritdoc */
-  update(tx: Transaction): ResultAsync<void, Error> {
+  update(tx: Transaction): ResultAsync<void, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.updateMany({
         data: toUpdateData(tx),
@@ -156,7 +156,7 @@ function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
  * Transform a Prisma row into a domain {@link Transaction} by normalizing
  * decimal values into strings expected by the value objects.
  */
-function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
+function toEntity(tx: PrismaTransaction): Result<Transaction, RichError> {
   return newTransaction({
     ...tx,
     amount: tx.amount.toString(),

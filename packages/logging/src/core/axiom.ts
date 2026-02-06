@@ -1,6 +1,6 @@
 import { Axiom, AxiomWithoutBatching, type ClientOptions } from "@axiomhq/js";
 
-import { deserializeError, newRichError } from "@o3osatoshi/toolkit";
+import { toRichError } from "@o3osatoshi/toolkit";
 
 import type { LogEvent, Transport } from "../types";
 
@@ -73,34 +73,26 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
       if (result && typeof result.catch === "function") {
         void result.catch((error) => {
           onError(
-            deserializeError(error, {
-              fallback: (cause) =>
-                newRichError({
-                  cause,
-                  details: {
-                    action: "AxiomIngest",
-                    reason: "axiom ingest failed with a non-error value",
-                  },
-                  kind: "Unknown",
-                  layer: "External",
-                }),
+            toRichError(error, {
+              details: {
+                action: "AxiomIngest",
+                reason: "axiom ingest failed with an unexpected error value",
+              },
+              kind: "Unknown",
+              layer: "External",
             }),
           );
         });
       }
     } catch (error: unknown) {
       onError(
-        deserializeError(error, {
-          fallback: (cause) =>
-            newRichError({
-              cause,
-              details: {
-                action: "AxiomIngest",
-                reason: "axiom ingest failed with a non-error value",
-              },
-              kind: "Unknown",
-              layer: "External",
-            }),
+        toRichError(error, {
+          details: {
+            action: "AxiomIngest",
+            reason: "axiom ingest failed with an unexpected error value",
+          },
+          kind: "Unknown",
+          layer: "External",
         }),
       );
     }

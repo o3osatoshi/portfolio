@@ -1,6 +1,7 @@
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
+import { newIntegrationError } from "../integration-error";
 import { createSlackNotifier } from "./notifier";
 
 describe("integrations/slack createSlackNotifier", () => {
@@ -111,7 +112,17 @@ describe("integrations/slack createSlackNotifier", () => {
   });
 
   it("wraps client errors as ExternalBadGatewayError", async () => {
-    const postMessageMock = vi.fn(() => errAsync(new Error("slack down")));
+    const postMessageMock = vi.fn(() =>
+      errAsync(
+        newIntegrationError({
+          details: {
+            action: "SlackNotifierSpec",
+            reason: "slack down",
+          },
+          kind: "Unavailable",
+        }),
+      ),
+    );
     const notifier = createSlackNotifier({
       channelId: "C123",
       client: { postMessage: postMessageMock },

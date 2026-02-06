@@ -1,6 +1,7 @@
 import type { z } from "zod";
 
 import type { Attributes, Logger } from "@o3osatoshi/logging";
+import type { RichError } from "@o3osatoshi/toolkit";
 import { resolveErrorInfo } from "@o3osatoshi/toolkit";
 
 import type {
@@ -109,7 +110,7 @@ function buildAttributes<S extends z.ZodType>(
 
 function buildErrorAttributes<S extends z.ZodType>(
   request: SmartFetchRequest<S>,
-  error: Error,
+  error: RichError,
   redactUrl: (url: string) => string,
   requestName?: string,
 ): Attributes {
@@ -132,7 +133,7 @@ function buildMetricsAttributes<S extends z.ZodType>({
   requestName,
   response,
 }: {
-  error?: Error | undefined;
+  error?: RichError | undefined;
   redactUrl: (url: string) => string;
   request: SmartFetchRequest<S>;
   requestName?: string | undefined;
@@ -161,7 +162,7 @@ function emitMetrics<S extends z.ZodType>({
   response,
 }: {
   durationMs: number;
-  error?: Error;
+  error?: RichError;
   logger: Logger;
   redactUrl: (url: string) => string;
   request: SmartFetchRequest<S>;
@@ -186,7 +187,7 @@ function emitMetrics<S extends z.ZodType>({
   });
 }
 
-function resolveErrorLevel(error: Error): "error" | "warn" {
+function resolveErrorLevel(error: RichError): "error" | "warn" {
   const { kind } = resolveErrorInfo(error);
   if (!kind) return "error";
   if (

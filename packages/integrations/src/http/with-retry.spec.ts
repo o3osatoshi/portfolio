@@ -1,6 +1,7 @@
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
+import { newIntegrationError } from "../integration-error";
 import { withRetry } from "./with-retry";
 
 const buildResponse = (status: number, headers: Headers, ok = status < 400) =>
@@ -69,8 +70,13 @@ describe("integrations/http withRetry", () => {
     vi.useFakeTimers();
     const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0);
 
-    const error = new Error("timeout");
-    error.name = "ExternalTimeoutError";
+    const error = newIntegrationError({
+      details: {
+        action: "WithRetrySpec",
+        reason: "timeout",
+      },
+      kind: "Timeout",
+    });
     const next = vi.fn(() => errAsync(error));
     const client = withRetry(next, {
       baseDelayMs: 1,

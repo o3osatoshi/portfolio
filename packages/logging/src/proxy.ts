@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 
-import { deserializeError, newRichError } from "@o3osatoshi/toolkit";
+import { toRichError } from "@o3osatoshi/toolkit";
 
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
@@ -145,17 +145,14 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       rawPayload = await req.json();
     } catch (error: unknown) {
       onError(
-        deserializeError(error, {
-          fallback: (cause) =>
-            newRichError({
-              cause,
-              details: {
-                action: "LoggingProxyParseRequest",
-                reason: "proxy payload parsing failed with a non-error value",
-              },
-              kind: "Unknown",
-              layer: "Infra",
-            }),
+        toRichError(error, {
+          details: {
+            action: "LoggingProxyParseRequest",
+            reason:
+              "proxy payload parsing failed with an unexpected error value",
+          },
+          kind: "Unknown",
+          layer: "Infra",
         }),
       );
       return json({ message: "invalid_json", status: "error" }, 400);
@@ -194,17 +191,13 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       return json({ accepted: payload.eventSets.length, status: "ok" }, 200);
     } catch (error) {
       onError(
-        deserializeError(error, {
-          fallback: (cause) =>
-            newRichError({
-              cause,
-              details: {
-                action: "LoggingProxyEmit",
-                reason: "proxy emission failed with a non-error value",
-              },
-              kind: "Unknown",
-              layer: "Infra",
-            }),
+        toRichError(error, {
+          details: {
+            action: "LoggingProxyEmit",
+            reason: "proxy emission failed with an unexpected error value",
+          },
+          kind: "Unknown",
+          layer: "Infra",
         }),
       );
       return json({ message: "proxy_failed", status: "error" }, 500);
@@ -305,17 +298,14 @@ export function createProxyTransport(
       } catch (error: unknown) {
         eventSets = _eventSets.concat(eventSets);
         onError(
-          deserializeError(error, {
-            fallback: (cause) =>
-              newRichError({
-                cause,
-                details: {
-                  action: "LoggingProxyTransportFlush",
-                  reason: "proxy transport flush failed with a non-error value",
-                },
-                kind: "Unknown",
-                layer: "Infra",
-              }),
+          toRichError(error, {
+            details: {
+              action: "LoggingProxyTransportFlush",
+              reason:
+                "proxy transport flush failed with an unexpected error value",
+            },
+            kind: "Unknown",
+            layer: "Infra",
           }),
         );
       } finally {

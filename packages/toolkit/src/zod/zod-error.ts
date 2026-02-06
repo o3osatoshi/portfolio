@@ -4,6 +4,7 @@ import {
   type Layer,
   type NewRichError,
   newRichError,
+  type RichError,
   type RichErrorDetails,
 } from "../error";
 
@@ -52,7 +53,7 @@ export function isZodError(e: unknown): e is ZodError {
  * @param options - Validation context plus optional override data (see {@link NewZodError}).
  * @public
  */
-export function newZodError(options: NewZodError): Error {
+export function newZodError(options: NewZodError): RichError {
   const { cause, details, issues, layer = "Application", ...rest } = options;
   const zIssues: undefined | ZodIssue[] = issues
     ? issues

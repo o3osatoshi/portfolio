@@ -2,6 +2,7 @@ import {
   type Kind,
   type NewRichError,
   newRichError,
+  type RichError,
 } from "@o3osatoshi/toolkit";
 
 /**
@@ -32,7 +33,7 @@ export type NewDomainError = {
  * Domain-aware error constructor. Shapes an Error using @o3osatoshi/toolkit with layer "Domain".
  * Prefer this over new Error(...) in domain code for consistent classification.
  */
-export function newDomainError({ kind, ...rest }: NewDomainError): Error {
+export function newDomainError({ kind, ...rest }: NewDomainError): RichError {
   return newRichError({
     ...rest,
     kind,

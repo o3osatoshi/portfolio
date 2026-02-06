@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { deserializeError, newRichError, serializeError } from "../error";
+import { newRichError, serializeError } from "../error";
 import { toHttpErrorResponse } from "./http-error-response";
 
 describe("toHttpErrorResponse", () => {
@@ -48,8 +48,8 @@ describe("toHttpErrorResponse", () => {
   });
 
   it("treats ZodError as validation (400)", () => {
-    const payload = { name: "ZodError", message: "invalid" };
-    const e = deserializeError(payload);
+    const e = new Error("invalid");
+    e.name = "ZodError";
     const res = toHttpErrorResponse(e);
     expect(res.statusCode).toBe(400);
   });
