@@ -147,7 +147,7 @@ export function withRetry(
               action: "RetryExternalApi",
               reason: `Retry attempts exhausted (attempts: ${attempts}).`,
             },
-            kind: "Unknown",
+            kind: "Internal",
           })
         );
       })(),
@@ -157,7 +157,7 @@ export function withRetry(
             action: "RetryExternalApi",
             reason: `Retry failed with an unexpected error value (attempts: ${attempts}).`,
           },
-          kind: "Unknown",
+          kind: "Internal",
           layer: "External",
         }),
     );

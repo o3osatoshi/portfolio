@@ -13,9 +13,9 @@ export type IntegrationKind = Extract<
   | "BadGateway"
   | "BadRequest"
   | "Canceled"
-  | "Config"
   | "Conflict"
   | "Forbidden"
+  | "Internal"
   | "MethodNotAllowed"
   | "NotFound"
   | "RateLimit"
@@ -23,7 +23,6 @@ export type IntegrationKind = Extract<
   | "Timeout"
   | "Unauthorized"
   | "Unavailable"
-  | "Unknown"
   | "Unprocessable"
   | "Validation"
 >;

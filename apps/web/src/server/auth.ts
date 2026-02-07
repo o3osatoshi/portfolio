@@ -5,12 +5,12 @@ import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
 import { env } from "@/env/server";
-import { webUnauthorizedError, webUnknownError } from "@/utils/web-error";
+import { webInternalError, webUnauthorizedError } from "@/utils/web-error";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 export function getUserId(): ResultAsync<string, RichError> {
   return ResultAsync.fromPromise(cookies(), (cause) =>
-    webUnknownError({
+    webInternalError({
       action: "ReadCookies",
       cause,
       reason: "Failed to read request cookies.",

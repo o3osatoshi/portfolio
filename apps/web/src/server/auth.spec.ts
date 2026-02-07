@@ -54,7 +54,7 @@ describe("server/auth getUserId", () => {
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
-    expect(res.error.name).toBe("UIUnknownError");
+    expect(res.error.name).toBe("PresentationInternalError");
     expect(h.getUserIdMock).not.toHaveBeenCalled();
   });
 
@@ -69,7 +69,7 @@ describe("server/auth getUserId", () => {
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
-    expect(res.error.name).toBe("UIUnauthorizedError");
+    expect(res.error.name).toBe("PresentationUnauthorizedError");
     expect(h.getUserIdMock).toHaveBeenCalledWith({
       cookie: "authjs.session-token=token",
       secret: "test-secret",
@@ -87,6 +87,6 @@ describe("server/auth getUserId", () => {
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
-    expect(res.error.name).toBe("UIUnauthorizedError");
+    expect(res.error.name).toBe("PresentationUnauthorizedError");
   });
 });

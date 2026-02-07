@@ -16,7 +16,7 @@ const testError = (reason: string) =>
       action: "StorePingUseCaseSpec",
       reason,
     },
-    kind: "Unknown",
+    kind: "Internal",
   });
 
 function makeCache(overrides: Partial<CacheStore> = {}): CacheStore {

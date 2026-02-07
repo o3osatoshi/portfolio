@@ -39,7 +39,7 @@ describe("http/core/respond", () => {
       const res = await app.request("/e");
       expect(res.status).toBe(404);
       const body = await res.json();
-      // Basic shape from serializeError
+      // Basic shape from serializeRichError
       expect(body).toHaveProperty("name", "DomainNotFoundError");
       expect(typeof body.message).toBe("string");
     });
@@ -80,7 +80,7 @@ describe("http/core/respond", () => {
               details: {
                 reason: "boom",
               },
-              kind: "Unknown",
+              kind: "Internal",
               layer: "External",
             }),
           ),
@@ -162,7 +162,7 @@ describe("http/core/respond", () => {
               details: {
                 reason: "boom",
               },
-              kind: "Unknown",
+              kind: "Internal",
               layer: "External",
             }),
           ),

@@ -178,7 +178,7 @@ function readPart(
         action: "StorePing",
         reason: `Missing date part: ${type}`,
       },
-      kind: "Unknown",
+      kind: "Internal",
     });
   }
   return part.value;

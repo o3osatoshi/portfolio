@@ -21,8 +21,8 @@ export function createInngestStepRunner(step: InngestStepRunner): StepRunner {
             action: "InngestStepRunner",
             reason: "step.run rejected with an unexpected error value",
           },
-          kind: "Unknown",
-          layer: "Infra",
+          kind: "Internal",
+          layer: "Infrastructure",
         }),
     ).map((value) => value as T);
 }

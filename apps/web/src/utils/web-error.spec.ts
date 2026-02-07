@@ -6,17 +6,17 @@ import {
   newWebError,
   webConflictError,
   webForbiddenError,
+  webInternalError,
   webNotFoundError,
   webRateLimitError,
   webTimeoutError,
   webUnauthorizedError,
   webUnavailableError,
-  webUnknownError,
   webValidationError,
 } from "./web-error";
 
 describe("utils/web-error newWebError", () => {
-  it("constructs UI-layer error with structured name and message", () => {
+  it("constructs Presentation-layer error with structured name and message", () => {
     const err = newWebError({
       action: "SubmitForm",
       hint: "Check the form fields.",
@@ -26,7 +26,7 @@ describe("utils/web-error newWebError", () => {
     });
 
     expect(err).toBeInstanceOf(Error);
-    expect(err.name).toBe("UIValidationError");
+    expect(err.name).toBe("PresentationValidationError");
     expect(isRichError(err)).toBe(true);
     if (isRichError(err)) {
       expect(err.details?.action).toBe("SubmitForm");
@@ -40,46 +40,46 @@ describe("utils/web-error newWebError", () => {
 describe("utils/web-error convenience wrappers", () => {
   it("webValidationError uses Validation kind", () => {
     const err = webValidationError({ action: "Validate" });
-    expect(err.name).toBe("UIValidationError");
+    expect(err.name).toBe("PresentationValidationError");
   });
 
   it("webNotFoundError uses NotFound kind", () => {
     const err = webNotFoundError({ action: "LoadResource" });
-    expect(err.name).toBe("UINotFoundError");
+    expect(err.name).toBe("PresentationNotFoundError");
   });
 
   it("webConflictError uses Conflict kind", () => {
     const err = webConflictError({ action: "UpdateResource" });
-    expect(err.name).toBe("UIConflictError");
+    expect(err.name).toBe("PresentationConflictError");
   });
 
   it("webForbiddenError uses Forbidden kind", () => {
     const err = webForbiddenError({ action: "AccessPage" });
-    expect(err.name).toBe("UIForbiddenError");
+    expect(err.name).toBe("PresentationForbiddenError");
   });
 
   it("webUnauthorizedError uses Unauthorized kind", () => {
     const err = webUnauthorizedError({ action: "PerformAction" });
-    expect(err.name).toBe("UIUnauthorizedError");
+    expect(err.name).toBe("PresentationUnauthorizedError");
   });
 
   it("webRateLimitError uses RateLimit kind", () => {
     const err = webRateLimitError({ action: "CallAPI" });
-    expect(err.name).toBe("UIRateLimitError");
+    expect(err.name).toBe("PresentationRateLimitError");
   });
 
   it("webTimeoutError uses Timeout kind", () => {
     const err = webTimeoutError({ action: "CallSlowAPI" });
-    expect(err.name).toBe("UITimeoutError");
+    expect(err.name).toBe("PresentationTimeoutError");
   });
 
   it("webUnavailableError uses Unavailable kind", () => {
     const err = webUnavailableError({ action: "CallService" });
-    expect(err.name).toBe("UIUnavailableError");
+    expect(err.name).toBe("PresentationUnavailableError");
   });
 
-  it("webUnknownError uses Unknown kind", () => {
-    const err = webUnknownError({ action: "DoSomething" });
-    expect(err.name).toBe("UIUnknownError");
+  it("webInternalError uses Internal kind", () => {
+    const err = webInternalError({ action: "DoSomething" });
+    expect(err.name).toBe("PresentationInternalError");
   });
 });

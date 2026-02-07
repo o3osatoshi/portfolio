@@ -54,7 +54,7 @@ describe("application/use-cases: HeavyProcessUseCase", () => {
         action: "HeavyProcessUseCaseSpec",
         reason: "sleep interrupted",
       },
-      kind: "Unknown",
+      kind: "Internal",
     });
     h.sleepMock.mockReturnValueOnce(errAsync<void, RichError>(sleepError));
 

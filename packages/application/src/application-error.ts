@@ -12,12 +12,12 @@ export type ApplicationKind = Extract<
   Kind,
   | "Conflict"
   | "Forbidden"
+  | "Internal"
   | "NotFound"
   | "RateLimit"
   | "Timeout"
   | "Unauthorized"
   | "Unavailable"
-  | "Unknown"
   | "Validation"
 >;
 
@@ -93,7 +93,8 @@ export const applicationUnavailableError = (
   p: Omit<NewApplicationError, "kind">,
 ) => newApplicationError({ kind: "Unavailable", ...p });
 /**
- * Convenience wrapper for {@link newApplicationError} with `kind="Unknown"`.
+ * Convenience wrapper for {@link newApplicationError} with `kind="Internal"`.
  */
-export const applicationUnknownError = (p: Omit<NewApplicationError, "kind">) =>
-  newApplicationError({ kind: "Unknown", ...p });
+export const applicationInternalError = (
+  p: Omit<NewApplicationError, "kind">,
+) => newApplicationError({ kind: "Internal", ...p });

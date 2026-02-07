@@ -82,7 +82,7 @@ describe("getHeavyProcessCached", () => {
   });
 
   it("returns Err Serialization when remote payload is not serialized RichError", async () => {
-    const body = { name: "ApplicationUnknownError", message: "something bad" };
+    const body = { name: "ApplicationInternalError", message: "something bad" };
 
     const json = vi.fn().mockResolvedValueOnce(body);
     h.getHeavyProcessCachedRequestMock.mockResolvedValueOnce({

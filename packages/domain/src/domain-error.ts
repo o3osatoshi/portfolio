@@ -12,12 +12,12 @@ export type DomainKind = Extract<
   Kind,
   | "Conflict"
   | "Forbidden"
+  | "Internal"
   | "NotFound"
   | "RateLimit"
   | "Timeout"
   | "Unauthorized"
   | "Unavailable"
-  | "Unknown"
   | "Validation"
 >;
 
@@ -65,6 +65,6 @@ export const domainTimeoutError = (p: Omit<NewDomainError, "kind">) =>
 /** Convenience wrapper for {@link newDomainError} with `kind="Unavailable"`. */
 export const domainUnavailableError = (p: Omit<NewDomainError, "kind">) =>
   newDomainError({ kind: "Unavailable", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Unknown"`. */
-export const domainUnknownError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Unknown", ...p });
+/** Convenience wrapper for {@link newDomainError} with `kind="Internal"`. */
+export const domainInternalError = (p: Omit<NewDomainError, "kind">) =>
+  newDomainError({ kind: "Internal", ...p });

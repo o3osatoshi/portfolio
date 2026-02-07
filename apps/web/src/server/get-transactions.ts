@@ -12,12 +12,12 @@ import { cacheLife, cacheTag } from "next/cache";
 import { env } from "@/env/server";
 import { getUserId } from "@/server/auth";
 import { getTag } from "@/utils/nav-handler";
-import { webUnknownError } from "@/utils/web-error";
+import { webInternalError } from "@/utils/web-error";
 import {
   deserializeRichError,
   type RichError,
   type SerializedError,
-  serializeError,
+  serializeRichError,
 } from "@o3osatoshi/toolkit";
 
 export type Transaction = TransactionResponse;
@@ -39,7 +39,7 @@ export function getTransactions(): ResultAsync<Transactions, RichError> {
   return getUserId()
     .andThen((userId) =>
       ResultAsync.fromPromise(getTransactionsCached(userId), (cause) =>
-        webUnknownError({
+        webInternalError({
           action: "GetTransactions",
           cause,
           reason: "Failed to read cached transactions.",
@@ -76,7 +76,7 @@ async function getTransactionsCached(
           expire: ERROR_CACHE_SECONDS,
           stale: 0,
         });
-        return { error: serializeError(error), ok: false };
+        return { error: serializeRichError(error), ok: false };
       },
     );
 }

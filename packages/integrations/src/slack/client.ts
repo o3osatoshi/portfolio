@@ -131,7 +131,7 @@ export function createSlackClient(
 }
 
 function slackErrorToKind(error?: string | undefined): IntegrationKind {
-  if (!error) return "Unknown";
+  if (!error) return "Internal";
 
   const SLACK_ERROR_KIND_MAP: ReadonlyArray<[string, IntegrationKind]> = [
     ["invalid_auth", "Unauthorized"],

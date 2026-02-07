@@ -59,7 +59,7 @@ describe("utils/rpc-headers createHeaders", () => {
     expect(h2).toEqual({ Cookie: "sid=multi-call" });
   });
 
-  it("returns Err with InfraUnknownError when cookies retrieval fails", async () => {
+  it("returns Err with InfrastructureInternalError when cookies retrieval fails", async () => {
     const cause = new Error("cookies failed");
     h.cookiesMock.mockReturnValueOnce(Promise.reject(cause));
 
@@ -70,7 +70,7 @@ describe("utils/rpc-headers createHeaders", () => {
     if (!res.isErr()) return;
 
     expect(res.error).toBeInstanceOf(Error);
-    expect(res.error.name).toBe("InfraUnknownError");
+    expect(res.error.name).toBe("InfrastructureInternalError");
     expect(isRichError(res.error)).toBe(true);
     if (isRichError(res.error)) {
       expect(res.error.details?.action).toBe("Call cookies");

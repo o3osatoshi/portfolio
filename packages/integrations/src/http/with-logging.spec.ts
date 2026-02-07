@@ -59,7 +59,7 @@ const buildError = (
     details: {
       reason: message,
     },
-    kind: info.kind ?? "Unknown",
+    kind: info.kind ?? "Internal",
     layer: info.layer ?? "External",
   });
   error.name = name;

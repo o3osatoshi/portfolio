@@ -13,7 +13,7 @@ import { newRichError } from "@o3osatoshi/toolkit";
  *
  * On success, the returned {@link ResultAsync} resolves to an object whose
  * `headers` function sets the `Cookie` header. On failure, it yields an
- * {@link Error} created by {@link newRichError} with Infra/Unknown metadata.
+ * {@link Error} created by {@link newRichError} with Infrastructure/Internal metadata.
  */
 export function createHeaders(): ResultAsync<
   Pick<ClientOptions, "headers">,
@@ -23,8 +23,8 @@ export function createHeaders(): ResultAsync<
     newRichError({
       cause,
       details: { action: "Call cookies" },
-      kind: "Unknown",
-      layer: "Infra",
+      kind: "Internal",
+      layer: "Infrastructure",
     }),
   ).map((reqCookies) => ({
     headers: () => ({

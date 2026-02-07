@@ -151,8 +151,8 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
             reason:
               "proxy payload parsing failed with an unexpected error value",
           },
-          kind: "Unknown",
-          layer: "Infra",
+          kind: "Internal",
+          layer: "Infrastructure",
         }),
       );
       return json({ message: "invalid_json", status: "error" }, 400);
@@ -196,8 +196,8 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
             action: "LoggingProxyEmit",
             reason: "proxy emission failed with an unexpected error value",
           },
-          kind: "Unknown",
-          layer: "Infra",
+          kind: "Internal",
+          layer: "Infrastructure",
         }),
       );
       return json({ message: "proxy_failed", status: "error" }, 500);
@@ -304,8 +304,8 @@ export function createProxyTransport(
               reason:
                 "proxy transport flush failed with an unexpected error value",
             },
-            kind: "Unknown",
-            layer: "Infra",
+            kind: "Internal",
+            layer: "Infrastructure",
           }),
         );
       } finally {

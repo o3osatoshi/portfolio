@@ -11,7 +11,7 @@ const testError = (reason: string) =>
       action: "WithCacheSpec",
       reason,
     },
-    kind: "Unknown",
+    kind: "Internal",
   });
 
 const buildResponse = <T>(data: T, attempts = 1, ok = true) =>

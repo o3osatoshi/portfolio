@@ -65,7 +65,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
                 reason: "Transaction not found or not owned by user.",
               },
               kind: "NotFound",
-              layer: "DB",
+              layer: "Persistence",
             }),
           ),
     );
@@ -128,7 +128,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
                 reason: "Transaction not found or not owned by user.",
               },
               kind: "NotFound",
-              layer: "DB",
+              layer: "Persistence",
             }),
           ),
     );

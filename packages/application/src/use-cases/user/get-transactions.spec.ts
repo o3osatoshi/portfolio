@@ -11,7 +11,7 @@ const testError = (reason: string) =>
       action: "GetTransactionsUseCaseSpec",
       reason,
     },
-    kind: "Unknown",
+    kind: "Internal",
   });
 
 function makeRepo(

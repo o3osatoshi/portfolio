@@ -18,19 +18,19 @@ type NewPrismaError = {
  * Prisma-aware newRichError override.
  *
  * Maps common Prisma error classes/codes to a stable error shape and delegates
- * to `@o3osatoshi/toolkit`'s `newRichError` with `layer: "DB"` and an appropriate `kind`.
+ * to `@o3osatoshi/toolkit`'s `newRichError` with `layer: "Persistence"` and an appropriate `kind`.
  *
  * Major mappings
- * - P2002: kind=Integrity, reason=Unique constraint violation (meta.target is shown if present)
+ * - P2002: kind=Conflict, reason=Unique constraint violation (meta.target is shown if present)
  * - P2025: kind=NotFound, reason=Record not found (meta.cause if present)
- * - P2003: kind=Integrity, reason=Foreign key constraint failed
+ * - P2003: kind=Conflict, reason=Foreign key constraint failed
  * - P2000: kind=Validation, reason=Value too long (column name if present)
  * - P2005/P2006: kind=Validation, reason=Value out of range / Invalid value
- * - P2021/P2022: kind=Config, reason=Table / Column does not exist
+ * - P2021/P2022: kind=Internal, reason=Table / Column does not exist
  * - PrismaClientValidationError: kind=Validation
- * - PrismaClientInitializationError: kind=Unavailable / Timeout / Unauthorized / Forbidden / Unknown (derived from message)
- * - PrismaClientUnknownRequestError: kind=Deadlock / Serialization / Unknown (derived from message)
- * - PrismaClientRustPanicError: kind=Unknown
+ * - PrismaClientInitializationError: kind=Unavailable / Timeout / Unauthorized / Forbidden / Internal (derived from message)
+ * - PrismaClientUnknownRequestError: kind=Conflict / Serialization / Internal (derived from message)
+ * - PrismaClientRustPanicError: kind=Internal
  *
  * Notes
  * - The original cause is preserved on the returned error.
@@ -39,7 +39,7 @@ type NewPrismaError = {
  * @param impact - Optional description of effect on the system.
  * @param hint - Optional remediation tip for operators/users.
  * @param cause - The original Prisma error (or unknown) to classify.
- * @returns Error shaped by `@o3osatoshi/toolkit`'s `newRichError` with layer `DB`.
+ * @returns Error shaped by `@o3osatoshi/toolkit`'s `newRichError` with layer `Persistence`.
  */
 export function newPrismaError({
   cause,
@@ -73,7 +73,7 @@ export function newPrismaError({
             reason: column ? `Value too long for ${column}` : "Value too long",
           }),
           kind: "Validation",
-          layer: "DB",
+          layer: "Persistence",
         });
       }
       case "P2002": {
@@ -91,8 +91,8 @@ export function newPrismaError({
               ? `Unique constraint violation on ${target}`
               : "Unique constraint violation",
           }),
-          kind: "Integrity",
-          layer: "DB",
+          kind: "Conflict",
+          layer: "Persistence",
         });
       }
       case "P2003": {
@@ -104,8 +104,8 @@ export function newPrismaError({
             hint: "Ensure related records exist before linking.",
             reason: "Foreign key constraint failed",
           }),
-          kind: "Integrity",
-          layer: "DB",
+          kind: "Conflict",
+          layer: "Persistence",
         });
       }
       case "P2005": // Value out of range for the type
@@ -119,7 +119,7 @@ export function newPrismaError({
             reason: code === "P2005" ? "Value out of range" : "Invalid value",
           }),
           kind: "Validation",
-          layer: "DB",
+          layer: "Persistence",
         });
       }
       case "P2021": // Table does not exist
@@ -135,8 +135,8 @@ export function newPrismaError({
                 ? "Table does not exist"
                 : "Column does not exist",
           }),
-          kind: "Config",
-          layer: "DB",
+          kind: "Internal",
+          layer: "Persistence",
         });
       }
       case "P2025": {
@@ -150,7 +150,7 @@ export function newPrismaError({
             reason: m ?? "Record not found",
           }),
           kind: "NotFound",
-          layer: "DB",
+          layer: "Persistence",
         });
       }
       default: {
@@ -160,8 +160,8 @@ export function newPrismaError({
           details: mergeDetails({
             reason: `Known request error ${code}`,
           }),
-          kind: "Unknown",
-          layer: "DB",
+          kind: "Internal",
+          layer: "Persistence",
         });
       }
     }
@@ -176,7 +176,7 @@ export function newPrismaError({
         reason: "Invalid Prisma query or data",
       }),
       kind: "Validation",
-      layer: "DB",
+      layer: "Persistence",
     });
   }
 
@@ -199,7 +199,7 @@ export function newPrismaError({
             ? "Unauthorized"
             : lower.includes("permission denied")
               ? "Forbidden"
-              : "Unknown";
+              : "Internal";
 
     return newRichError({
       ...rest,
@@ -214,7 +214,7 @@ export function newPrismaError({
         reason: msg,
       }),
       kind,
-      layer: "DB",
+      layer: "Persistence",
     });
   }
 
@@ -226,8 +226,8 @@ export function newPrismaError({
         hint: "Inspect logs; restart the process.",
         reason: "Prisma engine panic",
       }),
-      kind: "Unknown",
-      layer: "DB",
+      kind: "Internal",
+      layer: "Persistence",
     });
   }
 
@@ -235,11 +235,11 @@ export function newPrismaError({
     const msg = String(cause.message || "Unknown Prisma request error");
     const lower = msg.toLowerCase();
     const kind = lower.includes("deadlock")
-      ? "Deadlock"
+      ? "Conflict"
       : lower.includes("could not serialize access") ||
           lower.includes("serialization failure")
         ? "Serialization"
-        : "Unknown";
+        : "Internal";
     return newRichError({
       ...rest,
       cause,
@@ -247,7 +247,7 @@ export function newPrismaError({
         reason: msg,
       }),
       kind,
-      layer: "DB",
+      layer: "Persistence",
     });
   }
 
@@ -258,8 +258,8 @@ export function newPrismaError({
     details: mergeDetails({
       reason: "Unexpected error",
     }),
-    kind: "Unknown",
-    layer: "DB",
+    kind: "Internal",
+    layer: "Persistence",
   });
 }
 
@@ -289,7 +289,7 @@ function isUnknownRequestError(
   return e instanceof Prisma.PrismaClientUnknownRequestError;
 }
 
-/** Type guard for Prisma validation errors thrown before hitting the DB. */
+/** Type guard for Prisma validation errors thrown before hitting persistence. */
 function isValidationError(
   e: unknown,
 ): e is Prisma.PrismaClientValidationError {

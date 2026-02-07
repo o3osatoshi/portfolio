@@ -28,7 +28,7 @@ const testError = (reason: string) =>
       action: "HeavyProcessCachedUseCaseSpec",
       reason,
     },
-    kind: "Unknown",
+    kind: "Internal",
   });
 
 describe("application/use-cases: HeavyProcessCachedUseCase", () => {

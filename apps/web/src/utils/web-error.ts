@@ -1,7 +1,7 @@
 import { type Kind, newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 /**
- * Shape used to describe a UI-layer failure when constructing a structured {@link Error}.
+ * Shape used to describe a presentation-layer failure when constructing a structured {@link Error}.
  */
 export type NewWebError = {
   action?: string;
@@ -13,24 +13,24 @@ export type NewWebError = {
 };
 
 /**
- * Enumerates normalized error categories for the web (UI) layer.
+ * Enumerates normalized error categories for the web presentation layer.
  */
 export type WebKind = Extract<
   Kind,
   | "Conflict"
   | "Forbidden"
+  | "Internal"
   | "NotFound"
   | "RateLimit"
   | "Timeout"
   | "Unauthorized"
   | "Unavailable"
-  | "Unknown"
   | "Validation"
 >;
 
 /**
- * Web/UI-layer error constructor wrapping @o3osatoshi/toolkit with layer "UI".
- * Prefer this helper in UI code to keep error classification consistent.
+ * Web presentation-layer error constructor wrapping @o3osatoshi/toolkit with layer "Presentation".
+ * Prefer this helper in presentation code to keep error classification consistent.
  */
 export function newWebError({
   action,
@@ -49,7 +49,7 @@ export function newWebError({
       reason,
     },
     kind,
-    layer: "UI",
+    layer: "Presentation",
   });
 }
 
@@ -77,6 +77,6 @@ export const webTimeoutError = (p: Omit<NewWebError, "kind">) =>
 /** Convenience wrapper for {@link newWebError} with `kind="Unavailable"`. */
 export const webUnavailableError = (p: Omit<NewWebError, "kind">) =>
   newWebError({ kind: "Unavailable", ...p });
-/** Convenience wrapper for {@link newWebError} with `kind="Unknown"`. */
-export const webUnknownError = (p: Omit<NewWebError, "kind">) =>
-  newWebError({ kind: "Unknown", ...p });
+/** Convenience wrapper for {@link newWebError} with `kind="Internal"`. */
+export const webInternalError = (p: Omit<NewWebError, "kind">) =>
+  newWebError({ kind: "Internal", ...p });

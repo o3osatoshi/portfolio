@@ -127,7 +127,7 @@ describe("getTransactions", () => {
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
-    expect(res.error.name).toBe("UIUnauthorizedError");
+    expect(res.error.name).toBe("PresentationUnauthorizedError");
   });
 
   it("returns Err and uses short cache life when usecase fails", async () => {
@@ -138,7 +138,7 @@ describe("getTransactions", () => {
         reason: "Database unavailable",
       },
       kind: "Unavailable",
-      layer: "DB",
+      layer: "Persistence",
     });
 
     h.getUserIdMock.mockReturnValueOnce(okAsync(userId));

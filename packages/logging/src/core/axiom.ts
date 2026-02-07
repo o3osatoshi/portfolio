@@ -78,7 +78,7 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
                 action: "AxiomIngest",
                 reason: "axiom ingest failed with an unexpected error value",
               },
-              kind: "Unknown",
+              kind: "Internal",
               layer: "External",
             }),
           );
@@ -91,7 +91,7 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
             action: "AxiomIngest",
             reason: "axiom ingest failed with an unexpected error value",
           },
-          kind: "Unknown",
+          kind: "Internal",
           layer: "External",
         }),
       );
