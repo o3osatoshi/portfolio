@@ -12,10 +12,10 @@
  * - `NotFound` → 404
  * - `MethodNotAllowed` → 405
  * - `RateLimit` → 429
- * - `Conflict` / `Integrity` / `Deadlock` → 409
+ * - `Conflict` → 409
  * - `Unprocessable` → 422
  * - `Canceled` → 408
- * - `Serialization` / `Config` / `Unknown` → 500
+ * - `Serialization` / `Internal` → 500
  * - `BadGateway` → 502
  * - `Unavailable` → 503
  * - `Timeout` → 504
@@ -24,15 +24,16 @@
  * - `ZodError` is treated as 400 (Validation).
  * - `AbortError` is treated as 408 (Canceled).
  *
- * Security: in development, {@link serializeError} may include stack traces.
+ * Security: in development, {@link serializeRichError} may include stack traces.
  * Control this via the `includeStack` option.
  */
 import {
   type Kind,
   resolveErrorKind,
   type SerializedError,
-  serializeError,
   type SerializeOptions,
+  serializeRichError,
+  toRichError,
 } from "../error";
 
 /**
@@ -41,7 +42,7 @@ import {
  * @public
  */
 export type ErrorHttpResponse = {
-  /** Serialized, JSON‑safe error payload produced by {@link serializeError}. */
+  /** Serialized, JSON‑safe error payload produced by {@link serializeRichError}. */
   body: SerializedError;
   /** HTTP status code associated with the error. */
   statusCode: ErrorStatusCode;
@@ -77,10 +78,8 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
   BadGateway: 502,
   BadRequest: 400,
   Canceled: 408,
-  Config: 500,
   Conflict: 409,
-  Deadlock: 409,
-  Integrity: 409,
+  Internal: 500,
   MethodNotAllowed: 405,
   NotFound: 404,
   RateLimit: 429,
@@ -88,14 +87,13 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
   Timeout: 504,
   Unauthorized: 401,
   Unavailable: 503,
-  Unknown: 500,
   Unprocessable: 422,
 };
 
 /**
  * Convert an `Error` into an HTTP response shape.
  *
- * - `body` is a stable, JSON‑safe structure created by {@link serializeError}.
+ * - `body` is a stable, JSON‑safe structure created by {@link serializeRichError}.
  * - `status` is inferred from `error.name` (see Kind → Status mapping), unless
  *   a specific status override is provided.
  *
@@ -132,8 +130,9 @@ export function toHttpErrorResponse(
   status?: ErrorStatusCode,
   options?: SerializeOptions,
 ): ErrorHttpResponse {
-  const body = serializeError(error, options);
-  return { body, statusCode: status ?? deriveStatusFromError(error) };
+  const rich = toRichError(error);
+  const body = serializeRichError(rich, options);
+  return { body, statusCode: status ?? deriveStatusFromError(rich) };
 }
 
 /** @internal Derive HTTP status from an Error name (Kind heuristic). */

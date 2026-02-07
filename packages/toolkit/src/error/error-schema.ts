@@ -9,11 +9,9 @@ import { jsonObjectSchema } from "../types";
  * - `"BadGateway"` → upstream dependency returned an invalid/5xx response (502).
  * - `"BadRequest"` → malformed payload or invalid query before validation (400).
  * - `"Canceled"` → caller canceled or aborted the request (408).
- * - `"Config"` → server-side misconfiguration detected (500).
  * - `"Conflict"` → state/version mismatch such as optimistic locking (409).
- * - `"Deadlock"` → concurrency deadlock detected by the data store (409).
  * - `"Forbidden"` → authenticated caller lacks permission (403).
- * - `"Integrity"` → constraint violations such as unique/index failures (409).
+ * - `"Internal"` → unexpected internal failure (500).
  * - `"MethodNotAllowed"` → HTTP verb not supported for the resource (405).
  * - `"NotFound"` → entity or route missing (404).
  * - `"RateLimit"` → throttling or quota exceeded (429).
@@ -21,7 +19,6 @@ import { jsonObjectSchema } from "../types";
  * - `"Timeout"` → upstream or local job timed out (504).
  * - `"Unauthorized"` → authentication missing or invalid (401).
  * - `"Unavailable"` → dependency or subsystem temporarily down (503).
- * - `"Unknown"` → fallback for uncategorized errors (500).
  * - `"Unprocessable"` → semantically invalid input even though syntactically valid (422).
  * - `"Validation"` → domain/application validation error (400).
  *
@@ -31,11 +28,9 @@ export const kindSchema = z.enum([
   "BadGateway",
   "BadRequest",
   "Canceled",
-  "Config",
   "Conflict",
-  "Deadlock",
   "Forbidden",
-  "Integrity",
+  "Internal",
   "MethodNotAllowed",
   "NotFound",
   "RateLimit",
@@ -43,7 +38,6 @@ export const kindSchema = z.enum([
   "Timeout",
   "Unauthorized",
   "Unavailable",
-  "Unknown",
   "Unprocessable",
   "Validation",
 ]);
@@ -63,11 +57,12 @@ export type Kind = z.infer<typeof kindSchema>;
 export const layerSchema = z.enum([
   "Application",
   "Auth",
-  "DB",
   "Domain",
   "External",
-  "Infra",
-  "UI",
+  "Infrastructure",
+  "Interface",
+  "Persistence",
+  "Presentation",
 ]);
 
 /**
@@ -155,15 +150,41 @@ export const serializedErrorSchema: z.ZodType<{
   .strip();
 
 /**
- * Serialized cause type inferred from {@link serializedErrorSchema}.
- *
- * @public
- */
-export type SerializedCause = Exclude<SerializedError["cause"], undefined>;
-
-/**
  * Serialized error type inferred from {@link serializedErrorSchema}.
  *
  * @public
  */
 export type SerializedError = z.infer<typeof serializedErrorSchema>;
+
+/**
+ * Strict RichError transport shape.
+ *
+ * Unlike {@link SerializedError}, this shape always includes both `kind` and `layer`.
+ *
+ * @public
+ */
+export type SerializedRichError = {
+  kind: Kind;
+  layer: Layer;
+} & Omit<SerializedError, "kind" | "layer">;
+
+/**
+ * Strict schema for serialized RichError payloads.
+ *
+ * @public
+ */
+export const serializedRichErrorSchema: z.ZodType<SerializedRichError> =
+  z.intersection(
+    serializedErrorSchema,
+    z.object({
+      kind: kindSchema,
+      layer: layerSchema,
+    }),
+  );
+
+/**
+ * Serialized cause type inferred from {@link serializedErrorSchema}.
+ *
+ * @public
+ */
+export type SerializedCause = Exclude<SerializedError["cause"], undefined>;

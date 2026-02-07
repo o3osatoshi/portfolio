@@ -26,6 +26,10 @@ describe("error attribute helpers", () => {
       expect(extractErrorMessage("short message")).toBe("short message");
     });
 
+    it("keeps empty string messages", () => {
+      expect(extractErrorMessage("")).toBe("");
+    });
+
     it("reads message fields from plain objects", () => {
       const message = extractErrorMessage({ message: "boom" });
 

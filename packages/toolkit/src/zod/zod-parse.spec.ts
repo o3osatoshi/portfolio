@@ -30,11 +30,14 @@ describe("zod-parse: parseWith", () => {
 
   it("respects custom layer in error name", () => {
     const schema = z.object({ email: z.string().email() });
-    const parse = parseWith(schema, { action: "ParseForm", layer: "UI" });
+    const parse = parseWith(schema, {
+      action: "ParseForm",
+      layer: "Presentation",
+    });
     const res = parse({ email: "invalid" });
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("UIValidationError");
+      expect(res.error.name).toBe("PresentationValidationError");
       const message = res.error.message;
       expect(message).toContain("ParseForm failed");
       expect(message).toContain("email: Invalid string (email)");

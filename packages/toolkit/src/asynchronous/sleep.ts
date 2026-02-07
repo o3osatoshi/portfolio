@@ -11,7 +11,7 @@ export type SleepOptions = {
   /**
    * Optional signal used to cancel the pending timeout before it resolves.
    * Pass `AbortController.signal` to interrupt the sleep and receive an
-   * `InfraCanceledError`.
+   * `InfrastructureCanceledError`.
    */
   signal?: AbortSignal;
 };
@@ -20,7 +20,7 @@ export type SleepOptions = {
  * Delay execution for a given duration with AbortSignal support.
  *
  * Designed as an infrastructure utility that keeps timing logic near the runtime.
- * Rejects with an `InfraCanceledError` when the provided signal aborts before the
+ * Rejects with an `InfrastructureCanceledError` when the provided signal aborts before the
  * timeout completes.
  *
  * @param ms - Milliseconds to wait before resolving.
@@ -39,8 +39,8 @@ export function sleep(
         action: "Sleep",
         reason: "sleep rejected with an unexpected error value",
       },
-      kind: "Unknown",
-      layer: "Infra",
+      kind: "Internal",
+      layer: "Infrastructure",
     });
 
   if (!signal) {
@@ -62,7 +62,7 @@ export function sleep(
             reason: "operation aborted by AbortSignal",
           },
           kind: "Canceled",
-          layer: "Infra",
+          layer: "Infrastructure",
         });
       };
 

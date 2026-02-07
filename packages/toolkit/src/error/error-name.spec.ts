@@ -10,14 +10,16 @@ describe("error name helpers", () => {
   });
 
   it("parses layer and kind from structured names", () => {
-    expect(parseErrorName("InfraTimeoutError")).toEqual({
+    expect(parseErrorName("InfrastructureTimeoutError")).toEqual({
       kind: "Timeout",
-      layer: "Infra",
+      layer: "Infrastructure",
     });
   });
 
   it("returns layer when kind is unknown", () => {
-    expect(parseErrorName("UIWhateverError")).toEqual({ layer: "UI" });
+    expect(parseErrorName("PresentationWhateverError")).toEqual({
+      layer: "Presentation",
+    });
   });
 
   it("returns empty when format is not recognized", () => {

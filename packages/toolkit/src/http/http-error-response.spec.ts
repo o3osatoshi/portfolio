@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { newRichError, serializeError } from "../error";
+import { newRichError, serializeRichError } from "../error";
 import { toHttpErrorResponse } from "./http-error-response";
 
 describe("toHttpErrorResponse", () => {
@@ -8,7 +8,7 @@ describe("toHttpErrorResponse", () => {
     const err = newRichError({ kind: "Validation", layer: "Application" });
     const res = toHttpErrorResponse(err, 405);
     expect(res.statusCode).toBe(405);
-    expect(res.body).toEqual(serializeError(err));
+    expect(res.body).toEqual(serializeRichError(err));
   });
 
   it("infers status from error kind in name", () => {
@@ -21,10 +21,10 @@ describe("toHttpErrorResponse", () => {
       { kind: "Conflict", layer: "Domain", status: 409 },
       { kind: "RateLimit", layer: "External", status: 429 },
       { kind: "MethodNotAllowed", layer: "Application", status: 405 },
-      { kind: "Timeout", layer: "Infra", status: 504 },
-      { kind: "Unavailable", layer: "Infra", status: 503 },
+      { kind: "Timeout", layer: "Infrastructure", status: 504 },
+      { kind: "Unavailable", layer: "Infrastructure", status: 503 },
       { kind: "Unprocessable", layer: "Application", status: 422 },
-      { kind: "BadGateway", layer: "Infra", status: 502 },
+      { kind: "BadGateway", layer: "Infrastructure", status: 502 },
     ] as const;
 
     for (const { kind, layer, status } of cases) {
@@ -35,7 +35,10 @@ describe("toHttpErrorResponse", () => {
   });
 
   it("maps canceled to 408 (client closed request)", () => {
-    const canceled = newRichError({ kind: "Canceled", layer: "Infra" });
+    const canceled = newRichError({
+      kind: "Canceled",
+      layer: "Infrastructure",
+    });
     const res = toHttpErrorResponse(canceled);
     expect(res.statusCode).toBe(408);
   });

@@ -9,7 +9,7 @@ import type { JsonContainer, JsonValue } from "./types";
  * The input must represent a top-level JSON object (`{}`) or array (`[]`).
  * If parsing fails or the decoded value is a JSON primitive
  * (`string`, `number`, `boolean`, or `null`), this returns an error of kind
- * `"Serialization"` from the `"Infra"` layer.
+ * `"Serialization"` from the `"Infrastructure"` layer.
  *
  * @param value - JSON string to parse.
  * @returns A neverthrow result containing a {@link JsonContainer} on success, or a structured error on failure.
@@ -29,7 +29,7 @@ export function decode(value: string): Result<JsonContainer, RichError> {
           reason: "Expected top-level JSON object or array",
         },
         kind: "Serialization",
-        layer: "Infra",
+        layer: "Infrastructure",
       }),
     );
   });
@@ -41,7 +41,7 @@ export function decode(value: string): Result<JsonContainer, RichError> {
  * When `JSON.stringify` succeeds, this returns an `ok` result containing
  * the encoded JSON string. If serialization throws (for example, because
  * of cyclic references), this returns a `"Serialization"` error from the
- * `"Infra"` layer.
+ * `"Infrastructure"` layer.
  *
  * @param value - Arbitrary value to serialize.
  * @returns A neverthrow result containing the JSON string on success, or a structured error on failure.
@@ -60,7 +60,7 @@ export function encode(value: unknown): Result<string, RichError> {
           reason: "Failed to encode value as JSON",
         },
         kind: "Serialization",
-        layer: "Infra",
+        layer: "Infrastructure",
       }),
     );
   }
@@ -79,7 +79,7 @@ function _decode(value: string): Result<JsonValue, RichError> {
           reason: "Failed to decode value from JSON",
         },
         kind: "Serialization",
-        layer: "Infra",
+        layer: "Infrastructure",
       }),
     );
   }

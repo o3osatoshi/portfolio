@@ -190,7 +190,7 @@ export type HttpResponse<T = unknown> = {
 };
 
 // @public
-export type HttpStatusKind = Extract<Kind, "BadGateway" | "BadRequest" | "Forbidden" | "NotFound" | "RateLimit" | "Timeout" | "Unauthorized" | "Unknown">;
+export type HttpStatusKind = Extract<Kind, "BadGateway" | "BadRequest" | "Forbidden" | "Internal" | "NotFound" | "RateLimit" | "Timeout" | "Unauthorized">;
 
 // @public
 export type HttpStatusLike = {
@@ -212,6 +212,9 @@ export function isRichError(error: unknown): error is RichError;
 
 // @public
 export function isSerializedError(v: unknown): v is SerializedError;
+
+// @public
+export function isSerializedRichError(v: unknown): v is SerializedRichError;
 
 // @public
 export function isZodError(e: unknown): e is ZodError;
@@ -253,11 +256,9 @@ export const kindSchema: z.ZodEnum<{
     BadGateway: "BadGateway";
     BadRequest: "BadRequest";
     Canceled: "Canceled";
-    Config: "Config";
     Conflict: "Conflict";
-    Deadlock: "Deadlock";
     Forbidden: "Forbidden";
-    Integrity: "Integrity";
+    Internal: "Internal";
     MethodNotAllowed: "MethodNotAllowed";
     NotFound: "NotFound";
     RateLimit: "RateLimit";
@@ -265,7 +266,6 @@ export const kindSchema: z.ZodEnum<{
     Timeout: "Timeout";
     Unauthorized: "Unauthorized";
     Unavailable: "Unavailable";
-    Unknown: "Unknown";
     Unprocessable: "Unprocessable";
     Validation: "Validation";
 }>;
@@ -277,11 +277,12 @@ export type Layer = z.infer<typeof layerSchema>;
 export const layerSchema: z.ZodEnum<{
     Application: "Application";
     Auth: "Auth";
-    DB: "DB";
     Domain: "Domain";
     External: "External";
-    Infra: "Infra";
-    UI: "UI";
+    Infrastructure: "Infrastructure";
+    Interface: "Interface";
+    Persistence: "Persistence";
+    Presentation: "Presentation";
 }>;
 
 // @public
@@ -433,13 +434,22 @@ export const serializedErrorSchema: z.ZodType<{
 }>;
 
 // @public
-export function serializeError(error: Error, opts?: SerializeOptions): SerializedError;
+export type SerializedRichError = {
+    kind: Kind;
+    layer: Layer;
+} & Omit<SerializedError, "kind" | "layer">;
+
+// @public
+export const serializedRichErrorSchema: z.ZodType<SerializedRichError>;
 
 // @public
 export type SerializeOptions = {
     depth?: number | undefined;
     includeStack?: boolean | undefined;
 };
+
+// @public
+export function serializeRichError(error: RichError, opts?: SerializeOptions): SerializedRichError;
 
 // @public
 export function sleep(ms: number, input?: SleepOptions): ResultAsync<void, RichError>;
@@ -484,7 +494,7 @@ export function userMessageFromError(error: Error): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1153:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1170:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

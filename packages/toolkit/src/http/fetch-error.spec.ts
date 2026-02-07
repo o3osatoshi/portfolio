@@ -46,7 +46,7 @@ describe("toolkit newFetchError helper", () => {
       details: { action: "DoSomething" },
     });
 
-    expect(err.name).toBe("ExternalUnknownError");
+    expect(err.name).toBe("ExternalInternalError");
     expect(err.message).toContain(
       "DoSomething failed: encountered an unexpected error",
     );
@@ -59,7 +59,7 @@ describe("toolkit newFetchError helper", () => {
       request: { url: "/proxy/users/123" },
     });
 
-    expect(err.name).toBe("ExternalUnknownError");
+    expect(err.name).toBe("ExternalInternalError");
     expect(err.message).toContain(
       "LoadProfile failed: /proxy/users/123 failed with boom",
     );

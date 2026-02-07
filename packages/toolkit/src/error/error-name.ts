@@ -1,4 +1,4 @@
-import type { Kind, Layer } from "./error";
+import { type Kind, kindSchema, type Layer, layerSchema } from "./error-schema";
 
 /**
  * Utilities for composing and parsing structured error names used
@@ -7,36 +7,9 @@ import type { Kind, Layer } from "./error";
  * @public
  */
 
-const LAYER_VALUES = [
-  "Application",
-  "Auth",
-  "DB",
-  "Domain",
-  "External",
-  "Infra",
-  "UI",
-] as const satisfies readonly Layer[];
+const LAYER_VALUES = layerSchema.options as readonly Layer[];
 
-const KIND_VALUES = [
-  "BadGateway",
-  "BadRequest",
-  "Canceled",
-  "Config",
-  "Conflict",
-  "Deadlock",
-  "Forbidden",
-  "Integrity",
-  "MethodNotAllowed",
-  "NotFound",
-  "RateLimit",
-  "Serialization",
-  "Timeout",
-  "Unauthorized",
-  "Unavailable",
-  "Unknown",
-  "Unprocessable",
-  "Validation",
-] as const satisfies readonly Kind[];
+const KIND_VALUES = kindSchema.options as readonly Kind[];
 
 /**
  * Parsed components recovered from a structured error name.

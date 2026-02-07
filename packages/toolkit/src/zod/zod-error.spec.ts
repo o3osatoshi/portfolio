@@ -103,9 +103,9 @@ describe("zod-error helpers (with real Zod)", () => {
     const err = newZodError({
       details: { action: "ValidateForm" },
       issues: errCause.issues,
-      layer: "UI",
+      layer: "Presentation",
     });
-    expect(err.name).toBe("UIValidationError");
+    expect(err.name).toBe("PresentationValidationError");
     const message = err.message;
     expect(message).toContain("ValidateForm failed:");
     expect(message).toContain("Unrecognized keys:");

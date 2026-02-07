@@ -13,10 +13,15 @@ import {
   type Layer,
   type SerializedCause,
   type SerializedError,
-  serializedErrorSchema,
+  type SerializedRichError,
+  serializedRichErrorSchema,
 } from "./error-schema";
 
-export type { SerializedCause, SerializedError } from "./error-schema";
+export type {
+  SerializedCause,
+  SerializedError,
+  SerializedRichError,
+} from "./error-schema";
 
 /**
  * Failure payload returned by {@link tryDeserializeRichError}.
@@ -80,7 +85,7 @@ export type DeserializeRichErrorOptions = {
 };
 
 /**
- * Tuning knobs for {@link serializeError}.
+ * Tuning knobs for {@link serializeRichError}.
  *
  * @public
  */
@@ -140,11 +145,24 @@ export function deserializeRichError(
  * @public
  */
 export function isSerializedError(v: unknown): v is SerializedError {
-  return !!v && typeof v === "object" && "name" in v && "message" in v;
+  if (!v || typeof v !== "object") return false;
+  const candidate = v as { message?: unknown; name?: unknown };
+  return (
+    typeof candidate.name === "string" && typeof candidate.message === "string"
+  );
 }
 
 /**
- * Convert an `Error` into a {@link SerializedError}.
+ * Structural guard for strict serialized RichError payloads.
+ *
+ * @public
+ */
+export function isSerializedRichError(v: unknown): v is SerializedRichError {
+  return serializedRichErrorSchema.safeParse(v).success;
+}
+
+/**
+ * Convert a {@link RichError} into a JSON-safe transport payload.
  *
  * Behavior:
  * - Preserves `name` and `message`.
@@ -152,31 +170,21 @@ export function isSerializedError(v: unknown): v is SerializedError {
  * - Serializes nested `cause` recursively up to `depth`.
  *
  * @example
- * const s = serializeError(err); // send to worker or log store
+ * const s = serializeRichError(err); // send to worker or log store
  * const e = deserializeRichError(s); // rehydrate when payload is serialized RichError
  *
  * @public
- * @param error - Error instance to serialize.
+ * @param error - RichError instance to serialize.
  * @param opts - Serialization options (depth, stack inclusion, truncation).
  * @returns A JSON-friendly error object suitable for transport or storage.
  */
-export function serializeError(
-  error: Error,
+export function serializeRichError(
+  error: RichError,
   opts: SerializeOptions = {},
-): SerializedError {
+): SerializedRichError {
   const includeStack =
     opts.includeStack ?? process.env["NODE_ENV"] === "development";
   const depth = Math.max(0, opts.depth ?? 2);
-  const info = resolveErrorInfo(error);
-  const rich = isRichError(error)
-    ? {
-        code: error.code,
-        details: error.details,
-        i18n: error.i18n,
-        isOperational: error.isOperational,
-        meta: error.meta,
-      }
-    : undefined;
 
   return {
     name: error.name,
@@ -184,10 +192,14 @@ export function serializeError(
       depth: depth - 1,
       includeStack,
     }),
-    kind: info.kind,
-    layer: info.layer,
-    ...(rich ?? {}),
+    code: error.code,
+    details: error.details,
+    i18n: error.i18n,
+    isOperational: error.isOperational,
+    kind: error.kind,
+    layer: error.layer,
     message: error.message,
+    meta: error.meta,
     stack: includeStack ? error.stack : undefined,
   };
 }
@@ -196,8 +208,7 @@ export function serializeError(
  * Strictly deserialize a serialized RichError payload.
  *
  * @remarks
- * - Accepts only payloads that satisfy {@link serializedErrorSchema} and include
- *   both `kind` and `layer`.
+ * - Accepts only payloads that satisfy {@link serializedRichErrorSchema}.
  * - Returns `Err` when the payload is invalid or does not represent a RichError.
  * - Use {@link deserializeRichError} when you always need a `RichError` return value.
  *
@@ -208,7 +219,7 @@ export function tryDeserializeRichError(
 ): Result<RichError, DeserializeRichErrorFailure> {
   if (isRichError(input)) return ok(input);
 
-  const parsed = serializedErrorSchema.safeParse(input);
+  const parsed = serializedRichErrorSchema.safeParse(input);
   if (!parsed.success) {
     return err({
       input,
@@ -217,13 +228,6 @@ export function tryDeserializeRichError(
   }
 
   const value = parsed.data;
-  if (!value.kind || !value.layer) {
-    return err({
-      input,
-      issues: getMissingRichErrorFieldIssues(value),
-    });
-  }
-
   const rich = newRichError({
     cause: deserializeCause(value.cause),
     code: value.code,
@@ -235,8 +239,8 @@ export function tryDeserializeRichError(
     meta: value.meta,
   });
 
-  if (value.message) rich.message = value.message;
-  if (value.stack) rich.stack = value.stack;
+  if (value.message !== undefined) rich.message = value.message;
+  if (value.stack !== undefined) rich.stack = value.stack;
 
   return ok(rich);
 }
@@ -285,36 +289,15 @@ function deserializeSerializedError(value: SerializedError): Error {
       layer: value.layer,
       meta: value.meta,
     });
-    if (value.message) rich.message = value.message;
-    if (value.stack) rich.stack = value.stack;
+    if (value.message !== undefined) rich.message = value.message;
+    if (value.stack !== undefined) rich.stack = value.stack;
     return rich;
   }
 
   const error = buildError(value.message, cause);
   error.name = value.name;
-  if (value.stack) error.stack = value.stack;
+  if (value.stack !== undefined) error.stack = value.stack;
   return error;
-}
-
-function getMissingRichErrorFieldIssues(
-  value: SerializedError,
-): DeserializeRichErrorIssue[] {
-  const issues: DeserializeRichErrorIssue[] = [];
-  if (!value.kind) {
-    issues.push({
-      code: "missing_required_field",
-      message: "Expected field 'kind' for serialized RichError payload.",
-      path: "kind",
-    });
-  }
-  if (!value.layer) {
-    issues.push({
-      code: "missing_required_field",
-      message: "Expected field 'layer' for serialized RichError payload.",
-      path: "layer",
-    });
-  }
-  return issues;
 }
 
 function mapZodIssues(issues: ZodIssue[]): DeserializeRichErrorIssue[] {
@@ -338,7 +321,7 @@ function resolveInputType(input: unknown): string {
  * Serialize an `Error.cause` recursively with depth control.
  *
  * - Preserves primitive string causes as-is for compatibility.
- * - Serializes nested `Error` instances using {@link serializeError}.
+ * - Serializes nested `Error` instances with rich details when available.
  * - When the configured `depth` is reached, returns a summarized string via {@link coerceErrorMessage}.
  * - Already serialized causes are passed through unchanged.
  *
@@ -361,6 +344,12 @@ function serializeCause(
 
   // Error instances: serialize recursively first
   if (cause instanceof Error) {
+    if (isRichError(cause)) {
+      return serializeRichError(cause, {
+        depth: depth - 1,
+        includeStack: opts.includeStack,
+      });
+    }
     return serializeError(cause, {
       depth: depth - 1,
       includeStack: opts.includeStack,
@@ -378,4 +367,26 @@ function serializeCause(
   } else {
     return name;
   }
+}
+
+function serializeError(
+  error: Error,
+  opts: SerializeOptions = {},
+): SerializedError {
+  const includeStack =
+    opts.includeStack ?? process.env["NODE_ENV"] === "development";
+  const depth = Math.max(0, opts.depth ?? 2);
+  const info = resolveErrorInfo(error);
+
+  return {
+    name: error.name,
+    cause: serializeCause(error.cause, {
+      depth: depth - 1,
+      includeStack,
+    }),
+    kind: info.kind,
+    layer: info.layer,
+    message: error.message,
+    stack: includeStack ? error.stack : undefined,
+  };
 }

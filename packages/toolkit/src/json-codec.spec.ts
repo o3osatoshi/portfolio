@@ -37,7 +37,7 @@ describe("json-codec encode", () => {
 
     const error = result.error;
     expect(error).toBeInstanceOf(Error);
-    expect(error.name).toBe("InfraSerializationError");
+    expect(error.name).toBe("InfrastructureSerializationError");
 
     expect(isRichError(error)).toBe(true);
     if (isRichError(error)) {
@@ -100,7 +100,7 @@ describe("json-codec decode", () => {
 
     const error = result.error;
     expect(error).toBeInstanceOf(Error);
-    expect(error.name).toBe("InfraSerializationError");
+    expect(error.name).toBe("InfrastructureSerializationError");
 
     expect(isRichError(error)).toBe(true);
     if (isRichError(error)) {
@@ -126,7 +126,7 @@ describe("json-codec decode", () => {
 
       const error = result.error;
       expect(error).toBeInstanceOf(Error);
-      expect(error.name).toBe("InfraSerializationError");
+      expect(error.name).toBe("InfrastructureSerializationError");
 
       expect(isRichError(error)).toBe(true);
       if (isRichError(error)) {

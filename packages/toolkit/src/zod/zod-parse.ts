@@ -16,7 +16,7 @@ import { newZodError } from "./zod-error";
  * @returns A function that yields a neverthrow Result containing the inferred schema output.
  * @example
  * ```ts
- * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
+ * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "Presentation" });
  * const res = parseUser(someInput);
  * // Result of parsed type
  * ```

@@ -21,11 +21,11 @@ describe("RichError", () => {
       },
       i18n: { key: "error.user_fetch", params: { id: 1 } },
       kind: "Timeout",
-      layer: "Infra",
+      layer: "Infrastructure",
       meta: { requestId: "req_123" },
     });
 
-    expect(err.name).toBe("InfraTimeoutError");
+    expect(err.name).toBe("InfrastructureTimeoutError");
     expect(err.message).toBe("FetchUser failed: dependency unavailable");
     expect(err.details?.hint).toBe("retry with backoff");
     expect(err.details?.impact).toBe("no data returned");
@@ -38,10 +38,29 @@ describe("RichError", () => {
 
   it("normalizes unknown values to RichError with defaults", () => {
     const err = toRichError("boom");
-    expect(err.kind).toBe("Unknown");
+    expect(err.kind).toBe("Internal");
     expect(err.layer).toBe("External");
     expect(err.details?.reason).toBe("boom");
     expect(err.cause).toBe("boom");
+  });
+
+  it("merges fallback details with extracted reason when reason is missing", () => {
+    const err = toRichError(new Error("boom"), {
+      details: { action: "FetchUser" },
+    });
+
+    expect(err.details).toEqual({
+      action: "FetchUser",
+      reason: "boom",
+    });
+  });
+
+  it("preserves fallback reason when explicitly provided", () => {
+    const err = toRichError(new Error("boom"), {
+      details: { reason: "override-reason" },
+    });
+
+    expect(err.details?.reason).toBe("override-reason");
   });
 
   it("builds summaries from details", () => {

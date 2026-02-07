@@ -52,7 +52,7 @@ describe("sleep", () => {
     const result = await resultAsync;
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) throw new Error("Expected sleep to reject");
-    expect(result.error.name).toBe("InfraCanceledError");
+    expect(result.error.name).toBe("InfrastructureCanceledError");
     const message = result.error.message;
     expect(message).toContain("operation aborted by AbortSignal");
     expect(result.error).toHaveProperty("cause", abortReason);
@@ -73,7 +73,7 @@ describe("sleep", () => {
     const result = await resultAsync;
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) throw new Error("Expected sleep to reject");
-    expect(result.error.name).toBe("InfraCanceledError");
+    expect(result.error.name).toBe("InfrastructureCanceledError");
     const message = result.error.message;
     expect(message).toContain("operation aborted by AbortSignal");
     expect(result.error).toHaveProperty("cause", abortReason);

@@ -44,7 +44,7 @@ const userSchema = z.object({ name: z.string(), age: z.number().min(0) });
 
 const parseUser = parseWith(userSchema, {
   details: { action: "ParseUser" },
-  layer: "UI",
+  layer: "Presentation",
 });
 const res = parseUser({ name: "alice", age: 20 }); // Result<User, Error>
 

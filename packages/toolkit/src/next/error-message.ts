@@ -7,10 +7,8 @@ const KIND_MESSAGE_MAP: Record<Kind, string> = {
     "A connected service had an issue. Please try again in a few moments.",
   BadRequest: "The request was invalid. Please check your input.",
   Canceled: "The operation was canceled.",
-  Config: "We hit a configuration issue. Please try again in a few moments.",
   Conflict: "Your change conflicted with another update. Reload and try again.",
-  Deadlock: "The system is busy right now. Please try again in a few moments.",
-  Integrity: "We ran into a data consistency issue. Reload and try again.",
+  Internal: "An unexpected internal error occurred.",
   MethodNotAllowed: "This action is not supported.",
   NotFound: "We could not find the requested item.",
   RateLimit: "Too many requests right now. Please wait a moment and try again.",
@@ -19,7 +17,6 @@ const KIND_MESSAGE_MAP: Record<Kind, string> = {
   Unauthorized: "Please sign in to continue.",
   Unavailable:
     "The service is busy right now. Please try again in a few moments.",
-  Unknown: "An unexpected error occurred.",
   Unprocessable: "We could not process your input. Please check and try again.",
 };
 

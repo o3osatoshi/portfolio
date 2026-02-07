@@ -60,7 +60,7 @@ export function formatFetchTarget({
  * Classification rules:
  * - Aborted/timeout signals map to `Timeout`.
  * - Network-level failures (DNS, connection refused, etc.) map to `Unavailable`.
- * - Unknown situations fall back to `Unknown`.
+ * - Other situations fall back to `Internal`.
  *
  * The resulting `Error` is tagged with `layer: "External"` and a descriptive message that includes
  * the HTTP method/URL when available.
@@ -169,7 +169,7 @@ function classifyFromCause(cause: unknown): Classification | undefined {
 
 function inferKind(request?: FetchRequest): Kind {
   const method = request?.method?.toUpperCase();
-  return method === "GET" || method === "HEAD" ? "Unavailable" : "Unknown";
+  return method === "GET" || method === "HEAD" ? "Unavailable" : "Internal";
 }
 
 function isAbortError(cause: unknown): boolean {

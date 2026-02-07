@@ -192,8 +192,10 @@ export function toRichError(
   if (isRichError(error)) return error;
 
   const resolved = resolveErrorInfo(error);
-  const reason = fallback.details?.reason ?? extractErrorMessage(error);
-  const details = fallback.details ?? (reason ? { reason } : undefined);
+  const details = mergeRichErrorDetails(
+    fallback.details,
+    extractErrorMessage(error),
+  );
 
   return newRichError({
     cause: error,
@@ -201,7 +203,7 @@ export function toRichError(
     details,
     i18n: fallback.i18n,
     isOperational: fallback.isOperational,
-    kind: fallback.kind ?? resolved.kind ?? "Unknown",
+    kind: fallback.kind ?? resolved.kind ?? "Internal",
     layer: fallback.layer ?? resolved.layer ?? "External",
     meta: fallback.meta,
   });
@@ -216,4 +218,23 @@ function attachCause(error: Error, cause: unknown) {
   } catch {
     // ignore defineProperty failure
   }
+}
+
+function mergeRichErrorDetails(
+  details: RichErrorDetails | undefined,
+  extractedReason: string | undefined,
+): RichErrorDetails | undefined {
+  if (!details && extractedReason === undefined) {
+    return undefined;
+  }
+
+  if (!details) {
+    return { reason: extractedReason };
+  }
+
+  if (details.reason !== undefined || extractedReason === undefined) {
+    return details;
+  }
+
+  return { ...details, reason: extractedReason };
 }
