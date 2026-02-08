@@ -8,6 +8,10 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { newApplicationError } from "../../application-error";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import { noopStepRunner, type StepRunner } from "../../services";
 
 const JOB_KEY = "store-ping";
@@ -81,9 +85,13 @@ export class StorePingUseCase {
               if (!found) {
                 return errAsync(
                   newApplicationError({
+                    code: applicationErrorCodes.STORE_PING_READBACK_NOT_FOUND,
                     details: {
                       action: "StorePing",
                       reason: "Transaction readback returned no record",
+                    },
+                    i18n: {
+                      key: applicationErrorI18nKeys.NOT_FOUND,
                     },
                     kind: "NotFound",
                   }),
@@ -174,9 +182,13 @@ function readPart(
   const part = parts.find((entry) => entry.type === type);
   if (!part) {
     throw newApplicationError({
+      code: applicationErrorCodes.STORE_PING_CONTEXT_PART_MISSING,
       details: {
         action: "StorePing",
         reason: `Missing date part: ${type}`,
+      },
+      i18n: {
+        key: applicationErrorI18nKeys.INTERNAL,
       },
       kind: "Internal",
     });

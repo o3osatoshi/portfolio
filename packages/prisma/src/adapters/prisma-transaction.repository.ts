@@ -60,6 +60,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
         ? ok<void>(undefined)
         : err(
             newRichError({
+              code: "PRISMA_TRANSACTION_DELETE_NOT_FOUND",
               details: {
                 action: "DeleteTransaction",
                 reason: "Transaction not found or not owned by user.",
@@ -123,6 +124,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
         ? ok<void>(undefined)
         : err(
             newRichError({
+              code: "PRISMA_TRANSACTION_UPDATE_NOT_FOUND",
               details: {
                 action: "UpdateTransaction",
                 reason: "Transaction not found or not owned by user.",

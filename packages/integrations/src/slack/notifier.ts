@@ -6,6 +6,7 @@ import type {
 import { err } from "neverthrow";
 
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import type { OverridableSlackMessage, SlackClient } from "./client";
 import type { SlackBlock, SlackMessage, SlackTextObject } from "./types";
 
@@ -24,6 +25,7 @@ export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
           err(
             newIntegrationError({
               cause,
+              code: integrationErrorCodes.SLACK_NOTIFY_FAILED,
               details: {
                 action: "Notify",
                 hint: "Check Slack channel permissions and token scopes.",

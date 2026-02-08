@@ -23,6 +23,7 @@ export function decode(value: string): Result<JsonContainer, RichError> {
     return err<JsonContainer, RichError>(
       newRichError({
         cause: v,
+        code: "JSON_CODEC_CONTAINER_EXPECTED",
         details: {
           action: "DecodeJsonContainer",
           hint: "Ensure the JSON string encodes an object (`{}`) or array (`[]`).",
@@ -54,6 +55,7 @@ export function encode(value: unknown): Result<string, RichError> {
     return err<string, RichError>(
       newRichError({
         cause,
+        code: "JSON_CODEC_ENCODE_FAILED",
         details: {
           action: "EncodeJson",
           hint: "Ensure the value is JSON-serializable.",
@@ -73,6 +75,7 @@ function _decode(value: string): Result<JsonValue, RichError> {
     return err<JsonValue, RichError>(
       newRichError({
         cause,
+        code: "JSON_CODEC_DECODE_FAILED",
         details: {
           action: "DecodeJson",
           hint: "Ensure the input string is valid JSON.",

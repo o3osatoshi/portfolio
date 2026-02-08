@@ -230,7 +230,7 @@ export function tryDeserializeRichError(
   const value = parsed.data;
   const rich = newRichError({
     cause: deserializeCause(value.cause),
-    code: value.code,
+    code: value.code ?? "RICH_ERROR_DESERIALIZED_WITHOUT_CODE",
     details: value.details,
     i18n: value.i18n,
     isOperational: value.isOperational,
@@ -281,7 +281,7 @@ function deserializeSerializedError(value: SerializedError): Error {
   if (value.kind && value.layer) {
     const rich = newRichError({
       cause,
-      code: value.code,
+      code: value.code ?? "RICH_ERROR_CAUSE_DESERIALIZED_WITHOUT_CODE",
       details: value.details,
       i18n: value.i18n,
       isOperational: value.isOperational,

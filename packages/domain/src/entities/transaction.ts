@@ -3,6 +3,7 @@ import { err, ok, Result } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { domainValidationError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type {
   Amount,
   CurrencyCode,
@@ -204,6 +205,7 @@ export function updateTransaction(
   if (tx.id !== id) {
     return err(
       domainValidationError({
+        code: domainErrorCodes.TRANSACTION_ID_MISMATCH,
         details: {
           action: "UpdateTransaction",
           reason: "Transaction ID mismatch",

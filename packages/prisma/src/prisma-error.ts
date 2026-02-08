@@ -57,6 +57,7 @@ export function newPrismaError({
     hint: details?.hint ?? hint,
     reason: details?.reason ?? reason,
   });
+  const resolveCode = (fallback: string): string => rest.code ?? fallback;
 
   if (isKnownRequestError(cause)) {
     const code = cause.code;
@@ -68,6 +69,7 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode("PRISMA_P2000_VALUE_TOO_LONG"),
           details: mergeDetails({
             hint: "Shorten value or alter schema.",
             reason: column ? `Value too long for ${column}` : "Value too long",
@@ -85,6 +87,7 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode("PRISMA_P2002_UNIQUE_CONSTRAINT"),
           details: mergeDetails({
             hint: "Use a different value for unique fields.",
             reason: target
@@ -100,6 +103,7 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode("PRISMA_P2003_FOREIGN_KEY_CONSTRAINT"),
           details: mergeDetails({
             hint: "Ensure related records exist before linking.",
             reason: "Foreign key constraint failed",
@@ -114,6 +118,11 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode(
+            code === "P2005"
+              ? "PRISMA_P2005_VALUE_OUT_OF_RANGE"
+              : "PRISMA_P2006_INVALID_VALUE",
+          ),
           details: mergeDetails({
             hint: "Check data types and constraints.",
             reason: code === "P2005" ? "Value out of range" : "Invalid value",
@@ -128,6 +137,11 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode(
+            code === "P2021"
+              ? "PRISMA_P2021_TABLE_NOT_FOUND"
+              : "PRISMA_P2022_COLUMN_NOT_FOUND",
+          ),
           details: mergeDetails({
             hint: "Run migrations or verify schema.",
             reason:
@@ -145,6 +159,7 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode("PRISMA_P2025_RECORD_NOT_FOUND"),
           details: mergeDetails({
             hint: "Verify where conditions or record id.",
             reason: m ?? "Record not found",
@@ -157,6 +172,7 @@ export function newPrismaError({
         return newRichError({
           ...rest,
           cause,
+          code: resolveCode(`PRISMA_${code}_KNOWN_REQUEST_ERROR`),
           details: mergeDetails({
             reason: `Known request error ${code}`,
           }),
@@ -171,6 +187,7 @@ export function newPrismaError({
     return newRichError({
       ...rest,
       cause,
+      code: resolveCode("PRISMA_VALIDATION_ERROR"),
       details: mergeDetails({
         hint: "Check schema types and provided data.",
         reason: "Invalid Prisma query or data",
@@ -204,6 +221,7 @@ export function newPrismaError({
     return newRichError({
       ...rest,
       cause,
+      code: resolveCode(`PRISMA_INIT_${kind.toUpperCase()}`),
       details: mergeDetails({
         hint:
           kind === "Unavailable"
@@ -222,6 +240,7 @@ export function newPrismaError({
     return newRichError({
       ...rest,
       cause,
+      code: resolveCode("PRISMA_RUST_PANIC"),
       details: mergeDetails({
         hint: "Inspect logs; restart the process.",
         reason: "Prisma engine panic",
@@ -243,6 +262,7 @@ export function newPrismaError({
     return newRichError({
       ...rest,
       cause,
+      code: resolveCode(`PRISMA_UNKNOWN_REQUEST_${kind.toUpperCase()}`),
       details: mergeDetails({
         reason: msg,
       }),
@@ -255,6 +275,7 @@ export function newPrismaError({
   return newRichError({
     ...rest,
     cause,
+    code: resolveCode("PRISMA_UNEXPECTED_ERROR"),
     details: mergeDetails({
       reason: "Unexpected error",
     }),

@@ -3,6 +3,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { newApplicationError } from "../../application-error";
+import { applicationErrorCodes } from "../../application-error-catalog";
 import { GetFxQuoteUseCase } from "./get-fx-quote";
 
 const h = vi.hoisted(() => {
@@ -69,6 +70,7 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
 
   it("propagates provider errors", async () => {
     const providerError = newApplicationError({
+      code: applicationErrorCodes.UNAVAILABLE,
       details: {
         action: "GetFxQuoteUseCaseSpec",
         reason: "provider failed",

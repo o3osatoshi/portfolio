@@ -4,6 +4,7 @@ import { err, ok, type Result } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { domainValidationError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -50,6 +51,7 @@ export function newDecimal(v: unknown): Result<DecimalString, RichError> {
     if (!d.isFinite()) {
       return err(
         domainValidationError({
+          code: domainErrorCodes.DECIMAL_NOT_FINITE,
           details: {
             action: "NewDecimal",
             reason: "Decimal must be finite",
@@ -61,6 +63,7 @@ export function newDecimal(v: unknown): Result<DecimalString, RichError> {
   } catch {
     return err(
       domainValidationError({
+        code: domainErrorCodes.DECIMAL_INVALID_INPUT,
         details: {
           action: "NewDecimal",
           reason: "Invalid decimal input",

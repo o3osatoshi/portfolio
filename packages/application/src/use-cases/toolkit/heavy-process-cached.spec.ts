@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { newApplicationError } from "../../application-error";
+import { applicationErrorCodes } from "../../application-error-catalog";
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
@@ -24,6 +25,7 @@ const CACHE_TTL_MS = 200_000;
 
 const testError = (reason: string) =>
   newApplicationError({
+    code: applicationErrorCodes.INTERNAL,
     details: {
       action: "HeavyProcessCachedUseCaseSpec",
       reason,

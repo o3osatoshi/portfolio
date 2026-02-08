@@ -5,6 +5,11 @@ import {
   type RichError,
 } from "@o3osatoshi/toolkit";
 
+import type {
+  ApplicationErrorCode,
+  ApplicationErrorI18n,
+} from "./application-error-catalog";
+
 /**
  * Enumerates normalized error categories produced by the application layer.
  */
@@ -27,74 +32,75 @@ export type ApplicationKind = Extract<
  * callers can progressively add context (action, impact, hints, etc.).
  */
 export type NewApplicationError = {
+  code: ApplicationErrorCode;
+  i18n?: ApplicationErrorI18n | undefined;
   kind: ApplicationKind;
-} & Omit<NewRichError, "layer">;
+} & ApplicationErrorBase;
+
+type ApplicationErrorBase = Omit<
+  NewRichError,
+  "code" | "i18n" | "kind" | "layer"
+>;
+
+type NewApplicationErrorWithoutKind = Omit<NewApplicationError, "kind">;
 
 /**
  * Application-layer error constructor wrapping @o3osatoshi/toolkit with layer "Application".
  * Use in application/use-case orchestration for consistent error classification.
  */
 export function newApplicationError({
+  code,
+  i18n,
   kind,
   ...rest
 }: NewApplicationError): RichError {
   return newRichError({
+    code,
+    i18n,
     ...rest,
     kind,
     layer: "Application",
   });
 }
 
+const withApplicationKind =
+  (kind: ApplicationKind) =>
+  (p: NewApplicationErrorWithoutKind): RichError =>
+    newApplicationError({ kind, ...p });
+
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Validation"`.
  */
-export const applicationValidationError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Validation", ...p });
+export const applicationValidationError = withApplicationKind("Validation");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="NotFound"`.
  */
-export const applicationNotFoundError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "NotFound", ...p });
+export const applicationNotFoundError = withApplicationKind("NotFound");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Conflict"`.
  */
-export const applicationConflictError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Conflict", ...p });
+export const applicationConflictError = withApplicationKind("Conflict");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Forbidden"`.
  */
-export const applicationForbiddenError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Forbidden", ...p });
+export const applicationForbiddenError = withApplicationKind("Forbidden");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Unauthorized"`.
  */
-export const applicationUnauthorizedError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Unauthorized", ...p });
+export const applicationUnauthorizedError = withApplicationKind("Unauthorized");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="RateLimit"`.
  */
-export const applicationRateLimitError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "RateLimit", ...p });
+export const applicationRateLimitError = withApplicationKind("RateLimit");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Timeout"`.
  */
-export const applicationTimeoutError = (p: Omit<NewApplicationError, "kind">) =>
-  newApplicationError({ kind: "Timeout", ...p });
+export const applicationTimeoutError = withApplicationKind("Timeout");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Unavailable"`.
  */
-export const applicationUnavailableError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Unavailable", ...p });
+export const applicationUnavailableError = withApplicationKind("Unavailable");
 /**
  * Convenience wrapper for {@link newApplicationError} with `kind="Internal"`.
  */
-export const applicationInternalError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Internal", ...p });
+export const applicationInternalError = withApplicationKind("Internal");

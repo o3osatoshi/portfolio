@@ -18,6 +18,7 @@ import {
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { type ExchangeRateApiPair, exchangeRateApiPairSchema } from "./schema";
 
 const CACHE_TTL_MS = 3_600_000;
@@ -127,6 +128,7 @@ function toFxQuote(
     return err(
       newIntegrationError({
         cause: res.data,
+        code: integrationErrorCodes.EXCHANGE_RATE_API_HTTP_ERROR,
         details: {
           action: "FetchExchangeRateApi",
           reason: formatHttpStatusReason({
@@ -147,6 +149,7 @@ function toFxQuote(
     return err(
       newIntegrationError({
         cause: pair,
+        code: integrationErrorCodes.EXCHANGE_RATE_API_LOGICAL_ERROR,
         details: {
           action: "FetchExchangeRateApi",
           reason: `ExchangeRate API error: ${detail}`,
@@ -159,6 +162,7 @@ function toFxQuote(
   if (pair?.conversion_rate === undefined) {
     return err(
       newIntegrationError({
+        code: integrationErrorCodes.EXCHANGE_RATE_API_MISSING_RATE,
         details: {
           action: "ParseExchangeRateApiResponse",
           reason: "ExchangeRate API response missing conversion rate.",

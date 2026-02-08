@@ -9,6 +9,7 @@ import {
   type IntegrationKind,
   newIntegrationError,
 } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import type {
   SlackBlock,
   SlackMessage,
@@ -99,6 +100,7 @@ export function createSlackClient(
           if (!res.response.ok) {
             return err(
               newIntegrationError({
+                code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
                 details: {
                   action: "SlackPostMessage",
                   reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
@@ -113,6 +115,7 @@ export function createSlackClient(
           if (!res.data.ok) {
             return err(
               newIntegrationError({
+                code: integrationErrorCodes.SLACK_API_LOGICAL_ERROR,
                 details: {
                   action: "SlackPostMessage",
                   reason: res.data.error ?? "Slack API returned ok=false",

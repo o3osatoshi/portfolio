@@ -57,6 +57,7 @@ export function sleep(
       const newCanceledError = () => {
         return newRichError({
           cause: signal.reason,
+          code: "SLEEP_ABORTED",
           details: {
             action: "Sleep",
             reason: "operation aborted by AbortSignal",

@@ -72,6 +72,7 @@ export function newZodError(options: NewZodError): RichError {
   return newRichError({
     ...rest,
     cause,
+    code: rest.code ?? inferZodCode(zIssues),
     details: {
       ...details,
       hint,
@@ -81,6 +82,7 @@ export function newZodError(options: NewZodError): RichError {
     layer,
   });
 }
+
 /**
  * Summarizes every issue inside a Zod error into a single readable string.
  *
@@ -120,6 +122,29 @@ function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
       return "Remove unknown fields from the payload.";
     default:
       return undefined;
+  }
+}
+function inferZodCode(issues: undefined | ZodIssue[]): string {
+  const first = issues?.[0];
+  if (!first) return "ZOD_VALIDATION_ERROR";
+
+  switch (first.code) {
+    case "invalid_format":
+      return "ZOD_INVALID_FORMAT";
+    case "invalid_type":
+      return "ZOD_INVALID_TYPE";
+    case "invalid_value":
+      return "ZOD_INVALID_VALUE";
+    case "invalid_union":
+      return "ZOD_INVALID_UNION";
+    case "too_big":
+      return "ZOD_TOO_BIG";
+    case "too_small":
+      return "ZOD_TOO_SMALL";
+    case "unrecognized_keys":
+      return "ZOD_UNRECOGNIZED_KEYS";
+    default:
+      return "ZOD_VALIDATION_ERROR";
   }
 }
 function isRecord(value: unknown): value is Record<string, unknown> {

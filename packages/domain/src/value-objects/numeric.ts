@@ -3,6 +3,7 @@ import { err, ok, type Result } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { domainValidationError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 import {
   type DecimalString,
@@ -48,6 +49,7 @@ export function newAmount(v: unknown): Result<Amount, RichError> {
   if (!isPositiveDecimal(r.value))
     return err(
       domainValidationError({
+        code: domainErrorCodes.AMOUNT_MUST_BE_POSITIVE,
         details: {
           action: "NewAmount",
           reason: "Amount must be > 0",
@@ -66,6 +68,7 @@ export function newFee(v: unknown): Result<Fee, RichError> {
   if (!isNonNegativeDecimal(r.value))
     return err(
       domainValidationError({
+        code: domainErrorCodes.FEE_MUST_BE_NON_NEGATIVE,
         details: {
           action: "NewFee",
           reason: "Fee must be >= 0",
@@ -84,6 +87,7 @@ export function newPrice(v: unknown): Result<Price, RichError> {
   if (!isPositiveDecimal(r.value))
     return err(
       domainValidationError({
+        code: domainErrorCodes.PRICE_MUST_BE_POSITIVE,
         details: {
           action: "NewPrice",
           reason: "Price must be > 0",

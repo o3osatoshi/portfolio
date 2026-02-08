@@ -5,6 +5,8 @@ import {
   type RichError,
 } from "@o3osatoshi/toolkit";
 
+import type { IntegrationErrorCode } from "./integration-error-catalog";
+
 /**
  * Supported error categories emitted from the integrations layer.
  */
@@ -32,6 +34,7 @@ export type IntegrationKind = Extract<
  * Additional context can be attached incrementally for better diagnostics.
  */
 export type NewIntegrationError = {
+  code: IntegrationErrorCode;
   kind: IntegrationKind;
 } & Omit<NewRichError, "layer">;
 

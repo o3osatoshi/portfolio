@@ -3,10 +3,12 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
 
 import { newApplicationError } from "../../application-error";
+import { applicationErrorCodes } from "../../application-error-catalog";
 import { GetTransactionsUseCase } from "./get-transactions";
 
 const testError = (reason: string) =>
   newApplicationError({
+    code: applicationErrorCodes.INTERNAL,
     details: {
       action: "GetTransactionsUseCaseSpec",
       reason,

@@ -90,6 +90,7 @@ export function newFetchError({
   return newRichError({
     ...rest,
     cause,
+    code: rest.code ?? resolveFetchErrorCode(kind ?? classification.kind),
     details: {
       ...details,
       hint: details?.hint ?? classification.hint,
@@ -182,4 +183,39 @@ function isAbortError(cause: unknown): boolean {
   if (!message) return false;
 
   return /\babort(ed)?\b/.test(message) || /\babortcontroller\b/.test(message);
+}
+
+function resolveFetchErrorCode(kind: Kind): string {
+  switch (kind) {
+    case "BadGateway":
+      return "FETCH_BAD_GATEWAY";
+    case "BadRequest":
+      return "FETCH_BAD_REQUEST";
+    case "Canceled":
+      return "FETCH_CANCELED";
+    case "Conflict":
+      return "FETCH_CONFLICT";
+    case "Forbidden":
+      return "FETCH_FORBIDDEN";
+    case "MethodNotAllowed":
+      return "FETCH_METHOD_NOT_ALLOWED";
+    case "NotFound":
+      return "FETCH_NOT_FOUND";
+    case "RateLimit":
+      return "FETCH_RATE_LIMIT";
+    case "Serialization":
+      return "FETCH_SERIALIZATION";
+    case "Timeout":
+      return "FETCH_TIMEOUT";
+    case "Unauthorized":
+      return "FETCH_UNAUTHORIZED";
+    case "Unavailable":
+      return "FETCH_UNAVAILABLE";
+    case "Unprocessable":
+      return "FETCH_UNPROCESSABLE";
+    case "Validation":
+      return "FETCH_VALIDATION";
+    default:
+      return "FETCH_INTERNAL";
+  }
 }

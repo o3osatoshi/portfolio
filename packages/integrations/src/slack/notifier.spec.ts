@@ -2,6 +2,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { createSlackNotifier } from "./notifier";
 
 describe("integrations/slack createSlackNotifier", () => {
@@ -115,6 +116,7 @@ describe("integrations/slack createSlackNotifier", () => {
     const postMessageMock = vi.fn(() =>
       errAsync(
         newIntegrationError({
+          code: integrationErrorCodes.SLACK_NOTIFY_FAILED,
           details: {
             action: "SlackNotifierSpec",
             reason: "slack down",

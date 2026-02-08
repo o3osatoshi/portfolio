@@ -5,6 +5,8 @@ import {
   type RichError,
 } from "@o3osatoshi/toolkit";
 
+import type { DomainErrorCode } from "./domain-error-catalog";
+
 /**
  * Supported error categories emitted from the domain layer.
  */
@@ -26,6 +28,7 @@ export type DomainKind = Extract<
  * Additional context can be attached incrementally for better diagnostics.
  */
 export type NewDomainError = {
+  code: DomainErrorCode;
   kind: DomainKind;
 } & Omit<NewRichError, "layer">;
 

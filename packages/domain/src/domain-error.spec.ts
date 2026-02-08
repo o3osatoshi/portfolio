@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { domainValidationError, newDomainError } from "./domain-error";
+import { domainErrorCodes } from "./domain-error-catalog";
 
 describe("domain-error", () => {
   it("newDomainError shapes name and message", () => {
     const err = newDomainError({
+      code: domainErrorCodes.TRANSACTION_ID_MISMATCH,
       details: {
         action: "CreateTransaction",
         hint: "use a new id",
@@ -19,6 +21,7 @@ describe("domain-error", () => {
 
   it("domainValidationError helper sets kind Validation", () => {
     const err = domainValidationError({
+      code: domainErrorCodes.TRANSACTION_TYPE_INVALID,
       details: { action: "Parse", reason: "bad" },
     });
     expect(err.name).toBe("DomainValidationError");

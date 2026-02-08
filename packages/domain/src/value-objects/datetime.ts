@@ -3,6 +3,7 @@ import { err, ok, type Result } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { domainValidationError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -21,6 +22,7 @@ export function newDateTime(v: unknown): Result<DateTime, RichError> {
   if (!(v instanceof Date))
     return err(
       domainValidationError({
+        code: domainErrorCodes.DATETIME_NOT_DATE,
         details: {
           action: "NewDateTime",
           reason: "DateTime must be a Date",
@@ -30,6 +32,7 @@ export function newDateTime(v: unknown): Result<DateTime, RichError> {
   if (Number.isNaN(v.getTime()))
     return err(
       domainValidationError({
+        code: domainErrorCodes.DATETIME_INVALID,
         details: {
           action: "NewDateTime",
           reason: "DateTime is invalid",

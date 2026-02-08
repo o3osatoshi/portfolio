@@ -3,6 +3,7 @@ import { err, ok, type Result } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { domainValidationError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -23,6 +24,7 @@ export function newTransactionType(
   if (v === "BUY" || v === "SELL") return ok(v as TransactionType);
   return err(
     domainValidationError({
+      code: domainErrorCodes.TRANSACTION_TYPE_INVALID,
       details: {
         action: "NewTransactionType",
         reason: "TransactionType must be BUY or SELL",

@@ -3,10 +3,12 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { withCache } from "./with-cache";
 
 const testError = (reason: string) =>
   newIntegrationError({
+    code: integrationErrorCodes.CACHE_READ_FAILED,
     details: {
       action: "WithCacheSpec",
       reason,

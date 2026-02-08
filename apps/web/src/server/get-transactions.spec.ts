@@ -57,7 +57,7 @@ vi.mock("@/env/server", () => ({
 }));
 
 import { getTag } from "@/utils/nav-handler";
-import { webUnauthorizedError } from "@/utils/web-error";
+import { webErrorCodes, webUnauthorizedError } from "@/utils/web-error";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
@@ -117,6 +117,7 @@ describe("getTransactions", () => {
       errAsync(
         webUnauthorizedError({
           action: "DecodeAuthToken",
+          code: webErrorCodes.AUTH_USER_ID_MISSING,
           reason: "Session token is missing a user id.",
         }),
       ),
@@ -133,6 +134,7 @@ describe("getTransactions", () => {
   it("returns Err and uses short cache life when usecase fails", async () => {
     const userId = "u1";
     const error = newRichError({
+      code: "WEB_GET_TRANSACTIONS_PERSISTENCE_UNAVAILABLE",
       details: {
         action: "FindTransactionsByUserId",
         reason: "Database unavailable",

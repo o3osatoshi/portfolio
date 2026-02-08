@@ -2,6 +2,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { withRetry } from "./with-retry";
 
 const buildResponse = (status: number, headers: Headers, ok = status < 400) =>
@@ -71,6 +72,7 @@ describe("integrations/http withRetry", () => {
     const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0);
 
     const error = newIntegrationError({
+      code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
       details: {
         action: "WithRetrySpec",
         reason: "timeout",

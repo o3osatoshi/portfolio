@@ -22,6 +22,7 @@ export function createHeaders(): ResultAsync<
   return ResultAsync.fromPromise(cookies(), (cause) =>
     newRichError({
       cause,
+      code: "WEB_RPC_HEADERS_COOKIE_READ_FAILED",
       details: { action: "Call cookies" },
       kind: "Internal",
       layer: "Infrastructure",

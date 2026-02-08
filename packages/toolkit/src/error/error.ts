@@ -199,7 +199,7 @@ export function toRichError(
 
   return newRichError({
     cause: error,
-    code: fallback.code,
+    code: fallback.code ?? "RICH_ERROR_NORMALIZED",
     details,
     i18n: fallback.i18n,
     isOperational: fallback.isOperational,

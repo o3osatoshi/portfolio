@@ -8,6 +8,10 @@ import {
   applicationForbiddenError,
   applicationNotFoundError,
 } from "../../application-error";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import type { UpdateTransactionRequest } from "../../dtos";
 
 /**
@@ -36,9 +40,13 @@ export class UpdateTransactionUseCase {
           tx === null
             ? err(
                 applicationNotFoundError({
+                  code: applicationErrorCodes.TRANSACTION_NOT_FOUND,
                   details: {
                     action: "UpdateTransaction",
                     reason: "Transaction not found",
+                  },
+                  i18n: {
+                    key: applicationErrorI18nKeys.NOT_FOUND,
                   },
                 }),
               )
@@ -48,9 +56,13 @@ export class UpdateTransactionUseCase {
           tx.userId !== userId
             ? err(
                 applicationForbiddenError({
+                  code: applicationErrorCodes.TRANSACTION_UPDATE_FORBIDDEN,
                   details: {
                     action: "UpdateTransaction",
                     reason: "Transaction does not belong to user",
+                  },
+                  i18n: {
+                    key: applicationErrorI18nKeys.FORBIDDEN,
                   },
                 }),
               )

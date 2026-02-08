@@ -5,6 +5,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 import { resolveErrorKind, sleep, toRichError } from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import type {
   SmartFetch,
   SmartFetchRequest,
@@ -143,6 +144,7 @@ export function withRetry(
         throw (
           lastError ??
           newIntegrationError({
+            code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
             details: {
               action: "RetryExternalApi",
               reason: `Retry attempts exhausted (attempts: ${attempts}).`,
