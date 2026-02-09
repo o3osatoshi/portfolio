@@ -29,7 +29,6 @@
  */
 import {
   type Kind,
-  resolveErrorKind,
   type SerializedError,
   type SerializeOptions,
   serializeRichError,
@@ -132,12 +131,5 @@ export function toHttpErrorResponse(
 ): ErrorHttpResponse {
   const rich = toRichError(error);
   const body = serializeRichError(rich, options);
-  return { body, statusCode: status ?? deriveStatusFromError(rich) };
-}
-
-/** @internal Derive HTTP status from an Error name (Kind heuristic). */
-function deriveStatusFromError(e: Error): ErrorStatusCode {
-  const kind = resolveErrorKind(e);
-  if (kind) return KIND_TO_STATUS[kind];
-  return 500;
+  return { body, statusCode: status ?? KIND_TO_STATUS[rich.kind] ?? 500 };
 }

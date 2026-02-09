@@ -55,13 +55,6 @@ describe("toHttpErrorResponse", () => {
     expect(res.statusCode).toBe(500);
   });
 
-  it("treats ZodError as validation (400)", () => {
-    const e = new Error("invalid");
-    e.name = "ZodError";
-    const res = toHttpErrorResponse(e);
-    expect(res.statusCode).toBe(400);
-  });
-
   it("includes serialized cause and respects includeStack option", () => {
     const cause = new Error("inner");
     const top = new Error("top", { cause });

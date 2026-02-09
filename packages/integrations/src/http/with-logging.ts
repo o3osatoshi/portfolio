@@ -2,7 +2,6 @@ import type { z } from "zod";
 
 import type { Attributes, Logger } from "@o3osatoshi/logging";
 import type { RichError } from "@o3osatoshi/toolkit";
-import { resolveErrorInfo } from "@o3osatoshi/toolkit";
 
 import type {
   SmartFetch,
@@ -114,12 +113,11 @@ function buildErrorAttributes<S extends z.ZodType>(
   redactUrl: (url: string) => string,
   requestName?: string,
 ): Attributes {
-  const { kind, layer } = resolveErrorInfo(error);
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
-    ...(kind ? { "error.kind": kind } : {}),
-    ...(layer ? { "error.layer": layer } : {}),
     "error.name": error.name,
+    "error.kind": error.kind,
+    "error.layer": error.layer,
     "error.message": error.message,
     "http.method": (request.method ?? "GET").toUpperCase(),
     "http.url": redactUrl(request.url),
@@ -139,7 +137,8 @@ function buildMetricsAttributes<S extends z.ZodType>({
   requestName?: string | undefined;
   response?: SmartFetchResponse | undefined;
 }): Attributes {
-  const { kind, layer } = error ? resolveErrorInfo(error) : {};
+  const kind = error?.kind;
+  const layer = error?.layer;
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
     ...(kind ? { "error.kind": kind } : {}),
@@ -188,7 +187,7 @@ function emitMetrics<S extends z.ZodType>({
 }
 
 function resolveErrorLevel(error: RichError): "error" | "warn" {
-  const { kind } = resolveErrorInfo(error);
+  const kind = error.kind;
   if (!kind) return "error";
   if (
     kind === "BadRequest" ||

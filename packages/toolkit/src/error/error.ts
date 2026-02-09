@@ -1,6 +1,6 @@
 import type { JsonObject } from "../types";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
-import { composeErrorName, parseErrorName } from "./error-name";
+import { composeErrorName } from "./error-name";
 import type {
   Kind,
   Layer,
@@ -135,52 +135,6 @@ export function newRichError(params: NewRichError): RichError {
 }
 
 /**
- * Resolve kind/layer from known error forms.
- *
- * @public
- */
-export function resolveErrorInfo(error: unknown): {
-  kind?: Kind;
-  layer?: Layer;
-} {
-  if (isRichError(error)) {
-    return { kind: error.kind, layer: error.layer };
-  }
-
-  const name = extractErrorName(error);
-  const { kind, layer } = parseErrorName(name);
-  if (kind || layer) {
-    return {
-      ...(kind ? { kind } : {}),
-      ...(layer ? { layer } : {}),
-    };
-  }
-
-  if (name === "ZodError") return { kind: "Validation" };
-  if (name === "AbortError") return { kind: "Canceled" };
-
-  return {};
-}
-
-/**
- * Resolve just the {@link Kind} from an unknown error.
- *
- * @public
- */
-export function resolveErrorKind(error: unknown): Kind | undefined {
-  return resolveErrorInfo(error).kind;
-}
-
-/**
- * Resolve just the {@link Layer} from an unknown error.
- *
- * @public
- */
-export function resolveErrorLayer(error: unknown): Layer | undefined {
-  return resolveErrorInfo(error).layer;
-}
-
-/**
  * Derive default operationality from error kind.
  *
  * @public
@@ -212,13 +166,12 @@ export function toRichError(
 ): RichError {
   if (isRichError(error)) return error;
 
-  const resolved = resolveErrorInfo(error);
   const details = mergeRichErrorDetails(
     fallback.details,
     extractErrorMessage(error),
   );
 
-  const kind = fallback.kind ?? resolved.kind ?? "Internal";
+  const kind = fallback.kind ?? "Internal";
   const meta = mergeRichErrorMeta(fallback.meta, error);
 
   return newRichError({
@@ -228,7 +181,7 @@ export function toRichError(
     i18n: fallback.i18n,
     isOperational: fallback.isOperational ?? resolveOperationalFromKind(kind),
     kind,
-    layer: fallback.layer ?? resolved.layer ?? "External",
+    layer: fallback.layer ?? "External",
     meta,
   });
 }
