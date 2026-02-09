@@ -17,14 +17,16 @@ describe("application-error", () => {
   });
 
   it("allows code and i18n.key to be managed independently", () => {
-    newApplicationError({
+    const err = newApplicationError({
       code: "APP_TIMEOUT",
       i18n: { key: "errors.application.internal" },
       isOperational: true,
       kind: "Timeout",
     });
 
-    expect(true).toBe(true);
+    expect(err.code).toBe("APP_TIMEOUT");
+    expect(err.i18n).toEqual({ key: "errors.application.internal" });
+    expect(err.kind).toBe("Timeout");
   });
 
   it("enforces known code and i18n key unions at compile time", () => {

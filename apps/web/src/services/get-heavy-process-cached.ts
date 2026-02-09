@@ -20,8 +20,7 @@ export function getHeavyProcessCached(): ResultAsync<
   const client = createEdgeClient({ init: { cache: "no-store" } });
   const request = { method: "GET", url: getPath("heavy-process-cached") };
 
-  // @ts-expect-error
-  return ResultAsync.fromPromise(
+  return ResultAsync.fromPromise<Response, RichError>(
     client.edge.public.heavy.cached.$get(),
     (cause) =>
       newFetchError({
