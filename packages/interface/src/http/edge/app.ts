@@ -118,7 +118,7 @@ function buildEdgePrivateRoutes() {
       const authUser = c.get("authUser");
       return respond<User>(c)(
         parseWith<typeof userSchema>(userSchema, {
-          action: "Parse user from session",
+          action: "ParseSessionUser",
         })(authUser?.session.user ?? {}),
       );
     });

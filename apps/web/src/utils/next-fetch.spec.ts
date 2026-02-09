@@ -146,7 +146,7 @@ describe("utils/next-fetch nextFetch", () => {
     expect(res.error.name).toBe("ExternalUnavailableError");
     expect(isRichError(res.error)).toBe(true);
     if (isRichError(res.error)) {
-      expect(res.error.details?.action).toBe("Fetch /external");
+      expect(res.error.details?.action).toBe("FetchExternalApi");
     }
   });
 
@@ -176,7 +176,9 @@ describe("utils/next-fetch nextFetch", () => {
     expect(res.error.name).toBe("ExternalSerializationError");
     expect(isRichError(res.error)).toBe(true);
     if (isRichError(res.error)) {
-      expect(res.error.details?.action).toBe("Deserialize body for /external");
+      expect(res.error.details?.action).toBe(
+        "DeserializeExternalApiResponseBody",
+      );
     }
   });
 });

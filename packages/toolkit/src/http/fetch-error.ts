@@ -96,6 +96,7 @@ export function newFetchError({
     code: rest.code ?? resolveFetchErrorCode(kind ?? classification.kind),
     details: {
       ...details,
+      action: details?.action ?? "FetchExternalApi",
       hint: details?.hint ?? classification.hint,
       reason: details?.reason ?? reason,
     },

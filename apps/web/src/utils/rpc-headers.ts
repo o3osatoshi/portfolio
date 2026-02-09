@@ -23,7 +23,10 @@ export function createHeaders(): ResultAsync<
     newRichError({
       cause,
       code: "WEB_RPC_HEADERS_COOKIE_READ_FAILED",
-      details: { action: "Call cookies" },
+      details: {
+        action: "ReadRequestCookies",
+        reason: "Failed to read request cookies for RPC forwarding.",
+      },
       i18n: { key: "errors.application.internal" },
       isOperational: false,
       kind: "Internal",

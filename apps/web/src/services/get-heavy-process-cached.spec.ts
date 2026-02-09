@@ -99,7 +99,7 @@ describe("getHeavyProcessCached", () => {
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
     expect(res.error.message).toContain(
-      "Deserialize error body for getHeavyProcessCached",
+      "DeserializeExternalApiErrorBody",
     );
   });
 
@@ -120,7 +120,7 @@ describe("getHeavyProcessCached", () => {
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
     expect(res.error.message).toContain(
-      "Deserialize error body for getHeavyProcessCached",
+      "DeserializeExternalApiErrorBody",
     );
   });
 
@@ -141,7 +141,7 @@ describe("getHeavyProcessCached", () => {
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
     expect(res.error.message).toContain(
-      "Deserialize body for getHeavyProcessCached",
+      "DeserializeExternalApiResponseBody",
     );
   });
 
@@ -156,7 +156,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalUnavailableError");
-    expect(res.error.message).toContain("Fetch heavy process cached failed");
+    expect(res.error.message).toContain("FetchHeavyProcessCached failed");
     expect(res.error.message).toContain(getPath("heavy-process-cached"));
   });
 });

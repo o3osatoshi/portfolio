@@ -73,7 +73,7 @@ describe("utils/rpc-headers createHeaders", () => {
     expect(res.error.name).toBe("InfrastructureInternalError");
     expect(isRichError(res.error)).toBe(true);
     if (isRichError(res.error)) {
-      expect(res.error.details?.action).toBe("Call cookies");
+      expect(res.error.details?.action).toBe("ReadRequestCookies");
     }
   });
 });

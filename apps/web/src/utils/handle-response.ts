@@ -28,14 +28,14 @@ export function handleResponse<T>(
     return ResultAsync.fromPromise(res.json(), (cause) =>
       newFetchError({
         cause,
-        details: { action: `Deserialize error body for ${context}` },
+        details: { action: "DeserializeExternalApiErrorBody" },
         kind: "Serialization",
         request,
       }),
     ).andThen((body) =>
       errAsync(
         deserializeRichError(body, {
-          action: `Deserialize error body for ${context}`,
+          action: "DeserializeExternalApiErrorBody",
           layer: "External",
           meta: {
             context,
@@ -51,7 +51,7 @@ export function handleResponse<T>(
   return ResultAsync.fromPromise(res.json(), (cause) =>
     newFetchError({
       cause,
-      details: { action: `Deserialize body for ${context}` },
+      details: { action: "DeserializeExternalApiResponseBody" },
       kind: "Serialization",
       request,
     }),

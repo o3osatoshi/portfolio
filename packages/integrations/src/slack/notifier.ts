@@ -27,7 +27,7 @@ export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
               cause,
               code: integrationErrorCodes.SLACK_NOTIFY_FAILED,
               details: {
-                action: "Notify",
+                action: "NotifySlack",
                 hint: "Check Slack channel permissions and token scopes.",
                 impact: "notification could not be delivered",
                 reason: "Slack notification failed",

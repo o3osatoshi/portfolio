@@ -73,14 +73,16 @@ export function nextFetch(
     (cause) =>
       newFetchError({
         cause,
-        details: { action: `Fetch ${queryPath}` },
+        details: { action: "FetchExternalApi" },
         request: { method: "GET", url: url.href },
       }),
   ).andThen((response) =>
     ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
       newFetchError({
         cause,
-        details: { action: `Deserialize body for ${queryPath}` },
+        details: {
+          action: "DeserializeExternalApiResponseBody",
+        },
         kind: "Serialization",
         request: { method: "GET", url: url.href },
       }),

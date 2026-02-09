@@ -40,9 +40,7 @@ describe("utils/handle-response", () => {
 
     expect(result.error).toBeInstanceOf(Error);
     expect(result.error.name).toBe("ExternalSerializationError");
-    expect(result.error.message).toContain(
-      "Deserialize error body for getTransactions",
-    );
+    expect(result.error.message).toContain("DeserializeExternalApiErrorBody");
   });
 
   it("returns Ok with parsed body when response is successful", async () => {

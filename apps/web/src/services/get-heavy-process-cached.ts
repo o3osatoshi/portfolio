@@ -28,7 +28,7 @@ export function getHeavyProcessCached(): ResultAsync<
     (cause) =>
       newFetchError({
         cause,
-        details: { action: "Fetch heavy process cached" },
+        details: { action: "FetchHeavyProcessCached" },
         request,
       }),
   ).andThen((res) =>
