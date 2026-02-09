@@ -101,7 +101,9 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("DomainValidationError");
-    expect(result.error.i18n).toBeUndefined();
+    expect(result.error.i18n).toEqual({
+      key: applicationErrorI18nKeys.VALIDATION,
+    });
   });
 
   it("returns validation error when quote is invalid", async () => {
@@ -112,6 +114,8 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("DomainValidationError");
-    expect(result.error.i18n).toBeUndefined();
+    expect(result.error.i18n).toEqual({
+      key: applicationErrorI18nKeys.VALIDATION,
+    });
   });
 });

@@ -5,6 +5,7 @@ import { Result, type ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import type { DeleteTransactionRequest } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 /**
  * Use case encapsulating the deletion of a transaction for a given user.
@@ -22,6 +23,7 @@ export class DeleteTransactionUseCase {
     return Result.combine([newTransactionId(req.id), newUserId(req.userId)])
       .asyncAndThen(([transactionId, userId]) =>
         this.repo.delete(transactionId, userId),
-      );
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

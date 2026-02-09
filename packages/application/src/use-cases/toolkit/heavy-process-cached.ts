@@ -7,6 +7,7 @@ import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
 } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 import { HeavyProcessUseCase } from "./heavy-process";
 
 const CACHE_KEY_PREFIX = "edge:public:heavy";
@@ -49,6 +50,7 @@ export class HeavyProcessCachedUseCase {
             .orElse(() => okAsync(null))
             .map(() => ({ ...heavyProcess, cached: false })),
         );
-      });
+      })
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

@@ -4,6 +4,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 import { sleep } from "@o3osatoshi/toolkit";
 
 import type { HeavyProcessResponse } from "../../dtos/heavy-process.res.dto";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 export class HeavyProcessUseCase {
   /**
@@ -16,6 +17,8 @@ export class HeavyProcessUseCase {
    * current timestamp, or an {@link Error} if the sleep operation fails.
    */
   execute(): ResultAsync<HeavyProcessResponse, RichError> {
-    return sleep(3_000).map(() => ({ timestamp: new Date() }));
+    return sleep(3_000)
+      .map(() => ({ timestamp: new Date() }))
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

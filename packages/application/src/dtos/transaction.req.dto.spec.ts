@@ -32,6 +32,9 @@ describe("application/dtos: transaction.req.dto parsers", () => {
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("ApplicationValidationError");
+      expect(res.error.i18n).toEqual({
+        key: "errors.application.validation",
+      });
       expect(res.error.message).toContain("currency:");
     }
   });

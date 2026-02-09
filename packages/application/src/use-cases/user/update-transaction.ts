@@ -12,6 +12,7 @@ import {
   applicationErrorI18nKeys,
 } from "../../application-error-catalog";
 import type { UpdateTransactionRequest } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 /**
  * Use case that coordinates ownership checks and domain validation before
@@ -74,6 +75,7 @@ export class UpdateTransactionUseCase {
           )
           .andThen((tx) => updateTransaction(tx, req))
           .andThen((updatedTx) => this.repo.update(updatedTx)),
-      );
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

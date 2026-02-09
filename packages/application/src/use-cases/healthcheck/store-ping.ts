@@ -12,6 +12,7 @@ import {
   applicationErrorCodes,
   applicationErrorI18nKeys,
 } from "../../application-error-catalog";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 import { noopStepRunner, type StepRunner } from "../../services";
 
 const JOB_KEY = "store-ping";
@@ -148,7 +149,8 @@ export class StorePingUseCase {
               });
             }),
           ),
-      );
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }
 

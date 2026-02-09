@@ -9,6 +9,7 @@ import {
   type GetTransactionsResponse,
   toTransactionsResponse,
 } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 /**
  * Use case that fetches all transactions for a given user while enforcing
@@ -28,6 +29,7 @@ export class GetTransactionsUseCase {
   ): ResultAsync<GetTransactionsResponse, RichError> {
     return newUserId(req.userId).asyncAndThen((userId) =>
       this.repo.findByUserId(userId).map(toTransactionsResponse),
-    );
+    )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

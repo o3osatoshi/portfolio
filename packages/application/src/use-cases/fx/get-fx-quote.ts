@@ -6,6 +6,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 
 import type { GetFxQuoteRequest, GetFxQuoteResponse } from "../../dtos";
 import { toFxQuoteResponse } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 /**
  * Use case that fetches the latest FX quote for a currency pair.
@@ -26,6 +27,7 @@ export class GetFxQuoteUseCase {
     ])
       .asyncAndThen(([base, quote]) =>
         this.provider.getRate({ base, quote }).map(toFxQuoteResponse),
-      );
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }
