@@ -2,12 +2,6 @@ import { z } from "zod";
 
 import { parseWith } from "@o3osatoshi/toolkit";
 
-import { toApplicationError } from "../application-error";
-import {
-  applicationErrorCodes,
-  applicationErrorI18nKeys,
-} from "../application-error-catalog";
-
 const currencyCodeSchema = z
   .string()
   .regex(/^[A-Z]{3}$/i, "Must be a 3-letter currency code")
@@ -32,12 +26,4 @@ export type GetFxQuoteRequest = z.infer<typeof getFxQuoteRequestSchema>;
 export const parseGetFxQuoteRequest = (input: unknown) =>
   parseWith(getFxQuoteRequestSchema, {
     action: "ParseGetFxQuoteRequest",
-  })(input).mapErr((cause) =>
-    toApplicationError({
-      action: "ParseGetFxQuoteRequest",
-      cause,
-      code: applicationErrorCodes.GET_FX_QUOTE_REQUEST_INVALID,
-      i18n: { key: applicationErrorI18nKeys.VALIDATION },
-      kind: "Validation",
-    }),
-  );
+  })(input);

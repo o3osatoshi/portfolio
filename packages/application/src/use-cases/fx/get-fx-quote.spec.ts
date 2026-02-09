@@ -100,8 +100,8 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(h.getRateMock).not.toHaveBeenCalled();
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("ApplicationValidationError");
-    expect(result.error.i18n?.key).toBe("errors.application.validation");
+    expect(result.error.name).toBe("DomainValidationError");
+    expect(result.error.i18n).toBeUndefined();
   });
 
   it("returns validation error when quote is invalid", async () => {
@@ -111,7 +111,7 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(h.getRateMock).not.toHaveBeenCalled();
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("ApplicationValidationError");
-    expect(result.error.i18n?.key).toBe("errors.application.validation");
+    expect(result.error.name).toBe("DomainValidationError");
+    expect(result.error.i18n).toBeUndefined();
   });
 });

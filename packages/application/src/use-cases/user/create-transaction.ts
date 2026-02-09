@@ -4,8 +4,6 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { toApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
 import {
   type CreateTransactionRequest,
   type CreateTransactionResponse,
@@ -28,16 +26,8 @@ export class CreateTransactionUseCase {
   execute(
     req: CreateTransactionRequest,
   ): ResultAsync<CreateTransactionResponse, RichError> {
-    return createTransaction(req)
-      .asyncAndThen((transaction) =>
-        this.repo.create(transaction).map(toTransactionResponse),
-      )
-      .mapErr((cause) =>
-        toApplicationError({
-          action: "CreateTransaction",
-          cause,
-          code: applicationErrorCodes.CREATE_TRANSACTION_FAILED,
-        }),
-      );
+    return createTransaction(req).asyncAndThen((transaction) =>
+      this.repo.create(transaction).map(toTransactionResponse),
+    );
   }
 }

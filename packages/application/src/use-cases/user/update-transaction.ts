@@ -6,7 +6,6 @@ import type { RichError } from "@o3osatoshi/toolkit";
 
 import {
   newApplicationError,
-  toApplicationError,
 } from "../../application-error";
 import {
   applicationErrorCodes,
@@ -75,13 +74,6 @@ export class UpdateTransactionUseCase {
           )
           .andThen((tx) => updateTransaction(tx, req))
           .andThen((updatedTx) => this.repo.update(updatedTx)),
-      )
-      .mapErr((cause) =>
-        toApplicationError({
-          action: "UpdateTransaction",
-          cause,
-          code: applicationErrorCodes.UPDATE_TRANSACTION_FAILED,
-        }),
       );
   }
 }

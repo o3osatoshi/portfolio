@@ -4,8 +4,6 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { toApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
 import {
   type GetTransactionsRequest,
   type GetTransactionsResponse,
@@ -28,16 +26,8 @@ export class GetTransactionsUseCase {
   execute(
     req: GetTransactionsRequest,
   ): ResultAsync<GetTransactionsResponse, RichError> {
-    return newUserId(req.userId)
-      .asyncAndThen((userId) =>
-        this.repo.findByUserId(userId).map(toTransactionsResponse),
-      )
-      .mapErr((cause) =>
-        toApplicationError({
-          action: "GetTransactions",
-          cause,
-          code: applicationErrorCodes.GET_TRANSACTIONS_FAILED,
-        }),
-      );
+    return newUserId(req.userId).asyncAndThen((userId) =>
+      this.repo.findByUserId(userId).map(toTransactionsResponse),
+    );
   }
 }

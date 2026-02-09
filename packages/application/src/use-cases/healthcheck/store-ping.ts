@@ -7,10 +7,7 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import {
-  newApplicationError,
-  toApplicationError,
-} from "../../application-error";
+import { newApplicationError } from "../../application-error";
 import {
   applicationErrorCodes,
   applicationErrorI18nKeys,
@@ -151,13 +148,6 @@ export class StorePingUseCase {
               });
             }),
           ),
-      )
-      .mapErr((cause) =>
-        toApplicationError({
-          action: "StorePing",
-          cause,
-          code: applicationErrorCodes.STORE_PING_FAILED,
-        }),
       );
   }
 }

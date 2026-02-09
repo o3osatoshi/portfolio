@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { newApplicationError, toApplicationError } from "./application-error";
+import { newApplicationError } from "./application-error";
 
 describe("application-error", () => {
   it("keeps explicit i18n payload when provided", () => {
@@ -14,37 +14,6 @@ describe("application-error", () => {
 
     expect(err.code).toBe("APP_VALIDATION");
     expect(err.i18n).toEqual({ key: "errors.application.validation" });
-  });
-
-  it("toApplicationError infers i18n from normalized kind", () => {
-    const err = toApplicationError({
-      action: "LoadTransactions",
-      cause: new Error("boom"),
-      code: "APP_GET_TRANSACTIONS_FAILED",
-      kind: "Timeout",
-    });
-
-    expect(err.i18n).toEqual({
-      key: "errors.application.timeout",
-    });
-    expect(err.name).toBe("ApplicationTimeoutError");
-  });
-
-  it("toApplicationError keeps existing application errors with i18n", () => {
-    const existing = newApplicationError({
-      code: "APP_NOT_FOUND",
-      i18n: { key: "errors.application.not_found" },
-      isOperational: true,
-      kind: "NotFound",
-    });
-
-    const wrapped = toApplicationError({
-      action: "AnyAction",
-      cause: existing,
-      code: "APP_INTERNAL",
-    });
-
-    expect(wrapped).toBe(existing);
   });
 
   it("allows code and i18n.key to be managed independently", () => {

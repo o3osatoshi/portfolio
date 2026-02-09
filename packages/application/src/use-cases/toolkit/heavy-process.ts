@@ -3,8 +3,6 @@ import type { ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 import { sleep } from "@o3osatoshi/toolkit";
 
-import { toApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
 import type { HeavyProcessResponse } from "../../dtos/heavy-process.res.dto";
 
 export class HeavyProcessUseCase {
@@ -18,14 +16,6 @@ export class HeavyProcessUseCase {
    * current timestamp, or an {@link Error} if the sleep operation fails.
    */
   execute(): ResultAsync<HeavyProcessResponse, RichError> {
-    return sleep(3_000)
-      .map(() => ({ timestamp: new Date() }))
-      .mapErr((cause) =>
-        toApplicationError({
-          action: "HeavyProcess",
-          cause,
-          code: applicationErrorCodes.HEAVY_PROCESS_FAILED,
-        }),
-      );
+    return sleep(3_000).map(() => ({ timestamp: new Date() }));
   }
 }
