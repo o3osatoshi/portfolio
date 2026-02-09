@@ -123,6 +123,7 @@ describe("getTransactions", () => {
           action: "DecodeAuthToken",
           code: webErrorCodes.AUTH_USER_ID_MISSING,
           i18n: { key: webErrorI18nKeys.UNAUTHORIZED },
+          isOperational: true,
           kind: "Unauthorized",
           reason: "Session token is missing a user id.",
         }),
@@ -145,6 +146,7 @@ describe("getTransactions", () => {
         action: "FindTransactionsByUserId",
         reason: "Database unavailable",
       },
+      isOperational: true,
       kind: "Unavailable",
       layer: "Persistence",
     });

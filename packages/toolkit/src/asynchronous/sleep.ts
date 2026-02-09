@@ -62,6 +62,7 @@ export function sleep(
             action: "Sleep",
             reason: "operation aborted by AbortSignal",
           },
+          isOperational: true,
           kind: "Canceled",
           layer: "Infrastructure",
         });

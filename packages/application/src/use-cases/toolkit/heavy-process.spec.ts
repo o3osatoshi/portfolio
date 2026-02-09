@@ -60,6 +60,7 @@ describe("application/use-cases: HeavyProcessUseCase", () => {
         reason: "sleep interrupted",
       },
       i18n: { key: applicationErrorI18nKeys.INTERNAL },
+      isOperational: false,
       kind: "Internal",
     });
     h.sleepMock.mockReturnValueOnce(errAsync<void, RichError>(sleepError));

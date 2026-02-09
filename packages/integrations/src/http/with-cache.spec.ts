@@ -13,6 +13,7 @@ const testError = (reason: string) =>
       action: "WithCacheSpec",
       reason,
     },
+    isOperational: false,
     kind: "Internal",
   });
 

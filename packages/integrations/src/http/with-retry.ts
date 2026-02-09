@@ -149,6 +149,7 @@ export function withRetry(
               action: "RetryExternalApi",
               reason: `Retry attempts exhausted (attempts: ${attempts}).`,
             },
+            isOperational: false,
             kind: "Internal",
           })
         );

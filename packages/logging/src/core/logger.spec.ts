@@ -158,6 +158,7 @@ describe("createLogger", () => {
         impact: "transaction not saved",
         reason: "amount is required",
       },
+      isOperational: true,
       kind: "Validation",
       layer: "Domain",
     });

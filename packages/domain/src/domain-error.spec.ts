@@ -12,6 +12,7 @@ describe("domain-error", () => {
         hint: "use a new id",
         reason: "duplicate id",
       },
+      isOperational: true,
       kind: "Conflict",
     });
     expect(err.name).toBe("DomainConflictError");
@@ -23,6 +24,7 @@ describe("domain-error", () => {
     const err = newDomainError({
       code: domainErrorCodes.TRANSACTION_TYPE_INVALID,
       details: { action: "Parse", reason: "bad" },
+      isOperational: true,
       kind: "Validation",
     });
     expect(err.name).toBe("DomainValidationError");

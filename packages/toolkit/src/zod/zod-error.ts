@@ -4,6 +4,7 @@ import {
   type Layer,
   type NewRichError,
   newRichError,
+  resolveOperationalFromKind,
   type RichError,
   type RichErrorDetails,
 } from "../error";
@@ -22,11 +23,13 @@ export type NewZodError = {
   cause?: undefined | unknown;
   /** Optional diagnostic context that will be merged with inferred details. */
   details?: RichErrorDetails | undefined;
+  /** Optional operationality override (defaults to Validation semantics). */
+  isOperational?: boolean | undefined;
   /** Explicit Zod issues list; inferred from the `cause` when absent. */
   issues?: undefined | ZodIssue[];
   /** Architectural layer responsible for validation (default `"Application"`). */
   layer?: Layer | undefined;
-} & Omit<NewRichError, "details" | "kind" | "layer">;
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 type ZodIssue = z.core.$ZodIssue;
 
@@ -54,7 +57,14 @@ export function isZodError(e: unknown): e is ZodError {
  * @public
  */
 export function newZodError(options: NewZodError): RichError {
-  const { cause, details, issues, layer = "Application", ...rest } = options;
+  const {
+    cause,
+    details,
+    isOperational,
+    issues,
+    layer = "Application",
+    ...rest
+  } = options;
   const zIssues: undefined | ZodIssue[] = issues
     ? issues
     : isZodError(cause)
@@ -78,6 +88,7 @@ export function newZodError(options: NewZodError): RichError {
       hint,
       reason: details?.reason ?? reason,
     },
+    isOperational: isOperational ?? resolveOperationalFromKind("Validation"),
     kind: "Validation",
     layer,
   });

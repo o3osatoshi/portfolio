@@ -12,6 +12,7 @@ describe("utils/web-error newWebError", () => {
       hint: "Check the form fields.",
       i18n: { key: webErrorI18nKeys.VALIDATION },
       impact: "Form submission failed.",
+      isOperational: true,
       kind: "Validation",
       reason: "invalid payload",
     });
@@ -90,6 +91,7 @@ describe("utils/web-error newWebError kinds", () => {
       action: "HandleError",
       code,
       i18n: { key: i18nKey },
+      isOperational: kind !== "Internal",
       kind,
     });
     expect(err.name).toBe(expectedName);

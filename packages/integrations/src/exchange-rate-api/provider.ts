@@ -137,6 +137,7 @@ function toFxQuote(
             serviceName: "ExchangeRate API",
           }),
         },
+        isOperational: true,
         kind: httpStatusToKind(res.response.status),
       }),
     );
@@ -154,6 +155,7 @@ function toFxQuote(
           action: "FetchExchangeRateApi",
           reason: `ExchangeRate API error: ${detail}`,
         },
+        isOperational: true,
         kind: "BadGateway",
       }),
     );
@@ -167,6 +169,7 @@ function toFxQuote(
           action: "ParseExchangeRateApiResponse",
           reason: "ExchangeRate API response missing conversion rate.",
         },
+        isOperational: false,
         kind: "BadGateway",
       }),
     );

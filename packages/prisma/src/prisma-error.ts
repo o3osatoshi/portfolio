@@ -12,7 +12,8 @@ import { Prisma } from "../generated/prisma/client";
  */
 type NewPrismaError = {
   details?: RichErrorDetails | undefined;
-} & Omit<NewRichError, "details" | "kind" | "layer">;
+  isOperational?: boolean | undefined;
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 /**
  * Prisma-aware newRichError override.
@@ -58,6 +59,8 @@ export function newPrismaError({
     reason: details?.reason ?? reason,
   });
   const resolveCode = (fallback: string): string => rest.code ?? fallback;
+  const resolveOperational = (kind: NewRichError["kind"]) =>
+    rest.isOperational ?? (kind !== "Internal" && kind !== "Serialization");
 
   if (isKnownRequestError(cause)) {
     const code = cause.code;
@@ -74,6 +77,7 @@ export function newPrismaError({
             hint: "Shorten value or alter schema.",
             reason: column ? `Value too long for ${column}` : "Value too long",
           }),
+          isOperational: resolveOperational("Validation"),
           kind: "Validation",
           layer: "Persistence",
         });
@@ -94,6 +98,7 @@ export function newPrismaError({
               ? `Unique constraint violation on ${target}`
               : "Unique constraint violation",
           }),
+          isOperational: resolveOperational("Conflict"),
           kind: "Conflict",
           layer: "Persistence",
         });
@@ -108,6 +113,7 @@ export function newPrismaError({
             hint: "Ensure related records exist before linking.",
             reason: "Foreign key constraint failed",
           }),
+          isOperational: resolveOperational("Conflict"),
           kind: "Conflict",
           layer: "Persistence",
         });
@@ -127,6 +133,7 @@ export function newPrismaError({
             hint: "Check data types and constraints.",
             reason: code === "P2005" ? "Value out of range" : "Invalid value",
           }),
+          isOperational: resolveOperational("Validation"),
           kind: "Validation",
           layer: "Persistence",
         });
@@ -149,6 +156,7 @@ export function newPrismaError({
                 ? "Table does not exist"
                 : "Column does not exist",
           }),
+          isOperational: resolveOperational("Internal"),
           kind: "Internal",
           layer: "Persistence",
         });
@@ -164,6 +172,7 @@ export function newPrismaError({
             hint: "Verify where conditions or record id.",
             reason: m ?? "Record not found",
           }),
+          isOperational: resolveOperational("NotFound"),
           kind: "NotFound",
           layer: "Persistence",
         });
@@ -176,6 +185,7 @@ export function newPrismaError({
           details: mergeDetails({
             reason: `Known request error ${code}`,
           }),
+          isOperational: resolveOperational("Internal"),
           kind: "Internal",
           layer: "Persistence",
         });
@@ -192,6 +202,7 @@ export function newPrismaError({
         hint: "Check schema types and provided data.",
         reason: "Invalid Prisma query or data",
       }),
+      isOperational: resolveOperational("Validation"),
       kind: "Validation",
       layer: "Persistence",
     });
@@ -231,6 +242,7 @@ export function newPrismaError({
               : undefined,
         reason: msg,
       }),
+      isOperational: resolveOperational(kind),
       kind,
       layer: "Persistence",
     });
@@ -245,6 +257,7 @@ export function newPrismaError({
         hint: "Inspect logs; restart the process.",
         reason: "Prisma engine panic",
       }),
+      isOperational: resolveOperational("Internal"),
       kind: "Internal",
       layer: "Persistence",
     });
@@ -266,6 +279,7 @@ export function newPrismaError({
       details: mergeDetails({
         reason: msg,
       }),
+      isOperational: resolveOperational(kind),
       kind,
       layer: "Persistence",
     });
@@ -279,6 +293,7 @@ export function newPrismaError({
     details: mergeDetails({
       reason: "Unexpected error",
     }),
+    isOperational: resolveOperational("Internal"),
     kind: "Internal",
     layer: "Persistence",
   });

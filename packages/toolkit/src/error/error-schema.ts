@@ -164,9 +164,10 @@ export type SerializedError = z.infer<typeof serializedErrorSchema>;
  * @public
  */
 export type SerializedRichError = {
+  isOperational: boolean;
   kind: Kind;
   layer: Layer;
-} & Omit<SerializedError, "kind" | "layer">;
+} & Omit<SerializedError, "isOperational" | "kind" | "layer">;
 
 /**
  * Strict schema for serialized RichError payloads.
@@ -177,6 +178,7 @@ export const serializedRichErrorSchema: z.ZodType<SerializedRichError> =
   z.intersection(
     serializedErrorSchema,
     z.object({
+      isOperational: z.boolean(),
       kind: kindSchema,
       layer: layerSchema,
     }),

@@ -210,6 +210,7 @@ export function updateTransaction(
           action: "UpdateTransaction",
           reason: "Transaction ID mismatch",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

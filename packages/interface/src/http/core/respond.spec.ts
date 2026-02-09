@@ -29,6 +29,7 @@ describe("http/core/respond", () => {
                 action: "LookupEntity",
                 reason: "Entity missing",
               },
+              isOperational: true,
               kind: "NotFound",
               layer: "Domain",
             }),
@@ -54,6 +55,7 @@ describe("http/core/respond", () => {
                 details: {
                   reason: "aborted",
                 },
+                isOperational: true,
                 kind: "Canceled",
                 layer: "External",
               });
@@ -80,6 +82,7 @@ describe("http/core/respond", () => {
               details: {
                 reason: "boom",
               },
+              isOperational: false,
               kind: "Internal",
               layer: "External",
             }),
@@ -113,6 +116,7 @@ describe("http/core/respond", () => {
                 action: "LookupEntity",
                 reason: "Entity missing",
               },
+              isOperational: true,
               kind: "NotFound",
               layer: "Domain",
             }),
@@ -137,6 +141,7 @@ describe("http/core/respond", () => {
                 details: {
                   reason: "aborted",
                 },
+                isOperational: true,
                 kind: "Canceled",
                 layer: "External",
               });
@@ -162,6 +167,7 @@ describe("http/core/respond", () => {
               details: {
                 reason: "boom",
               },
+              isOperational: false,
               kind: "Internal",
               layer: "External",
             }),

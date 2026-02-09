@@ -25,6 +25,7 @@ export function createHeaders(): ResultAsync<
       code: "WEB_RPC_HEADERS_COOKIE_READ_FAILED",
       details: { action: "Call cookies" },
       i18n: { key: "errors.application.internal" },
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     }),

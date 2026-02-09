@@ -54,6 +54,7 @@ export function newAmount(v: unknown): Result<Amount, RichError> {
           action: "NewAmount",
           reason: "Amount must be > 0",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );
@@ -74,6 +75,7 @@ export function newFee(v: unknown): Result<Fee, RichError> {
           action: "NewFee",
           reason: "Fee must be >= 0",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );
@@ -94,6 +96,7 @@ export function newPrice(v: unknown): Result<Price, RichError> {
           action: "NewPrice",
           reason: "Price must be > 0",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

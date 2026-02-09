@@ -17,6 +17,7 @@ const testError = (reason: string) =>
       reason,
     },
     i18n: { key: applicationErrorI18nKeys.INTERNAL },
+    isOperational: false,
     kind: "Internal",
   });
 

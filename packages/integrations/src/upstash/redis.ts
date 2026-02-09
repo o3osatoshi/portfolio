@@ -30,6 +30,7 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
             impact: "response served without cache",
             reason: "Cache store read failed",
           },
+          isOperational: true,
           kind: "Unavailable",
         }),
       ),
@@ -52,6 +53,7 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
             impact: "response served without cache",
             reason: "Cache store write failed",
           },
+          isOperational: true,
           kind: "Unavailable",
         }),
       );

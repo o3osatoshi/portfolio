@@ -121,6 +121,7 @@ describe("integrations/slack createSlackNotifier", () => {
             action: "SlackNotifierSpec",
             reason: "slack down",
           },
+          isOperational: true,
           kind: "Unavailable",
         }),
       ),

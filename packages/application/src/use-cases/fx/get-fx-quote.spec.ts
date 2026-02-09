@@ -79,6 +79,7 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
         reason: "provider failed",
       },
       i18n: { key: applicationErrorI18nKeys.UNAVAILABLE },
+      isOperational: true,
       kind: "Unavailable",
     });
     h.getRateMock.mockReturnValueOnce(errAsync(providerError));

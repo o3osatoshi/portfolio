@@ -105,6 +105,7 @@ export function createSlackClient(
                   action: "SlackPostMessage",
                   reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
                 },
+                isOperational: true,
                 kind:
                   slackErrorToKind(res.data.error) ??
                   httpStatusToKind(res.response.status),
@@ -120,6 +121,7 @@ export function createSlackClient(
                   action: "SlackPostMessage",
                   reason: res.data.error ?? "Slack API returned ok=false",
                 },
+                isOperational: true,
                 kind:
                   slackErrorToKind(res.data.error) ??
                   httpStatusToKind(res.response.status),

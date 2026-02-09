@@ -20,6 +20,7 @@ describe("RichError", () => {
         reason: "dependency unavailable",
       },
       i18n: { key: "error.user_fetch", params: { id: 1 } },
+      isOperational: true,
       kind: "Timeout",
       layer: "Infrastructure",
       meta: { requestId: "req_123" },

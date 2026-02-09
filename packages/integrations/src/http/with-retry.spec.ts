@@ -77,6 +77,7 @@ describe("integrations/http withRetry", () => {
         action: "WithRetrySpec",
         reason: "timeout",
       },
+      isOperational: true,
       kind: "Timeout",
     });
     const next = vi.fn(() => errAsync(error));

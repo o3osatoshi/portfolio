@@ -56,6 +56,7 @@ export function newDecimal(v: unknown): Result<DecimalString, RichError> {
             action: "NewDecimal",
             reason: "Decimal must be finite",
           },
+          isOperational: true,
           kind: "Validation",
         }),
       );
@@ -69,6 +70,7 @@ export function newDecimal(v: unknown): Result<DecimalString, RichError> {
           action: "NewDecimal",
           reason: "Invalid decimal input",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

@@ -29,6 +29,7 @@ export function newCurrencyCode(v: unknown): Result<CurrencyCode, RichError> {
           action: "NewCurrencyCode",
           reason: "CurrencyCode must be string",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );
@@ -41,6 +42,7 @@ export function newCurrencyCode(v: unknown): Result<CurrencyCode, RichError> {
           action: "NewCurrencyCode",
           reason: "CurrencyCode must be A-Z 3 letters",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

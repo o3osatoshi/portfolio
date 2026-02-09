@@ -6,6 +6,7 @@ import {
   isRichError,
   newRichError,
   resolveErrorInfo,
+  resolveOperationalFromKind,
   type RichError,
 } from "./error";
 import { coerceErrorMessage, extractErrorName } from "./error-attributes";
@@ -130,6 +131,7 @@ export function deserializeRichError(
       reason: "Invalid serialized RichError payload.",
     },
     i18n: { key: options.i18nKey ?? "errors.transport.deserialize_failed" },
+    isOperational: false,
     kind: "Serialization",
     layer: options.layer ?? "External",
     meta: metadata,
@@ -279,13 +281,14 @@ function deserializeSerializedError(value: SerializedError): Error {
   const cause = deserializeCause(value.cause);
 
   if (value.kind && value.layer) {
+    const kind = value.kind;
     const rich = newRichError({
       cause,
       code: value.code ?? "RICH_ERROR_CAUSE_DESERIALIZED_WITHOUT_CODE",
       details: value.details,
       i18n: value.i18n,
-      isOperational: value.isOperational,
-      kind: value.kind,
+      isOperational: value.isOperational ?? resolveOperationalFromKind(kind),
+      kind,
       layer: value.layer,
       meta: value.meta,
     });

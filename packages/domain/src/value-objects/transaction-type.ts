@@ -29,6 +29,7 @@ export function newTransactionType(
         action: "NewTransactionType",
         reason: "TransactionType must be BUY or SELL",
       },
+      isOperational: true,
       kind: "Validation",
     }),
   );

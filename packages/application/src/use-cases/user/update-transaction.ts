@@ -49,6 +49,7 @@ export class UpdateTransactionUseCase {
                     i18n: {
                       key: applicationErrorI18nKeys.NOT_FOUND,
                     },
+                    isOperational: true,
                     kind: "NotFound",
                   }),
                 )
@@ -66,6 +67,7 @@ export class UpdateTransactionUseCase {
                     i18n: {
                       key: applicationErrorI18nKeys.FORBIDDEN,
                     },
+                    isOperational: true,
                     kind: "Forbidden",
                   }),
                 )

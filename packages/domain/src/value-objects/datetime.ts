@@ -27,6 +27,7 @@ export function newDateTime(v: unknown): Result<DateTime, RichError> {
           action: "NewDateTime",
           reason: "DateTime must be a Date",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );
@@ -38,6 +39,7 @@ export function newDateTime(v: unknown): Result<DateTime, RichError> {
           action: "NewDateTime",
           reason: "DateTime is invalid",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

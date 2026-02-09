@@ -283,9 +283,10 @@ export const layerSchema: z.ZodEnum<{
 export type NewFetchError = {
     cause?: unknown;
     details?: RichErrorDetails | undefined;
+    isOperational?: boolean | undefined;
     kind?: Kind | undefined;
     request?: FetchRequest | undefined;
-} & Omit<NewRichError, "details" | "kind" | "layer">;
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 // @public
 export function newFetchError(input: NewFetchError): RichError;
@@ -296,7 +297,7 @@ export type NewRichError = {
     code?: string | undefined;
     details?: RichErrorDetails | undefined;
     i18n?: RichErrorI18n | undefined;
-    isOperational?: boolean | undefined;
+    isOperational: boolean;
     kind: Kind;
     layer: Layer;
     meta?: JsonObject | undefined;
@@ -309,9 +310,10 @@ export function newRichError(params: NewRichError): RichError;
 export type NewZodError = {
     cause?: undefined | unknown;
     details?: RichErrorDetails | undefined;
+    isOperational?: boolean | undefined;
     issues?: undefined | ZodIssue[];
     layer?: Layer | undefined;
-} & Omit<NewRichError, "details" | "kind" | "layer">;
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 // @public
 export function newZodError(options: NewZodError): RichError;
@@ -358,6 +360,9 @@ export function resolveErrorKind(error: unknown): Kind | undefined;
 
 // @public
 export function resolveErrorLayer(error: unknown): Layer | undefined;
+
+// @public
+export function resolveOperationalFromKind(kind: Kind): boolean;
 
 // @public
 export class RichError extends Error {
@@ -429,9 +434,10 @@ export const serializedErrorSchema: z.ZodType<{
 
 // @public
 export type SerializedRichError = {
+    isOperational: boolean;
     kind: Kind;
     layer: Layer;
-} & Omit<SerializedError, "kind" | "layer">;
+} & Omit<SerializedError, "isOperational" | "kind" | "layer">;
 
 // @public
 export const serializedRichErrorSchema: z.ZodType<SerializedRichError>;
@@ -485,7 +491,7 @@ export type UrlRedactorOptions = {
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1146:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1156:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

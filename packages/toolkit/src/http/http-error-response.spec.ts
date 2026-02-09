@@ -5,7 +5,11 @@ import { toHttpErrorResponse } from "./http-error-response";
 
 describe("toHttpErrorResponse", () => {
   it("uses provided status when specified", () => {
-    const err = newRichError({ kind: "Validation", layer: "Application" });
+    const err = newRichError({
+      isOperational: true,
+      kind: "Validation",
+      layer: "Application",
+    });
     const res = toHttpErrorResponse(err, 405);
     expect(res.statusCode).toBe(405);
     expect(res.body).toEqual(serializeRichError(err));
@@ -28,7 +32,7 @@ describe("toHttpErrorResponse", () => {
     ] as const;
 
     for (const { kind, layer, status } of cases) {
-      const err = newRichError({ kind, layer });
+      const err = newRichError({ isOperational: true, kind, layer });
       const res = toHttpErrorResponse(err);
       expect(res.statusCode).toBe(status);
     }
@@ -36,6 +40,7 @@ describe("toHttpErrorResponse", () => {
 
   it("maps canceled to 408 (client closed request)", () => {
     const canceled = newRichError({
+      isOperational: true,
       kind: "Canceled",
       layer: "Infrastructure",
     });

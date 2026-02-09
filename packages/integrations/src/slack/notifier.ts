@@ -32,6 +32,7 @@ export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
                 impact: "notification could not be delivered",
                 reason: "Slack notification failed",
               },
+              isOperational: true,
               kind: "BadGateway",
             }),
           ),

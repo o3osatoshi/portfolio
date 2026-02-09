@@ -97,6 +97,7 @@ export class StorePingUseCase {
                       i18n: {
                         key: applicationErrorI18nKeys.NOT_FOUND,
                       },
+                      isOperational: true,
                       kind: "NotFound",
                     }),
                   );
@@ -201,6 +202,7 @@ function readPart(
       i18n: {
         key: applicationErrorI18nKeys.INTERNAL,
       },
+      isOperational: false,
       kind: "Internal",
     });
   }

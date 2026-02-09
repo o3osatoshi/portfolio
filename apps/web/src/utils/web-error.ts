@@ -46,6 +46,7 @@ export type NewWebError = {
   hint?: string;
   i18n: WebErrorI18n;
   impact?: string;
+  isOperational: boolean;
   kind: WebKind;
   reason?: string;
 };
@@ -85,6 +86,7 @@ export function newWebError({
   hint,
   i18n,
   impact,
+  isOperational,
   kind,
   reason,
 }: NewWebError): RichError {
@@ -98,6 +100,7 @@ export function newWebError({
       reason,
     },
     i18n,
+    isOperational,
     kind,
     layer: "Presentation",
   });

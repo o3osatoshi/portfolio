@@ -16,6 +16,7 @@ describe("utils/error-message", () => {
         key: "errors.application.forbidden",
         params: { resource: "transaction" },
       },
+      isOperational: true,
       kind: "Forbidden",
       layer: "Application",
       message: "fallback",
@@ -35,6 +36,7 @@ describe("utils/error-message", () => {
         i18n: {
           key: "errors.application.not_found",
         },
+        isOperational: true,
         kind: "NotFound",
         layer: "Application",
       }),
@@ -55,6 +57,7 @@ describe("utils/error-message", () => {
       i18n: {
         key: "errors.application.not_found",
       },
+      isOperational: true,
       kind: "NotFound",
       layer: "Application",
       message: "record missing",
@@ -73,6 +76,7 @@ describe("utils/error-message", () => {
   it("falls back to fallbackMessage when i18n is missing", () => {
     const error: SerializedRichError = {
       name: "ApplicationInternalError",
+      isOperational: false,
       kind: "Internal",
       layer: "Application",
       message: "internal details",

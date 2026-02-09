@@ -4,6 +4,7 @@ import {
   type Kind,
   type NewRichError,
   newRichError,
+  resolveOperationalFromKind,
   type RichError,
   type RichErrorDetails,
 } from "../error";
@@ -28,9 +29,10 @@ export type FetchRequest = {
 export type NewFetchError = {
   cause?: unknown;
   details?: RichErrorDetails | undefined;
+  isOperational?: boolean | undefined;
   kind?: Kind | undefined;
   request?: FetchRequest | undefined;
-} & Omit<NewRichError, "details" | "kind" | "layer">;
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 type Classification = {
   hint?: string;
@@ -71,6 +73,7 @@ export function formatFetchTarget({
 export function newFetchError({
   cause,
   details,
+  isOperational,
   kind,
   request,
   ...rest
@@ -96,6 +99,8 @@ export function newFetchError({
       hint: details?.hint ?? classification.hint,
       reason: details?.reason ?? reason,
     },
+    isOperational:
+      isOperational ?? resolveOperationalFromKind(kind ?? classification.kind),
     kind: kind ?? classification.kind,
     layer: "External",
   });

@@ -55,11 +55,13 @@ const buildError = (
   retryAttempts?: number,
 ): RichError => {
   const info = parseErrorName(name);
+  const kind = info.kind ?? "Internal";
   const error = newRichError({
     details: {
       reason: message,
     },
-    kind: info.kind ?? "Internal",
+    isOperational: kind !== "Internal" && kind !== "Serialization",
+    kind,
     layer: info.layer ?? "External",
   });
   error.name = name;

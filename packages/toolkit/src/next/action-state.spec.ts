@@ -35,6 +35,7 @@ describe("action-state ok/err", () => {
     const error = newRichError({
       code: "APP_FORBIDDEN",
       i18n: { key: "errors.application.forbidden" },
+      isOperational: true,
       kind: "Forbidden",
       layer: "Application",
     });
@@ -69,6 +70,7 @@ describe("action-state ok/err", () => {
       newRichError({
         code: "APP_NOT_FOUND",
         i18n: { key: "errors.application.not_found" },
+        isOperational: true,
         kind: "NotFound",
         layer: "Application",
       }),

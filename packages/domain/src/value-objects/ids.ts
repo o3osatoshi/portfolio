@@ -37,6 +37,7 @@ export function newTransactionId(v: unknown): Result<TransactionId, RichError> {
           action: "NewTransactionId",
           reason: "TransactionId must be non-empty",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );
@@ -55,6 +56,7 @@ export function newUserId(v: unknown): Result<UserId, RichError> {
           action: "NewUserId",
           reason: "UserId must be non-empty",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

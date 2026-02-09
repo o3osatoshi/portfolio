@@ -65,6 +65,7 @@ export function newFxRate(v: unknown): Result<FxRate, RichError> {
           action: "NewFxRate",
           reason: "FX rate must be > 0",
         },
+        isOperational: true,
         kind: "Validation",
       }),
     );

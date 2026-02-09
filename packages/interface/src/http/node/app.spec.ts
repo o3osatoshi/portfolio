@@ -129,6 +129,7 @@ describe("http/node app", () => {
           details: {
             reason: "bad",
           },
+          isOperational: true,
           kind: "Validation",
           layer: "Application",
         }),

@@ -19,6 +19,7 @@ describe("error-serializer", () => {
         reason: "Email is invalid",
       },
       i18n: { key: "error.user_invalid", params: { id: 1 } },
+      isOperational: true,
       kind: "Validation",
       layer: "Application",
       meta: { requestId: "req_1" },
@@ -70,6 +71,7 @@ describe("error-serializer", () => {
   it("handles string cause in serialized rich payload", () => {
     const e = newRichError({
       cause: "inner",
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -84,6 +86,7 @@ describe("error-serializer", () => {
     inner.name = "InnerError";
     const outer = newRichError({
       cause: inner,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -107,6 +110,7 @@ describe("error-serializer", () => {
     const mid = new Error("mid", { cause: deep });
     const top = newRichError({
       cause: mid,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -118,7 +122,11 @@ describe("error-serializer", () => {
   it("respects default includeStack based on NODE_ENV", () => {
     const prev = process.env["NODE_ENV"];
     try {
-      const err = newRichError({ kind: "Internal", layer: "Infrastructure" });
+      const err = newRichError({
+        isOperational: false,
+        kind: "Internal",
+        layer: "Infrastructure",
+      });
       process.env["NODE_ENV"] = "development";
       const sDev = serializeRichError(err);
       expect(typeof sDev.stack === "string").toBe(true);
@@ -132,7 +140,11 @@ describe("error-serializer", () => {
   });
 
   it("allows forcing stack inclusion via option", () => {
-    const err = newRichError({ kind: "Internal", layer: "Infrastructure" });
+    const err = newRichError({
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
     const s = serializeRichError(err, { includeStack: true });
     expect(typeof s.stack === "string").toBe(true);
   });
@@ -141,6 +153,7 @@ describe("error-serializer", () => {
     const inner: SerializedError = { name: "Inner", message: "m" };
     const top = newRichError({
       cause: inner,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -153,6 +166,7 @@ describe("error-serializer", () => {
     const mid = new Error("mid", { cause: inner });
     const top = newRichError({
       cause: mid,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -177,6 +191,7 @@ describe("error-serializer", () => {
     const inner = new Error("inner");
     const top = newRichError({
       cause: inner,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -196,6 +211,7 @@ describe("error-serializer", () => {
     const long = "x".repeat(300);
     const e = newRichError({
       cause: long,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -208,6 +224,7 @@ describe("error-serializer", () => {
     const inner = new Error("inner");
     const top = newRichError({
       cause: inner,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -220,6 +237,7 @@ describe("error-serializer", () => {
     const mid = new Error("mid", { cause: inner });
     const top = newRichError({
       cause: mid,
+      isOperational: false,
       kind: "Internal",
       layer: "Infrastructure",
     });
@@ -244,6 +262,7 @@ describe("error-serializer", () => {
     expect(
       isSerializedRichError({
         name: "ApplicationValidationError",
+        isOperational: true,
         kind: "Validation",
         layer: "Application",
         message: "msg",
@@ -262,6 +281,7 @@ describe("error-serializer", () => {
       name: "ApplicationNotFoundError",
       code: "resource.missing",
       details: { action: "GetResource", reason: "missing" },
+      isOperational: true,
       kind: "NotFound",
       layer: "Application",
       message: "GetResource failed: missing",
@@ -278,6 +298,7 @@ describe("error-serializer", () => {
   it("rehydrates empty stack/message values without dropping them", () => {
     const result = tryDeserializeRichError({
       name: "ApplicationInternalError",
+      isOperational: false,
       kind: "Internal",
       layer: "Application",
       message: "",
@@ -323,7 +344,11 @@ describe("error-serializer", () => {
   });
 
   it("tryDeserializeRichError returns the same instance for RichError input", () => {
-    const rich = newRichError({ kind: "Internal", layer: "Application" });
+    const rich = newRichError({
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
+    });
     const result = tryDeserializeRichError(rich);
     expect(result.isOk()).toBe(true);
     if (result.isOk()) {

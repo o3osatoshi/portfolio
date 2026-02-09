@@ -30,7 +30,7 @@ export type NewRichError = {
   /** UI-friendly i18n key + params (not translated here). */
   i18n?: RichErrorI18n | undefined;
   /** Indicates whether the error is an expected operational failure. */
-  isOperational?: boolean | undefined;
+  isOperational: boolean;
   /** High-level error classification shared across layers. */
   kind: Kind;
   /** Architectural layer where the failure originated. */
@@ -91,7 +91,7 @@ export class RichError extends Error {
     this.i18n = params.i18n;
     this.details = params.details;
     this.meta = params.meta;
-    this.isOperational = params.isOperational ?? true;
+    this.isOperational = params.isOperational;
   }
 }
 
@@ -181,6 +181,21 @@ export function resolveErrorLayer(error: unknown): Layer | undefined {
 }
 
 /**
+ * Derive default operationality from error kind.
+ *
+ * @public
+ */
+export function resolveOperationalFromKind(kind: Kind): boolean {
+  switch (kind) {
+    case "Internal":
+    case "Serialization":
+      return false;
+    default:
+      return true;
+  }
+}
+
+/**
  * Normalize an unknown value into a {@link RichError}.
  *
  * @public
@@ -197,13 +212,15 @@ export function toRichError(
     extractErrorMessage(error),
   );
 
+  const kind = fallback.kind ?? resolved.kind ?? "Internal";
+
   return newRichError({
     cause: error,
     code: fallback.code ?? "RICH_ERROR_NORMALIZED",
     details,
     i18n: fallback.i18n,
-    isOperational: fallback.isOperational,
-    kind: fallback.kind ?? resolved.kind ?? "Internal",
+    isOperational: fallback.isOperational ?? resolveOperationalFromKind(kind),
+    kind,
     layer: fallback.layer ?? resolved.layer ?? "External",
     meta: fallback.meta,
   });

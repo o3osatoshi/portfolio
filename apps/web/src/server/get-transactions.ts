@@ -48,6 +48,7 @@ export function getTransactions(): ResultAsync<Transactions, RichError> {
           cause,
           code: webErrorCodes.CACHE_READ_FAILED,
           i18n: { key: webErrorI18nKeys.INTERNAL },
+          isOperational: false,
           kind: "Internal",
           reason: "Failed to read cached transactions.",
         }),

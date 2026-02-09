@@ -63,6 +63,7 @@ const testError = (reason: string) =>
     details: {
       reason,
     },
+    isOperational: false,
     kind: "Internal",
     layer: "External",
   });

@@ -8,6 +8,7 @@ describe("application-error", () => {
       code: "APP_VALIDATION",
       details: { action: "ValidateInput", reason: "invalid" },
       i18n: { key: "errors.application.validation" },
+      isOperational: true,
       kind: "Validation",
     });
 
@@ -33,6 +34,7 @@ describe("application-error", () => {
     const existing = newApplicationError({
       code: "APP_NOT_FOUND",
       i18n: { key: "errors.application.not_found" },
+      isOperational: true,
       kind: "NotFound",
     });
 
@@ -49,6 +51,7 @@ describe("application-error", () => {
     newApplicationError({
       code: "APP_TIMEOUT",
       i18n: { key: "errors.application.internal" },
+      isOperational: true,
       kind: "Timeout",
     });
 
@@ -60,6 +63,7 @@ describe("application-error", () => {
       // @ts-expect-error unknown code
       code: "APP_NOT_REAL",
       i18n: { key: "errors.application.internal" },
+      isOperational: false,
       kind: "Internal",
     });
 
@@ -67,12 +71,14 @@ describe("application-error", () => {
       code: "APP_INTERNAL",
       // @ts-expect-error unknown i18n key
       i18n: { key: "errors.application.unknown" },
+      isOperational: false,
       kind: "Internal",
     });
 
     // @ts-expect-error i18n is required
     newApplicationError({
       code: "APP_INTERNAL",
+      isOperational: false,
       kind: "Internal",
     });
 
