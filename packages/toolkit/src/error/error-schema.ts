@@ -119,8 +119,8 @@ export type RichErrorI18n = z.infer<typeof richErrorI18nSchema>;
  *
  * @public
  */
-export const serializedErrorSchema: z.ZodType<{
-  cause?: string | undefined | z.infer<typeof serializedErrorSchema>;
+export type SerializedError = {
+  cause?: SerializedError | string | undefined;
   code?: string | undefined;
   details?: RichErrorDetails | undefined;
   i18n?: RichErrorI18n | undefined;
@@ -131,11 +131,13 @@ export const serializedErrorSchema: z.ZodType<{
   meta?: undefined | z.infer<typeof jsonObjectSchema>;
   name: string;
   stack?: string | undefined;
-}> = z
+};
+
+const serializedErrorSchemaInternal: z.ZodType<SerializedError> = z
   .object({
     name: z.string(),
     cause: z
-      .union([z.string(), z.lazy(() => serializedErrorSchema)])
+      .union([z.string(), z.lazy(() => serializedErrorSchemaInternal)])
       .optional(),
     code: z.string().optional(),
     details: richErrorDetailsSchema.optional(),
@@ -150,11 +152,11 @@ export const serializedErrorSchema: z.ZodType<{
   .strip();
 
 /**
- * Serialized error type inferred from {@link serializedErrorSchema}.
+ * JSON-friendly representation of an Error instance for cross-boundary transport.
  *
  * @public
  */
-export type SerializedError = z.infer<typeof serializedErrorSchema>;
+export const serializedErrorSchema = serializedErrorSchemaInternal;
 
 /**
  * Strict RichError transport shape.
