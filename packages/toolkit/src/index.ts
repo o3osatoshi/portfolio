@@ -1,6 +1,7 @@
 /**
  * @packageDocumentation
- * Toolkit utilities for structured errors and Zod helpers.
+ * TypeScript utilities for structured error flows, HTTP/Next helpers,
+ * environment validation, and Zod integration.
  */
 export * from "./asynchronous";
 export * from "./env";

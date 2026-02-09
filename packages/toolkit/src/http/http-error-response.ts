@@ -104,8 +104,8 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
  *   try {
  *     // ...
  *   } catch (err) {
- *     const { body, status } = toHttpErrorResponse(err as Error);
- *     return Response.json(body, { status });
+ *     const { body, statusCode } = toHttpErrorResponse(err as Error);
+ *     return Response.json(body, { status: statusCode });
  *   }
  * }
  * ```
@@ -114,15 +114,15 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
  * // Express middleware
  * ```ts
  * app.use((err, _req, res, _next) => {
- *   const { body, status } = toHttpErrorResponse(err);
- *   res.status(status).json(body);
+ *   const { body, statusCode } = toHttpErrorResponse(err);
+ *   res.status(statusCode).json(body);
  * });
  * ```
  *
  * @param error - Error instance to convert.
  * @param status - Optional HTTP status override. If provided, it takes precedence.
- * @param options - Serialization options (depth, includeStack, maxLen).
- * @returns A pair of `body` and `status` suitable for HTTP responses.
+ * @param options - Serialization options (depth, includeStack).
+ * @returns A pair of `body` and `statusCode` suitable for HTTP responses.
  * @public
  */
 export function toHttpErrorResponse(

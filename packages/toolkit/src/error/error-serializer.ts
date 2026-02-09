@@ -177,7 +177,7 @@ export function isSerializedRichError(v: unknown): v is SerializedRichError {
  *
  * @public
  * @param error - RichError instance to serialize.
- * @param opts - Serialization options (depth, stack inclusion, truncation).
+ * @param opts - Serialization options (depth, stack inclusion).
  * @returns A JSON-friendly error object suitable for transport or storage.
  */
 export function serializeRichError(

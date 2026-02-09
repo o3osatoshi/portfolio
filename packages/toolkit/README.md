@@ -1,17 +1,32 @@
 # @o3osatoshi/toolkit
 
-Utility helpers for error shaping and Zod integration, designed for TypeScript apps.
+TypeScript utilities for structured error flows, HTTP/Next helpers, environment validation, and Zod integration.
 
 ## Install
 
 ```bash
-pnpm add @o3osatoshi/toolkit                # runtime
-pnpm add -D typescript vitest               # dev (optional for typecheck/tests)
+pnpm add @o3osatoshi/toolkit
+```
+
+## Import Policy
+
+`@o3osatoshi/toolkit` currently exposes only the package root export.
+
+```ts
+import {
+  deserializeRichError,
+  err,
+  newRichError,
+  ok,
+  parseWith,
+  serializeRichError,
+  toRichError,
+} from "@o3osatoshi/toolkit";
 ```
 
 ## Quick Start
 
-### Structured errors
+### Structured RichError
 
 ```ts
 import { newRichError } from "@o3osatoshi/toolkit";
@@ -19,128 +34,149 @@ import { newRichError } from "@o3osatoshi/toolkit";
 throw newRichError({
   layer: "Application",
   kind: "Validation",
-  code: "user.email_invalid",
-  i18n: { key: "error.user_email_invalid", params: { field: "email" } },
+  code: "APP_CREATE_USER_INVALID_EMAIL",
+  i18n: { key: "errors.application.validation", params: { field: "email" } },
   details: {
     action: "CreateUser",
-    reason: "email format is invalid",
-    impact: "user cannot be registered",
-    hint: "ensure email has @",
+    reason: "Email format is invalid.",
+    impact: "User cannot be registered.",
+    hint: "Ensure the email includes '@'.",
   },
-  cause: new Error("zod: Expected string, received number"),
+  isOperational: true,
   meta: { requestId: "req_123" },
 });
 // name: ApplicationValidationError
-// message example: "CreateUser failed: email format is invalid"
+// message: "CreateUser failed: Email format is invalid."
+```
+
+### Normalize unknown errors
+
+```ts
+import { toRichError } from "@o3osatoshi/toolkit";
+
+try {
+  await doSomething();
+} catch (cause) {
+  const error = toRichError(cause, {
+    code: "APP_DO_SOMETHING_FAILED",
+    details: { action: "DoSomething" },
+    layer: "Application",
+  });
+
+  // always RichError
+  console.error(error.code, error.kind, error.layer);
+}
+```
+
+### Serialize / deserialize
+
+```ts
+import {
+  deserializeRichError,
+  newRichError,
+  serializeRichError,
+} from "@o3osatoshi/toolkit";
+
+const original = newRichError({
+  code: "APP_INTERNAL",
+  details: { action: "LoadDashboard", reason: "Cache unavailable." },
+  i18n: { key: "errors.application.internal" },
+  isOperational: false,
+  kind: "Internal",
+  layer: "Application",
+});
+
+const payload = serializeRichError(original);
+const restored = deserializeRichError(payload);
 ```
 
 ### Zod integration
 
 ```ts
+import { parseWith } from "@o3osatoshi/toolkit";
 import { z } from "zod";
-import { parseWith, newZodError } from "@o3osatoshi/toolkit";
 
-const userSchema = z.object({ name: z.string(), age: z.number().min(0) });
+const userSchema = z.object({
+  age: z.number().min(0),
+  name: z.string(),
+});
 
 const parseUser = parseWith(userSchema, {
   details: { action: "ParseUser" },
   layer: "Presentation",
 });
-const res = parseUser({ name: "alice", age: 20 }); // Result<User, Error>
 
-// When you catch a ZodError and want a normalized Error:
-try {
-  userSchema.parse({ name: 1 });
-} catch (e) {
-  throw newZodError({ details: { action: "ParseUser" }, cause: e });
-}
+const result = parseUser({ age: 20, name: "alice" });
+// Result<{ age: number; name: string }, RichError>
 ```
 
-### Error kinds
+## Error Kind Reference
 
-`newRichError` expects a `kind` that conveys how callers or HTTP layers should react. The defaults below are what `toHttpErrorResponse` uses when translating errors into status codes (override as needed):
+`toHttpErrorResponse` uses the following default `Kind -> statusCode` mapping:
 
-| Kind             | Default HTTP status | Description |
-| ---------------- | ------------------- | ----------- |
-| `BadRequest`     | 400                 | Malformed payload or transport-level input issue caught before validation. |
-| `Validation`     | 400                 | Domain/application validation failure (e.g., Zod, business rules). |
-| `Unauthorized`   | 401                 | Authentication missing, expired, or invalid. |
-| `Forbidden`      | 403                 | Authenticated caller lacks permission. |
-| `NotFound`       | 404                 | Entity, route, or resource is missing. |
-| `MethodNotAllowed` | 405               | HTTP verb is not supported for the requested resource. |
-| `Conflict`       | 409                 | Version/state conflict such as optimistic locking. |
-| `Integrity`      | 409                 | Constraint violation (unique/index/foreign key). |
-| `Deadlock`       | 409                 | Database or concurrency deadlock detected by the engine. |
-| `Unprocessable`  | 422                 | Semantically invalid request despite being well-formed. |
-| `RateLimit`      | 429                 | Quota exceeded or throttling triggered. |
-| `Canceled`       | 408                 | Caller aborted or connection closed mid-flight. |
-| `Config`         | 500                 | Server-side misconfiguration or missing secrets. |
-| `Serialization`  | 500                 | Encode/decode failure when handling data. |
-| `Unknown`        | 500                 | Fallback when no other kind matches. |
-| `BadGateway`     | 502                 | Upstream dependency returned an invalid or 5xx response. |
-| `Unavailable`    | 503                 | Dependency temporarily offline or service paused. |
-| `Timeout`        | 504                 | Operation exceeded configured timeout. |
+| Kind | statusCode | Meaning |
+| --- | --- | --- |
+| `BadRequest` | 400 | Malformed request input before domain validation. |
+| `Validation` | 400 | Domain/application validation failure. |
+| `Unauthorized` | 401 | Authentication missing/invalid. |
+| `Forbidden` | 403 | Authenticated but not permitted. |
+| `NotFound` | 404 | Resource/entity missing. |
+| `MethodNotAllowed` | 405 | HTTP method is not supported. |
+| `Canceled` | 408 | Request canceled/aborted. |
+| `Conflict` | 409 | State/version conflict. |
+| `Unprocessable` | 422 | Semantically invalid request. |
+| `RateLimit` | 429 | Throttling/quota exceeded. |
+| `Internal` | 500 | Unexpected internal failure. |
+| `Serialization` | 500 | Encode/decode failure. |
+| `BadGateway` | 502 | Upstream responded invalidly. |
+| `Unavailable` | 503 | Dependency/service temporarily unavailable. |
+| `Timeout` | 504 | Upstream/local operation timed out. |
 
-Note: Some gateways use non‑standard 499 (Client Closed Request). The default mapping here uses 408 for broader compatibility.
+## Next.js Action helpers
 
-## API
-
-- `newRichError(opts)`
-  - Builds a `RichError` with a consistent `name` (`<Layer><Kind>Error`) and a concise `message` summary derived from `details`.
-- `isZodError(e)`
-  - Robust detection using `instanceof` or duck-typing fallback when Zod instances differ.
-- `summarizeZodIssue(issue)` / `summarizeZodError(err)`
-  - Human‑readable messages for common Zod issues.
-- `newZodError(opts)`
-  - Wraps a `ZodError` (or issues array) into a structured `RichError` via `newRichError`.
-- `parseWith(schema, ctx)`
-  - Create a function returning `neverthrow` `Result` from a Zod schema. Errors are normalized via `newZodError`.
-- `createEnv(schema, opts?)`
-  - Validate environment variables with Zod and return a fully typed configuration object. Accepts an optional `name` label (used in error messages) and `source` map (useful for tests or SSR).
-- `Env`
-  - String union type for canonical deployment environments (`"development" | "local" | "production" | "staging"`), shared across packages (for example, telemetry configuration) to avoid ad‑hoc string literals.
-- `EnvOf<T>`, `EnvSchema`
-  - Helper types for `createEnv`. `EnvSchema` models the map of variable names to Zod validators, and `EnvOf<T>` infers the resulting runtime shape from that schema.
-- `@o3osatoshi/toolkit/next`
-  - Helpers for Next.js Server Actions. See below.
-
-## Next.js helpers (`@o3osatoshi/toolkit/next`)
-
-Lightweight utilities for `useActionState` and Server Actions.
+For Server Actions and `useActionState`, use `ok`/`err` from the same root package.
 
 ```ts
 import {
   err,
   ok,
+  toRichError,
   type ActionState,
-} from "@o3osatoshi/toolkit/next";
-import { toRichError } from "@o3osatoshi/toolkit";
+} from "@o3osatoshi/toolkit";
 
-// Server Action example
-export const createItem = async (
+export async function createItem(
   _prev: ActionState | undefined,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionState> {
   try {
     const data = await doSomething(formData);
     return ok(data);
-  } catch (e) {
-    return err(toRichError(e)); // serializable SerializedRichError payload
+  } catch (cause) {
+    return err(toRichError(cause));
   }
-};
+}
 ```
 
-- `err(error)` – accepts `RichError` and returns `{ ok: false, error }` where `error` is `SerializedRichError` (stack omitted) for safe transport through Server Actions.
-- `ok(data)` – wraps success payload as `{ ok: true, data }`.
+`err(...)` serializes `RichError` as `SerializedRichError` (stack omitted) for safe transport.
 
-## Notes
+## API Highlights
 
-- ESM + CJS outputs are provided; typings are included.
-- Target Node >= 22 (see `engines`).
-- When targeting different Zod instances (e.g., multiple versions), `isZodError` uses duck typing to remain resilient.
-- `pnpm -C packages/toolkit dev` uses `tsup --watch --no-clean` to avoid brief `dist` removals that can break dependent watch builds (e.g. `@o3osatoshi/logging`). Run `pnpm -C packages/toolkit clean` after export changes to prevent stale artifacts.
+- `newRichError(params)`
+- `toRichError(error, fallback?)`
+- `serializeRichError(error, options?)`
+- `deserializeRichError(input, options?)`
+- `tryDeserializeRichError(input)`
+- `toHttpErrorResponse(error, statusOverride?, serializeOptions?)`
+- `newFetchError(options)`
+- `createEnv(schema, options?)`
+- `createLazyEnv(schema, options?)`
+- `newZodError(options)`
+- `parseWith(schema, context)`
+- `ok(data)` / `err(error)` / `ActionState`
 
 ## Quality
 
-- Tests: `pnpm -C packages/toolkit test` / `pnpm -C packages/toolkit test:cvrg`
-- Coverage: [![Coverage: @o3osatoshi/toolkit](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=toolkit)](https://app.codecov.io/github/o3osatoshi/portfolio?component=toolkit)
+- Test: `pnpm -C packages/toolkit test`
+- Coverage: `pnpm -C packages/toolkit test:cvrg`
+- Typecheck: `pnpm -C packages/toolkit typecheck`
+- API extract: `pnpm -C packages/toolkit api:extract`

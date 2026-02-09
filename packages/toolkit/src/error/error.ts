@@ -198,6 +198,12 @@ export function resolveOperationalFromKind(kind: Kind): boolean {
 /**
  * Normalize an unknown value into a {@link RichError}.
  *
+ * @remarks
+ * - Returns the input as-is when it is already a {@link RichError}.
+ * - Fills missing `details.reason` from the source error message when possible.
+ * - Adds normalization metadata (`normalizedBy`, `normalizedFromType`,
+ *   `normalizedFromName`) while preserving caller-provided `fallback.meta`.
+ *
  * @public
  */
 export function toRichError(
