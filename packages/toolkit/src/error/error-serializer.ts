@@ -92,6 +92,8 @@ export type DeserializeRichErrorOptions = {
 export type SerializeOptions = {
   /** Maximum depth of `cause` chain to serialize (default: 2). */
   depth?: number | undefined;
+  /** Include `cause` chain in output (default: true). */
+  includeCause?: boolean | undefined;
   /** Include `stack` in output (default: true in development, false otherwise). */
   includeStack?: boolean | undefined;
 };
@@ -167,6 +169,7 @@ export function isSerializedRichError(v: unknown): v is SerializedRichError {
  *
  * Behavior:
  * - Preserves `name` and `message`.
+ * - Can omit `cause` entirely when `includeCause` is `false`.
  * - Optionally includes `stack` (dev-only by default).
  * - Serializes nested `cause` recursively up to `depth`.
  *
@@ -185,14 +188,16 @@ export function serializeRichError(
 ): SerializedRichError {
   const includeStack =
     opts.includeStack ?? process.env["NODE_ENV"] === "development";
-  const depth = Math.max(0, opts.depth ?? 2);
 
   return {
     name: error.name,
-    cause: serializeCause(error.cause, {
-      depth: depth - 1,
-      includeStack,
-    }),
+    cause:
+      (opts.includeCause ?? true)
+        ? serializeCause(error.cause, {
+            depth: Math.max(0, opts.depth ?? 2) - 1,
+            includeStack,
+          })
+        : undefined,
     code: error.code,
     details: error.details,
     i18n: error.i18n,

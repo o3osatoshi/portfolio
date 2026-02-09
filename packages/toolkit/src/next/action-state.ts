@@ -44,12 +44,14 @@ export type ActionState<
  * @returns An {@link ActionState} with `ok: false` and serialized RichError metadata.
  * @remarks
  * - Errors are always serialized via {@link serializeRichError}.
+ * - Cause chains are omitted from action payloads to avoid leaking internal details.
  * - Stack traces are omitted for server action payload safety.
  */
 export function err(error: RichError): ActionState<never, SerializedRichError> {
   return {
     error: serializeRichError(error, {
       depth: 0,
+      includeCause: false,
       includeStack: false,
     }),
     ok: false,

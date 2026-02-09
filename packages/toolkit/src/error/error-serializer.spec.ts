@@ -119,6 +119,23 @@ describe("error-serializer", () => {
     expect(typeof s.cause).toBe("string");
   });
 
+  it("omits cause when includeCause is false", () => {
+    const inner = new Error("inner-msg");
+    const top = newRichError({
+      cause: inner,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+
+    const serialized = serializeRichError(top, {
+      includeCause: false,
+      includeStack: false,
+    });
+
+    expect(serialized.cause).toBeUndefined();
+  });
+
   it("respects default includeStack based on NODE_ENV", () => {
     const prev = process.env["NODE_ENV"];
     try {

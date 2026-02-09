@@ -73,4 +73,21 @@ describe("action-state ok/err", () => {
       key: "errors.application.not_found",
     });
   });
+
+  it("omits cause chain from serialized action errors", () => {
+    const state = err(
+      newRichError({
+        cause: new Error("driver failed"),
+        code: "APP_INTERNAL",
+        details: { action: "RunAction" },
+        isOperational: false,
+        kind: "Internal",
+        layer: "Application",
+      }),
+    );
+
+    expect(state.ok).toBe(false);
+    if (state.ok) throw new Error("expected failure state");
+    expect(state.error.cause).toBeUndefined();
+  });
 });
