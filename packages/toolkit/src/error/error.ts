@@ -213,10 +213,7 @@ export function toRichError(
   );
 
   const kind = fallback.kind ?? resolved.kind ?? "Internal";
-  const meta = mergeRichErrorMeta(
-    fallback.meta,
-    error,
-  );
+  const meta = mergeRichErrorMeta(fallback.meta, error);
 
   return newRichError({
     cause: error,

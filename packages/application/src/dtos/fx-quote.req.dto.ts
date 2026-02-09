@@ -28,6 +28,4 @@ export type GetFxQuoteRequest = z.infer<typeof getFxQuoteRequestSchema>;
 export const parseGetFxQuoteRequest = (input: unknown) =>
   parseWith(getFxQuoteRequestSchema, {
     action: "ParseGetFxQuoteRequest",
-  })(input).mapErr((error) =>
-    ensureApplicationErrorI18n(error),
-  );
+  })(input).mapErr((error) => ensureApplicationErrorI18n(error));

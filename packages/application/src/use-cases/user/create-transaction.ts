@@ -27,9 +27,10 @@ export class CreateTransactionUseCase {
   execute(
     req: CreateTransactionRequest,
   ): ResultAsync<CreateTransactionResponse, RichError> {
-    return createTransaction(req).asyncAndThen((transaction) =>
-      this.repo.create(transaction).map(toTransactionResponse),
-    )
+    return createTransaction(req)
+      .asyncAndThen((transaction) =>
+        this.repo.create(transaction).map(toTransactionResponse),
+      )
       .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

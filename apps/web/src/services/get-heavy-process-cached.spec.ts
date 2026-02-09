@@ -98,9 +98,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain(
-      "DeserializeExternalApiErrorBody",
-    );
+    expect(res.error.message).toContain("DeserializeExternalApiErrorBody");
   });
 
   it("returns Err when remote error body cannot be deserialized", async () => {
@@ -119,9 +117,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain(
-      "DeserializeExternalApiErrorBody",
-    );
+    expect(res.error.message).toContain("DeserializeExternalApiErrorBody");
   });
 
   it("returns Err when response body JSON parse fails on success status", async () => {
@@ -140,9 +136,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain(
-      "DeserializeExternalApiResponseBody",
-    );
+    expect(res.error.message).toContain("DeserializeExternalApiResponseBody");
   });
 
   it("returns Err when underlying request rejects (network failure)", async () => {

@@ -412,6 +412,15 @@ function metaString(meta: unknown, key: string): string | undefined {
   return undefined;
 }
 
+function resolvePrismaErrorClass(cause: unknown): string {
+  if (isKnownRequestError(cause)) return "PrismaClientKnownRequestError";
+  if (isValidationError(cause)) return "PrismaClientValidationError";
+  if (isInitializationError(cause)) return "PrismaClientInitializationError";
+  if (isRustPanicError(cause)) return "PrismaClientRustPanicError";
+  if (isUnknownRequestError(cause)) return "PrismaClientUnknownRequestError";
+  return "Unknown";
+}
+
 function resolvePrismaMeta({
   cause,
   kind,
@@ -430,22 +439,13 @@ function resolvePrismaMeta({
   userMeta: NewRichError["meta"];
 }): NewRichError["meta"] {
   return {
-    prismaSource: "prisma.newPrismaError",
     prismaErrorClass: resolvePrismaErrorClass(cause),
     prismaKind: kind,
+    prismaSource: "prisma.newPrismaError",
     ...(prismaCode ? { prismaCode } : {}),
     ...(prismaColumn ? { prismaColumn } : {}),
     ...(prismaTarget ? { prismaTarget } : {}),
     ...(prismaNotFoundCause ? { prismaNotFoundCause } : {}),
     ...(userMeta ?? {}),
   };
-}
-
-function resolvePrismaErrorClass(cause: unknown): string {
-  if (isKnownRequestError(cause)) return "PrismaClientKnownRequestError";
-  if (isValidationError(cause)) return "PrismaClientValidationError";
-  if (isInitializationError(cause)) return "PrismaClientInitializationError";
-  if (isRustPanicError(cause)) return "PrismaClientRustPanicError";
-  if (isUnknownRequestError(cause)) return "PrismaClientUnknownRequestError";
-  return "Unknown";
 }

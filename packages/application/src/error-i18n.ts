@@ -19,14 +19,17 @@ export function ensureApplicationErrorI18n(error: RichError): RichError {
     return error;
   }
 
-  const resolved = resolveI18nByCode(error.code) ?? resolveI18nByKind(error.kind);
+  const resolved =
+    resolveI18nByCode(error.code) ?? resolveI18nByKind(error.kind);
 
   const mutable = error as unknown as MutableI18n;
   mutable.i18n = resolved;
   return error;
 }
 
-function resolveI18nByCode(code: string | undefined): ApplicationErrorI18n | null {
+function resolveI18nByCode(
+  code: string | undefined,
+): ApplicationErrorI18n | null {
   if (!code) return null;
 
   if (code.startsWith("DOM_") || code.startsWith("ZOD_")) {

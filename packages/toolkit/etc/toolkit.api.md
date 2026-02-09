@@ -490,9 +490,6 @@ export type UrlRedactorOptions = {
 };
 
 // @public
-export function userMessageFromError(error: Error): string;
-
-// @public
 export type ZodIssue = z.core.$ZodIssue;
 
 // (No @packageDocumentation comment for this package)

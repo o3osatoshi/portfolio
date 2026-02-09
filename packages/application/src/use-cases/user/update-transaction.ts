@@ -4,9 +4,7 @@ import { err, ok, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import {
-  newApplicationError,
-} from "../../application-error";
+import { newApplicationError } from "../../application-error";
 import {
   applicationErrorCodes,
   applicationErrorI18nKeys,

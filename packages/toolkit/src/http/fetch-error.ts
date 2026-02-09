@@ -254,11 +254,11 @@ function resolveFetchMeta({
   const causeName = extractErrorName(cause);
 
   return {
-    fetchSource: "toolkit.newFetchError",
+    fetchKindOverridden: inferredKind !== resolvedKind,
     fetchCauseType: resolveSourceType(cause),
     fetchInferredKind: inferredKind,
     fetchResolvedKind: resolvedKind,
-    fetchKindOverridden: inferredKind !== resolvedKind,
+    fetchSource: "toolkit.newFetchError",
     ...(method ? { fetchMethod: method } : {}),
     ...(url ? { fetchUrl: url } : {}),
     ...(target ? { fetchTarget: target } : {}),

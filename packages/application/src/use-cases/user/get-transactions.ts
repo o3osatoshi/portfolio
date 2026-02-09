@@ -27,9 +27,10 @@ export class GetTransactionsUseCase {
   execute(
     req: GetTransactionsRequest,
   ): ResultAsync<GetTransactionsResponse, RichError> {
-    return newUserId(req.userId).asyncAndThen((userId) =>
-      this.repo.findByUserId(userId).map(toTransactionsResponse),
-    )
+    return newUserId(req.userId)
+      .asyncAndThen((userId) =>
+        this.repo.findByUserId(userId).map(toTransactionsResponse),
+      )
       .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }
