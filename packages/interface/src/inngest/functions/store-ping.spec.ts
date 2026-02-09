@@ -9,6 +9,8 @@ import type { Inngest } from "inngest";
 import { errAsync, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+
 import { createStorePingFunction } from "./store-ping";
 
 const applicationMocks = vi.hoisted(() => {
@@ -49,12 +51,22 @@ type CreatedFunction = {
 type HarnessOptions = {
   context?: StorePingContext;
   notifyResults?: NotifyResult[];
-  storePingError?: Error;
+  storePingError?: RichError;
   storePingResult?: StorePingResult;
 };
 type NotifyResult = ReturnType<Notifier["notify"]>;
 
 type StepRun = (id: string, fn: () => Promise<unknown>) => Promise<unknown>;
+
+const testError = (reason: string) =>
+  newRichError({
+    details: {
+      reason,
+    },
+    isOperational: false,
+    kind: "Internal",
+    layer: "External",
+  });
 
 const baseContext: StorePingContext = {
   jobKey: "store-ping",
@@ -214,7 +226,7 @@ describe("createStorePingFunction", () => {
   });
 
   it("notifies failure when success notification fails", async () => {
-    const notifyError = new Error("temporary slack failure");
+    const notifyError = testError("temporary slack failure");
     const { created, notifyCalls, step, stepIds } = createHarness({
       notifyResults: [errAsync(notifyError), okAsync(undefined)],
     });
@@ -237,10 +249,10 @@ describe("createStorePingFunction", () => {
   });
 
   it("throws when failure notification fails", async () => {
-    const notifyError = new Error("slack outage");
+    const notifyError = testError("slack outage");
     const { created, notifyCalls, step, stepIds } = createHarness({
       notifyResults: [errAsync(notifyError)],
-      storePingError: new Error("db down"),
+      storePingError: testError("db down"),
     });
 
     await expect(created.handler({ step })).rejects.toThrow("slack outage");
@@ -255,7 +267,7 @@ describe("createStorePingFunction", () => {
   });
 
   it("notifies failure and rethrows the job error", async () => {
-    const jobError = new Error("db down");
+    const jobError = testError("db down");
     const { created, notifyCalls, step, stepIds } = createHarness({
       storePingError: jobError,
     });

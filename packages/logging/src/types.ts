@@ -324,7 +324,7 @@ export interface RuntimeLoggingOptions extends BaseLoggingOptions {
    * When omitted, the Axiom transport falls back to `console.error`.
    * Ignored when a custom `transport` is provided.
    */
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
 }
 
 /**

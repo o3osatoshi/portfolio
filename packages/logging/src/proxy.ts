@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 
-import { deserializeError, newError } from "@o3osatoshi/toolkit";
+import { toRichError } from "@o3osatoshi/toolkit";
 
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
@@ -52,7 +52,7 @@ export interface ProxyHandlerOptions {
   /**
    * Error handler invoked when request processing fails.
    */
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
   /**
    * Transport used to emit the received events.
    */
@@ -112,7 +112,7 @@ export interface ProxyTransportOptions {
   /**
    * Error handler invoked on send failures or drops.
    */
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
   /**
    * Proxy endpoint URL.
    */
@@ -133,7 +133,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
     ? new Set(options.allowDatasets)
     : undefined;
   const maxEvents = Math.max(1, options.maxEvents ?? 500);
-  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const onError = options.onError ?? ((error: unknown) => console.error(error));
 
   return async (req: Request): Promise<Response> => {
     if (req.method.toUpperCase() !== "POST") {
@@ -145,15 +145,14 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       rawPayload = await req.json();
     } catch (error: unknown) {
       onError(
-        deserializeError(error, {
-          fallback: (cause) =>
-            newError({
-              action: "LoggingProxyParseRequest",
-              cause,
-              kind: "Unknown",
-              layer: "Infra",
-              reason: "proxy payload parsing failed with a non-error value",
-            }),
+        toRichError(error, {
+          details: {
+            action: "LoggingProxyParseRequest",
+            reason:
+              "proxy payload parsing failed with an unexpected error value",
+          },
+          kind: "Internal",
+          layer: "Infrastructure",
         }),
       );
       return json({ message: "invalid_json", status: "error" }, 400);
@@ -192,15 +191,13 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       return json({ accepted: payload.eventSets.length, status: "ok" }, 200);
     } catch (error) {
       onError(
-        deserializeError(error, {
-          fallback: (cause) =>
-            newError({
-              action: "LoggingProxyEmit",
-              cause,
-              kind: "Unknown",
-              layer: "Infra",
-              reason: "proxy emission failed with a non-error value",
-            }),
+        toRichError(error, {
+          details: {
+            action: "LoggingProxyEmit",
+            reason: "proxy emission failed with an unexpected error value",
+          },
+          kind: "Internal",
+          layer: "Infrastructure",
         }),
       );
       return json({ message: "proxy_failed", status: "error" }, 500);
@@ -230,7 +227,7 @@ export function createProxyTransport(
 
   const maxBatchSize = Math.max(1, options.maxBatchSize ?? 50);
   const maxBufferSize = Math.max(maxBatchSize, options.maxBufferSize ?? 1000);
-  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const onError = options.onError ?? ((error: unknown) => console.error(error));
 
   let eventSets: EventSet[] = [];
   let flushTimer: ReturnType<typeof setTimeout> | undefined;
@@ -301,15 +298,14 @@ export function createProxyTransport(
       } catch (error: unknown) {
         eventSets = _eventSets.concat(eventSets);
         onError(
-          deserializeError(error, {
-            fallback: (cause) =>
-              newError({
-                action: "LoggingProxyTransportFlush",
-                cause,
-                kind: "Unknown",
-                layer: "Infra",
-                reason: "proxy transport flush failed with a non-error value",
-              }),
+          toRichError(error, {
+            details: {
+              action: "LoggingProxyTransportFlush",
+              reason:
+                "proxy transport flush failed with an unexpected error value",
+            },
+            kind: "Internal",
+            layer: "Infrastructure",
           }),
         );
       } finally {

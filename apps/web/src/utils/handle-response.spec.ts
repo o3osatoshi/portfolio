@@ -22,7 +22,7 @@ describe("utils/handle-response", () => {
     expect(result.error.name).toBe("ExternalUnauthorizedError");
   });
 
-  it("returns Err with deserialized remote error when response is non-2xx", async () => {
+  it("returns Err Serialization when remote payload is not serialized RichError", async () => {
     const body = { name: "ApplicationNotFoundError", message: "not found" };
     const res = {
       json: vi.fn().mockResolvedValueOnce(body),
@@ -39,8 +39,8 @@ describe("utils/handle-response", () => {
     if (!result.isErr()) return;
 
     expect(result.error).toBeInstanceOf(Error);
-    expect(result.error.name).toBe("ApplicationNotFoundError");
-    expect(result.error.message).toBe("not found");
+    expect(result.error.name).toBe("ExternalSerializationError");
+    expect(result.error.message).toContain("DeserializeExternalApiErrorBody");
   });
 
   it("returns Ok with parsed body when response is successful", async () => {

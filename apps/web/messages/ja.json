@@ -5,7 +5,8 @@
   "Common": {
     "errorWithMessage": "エラー: {message}",
     "notAvailable": "—",
-    "toggle": "切り替え"
+    "toggle": "切り替え",
+    "unknownError": "不明なエラー"
   },
   "Home": {
     "header": {
@@ -580,5 +581,21 @@
     "fallback": "CN",
     "signIn": "サインイン",
     "signOut": "サインアウト"
+  },
+  "errors": {
+    "application": {
+      "conflict": "既存データと競合しました。時間をおいて再実行してください。",
+      "forbidden": "この操作を行う権限がありません。",
+      "internal": "予期しないエラーが発生しました。しばらくしてから再試行してください。",
+      "not_found": "対象のデータが見つかりませんでした。",
+      "rate_limit": "リクエストが多すぎます。少し待ってから再試行してください。",
+      "timeout": "処理がタイムアウトしました。再試行してください。",
+      "unauthorized": "認証が必要です。サインインしてください。",
+      "unavailable": "現在サービスを利用できません。しばらくしてから再試行してください。",
+      "validation": "入力値に誤りがあります。内容を確認して再試行してください。"
+    },
+    "transport": {
+      "deserialize_failed": "サーバーのエラーレスポンスを解釈できませんでした。"
+    }
   }
 }

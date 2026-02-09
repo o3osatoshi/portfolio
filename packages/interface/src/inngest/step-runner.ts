@@ -2,8 +2,8 @@ import type { StepRunner } from "@repo/application";
 import { ResultAsync } from "neverthrow";
 
 import {
-  deserializeError,
-  newError,
+  type RichError,
+  toRichError,
   unwrapResultAsyncOrThrow,
 } from "@o3osatoshi/toolkit";
 
@@ -12,19 +12,17 @@ type InngestStepRunner = {
 };
 
 export function createInngestStepRunner(step: InngestStepRunner): StepRunner {
-  return <T>(id: string, task: () => ResultAsync<T, Error>) =>
+  return <T>(id: string, task: () => ResultAsync<T, RichError>) =>
     ResultAsync.fromPromise(
       step.run(id, () => unwrapResultAsyncOrThrow(task())),
       (error) =>
-        deserializeError(error, {
-          fallback: (cause) =>
-            newError({
-              action: "InngestStepRunner",
-              cause,
-              kind: "Unknown",
-              layer: "Infra",
-              reason: "step.run rejected with a non-error value",
-            }),
+        toRichError(error, {
+          details: {
+            action: "InngestStepRunner",
+            reason: "step.run rejected with an unexpected error value",
+          },
+          kind: "Internal",
+          layer: "Infrastructure",
         }),
     ).map((value) => value as T);
 }

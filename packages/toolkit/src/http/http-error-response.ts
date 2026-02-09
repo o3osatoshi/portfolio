@@ -1,5 +1,5 @@
 /**
- * Helpers for converting server-side `Error`s into HTTP-ready payloads.
+ * Helpers for converting unknown error-like values into HTTP-ready payloads.
  *
  * The primary entry point is {@link toHttpErrorResponse}, which returns a
  * serializable body and an appropriate status code. It also supports an
@@ -12,27 +12,23 @@
  * - `NotFound` → 404
  * - `MethodNotAllowed` → 405
  * - `RateLimit` → 429
- * - `Conflict` / `Integrity` / `Deadlock` → 409
+ * - `Conflict` → 409
  * - `Unprocessable` → 422
  * - `Canceled` → 408
- * - `Serialization` / `Config` / `Unknown` → 500
+ * - `Serialization` / `Internal` → 500
  * - `BadGateway` → 502
  * - `Unavailable` → 503
  * - `Timeout` → 504
  *
- * Heuristics:
- * - `ZodError` is treated as 400 (Validation).
- * - `AbortError` is treated as 408 (Canceled).
- *
- * Security: in development, {@link serializeError} may include stack traces.
+ * Security: in development, {@link serializeRichError} may include stack traces.
  * Control this via the `includeStack` option.
  */
 import {
   type Kind,
-  parseErrorName,
   type SerializedError,
-  serializeError,
   type SerializeOptions,
+  serializeRichError,
+  toRichError,
 } from "../error";
 
 /**
@@ -41,7 +37,7 @@ import {
  * @public
  */
 export type ErrorHttpResponse = {
-  /** Serialized, JSON‑safe error payload produced by {@link serializeError}. */
+  /** Serialized, JSON‑safe error payload produced by {@link serializeRichError}. */
   body: SerializedError;
   /** HTTP status code associated with the error. */
   statusCode: ErrorStatusCode;
@@ -77,10 +73,8 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
   BadGateway: 502,
   BadRequest: 400,
   Canceled: 408,
-  Config: 500,
   Conflict: 409,
-  Deadlock: 409,
-  Integrity: 409,
+  Internal: 500,
   MethodNotAllowed: 405,
   NotFound: 404,
   RateLimit: 429,
@@ -88,16 +82,15 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
   Timeout: 504,
   Unauthorized: 401,
   Unavailable: 503,
-  Unknown: 500,
   Unprocessable: 422,
 };
 
 /**
- * Convert an `Error` into an HTTP response shape.
+ * Convert an unknown error-like value into an HTTP response shape.
  *
- * - `body` is a stable, JSON‑safe structure created by {@link serializeError}.
- * - `status` is inferred from `error.name` (see Kind → Status mapping), unless
- *   a specific status override is provided.
+ * - `body` is a stable, JSON‑safe structure created by {@link serializeRichError}.
+ * - `status` is inferred from normalized `RichError.kind` (see Kind → Status
+ *   mapping), unless a specific status override is provided.
  *
  * @example
  * // Next.js Route Handler
@@ -106,8 +99,8 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
  *   try {
  *     // ...
  *   } catch (err) {
- *     const { body, status } = toHttpErrorResponse(err as Error);
- *     return Response.json(body, { status });
+ *     const { body, statusCode } = toHttpErrorResponse(err);
+ *     return Response.json(body, { status: statusCode });
  *   }
  * }
  * ```
@@ -116,44 +109,23 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
  * // Express middleware
  * ```ts
  * app.use((err, _req, res, _next) => {
- *   const { body, status } = toHttpErrorResponse(err);
- *   res.status(status).json(body);
+ *   const { body, statusCode } = toHttpErrorResponse(err);
+ *   res.status(statusCode).json(body);
  * });
  * ```
  *
- * @param error - Error instance to convert.
+ * @param error - Unknown value to convert into a structured error response.
  * @param status - Optional HTTP status override. If provided, it takes precedence.
- * @param options - Serialization options (depth, includeStack, maxLen).
- * @returns A pair of `body` and `status` suitable for HTTP responses.
+ * @param options - Serialization options (depth, includeStack).
+ * @returns A pair of `body` and `statusCode` suitable for HTTP responses.
  * @public
  */
 export function toHttpErrorResponse(
-  error: Error,
+  error: unknown,
   status?: ErrorStatusCode,
   options?: SerializeOptions,
 ): ErrorHttpResponse {
-  const body = serializeError(error, options);
-  return { body, statusCode: status ?? deriveStatusFromError(error) };
-}
-
-/** @internal Derive HTTP status from an Error name (Kind heuristic). */
-function deriveStatusFromError(e: Error): ErrorStatusCode {
-  const kind = detectKindFromName(e.name);
-  if (kind) return KIND_TO_STATUS[kind];
-  return 500;
-}
-
-/**
- * @internal Detect a {@link Kind} value from an error `name`.
- *
- * - Prioritizes names produced by {@link newError}, whose names are built as
- *   `Layer + Kind + "Error"` (e.g. `DomainValidationError`).
- * - Special‑cases external errors: `ZodError` and `AbortError`.
- */
-function detectKindFromName(name: string): Kind | undefined {
-  const { kind } = parseErrorName(name);
-  if (kind) return kind;
-  if (name === "ZodError") return "Validation";
-  if (name === "AbortError") return "Canceled";
-  return undefined;
+  const rich = toRichError(error);
+  const body = serializeRichError(rich, options);
+  return { body, statusCode: status ?? KIND_TO_STATUS[rich.kind] ?? 500 };
 }

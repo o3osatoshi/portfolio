@@ -1,6 +1,8 @@
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
+import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { withRetry } from "./with-retry";
 
 const buildResponse = (status: number, headers: Headers, ok = status < 400) =>
@@ -69,8 +71,15 @@ describe("integrations/http withRetry", () => {
     vi.useFakeTimers();
     const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0);
 
-    const error = new Error("timeout");
-    error.name = "ExternalTimeoutError";
+    const error = newIntegrationError({
+      code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
+      details: {
+        action: "WithRetrySpec",
+        reason: "timeout",
+      },
+      isOperational: true,
+      kind: "Timeout",
+    });
     const next = vi.fn(() => errAsync(error));
     const client = withRetry(next, {
       baseDelayMs: 1,
@@ -86,8 +95,45 @@ describe("integrations/http withRetry", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(next).toHaveBeenCalledTimes(3);
+    expect(result.error.meta?.["retry"]).toEqual({
+      attempts: 3,
+      exhausted: true,
+      maxAttempts: 3,
+      method: "GET",
+      retryable: false,
+    });
 
     randomSpy.mockRestore();
     vi.useRealTimers();
+  });
+
+  it("propagates retry metadata even when the error is non-retryable", async () => {
+    const error = newIntegrationError({
+      code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
+      details: {
+        action: "WithRetrySpec",
+        reason: "bad request",
+      },
+      isOperational: true,
+      kind: "Validation",
+    });
+    const next = vi.fn(() => errAsync(error));
+    const client = withRetry(next, {
+      maxAttempts: 5,
+    });
+
+    // @ts-expect-error
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) return;
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(result.error.meta?.["retry"]).toEqual({
+      attempts: 1,
+      exhausted: false,
+      maxAttempts: 5,
+      method: "GET",
+      retryable: false,
+    });
   });
 });

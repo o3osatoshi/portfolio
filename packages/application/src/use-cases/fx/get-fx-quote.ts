@@ -2,8 +2,11 @@ import type { FxQuoteProvider } from "@repo/domain";
 import { newCurrencyCode } from "@repo/domain";
 import { Result, type ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import type { GetFxQuoteRequest, GetFxQuoteResponse } from "../../dtos";
 import { toFxQuoteResponse } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 /**
  * Use case that fetches the latest FX quote for a currency pair.
@@ -17,12 +20,14 @@ export class GetFxQuoteUseCase {
    * @param req - Normalized request payload.
    * @returns ResultAsync with a typed response or a structured error.
    */
-  execute(req: GetFxQuoteRequest): ResultAsync<GetFxQuoteResponse, Error> {
+  execute(req: GetFxQuoteRequest): ResultAsync<GetFxQuoteResponse, RichError> {
     return Result.combine([
       newCurrencyCode(req.base),
       newCurrencyCode(req.quote),
-    ]).asyncAndThen(([base, quote]) =>
-      this.provider.getRate({ base, quote }).map(toFxQuoteResponse),
-    );
+    ])
+      .asyncAndThen(([base, quote]) =>
+        this.provider.getRate({ base, quote }).map(toFxQuoteResponse),
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

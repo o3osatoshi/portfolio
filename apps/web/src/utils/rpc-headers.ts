@@ -2,7 +2,7 @@ import type { ClientOptions } from "@repo/interface/rpc-client";
 import { ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 /**
  * Create a lazily-evaluated `Cookie` header from the current request cookies.
@@ -13,18 +13,24 @@ import { newError } from "@o3osatoshi/toolkit";
  *
  * On success, the returned {@link ResultAsync} resolves to an object whose
  * `headers` function sets the `Cookie` header. On failure, it yields an
- * {@link Error} created by {@link newError} with Infra/Unknown metadata.
+ * {@link Error} created by {@link newRichError} with Infrastructure/Internal metadata.
  */
 export function createHeaders(): ResultAsync<
   Pick<ClientOptions, "headers">,
-  Error
+  RichError
 > {
   return ResultAsync.fromPromise(cookies(), (cause) =>
-    newError({
-      action: "Call cookies",
+    newRichError({
       cause,
-      kind: "Unknown",
-      layer: "Infra",
+      code: "WEB_RPC_HEADERS_COOKIE_READ_FAILED",
+      details: {
+        action: "ReadRequestCookies",
+        reason: "Failed to read request cookies for RPC forwarding.",
+      },
+      i18n: { key: "errors.application.internal" },
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
     }),
   ).map((reqCookies) => ({
     headers: () => ({

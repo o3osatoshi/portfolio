@@ -2,6 +2,13 @@ import type { CacheStore } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newApplicationError } from "../../application-error";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
@@ -18,6 +25,18 @@ const h = vi.hoisted(() => {
 
 const CACHE_KEY = "edge:public:heavy";
 const CACHE_TTL_MS = 200_000;
+
+const testError = (reason: string) =>
+  newApplicationError({
+    code: applicationErrorCodes.INTERNAL,
+    details: {
+      action: "HeavyProcessCachedUseCaseSpec",
+      reason,
+    },
+    i18n: { key: applicationErrorI18nKeys.INTERNAL },
+    isOperational: false,
+    kind: "Internal",
+  });
 
 describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   beforeEach(() => {
@@ -42,7 +61,7 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
     const cachedTimestamp = new Date("2025-01-01T00:00:00Z");
 
     h.cacheGetMock.mockReturnValueOnce(
-      okAsync<HeavyProcessResponse | null, Error>({
+      okAsync<HeavyProcessResponse | null, RichError>({
         timestamp: cachedTimestamp,
       }),
     );
@@ -67,11 +86,11 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   it("runs heavy process and caches result when cache misses", async () => {
     const heavyTimestamp = new Date("2025-01-02T00:00:00Z");
 
-    h.cacheGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+    h.cacheGetMock.mockReturnValueOnce(okAsync<null, RichError>(null));
     h.heavyExecuteMock.mockReturnValueOnce(
-      okAsync<HeavyProcessResponse, Error>({ timestamp: heavyTimestamp }),
+      okAsync<HeavyProcessResponse, RichError>({ timestamp: heavyTimestamp }),
     );
-    h.cacheSetMock.mockReturnValueOnce(okAsync<"OK" | null, Error>("OK"));
+    h.cacheSetMock.mockReturnValueOnce(okAsync<"OK" | null, RichError>("OK"));
 
     const useCase = buildUseCase();
     const result = await useCase.execute();
@@ -97,16 +116,16 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   });
 
   it("falls back to heavy process when cache get fails", async () => {
-    const cacheError = new Error("cache get failed");
+    const cacheError = testError("cache get failed");
     const heavyTimestamp = new Date("2025-01-03T00:00:00Z");
 
     h.cacheGetMock.mockReturnValueOnce(
-      errAsync<HeavyProcessResponse | null, Error>(cacheError),
+      errAsync<HeavyProcessResponse | null, RichError>(cacheError),
     );
     h.heavyExecuteMock.mockReturnValueOnce(
-      okAsync<HeavyProcessResponse, Error>({ timestamp: heavyTimestamp }),
+      okAsync<HeavyProcessResponse, RichError>({ timestamp: heavyTimestamp }),
     );
-    h.cacheSetMock.mockReturnValueOnce(okAsync<"OK" | null, Error>("OK"));
+    h.cacheSetMock.mockReturnValueOnce(okAsync<"OK" | null, RichError>("OK"));
 
     const useCase = buildUseCase();
     const result = await useCase.execute();
@@ -117,11 +136,11 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   });
 
   it("propagates error when heavy process fails", async () => {
-    h.cacheGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+    h.cacheGetMock.mockReturnValueOnce(okAsync<null, RichError>(null));
 
-    const heavyError = new Error("heavy process failed");
+    const heavyError = testError("heavy process failed");
     h.heavyExecuteMock.mockReturnValueOnce(
-      errAsync<HeavyProcessResponse, Error>(heavyError),
+      errAsync<HeavyProcessResponse, RichError>(heavyError),
     );
 
     const useCase = buildUseCase();
@@ -139,14 +158,14 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   it("returns success even when cache set fails after heavy process", async () => {
     const heavyTimestamp = new Date("2025-01-04T00:00:00Z");
 
-    h.cacheGetMock.mockReturnValueOnce(okAsync<null, Error>(null));
+    h.cacheGetMock.mockReturnValueOnce(okAsync<null, RichError>(null));
     h.heavyExecuteMock.mockReturnValueOnce(
-      okAsync<HeavyProcessResponse, Error>({ timestamp: heavyTimestamp }),
+      okAsync<HeavyProcessResponse, RichError>({ timestamp: heavyTimestamp }),
     );
 
-    const cacheSetError = new Error("cache set failed");
+    const cacheSetError = testError("cache set failed");
     h.cacheSetMock.mockReturnValueOnce(
-      errAsync<"OK" | null, Error>(cacheSetError),
+      errAsync<"OK" | null, RichError>(cacheSetError),
     );
 
     const useCase = buildUseCase();

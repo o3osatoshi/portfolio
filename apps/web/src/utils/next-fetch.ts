@@ -6,6 +6,7 @@ import {
   deserializeResponseBody,
   type HttpResponse,
   newFetchError,
+  type RichError,
 } from "@o3osatoshi/toolkit";
 
 export type NextFetchRequest = {
@@ -51,7 +52,7 @@ export function getQueryPath(path: string, search?: Search) {
  */
 export function nextFetch(
   request: NextFetchRequest,
-): ResultAsync<HttpResponse, Error> {
+): ResultAsync<HttpResponse, RichError> {
   const queryPath = getQueryPath(request.path, request.search);
   const url = new URL(queryPath, env.NEXT_PUBLIC_API_BASE_URL);
 
@@ -71,15 +72,17 @@ export function nextFetch(
     }),
     (cause) =>
       newFetchError({
-        action: `Fetch ${queryPath}`,
         cause,
+        details: { action: "FetchExternalApi" },
         request: { method: "GET", url: url.href },
       }),
   ).andThen((response) =>
     ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
       newFetchError({
-        action: `Deserialize body for ${queryPath}`,
         cause,
+        details: {
+          action: "DeserializeExternalApiResponseBody",
+        },
         kind: "Serialization",
         request: { method: "GET", url: url.href },
       }),

@@ -1,4 +1,20 @@
-import type { ResultAsync } from "neverthrow";
+import type { Result, ResultAsync } from "neverthrow";
+
+import type { RichError } from "./error";
+
+/**
+ * Internal Result type standardized on {@link RichError}.
+ *
+ * @public
+ */
+export type RichResult<T> = Result<T, RichError>;
+
+/**
+ * Internal ResultAsync type standardized on {@link RichError}.
+ *
+ * @public
+ */
+export type RichResultAsync<T> = ResultAsync<T, RichError>;
 
 /**
  * Unwrap a ResultAsync into a Promise that throws on Err.

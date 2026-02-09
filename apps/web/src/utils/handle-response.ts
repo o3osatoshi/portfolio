@@ -1,6 +1,10 @@
 import { errAsync, ResultAsync } from "neverthrow";
 
-import { deserializeError, newFetchError } from "@o3osatoshi/toolkit";
+import {
+  deserializeRichError,
+  newFetchError,
+  type RichError,
+} from "@o3osatoshi/toolkit";
 
 type HandleResponseOptions = {
   context: string;
@@ -15,7 +19,7 @@ type Request = {
 export function handleResponse<T>(
   res: Response,
   { context, request }: HandleResponseOptions,
-): ResultAsync<T, Error> {
+): ResultAsync<T, RichError> {
   if (res.status === 401) {
     return errAsync(newFetchError({ kind: "Unauthorized", request }));
   }
@@ -23,21 +27,22 @@ export function handleResponse<T>(
   if (!res.ok) {
     return ResultAsync.fromPromise(res.json(), (cause) =>
       newFetchError({
-        action: `Deserialize error body for ${context}`,
         cause,
+        details: { action: "DeserializeExternalApiErrorBody" },
         kind: "Serialization",
         request,
       }),
     ).andThen((body) =>
       errAsync(
-        deserializeError(body, {
-          fallback: (cause) =>
-            newFetchError({
-              action: `Deserialize error body for ${context}`,
-              cause,
-              kind: "BadGateway",
-              request,
-            }),
+        deserializeRichError(body, {
+          action: "DeserializeExternalApiErrorBody",
+          layer: "External",
+          meta: {
+            context,
+            method: request.method,
+            url: request.url,
+          },
+          source: "web.handle-response",
         }),
       ),
     );
@@ -45,8 +50,8 @@ export function handleResponse<T>(
 
   return ResultAsync.fromPromise(res.json(), (cause) =>
     newFetchError({
-      action: `Deserialize body for ${context}`,
       cause,
+      details: { action: "DeserializeExternalApiResponseBody" },
       kind: "Serialization",
       request,
     }),

@@ -1,6 +1,9 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { domainValidationError } from "../domain-error";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newDomainError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -15,12 +18,19 @@ export function isTransactionType(v: unknown): v is TransactionType {
 /**
  * Validate unknown input and coerce it into a {@link TransactionType}.
  */
-export function newTransactionType(v: unknown): Result<TransactionType, Error> {
+export function newTransactionType(
+  v: unknown,
+): Result<TransactionType, RichError> {
   if (v === "BUY" || v === "SELL") return ok(v as TransactionType);
   return err(
-    domainValidationError({
-      action: "NewTransactionType",
-      reason: "TransactionType must be BUY or SELL",
+    newDomainError({
+      code: domainErrorCodes.TRANSACTION_TYPE_INVALID,
+      details: {
+        action: "NewTransactionType",
+        reason: "TransactionType must be BUY or SELL",
+      },
+      isOperational: true,
+      kind: "Validation",
     }),
   );
 }

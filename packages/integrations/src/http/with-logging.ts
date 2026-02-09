@@ -1,7 +1,7 @@
 import type { z } from "zod";
 
 import type { Attributes, Logger } from "@o3osatoshi/logging";
-import { parseErrorName } from "@o3osatoshi/toolkit";
+import type { RichError } from "@o3osatoshi/toolkit";
 
 import type {
   SmartFetch,
@@ -109,19 +109,19 @@ function buildAttributes<S extends z.ZodType>(
 
 function buildErrorAttributes<S extends z.ZodType>(
   request: SmartFetchRequest<S>,
-  error: Error,
+  error: RichError,
   redactUrl: (url: string) => string,
   requestName?: string,
 ): Attributes {
-  const { kind, layer } = parseErrorName(error.name);
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
-    ...(kind ? { "error.kind": kind } : {}),
-    ...(layer ? { "error.layer": layer } : {}),
     "error.name": error.name,
+    "error.kind": error.kind,
+    "error.layer": error.layer,
     "error.message": error.message,
     "http.method": (request.method ?? "GET").toUpperCase(),
     "http.url": redactUrl(request.url),
+    "retry.attempts": resolveRetryAttempts(error),
   };
 }
 
@@ -132,13 +132,14 @@ function buildMetricsAttributes<S extends z.ZodType>({
   requestName,
   response,
 }: {
-  error?: Error | undefined;
+  error?: RichError | undefined;
   redactUrl: (url: string) => string;
   request: SmartFetchRequest<S>;
   requestName?: string | undefined;
   response?: SmartFetchResponse | undefined;
 }): Attributes {
-  const { kind, layer } = error ? parseErrorName(error.name) : {};
+  const kind = error?.kind;
+  const layer = error?.layer;
   return {
     ...(requestName ? { "http.request.name": requestName } : {}),
     ...(kind ? { "error.kind": kind } : {}),
@@ -147,7 +148,9 @@ function buildMetricsAttributes<S extends z.ZodType>({
     "http.method": (request.method ?? "GET").toUpperCase(),
     "http.status_code": response?.response?.status,
     "http.url": redactUrl(request.url),
-    "retry.attempts": response?.retry?.attempts,
+    "retry.attempts":
+      response?.retry?.attempts ??
+      (error ? resolveRetryAttempts(error) : undefined),
   };
 }
 
@@ -161,7 +164,7 @@ function emitMetrics<S extends z.ZodType>({
   response,
 }: {
   durationMs: number;
-  error?: Error;
+  error?: RichError;
   logger: Logger;
   redactUrl: (url: string) => string;
   request: SmartFetchRequest<S>;
@@ -186,8 +189,8 @@ function emitMetrics<S extends z.ZodType>({
   });
 }
 
-function resolveErrorLevel(error: Error): "error" | "warn" {
-  const { kind } = parseErrorName(error.name);
+function resolveErrorLevel(error: RichError): "error" | "warn" {
+  const kind = error.kind;
   if (!kind) return "error";
   if (
     kind === "BadRequest" ||
@@ -200,4 +203,14 @@ function resolveErrorLevel(error: Error): "error" | "warn" {
     return "warn";
   }
   return "error";
+}
+
+function resolveRetryAttempts(error: RichError): number | undefined {
+  const retryMeta = error.meta?.["retry"];
+  if (!retryMeta || typeof retryMeta !== "object" || Array.isArray(retryMeta)) {
+    return undefined;
+  }
+  const attempts = retryMeta["attempts"];
+  if (typeof attempts !== "number") return undefined;
+  return Number.isFinite(attempts) ? attempts : undefined;
 }

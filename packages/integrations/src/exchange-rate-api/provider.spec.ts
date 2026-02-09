@@ -2,7 +2,7 @@ import type { CacheStore, FxQuoteQuery } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { parseErrorMessage } from "@o3osatoshi/toolkit";
+import { isRichError } from "@o3osatoshi/toolkit";
 
 import type { ExchangeRateApiConfig, ExchangeRateApiOptions } from "./provider";
 import { ExchangeRateApi } from "./provider";
@@ -170,8 +170,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalNotFoundError");
-    const { reason } = parseErrorMessage(result.error.message);
-    expect(reason ?? "").toContain("ExchangeRate API responded with 404");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.reason ?? "").toContain(
+        "ExchangeRate API responded with 404",
+      );
+    }
   });
 
   it("returns BadGateway error when JSON parsing fails", async () => {
@@ -191,8 +195,10 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
-    const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("DeserializeResponseBody");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.action).toBe("DeserializeResponseBody");
+    }
   });
 
   it("returns BadGateway error when payload schema is invalid", async () => {
@@ -215,8 +221,10 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalValidationError");
-    const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("ParseExchangeRateApiResponse");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.action).toBe("ParseExchangeRateApiResponse");
+    }
   });
 
   it("returns BadGateway error when API signals failure", async () => {
@@ -239,8 +247,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
-    const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("ExchangeRate API error: invalid-key");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.reason).toBe(
+        "ExchangeRate API error: invalid-key",
+      );
+    }
   });
 
   it("returns BadGateway error when the requested rate is missing", async () => {
@@ -264,8 +276,12 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("ExternalBadGatewayError");
-    const { reason } = parseErrorMessage(result.error.message);
-    expect(reason).toBe("ExchangeRate API response missing conversion rate.");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.reason).toBe(
+        "ExchangeRate API response missing conversion rate.",
+      );
+    }
   });
 
   it("propagates domain validation errors for invalid rates", async () => {

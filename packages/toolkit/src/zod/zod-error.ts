@@ -1,30 +1,35 @@
 import { z, type ZodError } from "zod";
 
-import { type Layer, newError } from "../error";
+import {
+  type Layer,
+  type NewRichError,
+  newRichError,
+  resolveOperationalFromKind,
+  type RichError,
+  type RichErrorDetails,
+} from "../error";
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.
- * Designed to mirror {@link NewError} while providing Zod-specific hooks.
+ * Designed to mirror {@link NewRichError} while providing Zod-specific hooks.
  *
  * @public
  */
 export type NewZodError = {
-  /** Logical operation being validated when the failure occurred. */
-  action?: string | undefined;
   /**
    * Original throwable (ideally a `ZodError`) used to derive issues.
    * Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
    */
   cause?: undefined | unknown;
-  /** Suggested remediation; falls back to an inferred hint when omitted. */
-  hint?: string | undefined;
-  /** Description of the effect of the validation failure. */
-  impact?: string | undefined;
+  /** Optional diagnostic context that will be merged with inferred details. */
+  details?: RichErrorDetails | undefined;
+  /** Optional operationality override (defaults to Validation semantics). */
+  isOperational?: boolean | undefined;
   /** Explicit Zod issues list; inferred from the `cause` when absent. */
   issues?: undefined | ZodIssue[];
   /** Architectural layer responsible for validation (default `"Application"`). */
   layer?: Layer | undefined;
-};
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 /**
  * Zod issue type used in toolkit helpers.
@@ -56,14 +61,14 @@ export function isZodError(e: unknown): e is ZodError {
  * @param options - Validation context plus optional override data (see {@link NewZodError}).
  * @public
  */
-export function newZodError(options: NewZodError): Error {
+export function newZodError(options: NewZodError): RichError {
   const {
-    action,
     cause,
-    hint,
-    impact,
+    details,
+    isOperational,
     issues,
     layer = "Application",
+    ...rest
   } = options;
   const zIssues: undefined | ZodIssue[] = issues
     ? issues
@@ -76,19 +81,24 @@ export function newZodError(options: NewZodError): Error {
       ? zIssues.map(summarizeZodIssue).join("; ")
       : "Invalid request payload";
 
-  const effectiveHint =
-    hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
+  const hint =
+    details?.hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
 
-  return newError({
-    action,
+  return newRichError({
+    ...rest,
     cause,
-    hint: effectiveHint,
-    impact,
+    code: rest.code ?? inferZodCode(zIssues),
+    details: {
+      ...details,
+      hint,
+      reason: details?.reason ?? reason,
+    },
+    isOperational: isOperational ?? resolveOperationalFromKind("Validation"),
     kind: "Validation",
     layer,
-    reason,
   });
 }
+
 /**
  * Summarizes every issue inside a Zod error into a single readable string.
  *
@@ -128,6 +138,29 @@ function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
       return "Remove unknown fields from the payload.";
     default:
       return undefined;
+  }
+}
+function inferZodCode(issues: undefined | ZodIssue[]): string {
+  const first = issues?.[0];
+  if (!first) return "ZOD_VALIDATION_ERROR";
+
+  switch (first.code) {
+    case "invalid_format":
+      return "ZOD_INVALID_FORMAT";
+    case "invalid_type":
+      return "ZOD_INVALID_TYPE";
+    case "invalid_value":
+      return "ZOD_INVALID_VALUE";
+    case "invalid_union":
+      return "ZOD_INVALID_UNION";
+    case "too_big":
+      return "ZOD_TOO_BIG";
+    case "too_small":
+      return "ZOD_TOO_SMALL";
+    case "unrecognized_keys":
+      return "ZOD_UNRECOGNIZED_KEYS";
+    default:
+      return "ZOD_VALIDATION_ERROR";
   }
 }
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -1,6 +1,9 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { domainValidationError } from "../domain-error";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newDomainError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -25,12 +28,17 @@ export function isUserId(v: unknown): v is UserId {
 /**
  * Validate unknown input and return a sanitized {@link TransactionId}.
  */
-export function newTransactionId(v: unknown): Result<TransactionId, Error> {
+export function newTransactionId(v: unknown): Result<TransactionId, RichError> {
   if (!nonEmptyString(v))
     return err(
-      domainValidationError({
-        action: "NewTransactionId",
-        reason: "TransactionId must be non-empty",
+      newDomainError({
+        code: domainErrorCodes.TRANSACTION_ID_NOT_EMPTY,
+        details: {
+          action: "NewTransactionId",
+          reason: "TransactionId must be non-empty",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   return ok(v as TransactionId);
@@ -39,12 +47,17 @@ export function newTransactionId(v: unknown): Result<TransactionId, Error> {
 /**
  * Validate unknown input and return a sanitized {@link UserId}.
  */
-export function newUserId(v: unknown): Result<UserId, Error> {
+export function newUserId(v: unknown): Result<UserId, RichError> {
   if (!nonEmptyString(v))
     return err(
-      domainValidationError({
-        action: "NewUserId",
-        reason: "UserId must be non-empty",
+      newDomainError({
+        code: domainErrorCodes.USER_ID_NOT_EMPTY,
+        details: {
+          action: "NewUserId",
+          reason: "UserId must be non-empty",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   return ok(v as UserId);

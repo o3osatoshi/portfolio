@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { newError } from "../error";
-import { type ActionError, err, ok } from "./action-state";
+import {
+  deserializeRichError,
+  isSerializedRichError,
+  newRichError,
+} from "../error";
+import { err, ok } from "./action-state";
 
 describe("action-state ok/err", () => {
   it("wraps data with ok: true", () => {
@@ -9,14 +13,6 @@ describe("action-state ok/err", () => {
     if (!state.ok) throw new Error("expected success state");
     expect(state.ok).toBe(true);
     expect(state.data).toEqual({ foo: "bar" });
-  });
-
-  it("wraps string errors with default name", () => {
-    const state = err("oops");
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
-    expect(state.error.message).toBe("oops");
-    expect(state.error.name).toBe("ActionError");
   });
 
   it("allows null and undefined as data", () => {
@@ -34,32 +30,64 @@ describe("action-state ok/err", () => {
     expect(undefinedState.data).toBeUndefined();
   });
 
-  it("passes through ActionError objects", () => {
-    const actionError: ActionError = { name: "Custom", message: "broken" };
-    const state = err(actionError);
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
-    expect(state.error).toBe(actionError);
-  });
-
-  it("preserves native Error name and derives a user-facing message", () => {
-    const error = new Error("plain message");
-    error.name = "CustomError";
+  it("serializes RichError for ActionState transport", () => {
+    const error = newRichError({
+      code: "APP_FORBIDDEN",
+      i18n: { key: "errors.application.forbidden" },
+      isOperational: true,
+      kind: "Forbidden",
+      layer: "Application",
+    });
     const state = err(error);
     expect(state.ok).toBe(false);
     if (state.ok) throw new Error("expected failure state");
-    expect(state.error.name).toBe("CustomError");
-    expect(state.error.message).toBe("plain message");
-  });
-
-  it("uses toolkit metadata to produce a friendly message", () => {
-    const error = newError({ kind: "Forbidden", layer: "Application" });
-    const state = err(error);
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
+    expect(isSerializedRichError(state.error)).toBe(true);
     expect(state.error.name).toBe("ApplicationForbiddenError");
-    expect(state.error.message).toBe(
-      "You do not have permission to perform this action.",
+    expect(state.error.message).toBe("ApplicationForbiddenError");
+    expect(state.error.code).toBe("APP_FORBIDDEN");
+    expect(state.error.i18n).toEqual({
+      key: "errors.application.forbidden",
+    });
+    expect(state.error.kind).toBe("Forbidden");
+    expect(state.error.layer).toBe("Application");
+    expect(state.error.stack).toBeUndefined();
+  });
+
+  it("supports rehydrating serialized action errors to RichError", () => {
+    const serialized = err(
+      newRichError({
+        code: "APP_NOT_FOUND",
+        i18n: { key: "errors.application.not_found" },
+        isOperational: true,
+        kind: "NotFound",
+        layer: "Application",
+      }),
     );
+    expect(serialized.ok).toBe(false);
+    if (serialized.ok) throw new Error("expected failure state");
+
+    const deserialized = deserializeRichError(serialized.error);
+    expect(deserialized.name).toBe("ApplicationNotFoundError");
+    expect(deserialized.code).toBe("APP_NOT_FOUND");
+    expect(deserialized.i18n).toEqual({
+      key: "errors.application.not_found",
+    });
+  });
+
+  it("omits cause chain from serialized action errors", () => {
+    const state = err(
+      newRichError({
+        cause: new Error("driver failed"),
+        code: "APP_INTERNAL",
+        details: { action: "RunAction" },
+        isOperational: false,
+        kind: "Internal",
+        layer: "Application",
+      }),
+    );
+
+    expect(state.ok).toBe(false);
+    if (state.ok) throw new Error("expected failure state");
+    expect(state.error.cause).toBeUndefined();
   });
 });

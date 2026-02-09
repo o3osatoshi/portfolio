@@ -5,7 +5,14 @@ import {
 } from "@repo/domain";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { newApplicationError } from "../../application-error";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 import { noopStepRunner, type StepRunner } from "../../services";
 
 const JOB_KEY = "store-ping";
@@ -59,7 +66,7 @@ export class StorePingUseCase {
   execute(
     context: StorePingContext,
     step: StepRunner = noopStepRunner,
-  ): ResultAsync<StorePingResult, Error> {
+  ): ResultAsync<StorePingResult, RichError> {
     const startedAt = Date.now();
 
     return createTransaction({
@@ -69,72 +76,81 @@ export class StorePingUseCase {
       price: "1",
       type: "BUY",
       userId: this.userId,
-    }).asyncAndThen((transactionInput) =>
-      step("store-ping-db-create", () =>
-        this.transactionRepo.create(transactionInput),
-      )
-        .andThen((created) =>
-          step("store-ping-db-read", () =>
-            this.transactionRepo.findById(created.id).andThen((found) => {
-              if (!found) {
-                return errAsync(
-                  newApplicationError({
-                    action: "StorePing",
-                    kind: "NotFound",
-                    reason: "Transaction readback returned no record",
-                  }),
-                );
-              }
-              return okAsync({ created, found });
+    })
+      .asyncAndThen((transactionInput) =>
+        step("store-ping-db-create", () =>
+          this.transactionRepo.create(transactionInput),
+        )
+          .andThen((created) =>
+            step("store-ping-db-read", () =>
+              this.transactionRepo.findById(created.id).andThen((found) => {
+                if (!found) {
+                  return errAsync(
+                    newApplicationError({
+                      code: applicationErrorCodes.STORE_PING_READBACK_NOT_FOUND,
+                      details: {
+                        action: "StorePing",
+                        reason: "Transaction readback returned no record",
+                      },
+                      i18n: {
+                        key: applicationErrorI18nKeys.NOT_FOUND,
+                      },
+                      isOperational: true,
+                      kind: "NotFound",
+                    }),
+                  );
+                }
+                return okAsync({ created, found });
+              }),
+            ),
+          )
+          .andThen(({ created, found }) =>
+            step("store-ping-db-delete", () =>
+              this.transactionRepo
+                .delete(created.id, created.userId)
+                .map(() => ({ created, found })),
+            ),
+          )
+          .andThen(({ created, found }) =>
+            step("store-ping-cache-get", () =>
+              this.cache
+                .get<StorePingCacheEntry[]>(CACHE_KEY)
+                .map((entries) => entries ?? []),
+            ).andThen((entries) => {
+              const newEntry: StorePingCacheEntry = {
+                runAt: context.runAt.toISOString(),
+                runKey: context.runKey,
+                slot: context.slot,
+                status: "success",
+              };
+              const newEntries = [
+                newEntry,
+                ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
+              ].slice(0, RECENT_RUN_LIMIT);
+              return step("store-ping-cache-set", () =>
+                this.cache
+                  .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
+                  .map(() => ({
+                    key: CACHE_KEY,
+                    size: newEntries.length,
+                  })),
+              ).map((cache) => {
+                const durationMs = Date.now() - startedAt;
+                return {
+                  ...context,
+                  cache,
+                  db: {
+                    createdId: created.id,
+                    deletedId: created.id,
+                    readId: found.id,
+                  },
+                  durationMs,
+                };
+              });
             }),
           ),
-        )
-        .andThen(({ created, found }) =>
-          step("store-ping-db-delete", () =>
-            this.transactionRepo
-              .delete(created.id, created.userId)
-              .map(() => ({ created, found })),
-          ),
-        )
-        .andThen(({ created, found }) =>
-          step("store-ping-cache-get", () =>
-            this.cache
-              .get<StorePingCacheEntry[]>(CACHE_KEY)
-              .map((entries) => entries ?? []),
-          ).andThen((entries) => {
-            const newEntry: StorePingCacheEntry = {
-              runAt: context.runAt.toISOString(),
-              runKey: context.runKey,
-              slot: context.slot,
-              status: "success",
-            };
-            const newEntries = [
-              newEntry,
-              ...entries.filter((entry) => entry.runKey !== newEntry.runKey),
-            ].slice(0, RECENT_RUN_LIMIT);
-            return step("store-ping-cache-set", () =>
-              this.cache
-                .set(CACHE_KEY, newEntries, { ttlMs: CACHE_TTL_MS })
-                .map(() => ({
-                  key: CACHE_KEY,
-                  size: newEntries.length,
-                })),
-            ).map((cache) => {
-              const durationMs = Date.now() - startedAt;
-              return {
-                ...context,
-                cache,
-                db: {
-                  createdId: created.id,
-                  deletedId: created.id,
-                  readId: found.id,
-                },
-                durationMs,
-              };
-            });
-          }),
-        ),
-    );
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }
 
@@ -170,9 +186,16 @@ function readPart(
   const part = parts.find((entry) => entry.type === type);
   if (!part) {
     throw newApplicationError({
-      action: "StorePing",
-      kind: "Unknown",
-      reason: `Missing date part: ${type}`,
+      code: applicationErrorCodes.STORE_PING_CONTEXT_PART_MISSING,
+      details: {
+        action: "StorePing",
+        reason: `Missing date part: ${type}`,
+      },
+      i18n: {
+        key: applicationErrorI18nKeys.INTERNAL,
+      },
+      isOperational: false,
+      kind: "Internal",
     });
   }
   return part.value;

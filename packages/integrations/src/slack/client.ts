@@ -1,6 +1,7 @@
 import { err, ok, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
 
 import { createSmartFetch, type CreateSmartFetchOptions } from "../http";
@@ -8,6 +9,7 @@ import {
   type IntegrationKind,
   newIntegrationError,
 } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import type {
   SlackBlock,
   SlackMessage,
@@ -28,7 +30,7 @@ export type OverridableSlackMessage = Partial<SlackMessage>;
 export type SlackClient = {
   postMessage: (
     message: SlackMessage,
-  ) => ResultAsync<SlackPostMessageResponse, Error>;
+  ) => ResultAsync<SlackPostMessageResponse, RichError>;
 };
 
 export type SlackClientConfig = {
@@ -98,11 +100,15 @@ export function createSlackClient(
           if (!res.response.ok) {
             return err(
               newIntegrationError({
-                action: "SlackPostMessage",
+                code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
+                details: {
+                  action: "SlackPostMessage",
+                  reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
+                },
+                isOperational: true,
                 kind:
                   slackErrorToKind(res.data.error) ??
                   httpStatusToKind(res.response.status),
-                reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
               }),
             );
           }
@@ -110,11 +116,15 @@ export function createSlackClient(
           if (!res.data.ok) {
             return err(
               newIntegrationError({
-                action: "SlackPostMessage",
+                code: integrationErrorCodes.SLACK_API_LOGICAL_ERROR,
+                details: {
+                  action: "SlackPostMessage",
+                  reason: res.data.error ?? "Slack API returned ok=false",
+                },
+                isOperational: true,
                 kind:
                   slackErrorToKind(res.data.error) ??
                   httpStatusToKind(res.response.status),
-                reason: res.data.error ?? "Slack API returned ok=false",
               }),
             );
           }
@@ -126,7 +136,7 @@ export function createSlackClient(
 }
 
 function slackErrorToKind(error?: string | undefined): IntegrationKind {
-  if (!error) return "Unknown";
+  if (!error) return "Internal";
 
   const SLACK_ERROR_KIND_MAP: ReadonlyArray<[string, IntegrationKind]> = [
     ["invalid_auth", "Unauthorized"],

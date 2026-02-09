@@ -1,4 +1,15 @@
-import { type Kind, newError } from "@o3osatoshi/toolkit";
+import {
+  type Kind,
+  type NewRichError,
+  newRichError,
+  type RichError,
+} from "@o3osatoshi/toolkit";
+
+import {
+  type ApplicationErrorCode,
+  type ApplicationErrorI18n,
+  applicationErrorI18nKeys,
+} from "./application-error-catalog";
 
 /**
  * Enumerates normalized error categories produced by the application layer.
@@ -7,12 +18,12 @@ export type ApplicationKind = Extract<
   Kind,
   | "Conflict"
   | "Forbidden"
+  | "Internal"
   | "NotFound"
   | "RateLimit"
   | "Timeout"
   | "Unauthorized"
   | "Unavailable"
-  | "Unknown"
   | "Validation"
 >;
 
@@ -22,86 +33,56 @@ export type ApplicationKind = Extract<
  * callers can progressively add context (action, impact, hints, etc.).
  */
 export type NewApplicationError = {
-  action?: string;
-  cause?: unknown;
-  hint?: string;
-  impact?: string;
+  code: ApplicationErrorCode;
+  i18n: ApplicationErrorI18n;
   kind: ApplicationKind;
-  reason?: string;
-};
+} & ApplicationErrorBase;
+
+type ApplicationErrorBase = Omit<
+  NewRichError,
+  "code" | "i18n" | "kind" | "layer"
+>;
+
+export function applicationI18nForKind(
+  kind: ApplicationKind,
+): ApplicationErrorI18n {
+  switch (kind) {
+    case "Conflict":
+      return { key: applicationErrorI18nKeys.CONFLICT };
+    case "Forbidden":
+      return { key: applicationErrorI18nKeys.FORBIDDEN };
+    case "NotFound":
+      return { key: applicationErrorI18nKeys.NOT_FOUND };
+    case "RateLimit":
+      return { key: applicationErrorI18nKeys.RATE_LIMIT };
+    case "Timeout":
+      return { key: applicationErrorI18nKeys.TIMEOUT };
+    case "Unauthorized":
+      return { key: applicationErrorI18nKeys.UNAUTHORIZED };
+    case "Unavailable":
+      return { key: applicationErrorI18nKeys.UNAVAILABLE };
+    case "Validation":
+      return { key: applicationErrorI18nKeys.VALIDATION };
+    case "Internal":
+      return { key: applicationErrorI18nKeys.INTERNAL };
+  }
+}
 
 /**
  * Application-layer error constructor wrapping @o3osatoshi/toolkit with layer "Application".
  * Use in application/use-case orchestration for consistent error classification.
  */
 export function newApplicationError({
-  action,
-  cause,
-  hint,
-  impact,
+  code,
+  i18n,
   kind,
-  reason,
-}: NewApplicationError): Error {
-  return newError({
-    action,
-    cause,
-    hint,
-    impact,
+  ...rest
+}: NewApplicationError): RichError {
+  return newRichError({
+    code,
+    i18n,
+    ...rest,
     kind,
     layer: "Application",
-    reason,
   });
 }
-
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Validation"`.
- */
-export const applicationValidationError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Validation", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="NotFound"`.
- */
-export const applicationNotFoundError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "NotFound", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Conflict"`.
- */
-export const applicationConflictError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Conflict", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Forbidden"`.
- */
-export const applicationForbiddenError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Forbidden", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Unauthorized"`.
- */
-export const applicationUnauthorizedError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Unauthorized", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="RateLimit"`.
- */
-export const applicationRateLimitError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "RateLimit", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Timeout"`.
- */
-export const applicationTimeoutError = (p: Omit<NewApplicationError, "kind">) =>
-  newApplicationError({ kind: "Timeout", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Unavailable"`.
- */
-export const applicationUnavailableError = (
-  p: Omit<NewApplicationError, "kind">,
-) => newApplicationError({ kind: "Unavailable", ...p });
-/**
- * Convenience wrapper for {@link newApplicationError} with `kind="Unknown"`.
- */
-export const applicationUnknownError = (p: Omit<NewApplicationError, "kind">) =>
-  newApplicationError({ kind: "Unknown", ...p });

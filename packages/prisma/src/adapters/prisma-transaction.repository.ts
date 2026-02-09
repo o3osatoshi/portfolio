@@ -8,7 +8,7 @@ import type {
 import { newTransaction } from "@repo/domain";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   Prisma,
@@ -25,76 +25,88 @@ export class PrismaTransactionRepository implements TransactionRepository {
   constructor(private readonly db: Prisma.TransactionClient | PrismaClient) {}
 
   /** @inheritdoc */
-  create(tx: CreateTransaction): ResultAsync<Transaction, Error> {
+  create(tx: CreateTransaction): ResultAsync<Transaction, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.create({
         data: toCreateData(tx),
       }),
       (e) =>
         newPrismaError({
-          action: "CreateTransaction",
           cause: e,
-          hint: "Ensure related user exists and data types are valid.",
+          details: {
+            action: "CreateTransaction",
+            hint: "Ensure related user exists and data types are valid.",
+          },
         }),
     ).andThen(toEntity);
   }
 
   /** @inheritdoc */
-  delete(id: TransactionId, userId: UserId): ResultAsync<void, Error> {
+  delete(id: TransactionId, userId: UserId): ResultAsync<void, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.deleteMany({
         where: { id, userId },
       }),
       (e) =>
         newPrismaError({
-          action: "DeleteTransaction",
           cause: e,
-          hint: "Verify ownership and record existence.",
+          details: {
+            action: "DeleteTransaction",
+            hint: "Verify ownership and record existence.",
+          },
         }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
         : err(
-            newError({
-              action: "DeleteTransaction",
+            newRichError({
+              code: "PRISMA_TRANSACTION_DELETE_NOT_FOUND",
+              details: {
+                action: "DeleteTransaction",
+                reason: "Transaction not found or not owned by user.",
+              },
+              isOperational: true,
               kind: "NotFound",
-              layer: "DB",
-              reason: "Transaction not found or not owned by user.",
+              layer: "Persistence",
             }),
           ),
     );
   }
 
   /** @inheritdoc */
-  findById(id: TransactionId): ResultAsync<null | Transaction, Error> {
+  findById(id: TransactionId): ResultAsync<null | Transaction, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.findUnique({
         where: { id },
       }),
       (e) =>
         newPrismaError({
-          action: "FindTransactionById",
           cause: e,
+          details: {
+            action: "FindTransactionById",
+          },
         }),
     ).andThen((row) => (row ? toEntity(row) : ok(null)));
   }
 
   /** @inheritdoc */
-  findByUserId(userId: UserId): ResultAsync<Transaction[], Error> {
+  findByUserId(userId: UserId): ResultAsync<Transaction[], RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.findMany({
         where: { userId },
       }),
       (e) =>
         newPrismaError({
-          action: "FindTransactionsByUserId",
           cause: e,
+          details: {
+            action: "FindTransactionsByUserId",
+          },
         }),
     ).andThen((rows) => Result.combine(rows.map(toEntity)));
   }
 
   /** @inheritdoc */
-  update(tx: Transaction): ResultAsync<void, Error> {
+  update(tx: Transaction): ResultAsync<void, RichError> {
     return ResultAsync.fromPromise(
       this.db.transaction.updateMany({
         data: toUpdateData(tx),
@@ -102,19 +114,25 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }),
       (e) =>
         newPrismaError({
-          action: "UpdateTransaction",
           cause: e,
-          hint: "Verify ownership and payload schema.",
+          details: {
+            action: "UpdateTransaction",
+            hint: "Verify ownership and payload schema.",
+          },
         }),
     ).andThen((res) =>
       res.count === 1
         ? ok<void>(undefined)
         : err(
-            newError({
-              action: "UpdateTransaction",
+            newRichError({
+              code: "PRISMA_TRANSACTION_UPDATE_NOT_FOUND",
+              details: {
+                action: "UpdateTransaction",
+                reason: "Transaction not found or not owned by user.",
+              },
+              isOperational: true,
               kind: "NotFound",
-              layer: "DB",
-              reason: "Transaction not found or not owned by user.",
+              layer: "Persistence",
             }),
           ),
     );
@@ -142,7 +160,7 @@ function toCreateData(tx: CreateTransaction): Prisma.TransactionCreateInput {
  * Transform a Prisma row into a domain {@link Transaction} by normalizing
  * decimal values into strings expected by the value objects.
  */
-function toEntity(tx: PrismaTransaction): Result<Transaction, Error> {
+function toEntity(tx: PrismaTransaction): Result<Transaction, RichError> {
   return newTransaction({
     ...tx,
     amount: tx.amount.toString(),

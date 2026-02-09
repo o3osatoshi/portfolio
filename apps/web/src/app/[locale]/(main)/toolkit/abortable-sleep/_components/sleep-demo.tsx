@@ -78,7 +78,10 @@ export default function SleepDemoCard() {
       setStatus("completed");
     } else {
       const error = result.error;
-      if (error instanceof Error && error.name === "InfraCanceledError") {
+      if (
+        error instanceof Error &&
+        error.name === "InfrastructureCanceledError"
+      ) {
         setStatus("canceled");
         setErrorMessage(error.message);
       } else if (error instanceof Error) {

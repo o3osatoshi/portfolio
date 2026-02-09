@@ -110,7 +110,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("DBNotFoundError");
+      expect(res.error.name).toBe("PersistenceNotFoundError");
     }
   });
 
@@ -139,7 +139,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("DBNotFoundError");
+      expect(res.error.name).toBe("PersistenceNotFoundError");
     }
   });
 
@@ -164,7 +164,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("DBNotFoundError");
+      expect(res.error.name).toBe("PersistenceNotFoundError");
     }
   });
 
@@ -209,7 +209,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("DBNotFoundError");
+      expect(res.error.name).toBe("PersistenceNotFoundError");
     }
   });
 
@@ -223,7 +223,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("DBNotFoundError");
+      expect(res.error.name).toBe("PersistenceNotFoundError");
     }
   });
 
@@ -245,7 +245,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.name).toBe("DBValidationError");
+      expect(res.error.name).toBe("PersistenceValidationError");
     }
   });
 

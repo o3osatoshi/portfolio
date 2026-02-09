@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import type { Logger } from "@o3osatoshi/logging";
-import { parseErrorMessage } from "@o3osatoshi/toolkit";
+import { isRichError } from "@o3osatoshi/toolkit";
 
 import { createSmartFetch } from "./smart-fetch";
 
@@ -108,7 +108,9 @@ describe("integrations/http createSmartFetchClient", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    const { action } = parseErrorMessage(result.error.message);
-    expect(action).toBe("FetchExternalApi");
+    expect(isRichError(result.error)).toBe(true);
+    if (isRichError(result.error)) {
+      expect(result.error.details?.action).toBe("FetchExternalApi");
+    }
   });
 });

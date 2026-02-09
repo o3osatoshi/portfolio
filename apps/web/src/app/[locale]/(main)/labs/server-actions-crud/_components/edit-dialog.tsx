@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/actions/update-transaction";
 import type { Transaction } from "@/server/get-transactions";
+import { useErrorMessage } from "@/utils/use-error-message";
 import { updateTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
@@ -28,6 +29,7 @@ interface Props {
 
 export default function EditDialog({ locale, transaction }: Props) {
   const t = useTranslations("LabsServerCrud");
+  const resolveErrorMessage = useErrorMessage();
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
@@ -147,9 +149,11 @@ export default function EditDialog({ locale, transaction }: Props) {
           </div>
           <DialogFooter>
             <div className="flex flex-col items-end gap-2">
-              {state?.ok === false && (
-                <Message variant="destructive">{state.error.message}</Message>
-              )}
+              {state?.ok === false ? (
+                <Message variant="destructive">
+                  {resolveErrorMessage(state.error)}
+                </Message>
+              ) : null}
               <Button
                 className="w-fit"
                 disabled={Object.keys(errors).length > 0 || isPending}

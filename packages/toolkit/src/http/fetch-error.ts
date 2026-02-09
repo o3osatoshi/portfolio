@@ -2,8 +2,11 @@ import {
   extractErrorMessage,
   extractErrorName,
   type Kind,
-  newError,
-  type NewError,
+  type NewRichError,
+  newRichError,
+  resolveOperationalFromKind,
+  type RichError,
+  type RichErrorDetails,
 } from "../error";
 
 /** Minimal request metadata used to contextualize fetch failures.
@@ -17,20 +20,19 @@ export type FetchRequest = {
 
 /**
  * Payload accepted by {@link newFetchError} before shaping a toolkit error.
- * Mirrors {@link NewError} while adding fetch-specific request context.
+ * Mirrors {@link NewRichError} while adding fetch-specific request context.
  * When `kind` is omitted, the helper falls back to the classification derived
  * from the request metadata or underlying cause.
  *
  * @public
  */
 export type NewFetchError = {
-  action?: string;
   cause?: unknown;
-  hint?: string;
-  impact?: string;
-  kind?: Kind;
+  details?: RichErrorDetails | undefined;
+  isOperational?: boolean | undefined;
+  kind?: Kind | undefined;
   request?: FetchRequest | undefined;
-};
+} & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
 type Classification = {
   hint?: string;
@@ -60,7 +62,7 @@ export function formatFetchTarget({
  * Classification rules:
  * - Aborted/timeout signals map to `Timeout`.
  * - Network-level failures (DNS, connection refused, etc.) map to `Unavailable`.
- * - Unknown situations fall back to `Unknown`.
+ * - Other situations fall back to `Internal`.
  *
  * The resulting `Error` is tagged with `layer: "External"` and a descriptive message that includes
  * the HTTP method/URL when available.
@@ -69,13 +71,13 @@ export function formatFetchTarget({
  * @public
  */
 export function newFetchError({
-  action,
   cause,
-  hint,
-  impact,
+  details,
+  isOperational,
   kind,
   request,
-}: NewFetchError): Error {
+  ...rest
+}: NewFetchError): RichError {
   const classification = classifyFetchFailure({
     cause,
     request,
@@ -84,18 +86,32 @@ export function newFetchError({
   const target = formatFetchTarget({
     request,
   });
+  const resolvedKind = kind ?? classification.kind;
   const reason = target
     ? `${target} ${classification.problem}`
     : classification.problem;
 
-  return newError({
-    action,
+  return newRichError({
+    ...rest,
     cause,
-    hint: hint ?? classification.hint,
-    impact,
-    kind: kind ?? classification.kind,
+    code: rest.code ?? resolveFetchErrorCode(resolvedKind),
+    details: {
+      ...details,
+      action: details?.action ?? "FetchExternalApi",
+      hint: details?.hint ?? classification.hint,
+      reason: details?.reason ?? reason,
+    },
+    isOperational: isOperational ?? resolveOperationalFromKind(resolvedKind),
+    kind: resolvedKind,
     layer: "External",
-    reason,
+    meta: resolveFetchMeta({
+      cause,
+      inferredKind: classification.kind,
+      request,
+      resolvedKind,
+      target,
+      userMeta: rest.meta,
+    }),
   });
 }
 
@@ -168,7 +184,7 @@ function classifyFromCause(cause: unknown): Classification | undefined {
 
 function inferKind(request?: FetchRequest): Kind {
   const method = request?.method?.toUpperCase();
-  return method === "GET" || method === "HEAD" ? "Unavailable" : "Unknown";
+  return method === "GET" || method === "HEAD" ? "Unavailable" : "Internal";
 }
 
 function isAbortError(cause: unknown): boolean {
@@ -181,4 +197,78 @@ function isAbortError(cause: unknown): boolean {
   if (!message) return false;
 
   return /\babort(ed)?\b/.test(message) || /\babortcontroller\b/.test(message);
+}
+
+function resolveFetchErrorCode(kind: Kind): string {
+  switch (kind) {
+    case "BadGateway":
+      return "FETCH_BAD_GATEWAY";
+    case "BadRequest":
+      return "FETCH_BAD_REQUEST";
+    case "Canceled":
+      return "FETCH_CANCELED";
+    case "Conflict":
+      return "FETCH_CONFLICT";
+    case "Forbidden":
+      return "FETCH_FORBIDDEN";
+    case "MethodNotAllowed":
+      return "FETCH_METHOD_NOT_ALLOWED";
+    case "NotFound":
+      return "FETCH_NOT_FOUND";
+    case "RateLimit":
+      return "FETCH_RATE_LIMIT";
+    case "Serialization":
+      return "FETCH_SERIALIZATION";
+    case "Timeout":
+      return "FETCH_TIMEOUT";
+    case "Unauthorized":
+      return "FETCH_UNAUTHORIZED";
+    case "Unavailable":
+      return "FETCH_UNAVAILABLE";
+    case "Unprocessable":
+      return "FETCH_UNPROCESSABLE";
+    case "Validation":
+      return "FETCH_VALIDATION";
+    default:
+      return "FETCH_INTERNAL";
+  }
+}
+
+function resolveFetchMeta({
+  cause,
+  inferredKind,
+  request,
+  resolvedKind,
+  target,
+  userMeta,
+}: {
+  cause?: unknown;
+  inferredKind: Kind;
+  request?: FetchRequest | undefined;
+  resolvedKind: Kind;
+  target: string | undefined;
+  userMeta: NewRichError["meta"];
+}): NewRichError["meta"] {
+  const method = request?.method?.trim().toUpperCase();
+  const url = request?.url;
+  const causeName = extractErrorName(cause);
+
+  return {
+    fetchKindOverridden: inferredKind !== resolvedKind,
+    fetchCauseType: resolveSourceType(cause),
+    fetchInferredKind: inferredKind,
+    fetchResolvedKind: resolvedKind,
+    fetchSource: "toolkit.newFetchError",
+    ...(method ? { fetchMethod: method } : {}),
+    ...(url ? { fetchUrl: url } : {}),
+    ...(target ? { fetchTarget: target } : {}),
+    ...(causeName ? { fetchCauseName: causeName } : {}),
+    ...(userMeta ?? {}),
+  };
+}
+
+function resolveSourceType(value: unknown): string {
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "array";
+  return typeof value;
 }

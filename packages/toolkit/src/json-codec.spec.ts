@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { isRichError } from "./error";
 import { decode, encode } from "./json-codec";
 
 describe("json-codec encode", () => {
@@ -36,13 +37,16 @@ describe("json-codec encode", () => {
 
     const error = result.error;
     expect(error).toBeInstanceOf(Error);
-    expect(error.name).toBe("InfraSerializationError");
+    expect(error.name).toBe("InfrastructureSerializationError");
 
-    const payload = JSON.parse(error.message) as Record<string, unknown>;
-    expect(payload["summary"]).toBe("EncodeJson failed");
-    expect(payload["action"]).toBe("EncodeJson");
-    expect(payload["reason"]).toBe("Failed to encode value as JSON");
-    expect(payload["hint"]).toBe("Ensure the value is JSON-serializable.");
+    expect(isRichError(error)).toBe(true);
+    if (isRichError(error)) {
+      expect(error.details?.action).toBe("EncodeJson");
+      expect(error.details?.reason).toBe("Failed to encode value as JSON");
+      expect(error.details?.hint).toBe(
+        "Ensure the value is JSON-serializable.",
+      );
+    }
   });
 });
 
@@ -96,13 +100,16 @@ describe("json-codec decode", () => {
 
     const error = result.error;
     expect(error).toBeInstanceOf(Error);
-    expect(error.name).toBe("InfraSerializationError");
+    expect(error.name).toBe("InfrastructureSerializationError");
 
-    const payload = JSON.parse(error.message) as Record<string, unknown>;
-    expect(payload["summary"]).toBe("DecodeJson failed");
-    expect(payload["action"]).toBe("DecodeJson");
-    expect(payload["reason"]).toBe("Failed to decode value from JSON");
-    expect(payload["hint"]).toBe("Ensure the input string is valid JSON.");
+    expect(isRichError(error)).toBe(true);
+    if (isRichError(error)) {
+      expect(error.details?.action).toBe("DecodeJson");
+      expect(error.details?.reason).toBe("Failed to decode value from JSON");
+      expect(error.details?.hint).toBe(
+        "Ensure the input string is valid JSON.",
+      );
+    }
   });
 
   it("returns structured Serialization error for primitive JSON values", () => {
@@ -119,15 +126,18 @@ describe("json-codec decode", () => {
 
       const error = result.error;
       expect(error).toBeInstanceOf(Error);
-      expect(error.name).toBe("InfraSerializationError");
+      expect(error.name).toBe("InfrastructureSerializationError");
 
-      const payload = JSON.parse(error.message) as Record<string, unknown>;
-      expect(payload["summary"]).toBe("DecodeJsonContainer failed");
-      expect(payload["action"]).toBe("DecodeJsonContainer");
-      expect(payload["reason"]).toBe("Expected top-level JSON object or array");
-      expect(payload["hint"]).toBe(
-        "Ensure the JSON string encodes an object (`{}`) or array (`[]`).",
-      );
+      expect(isRichError(error)).toBe(true);
+      if (isRichError(error)) {
+        expect(error.details?.action).toBe("DecodeJsonContainer");
+        expect(error.details?.reason).toBe(
+          "Expected top-level JSON object or array",
+        );
+        expect(error.details?.hint).toBe(
+          "Ensure the JSON string encodes an object (`{}`) or array (`[]`).",
+        );
+      }
     }
   });
 });

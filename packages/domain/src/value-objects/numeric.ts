@@ -1,6 +1,9 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { domainValidationError } from "../domain-error";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newDomainError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 import {
   type DecimalString,
@@ -40,14 +43,19 @@ export function isProfitLoss(v: unknown): v is ProfitLoss {
 /**
  * Normalize an unknown value into an {@link Amount}, ensuring it is > 0.
  */
-export function newAmount(v: unknown): Result<Amount, Error> {
+export function newAmount(v: unknown): Result<Amount, RichError> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
   if (!isPositiveDecimal(r.value))
     return err(
-      domainValidationError({
-        action: "NewAmount",
-        reason: "Amount must be > 0",
+      newDomainError({
+        code: domainErrorCodes.AMOUNT_MUST_BE_POSITIVE,
+        details: {
+          action: "NewAmount",
+          reason: "Amount must be > 0",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   return ok(r.value as Amount);
@@ -56,14 +64,19 @@ export function newAmount(v: unknown): Result<Amount, Error> {
 /**
  * Normalize an unknown value into a {@link Fee}, ensuring it is >= 0.
  */
-export function newFee(v: unknown): Result<Fee, Error> {
+export function newFee(v: unknown): Result<Fee, RichError> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
   if (!isNonNegativeDecimal(r.value))
     return err(
-      domainValidationError({
-        action: "NewFee",
-        reason: "Fee must be >= 0",
+      newDomainError({
+        code: domainErrorCodes.FEE_MUST_BE_NON_NEGATIVE,
+        details: {
+          action: "NewFee",
+          reason: "Fee must be >= 0",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   return ok(r.value as Fee);
@@ -72,14 +85,19 @@ export function newFee(v: unknown): Result<Fee, Error> {
 /**
  * Normalize an unknown value into a {@link Price}, ensuring it is > 0.
  */
-export function newPrice(v: unknown): Result<Price, Error> {
+export function newPrice(v: unknown): Result<Price, RichError> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
   if (!isPositiveDecimal(r.value))
     return err(
-      domainValidationError({
-        action: "NewPrice",
-        reason: "Price must be > 0",
+      newDomainError({
+        code: domainErrorCodes.PRICE_MUST_BE_POSITIVE,
+        details: {
+          action: "NewPrice",
+          reason: "Price must be > 0",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   return ok(r.value as Price);
@@ -87,7 +105,7 @@ export function newPrice(v: unknown): Result<Price, Error> {
 /**
  * Normalize an unknown value into a {@link ProfitLoss} (any decimal string).
  */
-export function newProfitLoss(v: unknown): Result<ProfitLoss, Error> {
+export function newProfitLoss(v: unknown): Result<ProfitLoss, RichError> {
   const r = newDecimal(v);
   if (r.isErr()) return err(r.error);
   return ok(r.value as ProfitLoss);

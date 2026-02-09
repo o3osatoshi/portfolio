@@ -1,6 +1,9 @@
 import { err, ok, type Result } from "neverthrow";
 
-import { domainValidationError } from "../domain-error";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newDomainError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -15,19 +18,29 @@ export function isDateTime(v: unknown): v is DateTime {
 /**
  * Validate unknown input and ensure it is a finite `Date` instance.
  */
-export function newDateTime(v: unknown): Result<DateTime, Error> {
+export function newDateTime(v: unknown): Result<DateTime, RichError> {
   if (!(v instanceof Date))
     return err(
-      domainValidationError({
-        action: "NewDateTime",
-        reason: "DateTime must be a Date",
+      newDomainError({
+        code: domainErrorCodes.DATETIME_NOT_DATE,
+        details: {
+          action: "NewDateTime",
+          reason: "DateTime must be a Date",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   if (Number.isNaN(v.getTime()))
     return err(
-      domainValidationError({
-        action: "NewDateTime",
-        reason: "DateTime is invalid",
+      newDomainError({
+        code: domainErrorCodes.DATETIME_INVALID,
+        details: {
+          action: "NewDateTime",
+          reason: "DateTime is invalid",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   return ok(v as DateTime);

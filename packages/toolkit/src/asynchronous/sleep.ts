@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
-import { deserializeError, newError } from "../error";
+import { newRichError, type RichError, toRichError } from "../error";
 
 /**
  * Options accepted by {@link sleep}.
@@ -11,7 +11,7 @@ export type SleepOptions = {
   /**
    * Optional signal used to cancel the pending timeout before it resolves.
    * Pass `AbortController.signal` to interrupt the sleep and receive an
-   * `InfraCanceledError`.
+   * `InfrastructureCanceledError`.
    */
   signal?: AbortSignal;
 };
@@ -20,7 +20,7 @@ export type SleepOptions = {
  * Delay execution for a given duration with AbortSignal support.
  *
  * Designed as an infrastructure utility that keeps timing logic near the runtime.
- * Rejects with an `InfraCanceledError` when the provided signal aborts before the
+ * Rejects with an `InfrastructureCanceledError` when the provided signal aborts before the
  * timeout completes.
  *
  * @param ms - Milliseconds to wait before resolving.
@@ -32,17 +32,15 @@ export type SleepOptions = {
 export function sleep(
   ms: number,
   { signal }: SleepOptions = {},
-): ResultAsync<void, Error> {
-  const mapErr = (error: unknown): Error =>
-    deserializeError(error, {
-      fallback: (cause) =>
-        newError({
-          action: "Sleep",
-          cause,
-          kind: "Unknown",
-          layer: "Infra",
-          reason: "sleep rejected with non-error value",
-        }),
+): ResultAsync<void, RichError> {
+  const mapErr = (error: unknown): RichError =>
+    toRichError(error, {
+      details: {
+        action: "Sleep",
+        reason: "sleep rejected with an unexpected error value",
+      },
+      kind: "Internal",
+      layer: "Infrastructure",
     });
 
   if (!signal) {
@@ -57,12 +55,16 @@ export function sleep(
   return ResultAsync.fromPromise(
     new Promise<void>((resolve, reject) => {
       const newCanceledError = () => {
-        return newError({
-          action: "Sleep",
+        return newRichError({
           cause: signal.reason,
+          code: "SLEEP_ABORTED",
+          details: {
+            action: "Sleep",
+            reason: "operation aborted by AbortSignal",
+          },
+          isOperational: true,
           kind: "Canceled",
-          layer: "Infra",
-          reason: "operation aborted by AbortSignal",
+          layer: "Infrastructure",
         });
       };
 

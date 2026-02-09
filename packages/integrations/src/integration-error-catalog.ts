@@ -1,0 +1,20 @@
+/**
+ * Stable machine-oriented codes for integrations-layer failures.
+ */
+export const integrationErrorCodes = {
+  CACHE_READ_FAILED: "INT_CACHE_READ_FAILED",
+  CACHE_WRITE_FAILED: "INT_CACHE_WRITE_FAILED",
+  EXCHANGE_RATE_API_HTTP_ERROR: "INT_EXCHANGE_RATE_API_HTTP_ERROR",
+  EXCHANGE_RATE_API_LOGICAL_ERROR: "INT_EXCHANGE_RATE_API_LOGICAL_ERROR",
+  EXCHANGE_RATE_API_MISSING_RATE: "INT_EXCHANGE_RATE_API_MISSING_RATE",
+  EXTERNAL_RETRY_EXHAUSTED: "INT_EXTERNAL_RETRY_EXHAUSTED",
+  SLACK_API_HTTP_ERROR: "INT_SLACK_API_HTTP_ERROR",
+  SLACK_API_LOGICAL_ERROR: "INT_SLACK_API_LOGICAL_ERROR",
+  SLACK_NOTIFY_FAILED: "INT_SLACK_NOTIFY_FAILED",
+} as const;
+
+/**
+ * Machine code union used by integrations-layer errors.
+ */
+export type IntegrationErrorCode =
+  (typeof integrationErrorCodes)[keyof typeof integrationErrorCodes];

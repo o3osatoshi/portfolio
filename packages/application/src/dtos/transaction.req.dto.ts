@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { parseWith } from "@o3osatoshi/toolkit";
 
+import { ensureApplicationErrorI18n } from "../error-i18n";
+
 const DecimalStringSchema = z.string().refine(
   (val) => {
     try {
@@ -105,38 +107,32 @@ export type UpdateTransactionRequest = z.infer<
 
 /**
  * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
- * Wraps `parseWith` to return a `Result` with typed error metadata.
  */
-export const parseCreateTransactionRequest = parseWith(
-  createTransactionRequestSchema,
-  {
+export const parseCreateTransactionRequest = (input: unknown) =>
+  parseWith(createTransactionRequestSchema, {
     action: "ParseCreateTransactionRequest",
-  },
-);
+  })(input).mapErr((error) => ensureApplicationErrorI18n(error));
+
 /**
  * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
  */
-export const parseUpdateTransactionRequest = parseWith(
-  updateTransactionRequestSchema,
-  {
+export const parseUpdateTransactionRequest = (input: unknown) =>
+  parseWith(updateTransactionRequestSchema, {
     action: "ParseUpdateTransactionRequest",
-  },
-);
+  })(input).mapErr((error) => ensureApplicationErrorI18n(error));
+
 /**
  * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
  */
-export const parseGetTransactionsRequest = parseWith(
-  getTransactionsRequestSchema,
-  {
+export const parseGetTransactionsRequest = (input: unknown) =>
+  parseWith(getTransactionsRequestSchema, {
     action: "ParseGetTransactionsRequest",
-  },
-);
+  })(input).mapErr((error) => ensureApplicationErrorI18n(error));
+
 /**
  * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
  */
-export const parseDeleteTransactionRequest = parseWith(
-  deleteTransactionRequestSchema,
-  {
+export const parseDeleteTransactionRequest = (input: unknown) =>
+  parseWith(deleteTransactionRequestSchema, {
     action: "ParseDeleteTransactionRequest",
-  },
-);
+  })(input).mapErr((error) => ensureApplicationErrorI18n(error));

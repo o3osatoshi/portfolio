@@ -57,8 +57,12 @@ vi.mock("@/env/server", () => ({
 }));
 
 import { getTag } from "@/utils/nav-handler";
-import { webUnauthorizedError } from "@/utils/web-error";
-import { newError } from "@o3osatoshi/toolkit";
+import {
+  newWebError,
+  webErrorCodes,
+  webErrorI18nKeys,
+} from "@/utils/web-error";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
 
@@ -107,8 +111,12 @@ describe("getTransactions", () => {
   it("returns Err when token is missing", async () => {
     h.getUserIdMock.mockReturnValueOnce(
       errAsync(
-        webUnauthorizedError({
+        newWebError({
           action: "DecodeAuthToken",
+          code: webErrorCodes.AUTH_USER_ID_MISSING,
+          i18n: { key: webErrorI18nKeys.UNAUTHORIZED },
+          isOperational: true,
+          kind: "Unauthorized",
           reason: "Session token is missing a user id.",
         }),
       ),
@@ -119,16 +127,20 @@ describe("getTransactions", () => {
     expect(res.isErr()).toBe(true);
     if (!res.isErr()) return;
 
-    expect(res.error.name).toBe("UIUnauthorizedError");
+    expect(res.error.name).toBe("PresentationUnauthorizedError");
   });
 
   it("returns Err and uses short cache life when usecase fails", async () => {
     const userId = "u1";
-    const error = newError({
-      action: "FindTransactionsByUserId",
+    const error = newRichError({
+      code: "WEB_GET_TRANSACTIONS_PERSISTENCE_UNAVAILABLE",
+      details: {
+        action: "FindTransactionsByUserId",
+        reason: "Database unavailable",
+      },
+      isOperational: true,
       kind: "Unavailable",
-      layer: "DB",
-      reason: "Database unavailable",
+      layer: "Persistence",
     });
 
     h.getUserIdMock.mockReturnValueOnce(okAsync(userId));

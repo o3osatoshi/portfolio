@@ -2,6 +2,12 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Logger } from "@o3osatoshi/logging";
+import {
+  type Kind,
+  type Layer,
+  newRichError,
+  type RichError,
+} from "@o3osatoshi/toolkit";
 
 import { withLogging } from "./with-logging";
 
@@ -44,13 +50,32 @@ const buildResponse = (
     },
   });
 
-const buildError = (name: string, message: string, retryAttempts?: number) => {
-  const error = new Error(message);
+const buildError = (
+  name: string,
+  message: string,
+  retryAttempts?: number,
+  options?: { kind?: Kind; layer?: Layer },
+): RichError => {
+  const kind = options?.kind ?? "Internal";
+  const layer = options?.layer ?? "External";
+  const error = newRichError({
+    details: {
+      reason: message,
+    },
+    ...(retryAttempts !== undefined
+      ? {
+          meta: {
+            retry: {
+              attempts: retryAttempts,
+            },
+          },
+        }
+      : {}),
+    isOperational: kind !== "Internal" && kind !== "Serialization",
+    kind,
+    layer,
+  });
   error.name = name;
-  if (retryAttempts !== undefined) {
-    // @ts-expect-error adding custom property for testing
-    error.retryAttempts = retryAttempts;
-  }
   return error;
 };
 
@@ -311,7 +336,15 @@ describe("integrations/http withLogging", () => {
   describe("error cases with events and metrics", () => {
     it("logs warn event for client errors (BadRequest)", async () => {
       const logger = buildLogger();
-      const error = buildError("DomainBadRequestError", "Invalid input");
+      const error = buildError(
+        "DomainBadRequestError",
+        "Invalid input",
+        undefined,
+        {
+          kind: "BadRequest",
+          layer: "Domain",
+        },
+      );
       const next = vi.fn(() => errAsync(error));
       const client = withLogging(next, { logger });
 
@@ -334,7 +367,15 @@ describe("integrations/http withLogging", () => {
 
     it("logs error event for server errors", async () => {
       const logger = buildLogger();
-      const error = buildError("ExternalTimeoutError", "Request timeout");
+      const error = buildError(
+        "ExternalTimeoutError",
+        "Request timeout",
+        undefined,
+        {
+          kind: "Timeout",
+          layer: "External",
+        },
+      );
       const next = vi.fn(() => errAsync(error));
       const client = withLogging(next, { logger });
 
@@ -356,7 +397,10 @@ describe("integrations/http withLogging", () => {
 
     it("logs error events when retryAttempts is set", async () => {
       const logger = buildLogger();
-      const error = buildError("ExternalTimeoutError", "Timeout", 3);
+      const error = buildError("ExternalTimeoutError", "Timeout", 3, {
+        kind: "Timeout",
+        layer: "External",
+      });
       const next = vi.fn(() => errAsync(error));
       const client = withLogging(next, { logger });
 
@@ -369,6 +413,7 @@ describe("integrations/http withLogging", () => {
           "error.name": "ExternalTimeoutError",
           "error.kind": "Timeout",
           "error.layer": "External",
+          "retry.attempts": 3,
         }),
         error,
       );
@@ -376,7 +421,10 @@ describe("integrations/http withLogging", () => {
 
     it("emits metrics for error cases", async () => {
       const logger = buildLogger();
-      const error = buildError("ExternalTimeoutError", "Timeout", 2);
+      const error = buildError("ExternalTimeoutError", "Timeout", 2, {
+        kind: "Timeout",
+        layer: "External",
+      });
       const next = vi.fn(() => errAsync(error));
       const client = withLogging(next, { logger });
 
@@ -391,6 +439,7 @@ describe("integrations/http withLogging", () => {
           "error.layer": "External",
           "http.method": "GET",
           "http.url": "https://example.test",
+          "retry.attempts": 2,
         }),
         { kind: "counter", unit: "1" },
       );
@@ -425,16 +474,22 @@ describe("integrations/http withLogging", () => {
       { expectedLevel: "warn", kind: "Forbidden" },
       { expectedLevel: "warn", kind: "RateLimit" },
       { expectedLevel: "error", kind: "Timeout" },
-      { expectedLevel: "error", kind: "InternalServer" },
+      { expectedLevel: "error", kind: "Internal" },
       { expectedLevel: "error", kind: "BadGateway" },
       { expectedLevel: "error", kind: undefined },
-    ];
+    ] as const satisfies ReadonlyArray<{
+      expectedLevel: "error" | "warn";
+      kind: Kind | undefined;
+    }>;
 
     errorLevelTestCases.forEach(({ expectedLevel, kind }) => {
       it(`logs ${expectedLevel} for ${kind || "unknown"} errors`, async () => {
         const logger = buildLogger();
         const errorName = kind ? `External${kind}Error` : "UnknownError";
-        const error = buildError(errorName, "Test error");
+        const error = buildError(errorName, "Test error", undefined, {
+          kind: kind ?? "Internal",
+          layer: "External",
+        });
         const next = vi.fn(() => errAsync(error));
         const client = withLogging(next, { logger });
 

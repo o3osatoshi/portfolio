@@ -30,11 +30,11 @@ export type HttpStatusKind = Extract<
   | "BadGateway"
   | "BadRequest"
   | "Forbidden"
+  | "Internal"
   | "NotFound"
   | "RateLimit"
   | "Timeout"
   | "Unauthorized"
-  | "Unknown"
 >;
 
 /**
@@ -141,7 +141,7 @@ export function httpStatusToKind(status: number): HttpStatusKind {
   if (status === 429) return "RateLimit";
   if (status >= 400 && status < 500) return "BadRequest";
   if (status >= 500 && status < 600) return "BadGateway";
-  return "Unknown";
+  return "Internal";
 }
 
 /**

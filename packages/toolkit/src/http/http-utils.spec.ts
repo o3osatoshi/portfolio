@@ -86,7 +86,7 @@ describe("toolkit http-utils", () => {
       expect(httpStatusToKind(499)).toBe("BadRequest");
       expect(httpStatusToKind(500)).toBe("BadGateway");
       expect(httpStatusToKind(599)).toBe("BadGateway");
-      expect(httpStatusToKind(200)).toBe("Unknown");
+      expect(httpStatusToKind(200)).toBe("Internal");
     });
   });
 

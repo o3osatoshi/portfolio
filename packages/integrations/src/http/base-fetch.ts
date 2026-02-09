@@ -1,5 +1,6 @@
 import { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import {
   buildHttpResponse,
   deserializeResponseBody,
@@ -11,7 +12,7 @@ import {
 
 export type BaseFetch = (
   request: BaseFetchRequest,
-) => ResultAsync<HttpResponse<unknown>, Error>;
+) => ResultAsync<HttpResponse<unknown>, RichError>;
 
 export type BaseFetchRequest = {
   body?: RequestInit["body"];
@@ -31,7 +32,7 @@ export function createBaseFetch(
 ): BaseFetch {
   return (
     request: BaseFetchRequest,
-  ): ResultAsync<HttpResponse<unknown>, Error> => {
+  ): ResultAsync<HttpResponse<unknown>, RichError> => {
     const req: HttpRequest = {
       method: request.method ?? "GET",
       url: request.url,
@@ -46,11 +47,11 @@ export function createBaseFetch(
 function deserializeBody(
   response: Response,
   request: HttpRequest,
-): ResultAsync<HttpResponse, Error> {
+): ResultAsync<HttpResponse, RichError> {
   return ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
     newFetchError({
-      action: "DeserializeResponseBody",
       cause,
+      details: { action: "DeserializeResponseBody" },
       kind: "BadGateway",
       request,
     }),
@@ -60,7 +61,7 @@ function deserializeBody(
 function performFetch(
   fetcher: typeof fetch,
   request: BaseFetchRequest,
-): ResultAsync<Response, Error> {
+): ResultAsync<Response, RichError> {
   const { cleanup, signal } = resolveAbortSignal({
     signal: request.signal,
     timeoutMs: request.timeoutMs,
@@ -75,8 +76,8 @@ function performFetch(
 
   return ResultAsync.fromPromise(fetcher(request.url, init), (cause) =>
     newFetchError({
-      action: "FetchExternalApi",
       cause,
+      details: { action: "FetchExternalApi" },
       request: { method: request.method ?? "GET", url: request.url },
     }),
   ).map((response) => {

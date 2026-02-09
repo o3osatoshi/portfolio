@@ -37,7 +37,7 @@ export function coerceErrorMessage(cause: unknown): string | undefined {
  * @returns A message string when detectable, otherwise `undefined`.
  */
 export function extractErrorMessage(cause: unknown): string | undefined {
-  if (!cause) return;
+  if (cause == null) return;
 
   if (cause instanceof Error) return cause.message;
   if (typeof cause === "string") return cause;
@@ -61,7 +61,7 @@ export function extractErrorMessage(cause: unknown): string | undefined {
  * @returns Detected error name or `undefined` when the value lacks an appropriate field.
  */
 export function extractErrorName(cause: unknown): string | undefined {
-  if (!cause) return;
+  if (cause == null) return;
 
   if (cause instanceof Error) return cause.name;
   if (typeof cause === "object" && "name" in cause) {

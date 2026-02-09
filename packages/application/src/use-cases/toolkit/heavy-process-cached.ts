@@ -1,10 +1,13 @@
 import type { CacheStore } from "@repo/domain";
 import { okAsync, type ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
 } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 import { HeavyProcessUseCase } from "./heavy-process";
 
 const CACHE_KEY_PREFIX = "edge:public:heavy";
@@ -30,7 +33,7 @@ export class HeavyProcessCachedUseCase {
    * @returns ResultAsync wrapping a {@link HeavyProcessCachedResponse} or an
    * {@link Error} if the underlying heavy process fails.
    */
-  execute(): ResultAsync<HeavyProcessCachedResponse, Error> {
+  execute(): ResultAsync<HeavyProcessCachedResponse, RichError> {
     return this.cacheStore
       .get<HeavyProcessResponse>(CACHE_KEY_PREFIX)
       .orElse(() => okAsync(null))
@@ -47,6 +50,7 @@ export class HeavyProcessCachedUseCase {
             .orElse(() => okAsync(null))
             .map(() => ({ ...heavyProcess, cached: false })),
         );
-      });
+      })
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

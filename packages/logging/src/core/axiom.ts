@@ -1,6 +1,6 @@
 import { Axiom, AxiomWithoutBatching, type ClientOptions } from "@axiomhq/js";
 
-import { deserializeError, newError } from "@o3osatoshi/toolkit";
+import { toRichError } from "@o3osatoshi/toolkit";
 
 import type { LogEvent, Transport } from "../types";
 
@@ -63,7 +63,7 @@ export function createAxiomClient(options: AxiomClientOptions): AxiomClient {
  * @public
  */
 export function createAxiomTransport(options: AxiomClientOptions): Transport {
-  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const onError = options.onError ?? ((error: unknown) => console.error(error));
   const client = createAxiomClient({ ...options, onError });
 
   const emit = (dataset: string, events: LogEvent | LogEvent[]) => {
@@ -73,30 +73,26 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
       if (result && typeof result.catch === "function") {
         void result.catch((error) => {
           onError(
-            deserializeError(error, {
-              fallback: (cause) =>
-                newError({
-                  action: "AxiomIngest",
-                  cause,
-                  kind: "Unknown",
-                  layer: "External",
-                  reason: "axiom ingest failed with a non-error value",
-                }),
+            toRichError(error, {
+              details: {
+                action: "AxiomIngest",
+                reason: "axiom ingest failed with an unexpected error value",
+              },
+              kind: "Internal",
+              layer: "External",
             }),
           );
         });
       }
     } catch (error: unknown) {
       onError(
-        deserializeError(error, {
-          fallback: (cause) =>
-            newError({
-              action: "AxiomIngest",
-              cause,
-              kind: "Unknown",
-              layer: "External",
-              reason: "axiom ingest failed with a non-error value",
-            }),
+        toRichError(error, {
+          details: {
+            action: "AxiomIngest",
+            reason: "axiom ingest failed with an unexpected error value",
+          },
+          kind: "Internal",
+          layer: "External",
         }),
       );
     }

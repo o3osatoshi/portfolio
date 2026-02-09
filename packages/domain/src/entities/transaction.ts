@@ -1,6 +1,9 @@
 import { err, ok, Result } from "neverthrow";
 
-import { domainValidationError } from "../domain-error";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newDomainError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type {
   Amount,
   CurrencyCode,
@@ -105,7 +108,7 @@ export type UpdateTransactionInput = {
  */
 export function createTransaction(
   tx: CreateTransactionInput,
-): Result<CreateTransaction, Error> {
+): Result<CreateTransaction, RichError> {
   return Result.combine([
     newTransactionType(tx.type),
     newDateTime(tx.datetime),
@@ -145,7 +148,7 @@ export function createTransaction(
  */
 export function newTransaction(
   tx: NewTransactionInput,
-): Result<Transaction, Error> {
+): Result<Transaction, RichError> {
   return Result.combine([
     newTransactionId(tx.id),
     newTransactionType(tx.type),
@@ -194,16 +197,21 @@ export function newTransaction(
 export function updateTransaction(
   tx: Transaction,
   patch: UpdateTransactionInput,
-): Result<Transaction, Error> {
+): Result<Transaction, RichError> {
   const res = newTransactionId(patch.id);
   if (res.isErr()) return err(res.error);
   const id = res.value;
 
   if (tx.id !== id) {
     return err(
-      domainValidationError({
-        action: "UpdateTransaction",
-        reason: "Transaction ID mismatch",
+      newDomainError({
+        code: domainErrorCodes.TRANSACTION_ID_MISMATCH,
+        details: {
+          action: "UpdateTransaction",
+          reason: "Transaction ID mismatch",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   }

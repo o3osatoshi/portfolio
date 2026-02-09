@@ -4,7 +4,7 @@ import { err, errAsync, ok, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import { newError } from "@o3osatoshi/toolkit";
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import { respond, respondAsync, respondZodError } from "./respond";
 
@@ -24,11 +24,14 @@ describe("http/core/respond", () => {
       app.get("/e", (c) =>
         respond<never>(c)(
           err(
-            newError({
-              action: "LookupEntity",
+            newRichError({
+              details: {
+                action: "LookupEntity",
+                reason: "Entity missing",
+              },
+              isOperational: true,
               kind: "NotFound",
               layer: "Domain",
-              reason: "Entity missing",
             }),
           ),
         ),
@@ -37,7 +40,7 @@ describe("http/core/respond", () => {
       const res = await app.request("/e");
       expect(res.status).toBe(404);
       const body = await res.json();
-      // Basic shape from serializeError
+      // Basic shape from serializeRichError
       expect(body).toHaveProperty("name", "DomainNotFoundError");
       expect(typeof body.message).toBe("string");
     });
@@ -48,7 +51,14 @@ describe("http/core/respond", () => {
         respond<never>(c)(
           err(
             (() => {
-              const e = new Error("aborted");
+              const e = newRichError({
+                details: {
+                  reason: "aborted",
+                },
+                isOperational: true,
+                kind: "Canceled",
+                layer: "External",
+              });
               // Simulate a DOM-style AbortError without depending on DOMException
               e.name = "AbortError";
               return e;
@@ -65,7 +75,20 @@ describe("http/core/respond", () => {
 
     it("defaults unknown errors to 500", async () => {
       const app = new Hono();
-      app.get("/unknown", (c) => respond<never>(c)(err(new Error("boom"))));
+      app.get("/unknown", (c) =>
+        respond<never>(c)(
+          err(
+            newRichError({
+              details: {
+                reason: "boom",
+              },
+              isOperational: false,
+              kind: "Internal",
+              layer: "External",
+            }),
+          ),
+        ),
+      );
       const res = await app.request("/unknown");
       expect(res.status).toBe(500);
     });
@@ -88,11 +111,14 @@ describe("http/core/respond", () => {
       app.get("/e", (c) =>
         respondAsync<never>(c)(
           errAsync(
-            newError({
-              action: "LookupEntity",
+            newRichError({
+              details: {
+                action: "LookupEntity",
+                reason: "Entity missing",
+              },
+              isOperational: true,
               kind: "NotFound",
               layer: "Domain",
-              reason: "Entity missing",
             }),
           ),
         ),
@@ -111,7 +137,14 @@ describe("http/core/respond", () => {
         respondAsync<never>(c)(
           errAsync(
             (() => {
-              const e = new Error("aborted");
+              const e = newRichError({
+                details: {
+                  reason: "aborted",
+                },
+                isOperational: true,
+                kind: "Canceled",
+                layer: "External",
+              });
               e.name = "AbortError";
               return e;
             })(),
@@ -128,7 +161,18 @@ describe("http/core/respond", () => {
     it("defaults unknown errors in ResultAsync to 500", async () => {
       const app = new Hono();
       app.get("/unknown", (c) =>
-        respondAsync<never>(c)(errAsync(new Error("boom"))),
+        respondAsync<never>(c)(
+          errAsync(
+            newRichError({
+              details: {
+                reason: "boom",
+              },
+              isOperational: false,
+              kind: "Internal",
+              layer: "External",
+            }),
+          ),
+        ),
       );
       const res = await app.request("/unknown");
       expect(res.status).toBe(500);

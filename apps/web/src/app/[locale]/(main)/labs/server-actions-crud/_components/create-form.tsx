@@ -6,6 +6,7 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { createTransaction } from "@/actions/create-transaction";
+import { useErrorMessage } from "@/utils/use-error-message";
 import { createTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
@@ -16,6 +17,7 @@ interface Props {
 
 export default function CreateForm({ locale }: Props) {
   const t = useTranslations("LabsServerCrud");
+  const resolveErrorMessage = useErrorMessage();
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
@@ -114,9 +116,11 @@ export default function CreateForm({ locale }: Props) {
           placeholder={labels.feeCurrency}
           type="text"
         />
-        {state?.ok === false && (
-          <Message variant="destructive">{state.error.message}</Message>
-        )}
+        {state?.ok === false ? (
+          <Message variant="destructive">
+            {resolveErrorMessage(state.error)}
+          </Message>
+        ) : null}
         <Button
           disabled={Object.keys(errors).length > 0 || isPending}
           type="submit"

@@ -2,11 +2,14 @@ import type { TransactionRepository } from "@repo/domain";
 import { newUserId } from "@repo/domain";
 import type { ResultAsync } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import {
   type GetTransactionsRequest,
   type GetTransactionsResponse,
   toTransactionsResponse,
 } from "../../dtos";
+import { ensureApplicationErrorI18n } from "../../error-i18n";
 
 /**
  * Use case that fetches all transactions for a given user while enforcing
@@ -23,9 +26,11 @@ export class GetTransactionsUseCase {
    */
   execute(
     req: GetTransactionsRequest,
-  ): ResultAsync<GetTransactionsResponse, Error> {
-    return newUserId(req.userId).asyncAndThen((userId) =>
-      this.repo.findByUserId(userId).map(toTransactionsResponse),
-    );
+  ): ResultAsync<GetTransactionsResponse, RichError> {
+    return newUserId(req.userId)
+      .asyncAndThen((userId) =>
+        this.repo.findByUserId(userId).map(toTransactionsResponse),
+      )
+      .mapErr((error) => ensureApplicationErrorI18n(error));
   }
 }

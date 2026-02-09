@@ -2,6 +2,11 @@ import { type FxQuoteProvider, newFxQuote } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { newApplicationError } from "../../application-error";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import { GetFxQuoteUseCase } from "./get-fx-quote";
 
 const h = vi.hoisted(() => {
@@ -67,7 +72,16 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
   });
 
   it("propagates provider errors", async () => {
-    const providerError = new Error("provider failed");
+    const providerError = newApplicationError({
+      code: applicationErrorCodes.UNAVAILABLE,
+      details: {
+        action: "GetFxQuoteUseCaseSpec",
+        reason: "provider failed",
+      },
+      i18n: { key: applicationErrorI18nKeys.UNAVAILABLE },
+      isOperational: true,
+      kind: "Unavailable",
+    });
     h.getRateMock.mockReturnValueOnce(errAsync(providerError));
 
     const useCase = buildUseCase();
@@ -87,6 +101,9 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("DomainValidationError");
+    expect(result.error.i18n).toEqual({
+      key: applicationErrorI18nKeys.VALIDATION,
+    });
   });
 
   it("returns validation error when quote is invalid", async () => {
@@ -97,5 +114,8 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(result.error.name).toBe("DomainValidationError");
+    expect(result.error.i18n).toEqual({
+      key: applicationErrorI18nKeys.VALIDATION,
+    });
   });
 });

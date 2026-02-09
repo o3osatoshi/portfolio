@@ -60,9 +60,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.value).toEqual(body);
 
-    expect(h.getHeavyProcessCachedRequestMock).toHaveBeenCalledWith(undefined, {
-      init: { cache: "no-store" },
-    });
+    expect(h.getHeavyProcessCachedRequestMock).toHaveBeenCalledWith();
   });
 
   it("returns Err Unauthorized when response status is 401", async () => {
@@ -81,8 +79,8 @@ describe("getHeavyProcessCached", () => {
     expect(res.error.name).toBe("ExternalUnauthorizedError");
   });
 
-  it("returns Err with deserialized remote error when response is non-2xx", async () => {
-    const body = { name: "ApplicationUnknownError", message: "something bad" };
+  it("returns Err Serialization when remote payload is not serialized RichError", async () => {
+    const body = { name: "ApplicationInternalError", message: "something bad" };
 
     const json = vi.fn().mockResolvedValueOnce(body);
     h.getHeavyProcessCachedRequestMock.mockResolvedValueOnce({
@@ -97,8 +95,8 @@ describe("getHeavyProcessCached", () => {
     if (!res.isErr()) return;
 
     expect(res.error).toBeInstanceOf(Error);
-    expect(res.error.name).toBe("ApplicationUnknownError");
-    expect(res.error.message).toBe("something bad");
+    expect(res.error.name).toBe("ExternalSerializationError");
+    expect(res.error.message).toContain("DeserializeExternalApiErrorBody");
   });
 
   it("returns Err when remote error body cannot be deserialized", async () => {
@@ -117,9 +115,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain(
-      "Deserialize error body for getHeavyProcessCached",
-    );
+    expect(res.error.message).toContain("DeserializeExternalApiErrorBody");
   });
 
   it("returns Err when response body JSON parse fails on success status", async () => {
@@ -138,9 +134,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    expect(res.error.message).toContain(
-      "Deserialize body for getHeavyProcessCached",
-    );
+    expect(res.error.message).toContain("DeserializeExternalApiResponseBody");
   });
 
   it("returns Err when underlying request rejects (network failure)", async () => {
@@ -154,7 +148,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalUnavailableError");
-    expect(res.error.message).toContain("Fetch heavy process cached failed");
+    expect(res.error.message).toContain("FetchHeavyProcessCached failed");
     expect(res.error.message).toContain(getPath("heavy-process-cached"));
   });
 });

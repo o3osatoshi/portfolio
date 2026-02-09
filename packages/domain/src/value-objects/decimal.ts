@@ -1,7 +1,10 @@
 import { default as DecimalJs } from "decimal.js";
 import { err, ok, type Result } from "neverthrow";
 
-import { domainValidationError } from "../domain-error";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { newDomainError } from "../domain-error";
+import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
 /**
@@ -42,23 +45,33 @@ export function isPositiveDecimal(value: DecimalString): boolean {
 /**
  * Normalize arbitrary numeric input into a {@link DecimalString}.
  */
-export function newDecimal(v: unknown): Result<DecimalString, Error> {
+export function newDecimal(v: unknown): Result<DecimalString, RichError> {
   try {
     const d = new DecimalJs(v as unknown as DecimalJs.Value);
     if (!d.isFinite()) {
       return err(
-        domainValidationError({
-          action: "NewDecimal",
-          reason: "Decimal must be finite",
+        newDomainError({
+          code: domainErrorCodes.DECIMAL_NOT_FINITE,
+          details: {
+            action: "NewDecimal",
+            reason: "Decimal must be finite",
+          },
+          isOperational: true,
+          kind: "Validation",
         }),
       );
     }
     return ok(d.toString() as DecimalString);
   } catch {
     return err(
-      domainValidationError({
-        action: "NewDecimal",
-        reason: "Invalid decimal input",
+      newDomainError({
+        code: domainErrorCodes.DECIMAL_INVALID_INPUT,
+        details: {
+          action: "NewDecimal",
+          reason: "Invalid decimal input",
+        },
+        isOperational: true,
+        kind: "Validation",
       }),
     );
   }

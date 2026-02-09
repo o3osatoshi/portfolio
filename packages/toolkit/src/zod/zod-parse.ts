@@ -1,7 +1,7 @@
 import { Result } from "neverthrow";
 import type { z } from "zod";
 
-import type { Layer } from "../error";
+import type { Layer, RichError } from "../error";
 import { newZodError } from "./zod-error";
 
 /**
@@ -16,7 +16,7 @@ import { newZodError } from "./zod-error";
  * @returns A function that yields a neverthrow Result containing the inferred schema output.
  * @example
  * ```ts
- * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
+ * const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "Presentation" });
  * const res = parseUser(someInput);
  * // Result of parsed type
  * ```
@@ -25,10 +25,10 @@ import { newZodError } from "./zod-error";
 export function parseWith<T extends z.ZodType>(
   schema: T,
   ctx: { action: string; layer?: Layer },
-): (input: unknown) => Result<z.infer<T>, Error> {
+): (input: unknown) => Result<z.infer<T>, RichError> {
   const { action, layer } = ctx;
   return Result.fromThrowable(
     (input: unknown) => schema.parse(input),
-    (cause) => newZodError({ action, cause, layer }),
+    (cause) => newZodError({ cause, details: { action }, layer }),
   );
 }

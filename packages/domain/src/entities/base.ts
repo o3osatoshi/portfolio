@@ -1,5 +1,7 @@
 import { Result } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { type DateTime, newDateTime } from "../value-objects";
 
 /**
@@ -21,7 +23,7 @@ export type NewBaseInput = {
 /**
  * Validate core temporal metadata for new domain entities.
  */
-export function newBase(base: NewBaseInput): Result<Base, Error> {
+export function newBase(base: NewBaseInput): Result<Base, RichError> {
   return Result.combine([
     newDateTime(base.createdAt),
     newDateTime(base.updatedAt),

@@ -1,80 +1,155 @@
 import { describe, expect, it } from "vitest";
 
+import { isRichError, newRichError } from "./error";
 import {
-  deserializeError,
+  deserializeRichError,
   isSerializedError,
+  isSerializedRichError,
   type SerializedError,
-  serializeError,
+  serializeRichError,
+  tryDeserializeRichError,
 } from "./error-serializer";
 
 describe("error-serializer", () => {
-  it("serializes and deserializes a basic Error", () => {
-    const e = new Error("oops");
-    e.name = "TestError";
-    const s = serializeError(e, { includeStack: true });
-    expect(s.name).toBe("TestError");
-    expect(s.message).toBe("oops");
-    const d = deserializeError(s);
-    expect(d.name).toBe("TestError");
-    expect(d.message).toBe("oops");
+  it("serializes rich error fields and rehydrates RichError", () => {
+    const err = newRichError({
+      code: "user.invalid",
+      details: {
+        action: "CreateUser",
+        reason: "Email is invalid",
+      },
+      i18n: { key: "error.user_invalid", params: { id: 1 } },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Application",
+      meta: { requestId: "req_1" },
+    });
+
+    const s = serializeRichError(err, { includeStack: false });
+    expect(s.kind).toBe("Validation");
+    expect(s.layer).toBe("Application");
+    expect(s.code).toBe("user.invalid");
+    expect(s.details?.action).toBe("CreateUser");
+    expect(s.i18n?.key).toBe("error.user_invalid");
+    expect(s.meta).toEqual({ requestId: "req_1" });
+    expect(isSerializedRichError(s)).toBe(true);
+
+    const d = deserializeRichError(s);
+    expect(isRichError(d)).toBe(true);
+    expect(d.kind).toBe("Validation");
+    expect(d.layer).toBe("Application");
+    expect(d.code).toBe("user.invalid");
+    expect(d.details?.reason).toBe("Email is invalid");
+    expect(d.i18n?.params).toEqual({ id: 1 });
+    expect(d.meta).toEqual({ requestId: "req_1" });
   });
 
-  it("handles string cause", () => {
-    const e = new Error("top");
-    e.cause = "inner";
-    const s = serializeError(e, { includeStack: false });
+  it("returns a serialization RichError for non-rich payload", () => {
+    const payload: SerializedError = { name: "TestError", message: "oops" };
+
+    const err = deserializeRichError(payload);
+    expect(err.kind).toBe("Serialization");
+    expect(err.layer).toBe("External");
+    expect(err.code).toBe("RICH_ERROR_DESERIALIZE_FAILED");
+  });
+
+  it("tryDeserializeRichError returns Err for serialized non-rich payload", () => {
+    const payload: SerializedError = { name: "TestError", message: "oops" };
+
+    const result = tryDeserializeRichError(payload);
+    expect(result.isErr()).toBe(true);
+    if (result.isErr()) {
+      expect(result.error.issues.some((issue) => issue.path === "kind")).toBe(
+        true,
+      );
+      expect(result.error.issues.some((issue) => issue.path === "layer")).toBe(
+        true,
+      );
+    }
+  });
+
+  it("handles string cause in serialized rich payload", () => {
+    const e = newRichError({
+      cause: "inner",
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+    const s = serializeRichError(e, { includeStack: false });
     expect(s.cause).toBe("inner");
-    const d = deserializeError(s);
+    const d = deserializeRichError(s);
     expect(d.cause).toBe("inner");
   });
 
-  it("handles nested Error cause recursively", () => {
+  it("handles nested cause recursively", () => {
     const inner = new Error("inner-msg");
     inner.name = "InnerError";
-    const outer = new Error("outer-msg", { cause: inner });
-    outer.name = "OuterError";
+    const outer = newRichError({
+      cause: inner,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
 
-    const s = serializeError(outer, { includeStack: false });
-    expect(s.name).toBe("OuterError");
+    const s = serializeRichError(outer, { includeStack: false });
     expect(typeof s.cause).toBe("object");
     const cause = s.cause as SerializedError;
     expect(isSerializedError(cause)).toBe(true);
     expect(cause.name).toBe("InnerError");
     expect(cause.message).toBe("inner-msg");
 
-    const d = deserializeError(s);
-    expect(d.name).toBe("OuterError");
-    expect(d.message).toBe("outer-msg");
+    const d = deserializeRichError(s);
     expect(d.cause instanceof Error).toBe(true);
     const dcause = d.cause as Error;
     expect(dcause.name).toBe("InnerError");
     expect(dcause.message).toBe("inner-msg");
   });
 
-  // serializeError now accepts only Error; non-error inputs are invalid
-
   it("honors depth option by summarizing deep causes", () => {
     const deep = new Error("deep-cause");
     const mid = new Error("mid", { cause: deep });
-    const top = new Error("top", { cause: mid });
+    const top = newRichError({
+      cause: mid,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
 
-    const s = serializeError(top, { depth: 1, includeStack: false });
-    // depth:1 => cause is summarized as string (not a structured object)
+    const s = serializeRichError(top, { depth: 1, includeStack: false });
     expect(typeof s.cause).toBe("string");
+  });
+
+  it("omits cause when includeCause is false", () => {
+    const inner = new Error("inner-msg");
+    const top = newRichError({
+      cause: inner,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+
+    const serialized = serializeRichError(top, {
+      includeCause: false,
+      includeStack: false,
+    });
+
+    expect(serialized.cause).toBeUndefined();
   });
 
   it("respects default includeStack based on NODE_ENV", () => {
     const prev = process.env["NODE_ENV"];
     try {
-      const err = new Error("with-stack");
-      // development → include stack by default
+      const err = newRichError({
+        isOperational: false,
+        kind: "Internal",
+        layer: "Infrastructure",
+      });
       process.env["NODE_ENV"] = "development";
-      const sDev = serializeError(err);
+      const sDev = serializeRichError(err);
       expect(typeof sDev.stack === "string").toBe(true);
 
-      // production → exclude stack by default
       process.env["NODE_ENV"] = "production";
-      const sProd = serializeError(err);
+      const sProd = serializeRichError(err);
       expect(sProd.stack).toBeUndefined();
     } finally {
       process.env["NODE_ENV"] = prev;
@@ -82,55 +157,68 @@ describe("error-serializer", () => {
   });
 
   it("allows forcing stack inclusion via option", () => {
-    const err = new Error("stack-opt");
-    const s = serializeError(err, { includeStack: true });
+    const err = newRichError({
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+    const s = serializeRichError(err, { includeStack: true });
     expect(typeof s.stack === "string").toBe(true);
   });
 
-  // serializeError now accepts only Error; primitives/objects are not allowed
-
   it("passes through already-serialized cause without modification", () => {
     const inner: SerializedError = { name: "Inner", message: "m" };
-    const top = new Error("top");
-    top.cause = inner;
-    const s = serializeError(top);
+    const top = newRichError({
+      cause: inner,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+    const s = serializeRichError(top);
     expect(s.cause).toEqual(inner);
   });
 
   it("controls structured depth of cause chain", () => {
     const inner = new Error("inner");
     const mid = new Error("mid", { cause: inner });
-    const top = new Error("top", { cause: mid });
+    const top = newRichError({
+      cause: mid,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
 
-    // default depth=2 → top.cause structured, mid.cause summarized string
-    const sDefault = serializeError(top);
+    const sDefault = serializeRichError(top);
     expect(isSerializedError(sDefault.cause)).toBe(true);
     const midSer = sDefault.cause as SerializedError;
     expect(typeof midSer.cause === "string" || midSer.cause === undefined).toBe(
       true,
     );
 
-    // depth=4 → top.cause structured, mid.cause structured
-    const sDeep = serializeError(top, { depth: 4 });
+    const sDeep = serializeRichError(top, { depth: 4 });
     expect(isSerializedError(sDeep.cause)).toBe(true);
     const midSerDeep = sDeep.cause as SerializedError;
     expect(isSerializedError(midSerDeep.cause)).toBe(true);
 
-    // depth=0 (coerce) → top.cause summarized string
-    const sShallow = serializeError(top, { depth: 0 });
+    const sShallow = serializeRichError(top, { depth: 0 });
     expect(typeof sShallow.cause).toBe("string");
   });
 
   it("propagates includeStack option to nested causes", () => {
     const inner = new Error("inner");
-    const top = new Error("top", { cause: inner });
+    const top = newRichError({
+      cause: inner,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
 
-    const withStack = serializeError(top, { includeStack: true });
+    const withStack = serializeRichError(top, { includeStack: true });
     const innerWith = withStack.cause as SerializedError;
     expect(isSerializedError(innerWith)).toBe(true);
     expect(typeof innerWith.stack === "string").toBe(true);
 
-    const withoutStack = serializeError(top, { includeStack: false });
+    const withoutStack = serializeRichError(top, { includeStack: false });
     const innerWithout = withoutStack.cause as SerializedError;
     expect(isSerializedError(innerWithout)).toBe(true);
     expect(innerWithout.stack).toBeUndefined();
@@ -138,37 +226,39 @@ describe("error-serializer", () => {
 
   it("keeps string cause as-is without truncation", () => {
     const long = "x".repeat(300);
-    const e = new Error("msg");
-    e.cause = long;
-    const s = serializeError(e); // default depth>0 preserves string causes
+    const e = newRichError({
+      cause: long,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+    const s = serializeRichError(e);
     expect(typeof s.cause).toBe("string");
     expect((s.cause as string).length).toBe(300);
   });
 
-  it("deserializes a serialized payload with string cause", () => {
-    const payload: SerializedError = {
-      name: "Top",
-      cause: "S",
-      message: "M",
-    };
-    const err = deserializeError(payload);
-    expect(err.name).toBe("Top");
-    expect(err.message).toBe("M");
-    expect(err.cause).toBe("S");
-  });
-
   it("normalizes negative depth to 0 (summarize)", () => {
     const inner = new Error("inner");
-    const top = new Error("top", { cause: inner });
-    const s = serializeError(top, { depth: -1 });
+    const top = newRichError({
+      cause: inner,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+    const s = serializeRichError(top, { depth: -1 });
     expect(typeof s.cause).toBe("string");
   });
 
   it("with depth=3 keeps second-level cause summarized string", () => {
     const inner = new Error("inner");
     const mid = new Error("mid", { cause: inner });
-    const top = new Error("top", { cause: mid });
-    const s = serializeError(top, { depth: 3 });
+    const top = newRichError({
+      cause: mid,
+      isOperational: false,
+      kind: "Internal",
+      layer: "Infrastructure",
+    });
+    const s = serializeRichError(top, { depth: 3 });
     expect(isSerializedError(s.cause)).toBe(true);
     const midSer = s.cause as SerializedError;
     expect(typeof midSer.cause).toBe("string");
@@ -177,58 +267,109 @@ describe("error-serializer", () => {
   it("isSerializedError guards valid shapes only", () => {
     expect(isSerializedError({ name: "A", message: "B" })).toBe(true);
     expect(isSerializedError({ name: "A", extra: 1, message: "B" })).toBe(true);
+    expect(isSerializedError({ name: 123, message: "B" })).toBe(false);
+    expect(isSerializedError({ name: "A", message: 42 })).toBe(false);
     expect(isSerializedError({ name: "A" })).toBe(false);
     expect(isSerializedError({ message: "B" })).toBe(false);
     expect(isSerializedError("x")).toBe(false);
     expect(isSerializedError(null)).toBe(false);
   });
 
-  it("deserializes from unknown input with schema validation (success)", () => {
+  it("isSerializedRichError requires kind/layer", () => {
+    expect(
+      isSerializedRichError({
+        name: "ApplicationValidationError",
+        isOperational: true,
+        kind: "Validation",
+        layer: "Application",
+        message: "msg",
+      }),
+    ).toBe(true);
+    expect(
+      isSerializedRichError({
+        name: "Error",
+        message: "msg",
+      }),
+    ).toBe(false);
+  });
+
+  it("tryDeserializeRichError succeeds for valid serialized RichError payload", () => {
     const payload: unknown = {
-      name: "X",
-      cause: { name: "A", message: "B" },
-      extra: 1,
-      message: "Y",
+      name: "ApplicationNotFoundError",
+      code: "resource.missing",
+      details: { action: "GetResource", reason: "missing" },
+      isOperational: true,
+      kind: "NotFound",
+      layer: "Application",
+      message: "GetResource failed: missing",
     };
-    const e = deserializeError(payload);
-    expect(e.name).toBe("X");
-    expect(e.message).toBe("Y");
-    expect(e.cause instanceof Error).toBe(true);
-    const c = e.cause as Error;
-    expect(c.name).toBe("A");
-    expect(c.message).toBe("B");
+    const result = tryDeserializeRichError(payload);
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value.kind).toBe("NotFound");
+      expect(result.value.layer).toBe("Application");
+      expect(result.value.code).toBe("resource.missing");
+    }
   });
 
-  it("deserializes from unknown input with schema validation (fallback)", () => {
-    const e1 = deserializeError(42);
-    expect(e1).toBeInstanceOf(Error);
-    expect(e1.name).toBe("UnknownError");
-    // Non-string primitive falls back to string coercion
-    expect(e1.message).toBe("42");
+  it("rehydrates empty stack/message values without dropping them", () => {
+    const result = tryDeserializeRichError({
+      name: "ApplicationInternalError",
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
+      message: "",
+      stack: "",
+    });
 
-    const e2 = deserializeError({ foo: "bar" });
-    expect(e2).toBeInstanceOf(Error);
-    expect(e2.name).toBe("UnknownError");
-    expect(e2.message).toBe('{"foo":"bar"}');
-
-    const already = new Error("keep");
-    const e3 = deserializeError(already);
-    expect(e3).toBe(already);
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value.message).toBe("");
+      expect(result.value.stack).toBe("");
+    }
   });
 
-  it("uses fallback when input is not deserializable", () => {
-    const payload = { foo: "bar" };
-    const fallback = (cause: unknown) => {
-      const err = new Error("fallback");
-      err.name = "FallbackError";
-      err.cause = cause;
-      return err;
-    };
+  it("deserializeRichError returns structured failure for invalid payload", () => {
+    const err = deserializeRichError(42);
+    expect(err.kind).toBe("Serialization");
+    expect(err.layer).toBe("External");
+    expect(err.code).toBe("RICH_ERROR_DESERIALIZE_FAILED");
+    expect(err.meta?.["inputType"]).toBe("number");
+    expect(typeof err.meta?.["issueCount"]).toBe("number");
+  });
 
-    const err = deserializeError(payload, { fallback });
+  it("deserializeRichError supports custom failure metadata", () => {
+    const err = deserializeRichError(
+      { foo: "bar" },
+      {
+        action: "DeserializeWebhookError",
+        code: "WEBHOOK_ERROR_DESERIALIZE_FAILED",
+        i18nKey: "errors.webhook.deserialize_failed",
+        layer: "Infrastructure",
+        meta: { endpoint: "/webhook" },
+        source: "webhook.transport",
+      },
+    );
 
-    expect(err.name).toBe("FallbackError");
-    expect(err.message).toBe("fallback");
-    expect(err.cause).toBe(payload);
+    expect(err.kind).toBe("Serialization");
+    expect(err.layer).toBe("Infrastructure");
+    expect(err.code).toBe("WEBHOOK_ERROR_DESERIALIZE_FAILED");
+    expect(err.details?.action).toBe("DeserializeWebhookError");
+    expect(err.i18n?.key).toBe("errors.webhook.deserialize_failed");
+    expect(err.meta?.["endpoint"]).toBe("/webhook");
+    expect(err.meta?.["source"]).toBe("webhook.transport");
+  });
+
+  it("tryDeserializeRichError returns the same instance for RichError input", () => {
+    const rich = newRichError({
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
+    });
+    const result = tryDeserializeRichError(rich);
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value).toBe(rich);
+    }
   });
 });

@@ -3,6 +3,7 @@ import { newFxQuote } from "@repo/domain";
 import type { Result } from "neverthrow";
 import { err } from "neverthrow";
 
+import type { RichError } from "@o3osatoshi/toolkit";
 import {
   createUrlRedactor,
   formatHttpStatusReason,
@@ -17,6 +18,7 @@ import {
   type SmartFetchResponse,
 } from "../http";
 import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { type ExchangeRateApiPair, exchangeRateApiPairSchema } from "./schema";
 
 const CACHE_TTL_MS = 3_600_000;
@@ -121,18 +123,22 @@ function resolveAsOf(pair: ExchangeRateApiPair): Date {
 function toFxQuote(
   res: SmartFetchResponse<ExchangeRateApiPair>,
   query: FxQuoteQuery,
-): Result<FxQuote, Error> {
+): Result<FxQuote, RichError> {
   if (!res.response.ok) {
     return err(
       newIntegrationError({
-        action: "FetchExchangeRateApi",
         cause: res.data,
+        code: integrationErrorCodes.EXCHANGE_RATE_API_HTTP_ERROR,
+        details: {
+          action: "FetchExchangeRateApi",
+          reason: formatHttpStatusReason({
+            payload: res.data,
+            response: res.response,
+            serviceName: "ExchangeRate API",
+          }),
+        },
+        isOperational: true,
         kind: httpStatusToKind(res.response.status),
-        reason: formatHttpStatusReason({
-          payload: res.data,
-          response: res.response,
-          serviceName: "ExchangeRate API",
-        }),
       }),
     );
   }
@@ -143,10 +149,14 @@ function toFxQuote(
     const detail = pair["error-type"] ?? "Unknown error";
     return err(
       newIntegrationError({
-        action: "FetchExchangeRateApi",
         cause: pair,
+        code: integrationErrorCodes.EXCHANGE_RATE_API_LOGICAL_ERROR,
+        details: {
+          action: "FetchExchangeRateApi",
+          reason: `ExchangeRate API error: ${detail}`,
+        },
+        isOperational: true,
         kind: "BadGateway",
-        reason: `ExchangeRate API error: ${detail}`,
       }),
     );
   }
@@ -154,9 +164,13 @@ function toFxQuote(
   if (pair?.conversion_rate === undefined) {
     return err(
       newIntegrationError({
-        action: "ParseExchangeRateApiResponse",
+        code: integrationErrorCodes.EXCHANGE_RATE_API_MISSING_RATE,
+        details: {
+          action: "ParseExchangeRateApiResponse",
+          reason: "ExchangeRate API response missing conversion rate.",
+        },
+        isOperational: false,
         kind: "BadGateway",
-        reason: "ExchangeRate API response missing conversion rate.",
       }),
     );
   }

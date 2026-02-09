@@ -13,6 +13,8 @@ vi.mock("@/env/client", () => ({
   },
 }));
 
+import { isRichError } from "@o3osatoshi/toolkit";
+
 import { getQueryPath, nextFetch } from "./next-fetch";
 
 describe("utils/next-fetch getQueryPath", () => {
@@ -142,8 +144,10 @@ describe("utils/next-fetch nextFetch", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalUnavailableError");
-    const payload = JSON.parse(res.error.message);
-    expect(payload.summary).toBe("Fetch /external failed");
+    expect(isRichError(res.error)).toBe(true);
+    if (isRichError(res.error)) {
+      expect(res.error.details?.action).toBe("FetchExternalApi");
+    }
   });
 
   it("returns Err when response body JSON parse fails", async () => {
@@ -170,7 +174,11 @@ describe("utils/next-fetch nextFetch", () => {
 
     expect(res.error).toBeInstanceOf(Error);
     expect(res.error.name).toBe("ExternalSerializationError");
-    const payload = JSON.parse(res.error.message);
-    expect(payload.summary).toBe("Deserialize body for /external failed");
+    expect(isRichError(res.error)).toBe(true);
+    if (isRichError(res.error)) {
+      expect(res.error.details?.action).toBe(
+        "DeserializeExternalApiResponseBody",
+      );
+    }
   });
 });

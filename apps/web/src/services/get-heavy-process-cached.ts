@@ -4,7 +4,7 @@ import { ResultAsync } from "neverthrow";
 import { handleResponse } from "@/utils/handle-response";
 import { getPath } from "@/utils/nav-handler";
 import { createEdgeClient } from "@/utils/rpc-client";
-import { newFetchError } from "@o3osatoshi/toolkit";
+import { newFetchError, type RichError } from "@o3osatoshi/toolkit";
 
 export type HeavyProcessCached = InferResponseType<
   ReturnType<
@@ -15,19 +15,17 @@ export type HeavyProcessCached = InferResponseType<
 
 export function getHeavyProcessCached(): ResultAsync<
   HeavyProcessCached,
-  Error
+  RichError
 > {
-  const client = createEdgeClient();
+  const client = createEdgeClient({ init: { cache: "no-store" } });
   const request = { method: "GET", url: getPath("heavy-process-cached") };
 
-  return ResultAsync.fromPromise(
-    client.edge.public.heavy.cached.$get(undefined, {
-      init: { cache: "no-store" },
-    }),
+  return ResultAsync.fromPromise<Response, RichError>(
+    client.edge.public.heavy.cached.$get(),
     (cause) =>
       newFetchError({
-        action: "Fetch heavy process cached",
         cause,
+        details: { action: "FetchHeavyProcessCached" },
         request,
       }),
   ).andThen((res) =>
