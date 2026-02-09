@@ -121,6 +121,7 @@ function buildErrorAttributes<S extends z.ZodType>(
     "error.message": error.message,
     "http.method": (request.method ?? "GET").toUpperCase(),
     "http.url": redactUrl(request.url),
+    "retry.attempts": resolveRetryAttempts(error),
   };
 }
 
@@ -147,7 +148,9 @@ function buildMetricsAttributes<S extends z.ZodType>({
     "http.method": (request.method ?? "GET").toUpperCase(),
     "http.status_code": response?.response?.status,
     "http.url": redactUrl(request.url),
-    "retry.attempts": response?.retry?.attempts,
+    "retry.attempts":
+      response?.retry?.attempts ??
+      (error ? resolveRetryAttempts(error) : undefined),
   };
 }
 
@@ -200,4 +203,14 @@ function resolveErrorLevel(error: RichError): "error" | "warn" {
     return "warn";
   }
   return "error";
+}
+
+function resolveRetryAttempts(error: RichError): number | undefined {
+  const retryMeta = error.meta?.["retry"];
+  if (!retryMeta || typeof retryMeta !== "object" || Array.isArray(retryMeta)) {
+    return undefined;
+  }
+  const attempts = retryMeta["attempts"];
+  if (typeof attempts !== "number") return undefined;
+  return Number.isFinite(attempts) ? attempts : undefined;
 }

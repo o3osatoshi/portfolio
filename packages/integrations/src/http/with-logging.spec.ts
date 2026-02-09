@@ -62,15 +62,20 @@ const buildError = (
     details: {
       reason: message,
     },
+    ...(retryAttempts !== undefined
+      ? {
+          meta: {
+            retry: {
+              attempts: retryAttempts,
+            },
+          },
+        }
+      : {}),
     isOperational: kind !== "Internal" && kind !== "Serialization",
     kind,
     layer,
   });
   error.name = name;
-  if (retryAttempts !== undefined) {
-    (error as { retryAttempts?: number } & RichError).retryAttempts =
-      retryAttempts;
-  }
   return error;
 };
 
@@ -408,6 +413,7 @@ describe("integrations/http withLogging", () => {
           "error.name": "ExternalTimeoutError",
           "error.kind": "Timeout",
           "error.layer": "External",
+          "retry.attempts": 3,
         }),
         error,
       );
@@ -433,6 +439,7 @@ describe("integrations/http withLogging", () => {
           "error.layer": "External",
           "http.method": "GET",
           "http.url": "https://example.test",
+          "retry.attempts": 2,
         }),
         { kind: "counter", unit: "1" },
       );

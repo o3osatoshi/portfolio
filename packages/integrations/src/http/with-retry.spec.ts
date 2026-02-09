@@ -95,8 +95,45 @@ describe("integrations/http withRetry", () => {
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
     expect(next).toHaveBeenCalledTimes(3);
+    expect(result.error.meta?.["retry"]).toEqual({
+      attempts: 3,
+      exhausted: true,
+      maxAttempts: 3,
+      method: "GET",
+      retryable: false,
+    });
 
     randomSpy.mockRestore();
     vi.useRealTimers();
+  });
+
+  it("propagates retry metadata even when the error is non-retryable", async () => {
+    const error = newIntegrationError({
+      code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
+      details: {
+        action: "WithRetrySpec",
+        reason: "bad request",
+      },
+      isOperational: true,
+      kind: "Validation",
+    });
+    const next = vi.fn(() => errAsync(error));
+    const client = withRetry(next, {
+      maxAttempts: 5,
+    });
+
+    // @ts-expect-error
+    const result = await client({ url: "https://example.test" });
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) return;
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(result.error.meta?.["retry"]).toEqual({
+      attempts: 1,
+      exhausted: false,
+      maxAttempts: 5,
+      method: "GET",
+      retryable: false,
+    });
   });
 });

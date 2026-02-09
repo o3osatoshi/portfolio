@@ -1,8 +1,13 @@
 import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
-import type { RichError } from "@o3osatoshi/toolkit";
-import { sleep, toRichError } from "@o3osatoshi/toolkit";
+import {
+  type JsonObject,
+  newRichError,
+  type RichError,
+  sleep,
+  toRichError,
+} from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
@@ -33,6 +38,14 @@ type RetryCheckInput<S extends z.ZodType> = {
   response?: SmartFetchResponse<z.infer<S>> | undefined;
 };
 
+type RetryMeta = {
+  attempts: number;
+  exhausted: boolean;
+  maxAttempts: number;
+  method: string;
+  retryable: boolean;
+};
+
 const MAX_ATTEMPTS = 3;
 const BASE_DELAY_MS = 200;
 const MAX_DELAY_MS = 2000;
@@ -46,14 +59,15 @@ export function withRetry(
 ): SmartFetch {
   return <S extends z.ZodType>(request: SmartFetchRequest<S>) => {
     let attempts = 0;
+    const maxAttempts = Math.max(
+      MAX_ATTEMPTS,
+      request.retry?.maxAttempts ?? options.maxAttempts ?? 1,
+    );
+    const method = (request.method ?? "GET").toUpperCase();
 
     return ResultAsync.fromPromise(
       (async () => {
         const retry = request.retry ?? {};
-        const maxAttempts = Math.max(
-          MAX_ATTEMPTS,
-          retry?.maxAttempts ?? options.maxAttempts ?? 1,
-        );
         const baseDelayMs =
           retry?.baseDelayMs ?? options.baseDelayMs ?? BASE_DELAY_MS;
         const maxDelayMs =
@@ -123,7 +137,13 @@ export function withRetry(
             request,
           });
           if (!shouldRetryError || attempts >= maxAttempts) {
-            throw result.error;
+            throw enrichRetryError(result.error, {
+              attempts,
+              exhausted: attempts >= maxAttempts,
+              maxAttempts,
+              method,
+              retryable: shouldRetryError,
+            });
           }
 
           const delayMs = resolveDelayMs({
@@ -141,18 +161,34 @@ export function withRetry(
           };
         }
 
-        throw (
-          lastError ??
-          newIntegrationError({
-            code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
-            details: {
-              action: "RetryExternalApi",
-              reason: `Retry attempts exhausted (attempts: ${attempts}).`,
+        if (lastError) {
+          throw enrichRetryError(lastError, {
+            attempts,
+            exhausted: true,
+            maxAttempts,
+            method,
+            retryable: false,
+          });
+        }
+
+        throw newIntegrationError({
+          code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
+          details: {
+            action: "RetryExternalApi",
+            reason: `Retry attempts exhausted (attempts: ${attempts}).`,
+          },
+          isOperational: false,
+          kind: "Internal",
+          meta: {
+            retry: {
+              attempts,
+              exhausted: true,
+              maxAttempts,
+              method,
+              retryable: false,
             },
-            isOperational: false,
-            kind: "Internal",
-          })
-        );
+          },
+        });
       })(),
       (error) =>
         toRichError(error, {
@@ -162,6 +198,15 @@ export function withRetry(
           },
           kind: "Internal",
           layer: "External",
+          meta: {
+            retry: {
+              attempts,
+              exhausted: attempts >= maxAttempts,
+              maxAttempts,
+              method,
+              retryable: false,
+            },
+          },
         }),
     );
   };
@@ -190,6 +235,24 @@ function defaultShouldRetry<S extends z.ZodType>({
   return retryOnStatuses.includes(status);
 }
 
+function enrichRetryError(error: RichError, retry: RetryMeta): RichError {
+  const richError = newRichError({
+    cause: error.cause,
+    code: error.code,
+    details: error.details,
+    i18n: error.i18n,
+    isOperational: error.isOperational,
+    kind: error.kind,
+    layer: error.layer,
+    meta: mergeRetryMeta(error.meta, retry),
+  });
+  richError.message = error.message;
+  if (error.stack !== undefined) {
+    richError.stack = error.stack;
+  }
+  return richError;
+}
+
 function isRetryableError(error: RichError): boolean {
   const kind = error.kind;
   if (!kind) return false;
@@ -199,6 +262,31 @@ function isRetryableError(error: RichError): boolean {
     kind === "RateLimit" ||
     kind === "BadGateway"
   );
+}
+
+function mergeRetryMeta(
+  meta: JsonObject | undefined,
+  retry: RetryMeta,
+): JsonObject {
+  const currentRetry =
+    meta &&
+    typeof meta["retry"] === "object" &&
+    meta["retry"] !== null &&
+    !Array.isArray(meta["retry"])
+      ? (meta["retry"] as Record<string, unknown>)
+      : undefined;
+
+  return {
+    ...(meta ?? {}),
+    retry: {
+      ...(currentRetry ?? {}),
+      attempts: retry.attempts,
+      exhausted: retry.exhausted,
+      maxAttempts: retry.maxAttempts,
+      method: retry.method,
+      retryable: retry.retryable,
+    },
+  };
 }
 
 function resolveDelayMs({
