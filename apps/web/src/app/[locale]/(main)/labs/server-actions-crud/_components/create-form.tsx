@@ -48,9 +48,6 @@ export default function CreateForm({ locale }: Props) {
     await handleSubmit(() => {})();
   };
 
-  const actionErrorMessage =
-    state?.ok === false ? resolveErrorMessage(state.error) : undefined;
-
   return (
     <form action={dispatch} onSubmit={validate}>
       <input name="locale" type="hidden" value={locale} />
@@ -119,8 +116,10 @@ export default function CreateForm({ locale }: Props) {
           placeholder={labels.feeCurrency}
           type="text"
         />
-        {actionErrorMessage ? (
-          <Message variant="destructive">{actionErrorMessage}</Message>
+        {state?.ok === false ? (
+          <Message variant="destructive">
+            {resolveErrorMessage(state.error)}
+          </Message>
         ) : null}
         <Button
           disabled={Object.keys(errors).length > 0 || isPending}
