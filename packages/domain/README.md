@@ -34,13 +34,16 @@ import type { TransactionRepository } from "@repo/domain";
 Use the domain‑aware constructor to create consistently shaped errors:
 
 ```ts
-import { newDomainError } from "@repo/domain";
+import { domainErrorCodes, newDomainError } from "@repo/domain";
 
 throw newDomainError({
+  code: domainErrorCodes.CURRENCY_CODE_FORMAT_INVALID,
+  details: {
+    action: "CreateUser",
+    hint: "ensure email has @",
+    reason: "email is invalid",
+  },
   kind: "Validation",
-  action: "CreateUser",
-  reason: "email is invalid",
-  hint: "ensure email has @",
 });
 ```
 

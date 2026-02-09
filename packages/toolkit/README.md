@@ -102,7 +102,7 @@ const userSchema = z.object({
 });
 
 const parseUser = parseWith(userSchema, {
-  details: { action: "ParseUser" },
+  action: "ParseUser",
   layer: "Presentation",
 });
 

@@ -60,9 +60,7 @@ describe("getHeavyProcessCached", () => {
 
     expect(res.value).toEqual(body);
 
-    expect(h.getHeavyProcessCachedRequestMock).toHaveBeenCalledWith(undefined, {
-      init: { cache: "no-store" },
-    });
+    expect(h.getHeavyProcessCachedRequestMock).toHaveBeenCalledWith();
   });
 
   it("returns Err Unauthorized when response status is 401", async () => {
