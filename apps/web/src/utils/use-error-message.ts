@@ -12,7 +12,7 @@ export function useErrorMessage() {
   const tError = useTranslations();
 
   return useCallback(
-    (error: Error | SerializedRichError) =>
+    (error: SerializedRichError) =>
       interpretErrorMessage(error, {
         fallbackMessage: tCommon("unknownError"),
         t: tError,

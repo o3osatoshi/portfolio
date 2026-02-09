@@ -60,9 +60,6 @@ export default function EditDialog({ locale, transaction }: Props) {
     await handleSubmit(() => {})();
   };
 
-  const actionErrorMessage =
-    state?.ok === false ? resolveErrorMessage(state.error) : undefined;
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -152,8 +149,10 @@ export default function EditDialog({ locale, transaction }: Props) {
           </div>
           <DialogFooter>
             <div className="flex flex-col items-end gap-2">
-              {actionErrorMessage ? (
-                <Message variant="destructive">{actionErrorMessage}</Message>
+              {state?.ok === false ? (
+                <Message variant="destructive">
+                  {resolveErrorMessage(state.error)}
+                </Message>
               ) : null}
               <Button
                 className="w-fit"

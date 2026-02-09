@@ -11,7 +11,7 @@ type Translate = (
 ) => string;
 
 export function interpretErrorMessage(
-  error: Error | SerializedRichError,
+  error: SerializedRichError,
   { fallbackMessage, t }: Options,
 ): string {
   const i18n = extractI18n(error);
@@ -26,14 +26,8 @@ export function interpretErrorMessage(
   }
 }
 
-function extractI18n(
-  error: Error | SerializedRichError,
-): RichErrorI18n | undefined {
-  if ("i18n" in error) {
-    return error.i18n;
-  }
-
-  return undefined;
+function extractI18n(error: SerializedRichError): RichErrorI18n | undefined {
+  return error.i18n;
 }
 
 function toTranslationParams(
