@@ -31,7 +31,12 @@ export type NewZodError = {
   layer?: Layer | undefined;
 } & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
-type ZodIssue = z.core.$ZodIssue;
+/**
+ * Zod issue type used in toolkit helpers.
+ *
+ * @public
+ */
+export type ZodIssue = z.core.$ZodIssue;
 
 /**
  * Determines whether a value came from Zod validation.

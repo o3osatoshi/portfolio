@@ -51,7 +51,7 @@ export default async function Page({ params }: Props) {
         title={t("header.title")}
       />
       <div className="flex flex-col gap-6">
-        <CreateForm />
+        <CreateForm locale={locale} />
         <Suspense fallback={<TransactionCardSkeleton />}>
           <TransactionsSection locale={locale} />
         </Suspense>
