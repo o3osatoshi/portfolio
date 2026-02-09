@@ -67,6 +67,12 @@ describe("prisma newPrismaError override", () => {
     expect(isRichError(err)).toBe(true);
     if (isRichError(err)) {
       expect(err.details?.hint).toBe("Shorten value or alter schema.");
+      expect(err.meta?.["prismaSource"]).toBe("prisma.newPrismaError");
+      expect(err.meta?.["prismaErrorClass"]).toBe(
+        "PrismaClientKnownRequestError",
+      );
+      expect(err.meta?.["prismaCode"]).toBe("P2000");
+      expect(err.meta?.["prismaColumn"]).toBe("description");
     }
   });
 
@@ -86,6 +92,7 @@ describe("prisma newPrismaError override", () => {
       expect(err.details?.hint).toBe(
         "Use a different value for unique fields.",
       );
+      expect(err.meta?.["prismaTarget"]).toBe("email");
     }
   });
 
@@ -105,6 +112,9 @@ describe("prisma newPrismaError override", () => {
     expect(isRichError(err)).toBe(true);
     if (isRichError(err)) {
       expect(err.details?.hint).toBe("Verify where conditions or record id.");
+      expect(err.meta?.["prismaNotFoundCause"]).toBe(
+        "No record found for where condition",
+      );
     }
   });
 

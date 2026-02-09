@@ -38,6 +38,10 @@ describe("toolkit newFetchError helper", () => {
       expect(err.details?.hint).toBe(
         "Verify network connectivity or upstream availability.",
       );
+      expect(err.meta?.["fetchSource"]).toBe("toolkit.newFetchError");
+      expect(err.meta?.["fetchMethod"]).toBe("GET");
+      expect(err.meta?.["fetchUrl"]).toBe("/api/widgets/123");
+      expect(err.meta?.["fetchResolvedKind"]).toBe("Unavailable");
     }
   });
 
@@ -77,6 +81,12 @@ describe("toolkit newFetchError helper", () => {
     expect(err.message).toContain(
       "SubmitForm failed: POST /api/login failed with invalid credentials",
     );
+    expect(isRichError(err)).toBe(true);
+    if (isRichError(err)) {
+      expect(err.meta?.["fetchInferredKind"]).toBe("Internal");
+      expect(err.meta?.["fetchResolvedKind"]).toBe("Forbidden");
+      expect(err.meta?.["fetchKindOverridden"]).toBe(true);
+    }
   });
 
   it("treats timeout phrases as ExternalTimeoutError with inferred hint", () => {

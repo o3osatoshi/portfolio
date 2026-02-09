@@ -86,6 +86,7 @@ export function newFetchError({
   const target = formatFetchTarget({
     request,
   });
+  const resolvedKind = kind ?? classification.kind;
   const reason = target
     ? `${target} ${classification.problem}`
     : classification.problem;
@@ -93,17 +94,24 @@ export function newFetchError({
   return newRichError({
     ...rest,
     cause,
-    code: rest.code ?? resolveFetchErrorCode(kind ?? classification.kind),
+    code: rest.code ?? resolveFetchErrorCode(resolvedKind),
     details: {
       ...details,
       action: details?.action ?? "FetchExternalApi",
       hint: details?.hint ?? classification.hint,
       reason: details?.reason ?? reason,
     },
-    isOperational:
-      isOperational ?? resolveOperationalFromKind(kind ?? classification.kind),
-    kind: kind ?? classification.kind,
+    isOperational: isOperational ?? resolveOperationalFromKind(resolvedKind),
+    kind: resolvedKind,
     layer: "External",
+    meta: resolveFetchMeta({
+      cause,
+      inferredKind: classification.kind,
+      request,
+      resolvedKind,
+      target,
+      userMeta: rest.meta,
+    }),
   });
 }
 
@@ -224,4 +232,43 @@ function resolveFetchErrorCode(kind: Kind): string {
     default:
       return "FETCH_INTERNAL";
   }
+}
+
+function resolveFetchMeta({
+  cause,
+  inferredKind,
+  request,
+  resolvedKind,
+  target,
+  userMeta,
+}: {
+  cause?: unknown;
+  inferredKind: Kind;
+  request?: FetchRequest | undefined;
+  resolvedKind: Kind;
+  target: string | undefined;
+  userMeta: NewRichError["meta"];
+}): NewRichError["meta"] {
+  const method = request?.method?.trim().toUpperCase();
+  const url = request?.url;
+  const causeName = extractErrorName(cause);
+
+  return {
+    fetchSource: "toolkit.newFetchError",
+    fetchCauseType: resolveSourceType(cause),
+    fetchInferredKind: inferredKind,
+    fetchResolvedKind: resolvedKind,
+    fetchKindOverridden: inferredKind !== resolvedKind,
+    ...(method ? { fetchMethod: method } : {}),
+    ...(url ? { fetchUrl: url } : {}),
+    ...(target ? { fetchTarget: target } : {}),
+    ...(causeName ? { fetchCauseName: causeName } : {}),
+    ...(userMeta ?? {}),
+  };
+}
+
+function resolveSourceType(value: unknown): string {
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "array";
+  return typeof value;
 }

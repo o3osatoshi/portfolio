@@ -43,6 +43,8 @@ describe("RichError", () => {
     expect(err.layer).toBe("External");
     expect(err.details?.reason).toBe("boom");
     expect(err.cause).toBe("boom");
+    expect(err.meta?.["normalizedBy"]).toBe("toolkit.toRichError");
+    expect(err.meta?.["normalizedFromType"]).toBe("string");
   });
 
   it("merges fallback details with extracted reason when reason is missing", () => {

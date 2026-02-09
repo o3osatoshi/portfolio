@@ -213,6 +213,10 @@ export function toRichError(
   );
 
   const kind = fallback.kind ?? resolved.kind ?? "Internal";
+  const meta = mergeRichErrorMeta(
+    fallback.meta,
+    error,
+  );
 
   return newRichError({
     cause: error,
@@ -222,7 +226,7 @@ export function toRichError(
     isOperational: fallback.isOperational ?? resolveOperationalFromKind(kind),
     kind,
     layer: fallback.layer ?? resolved.layer ?? "External",
-    meta: fallback.meta,
+    meta,
   });
 }
 
@@ -254,4 +258,24 @@ function mergeRichErrorDetails(
   }
 
   return { ...details, reason: extractedReason };
+}
+
+function mergeRichErrorMeta(
+  meta: JsonObject | undefined,
+  source: unknown,
+): JsonObject {
+  const sourceName = extractErrorName(source);
+
+  return {
+    normalizedBy: "toolkit.toRichError",
+    normalizedFromType: resolveSourceType(source),
+    ...(sourceName ? { normalizedFromName: sourceName } : {}),
+    ...(meta ?? {}),
+  };
+}
+
+function resolveSourceType(source: unknown): string {
+  if (source === null) return "null";
+  if (Array.isArray(source)) return "array";
+  return typeof source;
 }

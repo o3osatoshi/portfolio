@@ -61,6 +61,28 @@ export function newPrismaError({
   const resolveCode = (fallback: string): string => rest.code ?? fallback;
   const resolveOperational = (kind: NewRichError["kind"]) =>
     rest.isOperational ?? (kind !== "Internal" && kind !== "Serialization");
+  const resolveMeta = ({
+    kind,
+    prismaCode,
+    prismaColumn,
+    prismaNotFoundCause,
+    prismaTarget,
+  }: {
+    kind: NewRichError["kind"];
+    prismaCode?: string | undefined;
+    prismaColumn?: string | undefined;
+    prismaNotFoundCause?: string | undefined;
+    prismaTarget?: string | undefined;
+  }): NewRichError["meta"] =>
+    resolvePrismaMeta({
+      cause,
+      kind,
+      prismaCode,
+      prismaColumn,
+      prismaNotFoundCause,
+      prismaTarget,
+      userMeta: rest.meta,
+    });
 
   if (isKnownRequestError(cause)) {
     const code = cause.code;
@@ -80,6 +102,11 @@ export function newPrismaError({
           isOperational: resolveOperational("Validation"),
           kind: "Validation",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "Validation",
+            prismaCode: code,
+            prismaColumn: column,
+          }),
         });
       }
       case "P2002": {
@@ -101,6 +128,11 @@ export function newPrismaError({
           isOperational: resolveOperational("Conflict"),
           kind: "Conflict",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "Conflict",
+            prismaCode: code,
+            prismaTarget: target,
+          }),
         });
       }
       case "P2003": {
@@ -116,6 +148,10 @@ export function newPrismaError({
           isOperational: resolveOperational("Conflict"),
           kind: "Conflict",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "Conflict",
+            prismaCode: code,
+          }),
         });
       }
       case "P2005": // Value out of range for the type
@@ -136,6 +172,10 @@ export function newPrismaError({
           isOperational: resolveOperational("Validation"),
           kind: "Validation",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "Validation",
+            prismaCode: code,
+          }),
         });
       }
       case "P2021": // Table does not exist
@@ -159,6 +199,10 @@ export function newPrismaError({
           isOperational: resolveOperational("Internal"),
           kind: "Internal",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "Internal",
+            prismaCode: code,
+          }),
         });
       }
       case "P2025": {
@@ -175,6 +219,11 @@ export function newPrismaError({
           isOperational: resolveOperational("NotFound"),
           kind: "NotFound",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "NotFound",
+            prismaCode: code,
+            prismaNotFoundCause: m,
+          }),
         });
       }
       default: {
@@ -188,6 +237,10 @@ export function newPrismaError({
           isOperational: resolveOperational("Internal"),
           kind: "Internal",
           layer: "Persistence",
+          meta: resolveMeta({
+            kind: "Internal",
+            prismaCode: code,
+          }),
         });
       }
     }
@@ -205,6 +258,9 @@ export function newPrismaError({
       isOperational: resolveOperational("Validation"),
       kind: "Validation",
       layer: "Persistence",
+      meta: resolveMeta({
+        kind: "Validation",
+      }),
     });
   }
 
@@ -245,6 +301,9 @@ export function newPrismaError({
       isOperational: resolveOperational(kind),
       kind,
       layer: "Persistence",
+      meta: resolveMeta({
+        kind,
+      }),
     });
   }
 
@@ -260,6 +319,9 @@ export function newPrismaError({
       isOperational: resolveOperational("Internal"),
       kind: "Internal",
       layer: "Persistence",
+      meta: resolveMeta({
+        kind: "Internal",
+      }),
     });
   }
 
@@ -282,6 +344,9 @@ export function newPrismaError({
       isOperational: resolveOperational(kind),
       kind,
       layer: "Persistence",
+      meta: resolveMeta({
+        kind,
+      }),
     });
   }
 
@@ -296,6 +361,9 @@ export function newPrismaError({
     isOperational: resolveOperational("Internal"),
     kind: "Internal",
     layer: "Persistence",
+    meta: resolveMeta({
+      kind: "Internal",
+    }),
   });
 }
 
@@ -342,4 +410,42 @@ function metaString(meta: unknown, key: string): string | undefined {
     return typeof value === "string" ? value : undefined;
   }
   return undefined;
+}
+
+function resolvePrismaMeta({
+  cause,
+  kind,
+  prismaCode,
+  prismaColumn,
+  prismaNotFoundCause,
+  prismaTarget,
+  userMeta,
+}: {
+  cause: unknown;
+  kind: NewRichError["kind"];
+  prismaCode?: string | undefined;
+  prismaColumn?: string | undefined;
+  prismaNotFoundCause?: string | undefined;
+  prismaTarget?: string | undefined;
+  userMeta: NewRichError["meta"];
+}): NewRichError["meta"] {
+  return {
+    prismaSource: "prisma.newPrismaError",
+    prismaErrorClass: resolvePrismaErrorClass(cause),
+    prismaKind: kind,
+    ...(prismaCode ? { prismaCode } : {}),
+    ...(prismaColumn ? { prismaColumn } : {}),
+    ...(prismaTarget ? { prismaTarget } : {}),
+    ...(prismaNotFoundCause ? { prismaNotFoundCause } : {}),
+    ...(userMeta ?? {}),
+  };
+}
+
+function resolvePrismaErrorClass(cause: unknown): string {
+  if (isKnownRequestError(cause)) return "PrismaClientKnownRequestError";
+  if (isValidationError(cause)) return "PrismaClientValidationError";
+  if (isInitializationError(cause)) return "PrismaClientInitializationError";
+  if (isRustPanicError(cause)) return "PrismaClientRustPanicError";
+  if (isUnknownRequestError(cause)) return "PrismaClientUnknownRequestError";
+  return "Unknown";
 }
