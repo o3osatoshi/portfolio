@@ -29,15 +29,10 @@ export type GetFxQuoteRequest = z.infer<typeof getFxQuoteRequestSchema>;
 /**
  * Parse and validate an unknown payload into {@link GetFxQuoteRequest}.
  */
-const parseGetFxQuoteRequestBase = parseWith(getFxQuoteRequestSchema, {
-  action: "ParseGetFxQuoteRequest",
-});
-
-/**
- * Parse and validate an unknown payload into {@link GetFxQuoteRequest}.
- */
 export const parseGetFxQuoteRequest = (input: unknown) =>
-  parseGetFxQuoteRequestBase(input).mapErr((cause) =>
+  parseWith(getFxQuoteRequestSchema, {
+    action: "ParseGetFxQuoteRequest",
+  })(input).mapErr((cause) =>
     toApplicationError({
       action: "ParseGetFxQuoteRequest",
       cause,

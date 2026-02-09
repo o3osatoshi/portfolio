@@ -111,47 +111,11 @@ export type UpdateTransactionRequest = z.infer<
 
 /**
  * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
- * Wraps `parseWith` to return a `Result` with typed error metadata.
- */
-const parseCreateTransactionRequestBase = parseWith(
-  createTransactionRequestSchema,
-  {
-    action: "ParseCreateTransactionRequest",
-  },
-);
-/**
- * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
- */
-const parseUpdateTransactionRequestBase = parseWith(
-  updateTransactionRequestSchema,
-  {
-    action: "ParseUpdateTransactionRequest",
-  },
-);
-/**
- * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
- */
-const parseGetTransactionsRequestBase = parseWith(
-  getTransactionsRequestSchema,
-  {
-    action: "ParseGetTransactionsRequest",
-  },
-);
-/**
- * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
- */
-const parseDeleteTransactionRequestBase = parseWith(
-  deleteTransactionRequestSchema,
-  {
-    action: "ParseDeleteTransactionRequest",
-  },
-);
-
-/**
- * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
  */
 export const parseCreateTransactionRequest = (input: unknown) =>
-  parseCreateTransactionRequestBase(input).mapErr((cause) =>
+  parseWith(createTransactionRequestSchema, {
+    action: "ParseCreateTransactionRequest",
+  })(input).mapErr((cause) =>
     toApplicationError({
       action: "ParseCreateTransactionRequest",
       cause,
@@ -165,7 +129,9 @@ export const parseCreateTransactionRequest = (input: unknown) =>
  * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
  */
 export const parseUpdateTransactionRequest = (input: unknown) =>
-  parseUpdateTransactionRequestBase(input).mapErr((cause) =>
+  parseWith(updateTransactionRequestSchema, {
+    action: "ParseUpdateTransactionRequest",
+  })(input).mapErr((cause) =>
     toApplicationError({
       action: "ParseUpdateTransactionRequest",
       cause,
@@ -179,7 +145,9 @@ export const parseUpdateTransactionRequest = (input: unknown) =>
  * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
  */
 export const parseGetTransactionsRequest = (input: unknown) =>
-  parseGetTransactionsRequestBase(input).mapErr((cause) =>
+  parseWith(getTransactionsRequestSchema, {
+    action: "ParseGetTransactionsRequest",
+  })(input).mapErr((cause) =>
     toApplicationError({
       action: "ParseGetTransactionsRequest",
       cause,
@@ -193,7 +161,9 @@ export const parseGetTransactionsRequest = (input: unknown) =>
  * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
  */
 export const parseDeleteTransactionRequest = (input: unknown) =>
-  parseDeleteTransactionRequestBase(input).mapErr((cause) =>
+  parseWith(deleteTransactionRequestSchema, {
+    action: "ParseDeleteTransactionRequest",
+  })(input).mapErr((cause) =>
     toApplicationError({
       action: "ParseDeleteTransactionRequest",
       cause,
