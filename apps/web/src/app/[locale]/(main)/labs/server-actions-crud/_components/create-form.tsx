@@ -6,7 +6,7 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { createTransaction } from "@/actions/create-transaction";
-import { useLocalizedErrorMessage } from "@/utils/use-localized-error-message";
+import { useErrorMessage } from "@/utils/use-error-message";
 import { createTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
@@ -17,7 +17,7 @@ interface Props {
 
 export default function CreateForm({ locale }: Props) {
   const t = useTranslations("LabsServerCrud");
-  const resolveErrorMessage = useLocalizedErrorMessage();
+  const resolveErrorMessage = useErrorMessage();
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData

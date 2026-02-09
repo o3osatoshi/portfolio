@@ -10,7 +10,7 @@ type Translate = (
   values?: Record<string, Date | number | string>,
 ) => string;
 
-export function resolveLocalizedErrorMessage(
+export function interpretErrorMessage(
   error: Error | SerializedRichError,
   { fallbackMessage, t }: Options,
 ): string {

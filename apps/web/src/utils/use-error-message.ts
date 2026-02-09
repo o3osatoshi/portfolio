@@ -5,15 +5,15 @@ import { useCallback } from "react";
 
 import type { SerializedRichError } from "@o3osatoshi/toolkit";
 
-import { resolveLocalizedErrorMessage } from "./error-message";
+import { interpretErrorMessage } from "./error-message";
 
-export function useLocalizedErrorMessage() {
+export function useErrorMessage() {
   const tCommon = useTranslations("Common");
   const tError = useTranslations();
 
   return useCallback(
     (error: Error | SerializedRichError) =>
-      resolveLocalizedErrorMessage(error, {
+      interpretErrorMessage(error, {
         fallbackMessage: tCommon("unknownError"),
         t: tError,
       }),

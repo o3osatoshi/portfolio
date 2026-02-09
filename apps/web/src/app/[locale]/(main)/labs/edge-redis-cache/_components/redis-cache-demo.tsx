@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useState } from "react";
 
 import { getHeavyProcessCached } from "@/services/get-heavy-process-cached";
-import { useLocalizedErrorMessage } from "@/utils/use-localized-error-message";
+import { useErrorMessage } from "@/utils/use-error-message";
 import {
   Button,
   Card,
@@ -20,7 +20,7 @@ type DemoStatus = "error" | "idle" | "loading" | "success";
 export default function RedisCacheDemoCard() {
   const t = useTranslations("LabsEdgeRedisCache");
   const tCommon = useTranslations("Common");
-  const resolveErrorMessage = useLocalizedErrorMessage();
+  const resolveErrorMessage = useErrorMessage();
   const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [clientDurationMs, setClientDurationMs] = useState<null | number>(null);
