@@ -415,11 +415,8 @@ export type RichResultAsync<T> = ResultAsync<T, RichError>;
 export type SerializedCause = Exclude<SerializedError["cause"], undefined>;
 
 // @public
-export type SerializedError = z.infer<typeof serializedErrorSchema>;
-
-// @public
-export const serializedErrorSchema: z.ZodType<{
-    cause?: string | undefined | z.infer<typeof serializedErrorSchema>;
+export type SerializedError = {
+    cause?: SerializedError | string | undefined;
     code?: string | undefined;
     details?: RichErrorDetails | undefined;
     i18n?: RichErrorI18n | undefined;
@@ -430,7 +427,10 @@ export const serializedErrorSchema: z.ZodType<{
     meta?: undefined | z.infer<typeof jsonObjectSchema>;
     name: string;
     stack?: string | undefined;
-}>;
+};
+
+// @public
+export const serializedErrorSchema: z.ZodType<SerializedError, unknown, z.core.$ZodTypeInternals<SerializedError, unknown>>;
 
 // @public
 export type SerializedRichError = {
