@@ -8,6 +8,7 @@ import TransactionCard from "@/app/[locale]/(main)/labs/server-actions-crud/_com
 import TransactionCardSkeleton from "@/app/[locale]/(main)/labs/server-actions-crud/_components/transaction-card-skeleton";
 import { getTransactions } from "@/server/get-transactions";
 import { resolveErrorMessage } from "@/utils/resolve-error-message";
+import { serializeRichError } from "@o3osatoshi/toolkit";
 import { Message } from "@o3osatoshi/ui";
 
 interface Props {
@@ -65,7 +66,10 @@ async function TransactionsSection({ locale }: { locale: string }) {
   const result = await getTransactions();
   const transactions = result.isOk() ? result.value : [];
   const errorMessage = result.isErr()
-    ? await resolveErrorMessage(result.error, locale)
+    ? await resolveErrorMessage(
+        serializeRichError(result.error, { depth: 0, includeStack: false }),
+        locale,
+      )
     : undefined;
 
   if (errorMessage) {

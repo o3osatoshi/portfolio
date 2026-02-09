@@ -63,7 +63,7 @@ export function createAxiomClient(options: AxiomClientOptions): AxiomClient {
  * @public
  */
 export function createAxiomTransport(options: AxiomClientOptions): Transport {
-  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const onError = options.onError ?? ((error: unknown) => console.error(error));
   const client = createAxiomClient({ ...options, onError });
 
   const emit = (dataset: string, events: LogEvent | LogEvent[]) => {

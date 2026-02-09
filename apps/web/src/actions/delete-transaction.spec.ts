@@ -1,6 +1,8 @@
 import { err, errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { newRichError } from "@o3osatoshi/toolkit";
+
 const h = vi.hoisted(() => {
   return {
     createPrismaClientMock: vi.fn(),
@@ -128,7 +130,12 @@ describe("actions/delete-transaction", () => {
 
   it("returns ActionState error when request parsing fails", async () => {
     const userId = "u1";
-    const parseError = new Error("invalid payload");
+    const parseError = newRichError({
+      details: { reason: "invalid payload" },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Application",
+    });
 
     h.getUserIdMock.mockReturnValueOnce(okAsync(userId));
     h.parseDeleteTransactionRequestMock.mockReturnValueOnce(err(parseError));
@@ -142,9 +149,9 @@ describe("actions/delete-transaction", () => {
     if (state?.ok) return;
 
     expect(state?.error.message).toBe("invalid payload");
-    expect(state?.error.name).toBe("ExternalInternalError");
-    expect(state?.error.kind).toBe("Internal");
-    expect(state?.error.layer).toBe("External");
+    expect(state?.error.name).toBe("ApplicationValidationError");
+    expect(state?.error.kind).toBe("Validation");
+    expect(state?.error.layer).toBe("Application");
     expect(h.deleteTransactionExecuteMock).not.toHaveBeenCalled();
     expect(h.updateTagMock).not.toHaveBeenCalled();
     expect(h.redirectMock).not.toHaveBeenCalled();

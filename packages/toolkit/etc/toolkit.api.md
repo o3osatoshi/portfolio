@@ -445,7 +445,7 @@ export function summarizeZodError(err: ZodError): string;
 export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
-export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
+export function toHttpErrorResponse(error: unknown, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
 export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;

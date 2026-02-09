@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { getHeavyProcessCached } from "@/services/get-heavy-process-cached";
 import { useErrorMessage } from "@/utils/use-error-message";
+import { serializeRichError } from "@o3osatoshi/toolkit";
 import {
   Button,
   Card,
@@ -28,7 +29,6 @@ export default function RedisCacheDemoCard() {
   const [timestamp, setTimestamp] = useState<null | string>(null);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const notAvailableLabel = tCommon("notAvailable");
-  const unknownErrorLabel = tCommon("unknownError");
 
   const statusLabel = useMemo(() => {
     switch (status) {
@@ -61,7 +61,9 @@ export default function RedisCacheDemoCard() {
       const error = result.error;
       setStatus("error");
       setErrorMessage(
-        error instanceof Error ? resolveErrorMessage(error) : unknownErrorLabel,
+        resolveErrorMessage(
+          serializeRichError(error, { depth: 0, includeStack: false }),
+        ),
       );
       return;
     }
@@ -70,7 +72,7 @@ export default function RedisCacheDemoCard() {
     setStatus("success");
     setFromCache(body.cached);
     setTimestamp(body.timestamp);
-  }, [resolveErrorMessage, status, unknownErrorLabel]);
+  }, [resolveErrorMessage, status]);
 
   const handleReset = useCallback(() => {
     setStatus("idle");

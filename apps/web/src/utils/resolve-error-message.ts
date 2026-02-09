@@ -5,7 +5,7 @@ import type { SerializedRichError } from "@o3osatoshi/toolkit";
 import { interpretErrorMessage } from "./error-message";
 
 export async function resolveErrorMessage(
-  error: Error | SerializedRichError,
+  error: SerializedRichError,
   locale: string,
 ): Promise<string> {
   const tCommon = await getTranslations({ namespace: "Common", locale });

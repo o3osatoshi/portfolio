@@ -110,13 +110,4 @@ describe("utils/error-message", () => {
 
     expect(message).toBe("unknown");
   });
-
-  it("falls back to fallbackMessage for native Error", () => {
-    const message = interpretErrorMessage(new Error("boom"), {
-      fallbackMessage: "unknown",
-      t: () => "translated",
-    });
-
-    expect(message).toBe("unknown");
-  });
 });

@@ -1,5 +1,5 @@
 /**
- * Helpers for converting server-side `Error`s into HTTP-ready payloads.
+ * Helpers for converting unknown error-like values into HTTP-ready payloads.
  *
  * The primary entry point is {@link toHttpErrorResponse}, which returns a
  * serializable body and an appropriate status code. It also supports an
@@ -19,10 +19,6 @@
  * - `BadGateway` → 502
  * - `Unavailable` → 503
  * - `Timeout` → 504
- *
- * Heuristics:
- * - `ZodError` is treated as 400 (Validation).
- * - `AbortError` is treated as 408 (Canceled).
  *
  * Security: in development, {@link serializeRichError} may include stack traces.
  * Control this via the `includeStack` option.
@@ -90,11 +86,11 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
 };
 
 /**
- * Convert an `Error` into an HTTP response shape.
+ * Convert an unknown error-like value into an HTTP response shape.
  *
  * - `body` is a stable, JSON‑safe structure created by {@link serializeRichError}.
- * - `status` is inferred from `error.name` (see Kind → Status mapping), unless
- *   a specific status override is provided.
+ * - `status` is inferred from normalized `RichError.kind` (see Kind → Status
+ *   mapping), unless a specific status override is provided.
  *
  * @example
  * // Next.js Route Handler
@@ -103,7 +99,7 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
  *   try {
  *     // ...
  *   } catch (err) {
- *     const { body, statusCode } = toHttpErrorResponse(err as Error);
+ *     const { body, statusCode } = toHttpErrorResponse(err);
  *     return Response.json(body, { status: statusCode });
  *   }
  * }
@@ -118,14 +114,14 @@ const KIND_TO_STATUS: Record<Kind, ErrorStatusCode> = {
  * });
  * ```
  *
- * @param error - Error instance to convert.
+ * @param error - Unknown value to convert into a structured error response.
  * @param status - Optional HTTP status override. If provided, it takes precedence.
  * @param options - Serialization options (depth, includeStack).
  * @returns A pair of `body` and `statusCode` suitable for HTTP responses.
  * @public
  */
 export function toHttpErrorResponse(
-  error: Error,
+  error: unknown,
   status?: ErrorStatusCode,
   options?: SerializeOptions,
 ): ErrorHttpResponse {

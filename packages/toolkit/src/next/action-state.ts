@@ -2,7 +2,6 @@ import {
   type RichError,
   type SerializedRichError,
   serializeRichError,
-  toRichError,
 } from "../error";
 import type { UnknownRecord } from "../types";
 
@@ -46,13 +45,10 @@ export type ActionState<
  * @remarks
  * - Errors are always serialized via {@link serializeRichError}.
  * - Stack traces are omitted for server action payload safety.
- * - If a non-RichError reaches this function at runtime, it is normalized via {@link toRichError}.
  */
 export function err(error: RichError): ActionState<never, SerializedRichError> {
-  const rich = toRichError(error);
-
   return {
-    error: serializeRichError(rich, {
+    error: serializeRichError(error, {
       depth: 0,
       includeStack: false,
     }),
