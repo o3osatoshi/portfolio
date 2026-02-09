@@ -5,19 +5,16 @@ import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
 import { env } from "@/env/server";
-import {
-  webErrorCodes,
-  webInternalError,
-  webUnauthorizedError,
-} from "@/utils/web-error";
+import { newWebError, webErrorCodes } from "@/utils/web-error";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 export function getUserId(): ResultAsync<string, RichError> {
   return ResultAsync.fromPromise(cookies(), (cause) =>
-    webInternalError({
+    newWebError({
       action: "ReadCookies",
       cause,
       code: webErrorCodes.AUTH_COOKIE_READ_FAILED,
+      kind: "Internal",
       reason: "Failed to read request cookies.",
     }),
   )
@@ -28,10 +25,11 @@ export function getUserId(): ResultAsync<string, RichError> {
           secret: env.AUTH_SECRET,
         }),
         (cause) =>
-          webUnauthorizedError({
+          newWebError({
             action: "DecodeAuthToken",
             cause,
             code: webErrorCodes.AUTH_TOKEN_DECODE_FAILED,
+            kind: "Unauthorized",
             reason: "Failed to decode session token.",
           }),
       ),
@@ -40,9 +38,10 @@ export function getUserId(): ResultAsync<string, RichError> {
       userId
         ? okAsync(userId)
         : errAsync(
-            webUnauthorizedError({
+            newWebError({
               action: "DecodeAuthToken",
               code: webErrorCodes.AUTH_USER_ID_MISSING,
+              kind: "Unauthorized",
               reason: "Session token is missing a user id.",
             }),
           ),

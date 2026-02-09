@@ -2,7 +2,7 @@ import { err, ok, type Result } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { domainValidationError } from "../domain-error";
+import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
@@ -23,23 +23,25 @@ export function isCurrencyCode(v: unknown): v is CurrencyCode {
 export function newCurrencyCode(v: unknown): Result<CurrencyCode, RichError> {
   if (typeof v !== "string")
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.CURRENCY_CODE_NOT_STRING,
         details: {
           action: "NewCurrencyCode",
           reason: "CurrencyCode must be string",
         },
+        kind: "Validation",
       }),
     );
   const code = v.toUpperCase();
   if (!CURRENCY_RE.test(code))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.CURRENCY_CODE_FORMAT_INVALID,
         details: {
           action: "NewCurrencyCode",
           reason: "CurrencyCode must be A-Z 3 letters",
         },
+        kind: "Validation",
       }),
     );
   return ok(code as CurrencyCode);

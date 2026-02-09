@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { domainValidationError, newDomainError } from "./domain-error";
+import { newDomainError } from "./domain-error";
 import { domainErrorCodes } from "./domain-error-catalog";
 
 describe("domain-error", () => {
@@ -19,10 +19,11 @@ describe("domain-error", () => {
     expect(err.message).toContain("duplicate id");
   });
 
-  it("domainValidationError helper sets kind Validation", () => {
-    const err = domainValidationError({
+  it("newDomainError supports Validation kind", () => {
+    const err = newDomainError({
       code: domainErrorCodes.TRANSACTION_TYPE_INVALID,
       details: { action: "Parse", reason: "bad" },
+      kind: "Validation",
     });
     expect(err.name).toBe("DomainValidationError");
     expect(err.message).toContain("Parse failed");

@@ -4,10 +4,7 @@ import { err, ok, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import {
-  applicationForbiddenError,
-  applicationNotFoundError,
-} from "../../application-error";
+import { newApplicationError } from "../../application-error";
 import {
   applicationErrorCodes,
   applicationErrorI18nKeys,
@@ -39,7 +36,7 @@ export class UpdateTransactionUseCase {
         .andThen((tx) =>
           tx === null
             ? err(
-                applicationNotFoundError({
+                newApplicationError({
                   code: applicationErrorCodes.TRANSACTION_NOT_FOUND,
                   details: {
                     action: "UpdateTransaction",
@@ -48,6 +45,7 @@ export class UpdateTransactionUseCase {
                   i18n: {
                     key: applicationErrorI18nKeys.NOT_FOUND,
                   },
+                  kind: "NotFound",
                 }),
               )
             : ok(tx),
@@ -55,7 +53,7 @@ export class UpdateTransactionUseCase {
         .andThen((tx) =>
           tx.userId !== userId
             ? err(
-                applicationForbiddenError({
+                newApplicationError({
                   code: applicationErrorCodes.TRANSACTION_UPDATE_FORBIDDEN,
                   details: {
                     action: "UpdateTransaction",
@@ -64,6 +62,7 @@ export class UpdateTransactionUseCase {
                   i18n: {
                     key: applicationErrorI18nKeys.FORBIDDEN,
                   },
+                  kind: "Forbidden",
                 }),
               )
             : ok(tx),

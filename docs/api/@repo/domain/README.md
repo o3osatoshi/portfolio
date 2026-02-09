@@ -40,14 +40,8 @@ import type { TransactionRepository } from "@repo/domain";
 Use the domain‑aware constructor to create consistently shaped errors:
 
 ```ts
-import { domainValidationError, newDomainError } from "@repo/domain";
+import { newDomainError } from "@repo/domain";
 
-throw domainValidationError({
-  action: "CreateTransaction",
-  reason: "amount must be positive",
-});
-
-// or the generic helper
 throw newDomainError({
   kind: "Validation",
   action: "CreateUser",

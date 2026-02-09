@@ -3,7 +3,7 @@ import { err, ok, type Result } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { domainValidationError } from "../domain-error";
+import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
@@ -50,24 +50,26 @@ export function newDecimal(v: unknown): Result<DecimalString, RichError> {
     const d = new DecimalJs(v as unknown as DecimalJs.Value);
     if (!d.isFinite()) {
       return err(
-        domainValidationError({
+        newDomainError({
           code: domainErrorCodes.DECIMAL_NOT_FINITE,
           details: {
             action: "NewDecimal",
             reason: "Decimal must be finite",
           },
+          kind: "Validation",
         }),
       );
     }
     return ok(d.toString() as DecimalString);
   } catch {
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.DECIMAL_INVALID_INPUT,
         details: {
           action: "NewDecimal",
           reason: "Invalid decimal input",
         },
+        kind: "Validation",
       }),
     );
   }

@@ -2,7 +2,7 @@ import { err, ok, type Result } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { domainValidationError } from "../domain-error";
+import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 import {
@@ -48,12 +48,13 @@ export function newAmount(v: unknown): Result<Amount, RichError> {
   if (r.isErr()) return err(r.error);
   if (!isPositiveDecimal(r.value))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.AMOUNT_MUST_BE_POSITIVE,
         details: {
           action: "NewAmount",
           reason: "Amount must be > 0",
         },
+        kind: "Validation",
       }),
     );
   return ok(r.value as Amount);
@@ -67,12 +68,13 @@ export function newFee(v: unknown): Result<Fee, RichError> {
   if (r.isErr()) return err(r.error);
   if (!isNonNegativeDecimal(r.value))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.FEE_MUST_BE_NON_NEGATIVE,
         details: {
           action: "NewFee",
           reason: "Fee must be >= 0",
         },
+        kind: "Validation",
       }),
     );
   return ok(r.value as Fee);
@@ -86,12 +88,13 @@ export function newPrice(v: unknown): Result<Price, RichError> {
   if (r.isErr()) return err(r.error);
   if (!isPositiveDecimal(r.value))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.PRICE_MUST_BE_POSITIVE,
         details: {
           action: "NewPrice",
           reason: "Price must be > 0",
         },
+        kind: "Validation",
       }),
     );
   return ok(r.value as Price);

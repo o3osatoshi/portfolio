@@ -57,7 +57,7 @@ vi.mock("@/env/server", () => ({
 }));
 
 import { getTag } from "@/utils/nav-handler";
-import { webErrorCodes, webUnauthorizedError } from "@/utils/web-error";
+import { newWebError, webErrorCodes } from "@/utils/web-error";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
@@ -115,9 +115,10 @@ describe("getTransactions", () => {
   it("returns Err when token is missing", async () => {
     h.getUserIdMock.mockReturnValueOnce(
       errAsync(
-        webUnauthorizedError({
+        newWebError({
           action: "DecodeAuthToken",
           code: webErrorCodes.AUTH_USER_ID_MISSING,
+          kind: "Unauthorized",
           reason: "Session token is missing a user id.",
         }),
       ),

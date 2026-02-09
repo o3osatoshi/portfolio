@@ -43,31 +43,3 @@ export function newDomainError({ kind, ...rest }: NewDomainError): RichError {
     layer: "Domain",
   });
 }
-
-/** Convenience wrapper for {@link newDomainError} with `kind="Validation"`. */
-export const domainValidationError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Validation", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="NotFound"`. */
-export const domainNotFoundError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "NotFound", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Conflict"`. */
-export const domainConflictError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Conflict", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Forbidden"`. */
-export const domainForbiddenError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Forbidden", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Unauthorized"`. */
-export const domainUnauthorizedError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Unauthorized", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="RateLimit"`. */
-export const domainRateLimitError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "RateLimit", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Timeout"`. */
-export const domainTimeoutError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Timeout", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Unavailable"`. */
-export const domainUnavailableError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Unavailable", ...p });
-/** Convenience wrapper for {@link newDomainError} with `kind="Internal"`. */
-export const domainInternalError = (p: Omit<NewDomainError, "kind">) =>
-  newDomainError({ kind: "Internal", ...p });

@@ -2,7 +2,7 @@ import { err, ok, type Result } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { domainValidationError } from "../domain-error";
+import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
@@ -21,22 +21,24 @@ export function isDateTime(v: unknown): v is DateTime {
 export function newDateTime(v: unknown): Result<DateTime, RichError> {
   if (!(v instanceof Date))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.DATETIME_NOT_DATE,
         details: {
           action: "NewDateTime",
           reason: "DateTime must be a Date",
         },
+        kind: "Validation",
       }),
     );
   if (Number.isNaN(v.getTime()))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.DATETIME_INVALID,
         details: {
           action: "NewDateTime",
           reason: "DateTime is invalid",
         },
+        kind: "Validation",
       }),
     );
   return ok(v as DateTime);

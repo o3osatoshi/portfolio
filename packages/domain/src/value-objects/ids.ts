@@ -2,7 +2,7 @@ import { err, ok, type Result } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { domainValidationError } from "../domain-error";
+import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 
@@ -31,12 +31,13 @@ export function isUserId(v: unknown): v is UserId {
 export function newTransactionId(v: unknown): Result<TransactionId, RichError> {
   if (!nonEmptyString(v))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.TRANSACTION_ID_NOT_EMPTY,
         details: {
           action: "NewTransactionId",
           reason: "TransactionId must be non-empty",
         },
+        kind: "Validation",
       }),
     );
   return ok(v as TransactionId);
@@ -48,12 +49,13 @@ export function newTransactionId(v: unknown): Result<TransactionId, RichError> {
 export function newUserId(v: unknown): Result<UserId, RichError> {
   if (!nonEmptyString(v))
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.USER_ID_NOT_EMPTY,
         details: {
           action: "NewUserId",
           reason: "UserId must be non-empty",
         },
+        kind: "Validation",
       }),
     );
   return ok(v as UserId);

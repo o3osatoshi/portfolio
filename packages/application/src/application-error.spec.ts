@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  applicationValidationError,
-  newApplicationError,
-} from "./application-error";
+import { newApplicationError } from "./application-error";
 
 describe("application-error", () => {
   it("keeps i18n undefined when omitted", () => {
@@ -31,16 +28,6 @@ describe("application-error", () => {
       key: "errors.application.not_found",
       params: { id: 42 },
     });
-  });
-
-  it("supports convenience wrappers with required code", () => {
-    const err = applicationValidationError({
-      code: "APP_VALIDATION",
-      details: { action: "SaveUser" },
-    });
-
-    expect(err.code).toBe("APP_VALIDATION");
-    expect(err.i18n).toBeUndefined();
   });
 
   it("allows code and i18n.key to be managed independently", () => {

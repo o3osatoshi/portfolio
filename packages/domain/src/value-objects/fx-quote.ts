@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { domainValidationError } from "../domain-error";
+import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
 import type { Brand } from "./brand";
 import { type CurrencyCode, newCurrencyCode } from "./currency";
@@ -59,12 +59,13 @@ export function newFxRate(v: unknown): Result<FxRate, RichError> {
   if (res.isErr()) return err(res.error);
   if (!isPositiveDecimal(res.value)) {
     return err(
-      domainValidationError({
+      newDomainError({
         code: domainErrorCodes.FX_RATE_MUST_BE_POSITIVE,
         details: {
           action: "NewFxRate",
           reason: "FX rate must be > 0",
         },
+        kind: "Validation",
       }),
     );
   }
