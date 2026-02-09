@@ -1,11 +1,11 @@
 import { getTranslations } from "next-intl/server";
 
-import type { SerializedRichError } from "@o3osatoshi/toolkit";
+import type { RichError, SerializedRichError } from "@o3osatoshi/toolkit";
 
 import { interpretErrorMessage } from "./error-message";
 
 export async function resolveErrorMessage(
-  error: SerializedRichError,
+  error: RichError | SerializedRichError,
   locale: string,
 ): Promise<string> {
   const tCommon = await getTranslations({ namespace: "Common", locale });

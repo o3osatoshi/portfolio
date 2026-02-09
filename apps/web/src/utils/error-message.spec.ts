@@ -51,6 +51,24 @@ describe("utils/error-message", () => {
     expect(message).toBe("errors.application.not_found");
   });
 
+  it("uses RichError i18n key when present", () => {
+    const error = newRichError({
+      i18n: {
+        key: "errors.application.validation",
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Application",
+    });
+
+    const message = interpretErrorMessage(error, {
+      fallbackMessage: "unknown",
+      t: (key) => key,
+    });
+
+    expect(message).toBe("errors.application.validation");
+  });
+
   it("converts boolean i18n params to string before translation", () => {
     const error: SerializedRichError = {
       name: "IntegrationTimeoutError",

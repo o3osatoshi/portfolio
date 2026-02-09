@@ -1,4 +1,8 @@
-import type { RichErrorI18n, SerializedRichError } from "@o3osatoshi/toolkit";
+import type {
+  RichError,
+  RichErrorI18n,
+  SerializedRichError,
+} from "@o3osatoshi/toolkit";
 
 type Options = {
   fallbackMessage: string;
@@ -11,7 +15,7 @@ type Translate = (
 ) => string;
 
 export function interpretErrorMessage(
-  error: SerializedRichError,
+  error: RichError | SerializedRichError,
   { fallbackMessage, t }: Options,
 ): string {
   const i18n = extractI18n(error);
@@ -26,7 +30,9 @@ export function interpretErrorMessage(
   }
 }
 
-function extractI18n(error: SerializedRichError): RichErrorI18n | undefined {
+function extractI18n(
+  error: RichError | SerializedRichError,
+): RichErrorI18n | undefined {
   return error.i18n;
 }
 

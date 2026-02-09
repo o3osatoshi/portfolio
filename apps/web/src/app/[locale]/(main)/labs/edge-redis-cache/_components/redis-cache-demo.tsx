@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from "react";
 
 import { getHeavyProcessCached } from "@/services/get-heavy-process-cached";
 import { useErrorMessage } from "@/utils/use-error-message";
-import { serializeRichError } from "@o3osatoshi/toolkit";
 import {
   Button,
   Card,
@@ -58,13 +57,8 @@ export default function RedisCacheDemoCard() {
     setClientDurationMs(endedAt - startedAt);
 
     if (result.isErr()) {
-      const error = result.error;
       setStatus("error");
-      setErrorMessage(
-        resolveErrorMessage(
-          serializeRichError(error, { depth: 0, includeStack: false }),
-        ),
-      );
+      setErrorMessage(resolveErrorMessage(result.error));
       return;
     }
 
