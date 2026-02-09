@@ -21,6 +21,7 @@ import {
   deserializeRichError,
   type RichError,
   type SerializedError,
+  serializeRichError,
 } from "@o3osatoshi/toolkit";
 
 export type Transaction = TransactionResponse;
@@ -72,7 +73,7 @@ async function getTransactionsCached(
       },
       (error) => {
         cacheLife("errorShort");
-        return { error: serializeError(error), ok: false };
+        return { error: serializeRichError(error), ok: false };
       },
     );
 }
