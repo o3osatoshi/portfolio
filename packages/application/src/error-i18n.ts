@@ -1,30 +1,38 @@
-import type { Kind, RichError } from "@o3osatoshi/toolkit";
+import { type Kind, newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   type ApplicationErrorI18n,
   applicationErrorI18nKeys,
 } from "./application-error-catalog";
 
-type MutableI18n = {
-  i18n?: ApplicationErrorI18n | undefined;
-};
-
 /**
  * Ensure application-facing i18n metadata exists on a RichError.
  *
- * This function never wraps and always returns the same error instance.
+ * Returns the original error when i18n is already present.
+ * Otherwise returns an enriched RichError clone with preserved diagnostics.
  */
 export function ensureApplicationErrorI18n(error: RichError): RichError {
   if (error.i18n?.key) {
     return error;
   }
 
-  const resolved =
-    resolveI18nByCode(error.code) ?? resolveI18nByKind(error.kind);
+  const richError = newRichError({
+    cause: error.cause,
+    code: error.code,
+    details: error.details,
+    i18n: resolveI18nByCode(error.code) ?? resolveI18nByKind(error.kind),
+    isOperational: error.isOperational,
+    kind: error.kind,
+    layer: error.layer,
+    meta: error.meta,
+  });
 
-  const mutable = error as unknown as MutableI18n;
-  mutable.i18n = resolved;
-  return error;
+  richError.message = error.message;
+  if (error.stack !== undefined) {
+    richError.stack = error.stack;
+  }
+
+  return richError;
 }
 
 function resolveI18nByCode(

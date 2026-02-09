@@ -424,6 +424,7 @@ export const serializedRichErrorSchema: z.ZodType<SerializedRichError>;
 // @public
 export type SerializeOptions = {
     depth?: number | undefined;
+    includeCause?: boolean | undefined;
     includeStack?: boolean | undefined;
 };
 

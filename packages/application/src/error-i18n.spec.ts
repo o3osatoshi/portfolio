@@ -29,7 +29,32 @@ describe("application/error-i18n", () => {
     });
 
     const enriched = ensureApplicationErrorI18n(domainError);
+    expect(enriched).not.toBe(domainError);
     expect(enriched.i18n?.key).toBe(applicationErrorI18nKeys.VALIDATION);
+  });
+
+  it("preserves message, stack and cause when enriching", () => {
+    const cause = new Error("database timeout");
+    const error = newRichError({
+      cause,
+      code: "PRISMA_INIT_TIMEOUT",
+      details: { action: "ConnectPrisma", reason: "Connection timed out" },
+      isOperational: false,
+      kind: "Timeout",
+      layer: "Persistence",
+      meta: { service: "prisma" },
+    });
+    error.message = "custom timeout summary";
+    error.stack = "mock-stack";
+
+    const enriched = ensureApplicationErrorI18n(error);
+
+    expect(enriched).not.toBe(error);
+    expect(enriched.message).toBe("custom timeout summary");
+    expect(enriched.stack).toBe("mock-stack");
+    expect(enriched.cause).toBe(cause);
+    expect(enriched.meta).toEqual({ service: "prisma" });
+    expect(enriched.i18n?.key).toBe(applicationErrorI18nKeys.TIMEOUT);
   });
 
   it("maps prisma not-found code to not_found", () => {
