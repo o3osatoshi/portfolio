@@ -1,6 +1,5 @@
 import type { JsonObject } from "../types";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
-import { composeErrorName } from "./error-name";
 import type {
   Kind,
   Layer,
@@ -112,6 +111,15 @@ export function buildErrorSummary(
   if (details.impact) return details.impact;
   if (details.hint) return details.hint;
   return undefined;
+}
+
+/**
+ * Build an error `name` string such as `DomainValidationError`.
+ *
+ * @public
+ */
+export function composeErrorName(layer: Layer, kind: Kind): string {
+  return `${layer}${kind}Error`;
 }
 
 /**

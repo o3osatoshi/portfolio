@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildErrorSummary,
+  composeErrorName,
   isRichError,
   newRichError,
   toRichError,
@@ -70,6 +71,14 @@ describe("RichError", () => {
     expect(buildErrorSummary({ action: "SaveUser" })).toBe("SaveUser failed");
     expect(buildErrorSummary({ reason: "Something went wrong" })).toBe(
       "Something went wrong",
+    );
+  });
+});
+
+describe("error name helpers", () => {
+  it("composes names from layer + kind", () => {
+    expect(composeErrorName("Domain", "Validation")).toBe(
+      "DomainValidationError",
     );
   });
 });
