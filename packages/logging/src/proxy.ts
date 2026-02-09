@@ -52,7 +52,7 @@ export interface ProxyHandlerOptions {
   /**
    * Error handler invoked when request processing fails.
    */
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
   /**
    * Transport used to emit the received events.
    */
@@ -112,7 +112,7 @@ export interface ProxyTransportOptions {
   /**
    * Error handler invoked on send failures or drops.
    */
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
   /**
    * Proxy endpoint URL.
    */
@@ -133,7 +133,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
     ? new Set(options.allowDatasets)
     : undefined;
   const maxEvents = Math.max(1, options.maxEvents ?? 500);
-  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const onError = options.onError ?? ((error: unknown) => console.error(error));
 
   return async (req: Request): Promise<Response> => {
     if (req.method.toUpperCase() !== "POST") {
@@ -227,7 +227,7 @@ export function createProxyTransport(
 
   const maxBatchSize = Math.max(1, options.maxBatchSize ?? 50);
   const maxBufferSize = Math.max(maxBatchSize, options.maxBufferSize ?? 1000);
-  const onError = options.onError ?? ((error: Error) => console.error(error));
+  const onError = options.onError ?? ((error: unknown) => console.error(error));
 
   let eventSets: EventSet[] = [];
   let flushTimer: ReturnType<typeof setTimeout> | undefined;

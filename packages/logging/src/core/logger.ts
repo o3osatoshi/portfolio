@@ -2,7 +2,6 @@ import {
   extractErrorMessage,
   isRichError,
   type JsonValue,
-  resolveErrorInfo,
 } from "@o3osatoshi/toolkit";
 
 import type {
@@ -230,7 +229,6 @@ function normalizeValue(value: unknown): JsonValue | undefined {
 }
 
 function toErrorAttributes(error: unknown): Attributes {
-  const info = resolveErrorInfo(error);
   const rich = isRichError(error) ? error : undefined;
   const details = rich?.details;
   const causeText = extractErrorMessage(
@@ -238,8 +236,8 @@ function toErrorAttributes(error: unknown): Attributes {
   );
 
   return {
-    ...(info.kind ? { "error.kind": info.kind } : {}),
-    ...(info.layer ? { "error.layer": info.layer } : {}),
+    ...(rich?.kind ? { "error.kind": rich?.kind } : {}),
+    ...(rich?.layer ? { "error.layer": rich?.layer } : {}),
     ...(details?.action ? { "error.action": details.action } : {}),
     ...(details?.hint ? { "error.hint": details.hint } : {}),
     ...(details?.impact ? { "error.impact": details.impact } : {}),

@@ -2,7 +2,7 @@ import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
-import { resolveErrorKind, sleep, toRichError } from "@o3osatoshi/toolkit";
+import { sleep, toRichError } from "@o3osatoshi/toolkit";
 
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
@@ -191,7 +191,7 @@ function defaultShouldRetry<S extends z.ZodType>({
 }
 
 function isRetryableError(error: RichError): boolean {
-  const kind = resolveErrorKind(error);
+  const kind = error.kind;
   if (!kind) return false;
   return (
     kind === "Timeout" ||

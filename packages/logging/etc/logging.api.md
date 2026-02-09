@@ -158,7 +158,7 @@ export interface RequestLogger {
 // @public
 export interface RuntimeLoggingOptions extends BaseLoggingOptions {
     flushOnEnd?: boolean;
-    onError?: (error: Error) => void;
+    onError?: (error: unknown) => void;
 }
 
 // @public
