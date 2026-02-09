@@ -3,6 +3,8 @@ import { okAsync, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
+import { toApplicationError } from "../../application-error";
+import { applicationErrorCodes } from "../../application-error-catalog";
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
@@ -49,6 +51,13 @@ export class HeavyProcessCachedUseCase {
             .orElse(() => okAsync(null))
             .map(() => ({ ...heavyProcess, cached: false })),
         );
-      });
+      })
+      .mapErr((cause) =>
+        toApplicationError({
+          action: "HeavyProcessCached",
+          cause,
+          code: applicationErrorCodes.HEAVY_PROCESS_CACHED_FAILED,
+        }),
+      );
   }
 }

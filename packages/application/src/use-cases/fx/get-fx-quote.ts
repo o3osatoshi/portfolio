@@ -4,6 +4,8 @@ import { Result, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
+import { toApplicationError } from "../../application-error";
+import { applicationErrorCodes } from "../../application-error-catalog";
 import type { GetFxQuoteRequest, GetFxQuoteResponse } from "../../dtos";
 import { toFxQuoteResponse } from "../../dtos";
 
@@ -23,8 +25,16 @@ export class GetFxQuoteUseCase {
     return Result.combine([
       newCurrencyCode(req.base),
       newCurrencyCode(req.quote),
-    ]).asyncAndThen(([base, quote]) =>
-      this.provider.getRate({ base, quote }).map(toFxQuoteResponse),
-    );
+    ])
+      .asyncAndThen(([base, quote]) =>
+        this.provider.getRate({ base, quote }).map(toFxQuoteResponse),
+      )
+      .mapErr((cause) =>
+        toApplicationError({
+          action: "GetFxQuote",
+          cause,
+          code: applicationErrorCodes.GET_FX_QUOTE_FAILED,
+        }),
+      );
   }
 }

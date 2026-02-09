@@ -57,7 +57,11 @@ vi.mock("@/env/server", () => ({
 }));
 
 import { getTag } from "@/utils/nav-handler";
-import { newWebError, webErrorCodes } from "@/utils/web-error";
+import {
+  newWebError,
+  webErrorCodes,
+  webErrorI18nKeys,
+} from "@/utils/web-error";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import { getTransactions } from "./get-transactions";
@@ -118,6 +122,7 @@ describe("getTransactions", () => {
         newWebError({
           action: "DecodeAuthToken",
           code: webErrorCodes.AUTH_USER_ID_MISSING,
+          i18n: { key: webErrorI18nKeys.UNAUTHORIZED },
           kind: "Unauthorized",
           reason: "Session token is missing a user id.",
         }),

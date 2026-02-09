@@ -18,7 +18,10 @@ vi.mock("@o3osatoshi/toolkit", async (importOriginal) => {
 });
 
 import { newApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import type { HeavyProcessResponse } from "../../dtos/heavy-process.res.dto";
 import { HeavyProcessUseCase } from "./heavy-process";
 
@@ -56,6 +59,7 @@ describe("application/use-cases: HeavyProcessUseCase", () => {
         action: "HeavyProcessUseCaseSpec",
         reason: "sleep interrupted",
       },
+      i18n: { key: applicationErrorI18nKeys.INTERNAL },
       kind: "Internal",
     });
     h.sleepMock.mockReturnValueOnce(errAsync<void, RichError>(sleepError));

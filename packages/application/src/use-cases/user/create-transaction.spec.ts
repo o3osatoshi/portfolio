@@ -3,7 +3,10 @@ import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it } from "vitest";
 
 import { newApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import { CreateTransactionUseCase } from "./create-transaction";
 
 const testError = (reason: string) =>
@@ -13,6 +16,7 @@ const testError = (reason: string) =>
       action: "CreateTransactionUseCaseSpec",
       reason,
     },
+    i18n: { key: applicationErrorI18nKeys.INTERNAL },
     kind: "Internal",
   });
 

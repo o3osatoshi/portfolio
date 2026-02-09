@@ -1,4 +1,9 @@
-import { type Kind, newRichError, type RichError } from "@o3osatoshi/toolkit";
+import {
+  type Kind,
+  newRichError,
+  type RichError,
+  type RichErrorI18n,
+} from "@o3osatoshi/toolkit";
 
 /**
  * Stable machine-oriented codes for web presentation-layer failures.
@@ -19,6 +24,18 @@ export const webErrorCodes = {
   VALIDATION: "WEB_VALIDATION",
 } as const;
 
+export const webErrorI18nKeys = {
+  CONFLICT: "errors.application.conflict",
+  FORBIDDEN: "errors.application.forbidden",
+  INTERNAL: "errors.application.internal",
+  NOT_FOUND: "errors.application.not_found",
+  RATE_LIMIT: "errors.application.rate_limit",
+  TIMEOUT: "errors.application.timeout",
+  UNAUTHORIZED: "errors.application.unauthorized",
+  UNAVAILABLE: "errors.application.unavailable",
+  VALIDATION: "errors.application.validation",
+} as const;
+
 /**
  * Shape used to describe a presentation-layer failure when constructing a structured {@link Error}.
  */
@@ -27,12 +44,19 @@ export type NewWebError = {
   cause?: unknown;
   code: WebErrorCode;
   hint?: string;
+  i18n: WebErrorI18n;
   impact?: string;
   kind: WebKind;
   reason?: string;
 };
 
 export type WebErrorCode = (typeof webErrorCodes)[keyof typeof webErrorCodes];
+export type WebErrorI18n = {
+  key: WebErrorI18nKey;
+  params?: RichErrorI18n["params"] | undefined;
+};
+export type WebErrorI18nKey =
+  (typeof webErrorI18nKeys)[keyof typeof webErrorI18nKeys];
 
 /**
  * Enumerates normalized error categories for the web presentation layer.
@@ -59,6 +83,7 @@ export function newWebError({
   cause,
   code,
   hint,
+  i18n,
   impact,
   kind,
   reason,
@@ -72,6 +97,7 @@ export function newWebError({
       impact,
       reason,
     },
+    i18n,
     kind,
     layer: "Presentation",
   });

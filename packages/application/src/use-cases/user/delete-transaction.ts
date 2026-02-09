@@ -4,6 +4,8 @@ import { Result, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
+import { toApplicationError } from "../../application-error";
+import { applicationErrorCodes } from "../../application-error-catalog";
 import type { DeleteTransactionRequest } from "../../dtos";
 
 /**
@@ -19,11 +21,16 @@ export class DeleteTransactionUseCase {
    * @returns ResultAsync that resolves when the transaction is removed.
    */
   execute(req: DeleteTransactionRequest): ResultAsync<void, RichError> {
-    return Result.combine([
-      newTransactionId(req.id),
-      newUserId(req.userId),
-    ]).asyncAndThen(([transactionId, userId]) =>
-      this.repo.delete(transactionId, userId),
-    );
+    return Result.combine([newTransactionId(req.id), newUserId(req.userId)])
+      .asyncAndThen(([transactionId, userId]) =>
+        this.repo.delete(transactionId, userId),
+      )
+      .mapErr((cause) =>
+        toApplicationError({
+          action: "DeleteTransaction",
+          cause,
+          code: applicationErrorCodes.DELETE_TRANSACTION_FAILED,
+        }),
+      );
   }
 }

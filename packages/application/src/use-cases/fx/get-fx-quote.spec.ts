@@ -3,7 +3,10 @@ import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { newApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import { GetFxQuoteUseCase } from "./get-fx-quote";
 
 const h = vi.hoisted(() => {
@@ -75,6 +78,7 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
         action: "GetFxQuoteUseCaseSpec",
         reason: "provider failed",
       },
+      i18n: { key: applicationErrorI18nKeys.UNAVAILABLE },
       kind: "Unavailable",
     });
     h.getRateMock.mockReturnValueOnce(errAsync(providerError));
@@ -95,7 +99,8 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(h.getRateMock).not.toHaveBeenCalled();
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("DomainValidationError");
+    expect(result.error.name).toBe("ApplicationValidationError");
+    expect(result.error.i18n?.key).toBe("errors.application.validation");
   });
 
   it("returns validation error when quote is invalid", async () => {
@@ -105,6 +110,7 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     expect(h.getRateMock).not.toHaveBeenCalled();
     expect(result.isErr()).toBe(true);
     if (!result.isErr()) return;
-    expect(result.error.name).toBe("DomainValidationError");
+    expect(result.error.name).toBe("ApplicationValidationError");
+    expect(result.error.i18n?.key).toBe("errors.application.validation");
   });
 });

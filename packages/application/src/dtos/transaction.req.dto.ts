@@ -2,6 +2,12 @@ import { z } from "zod";
 
 import { parseWith } from "@o3osatoshi/toolkit";
 
+import { toApplicationError } from "../application-error";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../application-error-catalog";
+
 const DecimalStringSchema = z.string().refine(
   (val) => {
     try {
@@ -107,7 +113,7 @@ export type UpdateTransactionRequest = z.infer<
  * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
  * Wraps `parseWith` to return a `Result` with typed error metadata.
  */
-export const parseCreateTransactionRequest = parseWith(
+const parseCreateTransactionRequestBase = parseWith(
   createTransactionRequestSchema,
   {
     action: "ParseCreateTransactionRequest",
@@ -116,7 +122,7 @@ export const parseCreateTransactionRequest = parseWith(
 /**
  * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
  */
-export const parseUpdateTransactionRequest = parseWith(
+const parseUpdateTransactionRequestBase = parseWith(
   updateTransactionRequestSchema,
   {
     action: "ParseUpdateTransactionRequest",
@@ -125,7 +131,7 @@ export const parseUpdateTransactionRequest = parseWith(
 /**
  * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
  */
-export const parseGetTransactionsRequest = parseWith(
+const parseGetTransactionsRequestBase = parseWith(
   getTransactionsRequestSchema,
   {
     action: "ParseGetTransactionsRequest",
@@ -134,9 +140,65 @@ export const parseGetTransactionsRequest = parseWith(
 /**
  * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
  */
-export const parseDeleteTransactionRequest = parseWith(
+const parseDeleteTransactionRequestBase = parseWith(
   deleteTransactionRequestSchema,
   {
     action: "ParseDeleteTransactionRequest",
   },
 );
+
+/**
+ * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
+ */
+export const parseCreateTransactionRequest = (input: unknown) =>
+  parseCreateTransactionRequestBase(input).mapErr((cause) =>
+    toApplicationError({
+      action: "ParseCreateTransactionRequest",
+      cause,
+      code: applicationErrorCodes.CREATE_TRANSACTION_REQUEST_INVALID,
+      i18n: { key: applicationErrorI18nKeys.VALIDATION },
+      kind: "Validation",
+    }),
+  );
+
+/**
+ * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
+ */
+export const parseUpdateTransactionRequest = (input: unknown) =>
+  parseUpdateTransactionRequestBase(input).mapErr((cause) =>
+    toApplicationError({
+      action: "ParseUpdateTransactionRequest",
+      cause,
+      code: applicationErrorCodes.UPDATE_TRANSACTION_REQUEST_INVALID,
+      i18n: { key: applicationErrorI18nKeys.VALIDATION },
+      kind: "Validation",
+    }),
+  );
+
+/**
+ * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
+ */
+export const parseGetTransactionsRequest = (input: unknown) =>
+  parseGetTransactionsRequestBase(input).mapErr((cause) =>
+    toApplicationError({
+      action: "ParseGetTransactionsRequest",
+      cause,
+      code: applicationErrorCodes.GET_TRANSACTIONS_REQUEST_INVALID,
+      i18n: { key: applicationErrorI18nKeys.VALIDATION },
+      kind: "Validation",
+    }),
+  );
+
+/**
+ * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
+ */
+export const parseDeleteTransactionRequest = (input: unknown) =>
+  parseDeleteTransactionRequestBase(input).mapErr((cause) =>
+    toApplicationError({
+      action: "ParseDeleteTransactionRequest",
+      cause,
+      code: applicationErrorCodes.DELETE_TRANSACTION_REQUEST_INVALID,
+      i18n: { key: applicationErrorI18nKeys.VALIDATION },
+      kind: "Validation",
+    }),
+  );

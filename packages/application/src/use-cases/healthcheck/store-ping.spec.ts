@@ -7,7 +7,10 @@ import { errAsync, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { newApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import type { StepRunner } from "../../services";
 import { generateStorePingContext, StorePingUseCase } from "./store-ping";
 
@@ -18,6 +21,7 @@ const testError = (reason: string) =>
       action: "StorePingUseCaseSpec",
       reason,
     },
+    i18n: { key: applicationErrorI18nKeys.INTERNAL },
     kind: "Internal",
   });
 

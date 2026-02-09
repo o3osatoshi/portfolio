@@ -5,7 +5,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { newApplicationError } from "../../application-error";
-import { applicationErrorCodes } from "../../application-error-catalog";
+import {
+  applicationErrorCodes,
+  applicationErrorI18nKeys,
+} from "../../application-error-catalog";
 import type {
   HeavyProcessCachedResponse,
   HeavyProcessResponse,
@@ -30,6 +33,7 @@ const testError = (reason: string) =>
       action: "HeavyProcessCachedUseCaseSpec",
       reason,
     },
+    i18n: { key: applicationErrorI18nKeys.INTERNAL },
     kind: "Internal",
   });
 

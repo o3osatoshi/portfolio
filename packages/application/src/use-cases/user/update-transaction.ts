@@ -4,7 +4,10 @@ import { err, ok, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { newApplicationError } from "../../application-error";
+import {
+  newApplicationError,
+  toApplicationError,
+} from "../../application-error";
 import {
   applicationErrorCodes,
   applicationErrorI18nKeys,
@@ -30,45 +33,53 @@ export class UpdateTransactionUseCase {
     req: UpdateTransactionRequest,
     userId: string,
   ): ResultAsync<void, RichError> {
-    return newTransactionId(req.id).asyncAndThen((id) =>
-      this.repo
-        .findById(id)
-        .andThen((tx) =>
-          tx === null
-            ? err(
-                newApplicationError({
-                  code: applicationErrorCodes.TRANSACTION_NOT_FOUND,
-                  details: {
-                    action: "UpdateTransaction",
-                    reason: "Transaction not found",
-                  },
-                  i18n: {
-                    key: applicationErrorI18nKeys.NOT_FOUND,
-                  },
-                  kind: "NotFound",
-                }),
-              )
-            : ok(tx),
-        )
-        .andThen((tx) =>
-          tx.userId !== userId
-            ? err(
-                newApplicationError({
-                  code: applicationErrorCodes.TRANSACTION_UPDATE_FORBIDDEN,
-                  details: {
-                    action: "UpdateTransaction",
-                    reason: "Transaction does not belong to user",
-                  },
-                  i18n: {
-                    key: applicationErrorI18nKeys.FORBIDDEN,
-                  },
-                  kind: "Forbidden",
-                }),
-              )
-            : ok(tx),
-        )
-        .andThen((tx) => updateTransaction(tx, req))
-        .andThen((updatedTx) => this.repo.update(updatedTx)),
-    );
+    return newTransactionId(req.id)
+      .asyncAndThen((id) =>
+        this.repo
+          .findById(id)
+          .andThen((tx) =>
+            tx === null
+              ? err(
+                  newApplicationError({
+                    code: applicationErrorCodes.TRANSACTION_NOT_FOUND,
+                    details: {
+                      action: "UpdateTransaction",
+                      reason: "Transaction not found",
+                    },
+                    i18n: {
+                      key: applicationErrorI18nKeys.NOT_FOUND,
+                    },
+                    kind: "NotFound",
+                  }),
+                )
+              : ok(tx),
+          )
+          .andThen((tx) =>
+            tx.userId !== userId
+              ? err(
+                  newApplicationError({
+                    code: applicationErrorCodes.TRANSACTION_UPDATE_FORBIDDEN,
+                    details: {
+                      action: "UpdateTransaction",
+                      reason: "Transaction does not belong to user",
+                    },
+                    i18n: {
+                      key: applicationErrorI18nKeys.FORBIDDEN,
+                    },
+                    kind: "Forbidden",
+                  }),
+                )
+              : ok(tx),
+          )
+          .andThen((tx) => updateTransaction(tx, req))
+          .andThen((updatedTx) => this.repo.update(updatedTx)),
+      )
+      .mapErr((cause) =>
+        toApplicationError({
+          action: "UpdateTransaction",
+          cause,
+          code: applicationErrorCodes.UPDATE_TRANSACTION_FAILED,
+        }),
+      );
   }
 }
