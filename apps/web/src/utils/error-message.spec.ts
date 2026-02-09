@@ -6,7 +6,7 @@ import {
   serializeRichError,
 } from "@o3osatoshi/toolkit";
 
-import { resolveLocalizedErrorMessage } from "./error-message";
+import { interpretErrorMessage } from "./error-message";
 
 describe("utils/error-message", () => {
   it("uses SerializedRichError i18n key when present", () => {
@@ -22,7 +22,7 @@ describe("utils/error-message", () => {
       message: "fallback",
     };
 
-    const message = resolveLocalizedErrorMessage(error, {
+    const message = interpretErrorMessage(error, {
       fallbackMessage: "unknown",
       t: (key, values) => `${key}:${String(values?.["resource"])}`,
     });
@@ -30,7 +30,7 @@ describe("utils/error-message", () => {
     expect(message).toBe("errors.application.forbidden:transaction");
   });
 
-  it("uses RichError i18n key when present", () => {
+  it("uses serialized RichError i18n key when present", () => {
     const error = serializeRichError(
       newRichError({
         i18n: {
@@ -43,12 +43,33 @@ describe("utils/error-message", () => {
       { includeStack: false },
     );
 
-    const message = resolveLocalizedErrorMessage(error, {
+    const message = interpretErrorMessage(error, {
       fallbackMessage: "unknown",
       t: (key) => key,
     });
 
     expect(message).toBe("errors.application.not_found");
+  });
+
+  it("converts boolean i18n params to string before translation", () => {
+    const error: SerializedRichError = {
+      name: "IntegrationTimeoutError",
+      i18n: {
+        key: "errors.integration.timeout",
+        params: { retriable: false },
+      },
+      isOperational: true,
+      kind: "Timeout",
+      layer: "Infrastructure",
+      message: "timeout",
+    };
+
+    const message = interpretErrorMessage(error, {
+      fallbackMessage: "unknown",
+      t: (key, values) => `${key}:${String(values?.["retriable"])}`,
+    });
+
+    expect(message).toBe("errors.integration.timeout:false");
   });
 
   it("falls back to fallbackMessage when translation fails", () => {
@@ -63,7 +84,7 @@ describe("utils/error-message", () => {
       message: "record missing",
     };
 
-    const message = resolveLocalizedErrorMessage(error, {
+    const message = interpretErrorMessage(error, {
       fallbackMessage: "unknown",
       t: () => {
         throw new Error("missing translation");
@@ -82,7 +103,16 @@ describe("utils/error-message", () => {
       message: "internal details",
     };
 
-    const message = resolveLocalizedErrorMessage(error, {
+    const message = interpretErrorMessage(error, {
+      fallbackMessage: "unknown",
+      t: () => "translated",
+    });
+
+    expect(message).toBe("unknown");
+  });
+
+  it("falls back to fallbackMessage for native Error", () => {
+    const message = interpretErrorMessage(new Error("boom"), {
       fallbackMessage: "unknown",
       t: () => "translated",
     });
