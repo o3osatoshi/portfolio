@@ -1,8 +1,4 @@
-import {
-  type ActionError,
-  isRichError,
-  type RichErrorI18n,
-} from "@o3osatoshi/toolkit";
+import type { RichErrorI18n, SerializedRichError } from "@o3osatoshi/toolkit";
 
 type Options = {
   fallbackMessage: string;
@@ -15,42 +11,29 @@ type Translate = (
 ) => string;
 
 export function resolveLocalizedErrorMessage(
-  error: ActionError | Error,
+  error: Error | SerializedRichError,
   { fallbackMessage, t }: Options,
 ): string {
   const i18n = extractI18n(error);
-  if (i18n?.key) {
-    try {
-      return t(i18n.key, toTranslationParams(i18n.params));
-    } catch {
-      // fall through to message fallback when key is missing
-    }
+  if (!i18n?.key) {
+    return fallbackMessage;
   }
 
-  const message = extractMessage(error);
-  if (message) {
-    return message;
+  try {
+    return t(i18n.key, toTranslationParams(i18n.params));
+  } catch {
+    return fallbackMessage;
   }
-
-  return fallbackMessage;
 }
 
-function extractI18n(error: ActionError | Error): RichErrorI18n | undefined {
-  if (isRichError(error)) {
-    return error.i18n;
-  }
-
+function extractI18n(
+  error: Error | SerializedRichError,
+): RichErrorI18n | undefined {
   if ("i18n" in error) {
     return error.i18n;
   }
 
   return undefined;
-}
-
-function extractMessage(error: ActionError | Error): string | undefined {
-  const message = error.message?.trim();
-  if (!message) return undefined;
-  return message;
 }
 
 function toTranslationParams(

@@ -13,17 +13,7 @@ import { ZodError } from 'zod';
 export type ActionData<TBase extends UnknownRecord = UnknownRecord> = null | TBase | undefined;
 
 // @public
-export type ActionError = {
-    code?: string | undefined;
-    i18n?: RichErrorI18n | undefined;
-    kind?: Kind | undefined;
-    layer?: Layer | undefined;
-    message: string;
-    name: string;
-};
-
-// @public
-export type ActionState<T extends ActionData = UnknownRecord, E extends ActionError = ActionError> = {
+export type ActionState<T extends ActionData = UnknownRecord, E extends SerializedRichError = SerializedRichError> = {
     data: T;
     ok: true;
 } | {
@@ -119,7 +109,7 @@ export type EnvOf<T extends EnvSchema> = {
 export type EnvSchema = Record<string, z.ZodTypeAny>;
 
 // @public
-export function err<E extends Error>(error: ActionError | E | string): ActionState;
+export function err(error: RichError): ActionState<never, SerializedRichError>;
 
 // @public
 export type ErrorHttpResponse = {
@@ -493,12 +483,9 @@ export type UrlRedactorOptions = {
     secrets: Array<string | undefined>;
 };
 
-// @public
-export function userMessageFromError(error: Error): string;
-
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1175:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1146:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

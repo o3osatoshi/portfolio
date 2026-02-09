@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/actions/update-transaction";
 import type { Transaction } from "@/server/get-transactions";
-import { resolveLocalizedErrorMessage } from "@/utils/error-message";
+import { useLocalizedErrorMessage } from "@/utils/use-localized-error-message";
 import { updateTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
@@ -28,8 +28,7 @@ interface Props {
 
 export default function EditDialog({ transaction }: Props) {
   const t = useTranslations("LabsServerCrud");
-  const tCommon = useTranslations("Common");
-  const tError = useTranslations();
+  const resolveErrorMessage = useLocalizedErrorMessage();
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
@@ -61,12 +60,7 @@ export default function EditDialog({ transaction }: Props) {
   };
 
   const actionErrorMessage =
-    state?.ok === false
-      ? resolveLocalizedErrorMessage(state.error, {
-          fallbackMessage: tCommon("unknownError"),
-          t: tError,
-        })
-      : undefined;
+    state?.ok === false ? resolveErrorMessage(state.error) : undefined;
 
   return (
     <Dialog>

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useState } from "react";
 
 import { getHeavyProcessCached } from "@/services/get-heavy-process-cached";
-import { resolveLocalizedErrorMessage } from "@/utils/error-message";
+import { useLocalizedErrorMessage } from "@/utils/use-localized-error-message";
 import {
   Button,
   Card,
@@ -20,7 +20,7 @@ type DemoStatus = "error" | "idle" | "loading" | "success";
 export default function RedisCacheDemoCard() {
   const t = useTranslations("LabsEdgeRedisCache");
   const tCommon = useTranslations("Common");
-  const tError = useTranslations();
+  const resolveErrorMessage = useLocalizedErrorMessage();
   const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [clientDurationMs, setClientDurationMs] = useState<null | number>(null);
@@ -61,12 +61,7 @@ export default function RedisCacheDemoCard() {
       const error = result.error;
       setStatus("error");
       setErrorMessage(
-        error instanceof Error
-          ? resolveLocalizedErrorMessage(error, {
-              fallbackMessage: unknownErrorLabel,
-              t: tError,
-            })
-          : String(error ?? unknownErrorLabel),
+        error instanceof Error ? resolveErrorMessage(error) : unknownErrorLabel,
       );
       return;
     }
@@ -75,7 +70,7 @@ export default function RedisCacheDemoCard() {
     setStatus("success");
     setFromCache(body.cached);
     setTimestamp(body.timestamp);
-  }, [status, tError, unknownErrorLabel]);
+  }, [resolveErrorMessage, status, unknownErrorLabel]);
 
   const handleReset = useCallback(() => {
     setStatus("idle");

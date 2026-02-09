@@ -152,7 +152,9 @@ describe("actions/create-transaction", () => {
     if (state?.ok) return;
 
     expect(state?.error.message).toBe("invalid payload");
-    expect(state?.error.name).toBe("Error");
+    expect(state?.error.name).toBe("ExternalInternalError");
+    expect(state?.error.kind).toBe("Internal");
+    expect(state?.error.layer).toBe("External");
     expect(h.createTransactionExecuteMock).not.toHaveBeenCalled();
     expect(h.updateTagMock).not.toHaveBeenCalled();
     expect(h.redirectMock).not.toHaveBeenCalled();

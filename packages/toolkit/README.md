@@ -113,8 +113,8 @@ import {
   err,
   ok,
   type ActionState,
-  userMessageFromError,
 } from "@o3osatoshi/toolkit/next";
+import { toRichError } from "@o3osatoshi/toolkit";
 
 // Server Action example
 export const createItem = async (
@@ -125,14 +125,13 @@ export const createItem = async (
     const data = await doSomething(formData);
     return ok(data);
   } catch (e) {
-    return err(e as Error); // serializable ActionError (includes i18n/code when RichError)
+    return err(toRichError(e)); // serializable SerializedRichError payload
   }
 };
 ```
 
-- `err(error)` – accepts `Error | ActionError | string` and returns `{ ok: false, error }`. When given `RichError`, it preserves `code`, `i18n`, `kind`, and `layer` for presentation-layer localization/branching.
+- `err(error)` – accepts `RichError` and returns `{ ok: false, error }` where `error` is `SerializedRichError` (stack omitted) for safe transport through Server Actions.
 - `ok(data)` – wraps success payload as `{ ok: true, data }`.
-- `userMessageFromError(error)` – returns a fallback display string from `details` / plain message when i18n lookup is unavailable.
 
 ## Notes
 

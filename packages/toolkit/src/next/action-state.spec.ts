@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { newRichError } from "../error";
-import { type ActionError, err, ok } from "./action-state";
+import {
+  deserializeRichError,
+  isSerializedRichError,
+  newRichError,
+  type RichError,
+} from "../error";
+import { err, ok } from "./action-state";
 
 describe("action-state ok/err", () => {
   it("wraps data with ok: true", () => {
@@ -9,14 +14,6 @@ describe("action-state ok/err", () => {
     if (!state.ok) throw new Error("expected success state");
     expect(state.ok).toBe(true);
     expect(state.data).toEqual({ foo: "bar" });
-  });
-
-  it("wraps string errors with default name", () => {
-    const state = err("oops");
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
-    expect(state.error.message).toBe("oops");
-    expect(state.error.name).toBe("ActionError");
   });
 
   it("allows null and undefined as data", () => {
@@ -34,25 +31,7 @@ describe("action-state ok/err", () => {
     expect(undefinedState.data).toBeUndefined();
   });
 
-  it("passes through ActionError objects", () => {
-    const actionError: ActionError = { name: "Custom", message: "broken" };
-    const state = err(actionError);
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
-    expect(state.error).toBe(actionError);
-  });
-
-  it("preserves native Error name and derives a user-facing message", () => {
-    const error = new Error("plain message");
-    error.name = "CustomError";
-    const state = err(error);
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
-    expect(state.error.name).toBe("CustomError");
-    expect(state.error.message).toBe("plain message");
-  });
-
-  it("keeps RichError metadata for i18n at the presentation layer", () => {
+  it("serializes RichError for ActionState transport", () => {
     const error = newRichError({
       code: "APP_FORBIDDEN",
       i18n: { key: "errors.application.forbidden" },
@@ -62,15 +41,46 @@ describe("action-state ok/err", () => {
     const state = err(error);
     expect(state.ok).toBe(false);
     if (state.ok) throw new Error("expected failure state");
+    expect(isSerializedRichError(state.error)).toBe(true);
     expect(state.error.name).toBe("ApplicationForbiddenError");
-    expect(state.error.message).toBe(
-      "We could not complete your request due to an unknown error. Please try again.",
-    );
+    expect(state.error.message).toBe("ApplicationForbiddenError");
     expect(state.error.code).toBe("APP_FORBIDDEN");
     expect(state.error.i18n).toEqual({
       key: "errors.application.forbidden",
     });
     expect(state.error.kind).toBe("Forbidden");
     expect(state.error.layer).toBe("Application");
+    expect(state.error.stack).toBeUndefined();
+  });
+
+  it("normalizes non-RichError values when they slip in at runtime", () => {
+    const state = err(new Error("plain message") as unknown as RichError);
+    expect(state.ok).toBe(false);
+    if (state.ok) throw new Error("expected failure state");
+
+    expect(state.error.message).toBe("plain message");
+    expect(state.error.kind).toBe("Internal");
+    expect(state.error.layer).toBe("External");
+    expect(state.error.code).toBe("RICH_ERROR_NORMALIZED");
+  });
+
+  it("supports rehydrating serialized action errors to RichError", () => {
+    const serialized = err(
+      newRichError({
+        code: "APP_NOT_FOUND",
+        i18n: { key: "errors.application.not_found" },
+        kind: "NotFound",
+        layer: "Application",
+      }),
+    );
+    expect(serialized.ok).toBe(false);
+    if (serialized.ok) throw new Error("expected failure state");
+
+    const deserialized = deserializeRichError(serialized.error);
+    expect(deserialized.name).toBe("ApplicationNotFoundError");
+    expect(deserialized.code).toBe("APP_NOT_FOUND");
+    expect(deserialized.i18n).toEqual({
+      key: "errors.application.not_found",
+    });
   });
 });

@@ -6,15 +6,14 @@ import { type FormEvent, useActionState } from "react";
 import { useForm } from "react-hook-form";
 
 import { createTransaction } from "@/actions/create-transaction";
-import { resolveLocalizedErrorMessage } from "@/utils/error-message";
+import { useLocalizedErrorMessage } from "@/utils/use-localized-error-message";
 import { createTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
 
 export default function CreateForm() {
   const t = useTranslations("LabsServerCrud");
-  const tCommon = useTranslations("Common");
-  const tError = useTranslations();
+  const resolveErrorMessage = useLocalizedErrorMessage();
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
@@ -46,12 +45,7 @@ export default function CreateForm() {
   };
 
   const actionErrorMessage =
-    state?.ok === false
-      ? resolveLocalizedErrorMessage(state.error, {
-          fallbackMessage: tCommon("unknownError"),
-          t: tError,
-        })
-      : undefined;
+    state?.ok === false ? resolveErrorMessage(state.error) : undefined;
 
   return (
     <form action={dispatch} onSubmit={validate}>

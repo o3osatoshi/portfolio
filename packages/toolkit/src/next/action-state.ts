@@ -1,11 +1,10 @@
 import {
-  isRichError,
-  type Kind,
-  type Layer,
-  type RichErrorI18n,
+  type RichError,
+  type SerializedRichError,
+  serializeRichError,
+  toRichError,
 } from "../error";
 import type { UnknownRecord } from "../types";
-import { userMessageFromError } from "./error-message";
 
 /**
  * Data payload accepted by {@link ActionState}. Designed to mirror the
@@ -23,27 +22,10 @@ export type ActionData<TBase extends UnknownRecord = UnknownRecord> =
   | undefined;
 
 /**
- * Minimal error shape delivered to the client side.
- *
- * Includes optional machine metadata (`code` / `i18n` / `kind` / `layer`)
- * so presentation layers can localize and branch without exposing stack/cause.
- *
- * @public
- */
-export type ActionError = {
-  code?: string | undefined;
-  i18n?: RichErrorI18n | undefined;
-  kind?: Kind | undefined;
-  layer?: Layer | undefined;
-  message: string;
-  name: string;
-};
-
-/**
  * Success/failure envelope compatible with React `useActionState`.
  *
  * @typeParam T - Type of the `data` field; should usually be an {@link ActionData} union.
- * @typeParam E - Error payload type; defaults to {@link ActionError}.
+ * @typeParam E - Error payload type; defaults to {@link SerializedRichError}.
  * @public
  * @remarks
  * - The success shape is `{ ok: true, data }`.
@@ -52,30 +34,28 @@ export type ActionError = {
  */
 export type ActionState<
   T extends ActionData = UnknownRecord,
-  E extends ActionError = ActionError,
+  E extends SerializedRichError = SerializedRichError,
 > = { data: T; ok: true } | { error: E; ok: false } | never;
 
 /**
  * Build a failure {@link ActionState}.
  *
  * @public
- * @param error - A string, Error, or pre-shaped {@link ActionError}.
- * @returns An {@link ActionState} with `ok: false` and serializable error metadata.
+ * @param error - Structured error that should already be handled as {@link RichError}.
+ * @returns An {@link ActionState} with `ok: false` and serialized RichError metadata.
  * @remarks
- * - Strings and pre-shaped {@link ActionError} values are passed through.
- * - Native `Error` instances are converted into {@link ActionError}. For
- *   {@link RichError}, `code` and `i18n` are preserved.
+ * - Errors are always serialized via {@link serializeRichError}.
+ * - Stack traces are omitted for server action payload safety.
+ * - If a non-RichError reaches this function at runtime, it is normalized via {@link toRichError}.
  */
-export function err<E extends Error>(
-  error: ActionError | E | string,
-): ActionState {
+export function err(error: RichError): ActionState<never, SerializedRichError> {
+  const rich = toRichError(error);
+
   return {
-    error:
-      typeof error === "string"
-        ? newActionError(error)
-        : error instanceof Error
-          ? toActionError(error)
-          : error,
+    error: serializeRichError(rich, {
+      depth: 0,
+      includeStack: false,
+    }),
     ok: false,
   };
 }
@@ -89,31 +69,4 @@ export function err<E extends Error>(
  */
 export function ok<T extends ActionData>(data: T): ActionState<T, never> {
   return { data, ok: true };
-}
-
-/**
- * Construct a minimal {@link ActionError}.
- *
- * @internal
- */
-function newActionError(message: string, name?: string): ActionError {
-  return {
-    name: name || "ActionError",
-    message: message || "",
-  };
-}
-
-function toActionError(error: Error): ActionError {
-  const actionError = newActionError(userMessageFromError(error), error.name);
-  if (!isRichError(error)) {
-    return actionError;
-  }
-
-  return {
-    ...actionError,
-    code: error.code,
-    i18n: error.i18n,
-    kind: error.kind,
-    layer: error.layer,
-  };
 }

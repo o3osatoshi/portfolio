@@ -1,17 +1,23 @@
 import { describe, expect, it } from "vitest";
 
-import { type ActionError, newRichError } from "@o3osatoshi/toolkit";
+import {
+  newRichError,
+  type SerializedRichError,
+  serializeRichError,
+} from "@o3osatoshi/toolkit";
 
 import { resolveLocalizedErrorMessage } from "./error-message";
 
 describe("utils/error-message", () => {
-  it("uses ActionError i18n key when present", () => {
-    const error: ActionError = {
-      name: "ActionError",
+  it("uses SerializedRichError i18n key when present", () => {
+    const error: SerializedRichError = {
+      name: "ApplicationForbiddenError",
       i18n: {
         key: "errors.application.forbidden",
         params: { resource: "transaction" },
       },
+      kind: "Forbidden",
+      layer: "Application",
       message: "fallback",
     };
 
@@ -24,13 +30,16 @@ describe("utils/error-message", () => {
   });
 
   it("uses RichError i18n key when present", () => {
-    const error = newRichError({
-      i18n: {
-        key: "errors.application.not_found",
-      },
-      kind: "NotFound",
-      layer: "Application",
-    });
+    const error = serializeRichError(
+      newRichError({
+        i18n: {
+          key: "errors.application.not_found",
+        },
+        kind: "NotFound",
+        layer: "Application",
+      }),
+      { includeStack: false },
+    );
 
     const message = resolveLocalizedErrorMessage(error, {
       fallbackMessage: "unknown",
@@ -40,12 +49,14 @@ describe("utils/error-message", () => {
     expect(message).toBe("errors.application.not_found");
   });
 
-  it("falls back to message when translation fails", () => {
-    const error: ActionError = {
-      name: "ActionError",
+  it("falls back to fallbackMessage when translation fails", () => {
+    const error: SerializedRichError = {
+      name: "ApplicationNotFoundError",
       i18n: {
         key: "errors.application.not_found",
       },
+      kind: "NotFound",
+      layer: "Application",
       message: "record missing",
     };
 
@@ -56,13 +67,15 @@ describe("utils/error-message", () => {
       },
     });
 
-    expect(message).toBe("record missing");
+    expect(message).toBe("unknown");
   });
 
-  it("falls back to fallbackMessage when message is empty", () => {
-    const error: ActionError = {
-      name: "ActionError",
-      message: "",
+  it("falls back to fallbackMessage when i18n is missing", () => {
+    const error: SerializedRichError = {
+      name: "ApplicationInternalError",
+      kind: "Internal",
+      layer: "Application",
+      message: "internal details",
     };
 
     const message = resolveLocalizedErrorMessage(error, {
