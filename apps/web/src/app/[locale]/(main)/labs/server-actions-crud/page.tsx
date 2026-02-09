@@ -7,7 +7,7 @@ import CreateForm from "@/app/[locale]/(main)/labs/server-actions-crud/_componen
 import TransactionCard from "@/app/[locale]/(main)/labs/server-actions-crud/_components/transaction-card";
 import TransactionCardSkeleton from "@/app/[locale]/(main)/labs/server-actions-crud/_components/transaction-card-skeleton";
 import { getTransactions } from "@/server/get-transactions";
-import { userMessageFromError } from "@o3osatoshi/toolkit";
+import { resolveLocalizedErrorMessage } from "@/utils/error-message";
 import { Message } from "@o3osatoshi/ui";
 
 interface Props {
@@ -62,10 +62,15 @@ export default async function Page({ params }: Props) {
 
 async function TransactionsSection({ locale }: { locale: string }) {
   const t = await getTranslations({ namespace: "LabsServerCrud", locale });
+  const tCommon = await getTranslations({ namespace: "Common", locale });
+  const tError = await getTranslations({ locale });
   const result = await getTransactions();
   const transactions = result.isOk() ? result.value : [];
   const errorMessage = result.isErr()
-    ? userMessageFromError(result.error)
+    ? resolveLocalizedErrorMessage(result.error, {
+        fallbackMessage: tCommon("unknownError"),
+        t: tError,
+      })
     : undefined;
 
   if (errorMessage) {

@@ -52,14 +52,25 @@ describe("action-state ok/err", () => {
     expect(state.error.message).toBe("plain message");
   });
 
-  it("uses toolkit metadata to produce a friendly message", () => {
-    const error = newRichError({ kind: "Forbidden", layer: "Application" });
+  it("keeps RichError metadata for i18n at the presentation layer", () => {
+    const error = newRichError({
+      code: "APP_FORBIDDEN",
+      i18n: { key: "errors.application.forbidden" },
+      kind: "Forbidden",
+      layer: "Application",
+    });
     const state = err(error);
     expect(state.ok).toBe(false);
     if (state.ok) throw new Error("expected failure state");
     expect(state.error.name).toBe("ApplicationForbiddenError");
     expect(state.error.message).toBe(
-      "You do not have permission to perform this action.",
+      "We could not complete your request due to an unknown error. Please try again.",
     );
+    expect(state.error.code).toBe("APP_FORBIDDEN");
+    expect(state.error.i18n).toEqual({
+      key: "errors.application.forbidden",
+    });
+    expect(state.error.kind).toBe("Forbidden");
+    expect(state.error.layer).toBe("Application");
   });
 });

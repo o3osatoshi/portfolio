@@ -1,3 +1,9 @@
+import {
+  isRichError,
+  type Kind,
+  type Layer,
+  type RichErrorI18n,
+} from "../error";
 import type { UnknownRecord } from "../types";
 import { userMessageFromError } from "./error-message";
 
@@ -17,11 +23,18 @@ export type ActionData<TBase extends UnknownRecord = UnknownRecord> =
   | undefined;
 
 /**
- * Minimal error shape delivered to the client side; keeps stack/cause out of the response.
+ * Minimal error shape delivered to the client side.
+ *
+ * Includes optional machine metadata (`code` / `i18n` / `kind` / `layer`)
+ * so presentation layers can localize and branch without exposing stack/cause.
  *
  * @public
  */
 export type ActionError = {
+  code?: string | undefined;
+  i18n?: RichErrorI18n | undefined;
+  kind?: Kind | undefined;
+  layer?: Layer | undefined;
   message: string;
   name: string;
 };
@@ -43,14 +56,15 @@ export type ActionState<
 > = { data: T; ok: true } | { error: E; ok: false } | never;
 
 /**
- * Build a failure {@link ActionState} with a user-facing error message.
+ * Build a failure {@link ActionState}.
  *
  * @public
  * @param error - A string, Error, or pre-shaped {@link ActionError}.
- * @returns An {@link ActionState} with `ok: false` and a friendly message derived from the error.
+ * @returns An {@link ActionState} with `ok: false` and serializable error metadata.
  * @remarks
  * - Strings and pre-shaped {@link ActionError} values are passed through.
- * - Native `Error` instances are converted via {@link userMessageFromError} and wrapped as {@link ActionError} to keep messages user-friendly and serializable.
+ * - Native `Error` instances are converted into {@link ActionError}. For
+ *   {@link RichError}, `code` and `i18n` are preserved.
  */
 export function err<E extends Error>(
   error: ActionError | E | string,
@@ -60,7 +74,7 @@ export function err<E extends Error>(
       typeof error === "string"
         ? newActionError(error)
         : error instanceof Error
-          ? newActionError(userMessageFromError(error), error.name)
+          ? toActionError(error)
           : error,
     ok: false,
   };
@@ -86,5 +100,20 @@ function newActionError(message: string, name?: string): ActionError {
   return {
     name: name || "ActionError",
     message: message || "",
+  };
+}
+
+function toActionError(error: Error): ActionError {
+  const actionError = newActionError(userMessageFromError(error), error.name);
+  if (!isRichError(error)) {
+    return actionError;
+  }
+
+  return {
+    ...actionError,
+    code: error.code,
+    i18n: error.i18n,
+    kind: error.kind,
+    layer: error.layer,
   };
 }

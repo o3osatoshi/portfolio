@@ -4,10 +4,11 @@ import { newRichError } from "../error";
 import { userMessageFromError } from "./error-message";
 
 describe("userMessageFromError", () => {
-  it("returns a kind-based message with details for Validation errors", () => {
+  it("returns details-based message for RichError", () => {
     const error = newRichError({
       details: {
         hint: "Include @ in email",
+        impact: "Form submission was rejected",
         reason: "Email format is invalid",
       },
       kind: "Validation",
@@ -15,19 +16,20 @@ describe("userMessageFromError", () => {
     });
 
     const message = userMessageFromError(error);
-    expect(message).toContain(
-      "Some inputs look incorrect. Please review and try again.",
-    );
     expect(message).toContain("Email format is invalid");
+    expect(message).toContain("Impact: Form submission was rejected");
     expect(message).toContain("Hint: Include @ in email");
   });
 
-  it("uses name-based fallback kind mapping for AbortError", () => {
-    const error = new Error("canceled by user");
-    error.name = "AbortError";
-
+  it("uses fallback when message equals error name", () => {
+    const error = newRichError({
+      kind: "Forbidden",
+      layer: "Application",
+    });
     const message = userMessageFromError(error);
-    expect(message).toBe("The operation was canceled.");
+    expect(message).toBe(
+      "We could not complete your request due to an unknown error. Please try again.",
+    );
   });
 
   it("falls back to the raw message when not JSON-like", () => {

@@ -125,14 +125,14 @@ export const createItem = async (
     const data = await doSomething(formData);
     return ok(data);
   } catch (e) {
-    return err(e as Error); // user-facing message derived from toolkit error metadata
+    return err(e as Error); // serializable ActionError (includes i18n/code when RichError)
   }
 };
 ```
 
-- `err(error)` – accepts `Error | ActionError | string` and returns `{ ok: false, error }` with a user-friendly message derived from `@o3osatoshi/toolkit` errors (`kind`, `reason`, `hint`, `impact` are considered). Falls back to a generic safe message.
+- `err(error)` – accepts `Error | ActionError | string` and returns `{ ok: false, error }`. When given `RichError`, it preserves `code`, `i18n`, `kind`, and `layer` for presentation-layer localization/branching.
 - `ok(data)` – wraps success payload as `{ ok: true, data }`.
-- `userMessageFromError(error)` – converts an `Error` (ideally produced by `newRichError`) into user-facing copy, using kind-based defaults and any structured details.
+- `userMessageFromError(error)` – returns a fallback display string from `details` / plain message when i18n lookup is unavailable.
 
 ## Notes
 

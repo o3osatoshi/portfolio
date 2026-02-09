@@ -5,7 +5,8 @@
   "Common": {
     "errorWithMessage": "Error: {message}",
     "notAvailable": "—",
-    "toggle": "Toggle"
+    "toggle": "Toggle",
+    "unknownError": "Unknown error"
   },
   "Home": {
     "header": {
@@ -580,5 +581,21 @@
     "fallback": "CN",
     "signIn": "Sign in",
     "signOut": "Sign out"
+  },
+  "errors": {
+    "application": {
+      "conflict": "Your request conflicted with existing data. Please retry.",
+      "forbidden": "You do not have permission to perform this action.",
+      "internal": "An unexpected error occurred. Please try again later.",
+      "not_found": "The requested resource was not found.",
+      "rate_limit": "Too many requests. Please wait and try again.",
+      "timeout": "The operation timed out. Please try again.",
+      "unauthorized": "Authentication is required. Please sign in.",
+      "unavailable": "The service is currently unavailable. Please try again later.",
+      "validation": "Some input values are invalid. Please review and try again."
+    },
+    "transport": {
+      "deserialize_failed": "Failed to decode the server error response."
+    }
   }
 }

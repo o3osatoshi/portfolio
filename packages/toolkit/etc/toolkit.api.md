@@ -14,6 +14,10 @@ export type ActionData<TBase extends UnknownRecord = UnknownRecord> = null | TBa
 
 // @public
 export type ActionError = {
+    code?: string | undefined;
+    i18n?: RichErrorI18n | undefined;
+    kind?: Kind | undefined;
+    layer?: Layer | undefined;
     message: string;
     name: string;
 };
@@ -494,7 +498,7 @@ export function userMessageFromError(error: Error): string;
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:1170:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:1175:5 - (ae-forgotten-export) The symbol "ZodIssue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

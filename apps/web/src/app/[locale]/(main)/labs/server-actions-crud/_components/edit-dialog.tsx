@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { updateTransaction } from "@/actions/update-transaction";
 import type { Transaction } from "@/server/get-transactions";
+import { resolveLocalizedErrorMessage } from "@/utils/error-message";
 import { updateTransactionSchema } from "@/utils/validation";
 import type { ActionState } from "@o3osatoshi/toolkit";
 import { Button, FormInput, Message } from "@o3osatoshi/ui";
@@ -27,6 +28,8 @@ interface Props {
 
 export default function EditDialog({ transaction }: Props) {
   const t = useTranslations("LabsServerCrud");
+  const tCommon = useTranslations("Common");
+  const tError = useTranslations();
   const [state, dispatch, isPending] = useActionState<
     ActionState | undefined,
     FormData
@@ -56,6 +59,14 @@ export default function EditDialog({ transaction }: Props) {
     }
     await handleSubmit(() => {})();
   };
+
+  const actionErrorMessage =
+    state?.ok === false
+      ? resolveLocalizedErrorMessage(state.error, {
+          fallbackMessage: tCommon("unknownError"),
+          t: tError,
+        })
+      : undefined;
 
   return (
     <Dialog>
@@ -145,9 +156,9 @@ export default function EditDialog({ transaction }: Props) {
           </div>
           <DialogFooter>
             <div className="flex flex-col items-end gap-2">
-              {state?.ok === false && (
-                <Message variant="destructive">{state.error.message}</Message>
-              )}
+              {actionErrorMessage ? (
+                <Message variant="destructive">{actionErrorMessage}</Message>
+              ) : null}
               <Button
                 className="w-fit"
                 disabled={Object.keys(errors).length > 0 || isPending}
