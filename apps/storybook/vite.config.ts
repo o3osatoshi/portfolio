@@ -20,6 +20,10 @@ export default storybookTestPreset({
     coverage: {
       exclude: [".storybook/**", "vite.config.ts"],
     },
+    // Storybook browser tests can occasionally fail to dynamically import stories
+    // under heavy CI load. Running files serially improves stability.
+    fileParallelism: false,
+    maxWorkers: 1,
     projects: [
       {
         plugins: [
