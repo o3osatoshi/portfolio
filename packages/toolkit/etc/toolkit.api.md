@@ -118,12 +118,6 @@ export type ErrorHttpResponse = {
 };
 
 // @public
-export type ErrorNameParts = {
-    kind?: Kind;
-    layer?: Layer;
-};
-
-// @public
 export type ErrorStatusCode = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
 
 // @public
@@ -325,9 +319,6 @@ export function normalizeBaseUrl(baseUrl: string): string;
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 
 // @public
-export function parseErrorName(name: string | undefined): ErrorNameParts;
-
-// @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
@@ -348,18 +339,6 @@ export type ResolvedAbortSignal = {
     cleanup: () => void;
     signal?: AbortSignal | undefined;
 };
-
-// @public
-export function resolveErrorInfo(error: unknown): {
-    kind?: Kind;
-    layer?: Layer;
-};
-
-// @public
-export function resolveErrorKind(error: unknown): Kind | undefined;
-
-// @public
-export function resolveErrorLayer(error: unknown): Layer | undefined;
 
 // @public
 export function resolveOperationalFromKind(kind: Kind): boolean;
@@ -466,7 +445,7 @@ export function summarizeZodError(err: ZodError): string;
 export function summarizeZodIssue(issue: ZodIssue): string;
 
 // @public
-export function toHttpErrorResponse(error: Error, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
+export function toHttpErrorResponse(error: unknown, status?: ErrorStatusCode, options?: SerializeOptions): ErrorHttpResponse;
 
 // @public
 export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;

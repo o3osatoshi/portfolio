@@ -5,7 +5,6 @@ import type { JsonObject } from "../types";
 import {
   isRichError,
   newRichError,
-  resolveErrorInfo,
   resolveOperationalFromKind,
   type RichError,
 } from "./error";
@@ -379,7 +378,6 @@ function serializeError(
   const includeStack =
     opts.includeStack ?? process.env["NODE_ENV"] === "development";
   const depth = Math.max(0, opts.depth ?? 2);
-  const info = resolveErrorInfo(error);
 
   return {
     name: error.name,
@@ -387,8 +385,6 @@ function serializeError(
       depth: depth - 1,
       includeStack,
     }),
-    kind: info.kind,
-    layer: info.layer,
     message: error.message,
     stack: includeStack ? error.stack : undefined,
   };

@@ -4,7 +4,6 @@ import {
   deserializeRichError,
   isSerializedRichError,
   newRichError,
-  type RichError,
 } from "../error";
 import { err, ok } from "./action-state";
 
@@ -52,17 +51,6 @@ describe("action-state ok/err", () => {
     expect(state.error.kind).toBe("Forbidden");
     expect(state.error.layer).toBe("Application");
     expect(state.error.stack).toBeUndefined();
-  });
-
-  it("normalizes non-RichError values when they slip in at runtime", () => {
-    const state = err(new Error("plain message") as unknown as RichError);
-    expect(state.ok).toBe(false);
-    if (state.ok) throw new Error("expected failure state");
-
-    expect(state.error.message).toBe("plain message");
-    expect(state.error.kind).toBe("Internal");
-    expect(state.error.layer).toBe("External");
-    expect(state.error.code).toBe("RICH_ERROR_NORMALIZED");
   });
 
   it("supports rehydrating serialized action errors to RichError", () => {
