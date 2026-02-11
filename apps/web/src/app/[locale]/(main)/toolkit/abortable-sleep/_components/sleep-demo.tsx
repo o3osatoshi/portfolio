@@ -79,7 +79,6 @@ export default function SleepDemoCard() {
     } else {
       const isSleepAborted = result.error.code === "SLEEP_ABORTED";
 
-      const status = isSleepAborted ? "canceled" : "error";
       const message = interpretErrorMessage(result.error, {
         fallback: isSleepAborted
           ? {
@@ -93,7 +92,7 @@ export default function SleepDemoCard() {
         t: tError,
       });
 
-      setStatus(status);
+      setStatus(isSleepAborted ? "canceled" : "error");
       setErrorMessage(message);
     }
 
