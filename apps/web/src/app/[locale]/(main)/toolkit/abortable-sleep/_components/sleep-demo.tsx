@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { sleep } from "@o3osatoshi/toolkit";
+import { interpretErrorMessage, sleep } from "@o3osatoshi/toolkit";
 import {
   Button,
   Card,
@@ -20,7 +20,7 @@ const DURATION_MS = 3000;
 
 export default function SleepDemoCard() {
   const t = useTranslations("ToolkitAbortableSleep");
-  const tCommon = useTranslations("Common");
+  const tError = useTranslations();
   const cardKey = "sections.demo.card";
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [elapsedMs, setElapsedMs] = useState(0);
@@ -77,20 +77,23 @@ export default function SleepDemoCard() {
     if (result.isOk()) {
       setStatus("completed");
     } else {
-      const error = result.error;
-      if (
-        error instanceof Error &&
-        error.name === "InfrastructureCanceledError"
-      ) {
-        setStatus("canceled");
-        setErrorMessage(error.message);
-      } else if (error instanceof Error) {
-        setStatus("error");
-        setErrorMessage(error.message);
-      } else {
-        setStatus("error");
-        setErrorMessage(String(error));
-      }
+      const isSleepAborted = result.error.code === "SLEEP_ABORTED";
+
+      const message = interpretErrorMessage(result.error, {
+        fallback: isSleepAborted
+          ? {
+              i18n: {
+                key: "ToolkitAbortableSleep.sections.demo.card.errors.sleepAborted",
+              },
+            }
+          : {
+              i18n: { key: "Common.unknownError" },
+            },
+        t: tError,
+      });
+
+      setStatus(isSleepAborted ? "canceled" : "error");
+      setErrorMessage(message);
     }
 
     clearTicker();
@@ -100,7 +103,7 @@ export default function SleepDemoCard() {
     });
     abortControllerRef.current = null;
     startedAtRef.current = null;
-  }, [clearTicker, reasonRestarted, startTicker, status]);
+  }, [clearTicker, reasonRestarted, startTicker, status, tError]);
 
   const handleCancel = useCallback(() => {
     if (status !== "running") return;
@@ -151,9 +154,7 @@ export default function SleepDemoCard() {
         </dl>
 
         {errorMessage ? (
-          <Message variant="destructive">
-            {tCommon("errorWithMessage", { message: errorMessage })}
-          </Message>
+          <Message variant="destructive">{errorMessage}</Message>
         ) : null}
 
         <div className="flex flex-wrap gap-2">

@@ -20,15 +20,12 @@ describe("utils/resolve-error-message", () => {
   });
 
   it("returns translated message when i18n key exists", async () => {
-    const tCommon = vi.fn((key: string) => `common:${key}`);
-    const tError = vi.fn(
+    const t = vi.fn(
       (key: string, values?: Record<string, Date | number | string>) =>
         `${key}:${String(values?.["resource"])}`,
     );
 
-    h.getTranslationsMock
-      .mockResolvedValueOnce(tCommon)
-      .mockResolvedValueOnce(tError);
+    h.getTranslationsMock.mockResolvedValueOnce(t);
 
     const error: SerializedRichError = {
       name: "ApplicationForbiddenError",
@@ -44,26 +41,17 @@ describe("utils/resolve-error-message", () => {
 
     const message = await resolveErrorMessage(error, "ja");
 
-    expect(h.getTranslationsMock).toHaveBeenNthCalledWith(1, {
-      namespace: "Common",
-      locale: "ja",
-    });
-    expect(h.getTranslationsMock).toHaveBeenNthCalledWith(2, {
-      locale: "ja",
-    });
-    expect(tError).toHaveBeenCalledWith("errors.application.forbidden", {
+    expect(h.getTranslationsMock).toHaveBeenCalledTimes(1);
+    expect(h.getTranslationsMock).toHaveBeenCalledWith({ locale: "ja" });
+    expect(t).toHaveBeenCalledWith("errors.application.forbidden", {
       resource: "transaction",
     });
     expect(message).toBe("errors.application.forbidden:transaction");
   });
 
-  it("falls back to Common.unknownError when i18n is missing", async () => {
-    const tCommon = vi.fn((key: string) => `common:${key}`);
-    const tError = vi.fn();
-
-    h.getTranslationsMock
-      .mockResolvedValueOnce(tCommon)
-      .mockResolvedValueOnce(tError);
+  it("returns Unknown error when i18n is missing and no fallback exists", async () => {
+    const t = vi.fn();
+    h.getTranslationsMock.mockResolvedValueOnce(t);
 
     const error: SerializedRichError = {
       name: "ApplicationInternalError",
@@ -75,20 +63,19 @@ describe("utils/resolve-error-message", () => {
 
     const message = await resolveErrorMessage(error, "en");
 
-    expect(tCommon).toHaveBeenCalledWith("unknownError");
-    expect(tError).not.toHaveBeenCalled();
-    expect(message).toBe("common:unknownError");
+    expect(t).not.toHaveBeenCalled();
+    expect(message).toBe("Unknown error");
   });
 
-  it("falls back to Common.unknownError when translation throws", async () => {
-    const tCommon = vi.fn((key: string) => `common:${key}`);
-    const tError = vi.fn(() => {
-      throw new Error("translation missing");
+  it("falls back to fallback.i18n when primary translation throws", async () => {
+    const t = vi.fn((key: string) => {
+      if (key === "errors.application.not_found") {
+        throw new Error("translation missing");
+      }
+      return `translated:${key}`;
     });
 
-    h.getTranslationsMock
-      .mockResolvedValueOnce(tCommon)
-      .mockResolvedValueOnce(tError);
+    h.getTranslationsMock.mockResolvedValueOnce(t);
 
     const error: SerializedRichError = {
       name: "ApplicationNotFoundError",
@@ -101,9 +88,74 @@ describe("utils/resolve-error-message", () => {
       message: "not found",
     };
 
-    const message = await resolveErrorMessage(error, "ja");
+    const message = await resolveErrorMessage(error, "ja", {
+      fallback: {
+        i18n: { key: "errors.custom.unknown" },
+      },
+    });
 
-    expect(tCommon).toHaveBeenCalledWith("unknownError");
-    expect(message).toBe("common:unknownError");
+    expect(t).toHaveBeenNthCalledWith(
+      1,
+      "errors.application.not_found",
+      undefined,
+    );
+    expect(t).toHaveBeenNthCalledWith(2, "errors.custom.unknown", undefined);
+    expect(message).toBe("translated:errors.custom.unknown");
+  });
+
+  it("returns fallback.message when both primary and fallback.i18n translations fail", async () => {
+    const t = vi.fn(() => {
+      throw new Error("translation missing");
+    });
+
+    h.getTranslationsMock.mockResolvedValueOnce(t);
+
+    const error: SerializedRichError = {
+      name: "ApplicationForbiddenError",
+      i18n: {
+        key: "errors.application.forbidden",
+      },
+      isOperational: true,
+      kind: "Forbidden",
+      layer: "Application",
+      message: "forbidden",
+    };
+
+    const message = await resolveErrorMessage(error, "ja", {
+      fallback: {
+        i18n: { key: "errors.custom.unknown" },
+        message: "custom:unknown",
+      },
+    });
+
+    expect(t).toHaveBeenNthCalledWith(
+      1,
+      "errors.application.forbidden",
+      undefined,
+    );
+    expect(t).toHaveBeenNthCalledWith(2, "errors.custom.unknown", undefined);
+    expect(message).toBe("custom:unknown");
+  });
+
+  it("returns fallback.message without translation when only message fallback is provided", async () => {
+    const t = vi.fn();
+    h.getTranslationsMock.mockResolvedValueOnce(t);
+
+    const error: SerializedRichError = {
+      name: "ApplicationInternalError",
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
+      message: "internal details",
+    };
+
+    const message = await resolveErrorMessage(error, "en", {
+      fallback: {
+        message: "custom:unknown",
+      },
+    });
+
+    expect(t).not.toHaveBeenCalled();
+    expect(message).toBe("custom:unknown");
   });
 });

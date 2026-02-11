@@ -1,18 +1,25 @@
 import { getTranslations } from "next-intl/server";
 
-import type { RichError, SerializedRichError } from "@o3osatoshi/toolkit";
+import {
+  type ErrorMessageFallback,
+  interpretErrorMessage,
+  type RichError,
+  type SerializedRichError,
+} from "@o3osatoshi/toolkit";
 
-import { interpretErrorMessage } from "./error-message";
+export type ResolveErrorMessageOptions = {
+  fallback?: ErrorMessageFallback | undefined;
+};
 
 export async function resolveErrorMessage(
   error: RichError | SerializedRichError,
   locale: string,
+  options: ResolveErrorMessageOptions = {},
 ): Promise<string> {
-  const tCommon = await getTranslations({ namespace: "Common", locale });
-  const tError = await getTranslations({ locale });
+  const t = await getTranslations({ locale });
 
   return interpretErrorMessage(error, {
-    fallbackMessage: tCommon("unknownError"),
-    t: tError,
+    fallback: options.fallback,
+    t,
   });
 }

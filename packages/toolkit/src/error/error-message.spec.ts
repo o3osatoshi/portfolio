@@ -1,14 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  newRichError,
-  type SerializedRichError,
-  serializeRichError,
-} from "@o3osatoshi/toolkit";
-
+import { newRichError } from "./error";
 import { interpretErrorMessage } from "./error-message";
+import type { SerializedRichError } from "./error-serializer";
+import { serializeRichError } from "./error-serializer";
 
-describe("utils/error-message", () => {
+describe("interpretErrorMessage", () => {
   it("uses SerializedRichError i18n key when present", () => {
     const error: SerializedRichError = {
       name: "ApplicationForbiddenError",
@@ -23,7 +20,9 @@ describe("utils/error-message", () => {
     };
 
     const message = interpretErrorMessage(error, {
-      fallbackMessage: "unknown",
+      fallback: {
+        message: "unknown",
+      },
       t: (key, values) => `${key}:${String(values?.["resource"])}`,
     });
 
@@ -44,7 +43,9 @@ describe("utils/error-message", () => {
     );
 
     const message = interpretErrorMessage(error, {
-      fallbackMessage: "unknown",
+      fallback: {
+        message: "unknown",
+      },
       t: (key) => key,
     });
 
@@ -62,7 +63,9 @@ describe("utils/error-message", () => {
     });
 
     const message = interpretErrorMessage(error, {
-      fallbackMessage: "unknown",
+      fallback: {
+        message: "unknown",
+      },
       t: (key) => key,
     });
 
@@ -83,14 +86,16 @@ describe("utils/error-message", () => {
     };
 
     const message = interpretErrorMessage(error, {
-      fallbackMessage: "unknown",
+      fallback: {
+        message: "unknown",
+      },
       t: (key, values) => `${key}:${String(values?.["retriable"])}`,
     });
 
     expect(message).toBe("errors.integration.timeout:false");
   });
 
-  it("falls back to fallbackMessage when translation fails", () => {
+  it("falls back to fallback.i18n when primary translation fails", () => {
     const error: SerializedRichError = {
       name: "ApplicationNotFoundError",
       i18n: {
@@ -103,16 +108,23 @@ describe("utils/error-message", () => {
     };
 
     const message = interpretErrorMessage(error, {
-      fallbackMessage: "unknown",
-      t: () => {
-        throw new Error("missing translation");
+      fallback: {
+        i18n: {
+          key: "Common.unknownError",
+        },
+      },
+      t: (key) => {
+        if (key === "errors.application.not_found") {
+          throw new Error("missing translation");
+        }
+        return key;
       },
     });
 
-    expect(message).toBe("unknown");
+    expect(message).toBe("Common.unknownError");
   });
 
-  it("falls back to fallbackMessage when i18n is missing", () => {
+  it("falls back to fallback.i18n when i18n is missing", () => {
     const error: SerializedRichError = {
       name: "ApplicationInternalError",
       isOperational: false,
@@ -122,10 +134,56 @@ describe("utils/error-message", () => {
     };
 
     const message = interpretErrorMessage(error, {
-      fallbackMessage: "unknown",
-      t: () => "translated",
+      fallback: {
+        i18n: {
+          key: "Common.unknownError",
+        },
+      },
+      t: (key) => key,
+    });
+
+    expect(message).toBe("Common.unknownError");
+  });
+
+  it("falls back to fallback.message when fallback.i18n translation also fails", () => {
+    const error: SerializedRichError = {
+      name: "ApplicationInternalError",
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
+      message: "internal details",
+    };
+
+    const message = interpretErrorMessage(error, {
+      fallback: {
+        i18n: {
+          key: "Common.unknownError",
+        },
+        message: "unknown",
+      },
+      t: () => {
+        throw new Error("missing translation");
+      },
     });
 
     expect(message).toBe("unknown");
+  });
+
+  it("returns hardcoded default when no fallback is provided", () => {
+    const error: SerializedRichError = {
+      name: "ApplicationInternalError",
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
+      message: "internal details",
+    };
+
+    const message = interpretErrorMessage(error, {
+      t: () => {
+        throw new Error("missing translation");
+      },
+    });
+
+    expect(message).toBe("Unknown error");
   });
 });

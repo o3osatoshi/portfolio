@@ -118,6 +118,15 @@ export type ErrorHttpResponse = {
 };
 
 // @public
+export type ErrorMessageFallback = {
+    i18n?: RichErrorI18n | undefined;
+    message?: string | undefined;
+};
+
+// @public
+export type ErrorMessageTranslator = (key: string, values?: Record<string, Date | number | string>) => string;
+
+// @public
 export type ErrorStatusCode = 400 | 401 | 403 | 404 | 405 | 408 | 409 | 422 | 429 | 500 | 502 | 503 | 504;
 
 // @public
@@ -188,6 +197,15 @@ export type HttpStatusLike = {
 
 // @public
 export function httpStatusToKind(status: number): HttpStatusKind;
+
+// @public
+export function interpretErrorMessage(error: RichError | SerializedRichError, input: InterpretErrorMessageOptions): string;
+
+// @public
+export type InterpretErrorMessageOptions = {
+    fallback?: ErrorMessageFallback | undefined;
+    t: ErrorMessageTranslator;
+};
 
 // @public
 export function isDeserializableBody(res: Response): boolean;
