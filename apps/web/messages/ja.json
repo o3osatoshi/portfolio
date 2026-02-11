@@ -3,7 +3,6 @@
     "name": "o3osatoshi"
   },
   "Common": {
-    "errorWithMessage": "エラー: {message}",
     "notAvailable": "—",
     "toggle": "切り替え",
     "unknownError": "不明なエラー"
@@ -506,6 +505,9 @@
             "start": "{seconds}秒の sleep を開始"
           },
           "description": "中断可能な待機の進捗と状態変化を確認します。",
+          "errors": {
+            "sleepAborted": "sleep がキャンセルされました。"
+          },
           "labels": {
             "duration": "所要時間",
             "elapsed": "経過",

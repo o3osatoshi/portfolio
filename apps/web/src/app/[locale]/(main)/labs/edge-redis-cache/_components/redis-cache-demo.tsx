@@ -147,9 +147,7 @@ export default function RedisCacheDemoCard() {
         </dl>
 
         {errorMessage ? (
-          <Message variant="destructive">
-            {tCommon("errorWithMessage", { message: errorMessage })}
-          </Message>
+          <Message variant="destructive">{errorMessage}</Message>
         ) : null}
 
         <div className="flex flex-wrap gap-2">

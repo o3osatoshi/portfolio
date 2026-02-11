@@ -3,7 +3,6 @@
     "name": "o3osatoshi"
   },
   "Common": {
-    "errorWithMessage": "Error: {message}",
     "notAvailable": "—",
     "toggle": "Toggle",
     "unknownError": "Unknown error"
@@ -506,6 +505,9 @@
             "start": "Start {seconds}s sleep"
           },
           "description": "Simulate an abortable pause, watch progress, and inspect status transitions.",
+          "errors": {
+            "sleepAborted": "Sleep was canceled."
+          },
           "labels": {
             "duration": "Duration",
             "elapsed": "Elapsed",
