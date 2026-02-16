@@ -27,6 +27,11 @@ import { createRpcClient, createEdgeRpcClient } from "@repo/interface/rpc-client
 - Node.js（Next.js API / Firebase Functions など）: ベースパス `/api`
   - `GET /api/public/healthz` → `{ ok: true }`
   - `GET /api/private/labs/transactions` → `Transaction[]`（認証済みユーザーとして実行）
+  - `GET /api/cli/v1/me` → `{ userId, issuer, subject, scopes }`（CLI Bearer 認証）
+  - `GET /api/cli/v1/transactions`
+  - `POST /api/cli/v1/transactions`
+  - `PATCH /api/cli/v1/transactions/:id`
+  - `DELETE /api/cli/v1/transactions/:id`
 
 - Edge（Cloudflare Workers / Next.js Edge）: ベースパス `/edge`
   - `GET /edge/public/healthz`
@@ -54,9 +59,10 @@ import { env } from "./env";
 
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: env.AUTH_GOOGLE_ID,
-      clientSecret: env.AUTH_GOOGLE_SECRET,
+    oidc: {
+      clientId: env.AUTH_OIDC_CLIENT_ID,
+      clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+      issuer: env.AUTH_OIDC_ISSUER,
     },
   },
   secret: env.AUTH_SECRET,
@@ -82,18 +88,20 @@ const fxQuoteProvider = new ExchangeRateApi({
 });
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    oidc: {
+      clientId: process.env.AUTH_OIDC_CLIENT_ID!,
+      clientSecret: process.env.AUTH_OIDC_CLIENT_SECRET!,
+      issuer: process.env.AUTH_OIDC_ISSUER!,
     },
   },
   prismaClient: prisma,
   secret: process.env.AUTH_SECRET!,
 });
 
-export const { GET, POST } = buildHandler({
+export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   authConfig,
   fxQuoteProvider,
+  resolveCliPrincipal,
   transactionRepo,
 });
 
@@ -104,9 +112,10 @@ import { buildEdgeHandler } from "@repo/interface/http/edge";
 
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    oidc: {
+      clientId: process.env.AUTH_OIDC_CLIENT_ID!,
+      clientSecret: process.env.AUTH_OIDC_CLIENT_SECRET!,
+      issuer: process.env.AUTH_OIDC_ISSUER!,
     },
   },
   secret: process.env.AUTH_SECRET!,
@@ -127,6 +136,9 @@ import { SomeTransactionRepository } from "@your/infra";
 const app = buildApp({
   authConfig: {} as AuthConfig,
   fxQuoteProvider: {} as FxQuoteProvider,
+  resolveCliPrincipal: () => {
+    throw new Error("resolveCliPrincipal is required");
+  },
   transactionRepo: new SomeTransactionRepository(),
 });
 export const api = onRequest(createExpressRequestHandler(app));
@@ -161,7 +173,7 @@ pnpm -C packages/interface typecheck
 ```
 
 ## Extending the runtime dependencies
-The Node HTTP app expects a small `Deps` object. Delivery layers should inject an Auth.js config and a `TransactionRepository` (from `@repo/domain`):
+The Node HTTP app expects a small `Deps` object. Delivery layers should inject an Auth.js config, CLI principal resolver, and a `TransactionRepository` (from `@repo/domain`):
 
 ```ts
 import { createAuthConfig } from "@repo/auth";
@@ -170,9 +182,18 @@ import type { TransactionRepository } from "@repo/domain";
 
 const deps: Deps = {
   authConfig: createAuthConfig({
-    providers: { google: { clientId: "...", clientSecret: "..." } },
+    providers: {
+      oidc: {
+        clientId: "...",
+        clientSecret: "...",
+        issuer: "https://example.auth0.com",
+      },
+    },
     secret: "...",
   }),
+  resolveCliPrincipal: () => {
+    throw new Error("inject from @repo/auth#createCliPrincipalResolver");
+  },
   transactionRepo: myTransactionRepo as TransactionRepository,
 };
 
