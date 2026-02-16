@@ -1,4 +1,4 @@
-export type AuthProviderId = "google";
+export type AuthProviderId = "oidc";
 
 export type SignInOptions = {
   redirectTo?: string;

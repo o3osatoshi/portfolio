@@ -15,8 +15,9 @@ Hono + Auth.js configuration and helpers for the monorepo. This package exposes 
   - `@auth/prisma-adapter` (only if you supply a Prisma client)
 - Environment variables (runtime for apps):
   - `AUTH_SECRET`
-  - `AUTH_GOOGLE_ID`
-  - `AUTH_GOOGLE_SECRET`
+  - `AUTH_OIDC_CLIENT_ID`
+  - `AUTH_OIDC_CLIENT_SECRET`
+  - `AUTH_OIDC_ISSUER`
 
 Notes:
 - Next.js loads runtime envs from `apps/web/.env.local`.
@@ -52,18 +53,20 @@ const fxQuoteProvider = new ExchangeRateApi({
 
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    oidc: {
+      clientId: process.env.AUTH_OIDC_CLIENT_ID!,
+      clientSecret: process.env.AUTH_OIDC_CLIENT_SECRET!,
+      issuer: process.env.AUTH_OIDC_ISSUER!,
     },
   },
   prismaClient: prisma,
   secret: process.env.AUTH_SECRET!,
 });
 
-export const { GET, POST } = buildHandler({
+export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   authConfig,
   fxQuoteProvider,
+  resolveCliPrincipal,
   transactionRepo,
 });
 ```
@@ -79,9 +82,10 @@ export const runtime = "edge";
 
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    oidc: {
+      clientId: process.env.AUTH_OIDC_CLIENT_ID!,
+      clientSecret: process.env.AUTH_OIDC_CLIENT_SECRET!,
+      issuer: process.env.AUTH_OIDC_ISSUER!,
     },
   },
   secret: process.env.AUTH_SECRET!,
@@ -101,7 +105,7 @@ function App({ children }: { children: React.ReactNode }) {
 
 function Menu() {
   const user = useUser();
-  if (!user) return <button onClick={() => signIn("google", { redirectTo: "/" })}>Sign in</button>;
+  if (!user) return <button onClick={() => signIn("oidc", { redirectTo: "/" })}>Sign in</button>;
   return <button onClick={() => signOut()}>Sign out</button>;
 }
 ```

@@ -1,9 +1,14 @@
 import type { NextAuthConfig } from "next-auth";
-import Google from "next-auth/providers/google";
+import Auth0 from "next-auth/providers/auth0";
 
 // Shared NextAuth configuration (Edge-safe: no DB/adapter access here)
 export const authConfig: NextAuthConfig = {
-  providers: [Google],
+  providers: [
+    Auth0({
+      id: "oidc",
+      allowDangerousEmailAccountLinking: true,
+    }),
+  ],
   callbacks: {
     async jwt({ token, user }) {
       if (user !== undefined) {
