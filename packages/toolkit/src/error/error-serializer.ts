@@ -9,6 +9,7 @@ import {
   type RichError,
 } from "./error";
 import { coerceErrorMessage, extractErrorName } from "./error-attributes";
+import type { ErrorConstructor } from "./error-constructor";
 import {
   type Layer,
   type SerializedCause,
@@ -253,12 +254,8 @@ export function tryDeserializeRichError(
 
 function buildError(message: string, cause: unknown): Error {
   try {
-    return new (
-      Error as unknown as new (
-        m?: string,
-        o?: { cause?: unknown },
-      ) => Error
-    )(message, cause !== undefined ? { cause } : undefined);
+    const ErrorCtor = Error as ErrorConstructor;
+    return new ErrorCtor(message, cause !== undefined ? { cause } : undefined);
   } catch {
     const error = new Error(message);
     if (cause !== undefined) {

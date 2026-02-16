@@ -1,6 +1,7 @@
 import type { CacheStore } from "@repo/domain";
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
@@ -16,6 +17,10 @@ const testError = (reason: string) =>
     isOperational: false,
     kind: "Internal",
   });
+
+const decodedValueSchema = z.object({
+  value: z.string(),
+});
 
 const buildResponse = <T>(data: T, attempts = 1, ok = true) =>
   okAsync({
@@ -90,9 +95,9 @@ describe("integrations/http withCache", () => {
       store: cacheStore,
     });
 
-    // @ts-expect-error
     const result = await client({
       cache: { getKey: () => "cache:key" },
+      decode: { schema: decodedValueSchema },
       url: "https://example.test",
     });
 
@@ -102,6 +107,38 @@ describe("integrations/http withCache", () => {
     expect(result.value.cache?.hit).toBe(true);
     expect(result.value.cache?.key).toBe("cache:key");
     expect(result.value.data).toEqual({ value: "cached" });
+  });
+
+  it("treats schema-mismatched cached data as miss and refetches", async () => {
+    const cacheStore: CacheStore = {
+      // @ts-expect-error
+      get: vi.fn(() => okAsync({ value: 123 })),
+      // @ts-expect-error
+      set: vi.fn(() => okAsync("OK")),
+    };
+    const next = vi.fn(() => buildResponse({ value: "fresh" }));
+    // @ts-expect-error
+    const client = withCache(next, {
+      store: cacheStore,
+    });
+
+    const result = await client({
+      cache: { getKey: () => "cache:key" },
+      decode: { schema: decodedValueSchema },
+      url: "https://example.test",
+    });
+
+    expect(result.isOk()).toBe(true);
+    if (!result.isOk()) return;
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(cacheStore.set).toHaveBeenCalledWith(
+      "cache:key",
+      { value: "fresh" },
+      { ttlMs: undefined },
+    );
+    expect(result.value.cache?.hit).toBe(false);
+    expect(result.value.data).toEqual({ value: "fresh" });
   });
 
   it("writes to cache on cache miss", async () => {

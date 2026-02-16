@@ -58,18 +58,20 @@ export function createStorePingFunction(
                 message: "Store ping completed",
                 title: "Store Ping",
               })
-              .map(() => result),
-          );
+              .map(() => null),
+          ).map(() => result);
         })
         .orElse((error) => {
           return stepRunner("store-ping-notify-failure", () =>
-            deps.notifier.notify({
-              error: { message: error.message ?? "Unknown error" },
-              fields,
-              level: "error",
-              message: "Store ping failed",
-              title: "Store Ping",
-            }),
+            deps.notifier
+              .notify({
+                error: { message: error.message ?? "Unknown error" },
+                fields,
+                level: "error",
+                message: "Store ping failed",
+                title: "Store Ping",
+              })
+              .map(() => null),
           ).andThen(() => err(error));
         })
         .match(

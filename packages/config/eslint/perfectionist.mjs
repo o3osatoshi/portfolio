@@ -25,7 +25,32 @@ export default [
     },
   },
 
-  // 3. Override rules in another block (no "plugins" here)
+  // 3. Guardrails for unsafe type assertions in production code
+  {
+    files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
+    ignores: [
+      "**/*.spec.{js,jsx,ts,tsx,mjs,cjs,mts,cts}",
+      "**/*.stories.{js,jsx,ts,tsx,mjs,cjs,mts,cts}",
+      "**/generated/**",
+    ],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          message:
+            "Avoid `as any`; prefer specific types, type guards, or runtime parsing.",
+          selector: "TSAsExpression[typeAnnotation.type='TSAnyKeyword']",
+        },
+        {
+          message:
+            "Avoid double type assertions (`as unknown as T`); prefer type guards or parsing.",
+          selector: "TSAsExpression[expression.type='TSAsExpression']",
+        },
+      ],
+    },
+  },
+
+  // 4. Override rules in another block (no "plugins" here)
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"],
     rules: {
@@ -81,7 +106,7 @@ export default [
     },
   },
 
-  // 4. JSX-specific sorting
+  // 5. JSX-specific sorting
   {
     files: ["**/*.{jsx,tsx}"],
     rules: {

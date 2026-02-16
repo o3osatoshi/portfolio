@@ -7,7 +7,7 @@ import { err } from "neverthrow";
 
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
-import type { OverridableSlackMessage, SlackClient } from "./client";
+import type { SlackClient } from "./client";
 import type { SlackBlock, SlackMessage, SlackTextObject } from "./types";
 
 export type SlackNotifierConfig = {
@@ -97,7 +97,7 @@ function buildMessage(
     text: buildFallbackText(payload),
   };
 
-  return overrideMessage(message, extractOverridableMessage(payload));
+  return message;
 }
 
 function buildSlackTextObjects(
@@ -117,29 +117,6 @@ function buildSlackTextObjects(
   }
 
   return fields.map((entry) => toSlackTextObject(entry.label, entry.value));
-}
-
-function extractOverridableMessage(
-  payload: NotificationPayload,
-): OverridableSlackMessage | undefined {
-  const overrides = payload.overrides?.["slack"];
-  if (!overrides || typeof overrides !== "object") return undefined;
-  return overrides as OverridableSlackMessage;
-}
-
-function overrideMessage(
-  message: SlackMessage,
-  prioritizedMessage?: OverridableSlackMessage,
-): SlackMessage {
-  if (!prioritizedMessage) return message;
-  const blocks = prioritizedMessage.blocks ?? message.blocks;
-  return {
-    ...message,
-    ...prioritizedMessage,
-    blocks,
-    channel: prioritizedMessage.channel ?? message.channel,
-    text: prioritizedMessage.text ?? message.text,
-  };
 }
 
 function toSlackTextObject(label: string, value: string): SlackTextObject {

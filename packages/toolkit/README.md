@@ -173,6 +173,7 @@ export async function createItem(
 - `newZodError(options)`
 - `parseWith(schema, context)`
 - `ok(data)` / `err(error)` / `ActionState`
+- `unwrapResultAsync(result)`
 
 ## Quality
 

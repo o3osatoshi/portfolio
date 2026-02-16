@@ -47,7 +47,7 @@ export function isPositiveDecimal(value: DecimalString): boolean {
  */
 export function newDecimal(v: unknown): Result<DecimalString, RichError> {
   try {
-    const d = new DecimalJs(v as unknown as DecimalJs.Value);
+    const d = new DecimalJs(v as DecimalJs.Value);
     if (!d.isFinite()) {
       return err(
         newDomainError({

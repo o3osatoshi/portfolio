@@ -1,20 +1,6 @@
-import type { Result, ResultAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "./error";
-
-/**
- * Internal Result type standardized on {@link RichError}.
- *
- * @public
- */
-export type RichResult<T> = Result<T, RichError>;
-
-/**
- * Internal ResultAsync type standardized on {@link RichError}.
- *
- * @public
- */
-export type RichResultAsync<T> = ResultAsync<T, RichError>;
 
 /**
  * Unwrap a ResultAsync into a Promise that throws on Err.
@@ -26,9 +12,14 @@ export type RichResultAsync<T> = ResultAsync<T, RichError>;
  * `ResultAsync` whenever possible. Use only at integration boundaries that
  * require a Promise that rejects (for example, scheduler step runners).
  *
+ * @typeParam T - Successful value type inside `ResultAsync`.
+ * @typeParam E - Error type extending {@link RichError}. Defaults to `RichError`.
+ * @param result - ResultAsync value to unwrap.
+ * @returns A Promise that resolves with the Ok value or rejects with the Err error.
+ *
  * @public
  */
-export async function unwrapResultAsyncOrThrow<T, E extends Error>(
+export async function unwrapResultAsync<T, E extends RichError = RichError>(
   result: ResultAsync<T, E>,
 ): Promise<T> {
   return result.match(

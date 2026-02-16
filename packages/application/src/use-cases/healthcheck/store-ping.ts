@@ -1,9 +1,11 @@
 import {
   type CacheStore,
   createTransaction,
+  newTransactionId,
+  newUserId,
   type TransactionRepository,
 } from "@repo/domain";
-import { errAsync, okAsync, type ResultAsync } from "neverthrow";
+import { errAsync, okAsync, Result, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
@@ -77,38 +79,56 @@ export class StorePingUseCase {
       type: "BUY",
       userId: this.userId,
     })
-      .asyncAndThen((transactionInput) =>
+      .asyncAndThen((input) =>
         step("store-ping-db-create", () =>
-          this.transactionRepo.create(transactionInput),
+          this.transactionRepo.create(input).map((created) => ({
+            created: {
+              id: `${created.id}`,
+              userId: `${created.userId}`,
+            },
+          })),
         )
-          .andThen((created) =>
+          .andThen(({ created }) =>
             step("store-ping-db-read", () =>
-              this.transactionRepo.findById(created.id).andThen((found) => {
-                if (!found) {
-                  return errAsync(
-                    newApplicationError({
-                      code: applicationErrorCodes.STORE_PING_READBACK_NOT_FOUND,
-                      details: {
-                        action: "StorePing",
-                        reason: "Transaction readback returned no record",
-                      },
-                      i18n: {
-                        key: applicationErrorI18nKeys.NOT_FOUND,
-                      },
-                      isOperational: true,
-                      kind: "NotFound",
-                    }),
-                  );
-                }
-                return okAsync({ created, found });
-              }),
+              newTransactionId(created.id).asyncAndThen((createdId) =>
+                this.transactionRepo.findById(createdId).andThen((found) => {
+                  if (!found) {
+                    return errAsync(
+                      newApplicationError({
+                        code: applicationErrorCodes.STORE_PING_READBACK_NOT_FOUND,
+                        details: {
+                          action: "StorePing",
+                          reason: "Transaction readback returned no record",
+                        },
+                        i18n: {
+                          key: applicationErrorI18nKeys.NOT_FOUND,
+                        },
+                        isOperational: true,
+                        kind: "NotFound",
+                      }),
+                    );
+                  }
+                  return okAsync({
+                    created,
+                    found: {
+                      id: `${found.id}`,
+                    },
+                  });
+                }),
+              ),
             ),
           )
           .andThen(({ created, found }) =>
             step("store-ping-db-delete", () =>
-              this.transactionRepo
-                .delete(created.id, created.userId)
-                .map(() => ({ created, found })),
+              Result.combine([
+                newTransactionId(created.id),
+                newUserId(created.userId),
+              ]).asyncAndThen(([createdId, userId]) =>
+                this.transactionRepo.delete(createdId, userId).map(() => ({
+                  created,
+                  found,
+                })),
+              ),
             ),
           )
           .andThen(({ created, found }) =>

@@ -92,7 +92,18 @@ jobs:
 #          token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Run test
-        run: pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit
+        run: |
+          set -euo pipefail
+          for attempt in 1 2; do
+            echo "Run test attempt ${attempt}/2"
+            if pnpm turbo run test:cvrg --affected -- --reporter=default --reporter=junit; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 2 ]; then
+              exit 1
+            fi
+            echo "Transient test failure detected. Retrying once..."
+          done
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 

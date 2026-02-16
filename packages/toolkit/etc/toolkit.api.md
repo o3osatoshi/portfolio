@@ -403,12 +403,6 @@ export const richErrorI18nSchema: z.ZodObject<{
 }, z.core.$strip>;
 
 // @public
-export type RichResult<T> = Result<T, RichError>;
-
-// @public
-export type RichResultAsync<T> = ResultAsync<T, RichError>;
-
-// @public
 export type SerializedCause = Exclude<SerializedError["cause"], undefined>;
 
 // @public
@@ -479,7 +473,7 @@ export function tryDeserializeRichError(input: unknown): Result<RichError, Deser
 export type UnknownRecord = Record<string, unknown>;
 
 // @public
-export function unwrapResultAsyncOrThrow<T, E extends Error>(result: ResultAsync<T, E>): Promise<T>;
+export function unwrapResultAsync<T, E extends RichError = RichError>(result: ResultAsync<T, E>): Promise<T>;
 
 // @public
 export type UrlRedactorOptions = {
