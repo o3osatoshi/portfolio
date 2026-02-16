@@ -30,8 +30,8 @@ describe("@repo/auth/react helpers", () => {
 
   it("signIn forwards provider and options", async () => {
     h.signInMock.mockResolvedValueOnce("ok");
-    const res = await signIn("google", { redirectTo: "/" });
-    expect(h.signInMock).toHaveBeenCalledWith("google", { redirectTo: "/" });
+    const res = await signIn("oidc", { redirectTo: "/" });
+    expect(h.signInMock).toHaveBeenCalledWith("oidc", { redirectTo: "/" });
     expect(res).toBe("ok");
   });
 
