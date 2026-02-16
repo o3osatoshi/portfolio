@@ -5,6 +5,7 @@ import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 import { env } from "@/env/server";
 import { getWebNodeLogger } from "@/lib/logger/node";
+import { resolveCliPrincipal } from "@/server/resolve-cli-principal";
 
 const store = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
@@ -26,9 +27,10 @@ const fxQuoteProvider = new ExchangeRateApi(
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: env.AUTH_GOOGLE_ID,
-      clientSecret: env.AUTH_GOOGLE_SECRET,
+    oidc: {
+      clientId: env.AUTH_OIDC_CLIENT_ID,
+      clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+      issuer: env.AUTH_OIDC_ISSUER,
     },
   },
   prismaClient: client,
@@ -37,8 +39,9 @@ const authConfig = createAuthConfig({
 
 const transactionRepo = new PrismaTransactionRepository(client);
 
-export const { GET, POST } = buildHandler({
+export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   fxQuoteProvider,
   authConfig,
+  resolveCliPrincipal,
   transactionRepo,
 });
