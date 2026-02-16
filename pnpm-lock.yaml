@@ -530,6 +530,9 @@ importers:
       jsonc-eslint-parser:
         specifier: ^2.4.0
         version: 2.4.1
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

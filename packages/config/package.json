@@ -56,6 +56,9 @@
     "prepublishOnly": "pnpm clean && pnpm typecheck && NODE_ENV=production pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "dependencies": {
+    "zod": "catalog:"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
