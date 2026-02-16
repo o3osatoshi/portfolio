@@ -2,19 +2,28 @@ import type { StepRunner } from "@repo/application";
 import { ResultAsync } from "neverthrow";
 
 import {
+  type JsonValue,
   type RichError,
   toRichError,
-  unwrapResultAsyncOrThrow,
+  unwrapResultAsync,
 } from "@o3osatoshi/toolkit";
 
 type InngestStepRunner = {
-  run: <T>(id: string, fn: () => Promise<T>) => Promise<unknown>;
+  // Inngest serializes step outputs before returning them, so the boundary is
+  // intentionally unknown here and narrowed at the StepRunner contract edge.
+  run: <T extends JsonValue>(
+    id: string,
+    fn: () => Promise<T>,
+  ) => Promise<unknown>;
 };
 
 export function createInngestStepRunner(step: InngestStepRunner): StepRunner {
-  return <T>(id: string, task: () => ResultAsync<T, RichError>) =>
+  return <T extends JsonValue>(
+    id: string,
+    task: () => ResultAsync<T, RichError>,
+  ) =>
     ResultAsync.fromPromise(
-      step.run(id, () => unwrapResultAsyncOrThrow(task())),
+      step.run(id, () => unwrapResultAsync(task())),
       (error) =>
         toRichError(error, {
           details: {
