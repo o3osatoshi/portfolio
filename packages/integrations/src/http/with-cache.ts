@@ -34,7 +34,10 @@ export function withCache(
         : request.cache.serialize;
     const deserialize =
       request.cache?.deserialize === undefined
-        ? (data: unknown) => data as z.infer<S>
+        ? (data: unknown) => {
+            const result = request.decode.schema.safeParse(data);
+            return result.success ? result.data : null;
+          }
         : request.cache.deserialize;
     const shouldCache =
       request.cache?.shouldCache === undefined
