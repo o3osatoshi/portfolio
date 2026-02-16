@@ -1,5 +1,6 @@
 import type { JsonObject } from "../types";
 import { extractErrorMessage, extractErrorName } from "./error-attributes";
+import type { ErrorConstructor } from "./error-constructor";
 import type {
   Kind,
   Layer,
@@ -42,11 +43,8 @@ const RICH_ERROR_BRAND = Symbol.for("@o3osatoshi/rich-error");
 
 const SUPPORTS_ERROR_CAUSE = (() => {
   try {
-    const ctor = Error as unknown as new (
-      m?: string,
-      o?: { cause?: unknown },
-    ) => Error;
-    new ctor("probe", { cause: "probe" });
+    const ErrorCtor = Error as ErrorConstructor;
+    new ErrorCtor("probe", { cause: "probe" });
     return true;
   } catch {
     return false;

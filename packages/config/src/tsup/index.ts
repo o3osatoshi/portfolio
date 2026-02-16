@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { defineConfig, type Options } from "tsup";
+import { z } from "zod";
 
 /**
  * Build-time heuristics used by the presets to infer sensible defaults.
@@ -9,13 +10,12 @@ import { defineConfig, type Options } from "tsup";
 const isCI = !!process.env["CI"];
 const isProd = process.env["NODE_ENV"] === "production" || isCI;
 
-/**
- * Minimal package.json representation used when loading externals.
- */
-interface PackageJson {
-  dependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
-}
+const packageJsonSchema = z
+  .object({
+    dependencies: z.record(z.string(), z.string()).optional(),
+    peerDependencies: z.record(z.string(), z.string()).optional(),
+  })
+  .loose();
 
 /**
  * Creates a tsup configuration preset tailored for browser-facing React bundles.
@@ -130,12 +130,16 @@ function autoExternals(pkgDir = process.cwd()): string[] {
     if (!pkgPath) return [];
 
     const pkgContent = fs.readFileSync(pkgPath, "utf8");
-    const pkg = JSON.parse(pkgContent) as PackageJson;
+    const result = packageJsonSchema.safeParse(JSON.parse(pkgContent));
 
-    const ext = new Set<string>([
-      ...Object.keys(pkg.dependencies ?? {}),
-      ...Object.keys(pkg.peerDependencies ?? {}),
-    ]);
+    const ext = new Set<string>(
+      result.success
+        ? [
+            ...Object.keys(result.data.dependencies ?? {}),
+            ...Object.keys(result.data.peerDependencies ?? {}),
+          ]
+        : [],
+    );
 
     // Common always-externals for UI/libs (avoid double-bundling)
     const commonExternals = ["react", "react-dom", "next"];
