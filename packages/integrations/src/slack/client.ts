@@ -25,8 +25,6 @@ const slackPostMessageResponseSchema: z.ZodType<SlackPostMessageResponse> = z
   })
   .loose();
 
-export type OverridableSlackMessage = Partial<SlackMessage>;
-
 export type SlackClient = {
   postMessage: (
     message: SlackMessage,

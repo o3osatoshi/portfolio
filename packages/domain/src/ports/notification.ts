@@ -9,18 +9,11 @@ export type NotificationField = {
 
 export type NotificationLevel = "error" | "info" | "success" | "warning";
 
-/**
- * Transport-specific overrides keyed by channel name (e.g. "slack", "email").
- * The shape is intentionally loose to avoid leaking vendor details into domain.
- */
-export type NotificationOverrides = Record<string, Record<string, unknown>>;
-
 export type NotificationPayload = {
   error?: { message: string } | undefined;
   fields?: NotificationField[] | undefined;
   level: NotificationLevel;
   message?: string | undefined;
-  overrides?: NotificationOverrides | undefined;
   timestamp?: Date | undefined;
   title: string;
 };

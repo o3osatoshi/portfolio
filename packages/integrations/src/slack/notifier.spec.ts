@@ -66,52 +66,6 @@ describe("integrations/slack createSlackNotifier", () => {
     });
   });
 
-  it("respects Slack-specific overrides", async () => {
-    const postMessageMock = vi.fn(() =>
-      okAsync({
-        ok: true,
-      }),
-    );
-    const notifier = createSlackNotifier({
-      channelId: "C123",
-      client: { postMessage: postMessageMock },
-    });
-
-    const result = await notifier.notify({
-      overrides: {
-        slack: {
-          blocks: [
-            {
-              text: { text: "Override block", type: "mrkdwn" },
-              type: "section",
-            },
-          ],
-          channel: "C_OVERRIDE",
-          text: "Override text",
-        },
-      },
-      level: "info",
-      title: "Store Ping",
-    });
-
-    expect(result.isOk()).toBe(true);
-    if (!result.isOk()) return;
-
-    // @ts-expect-error
-    const message = postMessageMock.mock.calls[0]?.[0] as unknown as {
-      blocks: Array<{ text?: { text: string; type: string }; type: string }>;
-      channel: string;
-      text: string;
-    };
-    expect(message.channel).toBe("C_OVERRIDE");
-    expect(message.text).toBe("Override text");
-    expect(message.blocks).toHaveLength(1);
-    expect(message.blocks[0]).toMatchObject({
-      text: { text: "Override block", type: "mrkdwn" },
-      type: "section",
-    });
-  });
-
   it("wraps client errors as ExternalBadGatewayError", async () => {
     const postMessageMock = vi.fn(() =>
       errAsync(
