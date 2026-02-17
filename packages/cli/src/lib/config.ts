@@ -6,6 +6,7 @@ const envSchema = z.object({
   oidcAudience: z.string().min(1),
   oidcClientId: z.string().min(1),
   oidcIssuer: z.string().min(1),
+  oidcRedirectPort: z.coerce.number().int().min(1).max(65535),
   apiBaseUrl: z.string().url(),
 });
 
@@ -17,6 +18,7 @@ export function getRuntimeConfig(): CliRuntimeConfig {
       process.env["O3O_OIDC_CLIENT_ID"] ?? process.env["AUTH_OIDC_CLIENT_ID"],
     oidcIssuer:
       process.env["O3O_OIDC_ISSUER"] ?? process.env["AUTH_OIDC_ISSUER"],
+    oidcRedirectPort: process.env["O3O_OIDC_REDIRECT_PORT"] ?? "38080",
     apiBaseUrl:
       process.env["O3O_API_BASE_URL"] ??
       process.env["PORTFOLIO_API_BASE_URL"] ??
@@ -35,6 +37,7 @@ export function getRuntimeConfig(): CliRuntimeConfig {
       audience: parsed.data.oidcAudience,
       clientId: parsed.data.oidcClientId,
       issuer: parsed.data.oidcIssuer,
+      redirectPort: parsed.data.oidcRedirectPort,
     },
     apiBaseUrl: parsed.data.apiBaseUrl,
   };
