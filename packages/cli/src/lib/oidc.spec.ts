@@ -7,6 +7,7 @@ const config: OidcConfig = {
   audience: "https://api.o3o.app",
   clientId: "cli-client-id",
   issuer: "https://example.auth0.com",
+  redirectPort: 38080,
 };
 
 describe("lib/oidc", () => {

@@ -7,6 +7,7 @@ export type OidcConfig = {
   audience: string;
   clientId: string;
   issuer: string;
+  redirectPort: number;
 };
 
 export type TokenSet = {

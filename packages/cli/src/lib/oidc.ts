@@ -1,7 +1,6 @@
 import { execFile } from "node:child_process";
 import { createHash, randomBytes } from "node:crypto";
 import { createServer } from "node:http";
-import type { AddressInfo } from "node:net";
 import { promisify } from "node:util";
 
 import { z } from "zod";
@@ -216,6 +215,8 @@ async function loginByPkce(
   config: OidcConfig,
   discovery: z.infer<typeof discoverySchema>,
 ): Promise<TokenSet> {
+  const redirectHost = "127.0.0.1";
+  const redirectUri = `http://${redirectHost}:${config.redirectPort}/callback`;
   const state = randomBytes(16).toString("hex");
   const verifier = randomBytes(48).toString("base64url");
   const challenge = createHash("sha256").update(verifier).digest("base64url");
@@ -228,7 +229,7 @@ async function loginByPkce(
     }, 180000);
 
     server.on("request", (req, res) => {
-      const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+      const base = `http://${redirectHost}:${config.redirectPort}`;
       const url = new URL(req.url ?? "/", base);
       if (url.pathname !== "/callback") {
         res.statusCode = 404;
@@ -254,12 +255,16 @@ async function loginByPkce(
   });
 
   await new Promise<void>((resolve, reject) => {
-    server.listen(0, "127.0.0.1", () => resolve());
-    server.on("error", reject);
+    server.listen(config.redirectPort, redirectHost, () => resolve());
+    server.on("error", (error) => {
+      reject(
+        new Error(
+          `Failed to start PKCE callback server on ${redirectUri}. Ensure the port is free and retry.`,
+          { cause: error },
+        ),
+      );
+    });
   });
-
-  const address = server.address() as AddressInfo;
-  const redirectUri = `http://127.0.0.1:${address.port}/callback`;
 
   const authorizationUrl = new URL(discovery.authorization_endpoint);
   authorizationUrl.searchParams.set("response_type", "code");
