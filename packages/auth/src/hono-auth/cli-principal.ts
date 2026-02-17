@@ -74,7 +74,7 @@ export function createCliPrincipalResolver(
     verifyOidcAccessToken(verifyAccessToken, input.accessToken).andThen(
       (claims) => {
         const scopes = parseScopes(claims.scope);
-        const issuer = claims.iss;
+        const issuer = normalizeIssuer(claims.iss);
         const subject = claims.sub;
 
         return options
@@ -208,4 +208,8 @@ function fetchUserInfo({
         }),
       );
     });
+}
+
+function normalizeIssuer(issuer: string): string {
+  return issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
 }

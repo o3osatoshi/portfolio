@@ -81,7 +81,7 @@ function buildOidcProvider(
   return {
     id: "oidc",
     name: "OIDC",
-    allowDangerousEmailAccountLinking: true,
+    allowDangerousEmailAccountLinking: false,
     authorization: {
       params: {
         scope: config.scope ?? "openid profile email",
@@ -92,10 +92,17 @@ function buildOidcProvider(
     clientSecret: config.clientSecret,
     issuer: config.issuer,
     profile(profile) {
+      const subject = toRequiredNonEmptyString(
+        profile["sub"],
+        "OIDC profile is missing required `sub` claim.",
+      );
+      const email = toOptionalString(profile["email"]);
+      const emailVerified = profile["email_verified"] === true;
+
       return {
-        id: String(profile["sub"] ?? ""),
+        id: subject,
         name: toOptionalString(profile["name"]),
-        email: toOptionalString(profile["email"]),
+        email: emailVerified ? email : null,
         image: toOptionalString(profile["picture"]),
       };
     },
@@ -105,4 +112,14 @@ function buildOidcProvider(
 
 function toOptionalString(input: unknown): null | string {
   return typeof input === "string" ? input : null;
+}
+
+function toRequiredNonEmptyString(
+  input: unknown,
+  errorMessage: string,
+): string {
+  if (typeof input === "string" && input.trim().length > 0) {
+    return input;
+  }
+  throw new Error(errorMessage);
 }

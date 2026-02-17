@@ -20,9 +20,10 @@ describe("hono-auth/cli-principal", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns existing mapped user without calling /userinfo", async () => {
+    const findUserIdByIdentity = vi.fn(() => okAsync("u-1"));
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({
-        iss: "https://example.auth0.com",
+        iss: "https://example.auth0.com/",
         scope: "transactions:read",
         sub: "auth0|123",
       }),
@@ -31,7 +32,7 @@ describe("hono-auth/cli-principal", () => {
     const resolve = createCliPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByIdentity: () => okAsync("u-1"),
+      findUserIdByIdentity,
       issuer: "https://example.auth0.com",
       resolveUserIdByIdentity: () => okAsync("u-new"),
     });
@@ -40,9 +41,14 @@ describe("hono-auth/cli-principal", () => {
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
+      expect(res.value.issuer).toBe("https://example.auth0.com");
       expect(res.value.userId).toBe("u-1");
       expect(res.value.scopes).toEqual(["transactions:read"]);
     }
+    expect(findUserIdByIdentity).toHaveBeenCalledWith({
+      issuer: "https://example.auth0.com",
+      subject: "auth0|123",
+    });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
