@@ -30,9 +30,9 @@ export type OidcAccessTokenVerifierOptions = {
 };
 
 const jwtVerifyFailureSchema = z.object({
+  name: z.string().optional(),
   code: z.string().optional(),
   message: z.string().optional(),
-  name: z.string().optional(),
 });
 
 /**

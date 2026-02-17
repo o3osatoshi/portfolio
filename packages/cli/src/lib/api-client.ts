@@ -83,6 +83,29 @@ export async function updateTransaction(
   });
 }
 
+async function buildRequestErrorMessage(response: Response): Promise<string> {
+  const fallback = response.statusText
+    ? `API request failed (${response.status}): ${response.statusText}`
+    : `API request failed (${response.status}).`;
+  const text = (await response.text()).trim();
+  if (!text) return fallback;
+
+  const parsed = parseApiError(text);
+  if (!parsed) return fallback;
+
+  const reason = parsed.details?.reason ?? parsed.message;
+  if (reason && parsed.code) {
+    return `API request failed (${response.status}): ${reason} (code=${parsed.code})`;
+  }
+  if (reason) {
+    return `API request failed (${response.status}): ${reason}`;
+  }
+  if (parsed.code) {
+    return `API request failed (${response.status}): code=${parsed.code}`;
+  }
+  return fallback;
+}
+
 async function buildUnauthorizedErrorMessage(
   response: Response,
 ): Promise<string> {
@@ -107,38 +130,6 @@ async function buildUnauthorizedErrorMessage(
 
   if (details.length === 0) return fallback;
   return `${fallback} (${details.join(", ")})`;
-}
-
-async function buildRequestErrorMessage(response: Response): Promise<string> {
-  const fallback = response.statusText
-    ? `API request failed (${response.status}): ${response.statusText}`
-    : `API request failed (${response.status}).`;
-  const text = (await response.text()).trim();
-  if (!text) return fallback;
-
-  const parsed = parseApiError(text);
-  if (!parsed) return fallback;
-
-  const reason = parsed.details?.reason ?? parsed.message;
-  if (reason && parsed.code) {
-    return `API request failed (${response.status}): ${reason} (code=${parsed.code})`;
-  }
-  if (reason) {
-    return `API request failed (${response.status}): ${reason}`;
-  }
-  if (parsed.code) {
-    return `API request failed (${response.status}): code=${parsed.code}`;
-  }
-  return fallback;
-}
-
-function parseApiError(text: string): null | z.infer<typeof apiErrorResponseSchema> {
-  try {
-    const parsed = apiErrorResponseSchema.safeParse(JSON.parse(text));
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
-  }
 }
 
 async function ensureAccessToken(): Promise<TokenSet> {
@@ -170,6 +161,15 @@ async function ensureAccessToken(): Promise<TokenSet> {
 
 function nowSeconds() {
   return Math.floor(Date.now() / 1000);
+}
+
+function parseApiError(text: string): null | z.infer<typeof apiErrorResponseSchema> {
+  try {
+    const parsed = apiErrorResponseSchema.safeParse(JSON.parse(text));
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
 }
 
 async function request(path: string, init: RequestInit): Promise<unknown> {
