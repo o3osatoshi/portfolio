@@ -11,6 +11,11 @@ const envSchema = z.object({
 });
 
 export function getRuntimeConfig(): CliRuntimeConfig {
+  const fallbackApiBaseUrl =
+    process.env["NODE_ENV"] === "production"
+      ? undefined
+      : "http://localhost:3000";
+
   const parsed = envSchema.safeParse({
     oidcAudience:
       process.env["O3O_OIDC_AUDIENCE"] ?? process.env["AUTH_OIDC_AUDIENCE"],
@@ -22,7 +27,7 @@ export function getRuntimeConfig(): CliRuntimeConfig {
     apiBaseUrl:
       process.env["O3O_API_BASE_URL"] ??
       process.env["PORTFOLIO_API_BASE_URL"] ??
-      "http://localhost:3000",
+      fallbackApiBaseUrl,
   });
 
   if (!parsed.success) {

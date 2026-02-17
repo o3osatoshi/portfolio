@@ -1,6 +1,10 @@
 import { execFile } from "node:child_process";
 import { createHash, randomBytes } from "node:crypto";
-import { createServer } from "node:http";
+import {
+  createServer,
+  type IncomingMessage,
+  type ServerResponse,
+} from "node:http";
 import { promisify } from "node:util";
 
 import { z } from "zod";
@@ -38,6 +42,8 @@ const deviceTokenErrorSchema = z.object({
 });
 
 export type LoginMode = "auto" | "device" | "pkce";
+// Keep callback wait bounded to avoid dangling local servers in failed login flows.
+const PKCE_CALLBACK_TIMEOUT_MS = 180_000;
 
 export async function loginWithOidc(
   config: OidcConfig,
@@ -223,12 +229,25 @@ async function loginByPkce(
 
   const server = createServer();
 
-  const codePromise = new Promise<string>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error("Timed out waiting for browser callback."));
-    }, 180000);
+  await new Promise<void>((resolve, reject) => {
+    const onError = (error: Error) => {
+      reject(
+        new Error(
+          `Failed to start PKCE callback server on ${redirectUri}. Ensure the port is free and retry.`,
+          { cause: error },
+        ),
+      );
+    };
 
-    server.on("request", (req, res) => {
+    server.once("error", onError);
+    server.listen(config.redirectPort, redirectHost, () => {
+      server.off("error", onError);
+      resolve();
+    });
+  });
+
+  const codePromise = new Promise<string>((resolve, reject) => {
+    const onRequest = (req: IncomingMessage, res: ServerResponse) => {
       const base = `http://${redirectHost}:${config.redirectPort}`;
       const url = new URL(req.url ?? "/", base);
       if (url.pathname !== "/callback") {
@@ -242,28 +261,28 @@ async function loginByPkce(
       if (!code || returnedState !== state) {
         res.statusCode = 400;
         res.end("OAuth callback validation failed.");
-        clearTimeout(timeout);
+        cleanup();
         reject(new Error("OAuth callback validation failed."));
         return;
       }
 
       res.statusCode = 200;
       res.end("Login completed. You can close this tab.");
-      clearTimeout(timeout);
+      cleanup();
       resolve(code);
-    });
-  });
+    };
 
-  await new Promise<void>((resolve, reject) => {
-    server.listen(config.redirectPort, redirectHost, () => resolve());
-    server.on("error", (error) => {
-      reject(
-        new Error(
-          `Failed to start PKCE callback server on ${redirectUri}. Ensure the port is free and retry.`,
-          { cause: error },
-        ),
-      );
-    });
+    const cleanup = () => {
+      clearTimeout(timeout);
+      server.off("request", onRequest);
+    };
+
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("Timed out waiting for browser callback."));
+    }, PKCE_CALLBACK_TIMEOUT_MS);
+
+    server.on("request", onRequest);
   });
 
   const authorizationUrl = new URL(discovery.authorization_endpoint);
