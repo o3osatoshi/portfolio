@@ -22,6 +22,7 @@ const tokenSchema = z.object({
 const SERVICE = "o3o-cli";
 const ACCOUNT = "default";
 const filePath = join(homedir(), ".config", "o3o", "auth.json");
+let didWarnFileFallback = false;
 
 export async function clearTokenSet(): Promise<void> {
   await tryDeleteKeychain();
@@ -34,8 +35,7 @@ export async function readTokenSet(): Promise<null | TokenSet> {
 
   if (!existsSync(filePath)) return null;
   const raw = await readFile(filePath, "utf8");
-  const parsed = tokenSchema.safeParse(JSON.parse(raw));
-  return parsed.success ? parsed.data : null;
+  return parseTokenSet(raw);
 }
 
 export async function writeTokenSet(tokenSet: TokenSet): Promise<void> {
@@ -43,10 +43,20 @@ export async function writeTokenSet(tokenSet: TokenSet): Promise<void> {
   const serialized = JSON.stringify(parsed);
 
   if (await tryWriteKeychain(serialized)) return;
+  warnFileFallbackOnce();
 
   await mkdir(dirname(filePath), { recursive: true });
   await writeFile(filePath, `${serialized}\n`, "utf8");
   await chmod(filePath, 0o600);
+}
+
+function parseTokenSet(raw: string): null | TokenSet {
+  try {
+    const parsed = tokenSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
 }
 
 async function tryDeleteKeychain(): Promise<void> {
@@ -87,8 +97,7 @@ async function tryReadKeychain(): Promise<null | TokenSet> {
         SERVICE,
         "-w",
       ]);
-      const parsed = tokenSchema.safeParse(JSON.parse(stdout));
-      return parsed.success ? parsed.data : null;
+      return parseTokenSet(stdout);
     }
 
     if (process.platform === "linux") {
@@ -100,8 +109,7 @@ async function tryReadKeychain(): Promise<null | TokenSet> {
         ACCOUNT,
       ]);
       if (!stdout.trim()) return null;
-      const parsed = tokenSchema.safeParse(JSON.parse(stdout));
-      return parsed.success ? parsed.data : null;
+      return parseTokenSet(stdout);
     }
 
     return null;
@@ -135,4 +143,12 @@ async function tryWriteKeychain(serialized: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+function warnFileFallbackOnce(): void {
+  if (didWarnFileFallback) return;
+  didWarnFileFallback = true;
+  console.warn(
+    `System keychain is unavailable. Falling back to file token storage at ${filePath}.`,
+  );
 }

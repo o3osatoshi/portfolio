@@ -1,4 +1,10 @@
-import { existsSync, mkdtempSync, statSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -35,6 +41,7 @@ describe("lib/token-store", () => {
         callback(new Error("keychain unavailable"));
       },
     );
+    vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.resetModules();
   });
 
@@ -58,6 +65,7 @@ describe("lib/token-store", () => {
 
     expect(existsSync(tokenPath)).toBe(true);
     expect(statSync(tokenPath).mode & 0o777).toBe(0o600);
+    expect(console.warn).toHaveBeenCalledTimes(1);
 
     const loaded = await readTokenSet();
     expect(loaded).toEqual({
@@ -70,5 +78,14 @@ describe("lib/token-store", () => {
 
     await clearTokenSet();
     expect(existsSync(tokenPath)).toBe(false);
+  });
+
+  it("returns null when token file JSON is corrupted", async () => {
+    const tokenPath = join(h.homeDir, ".config", "o3o", "auth.json");
+    mkdirSync(join(h.homeDir, ".config", "o3o"), { recursive: true });
+    writeFileSync(tokenPath, "{broken-json", "utf8");
+
+    const { readTokenSet } = await import("./token-store");
+    await expect(readTokenSet()).resolves.toBeNull();
   });
 });

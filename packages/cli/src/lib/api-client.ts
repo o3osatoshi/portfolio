@@ -33,6 +33,8 @@ const apiErrorResponseSchema = z.looseObject({
     .optional(),
   message: z.string().optional(),
 });
+// Refresh slightly before exp to avoid clock-skew races between CLI and API.
+const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
 
 export type MeResponse = z.infer<typeof meSchema>;
 export type TransactionResponse = z.infer<typeof transactionSchema>;
@@ -137,7 +139,10 @@ async function ensureAccessToken(): Promise<TokenSet> {
   const token = await readTokenSet();
   if (!token) throw new Error("Not logged in. Run `o3o auth login`.");
 
-  if (!token.expires_at || token.expires_at > nowSeconds() + 60) {
+  if (
+    !token.expires_at ||
+    token.expires_at > nowSeconds() + ACCESS_TOKEN_REFRESH_SKEW_SECONDS
+  ) {
     return token;
   }
 
