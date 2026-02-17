@@ -51,7 +51,7 @@ export function createOidcAccessTokenVerifier(
         clockTolerance: options.clockToleranceSeconds ?? 60,
       }),
       (cause) => {
-        const {code, reason} = classifyJwtVerifyFailure(cause);
+        const { code, reason } = classifyJwtVerifyFailure(cause);
         return newRichError({
           cause,
           code,

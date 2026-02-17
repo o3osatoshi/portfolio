@@ -163,7 +163,9 @@ function nowSeconds() {
   return Math.floor(Date.now() / 1000);
 }
 
-function parseApiError(text: string): null | z.infer<typeof apiErrorResponseSchema> {
+function parseApiError(
+  text: string,
+): null | z.infer<typeof apiErrorResponseSchema> {
   try {
     const parsed = apiErrorResponseSchema.safeParse(JSON.parse(text));
     return parsed.success ? parsed.data : null;
