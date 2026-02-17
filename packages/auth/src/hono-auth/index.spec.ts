@@ -34,9 +34,60 @@ describe("hono-auth/createAuthConfig", () => {
     expect(Array.isArray(cfg.providers)).toBe(true);
     expect(cfg.providers?.[0]).toMatchObject({
       id: "oidc",
+      allowDangerousEmailAccountLinking: false,
       issuer: "https://example.auth0.com/",
       type: "oidc",
     });
+  });
+
+  it("rejects OIDC profile when sub claim is missing", () => {
+    const cfg = createAuthConfig({
+      providers: {
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
+      },
+      secret: "s3cr3t",
+    });
+
+    const provider = cfg.providers?.[0] as
+      | { profile?: (profile: Record<string, unknown>) => unknown }
+      | undefined;
+    expect(provider?.profile).toBeDefined();
+
+    expect(() => provider?.profile?.({})).toThrowError(/sub/);
+  });
+
+  it("drops email from profile when email is not verified", () => {
+    const cfg = createAuthConfig({
+      providers: {
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
+      },
+      secret: "s3cr3t",
+    });
+
+    const provider = cfg.providers?.[0] as
+      | {
+          profile?: (profile: Record<string, unknown>) => {
+            email: null | string;
+            id: string;
+          };
+        }
+      | undefined;
+    const user = provider?.profile?.({
+      email: "ada@example.com",
+      email_verified: false,
+      sub: "auth0|123",
+    });
+
+    expect(user?.id).toBe("auth0|123");
+    expect(user?.email).toBeNull();
   });
 
   it("attaches PrismaAdapter when prismaClient provided", () => {

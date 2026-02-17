@@ -58,6 +58,35 @@ describe("hono-auth/oidc-bearer", () => {
     expect(h.jwtVerifyMock.mock.calls[0]?.[2]).not.toHaveProperty("issuer");
   });
 
+  it("reuses remote JWKS set across multiple token verifications", async () => {
+    h.jwtVerifyMock
+      .mockResolvedValueOnce({
+        payload: {
+          aud: "https://api.o3o.app",
+          iss: "https://example.auth0.com",
+          sub: "auth0|abc",
+        },
+      })
+      .mockResolvedValueOnce({
+        payload: {
+          aud: "https://api.o3o.app",
+          iss: "https://example.auth0.com",
+          sub: "auth0|def",
+        },
+      });
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+
+    await verifier("token-1");
+    await verifier("token-2");
+
+    expect(h.createRemoteJWKSetMock).toHaveBeenCalledTimes(1);
+    expect(h.jwtVerifyMock).toHaveBeenCalledTimes(2);
+  });
+
   it("returns Unauthorized when required claims are missing", async () => {
     h.jwtVerifyMock.mockResolvedValueOnce({
       payload: {
