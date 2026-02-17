@@ -26,11 +26,11 @@ describe("hono-auth/oidc-bearer", () => {
     expect(parseScopes(undefined)).toEqual([]);
   });
 
-  it("verifies token and returns normalized claims", async () => {
+  it("verifies token and accepts issuer with trailing-slash difference", async () => {
     h.jwtVerifyMock.mockResolvedValueOnce({
       payload: {
         aud: "https://api.o3o.app",
-        iss: "https://example.auth0.com",
+        iss: "https://example.auth0.com/",
         scope: "transactions:read",
         sub: "auth0|abc",
       },
@@ -44,9 +44,18 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
-      expect(res.value.iss).toBe("https://example.auth0.com");
+      expect(res.value.iss).toBe("https://example.auth0.com/");
       expect(res.value.sub).toBe("auth0|abc");
     }
+
+    expect(h.jwtVerifyMock).toHaveBeenCalledWith(
+      "token",
+      expect.anything(),
+      expect.objectContaining({
+        audience: "https://api.o3o.app",
+      }),
+    );
+    expect(h.jwtVerifyMock.mock.calls[0]?.[2]).not.toHaveProperty("issuer");
   });
 
   it("returns Unauthorized when required claims are missing", async () => {
@@ -88,4 +97,83 @@ describe("hono-auth/oidc-bearer", () => {
       expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH");
     }
   });
+
+  it("returns Unauthorized on issuer mismatch after normalized compare", async () => {
+    h.jwtVerifyMock.mockResolvedValueOnce({
+      payload: {
+        aud: "https://api.o3o.app",
+        iss: "https://another.auth0.com/",
+        sub: "auth0|abc",
+      },
+    });
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_ISSUER_MISMATCH");
+    }
+  });
+
+  it("maps jose audience claim validation failures to audience mismatch", async () => {
+    h.jwtVerifyMock.mockRejectedValueOnce(
+      joseLikeError("JWTClaimValidationFailed", 'unexpected "aud" claim value'),
+    );
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH");
+    }
+  });
+
+  it("maps jose expiration failures to expired", async () => {
+    h.jwtVerifyMock.mockRejectedValueOnce(
+      joseLikeError("JWTExpired", '"exp" claim timestamp check failed'),
+    );
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_EXPIRED");
+    }
+  });
+
+  it("maps non-Error jwt failures when jose-style code is present", async () => {
+    h.jwtVerifyMock.mockRejectedValueOnce({
+      code: "ERR_JWT_EXPIRED",
+      message: "token expired",
+    });
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_EXPIRED");
+    }
+  });
 });
+
+function joseLikeError(name: string, message: string): Error {
+  const error = new Error(message);
+  error.name = name;
+  return error;
+}
