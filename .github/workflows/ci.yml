@@ -70,10 +70,10 @@ jobs:
       - name: Build packages
         run: pnpm turbo run build --affected
         env:
-          AUTH_OIDC_AUDIENCE: ${{ secrets.AUTH_OIDC_AUDIENCE }}
-          AUTH_OIDC_CLIENT_ID: ${{ secrets.AUTH_OIDC_CLIENT_ID }}
-          AUTH_OIDC_CLIENT_SECRET: ${{ secrets.AUTH_OIDC_CLIENT_SECRET }}
-          AUTH_OIDC_ISSUER: ${{ secrets.AUTH_OIDC_ISSUER }}
+          AUTH_OIDC_AUDIENCE: ${{ secrets.AUTH_OIDC_AUDIENCE || 'https://api.o3o.app' }}
+          AUTH_OIDC_CLIENT_ID: ${{ secrets.AUTH_OIDC_CLIENT_ID || secrets.AUTH_GOOGLE_ID || 'local-ci-client-id' }}
+          AUTH_OIDC_CLIENT_SECRET: ${{ secrets.AUTH_OIDC_CLIENT_SECRET || secrets.AUTH_GOOGLE_SECRET || 'local-ci-client-secret' }}
+          AUTH_OIDC_ISSUER: ${{ secrets.AUTH_OIDC_ISSUER || 'https://example.invalid' }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           AXIOM_API_TOKEN: ${{ secrets.AXIOM_API_TOKEN }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
