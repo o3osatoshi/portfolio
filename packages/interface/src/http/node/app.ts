@@ -15,7 +15,7 @@ import type {
   GetFxQuoteResponse,
   GetTransactionsResponse,
 } from "@repo/application";
-import { type AuthConfig, getAuthUserId } from "@repo/auth";
+import { type AuthConfig, type CliPrincipal, getAuthUserId } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { type Context, Hono } from "hono";
@@ -45,13 +45,6 @@ import { loggerMiddleware } from "./middlewares";
  * Useful for deriving a typed RPC client via `hono/client`.
  */
 export type AppType = ReturnType<typeof buildApp>;
-
-export type CliPrincipal = {
-  issuer: string;
-  scopes: string[];
-  subject: string;
-  userId: string;
-};
 
 /**
  * Dependencies required by {@link buildApp}.
