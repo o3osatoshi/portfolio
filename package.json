@@ -17,7 +17,7 @@
     "deploy:edge": "pnpm -C apps/edge run deploy",
     "deploy:edge:prv": "pnpm -C apps/edge run deploy:prv",
     "deploy:functions": "firebase deploy --only functions",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency=20",
     "dev:edge": "turbo run dev --filter=@repo/edge...",
     "dev:functions": "turbo run dev --filter=@repo/functions...",
     "dev:storybook": "turbo run dev --filter=@repo/storybook...",
