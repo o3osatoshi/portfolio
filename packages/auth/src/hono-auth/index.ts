@@ -100,6 +100,9 @@ function buildOidcProvider(
       const emailVerified = profile["email_verified"] === true;
 
       return {
+        // Use OIDC subject as canonical user id for new OIDC-provisioned users.
+        // Cross-provider user linkage (e.g. legacy Google -> OIDC) is handled
+        // outside this callback as an explicit migration step.
         id: subject,
         name: toOptionalString(profile["name"]),
         email: emailVerified ? email : null,

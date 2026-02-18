@@ -177,7 +177,8 @@ This repository now standardizes user authentication on Auth0 OIDC for both Web 
 - Web sign-in provider switched from Google-specific configuration to a single OIDC provider (`oidc`).
 - Existing users must sign in again through Auth0 once after rollout.
 - CLI users must run `o3o auth login` again to obtain Auth0-issued access/refresh tokens.
-- Existing Web data is preserved by linking identities through `user_identity` with `(issuer, subject)` as the canonical key.
+- Automatic cross-provider email linking is disabled (`allowDangerousEmailAccountLinking: false`), so legacy provider accounts must be linked via an explicit migration/backfill process.
+- `user_identity` stores `(issuer, subject) -> user_id` mappings for canonical principal resolution (especially for CLI access tokens).
 - First-time CLI linking requires `/userinfo` to return `email_verified=true`; the resolver links by verified email or provisions a new user.
 
 Recommended rollout order:

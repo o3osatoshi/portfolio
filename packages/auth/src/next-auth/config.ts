@@ -10,6 +10,8 @@ export const authConfig: NextAuthConfig = {
   providers: [
     Auth0({
       id: "oidc",
+      // Keep disabled: do not auto-link accounts across providers by email.
+      // Legacy-provider -> OIDC linking must be migrated explicitly.
       allowDangerousEmailAccountLinking: false,
       ...(oidcClientId ? { clientId: oidcClientId } : {}),
       ...(oidcClientSecret ? { clientSecret: oidcClientSecret } : {}),
