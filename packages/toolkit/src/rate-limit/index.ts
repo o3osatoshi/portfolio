@@ -2,6 +2,11 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import { newRichError, type RichError } from "../error";
 
+/**
+ * Options for creating a reusable rate-limit guard.
+ *
+ * @public
+ */
 export type CreateRateLimitGuardOptions<T> = {
   buildRateLimitedError?:
     | ((ctx: RateLimitExceededContext<T>) => RichError)
@@ -12,12 +17,22 @@ export type CreateRateLimitGuardOptions<T> = {
   store: RateLimitStore;
 };
 
+/**
+ * Context passed to `onBypass` when a store failure is bypassed in fail-open mode.
+ *
+ * @public
+ */
 export type RateLimitBypassContext<T> = {
   error: RichError;
   input: T;
   rule: RateLimitRule<T>;
 };
 
+/**
+ * Input payload consumed by a rate-limit store implementation.
+ *
+ * @public
+ */
 export type RateLimitConsumeInput = {
   bucket: string;
   identifier: string;
@@ -25,6 +40,11 @@ export type RateLimitConsumeInput = {
   windowSeconds: number;
 };
 
+/**
+ * Normalized decision returned by a rate-limit store.
+ *
+ * @public
+ */
 export type RateLimitDecision = {
   allowed: boolean;
   limit: number;
@@ -32,14 +52,29 @@ export type RateLimitDecision = {
   resetEpochSeconds: number;
 };
 
+/**
+ * Context used to build a custom rate-limited error.
+ *
+ * @public
+ */
 export type RateLimitExceededContext<T> = {
   decision: RateLimitDecision;
   input: T;
   rule: RateLimitRule<T>;
 };
 
+/**
+ * Failure handling mode used by `createRateLimitGuard`.
+ *
+ * @public
+ */
 export type RateLimitFailureMode = "fail-closed" | "fail-open";
 
+/**
+ * Declarative rule evaluated by a rate-limit guard.
+ *
+ * @public
+ */
 export type RateLimitRule<T> = {
   id: string;
   limit: number;
@@ -47,12 +82,22 @@ export type RateLimitRule<T> = {
   windowSeconds: number;
 };
 
+/**
+ * Storage abstraction for consuming rate-limit tokens.
+ *
+ * @public
+ */
 export type RateLimitStore = {
   consume(
     input: RateLimitConsumeInput,
   ): ResultAsync<RateLimitDecision, RichError>;
 };
 
+/**
+ * Create a reusable guard that evaluates one or more rate-limit rules.
+ *
+ * @public
+ */
 export function createRateLimitGuard<T>(
   options: CreateRateLimitGuardOptions<T>,
 ) {
