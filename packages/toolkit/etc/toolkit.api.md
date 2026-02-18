@@ -60,6 +60,18 @@ export function createLazyEnv<T extends EnvSchema>(schema: T, opts?: CreateLazyE
 export type CreateLazyEnvOptions = CreateEnvOptions;
 
 // @public
+export function createRateLimitGuard<T>(options: CreateRateLimitGuardOptions<T>): (input: T) => ResultAsync<void, RichError>;
+
+// @public
+export type CreateRateLimitGuardOptions<T> = {
+    buildRateLimitedError?: ((ctx: RateLimitExceededContext<T>) => RichError) | undefined;
+    failureMode?: RateLimitFailureMode | undefined;
+    onBypass?: ((ctx: RateLimitBypassContext<T>) => void) | undefined;
+    rules: RateLimitRule<T>[];
+    store: RateLimitStore;
+};
+
+// @public
 export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
 
 // @public
@@ -341,6 +353,52 @@ export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
     layer?: Layer;
 }): (input: unknown) => Result<z.infer<T>, RichError>;
+
+// @public
+export type RateLimitBypassContext<T> = {
+    error: RichError;
+    input: T;
+    rule: RateLimitRule<T>;
+};
+
+// @public
+export type RateLimitConsumeInput = {
+    bucket: string;
+    identifier: string;
+    limit: number;
+    windowSeconds: number;
+};
+
+// @public
+export type RateLimitDecision = {
+    allowed: boolean;
+    limit: number;
+    remaining: number;
+    resetEpochSeconds: number;
+};
+
+// @public
+export type RateLimitExceededContext<T> = {
+    decision: RateLimitDecision;
+    input: T;
+    rule: RateLimitRule<T>;
+};
+
+// @public
+export type RateLimitFailureMode = "fail-closed" | "fail-open";
+
+// @public
+export type RateLimitRule<T> = {
+    id: string;
+    limit: number;
+    resolveIdentifier(input: T): string;
+    windowSeconds: number;
+};
+
+// @public
+export type RateLimitStore = {
+    consume(input: RateLimitConsumeInput): ResultAsync<RateLimitDecision, RichError>;
+};
 
 // @public
 export function resolveAbortSignal(options?: ResolveAbortSignalOptions): ResolvedAbortSignal;

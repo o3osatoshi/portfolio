@@ -4,6 +4,16 @@ import { createLazyEnv } from "@o3osatoshi/toolkit";
 
 export const env = createLazyEnv(
   {
+    AUTH_CLI_IDENTITY_ISSUER_LIMIT_PER_MINUTE: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(60),
+    AUTH_CLI_IDENTITY_SUBJECT_COOLDOWN_SECONDS: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(300),
     AUTH_OIDC_AUDIENCE: z.string().min(1),
     AUTH_OIDC_CLIENT_ID: z.string().min(1),
     AUTH_OIDC_CLIENT_SECRET: z.string().min(1),

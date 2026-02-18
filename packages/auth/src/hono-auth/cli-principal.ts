@@ -22,6 +22,9 @@ export type CliPrincipal = {
 
 export type CreateCliPrincipalResolverOptions = {
   audience: string;
+  checkIdentityProvisioningRateLimit?: (
+    input: FindUserIdByIdentityInput,
+  ) => ResultAsync<void, RichError>;
   fetchImpl?: typeof fetch;
   findUserIdByIdentity: (
     input: FindUserIdByIdentityInput,
@@ -84,37 +87,46 @@ export function createCliPrincipalResolver(
               return okAsync(existingUserId);
             }
 
-            return fetchUserInfo({
-              accessToken: input.accessToken,
-              fetchImpl,
-              issuer,
-            }).andThen((userInfo) => {
-              if (userInfo.sub !== subject) {
-                return errAsync(
-                  newRichError({
-                    code: "CLI_IDENTITY_SUB_MISMATCH",
-                    details: {
-                      action: "ResolveCliPrincipal",
-                      reason:
-                        "Access token subject does not match /userinfo subject.",
-                    },
-                    i18n: { key: "errors.application.unauthorized" },
-                    isOperational: true,
-                    kind: "Unauthorized",
-                    layer: "External",
-                  }),
-                );
-              }
-
-              return options.resolveUserIdByIdentity({
-                name: userInfo.name,
-                email: userInfo.email,
-                emailVerified: userInfo.email_verified === true,
-                image: userInfo.picture,
+            return (
+              options.checkIdentityProvisioningRateLimit
+                ? options.checkIdentityProvisioningRateLimit({
+                    issuer,
+                    subject,
+                  })
+                : okAsync(undefined)
+            ).andThen(() =>
+              fetchUserInfo({
+                accessToken: input.accessToken,
+                fetchImpl,
                 issuer,
-                subject,
-              });
-            });
+              }).andThen((userInfo) => {
+                if (userInfo.sub !== subject) {
+                  return errAsync(
+                    newRichError({
+                      code: "CLI_IDENTITY_SUB_MISMATCH",
+                      details: {
+                        action: "ResolveCliPrincipal",
+                        reason:
+                          "Access token subject does not match /userinfo subject.",
+                      },
+                      i18n: { key: "errors.application.unauthorized" },
+                      isOperational: true,
+                      kind: "Unauthorized",
+                      layer: "External",
+                    }),
+                  );
+                }
+
+                return options.resolveUserIdByIdentity({
+                  name: userInfo.name,
+                  email: userInfo.email,
+                  emailVerified: userInfo.email_verified === true,
+                  image: userInfo.picture,
+                  issuer,
+                  subject,
+                });
+              }),
+            );
           })
           .map((userId) => ({
             issuer,
