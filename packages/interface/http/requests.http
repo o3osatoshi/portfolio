@@ -27,3 +27,42 @@ Accept: application/json
 GET {{API_BASE_URL}}/api/private/labs/transactions
 Accept: application/json
 Cookie: {{AUTH_COOKIE}}
+
+### cli me
+GET {{API_BASE_URL}}/api/cli/v1/me
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+### cli list transactions
+GET {{API_BASE_URL}}/api/cli/v1/transactions
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+### cli create transaction
+POST {{API_BASE_URL}}/api/cli/v1/transactions
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+Content-Type: application/json
+
+{
+  "type": "BUY",
+  "datetime": "2025-01-01T00:00:00.000Z",
+  "amount": "1.5",
+  "price": "100",
+  "currency": "USD"
+}
+
+### cli update transaction
+PATCH {{API_BASE_URL}}/api/cli/v1/transactions/{{TRANSACTION_ID}}
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+Content-Type: application/json
+
+{
+  "amount": "2.0"
+}
+
+### cli delete transaction
+DELETE {{API_BASE_URL}}/api/cli/v1/transactions/{{TRANSACTION_ID}}
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}

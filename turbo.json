@@ -13,8 +13,10 @@
     "build": {
       "dependsOn": ["^build"],
       "env": [
-        "AUTH_GOOGLE_ID",
-        "AUTH_GOOGLE_SECRET",
+        "AUTH_OIDC_AUDIENCE",
+        "AUTH_OIDC_CLIENT_ID",
+        "AUTH_OIDC_CLIENT_SECRET",
+        "AUTH_OIDC_ISSUER",
         "AUTH_SECRET",
         "AXIOM_API_TOKEN",
         "DATABASE_URL",

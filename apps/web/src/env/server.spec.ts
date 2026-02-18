@@ -9,8 +9,10 @@ describe("apps/web env (server)", () => {
   });
 
   it("accepts valid DATABASE_URL values", async () => {
-    vi.stubEnv("AUTH_GOOGLE_ID", "test-google-id");
-    vi.stubEnv("AUTH_GOOGLE_SECRET", "test-google-secret");
+    vi.stubEnv("AUTH_OIDC_AUDIENCE", "https://api.o3o.app");
+    vi.stubEnv("AUTH_OIDC_CLIENT_ID", "test-oidc-id");
+    vi.stubEnv("AUTH_OIDC_CLIENT_SECRET", "test-oidc-secret");
+    vi.stubEnv("AUTH_OIDC_ISSUER", "https://example.auth0.com");
     vi.stubEnv("AUTH_SECRET", "test-auth-secret");
     vi.stubEnv("AXIOM_API_TOKEN", "test-axiom-token");
     vi.stubEnv(

@@ -5,30 +5,24 @@ const h = vi.hoisted(() => {
     client,
     tag: "adapter",
   }));
-  const GoogleProviderMock = vi.fn((opts: unknown) => ({
-    opts,
-    tag: "google",
-  }));
   const prisma = { _tag: "prisma" } as const;
-  return { GoogleProviderMock, prisma, PrismaAdapterMock };
+  return { prisma, PrismaAdapterMock };
 });
 
 vi.mock("@auth/prisma-adapter", () => ({ PrismaAdapter: h.PrismaAdapterMock }));
-vi.mock("@auth/core/providers/google", () => ({
-  default: h.GoogleProviderMock,
-}));
 
 import { createAuthConfig, getAuthUserId } from "./index";
 
 describe("hono-auth/createAuthConfig", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("builds config with Google provider and secret", () => {
+  it("builds config with OIDC provider and secret", () => {
     const cfg = createAuthConfig({
       providers: {
-        google: {
+        oidc: {
           clientId: "id",
           clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
         },
       },
       secret: "s3cr3t",
@@ -37,20 +31,73 @@ describe("hono-auth/createAuthConfig", () => {
     expect(cfg.secret).toBe("s3cr3t");
     // default basePath
     expect(cfg.basePath).toBe("/api/auth");
-    // provider wired with passed credentials
-    expect(h.GoogleProviderMock).toHaveBeenCalledWith({
-      clientId: "id",
-      clientSecret: "secret",
-    });
     expect(Array.isArray(cfg.providers)).toBe(true);
-    // @ts-expect-error provider mock exposes internal test-only tag
-    expect(cfg.providers?.[0]?.tag).toBe("google");
+    expect(cfg.providers?.[0]).toMatchObject({
+      id: "oidc",
+      allowDangerousEmailAccountLinking: false,
+      issuer: "https://example.auth0.com/",
+      type: "oidc",
+    });
+  });
+
+  it("rejects OIDC profile when sub claim is missing", () => {
+    const cfg = createAuthConfig({
+      providers: {
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
+      },
+      secret: "s3cr3t",
+    });
+
+    const provider = cfg.providers?.[0] as
+      | { profile?: (profile: Record<string, unknown>) => unknown }
+      | undefined;
+    expect(provider?.profile).toBeDefined();
+
+    expect(() => provider?.profile?.({})).toThrowError(/sub/);
+  });
+
+  it("drops email from profile when email is not verified", () => {
+    const cfg = createAuthConfig({
+      providers: {
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
+      },
+      secret: "s3cr3t",
+    });
+
+    const provider = cfg.providers?.[0] as
+      | {
+          profile?: (profile: Record<string, unknown>) => {
+            email: null | string;
+            id: string;
+          };
+        }
+      | undefined;
+    const user = provider?.profile?.({
+      email: "ada@example.com",
+      email_verified: false,
+      sub: "auth0|123",
+    });
+
+    expect(user?.id).toBe("auth0|123");
+    expect(user?.email).toBeNull();
   });
 
   it("attaches PrismaAdapter when prismaClient provided", () => {
     const cfg = createAuthConfig({
       providers: {
-        google: { clientId: "id", clientSecret: "secret" },
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
       },
       // @ts-expect-error prisma mock does not implement full client type
       prismaClient: h.prisma,
@@ -63,7 +110,13 @@ describe("hono-auth/createAuthConfig", () => {
 
   it("overrides basePath and session.strategy when provided", () => {
     const cfg = createAuthConfig({
-      providers: { google: { clientId: "id", clientSecret: "secret" } },
+      providers: {
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
+      },
       basePath: "/auth",
       secret: "s",
       session: { strategy: "database" },
@@ -74,7 +127,13 @@ describe("hono-auth/createAuthConfig", () => {
 
   it("jwt callback sets token.id and session callback mirrors it to session.user.id", async () => {
     const cfg = createAuthConfig({
-      providers: { google: { clientId: "id", clientSecret: "secret" } },
+      providers: {
+        oidc: {
+          clientId: "id",
+          clientSecret: "secret",
+          issuer: "https://example.auth0.com/",
+        },
+      },
       secret: "s",
     });
 

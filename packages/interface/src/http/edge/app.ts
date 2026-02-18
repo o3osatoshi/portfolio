@@ -92,7 +92,13 @@ export function buildEdgeApp(deps: EdgeDeps) {
  * export const runtime = "edge";
  *
  * const authConfig = createAuthConfig({
- *   providers: { google: { clientId: "...", clientSecret: "..." } },
+ *   providers: {
+ *     oidc: {
+ *       clientId: "...",
+ *       clientSecret: "...",
+ *       issuer: "https://example.auth0.com",
+ *     },
+ *   },
  *   secret: "...",
  * });
  *
