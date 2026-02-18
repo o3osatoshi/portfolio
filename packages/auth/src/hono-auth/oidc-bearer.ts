@@ -30,9 +30,9 @@ export type OidcAccessTokenVerifierOptions = {
 };
 
 const jwtVerifyFailureSchema = z.object({
+  name: z.string().optional(),
   code: z.string().optional(),
   message: z.string().optional(),
-  name: z.string().optional(),
 });
 
 /**
@@ -52,7 +52,7 @@ export function createOidcAccessTokenVerifier(
         clockTolerance: options.clockToleranceSeconds ?? 60,
       }),
       (cause) => {
-        const {code, reason} = classifyJwtVerifyFailure(cause);
+        const { code, reason } = classifyJwtVerifyFailure(cause);
         return newRichError({
           cause,
           code,
