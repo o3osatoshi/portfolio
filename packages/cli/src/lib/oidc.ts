@@ -247,6 +247,7 @@ async function loginByPkce(
   });
 
   const codePromise = new Promise<string>((resolve, reject) => {
+    let callbackDisposed = false;
     const onRequest = (req: IncomingMessage, res: ServerResponse) => {
       const base = `http://${redirectHost}:${config.redirectPort}`;
       const url = new URL(req.url ?? "/", base);
@@ -273,6 +274,10 @@ async function loginByPkce(
     };
 
     const cleanup = () => {
+      if (callbackDisposed) {
+        return;
+      }
+      callbackDisposed = true;
       clearTimeout(timeout);
       server.off("request", onRequest);
     };
@@ -298,10 +303,13 @@ async function loginByPkce(
   authorizationUrl.searchParams.set("code_challenge", challenge);
   authorizationUrl.searchParams.set("code_challenge_method", "S256");
 
-  await openBrowser(authorizationUrl.toString());
-  const code = await codePromise.finally(() => {
+  let code: string;
+  try {
+    await openBrowser(authorizationUrl.toString());
+    code = await codePromise;
+  } finally {
     server.close();
-  });
+  }
 
   const body = new URLSearchParams({
     client_id: config.clientId,
