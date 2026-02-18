@@ -123,6 +123,16 @@ export class PrismaUserIdentityStore {
             action: "LinkUserIdentity",
           },
         }),
-    );
+    ).orElse((error) => {
+      if (error.code !== "PRISMA_P2002_UNIQUE_CONSTRAINT") {
+        return errAsync(error);
+      }
+
+      // A concurrent request may have linked the same issuer/subject first.
+      // Retry by reading the canonical mapping and return it when available.
+      return this.findUserIdByIssuerSubject(input).andThen((userId) =>
+        userId ? okAsync(userId) : errAsync(error),
+      );
+    });
   }
 }

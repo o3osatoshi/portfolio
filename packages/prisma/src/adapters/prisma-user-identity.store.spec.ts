@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { Prisma } from "../../generated/prisma/client";
 import type { PrismaClient } from "../prisma-client";
 import { PrismaUserIdentityStore } from "./prisma-user-identity.store";
 
@@ -76,6 +77,37 @@ describe("PrismaUserIdentityStore", () => {
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) expect(res.value).toBe("u-2");
+    expect(upsert).toHaveBeenCalledTimes(1);
+  });
+
+  it("resolveUserId retries lookup when upsert hits unique constraint", async () => {
+    const findUnique = vi
+      .fn<(args: unknown) => Promise<{ userId: string } | null>>()
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ userId: "u-race" });
+
+    const uniqueConflict = Object.create(
+      Prisma.PrismaClientKnownRequestError.prototype,
+    ) as Record<string, unknown>;
+    uniqueConflict["code"] = "P2002";
+    uniqueConflict["message"] = "Unique constraint failed";
+    uniqueConflict["meta"] = { target: ["issuer", "subject"] };
+
+    const upsert = vi.fn(async () => {
+      throw uniqueConflict;
+    });
+
+    const store = createStore({ findUnique, upsert });
+    const res = await store.resolveUserId({
+      email: "ada@example.com",
+      emailVerified: true,
+      issuer: "https://example.auth0.com",
+      subject: "auth0|abc",
+    });
+
+    expect(res.isOk()).toBe(true);
+    if (res.isOk()) expect(res.value).toBe("u-race");
+    expect(findUnique).toHaveBeenCalledTimes(2);
     expect(upsert).toHaveBeenCalledTimes(1);
   });
 });
