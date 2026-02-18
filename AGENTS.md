@@ -1,111 +1,111 @@
-# Repository Guidelines (Current Implementation)
+# リポジトリガイドライン（現行実装）
 
-This document reflects the current state of the repository. Commands listed below come directly from existing `package.json` files, so please keep them in sync after making changes.
+このドキュメントは、現在のリポジトリの状態を反映したものです。以下のコマンドは既存の `package.json` から直接取得しているため、変更を加えた際は必ず整合性を保って更新してください。
 
-## Architecture Overview
-- **Domain (`@repo/domain`)**: Value objects, entities, and ports. Internal dependencies are limited to `@o3osatoshi/toolkit` (plus external libs only).
-- **Application (`@repo/application`)**: DTO validation and use cases. Depends on domain ports/value objects and `@o3osatoshi/toolkit`.
-- **Infrastructure (`@repo/prisma`)**: Prisma-backed implementations of domain ports plus DB client utilities.
-- **Integrations (`@repo/integrations`)**: External service adapters (APIs, caches) implementing domain ports.
-- **Logging (`@o3osatoshi/logging`)**: Axiom-first logging helpers for Node/Edge/Browser runtimes.
-- **Auth (`@repo/auth`)**: Shared Auth.js/Hono configuration and React helpers consumed by HTTP interface and delivery layers.
-- **HTTP Interface (`@repo/interface`)**: Hono-based HTTP interface (Node/Edge apps and typed client) that wires auth + use cases without owning business logic.
-- **Delivery (`apps/web`, `apps/functions`, `apps/edge`)**: Next.js route handlers, Firebase Functions, and a Cloudflare Worker that inject infrastructure adapters into application use cases.
-- **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: Reusable UI library and documentation surface that stay free from domain concerns.
-- **Shared Tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)**: Build presets, lint configs, and error-handling utilities consumed across the stack.
+## アーキテクチャ概要
+- **Domain (`@repo/domain`)**: 値オブジェクト、エンティティ、ポート。内部依存は `@o3osatoshi/toolkit` に限定されます（外部ライブラリは除く）。
+- **Application (`@repo/application`)**: DTO バリデーションとユースケース。Domain のポート/値オブジェクトおよび `@o3osatoshi/toolkit` に依存します。
+- **Infrastructure (`@repo/prisma`)**: Prisma を用いた Domain ポート実装と DB クライアントユーティリティ。
+- **Integrations (`@repo/integrations`)**: Domain ポートを実装する外部サービスアダプター（API、キャッシュ）。
+- **Logging (`@o3osatoshi/logging`)**: Node/Edge/Browser ランタイム向けの Axiom-first ロギングヘルパー。
+- **Auth (`@repo/auth`)**: HTTP インターフェース層とデリバリー層で利用する、共有の Auth.js/Hono 設定と React ヘルパー。
+- **HTTP Interface (`@repo/interface`)**: Hono ベースの HTTP インターフェース（Node/Edge アプリと型付きクライアント）。ビジネスロジックは持たず、auth とユースケースを接続します。
+- **Delivery (`apps/web`, `apps/functions`, `apps/edge`)**: Next.js ルートハンドラー、Firebase Functions、Cloudflare Worker。Infrastructure アダプターをアプリケーションのユースケースへ注入します。
+- **Presentation (`@o3osatoshi/ui`, `apps/storybook`)**: ドメイン関心事から分離された、再利用可能な UI ライブラリとドキュメント基盤。
+- **Shared Tooling (`@o3osatoshi/config`, `@o3osatoshi/toolkit`)**: スタック横断で利用するビルドプリセット、lint 設定、エラーハンドリングユーティリティ。
 
-## Project Structure
-- `apps/web`: Next.js 16 portfolio app (React 19, App Router).
-- `apps/functions`: Firebase Cloud Functions bundled via `tsup` (Node 22 runtime).
-- `apps/edge`: Cloudflare Worker (Wrangler v4) exposing the Edge HTTP API via `@repo/interface/http/edge`.
-- `apps/storybook`: Vite-powered Storybook for UI review and visual testing.
-- `packages/domain`, `packages/application`: Clean architecture core (Vitest).
-- `packages/prisma`: Prisma schema, adapters, and DB scripts.
-- `packages/integrations`: External service adapters (APIs, caches) for provider implementations.
-- `packages/auth`: Auth.js + Hono configuration and React helpers shared across delivery layers.
-- `packages/interface`: Runtime-agnostic HTTP interface (Hono app + typed RPC client) for Node/Edge.
-- `packages/logging`: Axiom-first logging helpers for Node/Edge/Browser runtimes.
-- `packages/ui`: Published React component library with split server/client builds.
-- `packages/toolkit`: Zod/Neverthrow helpers for consistent error handling.
-- `packages/eth`: Wagmi CLI generated contract types/hooks (requires `packages/eth/.env.local`).
-- `packages/config`: Shared tsconfig/biome/eslint/tsup presets.
-- `packages/supabase`: Supabase CLI configuration (not a workspace package).
+## プロジェクト構成
+- `apps/web`: Next.js 16 ポートフォリオアプリ（React 19、App Router）。
+- `apps/functions`: `tsup` でバンドルされる Firebase Cloud Functions（Node 22 ランタイム）。
+- `apps/edge`: `@repo/interface/http/edge` 経由で Edge HTTP API を公開する Cloudflare Worker（Wrangler v4）。
+- `apps/storybook`: UI レビューとビジュアルテスト向けの Vite ベース Storybook。
+- `packages/domain`, `packages/application`: クリーンアーキテクチャのコア（Vitest）。
+- `packages/prisma`: Prisma スキーマ、アダプター、DB スクリプト。
+- `packages/integrations`: プロバイダー実装向けの外部サービスアダプター（API、キャッシュ）。
+- `packages/auth`: デリバリー層で共有される Auth.js + Hono 設定と React ヘルパー。
+- `packages/interface`: ランタイム非依存の HTTP インターフェース（Hono アプリ + 型付き RPC クライアント）。Node/Edge 向け。
+- `packages/logging`: Node/Edge/Browser ランタイム向けの Axiom-first ロギングヘルパー。
+- `packages/ui`: サーバー/クライアント分割ビルドで公開される React コンポーネントライブラリ。
+- `packages/toolkit`: 一貫したエラーハンドリングのための Zod/Neverthrow ヘルパー。
+- `packages/eth`: Wagmi CLI で生成されるコントラクト型/フック（`packages/eth/.env.local` が必要）。
+- `packages/config`: 共有の tsconfig/biome/eslint/tsup プリセット。
+- `packages/supabase`: Supabase CLI 設定（ワークスペースパッケージではありません）。
 
-## Setup & Root Scripts
-- Install dependencies: `pnpm install` (requires Node >= 22).
-- Start all dev targets: `pnpm dev`.
-- Start scoped dev targets: `pnpm dev:web`, `pnpm dev:edge`, `pnpm dev:functions`, `pnpm dev:storybook`.
-- Build all packages/apps: `pnpm build`.
-- Build scoped targets: `pnpm build:web`, `pnpm build:functions`, `pnpm build:storybook`, `pnpm build:edge`.
-- Type-check the workspace: `pnpm check:type`.
-- Run all tests: `pnpm check:test`.
-- Run tests with coverage: `pnpm check:test:cvrg`.
-- Combined check (types + tests): `pnpm check`.
-- Lint/format/package sorting (write): `pnpm style`.
-- Lint/format/package sorting (check-only): `pnpm style:pure`.
-- Biome only: `pnpm style:biome` (write) or `pnpm style:biome:fix` (unsafe write) or `pnpm style:biome:pure` (check).
-- ESLint only: `pnpm style:eslint` (fix) or `pnpm style:eslint:pure` (cache-only).
-- Package.json sorting only: `pnpm style:pkg` (write) or `pnpm style:pkg:pure` (check).
-- Clean build artifacts: `pnpm clean`.
-- Update env files (runs only where `env:pull` script exists): `pnpm env:pull`.
-- Deploy Firebase functions: `pnpm deploy:functions`.
-- Deploy Edge (prod): `pnpm deploy:edge`.
-- Deploy Edge (preview): `pnpm deploy:edge:prv`.
-- Refine (style → build → check → API extract): `pnpm refine`.
-- API extractor: `pnpm api:extract`, `pnpm api:report`.
-- Release workflow helpers (Changesets):
-  - Open interactive changeset editor: `pnpm release:log`.
-  - Apply pending changesets and bump versions: `pnpm release:version`.
-  - Publish packages to npm (usually via CI): `pnpm release`.
+## セットアップとルートスクリプト
+- 依存関係のインストール: `pnpm install`（Node >= 22 が必要）。
+- すべての開発ターゲットを起動: `pnpm dev`。
+- スコープ指定の開発ターゲットを起動: `pnpm dev:web`, `pnpm dev:edge`, `pnpm dev:functions`, `pnpm dev:storybook`。
+- すべてのパッケージ/アプリをビルド: `pnpm build`。
+- スコープ指定のターゲットをビルド: `pnpm build:web`, `pnpm build:functions`, `pnpm build:storybook`, `pnpm build:edge`。
+- ワークスペース全体を型チェック: `pnpm check:type`。
+- すべてのテストを実行: `pnpm check:test`。
+- カバレッジ付きでテストを実行: `pnpm check:test:cvrg`。
+- 統合チェック（型 + テスト）: `pnpm check`。
+- Lint/Format/`package.json` ソート（書き込みあり）: `pnpm style`。
+- Lint/Format/`package.json` ソート（チェックのみ）: `pnpm style:pure`。
+- Biome のみ: `pnpm style:biome`（書き込み）または `pnpm style:biome:fix`（unsafe 書き込み）または `pnpm style:biome:pure`（チェック）。
+- ESLint のみ: `pnpm style:eslint`（fix）または `pnpm style:eslint:pure`（キャッシュのみ）。
+- `package.json` ソートのみ: `pnpm style:pkg`（書き込み）または `pnpm style:pkg:pure`（チェック）。
+- ビルド成果物をクリーン: `pnpm clean`。
+- env ファイルを更新（`env:pull` スクリプトがある場所のみ実行）: `pnpm env:pull`。
+- Firebase Functions をデプロイ: `pnpm deploy:functions`。
+- Edge をデプロイ（prod）: `pnpm deploy:edge`。
+- Edge をデプロイ（preview）: `pnpm deploy:edge:prv`。
+- Refine（style → build → check → API extract）: `pnpm refine`。
+- API Extractor: `pnpm api:extract`, `pnpm api:report`。
+- リリースワークフローヘルパー（Changesets）:
+  - インタラクティブ changeset エディターを開く: `pnpm release:log`。
+  - 保留中の changeset を適用してバージョンを更新: `pnpm release:version`。
+  - npm にパッケージを公開（通常は CI 経由）: `pnpm release`。
 
-## Per-App / Package Commands
-- Web: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`.
-- Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`.
-- Functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`.
-- Edge: `pnpm -C apps/edge dev`, `pnpm -C apps/edge build`, `pnpm -C apps/edge deploy`, `pnpm -C apps/edge deploy:prv`.
-- Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma migrate:reset`, `pnpm -C packages/prisma migrate:status`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma db:seed`, `pnpm -C packages/prisma studio`.
-- Eth codegen: `pnpm -C packages/eth generate` (requires `packages/eth/.env.local`).
-- UI library: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`.
-- Core packages (domain/application/auth/interface/integrations/logging/toolkit/eth): `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`.
+## アプリ / パッケージ別コマンド
+- Web: `pnpm dev:web`, `pnpm -C apps/web build`, `pnpm -C apps/web start`。
+- Storybook: `pnpm dev:storybook`, `pnpm -C apps/storybook build`。
+- Functions: `pnpm -C apps/functions dev`, `pnpm -C apps/functions serve`, `pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`。
+- Edge: `pnpm -C apps/edge dev`, `pnpm -C apps/edge build`, `pnpm -C apps/edge deploy`, `pnpm -C apps/edge deploy:prv`。
+- Prisma: `pnpm -C packages/prisma migrate:dev`, `pnpm -C packages/prisma migrate:deploy`, `pnpm -C packages/prisma migrate:reset`, `pnpm -C packages/prisma migrate:status`, `pnpm -C packages/prisma db:push`, `pnpm -C packages/prisma db:seed`, `pnpm -C packages/prisma studio`。
+- Eth コード生成: `pnpm -C packages/eth generate`（`packages/eth/.env.local` が必要）。
+- UI ライブラリ: `pnpm -C packages/ui dev`, `pnpm -C packages/ui build`, `pnpm -C packages/ui test`。
+- コアパッケージ（domain/application/auth/interface/integrations/logging/toolkit/eth）: `pnpm -C packages/<name> test`, `pnpm -C packages/<name> typecheck`。
 
-## Code Generation
-- Prisma client: `pnpm -C packages/prisma build`
-  - Turbo runs this script as part of `build` pipelines, so Prisma Client is generated automatically when building.
-- Wagmi/ETH hooks: `pnpm -C packages/eth generate`.
-- Run every available `generate` script: `pnpm -r run generate` (only executes where defined).
+## コード生成
+- Prisma クライアント: `pnpm -C packages/prisma build`
+  - Turbo は `build` パイプラインの一部としてこのスクリプトを実行するため、ビルド時に Prisma Client は自動生成されます。
+- Wagmi/ETH フック: `pnpm -C packages/eth generate`。
+- 利用可能な `generate` スクリプトをすべて実行: `pnpm -r run generate`（定義されている場所のみ実行）。
 
-## Database (Prisma)
-- Environment files:
-  - `packages/prisma/.env` (used by Prisma CLI via `prisma.config.ts` + `dotenv/config`)
-  - `packages/prisma/.env.development.local`, `.env.test.local`, `.env.production.local` (local templates)
-- Use the `packages/prisma` scripts for all schema/migration/seed tasks (see commands above). There are no root-level DB scripts.
+## データベース（Prisma）
+- 環境変数ファイル:
+  - `packages/prisma/.env`（`prisma.config.ts` + `dotenv/config` 経由で Prisma CLI が使用）
+  - `packages/prisma/.env.development.local`, `.env.test.local`, `.env.production.local`（ローカルテンプレート）
+- スキーマ/マイグレーション/シード関連の作業はすべて `packages/prisma` のスクリプトを使用してください（上記コマンド参照）。ルートレベルの DB スクリプトはありません。
 
-## Testing
-- Framework: Vitest with colocated `*.spec.ts(x)` tests.
-- Workspace: `pnpm check:test` (Turbo fans out to package-level `test` scripts).
-- Package scoped example: `pnpm -C packages/domain test`.
-- Coverage: `pnpm -C <package> test:cvrg`.
+## テスト
+- フレームワーク: 併置された `*.spec.ts(x)` テストを使う Vitest。
+- ワークスペース全体: `pnpm check:test`（Turbo がパッケージレベルの `test` スクリプトへ展開）。
+- パッケージ単位の例: `pnpm -C packages/domain test`。
+- カバレッジ: `pnpm -C <package> test:cvrg`。
 
-## Coding Style & Conventions
-- Run `pnpm style` to execute package sort + ESLint + Biome in sequence.
-- Biome only: `pnpm style:biome` (write), `pnpm style:biome:fix` (unsafe write), `pnpm style:biome:pure` (check).
-- ESLint only: `pnpm style:eslint` (fix) or `pnpm style:eslint:pure` (cache-only).
-- Imports are auto-organized via Biome + `eslint-plugin-perfectionist`.
-- Strings: double quotes; indentation: spaces (Biome enforced).
-- Naming: files = kebab-case, components = PascalCase, code symbols = camelCase.
-- TypeScript preferred everywhere (Next.js routing conventions in `apps/web` and `packages/ui`).
+## コーディングスタイルと規約
+- `pnpm style` を実行すると、package sort + ESLint + Biome を順番に実行します。
+- Biome のみ: `pnpm style:biome`（書き込み）, `pnpm style:biome:fix`（unsafe 書き込み）, `pnpm style:biome:pure`（チェック）。
+- ESLint のみ: `pnpm style:eslint`（fix）または `pnpm style:eslint:pure`（キャッシュのみ）。
+- import は Biome + `eslint-plugin-perfectionist` により自動整列されます。
+- 文字列: ダブルクォート、インデント: スペース（Biome で強制）。
+- 命名: ファイル = kebab-case、コンポーネント = PascalCase、コードシンボル = camelCase。
+- TypeScript を全体で推奨（`apps/web` と `packages/ui` は Next.js ルーティング規約に従う）。
 
-## Security & Configuration
-- Environment variables live in `.env.*` within consuming apps/packages.
-  - `apps/web`: `.env.local` (Next.js).
-  - `apps/functions`: `.env.local` (Firebase Functions).
-  - `apps/edge`: `.env.local` for local Wrangler dev.
-  - `packages/prisma`: `.env` (CLI), `.env.development.local`, `.env.test.local`, `.env.production.local`.
-  - `packages/eth`: `.env.local` for Wagmi CLI.
-- Firebase CLI commands assume you are authenticated (`pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`).
-- Minimum Node version is 22 for every workspace; `apps/functions` pins `engines.node` to `22`.
+## セキュリティと設定
+- 環境変数は、利用側の app/package 配下にある `.env.*` に配置します。
+  - `apps/web`: `.env.local`（Next.js）。
+  - `apps/functions`: `.env.local`（Firebase Functions）。
+  - `apps/edge`: ローカル Wrangler 開発用の `.env.local`。
+  - `packages/prisma`: `.env`（CLI）, `.env.development.local`, `.env.test.local`, `.env.production.local`。
+  - `packages/eth`: Wagmi CLI 用の `.env.local`。
+- Firebase CLI コマンドは認証済みであることを前提とします（`pnpm -C apps/functions deploy`, `pnpm -C apps/functions logs`）。
+- すべてのワークスペースで最低 Node バージョンは 22。`apps/functions` は `engines.node` を `22` に固定しています。
 
-## Notes
-- `packages/ui` publishes split server/client bundles; import `@o3osatoshi/ui/client` inside React client components.
-- `packages/supabase` is configuration only and excluded from pnpm workspaces.
-- Keep this document updated whenever scripts, package names, or architecture boundaries change.
+## 補足
+- `packages/ui` はサーバー/クライアント分割バンドルを公開します。React のクライアントコンポーネント内では `@o3osatoshi/ui/client` を import してください。
+- `packages/supabase` は設定のみで、pnpm ワークスペースから除外されています。
+- スクリプト、パッケージ名、アーキテクチャ境界に変更があった場合は、このドキュメントを必ず更新してください。
