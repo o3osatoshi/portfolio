@@ -14,9 +14,20 @@ import {
 } from "@repo/application";
 import type { CliPrincipal } from "@repo/auth";
 import { type Context, Hono } from "hono";
-import { err, errAsync, ok, okAsync, type Result, ResultAsync } from "neverthrow";
+import {
+  err,
+  errAsync,
+  ok,
+  okAsync,
+  type Result,
+  ResultAsync,
+} from "neverthrow";
 
-import { newRichError, type RichError, toHttpErrorResponse } from "@o3osatoshi/toolkit";
+import {
+  newRichError,
+  type RichError,
+  toHttpErrorResponse,
+} from "@o3osatoshi/toolkit";
 
 import { respondAsync } from "../../core";
 import type { ContextEnv } from "../../core/types";
@@ -31,7 +42,8 @@ export function buildCliRoutes(deps: Deps) {
       const principalResult = await deps.resolveCliPrincipal({
         accessToken: accessToken.value,
       });
-      if (principalResult.isErr()) return errorResponse(c, principalResult.error);
+      if (principalResult.isErr())
+        return errorResponse(c, principalResult.error);
 
       c.set("cliPrincipal", principalResult.value);
       c.get("requestLogger")?.setUserId?.(principalResult.value.userId);

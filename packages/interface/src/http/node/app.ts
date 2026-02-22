@@ -1,4 +1,8 @@
-import type { AuthConfig, CliPrincipal, ResolveCliPrincipalInput } from "@repo/auth";
+import type {
+  AuthConfig,
+  CliPrincipal,
+  ResolveCliPrincipalInput,
+} from "@repo/auth";
 import { authHandler, initAuthConfig } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
