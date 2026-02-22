@@ -109,7 +109,9 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
           },
         }),
     )
-      .andThen((row) => parseUserId(row.userId, "LinkExternalIdentityToUserByEmail"))
+      .andThen((row) =>
+        parseUserId(row.userId, "LinkExternalIdentityToUserByEmail"),
+      )
       .orElse((error) => {
         if (error.code !== "PRISMA_P2002_UNIQUE_CONSTRAINT") {
           return errAsync(error);
