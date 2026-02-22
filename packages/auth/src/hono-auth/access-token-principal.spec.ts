@@ -39,7 +39,7 @@ describe("hono-auth/access-token-principal", () => {
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByKey: findUserIdByExternalIdentity,
       issuer: "https://example.auth0.com",
-      resolveUserId: () => okAsync(asUserId("u-new")),
+      linkByVerifiedEmail: () => okAsync(asUserId("u-new")),
     });
 
     const res = await resolve({ accessToken: "token" });
@@ -75,7 +75,7 @@ describe("hono-auth/access-token-principal", () => {
       }),
       ok: true,
     });
-    const resolveUserIdByExternalIdentity = vi.fn(() =>
+    const linkByVerifiedEmail = vi.fn(() =>
       okAsync(asUserId("u-2")),
     );
 
@@ -84,13 +84,13 @@ describe("hono-auth/access-token-principal", () => {
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByKey: () => okAsync(null),
       issuer: "https://example.auth0.com",
-      resolveUserId: resolveUserIdByExternalIdentity,
+      linkByVerifiedEmail: linkByVerifiedEmail,
     });
 
     const res = await resolve({ accessToken: "token" });
 
     expect(res.isOk()).toBe(true);
-    expect(resolveUserIdByExternalIdentity).toHaveBeenCalledWith({
+    expect(linkByVerifiedEmail).toHaveBeenCalledWith({
       name: "Ada",
       email: "ada@example.com",
       emailVerified: true,

@@ -28,9 +28,9 @@ export interface ExternalIdentityResolver {
   ): ResultAsync<null | UserId, RichError>;
 
   /**
-   * Resolve or link an internal user id for the provided identity context.
+   * Link or create an internal user id from the provided external identity.
    */
-  resolveUserId(
+  linkByVerifiedEmail(
     claimSet: ExternalIdentityClaimSet,
   ): ResultAsync<UserId, RichError>;
 }

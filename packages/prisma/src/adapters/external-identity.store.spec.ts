@@ -42,11 +42,11 @@ describe("PrismaExternalIdentityStore", () => {
     if (res.isOk()) expect(res.value).toBeNull();
   });
 
-  it("resolveUserId returns existing user id", async () => {
+  it("linkByVerifiedEmail returns existing mapped user id via upsert", async () => {
     const store = createStore({
-      findUnique: async () => ({ userId: asUserId("u-1") }),
+      upsert: async () => ({ userId: asUserId("u-1") }),
     });
-    const res = await store.resolveUserId({
+    const res = await store.linkByVerifiedEmail({
       email: "ada@example.com",
       emailVerified: true,
       issuer: "https://example.auth0.com",
@@ -56,9 +56,9 @@ describe("PrismaExternalIdentityStore", () => {
     if (res.isOk()) expect(res.value).toBe("u-1");
   });
 
-  it("resolveUserId rejects when email is missing or unverified", async () => {
+  it("linkByVerifiedEmail rejects when email is missing or unverified", async () => {
     const store = createStore();
-    const res = await store.resolveUserId({
+    const res = await store.linkByVerifiedEmail({
       emailVerified: false,
       issuer: "https://example.auth0.com",
       subject: "auth0|abc",
@@ -69,10 +69,10 @@ describe("PrismaExternalIdentityStore", () => {
     }
   });
 
-  it("resolveUserId links identity with upsert when mapping is absent", async () => {
+  it("linkByVerifiedEmail links identity with upsert when mapping is absent", async () => {
     const upsert = vi.fn(async () => ({ userId: asUserId("u-2") }));
     const store = createStore({ upsert });
-    const res = await store.resolveUserId({
+    const res = await store.linkByVerifiedEmail({
       name: "Ada",
       email: "ada@example.com",
       emailVerified: true,
@@ -85,10 +85,9 @@ describe("PrismaExternalIdentityStore", () => {
     expect(upsert).toHaveBeenCalledTimes(1);
   });
 
-  it("resolveUserId retries lookup when upsert hits unique constraint", async () => {
+  it("linkByVerifiedEmail retries lookup when upsert hits unique constraint", async () => {
     const findUnique = vi
       .fn<(args: unknown) => Promise<{ userId: UserId } | null>>()
-      .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({ userId: asUserId("u-race") });
 
     const uniqueConflict = Object.create(
@@ -103,7 +102,7 @@ describe("PrismaExternalIdentityStore", () => {
     });
 
     const store = createStore({ findUnique, upsert });
-    const res = await store.resolveUserId({
+    const res = await store.linkByVerifiedEmail({
       email: "ada@example.com",
       emailVerified: true,
       issuer: "https://example.auth0.com",
@@ -112,7 +111,7 @@ describe("PrismaExternalIdentityStore", () => {
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) expect(res.value).toBe("u-race");
-    expect(findUnique).toHaveBeenCalledTimes(2);
+    expect(findUnique).toHaveBeenCalledTimes(1);
     expect(upsert).toHaveBeenCalledTimes(1);
   });
 });

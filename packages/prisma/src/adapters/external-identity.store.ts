@@ -52,21 +52,9 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
   }
 
   /**
-   * Resolve an internal user id for the given identity.
-   *
-   * - Existing identity -> returns mapped user id.
-   * - New identity -> links/creates user by verified email.
+   * Link or create an internal user id using a verified external identity.
    */
-  resolveUserId(
-    claim: ExternalIdentityClaimSet,
-  ): ResultAsync<UserId, RichError> {
-    return this.findUserIdByKey(claim).andThen((userId) => {
-      if (userId) return okAsync(userId);
-      return this.linkByVerifiedEmail(claim);
-    });
-  }
-
-  private linkByVerifiedEmail(
+  linkByVerifiedEmail(
     claim: ExternalIdentityClaimSet,
   ): ResultAsync<UserId, RichError> {
     if (!claim.email || !claim.emailVerified) {
