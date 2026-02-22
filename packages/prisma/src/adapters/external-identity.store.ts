@@ -54,7 +54,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
   /**
    * Link or create an internal user id using a verified external identity.
    */
-  linkByVerifiedEmail(
+  linkExternalIdentityToUserByEmail(
     claim: ExternalIdentityClaimSet,
   ): ResultAsync<UserId, RichError> {
     if (!claim.email || !claim.emailVerified) {
@@ -62,7 +62,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
         newRichError({
           code: "PRISMA_EXTERNAL_IDENTITY_EMAIL_UNVERIFIED",
           details: {
-            action: "LinkExternalIdentity",
+            action: "LinkExternalIdentityToUserByEmail",
             reason:
               "Verified email is required to auto-link or auto-create a user.",
           },
@@ -105,11 +105,11 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
         newPrismaError({
           cause,
           details: {
-            action: "LinkExternalIdentity",
+            action: "LinkExternalIdentityToUserByEmail",
           },
         }),
     )
-      .andThen((row) => parseUserId(row.userId, "LinkExternalIdentity"))
+      .andThen((row) => parseUserId(row.userId, "LinkExternalIdentityToUserByEmail"))
       .orElse((error) => {
         if (error.code !== "PRISMA_P2002_UNIQUE_CONSTRAINT") {
           return errAsync(error);

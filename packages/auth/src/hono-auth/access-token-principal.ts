@@ -27,7 +27,7 @@ export type CreateAccessTokenPrinResolverOptions = {
   fetchImpl?: typeof fetch;
   findUserIdByKey: ExternalIdentityResolver["findUserIdByKey"];
   issuer: string;
-  linkByVerifiedEmail: ExternalIdentityResolver["linkByVerifiedEmail"];
+  linkExternalIdentityToUserByEmail: ExternalIdentityResolver["linkExternalIdentityToUserByEmail"];
 };
 
 export type ResolveAccessTokenPrinParams = {
@@ -92,7 +92,7 @@ export function createAccessTokenPrinResolver(
                 );
               }
 
-              return options.linkByVerifiedEmail({
+              return options.linkExternalIdentityToUserByEmail({
                 name: userInfo.name,
                 email: userInfo.email,
                 emailVerified: userInfo.email_verified === true,

@@ -42,11 +42,11 @@ describe("PrismaExternalIdentityStore", () => {
     if (res.isOk()) expect(res.value).toBeNull();
   });
 
-  it("linkByVerifiedEmail returns existing mapped user id via upsert", async () => {
+  it("linkExternalIdentityToUserByEmail returns mapped user id via upsert", async () => {
     const store = createStore({
       upsert: async () => ({ userId: asUserId("u-1") }),
     });
-    const res = await store.linkByVerifiedEmail({
+    const res = await store.linkExternalIdentityToUserByEmail({
       email: "ada@example.com",
       emailVerified: true,
       issuer: "https://example.auth0.com",
@@ -56,9 +56,9 @@ describe("PrismaExternalIdentityStore", () => {
     if (res.isOk()) expect(res.value).toBe("u-1");
   });
 
-  it("linkByVerifiedEmail rejects when email is missing or unverified", async () => {
+  it("linkExternalIdentityToUserByEmail rejects when email is missing or unverified", async () => {
     const store = createStore();
-    const res = await store.linkByVerifiedEmail({
+    const res = await store.linkExternalIdentityToUserByEmail({
       emailVerified: false,
       issuer: "https://example.auth0.com",
       subject: "auth0|abc",
@@ -69,10 +69,10 @@ describe("PrismaExternalIdentityStore", () => {
     }
   });
 
-  it("linkByVerifiedEmail links identity with upsert when mapping is absent", async () => {
+  it("linkExternalIdentityToUserByEmail links identity with upsert when mapping is absent", async () => {
     const upsert = vi.fn(async () => ({ userId: asUserId("u-2") }));
     const store = createStore({ upsert });
-    const res = await store.linkByVerifiedEmail({
+    const res = await store.linkExternalIdentityToUserByEmail({
       name: "Ada",
       email: "ada@example.com",
       emailVerified: true,
@@ -85,7 +85,7 @@ describe("PrismaExternalIdentityStore", () => {
     expect(upsert).toHaveBeenCalledTimes(1);
   });
 
-  it("linkByVerifiedEmail retries lookup when upsert hits unique constraint", async () => {
+  it("linkExternalIdentityToUserByEmail retries lookup when upsert hits unique constraint", async () => {
     const findUnique = vi
       .fn<(args: unknown) => Promise<{ userId: UserId } | null>>()
       .mockResolvedValueOnce({ userId: asUserId("u-race") });
@@ -102,7 +102,7 @@ describe("PrismaExternalIdentityStore", () => {
     });
 
     const store = createStore({ findUnique, upsert });
-    const res = await store.linkByVerifiedEmail({
+    const res = await store.linkExternalIdentityToUserByEmail({
       email: "ada@example.com",
       emailVerified: true,
       issuer: "https://example.auth0.com",

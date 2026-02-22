@@ -30,7 +30,7 @@ export interface ExternalIdentityResolver {
   /**
    * Link or create an internal user id from the provided external identity.
    */
-  linkByVerifiedEmail(
+  linkExternalIdentityToUserByEmail(
     claimSet: ExternalIdentityClaimSet,
   ): ResultAsync<UserId, RichError>;
 }

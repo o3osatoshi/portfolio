@@ -15,8 +15,8 @@ const resolver = createAccessTokenPrinResolver({
   audience: env.AUTH_OIDC_AUDIENCE,
   findUserIdByKey: (input) => externalIdentityStore.findUserIdByKey(input),
   issuer: env.AUTH_OIDC_ISSUER,
-  linkByVerifiedEmail: (input) =>
-    externalIdentityStore.linkByVerifiedEmail(input),
+  linkExternalIdentityToUserByEmail: (input) =>
+    externalIdentityStore.linkExternalIdentityToUserByEmail(input),
 });
 
 export function resolveAccessTokenPrin(input: ResolveAccessTokenPrinParams) {

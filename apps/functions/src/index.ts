@@ -60,7 +60,8 @@ export const api = onRequest(async (req, res) => {
       audience: env.AUTH_OIDC_AUDIENCE,
       findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
       issuer: env.AUTH_OIDC_ISSUER,
-      linkByVerifiedEmail: (claim) => identityStore.linkByVerifiedEmail(claim),
+      linkExternalIdentityToUserByEmail: (claim) =>
+        identityStore.linkExternalIdentityToUserByEmail(claim),
     });
 
     const app = buildApp({
