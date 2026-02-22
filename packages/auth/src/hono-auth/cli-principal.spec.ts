@@ -25,9 +25,7 @@ describe("hono-auth/cli-principal", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns existing mapped user without calling /userinfo", async () => {
-    const findUserIdByExternalIdentity = vi.fn(() =>
-      okAsync(asUserId("u-1")),
-    );
+    const findUserIdByExternalIdentity = vi.fn(() => okAsync(asUserId("u-1")));
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({
         iss: "https://example.auth0.com/",
@@ -77,7 +75,9 @@ describe("hono-auth/cli-principal", () => {
       }),
       ok: true,
     });
-    const resolveUserIdByExternalIdentity = vi.fn(() => okAsync(asUserId("u-2")));
+    const resolveUserIdByExternalIdentity = vi.fn(() =>
+      okAsync(asUserId("u-2")),
+    );
 
     const resolve = createCliPrincipalResolver({
       audience: "https://api.o3o.app",

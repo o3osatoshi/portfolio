@@ -1,9 +1,9 @@
 import {
+  type ExternalIdentityResolver,
   type ExternalKey,
-  type IdentityClaims,
+  type IdentityClaim,
   newUserId,
   type UserId,
-  type ExternalIdentityResolver,
 } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 
@@ -25,15 +25,15 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
    * Look up an existing user id by OIDC issuer/subject pair.
    */
   findUserIdByExternalKey(
-    input: ExternalKey,
+    key: ExternalKey,
   ): ResultAsync<null | UserId, RichError> {
     return ResultAsync.fromPromise(
       this.db.externalIdentity.findUnique({
         select: { userId: true },
         where: {
           issuer_subject: {
-            issuer: input.issuer,
-            subject: input.subject,
+            issuer: key.issuer,
+            subject: key.subject,
           },
         },
       }),
@@ -57,17 +57,17 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
    * - Existing identity -> returns mapped user id.
    * - New identity -> links/creates user by verified email.
    */
-  resolveUserId(input: IdentityClaims): ResultAsync<UserId, RichError> {
-    return this.findUserIdByExternalKey(input).andThen((existingUserId) => {
-      if (existingUserId) return okAsync(existingUserId);
-      return this.linkByVerifiedEmail(input);
+  resolveUserId(claim: IdentityClaim): ResultAsync<UserId, RichError> {
+    return this.findUserIdByExternalKey(claim).andThen((userId) => {
+      if (userId) return okAsync(userId);
+      return this.linkByVerifiedEmail(claim);
     });
   }
 
   private linkByVerifiedEmail(
-    input: IdentityClaims,
+    claim: IdentityClaim,
   ): ResultAsync<UserId, RichError> {
-    if (!input.email || !input.emailVerified) {
+    if (!claim.email || !claim.emailVerified) {
       return errAsync(
         newRichError({
           code: "PRISMA_EXTERNAL_IDENTITY_EMAIL_UNVERIFIED",
@@ -87,17 +87,17 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
     return ResultAsync.fromPromise(
       this.db.externalIdentity.upsert({
         create: {
-          issuer: input.issuer,
-          subject: input.subject,
+          issuer: claim.issuer,
+          subject: claim.subject,
           user: {
             connectOrCreate: {
               create: {
-                email: input.email,
-                ...(input.name ? { name: input.name } : {}),
-                ...(input.image ? { image: input.image } : {}),
+                email: claim.email,
+                ...(claim.name ? { name: claim.name } : {}),
+                ...(claim.image ? { image: claim.image } : {}),
               },
               where: {
-                email: input.email,
+                email: claim.email,
               },
             },
           },
@@ -106,8 +106,8 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
         update: {},
         where: {
           issuer_subject: {
-            issuer: input.issuer,
-            subject: input.subject,
+            issuer: claim.issuer,
+            subject: claim.subject,
           },
         },
       }),
@@ -127,7 +127,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
 
         // A concurrent request may have linked the same issuer/subject first.
         // Retry by reading the canonical mapping and return it when available.
-        return this.findUserIdByExternalKey(input).andThen((userId) =>
+        return this.findUserIdByExternalKey(claim).andThen((userId) =>
           userId ? okAsync(userId) : errAsync(error),
         );
       });
@@ -135,16 +135,16 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
 }
 
 function parseUserId(
-  rawUserId: string,
+  userId: string,
   action: string,
 ): ResultAsync<UserId, RichError> {
-  const parsed = newUserId(rawUserId);
-  if (parsed.isOk()) {
-    return okAsync(parsed.value);
+  const result = newUserId(userId);
+  if (result.isOk()) {
+    return okAsync(result.value);
   }
   return errAsync(
     newRichError({
-      cause: parsed.error,
+      cause: result.error,
       code: "PRISMA_EXTERNAL_IDENTITY_USER_ID_INVALID",
       details: {
         action,
