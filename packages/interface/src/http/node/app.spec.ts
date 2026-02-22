@@ -213,6 +213,13 @@ describe("http/node app", () => {
     expect(res.status).toBe(401);
   });
 
+  it("returns 401 when Authorization header is malformed", async () => {
+    const res = await build().request("/api/cli/v1/transactions", {
+      headers: { Authorization: "invalid-token-format" },
+    });
+    expect(res.status).toBe(401);
+  });
+
   it("GET /api/cli/v1/transactions enforces read scope", async () => {
     const res = await build((_) =>
       okAsync({
