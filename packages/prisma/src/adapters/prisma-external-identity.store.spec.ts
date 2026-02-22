@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { Prisma } from "../../generated/prisma/client";
 import type { PrismaClient } from "../prisma-client";
-import { PrismaUserIdentityStore } from "./prisma-user-identity.store";
+import { PrismaExternalIdentityStore } from "./prisma-external-identity.store";
 
 function asUserId(value: string): UserId {
   return value as UserId;
@@ -14,7 +14,7 @@ function createStore(overrides?: {
   upsert?: (args: unknown) => Promise<{ userId: UserId }>;
 }) {
   const db = {
-    userIdentity: {
+    externalIdentity: {
       findUnique:
         overrides?.findUnique ??
         (async () => {
@@ -28,10 +28,10 @@ function createStore(overrides?: {
     },
   } as unknown as PrismaClient;
 
-  return new PrismaUserIdentityStore(db);
+  return new PrismaExternalIdentityStore(db);
 }
 
-describe("PrismaUserIdentityStore", () => {
+describe("PrismaExternalIdentityStore", () => {
   it("findUserIdByExternalKey returns null when identity does not exist", async () => {
     const store = createStore();
     const res = await store.findUserIdByExternalKey({
@@ -65,7 +65,7 @@ describe("PrismaUserIdentityStore", () => {
     });
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("PRISMA_USER_IDENTITY_EMAIL_UNVERIFIED");
+      expect(res.error.code).toBe("PRISMA_EXTERNAL_IDENTITY_EMAIL_UNVERIFIED");
     }
   });
 

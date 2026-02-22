@@ -43,7 +43,7 @@ Node API route:
 import { createAuthConfig } from "@repo/auth";
 import { buildHandler } from "@repo/interface/http/node";
 import { ExchangeRateApi } from "@repo/integrations";
-import { createPrismaClient, PrismaTransactionRepository, PrismaUserIdentityStore } from "@repo/prisma";
+import { createPrismaClient, PrismaTransactionRepository, PrismaExternalIdentityStore } from "@repo/prisma";
 import { createCliPrincipalResolver } from "@repo/auth";
 
 const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
@@ -64,12 +64,12 @@ const authConfig = createAuthConfig({
   prismaClient: prisma,
   secret: process.env.AUTH_SECRET!,
 });
-const userIdentityStore = new PrismaUserIdentityStore(prisma);
+const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
 const resolveCliPrincipal = createCliPrincipalResolver({
   audience: process.env.AUTH_OIDC_AUDIENCE!,
-  findUserIdByIdentity: (input) => userIdentityStore.findUserIdByExternalKey(input),
+  findUserIdByIdentity: (input) => externalIdentityStore.findUserIdByExternalKey(input),
   issuer: process.env.AUTH_OIDC_ISSUER!,
-  resolveUserIdByIdentity: (input) => userIdentityStore.resolveUserId(input),
+  resolveUserIdByIdentity: (input) => externalIdentityStore.resolveUserId(input),
 });
 
 export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({

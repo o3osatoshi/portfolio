@@ -18,7 +18,7 @@ import { newPrismaError } from "../prisma-error";
  * The store keeps `issuer + subject` as the primary lookup key and only falls
  * back to verified email when first linking a user.
  */
-export class PrismaUserIdentityStore implements UserIdentityResolver {
+export class PrismaExternalIdentityStore implements UserIdentityResolver {
   constructor(private readonly db: PrismaClient) {}
 
   /**
@@ -28,7 +28,7 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
     input: ExternalKey,
   ): ResultAsync<null | UserId, RichError> {
     return ResultAsync.fromPromise(
-      this.db.userIdentity.findUnique({
+      this.db.externalIdentity.findUnique({
         select: { userId: true },
         where: {
           issuer_subject: {
@@ -41,11 +41,13 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
         newPrismaError({
           cause,
           details: {
-            action: "FindUserByIssuerSubject",
+            action: "FindExternalIdentityByIssuerSubject",
           },
         }),
     ).andThen((row) =>
-      row ? parseUserId(row.userId, "FindUserByIssuerSubject") : okAsync(null),
+      row
+        ? parseUserId(row.userId, "FindExternalIdentityByIssuerSubject")
+        : okAsync(null),
     );
   }
 
@@ -68,9 +70,9 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
     if (!input.email || !input.emailVerified) {
       return errAsync(
         newRichError({
-          code: "PRISMA_USER_IDENTITY_EMAIL_UNVERIFIED",
+          code: "PRISMA_EXTERNAL_IDENTITY_EMAIL_UNVERIFIED",
           details: {
-            action: "LinkUserIdentity",
+            action: "LinkExternalIdentity",
             reason:
               "Verified email is required to auto-link or auto-create a user.",
           },
@@ -83,7 +85,7 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
     }
 
     return ResultAsync.fromPromise(
-      this.db.userIdentity.upsert({
+      this.db.externalIdentity.upsert({
         create: {
           issuer: input.issuer,
           subject: input.subject,
@@ -113,11 +115,11 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
         newPrismaError({
           cause,
           details: {
-            action: "LinkUserIdentity",
+            action: "LinkExternalIdentity",
           },
         }),
     )
-      .andThen((row) => parseUserId(row.userId, "LinkUserIdentity"))
+      .andThen((row) => parseUserId(row.userId, "LinkExternalIdentity"))
       .orElse((error) => {
         if (error.code !== "PRISMA_P2002_UNIQUE_CONSTRAINT") {
           return errAsync(error);
@@ -143,7 +145,7 @@ function parseUserId(
   return errAsync(
     newRichError({
       cause: parsed.error,
-      code: "PRISMA_USER_IDENTITY_USER_ID_INVALID",
+      code: "PRISMA_EXTERNAL_IDENTITY_USER_ID_INVALID",
       details: {
         action,
         reason: "Persisted user id does not satisfy domain UserId constraints.",

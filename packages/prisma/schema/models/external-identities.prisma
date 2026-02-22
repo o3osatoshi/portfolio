@@ -1,4 +1,4 @@
-model UserIdentity {
+model ExternalIdentity {
   id      String @id @default(cuid()) @map("id")
   issuer  String @map("issuer")
   subject String @map("subject")
@@ -11,5 +11,5 @@ model UserIdentity {
 
   @@index([userId])
   @@unique([issuer, subject])
-  @@map("user_identity")
+  @@map("external_identity")
 }
