@@ -3,7 +3,7 @@ import {
   type IdentityClaims,
   newUserId,
   type UserId,
-  type UserIdentityResolver,
+  type ExternalIdentityResolver,
 } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 
@@ -18,7 +18,7 @@ import { newPrismaError } from "../prisma-error";
  * The store keeps `issuer + subject` as the primary lookup key and only falls
  * back to verified email when first linking a user.
  */
-export class PrismaExternalIdentityStore implements UserIdentityResolver {
+export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
   constructor(private readonly db: PrismaClient) {}
 
   /**

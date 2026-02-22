@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { Prisma } from "../../generated/prisma/client";
 import type { PrismaClient } from "../prisma-client";
-import { PrismaExternalIdentityStore } from "./prisma-external-identity.store";
+import { PrismaExternalIdentityStore } from "./external-identity.store";
 
 function asUserId(value: string): UserId {
   return value as UserId;
