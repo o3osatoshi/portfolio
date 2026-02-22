@@ -6,7 +6,7 @@ import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { authErrorCodes } from "../auth-error-catalog";
 
-export type OidcAccessTokenClaims = {
+export type OidcAccessTokenClaimSet = {
   [key: string]: unknown;
   aud?: string | string[] | undefined;
   email?: string | undefined;
@@ -20,7 +20,7 @@ export type OidcAccessTokenClaims = {
   sub: string;
 };
 
-const oidcAccessTokenClaimsSchema: z.ZodType<OidcAccessTokenClaims> = z
+const oidcAccessTokenClaimSetSchema: z.ZodType<OidcAccessTokenClaimSet> = z
   .object({
     aud: z.union([z.string(), z.array(z.string())]).optional(),
     email: z.string().optional(),
@@ -37,7 +37,7 @@ const oidcAccessTokenClaimsSchema: z.ZodType<OidcAccessTokenClaims> = z
 
 export type OidcAccessTokenVerifier = (
   token: string,
-) => ResultAsync<OidcAccessTokenClaims, RichError>;
+) => ResultAsync<OidcAccessTokenClaimSet, RichError>;
 
 export type OidcAccessTokenVerifierOptions = {
   audience: string;
@@ -86,7 +86,7 @@ export function createOidcAccessTokenVerifier(
         });
       },
     ).andThen(({ payload }) => {
-      const result = oidcAccessTokenClaimsSchema.safeParse(payload);
+      const result = oidcAccessTokenClaimSetSchema.safeParse(payload);
       if (!result.success) {
         return errAsync(
           newRichError({
