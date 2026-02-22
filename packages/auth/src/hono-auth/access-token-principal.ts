@@ -2,13 +2,13 @@ import type { ExternalIdentityResolver, UserId } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { authErrorCodes } from "../auth-error-catalog";
 import {
   newFetchError,
   newRichError,
   type RichError,
 } from "@o3osatoshi/toolkit";
 
+import { authErrorCodes } from "../auth-error-catalog";
 import {
   createOidcAccessTokenVerifier,
   parseScopes,
@@ -78,7 +78,7 @@ export function createAccessTokenPrinResolver(
               if (userInfo.sub !== subject) {
                 return errAsync(
                   newRichError({
-                    code: authErrorCodes.CLI_IDENTITY_SUB_MISMATCH,
+                    code: authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH,
                     details: {
                       action: "ResolveAccessTokenPrin",
                       reason:
@@ -134,7 +134,7 @@ function fetchUserInfo({
     (cause) =>
       newFetchError({
         cause,
-        code: authErrorCodes.CLI_USERINFO_FETCH_FAILED,
+        code: authErrorCodes.OIDC_USERINFO_FETCH_FAILED,
         details: {
           action: "FetchUserInfo",
         },
@@ -149,7 +149,7 @@ function fetchUserInfo({
         ? ResultAsync.fromPromise(res.json(), (cause) =>
             newFetchError({
               cause,
-              code: authErrorCodes.CLI_USERINFO_PARSE_FAILED,
+              code: authErrorCodes.OIDC_USERINFO_PARSE_FAILED,
               details: {
                 action: "ParseUserInfo",
                 reason: "Failed to parse /userinfo response.",
@@ -162,7 +162,7 @@ function fetchUserInfo({
           )
         : errAsync(
             newRichError({
-              code: authErrorCodes.CLI_USERINFO_UNAUTHORIZED,
+              code: authErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
               details: {
                 action: "FetchUserInfo",
                 reason: "/userinfo request was rejected by the IdP.",
@@ -182,7 +182,7 @@ function fetchUserInfo({
       return errAsync(
         newRichError({
           cause: result.error,
-          code: authErrorCodes.CLI_USERINFO_SCHEMA_INVALID,
+          code: authErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
           details: {
             action: "ParseUserInfo",
             reason: "IdP /userinfo payload does not match expected schema.",

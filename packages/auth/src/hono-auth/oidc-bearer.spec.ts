@@ -11,12 +11,12 @@ vi.mock("jose", () => ({
   jwtVerify: h.jwtVerifyMock,
 }));
 
+import { authErrorCodes } from "../auth-error-catalog";
 import {
   createOidcAccessTokenVerifier,
   parseScopes,
   verifyOidcAccessToken,
 } from "./oidc-bearer";
-import { authErrorCodes } from "../auth-error-catalog";
 
 describe("hono-auth/oidc-bearer", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -103,7 +103,9 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_CLAIMS_INVALID);
+      expect(res.error.code).toBe(
+        authErrorCodes.OIDC_ACCESS_TOKEN_CLAIMS_INVALID,
+      );
     }
   });
 
@@ -147,7 +149,9 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH);
+      expect(res.error.code).toBe(
+        authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH,
+      );
     }
   });
 

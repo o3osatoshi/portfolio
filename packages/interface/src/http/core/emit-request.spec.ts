@@ -1,7 +1,7 @@
+import { authErrorCodes } from "@repo/auth";
 import { describe, expect, it, vi } from "vitest";
 
 import type { RequestLogger } from "@o3osatoshi/logging";
-import { authErrorCodes } from "@repo/auth";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import { emitRequestSummary } from "./emit-request";

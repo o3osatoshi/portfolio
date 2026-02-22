@@ -5,7 +5,7 @@ import type {
   GetTransactionsRequest,
   UpdateTransactionRequest,
 } from "@repo/application";
-import { authErrorCodes, type AuthConfig } from "@repo/auth";
+import { type AuthConfig, authErrorCodes } from "@repo/auth";
 import type {
   FxQuoteProvider,
   TransactionRepository,

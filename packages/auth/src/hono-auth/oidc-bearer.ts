@@ -2,8 +2,9 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { authErrorCodes } from "../auth-error-catalog";
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+
+import { authErrorCodes } from "../auth-error-catalog";
 
 export type OidcAccessTokenClaims = {
   [key: string]: unknown;
