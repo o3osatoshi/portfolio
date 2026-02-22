@@ -44,11 +44,13 @@ export function createOidcAccessTokenVerifier(
   const issuer = normalizeIssuer(options.issuer);
   const jwksUri = options.jwksUri ?? `${issuer}/.well-known/jwks.json`;
   const jwkSet = createRemoteJWKSet(new URL(jwksUri));
+  const issuers = [issuer, `${issuer}/`];
 
   return (token: string) =>
     ResultAsync.fromPromise(
       jwtVerify(token, jwkSet, {
         audience: options.audience,
+        issuer: issuers,
         clockTolerance: options.clockToleranceSeconds ?? 60,
       }),
       (cause) => {

@@ -53,9 +53,9 @@ describe("hono-auth/oidc-bearer", () => {
       expect.anything(),
       expect.objectContaining({
         audience: "https://api.o3o.app",
+        issuer: ["https://example.auth0.com", "https://example.auth0.com/"],
       }),
     );
-    expect(h.jwtVerifyMock.mock.calls[0]?.[2]).not.toHaveProperty("issuer");
   });
 
   it("reuses remote JWKS set across multiple token verifications", async () => {

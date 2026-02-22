@@ -15,7 +15,12 @@ import type {
   GetFxQuoteResponse,
   GetTransactionsResponse,
 } from "@repo/application";
-import { type AuthConfig, type CliPrincipal, getAuthUserId } from "@repo/auth";
+import {
+  type AuthConfig,
+  type CliPrincipal,
+  type ResolveCliPrincipalInput,
+  getAuthUserId,
+} from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { type Context, Hono } from "hono";
@@ -62,10 +67,6 @@ export type Deps = {
   ) => ResultAsync<CliPrincipal, RichError>;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
-};
-
-export type ResolveCliPrincipalInput = {
-  accessToken: string;
 };
 
 /**
