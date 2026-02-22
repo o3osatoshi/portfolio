@@ -1,7 +1,7 @@
 import {
+  type ExternalIdentityClaimSet,
+  type ExternalIdentityKey,
   type ExternalIdentityResolver,
-  type ExternalKey,
-  type IdentityClaim,
   newUserId,
   type UserId,
 } from "@repo/domain";
@@ -24,7 +24,9 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
   /**
    * Look up an existing user id by OIDC issuer/subject pair.
    */
-  findUserIdByKey(key: ExternalKey): ResultAsync<null | UserId, RichError> {
+  findUserIdByKey(
+    key: ExternalIdentityKey,
+  ): ResultAsync<null | UserId, RichError> {
     return ResultAsync.fromPromise(
       this.db.externalIdentity.findUnique({
         select: { userId: true },
@@ -55,7 +57,9 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
    * - Existing identity -> returns mapped user id.
    * - New identity -> links/creates user by verified email.
    */
-  resolveUserId(claim: IdentityClaim): ResultAsync<UserId, RichError> {
+  resolveUserId(
+    claim: ExternalIdentityClaimSet,
+  ): ResultAsync<UserId, RichError> {
     return this.findUserIdByKey(claim).andThen((userId) => {
       if (userId) return okAsync(userId);
       return this.linkByVerifiedEmail(claim);
@@ -63,7 +67,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
   }
 
   private linkByVerifiedEmail(
-    claim: IdentityClaim,
+    claim: ExternalIdentityClaimSet,
   ): ResultAsync<UserId, RichError> {
     if (!claim.email || !claim.emailVerified) {
       return errAsync(
