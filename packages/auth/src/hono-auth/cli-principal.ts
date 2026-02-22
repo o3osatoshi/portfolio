@@ -24,7 +24,7 @@ export type CliPrincipal = {
 export type CreateCliPrincipalResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
-  findUserIdByIdentity: UserIdentityResolver["findUserIdByIssuerSubject"];
+  findUserIdByIdentity: UserIdentityResolver["findUserIdByExternalKey"];
   issuer: string;
   resolveUserIdByIdentity: UserIdentityResolver["resolveUserId"];
 };

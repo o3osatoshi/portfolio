@@ -58,7 +58,7 @@ export const api = onRequest(async (req, res) => {
     const resolveCliPrincipal = createCliPrincipalResolver({
       audience: env.AUTH_OIDC_AUDIENCE,
       findUserIdByIdentity: (input) =>
-        userIdentityStore.findUserIdByIssuerSubject(input),
+        userIdentityStore.findUserIdByExternalKey(input),
       issuer: env.AUTH_OIDC_ISSUER,
       resolveUserIdByIdentity: (input) =>
         userIdentityStore.resolveUserId(input),

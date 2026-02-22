@@ -67,7 +67,7 @@ const authConfig = createAuthConfig({
 const userIdentityStore = new PrismaUserIdentityStore(prisma);
 const resolveCliPrincipal = createCliPrincipalResolver({
   audience: process.env.AUTH_OIDC_AUDIENCE!,
-  findUserIdByIdentity: (input) => userIdentityStore.findUserIdByIssuerSubject(input),
+  findUserIdByIdentity: (input) => userIdentityStore.findUserIdByExternalKey(input),
   issuer: process.env.AUTH_OIDC_ISSUER!,
   resolveUserIdByIdentity: (input) => userIdentityStore.resolveUserId(input),
 });

@@ -1,7 +1,7 @@
 import {
-  type IdentityKey,
+  type ExternalKey,
+  type IdentityClaims,
   newUserId,
-  type ResolveUserByIdentityInput,
   type UserId,
   type UserIdentityResolver,
 } from "@repo/domain";
@@ -24,8 +24,8 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
   /**
    * Look up an existing user id by OIDC issuer/subject pair.
    */
-  findUserIdByIssuerSubject(
-    input: IdentityKey,
+  findUserIdByExternalKey(
+    input: ExternalKey,
   ): ResultAsync<null | UserId, RichError> {
     return ResultAsync.fromPromise(
       this.db.userIdentity.findUnique({
@@ -55,17 +55,15 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
    * - Existing identity -> returns mapped user id.
    * - New identity -> links/creates user by verified email.
    */
-  resolveUserId(
-    input: ResolveUserByIdentityInput,
-  ): ResultAsync<UserId, RichError> {
-    return this.findUserIdByIssuerSubject(input).andThen((existingUserId) => {
+  resolveUserId(input: IdentityClaims): ResultAsync<UserId, RichError> {
+    return this.findUserIdByExternalKey(input).andThen((existingUserId) => {
       if (existingUserId) return okAsync(existingUserId);
       return this.linkByVerifiedEmail(input);
     });
   }
 
   private linkByVerifiedEmail(
-    input: ResolveUserByIdentityInput,
+    input: IdentityClaims,
   ): ResultAsync<UserId, RichError> {
     if (!input.email || !input.emailVerified) {
       return errAsync(
@@ -127,7 +125,7 @@ export class PrismaUserIdentityStore implements UserIdentityResolver {
 
         // A concurrent request may have linked the same issuer/subject first.
         // Retry by reading the canonical mapping and return it when available.
-        return this.findUserIdByIssuerSubject(input).andThen((userId) =>
+        return this.findUserIdByExternalKey(input).andThen((userId) =>
           userId ? okAsync(userId) : errAsync(error),
         );
       });

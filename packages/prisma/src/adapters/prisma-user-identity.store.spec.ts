@@ -32,9 +32,9 @@ function createStore(overrides?: {
 }
 
 describe("PrismaUserIdentityStore", () => {
-  it("findUserIdByIssuerSubject returns null when identity does not exist", async () => {
+  it("findUserIdByExternalKey returns null when identity does not exist", async () => {
     const store = createStore();
-    const res = await store.findUserIdByIssuerSubject({
+    const res = await store.findUserIdByExternalKey({
       issuer: "https://example.auth0.com",
       subject: "auth0|abc",
     });
