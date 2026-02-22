@@ -2,6 +2,7 @@ import type { ExternalIdentityResolver, UserId } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
+import { authErrorCodes } from "../auth-error-catalog";
 import {
   newFetchError,
   newRichError,
@@ -77,7 +78,7 @@ export function createAccessTokenPrinResolver(
               if (userInfo.sub !== subject) {
                 return errAsync(
                   newRichError({
-                    code: "CLI_IDENTITY_SUB_MISMATCH",
+                    code: authErrorCodes.CLI_IDENTITY_SUB_MISMATCH,
                     details: {
                       action: "ResolveAccessTokenPrin",
                       reason:
@@ -133,7 +134,7 @@ function fetchUserInfo({
     (cause) =>
       newFetchError({
         cause,
-        code: "CLI_USERINFO_FETCH_FAILED",
+        code: authErrorCodes.CLI_USERINFO_FETCH_FAILED,
         details: {
           action: "FetchUserInfo",
         },
@@ -148,7 +149,7 @@ function fetchUserInfo({
         ? ResultAsync.fromPromise(res.json(), (cause) =>
             newFetchError({
               cause,
-              code: "CLI_USERINFO_PARSE_FAILED",
+              code: authErrorCodes.CLI_USERINFO_PARSE_FAILED,
               details: {
                 action: "ParseUserInfo",
                 reason: "Failed to parse /userinfo response.",
@@ -161,7 +162,7 @@ function fetchUserInfo({
           )
         : errAsync(
             newRichError({
-              code: "CLI_USERINFO_UNAUTHORIZED",
+              code: authErrorCodes.CLI_USERINFO_UNAUTHORIZED,
               details: {
                 action: "FetchUserInfo",
                 reason: "/userinfo request was rejected by the IdP.",
@@ -181,7 +182,7 @@ function fetchUserInfo({
       return errAsync(
         newRichError({
           cause: result.error,
-          code: "CLI_USERINFO_SCHEMA_INVALID",
+          code: authErrorCodes.CLI_USERINFO_SCHEMA_INVALID,
           details: {
             action: "ParseUserInfo",
             reason: "IdP /userinfo payload does not match expected schema.",

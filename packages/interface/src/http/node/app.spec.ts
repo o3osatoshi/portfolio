@@ -5,7 +5,7 @@ import type {
   GetTransactionsRequest,
   UpdateTransactionRequest,
 } from "@repo/application";
-import type { AuthConfig } from "@repo/auth";
+import { authErrorCodes, type AuthConfig } from "@repo/auth";
 import type {
   FxQuoteProvider,
   TransactionRepository,
@@ -289,7 +289,7 @@ describe("http/node app", () => {
     const res = await build((_) =>
       errAsync(
         newRichError({
-          code: "OIDC_ACCESS_TOKEN_INVALID",
+          code: authErrorCodes.OIDC_ACCESS_TOKEN_INVALID,
           details: { action: "VerifyOidcAccessToken", reason: "invalid" },
           i18n: { key: "errors.application.unauthorized" },
           isOperational: true,

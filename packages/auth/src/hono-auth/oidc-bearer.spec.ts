@@ -16,6 +16,7 @@ import {
   parseScopes,
   verifyOidcAccessToken,
 } from "./oidc-bearer";
+import { authErrorCodes } from "../auth-error-catalog";
 
 describe("hono-auth/oidc-bearer", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -102,7 +103,7 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_CLAIMS_INVALID");
+      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_CLAIMS_INVALID);
     }
   });
 
@@ -123,7 +124,9 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH");
+      expect(res.error.code).toBe(
+        authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
+      );
     }
   });
 
@@ -144,7 +147,7 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_ISSUER_MISMATCH");
+      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH);
     }
   });
 
@@ -161,7 +164,9 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH");
+      expect(res.error.code).toBe(
+        authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
+      );
     }
   });
 
@@ -178,7 +183,7 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_EXPIRED");
+      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_EXPIRED);
     }
   });
 
@@ -196,7 +201,7 @@ describe("hono-auth/oidc-bearer", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("OIDC_ACCESS_TOKEN_EXPIRED");
+      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_EXPIRED);
     }
   });
 });

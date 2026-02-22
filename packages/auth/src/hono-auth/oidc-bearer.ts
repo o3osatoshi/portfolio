@@ -2,6 +2,7 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
+import { authErrorCodes } from "../auth-error-catalog";
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 export type OidcAccessTokenClaims = {
@@ -84,12 +85,12 @@ export function createOidcAccessTokenVerifier(
         });
       },
     ).andThen(({ payload }) => {
-      const parsedClaims = oidcAccessTokenClaimsSchema.safeParse(payload);
-      if (!parsedClaims.success) {
+      const result = oidcAccessTokenClaimsSchema.safeParse(payload);
+      if (!result.success) {
         return errAsync(
           newRichError({
-            cause: parsedClaims.error,
-            code: "OIDC_ACCESS_TOKEN_CLAIMS_INVALID",
+            cause: result.error,
+            code: authErrorCodes.OIDC_ACCESS_TOKEN_CLAIMS_INVALID,
             details: {
               action: "VerifyOidcAccessToken",
               reason: "Access token claims did not match expected shape.",
@@ -102,12 +103,12 @@ export function createOidcAccessTokenVerifier(
         );
       }
 
-      const claims = parsedClaims.data;
+      const claims = result.data;
 
       if (normalizeIssuer(claims.iss) !== issuer) {
         return errAsync(
           newRichError({
-            code: "OIDC_ACCESS_TOKEN_ISSUER_MISMATCH",
+            code: authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH,
             details: {
               action: "VerifyOidcAccessToken",
               reason: "Access token issuer does not match this API.",
@@ -124,7 +125,7 @@ export function createOidcAccessTokenVerifier(
       if (!normalizedAud.includes(options.audience)) {
         return errAsync(
           newRichError({
-            code: "OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH",
+            code: authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
             details: {
               action: "VerifyOidcAccessToken",
               reason: "Access token audience does not match this API.",
@@ -168,7 +169,7 @@ export function verifyOidcAccessToken(
 }
 
 function classifyJwtVerifyFailure(cause: unknown): {
-  code: string;
+  code: (typeof authErrorCodes)[keyof typeof authErrorCodes];
   reason: string;
 } {
   const result = jwtVerifyFailureSchema.safeParse(cause);
@@ -182,7 +183,7 @@ function classifyJwtVerifyFailure(cause: unknown): {
     message.includes('"exp" claim timestamp check failed')
   ) {
     return {
-      code: "OIDC_ACCESS_TOKEN_EXPIRED",
+      code: authErrorCodes.OIDC_ACCESS_TOKEN_EXPIRED,
       reason: "Access token has expired.",
     };
   }
@@ -192,13 +193,13 @@ function classifyJwtVerifyFailure(cause: unknown): {
     message.includes('unexpected "aud" claim value')
   ) {
     return {
-      code: "OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH",
+      code: authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
       reason: "Access token audience does not match this API.",
     };
   }
 
   return {
-    code: "OIDC_ACCESS_TOKEN_INVALID",
+    code: authErrorCodes.OIDC_ACCESS_TOKEN_INVALID,
     reason: "Access token verification failed.",
   };
 }
