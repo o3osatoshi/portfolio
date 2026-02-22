@@ -14,14 +14,14 @@ import {
   verifyOidcAccessToken,
 } from "./oidc-bearer";
 
-export type CliPrincipal = {
+export type AccessTokenPrincipal = {
   issuer: string;
   scopes: string[];
   subject: string;
   userId: UserId;
 };
 
-export type CreateCliPrincipalResolverOptions = {
+export type CreateAccessTokenPrincipalResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
   findUserIdByExternalIdentity: ExternalIdentityResolver["findUserIdByExternalKey"];
@@ -29,7 +29,7 @@ export type CreateCliPrincipalResolverOptions = {
   resolveUserIdByExternalIdentity: ExternalIdentityResolver["resolveUserId"];
 };
 
-export type ResolveCliPrincipalInput = {
+export type ResolveAccessTokenPrincipalInput = {
   accessToken: string;
 };
 
@@ -42,10 +42,10 @@ const userInfoSchema = z.object({
 });
 
 /**
- * Build a resolver that maps a CLI access token onto an internal user id.
+ * Build a resolver that maps an access token onto an internal user id.
  */
-export function createCliPrincipalResolver(
-  options: CreateCliPrincipalResolverOptions,
+export function createAccessTokenPrincipalResolver(
+  options: CreateAccessTokenPrincipalResolverOptions,
 ) {
   const verifyAccessToken = createOidcAccessTokenVerifier({
     audience: options.audience,
@@ -54,8 +54,8 @@ export function createCliPrincipalResolver(
   const fetchImpl = options.fetchImpl ?? fetch;
 
   return (
-    input: ResolveCliPrincipalInput,
-  ): ResultAsync<CliPrincipal, RichError> =>
+    input: ResolveAccessTokenPrincipalInput,
+  ): ResultAsync<AccessTokenPrincipal, RichError> =>
     verifyOidcAccessToken(verifyAccessToken, input.accessToken).andThen(
       (claims) => {
         const scopes = parseScopes(claims.scope);
@@ -79,7 +79,7 @@ export function createCliPrincipalResolver(
                   newRichError({
                     code: "CLI_IDENTITY_SUB_MISMATCH",
                     details: {
-                      action: "ResolveCliPrincipal",
+                      action: "ResolveAccessTokenPrincipal",
                       reason:
                         "Access token subject does not match /userinfo subject.",
                     },

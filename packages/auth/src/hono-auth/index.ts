@@ -70,7 +70,7 @@ export function getAuthUserId(authUser?: AuthUser): string | undefined {
 }
 
 export type { AuthConfig };
-export * from "./cli-principal";
+export * from "./access-token-principal";
 export * from "./jwt";
 export * from "./oidc-bearer";
 export * from "./types";

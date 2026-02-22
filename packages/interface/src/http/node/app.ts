@@ -1,7 +1,7 @@
 import type {
+  AccessTokenPrincipal,
   AuthConfig,
-  CliPrincipal,
-  ResolveCliPrincipalInput,
+  ResolveAccessTokenPrincipalInput,
 } from "@repo/auth";
 import { authHandler, initAuthConfig } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
@@ -36,9 +36,9 @@ export type Deps = {
   /** Provider required by FX-quote use cases. */
   fxQuoteProvider: FxQuoteProvider;
   /** Resolve and provision the internal user principal for CLI access tokens. */
-  resolveCliPrincipal: (
-    input: ResolveCliPrincipalInput,
-  ) => ResultAsync<CliPrincipal, RichError>;
+  resolveAccessTokenPrincipal: (
+    input: ResolveAccessTokenPrincipalInput,
+  ) => ResultAsync<AccessTokenPrincipal, RichError>;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -113,7 +113,7 @@ export function buildApp(deps: Deps) {
  * export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
  *   authConfig,
  *   fxQuoteProvider,
- *   resolveCliPrincipal,
+ *   resolveAccessTokenPrincipal,
  *   transactionRepo,
  * });
  * ```

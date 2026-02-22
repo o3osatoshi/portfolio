@@ -1,8 +1,8 @@
 import "server-only";
 
 import {
-  createCliPrincipalResolver,
-  type ResolveCliPrincipalInput,
+  createAccessTokenPrincipalResolver,
+  type ResolveAccessTokenPrincipalInput,
 } from "@repo/auth";
 import { createPrismaClient, PrismaExternalIdentityStore } from "@repo/prisma";
 
@@ -11,7 +11,7 @@ import { env } from "@/env/server";
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
 const externalIdentityStore = new PrismaExternalIdentityStore(client);
 
-const resolver = createCliPrincipalResolver({
+const resolver = createAccessTokenPrincipalResolver({
   audience: env.AUTH_OIDC_AUDIENCE,
   findUserIdByExternalIdentity: (input) =>
     externalIdentityStore.findUserIdByExternalKey(input),
@@ -20,6 +20,8 @@ const resolver = createCliPrincipalResolver({
     externalIdentityStore.resolveUserId(input),
 });
 
-export function resolveCliPrincipal(input: ResolveCliPrincipalInput) {
+export function resolveAccessTokenPrincipal(
+  input: ResolveAccessTokenPrincipalInput,
+) {
   return resolver(input);
 }

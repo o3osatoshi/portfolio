@@ -160,13 +160,15 @@ describe("http/node app", () => {
   beforeEach(() => vi.clearAllMocks());
 
   function build(
-    resolveCliPrincipal?: Parameters<typeof buildApp>[0]["resolveCliPrincipal"],
+    resolveAccessTokenPrincipal?: Parameters<
+      typeof buildApp
+    >[0]["resolveAccessTokenPrincipal"],
   ) {
     return buildApp({
       fxQuoteProvider: {} as FxQuoteProvider,
       authConfig: {} as AuthConfig,
-      resolveCliPrincipal:
-        resolveCliPrincipal ??
+      resolveAccessTokenPrincipal:
+        resolveAccessTokenPrincipal ??
         ((_) =>
           okAsync({
             issuer: "https://example.auth0.com",
@@ -283,7 +285,7 @@ describe("http/node app", () => {
     });
   });
 
-  it("returns 401 when resolveCliPrincipal fails", async () => {
+  it("returns 401 when resolveAccessTokenPrincipal fails", async () => {
     const res = await build((_) =>
       errAsync(
         newRichError({

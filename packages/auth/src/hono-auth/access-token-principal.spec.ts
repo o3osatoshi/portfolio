@@ -2,7 +2,7 @@ import type { UserId } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createCliPrincipalResolver } from "./cli-principal";
+import { createAccessTokenPrincipalResolver } from "./access-token-principal";
 
 const h = vi.hoisted(() => {
   const createVerifierMock = vi.fn(() => Symbol("verifier"));
@@ -21,7 +21,7 @@ function asUserId(value: string): UserId {
   return value as UserId;
 }
 
-describe("hono-auth/cli-principal", () => {
+describe("hono-auth/access-token-principal", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns existing mapped user without calling /userinfo", async () => {
@@ -34,7 +34,7 @@ describe("hono-auth/cli-principal", () => {
       }),
     );
     const fetchMock = vi.fn();
-    const resolve = createCliPrincipalResolver({
+    const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByExternalIdentity,
@@ -79,7 +79,7 @@ describe("hono-auth/cli-principal", () => {
       okAsync(asUserId("u-2")),
     );
 
-    const resolve = createCliPrincipalResolver({
+    const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByExternalIdentity: () => okAsync(null),
