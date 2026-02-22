@@ -14,28 +14,28 @@ import {
   verifyOidcAccessToken,
 } from "./oidc-bearer";
 
-export type AccessTokenPrincipal = {
+export type AccessTokenPrin = {
   issuer: string;
   scopes: string[];
   subject: string;
   userId: UserId;
 };
 
-export type CreateAccessTokenPrincipalResolverOptions = {
+export type CreateAccessTokenPrinResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
-  findUserIdByExternalIdentity: ExternalIdentityResolver["findUserIdByExternalKey"];
+  findUserIdByKey: ExternalIdentityResolver["findUserIdByKey"];
   issuer: string;
-  resolveUserIdByExternalIdentity: ExternalIdentityResolver["resolveUserId"];
+  resolveUserId: ExternalIdentityResolver["resolveUserId"];
 };
 
-export type ResolveAccessTokenPrincipalInput = {
+export type ResolveAccessTokenPrinParams = {
   accessToken: string;
 };
 
 const userInfoSchema = z.object({
   name: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   email_verified: z.boolean().optional(),
   picture: z.string().optional(),
   sub: z.string(),
@@ -44,8 +44,8 @@ const userInfoSchema = z.object({
 /**
  * Build a resolver that maps an access token onto an internal user id.
  */
-export function createAccessTokenPrincipalResolver(
-  options: CreateAccessTokenPrincipalResolverOptions,
+export function createAccessTokenPrinResolver(
+  options: CreateAccessTokenPrinResolverOptions,
 ) {
   const verifyAccessToken = createOidcAccessTokenVerifier({
     audience: options.audience,
@@ -54,23 +54,23 @@ export function createAccessTokenPrincipalResolver(
   const fetchImpl = options.fetchImpl ?? fetch;
 
   return (
-    input: ResolveAccessTokenPrincipalInput,
-  ): ResultAsync<AccessTokenPrincipal, RichError> =>
-    verifyOidcAccessToken(verifyAccessToken, input.accessToken).andThen(
+    params: ResolveAccessTokenPrinParams,
+  ): ResultAsync<AccessTokenPrin, RichError> =>
+    verifyOidcAccessToken(verifyAccessToken, params.accessToken).andThen(
       (claims) => {
         const scopes = parseScopes(claims.scope);
         const issuer = normalizeIssuer(claims.iss);
         const subject = claims.sub;
 
         return options
-          .findUserIdByExternalIdentity({ issuer, subject })
-          .andThen((existingUserId) => {
-            if (existingUserId) {
-              return okAsync(existingUserId);
+          .findUserIdByKey({ issuer, subject })
+          .andThen((userId) => {
+            if (userId) {
+              return okAsync(userId);
             }
 
             return fetchUserInfo({
-              accessToken: input.accessToken,
+              accessToken: params.accessToken,
               fetchImpl,
               issuer,
             }).andThen((userInfo) => {
@@ -79,7 +79,7 @@ export function createAccessTokenPrincipalResolver(
                   newRichError({
                     code: "CLI_IDENTITY_SUB_MISMATCH",
                     details: {
-                      action: "ResolveAccessTokenPrincipal",
+                      action: "ResolveAccessTokenPrin",
                       reason:
                         "Access token subject does not match /userinfo subject.",
                     },
@@ -91,7 +91,7 @@ export function createAccessTokenPrincipalResolver(
                 );
               }
 
-              return options.resolveUserIdByExternalIdentity({
+              return options.resolveUserId({
                 name: userInfo.name,
                 email: userInfo.email,
                 emailVerified: userInfo.email_verified === true,
@@ -121,10 +121,10 @@ function fetchUserInfo({
   issuer: string;
 }): ResultAsync<z.infer<typeof userInfoSchema>, RichError> {
   const normalizedIssuer = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  const userInfoUrl = `${normalizedIssuer}/userinfo`;
+  const url = `${normalizedIssuer}/userinfo`;
 
   return ResultAsync.fromPromise(
-    fetchImpl(userInfoUrl, {
+    fetchImpl(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -135,27 +135,27 @@ function fetchUserInfo({
         cause,
         code: "CLI_USERINFO_FETCH_FAILED",
         details: {
-          action: "FetchCliUserInfo",
+          action: "FetchUserInfo",
         },
         request: {
           method: "GET",
-          url: userInfoUrl,
+          url,
         },
       }),
   )
-    .andThen((response) =>
-      response.ok
-        ? ResultAsync.fromPromise(response.json(), (cause) =>
+    .andThen((res) =>
+      res.ok
+        ? ResultAsync.fromPromise(res.json(), (cause) =>
             newFetchError({
               cause,
               code: "CLI_USERINFO_PARSE_FAILED",
               details: {
-                action: "ParseCliUserInfo",
+                action: "ParseUserInfo",
                 reason: "Failed to parse /userinfo response.",
               },
               request: {
                 method: "GET",
-                url: userInfoUrl,
+                url,
               },
             }),
           )
@@ -163,7 +163,7 @@ function fetchUserInfo({
             newRichError({
               code: "CLI_USERINFO_UNAUTHORIZED",
               details: {
-                action: "FetchCliUserInfo",
+                action: "FetchUserInfo",
                 reason: "/userinfo request was rejected by the IdP.",
               },
               i18n: { key: "errors.application.unauthorized" },
@@ -174,16 +174,16 @@ function fetchUserInfo({
           ),
     )
     .andThen((json) => {
-      const parsed = userInfoSchema.safeParse(json);
-      if (parsed.success) {
-        return okAsync(parsed.data);
+      const result = userInfoSchema.safeParse(json);
+      if (result.success) {
+        return okAsync(result.data);
       }
       return errAsync(
         newRichError({
-          cause: parsed.error,
+          cause: result.error,
           code: "CLI_USERINFO_SCHEMA_INVALID",
           details: {
-            action: "ParseCliUserInfo",
+            action: "ParseUserInfo",
             reason: "IdP /userinfo payload does not match expected schema.",
           },
           i18n: { key: "errors.application.unauthorized" },

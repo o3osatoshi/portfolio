@@ -1,7 +1,4 @@
-import {
-  createAccessTokenPrincipalResolver,
-  createAuthConfig,
-} from "@repo/auth";
+import { createAccessTokenPrinResolver, createAuthConfig } from "@repo/auth";
 import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import {
   buildApp,
@@ -57,20 +54,19 @@ export const api = onRequest(async (req, res) => {
     });
 
     const transactionRepo = new PrismaTransactionRepository(client);
-    const externalIdentityStore = new PrismaExternalIdentityStore(client);
-    const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+
+    const identityStore = new PrismaExternalIdentityStore(client);
+    const resolveAccessTokenPrin = createAccessTokenPrinResolver({
       audience: env.AUTH_OIDC_AUDIENCE,
-      findUserIdByExternalIdentity: (input) =>
-        externalIdentityStore.findUserIdByExternalKey(input),
+      findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
       issuer: env.AUTH_OIDC_ISSUER,
-      resolveUserIdByExternalIdentity: (input) =>
-        externalIdentityStore.resolveUserId(input),
+      resolveUserId: (claim) => identityStore.resolveUserId(claim),
     });
 
     const app = buildApp({
       fxQuoteProvider,
       authConfig,
-      resolveAccessTokenPrincipal,
+      resolveAccessTokenPrin,
       transactionRepo,
     });
     handler = createExpressRequestHandler(app);

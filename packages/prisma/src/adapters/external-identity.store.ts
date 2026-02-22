@@ -24,9 +24,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
   /**
    * Look up an existing user id by OIDC issuer/subject pair.
    */
-  findUserIdByExternalKey(
-    key: ExternalKey,
-  ): ResultAsync<null | UserId, RichError> {
+  findUserIdByKey(key: ExternalKey): ResultAsync<null | UserId, RichError> {
     return ResultAsync.fromPromise(
       this.db.externalIdentity.findUnique({
         select: { userId: true },
@@ -58,7 +56,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
    * - New identity -> links/creates user by verified email.
    */
   resolveUserId(claim: IdentityClaim): ResultAsync<UserId, RichError> {
-    return this.findUserIdByExternalKey(claim).andThen((userId) => {
+    return this.findUserIdByKey(claim).andThen((userId) => {
       if (userId) return okAsync(userId);
       return this.linkByVerifiedEmail(claim);
     });
@@ -127,7 +125,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
 
         // A concurrent request may have linked the same issuer/subject first.
         // Retry by reading the canonical mapping and return it when available.
-        return this.findUserIdByExternalKey(claim).andThen((userId) =>
+        return this.findUserIdByKey(claim).andThen((userId) =>
           userId ? okAsync(userId) : errAsync(error),
         );
       });

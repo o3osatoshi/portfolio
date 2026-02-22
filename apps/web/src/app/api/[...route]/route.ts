@@ -5,7 +5,7 @@ import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
 
 import { env } from "@/env/server";
 import { getWebNodeLogger } from "@/lib/logger/node";
-import { resolveAccessTokenPrincipal } from "@/server/resolve-access-token-principal";
+import { resolveAccessTokenPrin } from "@/server/resolve-access-token-principal";
 
 const store = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
@@ -42,6 +42,6 @@ const transactionRepo = new PrismaTransactionRepository(client);
 export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   fxQuoteProvider,
   authConfig,
-  resolveAccessTokenPrincipal,
+  resolveAccessTokenPrin,
   transactionRepo,
 });

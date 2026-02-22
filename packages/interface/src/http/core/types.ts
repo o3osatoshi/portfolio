@@ -1,11 +1,11 @@
-import type { AccessTokenPrincipal, AuthUser } from "@repo/auth";
+import type { AccessTokenPrin, AuthUser } from "@repo/auth";
 
 import type { Logger, RequestLogger } from "@o3osatoshi/logging";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 export type ContextEnv = {
   Variables: {
-    accessTokenPrincipal?: AccessTokenPrincipal;
+    accessTokenPrin?: AccessTokenPrin;
     authUser?: AuthUser;
     error?: RichError;
     logger?: Logger;

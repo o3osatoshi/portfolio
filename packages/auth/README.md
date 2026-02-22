@@ -44,7 +44,7 @@ import { createAuthConfig } from "@repo/auth";
 import { buildHandler } from "@repo/interface/http/node";
 import { ExchangeRateApi } from "@repo/integrations";
 import { createPrismaClient, PrismaTransactionRepository, PrismaExternalIdentityStore } from "@repo/prisma";
-import { createAccessTokenPrincipalResolver } from "@repo/auth";
+import { createAccessTokenPrinResolver } from "@repo/auth";
 
 const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
 const transactionRepo = new PrismaTransactionRepository(prisma);
@@ -65,10 +65,10 @@ const authConfig = createAuthConfig({
   secret: process.env.AUTH_SECRET!,
 });
 const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
-const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+const resolveAccessTokenPrin = createAccessTokenPrinResolver({
   audience: process.env.AUTH_OIDC_AUDIENCE!,
   findUserIdByExternalIdentity: (input) =>
-    externalIdentityStore.findUserIdByExternalKey(input),
+    externalIdentityStore.findUserIdByKey(input),
   issuer: process.env.AUTH_OIDC_ISSUER!,
   resolveUserIdByExternalIdentity: (input) =>
     externalIdentityStore.resolveUserId(input),
@@ -77,7 +77,7 @@ const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
 export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   authConfig,
   fxQuoteProvider,
-  resolveAccessTokenPrincipal,
+  resolveAccessTokenPrin,
   transactionRepo,
 });
 ```

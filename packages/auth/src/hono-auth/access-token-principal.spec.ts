@@ -2,7 +2,7 @@ import type { UserId } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createAccessTokenPrincipalResolver } from "./access-token-principal";
+import { createAccessTokenPrinResolver } from "./access-token-principal";
 
 const h = vi.hoisted(() => {
   const createVerifierMock = vi.fn(() => Symbol("verifier"));
@@ -34,12 +34,12 @@ describe("hono-auth/access-token-principal", () => {
       }),
     );
     const fetchMock = vi.fn();
-    const resolve = createAccessTokenPrincipalResolver({
+    const resolve = createAccessTokenPrinResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByExternalIdentity,
+      findUserIdByKey: findUserIdByExternalIdentity,
       issuer: "https://example.auth0.com",
-      resolveUserIdByExternalIdentity: () => okAsync(asUserId("u-new")),
+      resolveUserId: () => okAsync(asUserId("u-new")),
     });
 
     const res = await resolve({ accessToken: "token" });
@@ -79,12 +79,12 @@ describe("hono-auth/access-token-principal", () => {
       okAsync(asUserId("u-2")),
     );
 
-    const resolve = createAccessTokenPrincipalResolver({
+    const resolve = createAccessTokenPrinResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByExternalIdentity: () => okAsync(null),
+      findUserIdByKey: () => okAsync(null),
       issuer: "https://example.auth0.com",
-      resolveUserIdByExternalIdentity,
+      resolveUserId: resolveUserIdByExternalIdentity,
     });
 
     const res = await resolve({ accessToken: "token" });

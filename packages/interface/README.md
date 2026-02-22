@@ -101,7 +101,7 @@ const authConfig = createAuthConfig({
 export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   authConfig,
   fxQuoteProvider,
-  resolveAccessTokenPrincipal,
+  resolveAccessTokenPrin,
   transactionRepo,
 });
 
@@ -136,8 +136,8 @@ import { SomeTransactionRepository } from "@your/infra";
 const app = buildApp({
   authConfig: {} as AuthConfig,
   fxQuoteProvider: {} as FxQuoteProvider,
-  resolveAccessTokenPrincipal: () => {
-    throw new Error("resolveAccessTokenPrincipal is required");
+  resolveAccessTokenPrin: () => {
+    throw new Error("resolveAccessTokenPrin is required");
   },
   transactionRepo: new SomeTransactionRepository(),
 });
@@ -191,9 +191,9 @@ const deps: Deps = {
     },
     secret: "...",
   }),
-  resolveAccessTokenPrincipal: () => {
+  resolveAccessTokenPrin: () => {
     throw new Error(
-      "inject from @repo/auth#createAccessTokenPrincipalResolver",
+      "inject from @repo/auth#createAccessTokenPrinResolver",
     );
   },
   transactionRepo: myTransactionRepo as TransactionRepository,

@@ -11,9 +11,7 @@ export interface ExternalIdentityResolver {
   /**
    * Look up a linked user id by issuer/subject pair.
    */
-  findUserIdByExternalKey(
-    key: ExternalKey,
-  ): ResultAsync<null | UserId, RichError>;
+  findUserIdByKey(key: ExternalKey): ResultAsync<null | UserId, RichError>;
 
   /**
    * Resolve or link an internal user id for the provided identity context.
