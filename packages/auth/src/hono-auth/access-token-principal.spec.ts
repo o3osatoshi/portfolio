@@ -5,14 +5,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createAccessTokenPrinResolver } from "./access-token-principal";
 
 const h = vi.hoisted(() => {
-  const createVerifierMock = vi.fn(() => Symbol("verifier"));
+  const createVerifierMock = vi.fn();
   const verifyTokenMock = vi.fn();
+  createVerifierMock.mockImplementation(() => verifyTokenMock);
   return { createVerifierMock, verifyTokenMock };
 });
 
 vi.mock("./oidc-bearer", () => ({
   createOidcAccessTokenVerifier: h.createVerifierMock,
-  verifyOidcAccessToken: h.verifyTokenMock,
   parseScopes: (scope: unknown) =>
     typeof scope === "string" ? scope.split(" ").filter(Boolean) : [],
 }));

@@ -12,11 +12,7 @@ vi.mock("jose", () => ({
 }));
 
 import { authErrorCodes } from "../auth-error-catalog";
-import {
-  createOidcAccessTokenVerifier,
-  parseScopes,
-  verifyOidcAccessToken,
-} from "./oidc-bearer";
+import { createOidcAccessTokenVerifier, parseScopes } from "./oidc-bearer";
 
 describe("hono-auth/oidc-bearer", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -41,7 +37,7 @@ describe("hono-auth/oidc-bearer", () => {
       audience: "https://api.o3o.app",
       issuer: "https://example.auth0.com/",
     });
-    const res = await verifyOidcAccessToken(verifier, "token");
+    const res = await verifier("token");
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {

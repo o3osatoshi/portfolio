@@ -104,9 +104,9 @@ export function createOidcAccessTokenVerifier(
         );
       }
 
-      const claims = result.data;
+      const claimSet = result.data;
 
-      if (normalizeIssuer(claims.iss) !== issuer) {
+      if (normalizeIssuer(claimSet.iss) !== issuer) {
         return errAsync(
           newRichError({
             code: authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH,
@@ -122,8 +122,7 @@ export function createOidcAccessTokenVerifier(
         );
       }
 
-      const normalizedAud = normalizeAudience(claims.aud);
-      if (!normalizedAud.includes(options.audience)) {
+      if (!normalizeAudience(claimSet.aud).includes(options.audience)) {
         return errAsync(
           newRichError({
             code: authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
@@ -139,7 +138,7 @@ export function createOidcAccessTokenVerifier(
         );
       }
 
-      return okAsync(claims);
+      return okAsync(claimSet);
     });
 }
 
@@ -156,17 +155,6 @@ export function parseScopes(scopeClaim: unknown): string[] {
         .filter(Boolean),
     ),
   ];
-}
-
-/**
- * Verify an OIDC access token using a verifier returned by
- * {@link createOidcAccessTokenVerifier}.
- */
-export function verifyOidcAccessToken(
-  verifier: OidcAccessTokenVerifier,
-  token: string,
-) {
-  return verifier(token);
 }
 
 function classifyJwtVerifyFailure(cause: unknown): {

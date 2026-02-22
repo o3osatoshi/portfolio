@@ -9,11 +9,7 @@ import {
 } from "@o3osatoshi/toolkit";
 
 import { authErrorCodes } from "../auth-error-catalog";
-import {
-  createOidcAccessTokenVerifier,
-  parseScopes,
-  verifyOidcAccessToken,
-} from "./oidc-bearer";
+import { createOidcAccessTokenVerifier, parseScopes } from "./oidc-bearer";
 
 export type AccessTokenPrin = {
   issuer: string;
@@ -57,59 +53,57 @@ export function createAccessTokenPrinResolver(
   return (
     params: ResolveAccessTokenPrinParams,
   ): ResultAsync<AccessTokenPrin, RichError> =>
-    verifyOidcAccessToken(verifyAccessToken, params.accessToken).andThen(
-      (claims) => {
-        const scopes = parseScopes(claims.scope);
-        const issuer = normalizeIssuer(claims.iss);
-        const subject = claims.sub;
+    verifyAccessToken(params.accessToken).andThen((claims) => {
+      const scopes = parseScopes(claims.scope);
+      const issuer = normalizeIssuer(claims.iss);
+      const subject = claims.sub;
 
-        return options
-          .findUserIdByKey({ issuer, subject })
-          .andThen((userId) => {
-            if (userId) {
-              return okAsync(userId);
+      return options
+        .findUserIdByKey({ issuer, subject })
+        .andThen((userId) => {
+          if (userId) {
+            return okAsync(userId);
+          }
+
+          return fetchUserInfo({
+            accessToken: params.accessToken,
+            fetchImpl,
+            issuer,
+          }).andThen((userInfo) => {
+            if (userInfo.sub !== subject) {
+              return errAsync(
+                newRichError({
+                  code: authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH,
+                  details: {
+                    action: "ResolveAccessTokenPrin",
+                    reason:
+                      "Access token subject does not match /userinfo subject.",
+                  },
+                  i18n: { key: "errors.application.unauthorized" },
+                  isOperational: true,
+                  kind: "Unauthorized",
+                  layer: "External",
+                }),
+              );
             }
 
-            return fetchUserInfo({
-              accessToken: params.accessToken,
-              fetchImpl,
+            return options.linkExternalIdentityToUserByEmail({
+              name: userInfo.name,
+              email: userInfo.email,
+              emailVerified: userInfo.email_verified === true,
+              image: userInfo.picture,
               issuer,
-            }).andThen((userInfo) => {
-              if (userInfo.sub !== subject) {
-                return errAsync(
-                  newRichError({
-                    code: authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH,
-                    details: {
-                      action: "ResolveAccessTokenPrin",
-                      reason:
-                        "Access token subject does not match /userinfo subject.",
-                    },
-                    i18n: { key: "errors.application.unauthorized" },
-                    isOperational: true,
-                    kind: "Unauthorized",
-                    layer: "External",
-                  }),
-                );
-              }
-
-              return options.linkExternalIdentityToUserByEmail({
-                name: userInfo.name,
-                email: userInfo.email,
-                emailVerified: userInfo.email_verified === true,
-                image: userInfo.picture,
-                issuer,
-                subject,
-              });
+              subject,
             });
-          })
-          .map((userId) => ({
-            issuer,
-            scopes,
-            subject,
-            userId,
-          }));
-      },
-    );
+          });
+        })
+        .map((userId) => ({
+          issuer,
+          scopes,
+          subject,
+          userId,
+        }));
+    });
 }
 
 function fetchUserInfo({
