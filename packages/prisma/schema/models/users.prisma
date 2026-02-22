@@ -6,6 +6,7 @@ model User {
   image         String?         @map("image")
   accounts      Account[]
   sessions      Session[]
+  externalIdentities ExternalIdentity[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 

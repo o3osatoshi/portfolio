@@ -51,7 +51,7 @@ export const signOutOptionsSchema = z.object({
 });
 export type SignOutOptions = z.infer<typeof signOutOptionsSchema>;
 
-export const authProviderIdSchema = z.enum(["google"]);
+export const authProviderIdSchema = z.enum(["oidc"]);
 export type AuthProviderId = z.infer<typeof authProviderIdSchema>;
 
 export type { AuthConfig } from "@hono/auth-js";

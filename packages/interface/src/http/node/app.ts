@@ -1,22 +1,22 @@
-import {
-  GetFxQuoteUseCase,
-  GetTransactionsUseCase,
-  parseGetFxQuoteRequest,
-  parseGetTransactionsRequest,
-} from "@repo/application";
 import type {
-  GetFxQuoteResponse,
-  GetTransactionsResponse,
-} from "@repo/application";
-import { type AuthConfig, getAuthUserId } from "@repo/auth";
-import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
+  AccessTokenPrin,
+  AuthConfig,
+  ResolveAccessTokenPrinParams,
+} from "@repo/auth";
+import { authHandler, initAuthConfig } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import type { ResultAsync } from "neverthrow";
 
-import { requestIdMiddleware, respondAsync, userIdMiddleware } from "../core";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { requestIdMiddleware } from "../core";
 import type { ContextEnv } from "../core/types";
 import { loggerMiddleware } from "./middlewares";
+import { buildCliRoutes } from "./routes/cli";
+import { buildPrivateRoutes } from "./routes/private";
+import { buildPublicRoutes } from "./routes/public";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
@@ -35,6 +35,10 @@ export type Deps = {
   authConfig: AuthConfig;
   /** Provider required by FX-quote use cases. */
   fxQuoteProvider: FxQuoteProvider;
+  /** Resolve and provision the internal user principal for CLI access tokens. */
+  resolveAccessTokenPrin: (
+    input: ResolveAccessTokenPrinParams,
+  ) => ResultAsync<AccessTokenPrin, RichError>;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -67,6 +71,7 @@ export function buildApp(deps: Deps) {
       initAuthConfig(() => deps.authConfig),
     )
     .route("/auth", buildAuthRoutes())
+    .route("/cli", buildCliRoutes(deps))
     .route("/public", buildPublicRoutes(deps))
     .route("/private", buildPrivateRoutes(deps));
 }
@@ -94,53 +99,39 @@ export function buildApp(deps: Deps) {
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
  * });
  * const authConfig = createAuthConfig({
- *   providers: { google: { clientId: process.env.AUTH_GOOGLE_ID!, clientSecret: process.env.AUTH_GOOGLE_SECRET! } },
+ *   providers: {
+ *     oidc: {
+ *       clientId: process.env.AUTH_OIDC_CLIENT_ID!,
+ *       clientSecret: process.env.AUTH_OIDC_CLIENT_SECRET!,
+ *       issuer: process.env.AUTH_OIDC_ISSUER!,
+ *     },
+ *   },
  *   prismaClient: prisma,
  *   secret: process.env.AUTH_SECRET!,
  * });
  *
- * export const { GET, POST } = buildHandler({
+ * export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
  *   authConfig,
  *   fxQuoteProvider,
+ *   resolveAccessTokenPrin,
  *   transactionRepo,
  * });
  * ```
  */
 export function buildHandler(deps: Deps) {
   const app = buildApp(deps);
-  const GET = handle(app);
-  const POST = handle(app);
-  return { GET, POST };
+  const handler = handle(app);
+  return {
+    DELETE: handler,
+    GET: handler,
+    HEAD: handler,
+    OPTIONS: handler,
+    PATCH: handler,
+    POST: handler,
+    PUT: handler,
+  };
 }
 
 function buildAuthRoutes() {
   return new Hono<ContextEnv>().use("/*", authHandler());
-}
-
-function buildPrivateRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .use("/*", verifyAuth(), userIdMiddleware)
-    .get("/labs/transactions", (c) => {
-      const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-      return respondAsync<GetTransactionsResponse>(c)(
-        parseGetTransactionsRequest({
-          userId: getAuthUserId(c.get("authUser")),
-        }).asyncAndThen((res) => getTransactions.execute(res)),
-      );
-    });
-}
-
-function buildPublicRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .get("/healthz", (c) => c.json({ ok: true }))
-    .get("/exchange-rate", (c) => {
-      const query = c.req.query();
-      const getFxQuote = new GetFxQuoteUseCase(deps.fxQuoteProvider);
-      return respondAsync<GetFxQuoteResponse>(c)(
-        parseGetFxQuoteRequest({
-          base: query["base"],
-          quote: query["quote"],
-        }).asyncAndThen((res) => getFxQuote.execute(res)),
-      );
-    });
 }

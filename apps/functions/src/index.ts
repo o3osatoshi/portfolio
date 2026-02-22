@@ -1,10 +1,14 @@
-import { createAuthConfig } from "@repo/auth";
+import { createAccessTokenPrinResolver, createAuthConfig } from "@repo/auth";
 import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import {
   buildApp,
   createExpressRequestHandler,
 } from "@repo/interface/http/node";
-import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+import {
+  createPrismaClient,
+  PrismaExternalIdentityStore,
+  PrismaTransactionRepository,
+} from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
 import { env } from "./env";
@@ -39,9 +43,10 @@ export const api = onRequest(async (req, res) => {
     });
     const authConfig = createAuthConfig({
       providers: {
-        google: {
-          clientId: env.AUTH_GOOGLE_ID,
-          clientSecret: env.AUTH_GOOGLE_SECRET,
+        oidc: {
+          clientId: env.AUTH_OIDC_CLIENT_ID,
+          clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+          issuer: env.AUTH_OIDC_ISSUER,
         },
       },
       prismaClient: client,
@@ -50,9 +55,18 @@ export const api = onRequest(async (req, res) => {
 
     const transactionRepo = new PrismaTransactionRepository(client);
 
+    const identityStore = new PrismaExternalIdentityStore(client);
+    const resolveAccessTokenPrin = createAccessTokenPrinResolver({
+      audience: env.AUTH_OIDC_AUDIENCE,
+      findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+      issuer: env.AUTH_OIDC_ISSUER,
+      resolveUserId: (claim) => identityStore.resolveUserId(claim),
+    });
+
     const app = buildApp({
       fxQuoteProvider,
       authConfig,
+      resolveAccessTokenPrin,
       transactionRepo,
     });
     handler = createExpressRequestHandler(app);

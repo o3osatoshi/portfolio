@@ -1,4 +1,5 @@
 import type { Attributes, RequestLogger } from "@o3osatoshi/logging";
+import { toRichError } from "@o3osatoshi/toolkit";
 
 export function emitRequestSummary(
   requestLogger: RequestLogger,
@@ -10,6 +11,7 @@ export function emitRequestSummary(
     "http.response.duration_ms": Math.max(0, durationMs),
     "http.status_code": status,
   };
+  attachErrorAttributes(attributes, error);
 
   const isSuccess = status < 400;
   const isClientError = status >= 400 && status < 500;
@@ -37,4 +39,18 @@ export function emitRequestSummary(
     { "http.status_code": status },
     { kind: "histogram", unit: "ms" },
   );
+}
+
+function attachErrorAttributes(attributes: Attributes, error?: unknown) {
+  if (!error) return;
+
+  const rich = toRichError(error);
+  if (rich.code) attributes["error.code"] = rich.code;
+  attributes["error.kind"] = rich.kind;
+  attributes["error.layer"] = rich.layer;
+
+  const reason = rich.details?.reason;
+  if (typeof reason === "string" && reason.length > 0) {
+    attributes["error.reason"] = reason;
+  }
 }

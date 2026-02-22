@@ -4,8 +4,10 @@ import { createEnv } from "@o3osatoshi/toolkit";
 
 export const env = createEnv(
   {
-    AUTH_GOOGLE_ID: z.string().min(1),
-    AUTH_GOOGLE_SECRET: z.string().min(1),
+    AUTH_OIDC_AUDIENCE: z.string().min(1),
+    AUTH_OIDC_CLIENT_ID: z.string().min(1),
+    AUTH_OIDC_CLIENT_SECRET: z.string().min(1),
+    AUTH_OIDC_ISSUER: z.url(),
     AUTH_SECRET: z.string().min(1),
     AXIOM_API_TOKEN: z.string().min(1),
     DATABASE_URL: z.string().min(1),

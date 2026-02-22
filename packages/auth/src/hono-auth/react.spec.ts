@@ -47,8 +47,8 @@ describe("hono-auth/react shims", () => {
 
   it("signIn maps redirectTo to callbackUrl when provided", async () => {
     h.signInMock.mockResolvedValueOnce("ok");
-    const out = await signIn("google", { redirectTo: "/home" });
-    expect(h.signInMock).toHaveBeenCalledWith("google", {
+    const out = await signIn("oidc", { redirectTo: "/home" });
+    expect(h.signInMock).toHaveBeenCalledWith("oidc", {
       callbackUrl: "/home",
     });
     expect(out).toBe("ok");
@@ -56,8 +56,8 @@ describe("hono-auth/react shims", () => {
 
   it("signIn forwards provider with empty options when redirectTo is not provided", async () => {
     h.signInMock.mockResolvedValueOnce("ok");
-    const out = await signIn("google");
-    expect(h.signInMock).toHaveBeenCalledWith("google", {});
+    const out = await signIn("oidc");
+    expect(h.signInMock).toHaveBeenCalledWith("oidc", {});
     expect(out).toBe("ok");
   });
 
