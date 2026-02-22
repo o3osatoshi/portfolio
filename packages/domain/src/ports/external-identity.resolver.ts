@@ -19,7 +19,7 @@ export type IdentityClaims = {
 /**
  * Port for resolving internal user ids from external identity claims.
  */
-export interface UserIdentityResolver {
+export interface ExternalIdentityResolver {
   /**
    * Look up a linked user id by issuer/subject pair.
    */

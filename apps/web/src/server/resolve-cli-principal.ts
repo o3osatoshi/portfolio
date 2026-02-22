@@ -13,10 +13,11 @@ const externalIdentityStore = new PrismaExternalIdentityStore(client);
 
 const resolver = createCliPrincipalResolver({
   audience: env.AUTH_OIDC_AUDIENCE,
-  findUserIdByIdentity: (input) =>
+  findUserIdByExternalIdentity: (input) =>
     externalIdentityStore.findUserIdByExternalKey(input),
   issuer: env.AUTH_OIDC_ISSUER,
-  resolveUserIdByIdentity: (input) => externalIdentityStore.resolveUserId(input),
+  resolveUserIdByExternalIdentity: (input) =>
+    externalIdentityStore.resolveUserId(input),
 });
 
 export function resolveCliPrincipal(input: ResolveCliPrincipalInput) {

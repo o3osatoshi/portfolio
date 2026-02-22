@@ -1,4 +1,4 @@
-import type { UserId, UserIdentityResolver } from "@repo/domain";
+import type { ExternalIdentityResolver, UserId } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
@@ -24,9 +24,9 @@ export type CliPrincipal = {
 export type CreateCliPrincipalResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
-  findUserIdByIdentity: UserIdentityResolver["findUserIdByExternalKey"];
+  findUserIdByExternalIdentity: ExternalIdentityResolver["findUserIdByExternalKey"];
   issuer: string;
-  resolveUserIdByIdentity: UserIdentityResolver["resolveUserId"];
+  resolveUserIdByExternalIdentity: ExternalIdentityResolver["resolveUserId"];
 };
 
 export type ResolveCliPrincipalInput = {
@@ -63,7 +63,7 @@ export function createCliPrincipalResolver(
         const subject = claims.sub;
 
         return options
-          .findUserIdByIdentity({ issuer, subject })
+          .findUserIdByExternalIdentity({ issuer, subject })
           .andThen((existingUserId) => {
             if (existingUserId) {
               return okAsync(existingUserId);
@@ -91,7 +91,7 @@ export function createCliPrincipalResolver(
                 );
               }
 
-              return options.resolveUserIdByIdentity({
+              return options.resolveUserIdByExternalIdentity({
                 name: userInfo.name,
                 email: userInfo.email,
                 emailVerified: userInfo.email_verified === true,

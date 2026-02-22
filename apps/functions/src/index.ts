@@ -6,8 +6,8 @@ import {
 } from "@repo/interface/http/node";
 import {
   createPrismaClient,
-  PrismaTransactionRepository,
   PrismaExternalIdentityStore,
+  PrismaTransactionRepository,
 } from "@repo/prisma";
 import { onRequest } from "firebase-functions/v2/https";
 
@@ -57,10 +57,10 @@ export const api = onRequest(async (req, res) => {
     const externalIdentityStore = new PrismaExternalIdentityStore(client);
     const resolveCliPrincipal = createCliPrincipalResolver({
       audience: env.AUTH_OIDC_AUDIENCE,
-      findUserIdByIdentity: (input) =>
+      findUserIdByExternalIdentity: (input) =>
         externalIdentityStore.findUserIdByExternalKey(input),
       issuer: env.AUTH_OIDC_ISSUER,
-      resolveUserIdByIdentity: (input) =>
+      resolveUserIdByExternalIdentity: (input) =>
         externalIdentityStore.resolveUserId(input),
     });
 

@@ -25,7 +25,9 @@ describe("hono-auth/cli-principal", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns existing mapped user without calling /userinfo", async () => {
-    const findUserIdByIdentity = vi.fn(() => okAsync(asUserId("u-1")));
+    const findUserIdByExternalIdentity = vi.fn(() =>
+      okAsync(asUserId("u-1")),
+    );
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({
         iss: "https://example.auth0.com/",
@@ -37,9 +39,9 @@ describe("hono-auth/cli-principal", () => {
     const resolve = createCliPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByIdentity,
+      findUserIdByExternalIdentity,
       issuer: "https://example.auth0.com",
-      resolveUserIdByIdentity: () => okAsync(asUserId("u-new")),
+      resolveUserIdByExternalIdentity: () => okAsync(asUserId("u-new")),
     });
 
     const res = await resolve({ accessToken: "token" });
@@ -50,7 +52,7 @@ describe("hono-auth/cli-principal", () => {
       expect(res.value.userId).toBe("u-1");
       expect(res.value.scopes).toEqual(["transactions:read"]);
     }
-    expect(findUserIdByIdentity).toHaveBeenCalledWith({
+    expect(findUserIdByExternalIdentity).toHaveBeenCalledWith({
       issuer: "https://example.auth0.com",
       subject: "auth0|123",
     });
@@ -75,20 +77,20 @@ describe("hono-auth/cli-principal", () => {
       }),
       ok: true,
     });
-    const resolveUserIdByIdentity = vi.fn(() => okAsync(asUserId("u-2")));
+    const resolveUserIdByExternalIdentity = vi.fn(() => okAsync(asUserId("u-2")));
 
     const resolve = createCliPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByIdentity: () => okAsync(null),
+      findUserIdByExternalIdentity: () => okAsync(null),
       issuer: "https://example.auth0.com",
-      resolveUserIdByIdentity,
+      resolveUserIdByExternalIdentity,
     });
 
     const res = await resolve({ accessToken: "token" });
 
     expect(res.isOk()).toBe(true);
-    expect(resolveUserIdByIdentity).toHaveBeenCalledWith({
+    expect(resolveUserIdByExternalIdentity).toHaveBeenCalledWith({
       name: "Ada",
       email: "ada@example.com",
       emailVerified: true,
