@@ -1,3 +1,4 @@
+import type { UserId } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -16,11 +17,15 @@ vi.mock("./oidc-bearer", () => ({
     typeof scope === "string" ? scope.split(" ").filter(Boolean) : [],
 }));
 
+function asUserId(value: string): UserId {
+  return value as UserId;
+}
+
 describe("hono-auth/cli-principal", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns existing mapped user without calling /userinfo", async () => {
-    const findUserIdByIdentity = vi.fn(() => okAsync("u-1"));
+    const findUserIdByIdentity = vi.fn(() => okAsync(asUserId("u-1")));
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({
         iss: "https://example.auth0.com/",
@@ -34,7 +39,7 @@ describe("hono-auth/cli-principal", () => {
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByIdentity,
       issuer: "https://example.auth0.com",
-      resolveUserIdByIdentity: () => okAsync("u-new"),
+      resolveUserIdByIdentity: () => okAsync(asUserId("u-new")),
     });
 
     const res = await resolve({ accessToken: "token" });
@@ -70,7 +75,7 @@ describe("hono-auth/cli-principal", () => {
       }),
       ok: true,
     });
-    const resolveUserIdByIdentity = vi.fn(() => okAsync("u-2"));
+    const resolveUserIdByIdentity = vi.fn(() => okAsync(asUserId("u-2")));
 
     const resolve = createCliPrincipalResolver({
       audience: "https://api.o3o.app",

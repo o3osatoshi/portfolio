@@ -6,12 +6,20 @@ import type {
   UpdateTransactionRequest,
 } from "@repo/application";
 import type { AuthConfig } from "@repo/auth";
-import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
+import type {
+  FxQuoteProvider,
+  TransactionRepository,
+  UserId,
+} from "@repo/domain";
 import type { Context, Next } from "hono";
 import { err, errAsync, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+
+function asUserId(value: string): UserId {
+  return value as UserId;
+}
 
 const h = vi.hoisted(() => {
   const initAuthConfigMock = vi.fn(
@@ -164,7 +172,7 @@ describe("http/node app", () => {
             issuer: "https://example.auth0.com",
             scopes: ["transactions:read", "transactions:write"],
             subject: "auth0|u-1",
-            userId: "u-1",
+            userId: asUserId("u-1"),
           })),
       transactionRepo: {} as TransactionRepository,
     });
@@ -211,7 +219,7 @@ describe("http/node app", () => {
         issuer: "https://example.auth0.com",
         scopes: ["transactions:write"],
         subject: "auth0|u-1",
-        userId: "u-1",
+        userId: asUserId("u-1"),
       }),
     ).request("/api/cli/v1/transactions", {
       headers: { Authorization: "Bearer token" },

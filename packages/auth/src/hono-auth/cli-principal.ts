@@ -1,3 +1,4 @@
+import type { UserId, UserIdentityResolver } from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
@@ -17,36 +18,20 @@ export type CliPrincipal = {
   issuer: string;
   scopes: string[];
   subject: string;
-  userId: string;
+  userId: UserId;
 };
 
 export type CreateCliPrincipalResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
-  findUserIdByIdentity: (
-    input: FindUserIdByIdentityInput,
-  ) => ResultAsync<null | string, RichError>;
+  findUserIdByIdentity: UserIdentityResolver["findUserIdByIssuerSubject"];
   issuer: string;
-  resolveUserIdByIdentity: (
-    input: ResolveUserIdByIdentityInput,
-  ) => ResultAsync<string, RichError>;
+  resolveUserIdByIdentity: UserIdentityResolver["resolveUserId"];
 };
 
 export type ResolveCliPrincipalInput = {
   accessToken: string;
 };
-
-type FindUserIdByIdentityInput = {
-  issuer: string;
-  subject: string;
-};
-
-type ResolveUserIdByIdentityInput = {
-  email?: string | undefined;
-  emailVerified: boolean;
-  image?: string | undefined;
-  name?: string | undefined;
-} & FindUserIdByIdentityInput;
 
 const userInfoSchema = z.object({
   name: z.string().optional(),

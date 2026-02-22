@@ -1,3 +1,10 @@
+import {
+  type IdentityKey,
+  newUserId,
+  type ResolveUserByIdentityInput,
+  type UserId,
+  type UserIdentityResolver,
+} from "@repo/domain";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
@@ -5,33 +12,21 @@ import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 import type { PrismaClient } from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
 
-type FindUserByIdentityInput = {
-  issuer: string;
-  subject: string;
-};
-
-type ResolveUserByIdentityInput = {
-  email?: string | undefined;
-  emailVerified: boolean;
-  image?: string | undefined;
-  name?: string | undefined;
-} & FindUserByIdentityInput;
-
 /**
  * Identity-backed user resolution for CLI access tokens.
  *
  * The store keeps `issuer + subject` as the primary lookup key and only falls
  * back to verified email when first linking a user.
  */
-export class PrismaUserIdentityStore {
+export class PrismaUserIdentityStore implements UserIdentityResolver {
   constructor(private readonly db: PrismaClient) {}
 
   /**
    * Look up an existing user id by OIDC issuer/subject pair.
    */
   findUserIdByIssuerSubject(
-    input: FindUserByIdentityInput,
-  ): ResultAsync<null | string, RichError> {
+    input: IdentityKey,
+  ): ResultAsync<null | UserId, RichError> {
     return ResultAsync.fromPromise(
       this.db.userIdentity.findUnique({
         select: { userId: true },
@@ -49,7 +44,9 @@ export class PrismaUserIdentityStore {
             action: "FindUserByIssuerSubject",
           },
         }),
-    ).map((row) => row?.userId ?? null);
+    ).andThen((row) =>
+      row ? parseUserId(row.userId, "FindUserByIssuerSubject") : okAsync(null),
+    );
   }
 
   /**
@@ -60,7 +57,7 @@ export class PrismaUserIdentityStore {
    */
   resolveUserId(
     input: ResolveUserByIdentityInput,
-  ): ResultAsync<string, RichError> {
+  ): ResultAsync<UserId, RichError> {
     return this.findUserIdByIssuerSubject(input).andThen((existingUserId) => {
       if (existingUserId) return okAsync(existingUserId);
       return this.linkByVerifiedEmail(input);
@@ -69,7 +66,7 @@ export class PrismaUserIdentityStore {
 
   private linkByVerifiedEmail(
     input: ResolveUserByIdentityInput,
-  ): ResultAsync<string, RichError> {
+  ): ResultAsync<UserId, RichError> {
     if (!input.email || !input.emailVerified) {
       return errAsync(
         newRichError({
@@ -88,34 +85,32 @@ export class PrismaUserIdentityStore {
     }
 
     return ResultAsync.fromPromise(
-      this.db.userIdentity
-        .upsert({
-          create: {
-            issuer: input.issuer,
-            subject: input.subject,
-            user: {
-              connectOrCreate: {
-                create: {
-                  email: input.email,
-                  ...(input.name ? { name: input.name } : {}),
-                  ...(input.image ? { image: input.image } : {}),
-                },
-                where: {
-                  email: input.email,
-                },
+      this.db.userIdentity.upsert({
+        create: {
+          issuer: input.issuer,
+          subject: input.subject,
+          user: {
+            connectOrCreate: {
+              create: {
+                email: input.email,
+                ...(input.name ? { name: input.name } : {}),
+                ...(input.image ? { image: input.image } : {}),
+              },
+              where: {
+                email: input.email,
               },
             },
           },
-          select: { userId: true },
-          update: {},
-          where: {
-            issuer_subject: {
-              issuer: input.issuer,
-              subject: input.subject,
-            },
+        },
+        select: { userId: true },
+        update: {},
+        where: {
+          issuer_subject: {
+            issuer: input.issuer,
+            subject: input.subject,
           },
-        })
-        .then((row) => row.userId),
+        },
+      }),
       (cause) =>
         newPrismaError({
           cause,
@@ -123,16 +118,41 @@ export class PrismaUserIdentityStore {
             action: "LinkUserIdentity",
           },
         }),
-    ).orElse((error) => {
-      if (error.code !== "PRISMA_P2002_UNIQUE_CONSTRAINT") {
-        return errAsync(error);
-      }
+    )
+      .andThen((row) => parseUserId(row.userId, "LinkUserIdentity"))
+      .orElse((error) => {
+        if (error.code !== "PRISMA_P2002_UNIQUE_CONSTRAINT") {
+          return errAsync(error);
+        }
 
-      // A concurrent request may have linked the same issuer/subject first.
-      // Retry by reading the canonical mapping and return it when available.
-      return this.findUserIdByIssuerSubject(input).andThen((userId) =>
-        userId ? okAsync(userId) : errAsync(error),
-      );
-    });
+        // A concurrent request may have linked the same issuer/subject first.
+        // Retry by reading the canonical mapping and return it when available.
+        return this.findUserIdByIssuerSubject(input).andThen((userId) =>
+          userId ? okAsync(userId) : errAsync(error),
+        );
+      });
   }
+}
+
+function parseUserId(
+  rawUserId: string,
+  action: string,
+): ResultAsync<UserId, RichError> {
+  const parsed = newUserId(rawUserId);
+  if (parsed.isOk()) {
+    return okAsync(parsed.value);
+  }
+  return errAsync(
+    newRichError({
+      cause: parsed.error,
+      code: "PRISMA_USER_IDENTITY_USER_ID_INVALID",
+      details: {
+        action,
+        reason: "Persisted user id does not satisfy domain UserId constraints.",
+      },
+      isOperational: false,
+      kind: "Internal",
+      layer: "Persistence",
+    }),
+  );
 }

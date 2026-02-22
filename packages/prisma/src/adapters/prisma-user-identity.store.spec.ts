@@ -1,12 +1,17 @@
+import type { UserId } from "@repo/domain";
 import { describe, expect, it, vi } from "vitest";
 
 import { Prisma } from "../../generated/prisma/client";
 import type { PrismaClient } from "../prisma-client";
 import { PrismaUserIdentityStore } from "./prisma-user-identity.store";
 
+function asUserId(value: string): UserId {
+  return value as UserId;
+}
+
 function createStore(overrides?: {
-  findUnique?: (args: unknown) => Promise<{ userId: string } | null>;
-  upsert?: (args: unknown) => Promise<{ userId: string }>;
+  findUnique?: (args: unknown) => Promise<{ userId: UserId } | null>;
+  upsert?: (args: unknown) => Promise<{ userId: UserId }>;
 }) {
   const db = {
     userIdentity: {
@@ -18,7 +23,7 @@ function createStore(overrides?: {
       upsert:
         overrides?.upsert ??
         (async () => {
-          return { userId: "u-new" };
+          return { userId: asUserId("u-new") };
         }),
     },
   } as unknown as PrismaClient;
@@ -39,7 +44,7 @@ describe("PrismaUserIdentityStore", () => {
 
   it("resolveUserId returns existing user id", async () => {
     const store = createStore({
-      findUnique: async () => ({ userId: "u-1" }),
+      findUnique: async () => ({ userId: asUserId("u-1") }),
     });
     const res = await store.resolveUserId({
       email: "ada@example.com",
@@ -65,7 +70,7 @@ describe("PrismaUserIdentityStore", () => {
   });
 
   it("resolveUserId links identity with upsert when mapping is absent", async () => {
-    const upsert = vi.fn(async () => ({ userId: "u-2" }));
+    const upsert = vi.fn(async () => ({ userId: asUserId("u-2") }));
     const store = createStore({ upsert });
     const res = await store.resolveUserId({
       name: "Ada",
@@ -82,9 +87,9 @@ describe("PrismaUserIdentityStore", () => {
 
   it("resolveUserId retries lookup when upsert hits unique constraint", async () => {
     const findUnique = vi
-      .fn<(args: unknown) => Promise<{ userId: string } | null>>()
+      .fn<(args: unknown) => Promise<{ userId: UserId } | null>>()
       .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce({ userId: "u-race" });
+      .mockResolvedValueOnce({ userId: asUserId("u-race") });
 
     const uniqueConflict = Object.create(
       Prisma.PrismaClientKnownRequestError.prototype,
