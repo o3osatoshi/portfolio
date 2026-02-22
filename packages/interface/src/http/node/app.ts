@@ -18,8 +18,8 @@ import type {
 import {
   type AuthConfig,
   type CliPrincipal,
-  type ResolveCliPrincipalInput,
   getAuthUserId,
+  type ResolveCliPrincipalInput,
 } from "@repo/auth";
 import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";

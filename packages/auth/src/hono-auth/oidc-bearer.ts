@@ -50,8 +50,8 @@ export function createOidcAccessTokenVerifier(
     ResultAsync.fromPromise(
       jwtVerify(token, jwkSet, {
         audience: options.audience,
-        issuer: issuers,
         clockTolerance: options.clockToleranceSeconds ?? 60,
+        issuer: issuers,
       }),
       (cause) => {
         const { code, reason } = classifyJwtVerifyFailure(cause);
