@@ -116,14 +116,16 @@ export function buildApp(deps: Deps) {
  */
 export function buildHandler(deps: Deps) {
   const app = buildApp(deps);
-  const GET = handle(app);
-  const HEAD = handle(app);
-  const OPTIONS = handle(app);
-  const POST = handle(app);
-  const PATCH = handle(app);
-  const PUT = handle(app);
-  const DELETE = handle(app);
-  return { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT };
+  const handler = handle(app);
+  return {
+    DELETE: handler,
+    GET: handler,
+    HEAD: handler,
+    OPTIONS: handler,
+    PATCH: handler,
+    POST: handler,
+    PUT: handler,
+  };
 }
 
 function buildAuthRoutes() {
