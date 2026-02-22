@@ -18,6 +18,21 @@ export type OidcAccessTokenClaims = {
   sub: string;
 };
 
+const oidcAccessTokenClaimsSchema: z.ZodType<OidcAccessTokenClaims> = z
+  .object({
+    aud: z.union([z.string(), z.array(z.string())]).optional(),
+    email: z.string().optional(),
+    email_verified: z.boolean().optional(),
+    exp: z.number().optional(),
+    iat: z.number().optional(),
+    iss: z.string(),
+    nbf: z.number().optional(),
+    picture: z.string().optional(),
+    scope: z.string().optional(),
+    sub: z.string(),
+  })
+  .catchall(z.unknown());
+
 export type OidcAccessTokenVerifier = (
   token: string,
 ) => ResultAsync<OidcAccessTokenClaims, RichError>;
@@ -69,14 +84,15 @@ export function createOidcAccessTokenVerifier(
         });
       },
     ).andThen(({ payload }) => {
-      const claims = payload as Partial<OidcAccessTokenClaims>;
-      if (typeof claims.iss !== "string" || typeof claims.sub !== "string") {
+      const parsedClaims = oidcAccessTokenClaimsSchema.safeParse(payload);
+      if (!parsedClaims.success) {
         return errAsync(
           newRichError({
+            cause: parsedClaims.error,
             code: "OIDC_ACCESS_TOKEN_CLAIMS_INVALID",
             details: {
               action: "VerifyOidcAccessToken",
-              reason: "Access token is missing required claims.",
+              reason: "Access token claims did not match expected shape.",
             },
             i18n: { key: "errors.application.unauthorized" },
             isOperational: true,
@@ -85,6 +101,8 @@ export function createOidcAccessTokenVerifier(
           }),
         );
       }
+
+      const claims = parsedClaims.data;
 
       if (normalizeIssuer(claims.iss) !== issuer) {
         return errAsync(
@@ -119,7 +137,7 @@ export function createOidcAccessTokenVerifier(
         );
       }
 
-      return okAsync(claims as OidcAccessTokenClaims);
+      return okAsync(claims);
     });
 }
 
