@@ -11,7 +11,7 @@ const h = vi.hoisted(() => {
   return { createVerifierMock, verifyTokenMock };
 });
 
-vi.mock("./oidc-bearer", () => ({
+vi.mock("./oidc-access-token", () => ({
   createOidcAccessTokenVerifier: h.createVerifierMock,
   parseScopes: (scope: unknown) =>
     typeof scope === "string" ? scope.split(" ").filter(Boolean) : [],

@@ -72,7 +72,7 @@ export function getAuthUserId(authUser?: AuthUser): string | undefined {
 export type { AuthConfig };
 export * from "./access-token-principal";
 export * from "./jwt";
-export * from "./oidc-bearer";
+export * from "./oidc-access-token";
 export * from "./types";
 
 function buildOidcProvider(

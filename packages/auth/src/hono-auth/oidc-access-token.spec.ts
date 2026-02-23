@@ -12,9 +12,12 @@ vi.mock("jose", () => ({
 }));
 
 import { authErrorCodes } from "../auth-error-catalog";
-import { createOidcAccessTokenVerifier, parseScopes } from "./oidc-bearer";
+import {
+  createOidcAccessTokenVerifier,
+  parseScopes,
+} from "./oidc-access-token";
 
-describe("hono-auth/oidc-bearer", () => {
+describe("hono-auth/oidc-access-token", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("parseScopes parses and de-duplicates scope strings", () => {
