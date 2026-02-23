@@ -9,7 +9,7 @@ import { integrationErrorCodes } from "../integration-error-catalog";
 
 export const oidcUserInfoSchema = z.object({
   name: z.string().optional(),
-  email: z.email().optional(),
+  email: z.string().email().optional(),
   email_verified: z.boolean().optional(),
   picture: z.string().optional(),
   sub: z.string(),
@@ -49,7 +49,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
   const requestAction = DEFAULT_OIDC_USERINFO_REQUEST_ACTION;
   const unauthorizedReason =
     options.unauthorizedReason ?? "/userinfo request was rejected by the IdP.";
-  const fetchUserInfo = createSmartFetch({ fetch: fetchImpl });
+  const sFetch = createSmartFetch({ fetch: fetchImpl });
 
   return (
     input: OidcUserInfoFetcherInput,
@@ -59,7 +59,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
       : input.issuer;
     const url = `${normalizedIssuer}/userinfo`;
 
-    return fetchUserInfo({
+    return sFetch({
       decode: {
         context: {
           action: DEFAULT_OIDC_USERINFO_DECODE_BODY_ACTION,

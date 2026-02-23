@@ -80,8 +80,9 @@ export function buildApp(deps: Deps) {
  * Build Next.js/Vercel-compatible handlers for the Node runtime.
  *
  * Notes:
- * - Both `GET` and `POST` are bound to the same underlying Hono app via
- *   `handle(app)`. Unimplemented methods for a route will return 404.
+ * - `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, and `PUT` are all
+ *   bound to the same underlying Hono app via `handle(app)`.
+ * - Unimplemented methods for a route will return 404.
  *
  * Usage (Next.js App Router):
  * ```ts
