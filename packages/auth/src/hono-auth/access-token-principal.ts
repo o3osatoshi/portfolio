@@ -1,15 +1,14 @@
 import type { ExternalIdentityResolver, UserId } from "@repo/domain";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
-import { z } from "zod";
+import { createOidcUserInfoFetcher } from "@repo/integrations";
+import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
-import {
-  newFetchError,
-  newRichError,
-  type RichError,
-} from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { authErrorCodes } from "../auth-error-catalog";
-import { createOidcAccessTokenVerifier, parseScopes } from "./oidc-bearer";
+import {
+  createOidcAccessTokenVerifier,
+  parseScopes,
+} from "./oidc-access-token";
 
 export type AccessTokenPrin = {
   issuer: string;
@@ -30,14 +29,6 @@ export type ResolveAccessTokenPrinParams = {
   accessToken: string;
 };
 
-const userInfoSchema = z.object({
-  name: z.string().optional(),
-  email: z.email().optional(),
-  email_verified: z.boolean().optional(),
-  picture: z.string().optional(),
-  sub: z.string(),
-});
-
 /**
  * Build a resolver that maps an access token onto an internal user id.
  */
@@ -49,14 +40,24 @@ export function createAccessTokenPrinResolver(
     issuer: options.issuer,
   });
   const fetchImpl = options.fetchImpl ?? fetch;
+  const fetchUserInfo = createOidcUserInfoFetcher({
+    errorCodes: {
+      schemaInvalid: authErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+      fetchFailed: authErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+      parseFailed: authErrorCodes.OIDC_USERINFO_PARSE_FAILED,
+      unauthorized: authErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+    },
+    fetch: fetchImpl,
+    unauthorizedReason: "/userinfo request was rejected by the IdP.",
+  });
 
   return (
     params: ResolveAccessTokenPrinParams,
   ): ResultAsync<AccessTokenPrin, RichError> =>
-    verifyAccessToken(params.accessToken).andThen((claims) => {
-      const scopes = parseScopes(claims.scope);
-      const issuer = normalizeIssuer(claims.iss);
-      const subject = claims.sub;
+    verifyAccessToken(params.accessToken).andThen((claimSet) => {
+      const scopes = parseScopes(claimSet.scope);
+      const issuer = normalizeIssuer(claimSet.iss);
+      const subject = claimSet.sub;
 
       return options
         .findUserIdByKey({ issuer, subject })
@@ -67,10 +68,9 @@ export function createAccessTokenPrinResolver(
 
           return fetchUserInfo({
             accessToken: params.accessToken,
-            fetchImpl,
             issuer,
           }).andThen((userInfo) => {
-            if (userInfo.sub !== subject) {
+            if (userInfo.subject !== subject) {
               return errAsync(
                 newRichError({
                   code: authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH,
@@ -90,8 +90,8 @@ export function createAccessTokenPrinResolver(
             return options.linkExternalIdentityToUserByEmail({
               name: userInfo.name,
               email: userInfo.email,
-              emailVerified: userInfo.email_verified === true,
-              image: userInfo.picture,
+              emailVerified: userInfo.emailVerified,
+              image: userInfo.image,
               issuer,
               subject,
             });
@@ -103,90 +103,6 @@ export function createAccessTokenPrinResolver(
           subject,
           userId,
         }));
-    });
-}
-
-function fetchUserInfo({
-  accessToken,
-  fetchImpl,
-  issuer,
-}: {
-  accessToken: string;
-  fetchImpl: typeof fetch;
-  issuer: string;
-}): ResultAsync<z.infer<typeof userInfoSchema>, RichError> {
-  const normalizedIssuer = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  const url = `${normalizedIssuer}/userinfo`;
-
-  return ResultAsync.fromPromise(
-    fetchImpl(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      method: "GET",
-    }),
-    (cause) =>
-      newFetchError({
-        cause,
-        code: authErrorCodes.OIDC_USERINFO_FETCH_FAILED,
-        details: {
-          action: "FetchUserInfo",
-        },
-        request: {
-          method: "GET",
-          url,
-        },
-      }),
-  )
-    .andThen((res) =>
-      res.ok
-        ? ResultAsync.fromPromise(res.json(), (cause) =>
-            newFetchError({
-              cause,
-              code: authErrorCodes.OIDC_USERINFO_PARSE_FAILED,
-              details: {
-                action: "ParseUserInfo",
-                reason: "Failed to parse /userinfo response.",
-              },
-              request: {
-                method: "GET",
-                url,
-              },
-            }),
-          )
-        : errAsync(
-            newRichError({
-              code: authErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
-              details: {
-                action: "FetchUserInfo",
-                reason: "/userinfo request was rejected by the IdP.",
-              },
-              i18n: { key: "errors.application.unauthorized" },
-              isOperational: true,
-              kind: "Unauthorized",
-              layer: "External",
-            }),
-          ),
-    )
-    .andThen((json) => {
-      const result = userInfoSchema.safeParse(json);
-      if (result.success) {
-        return okAsync(result.data);
-      }
-      return errAsync(
-        newRichError({
-          cause: result.error,
-          code: authErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
-          details: {
-            action: "ParseUserInfo",
-            reason: "IdP /userinfo payload does not match expected schema.",
-          },
-          i18n: { key: "errors.application.unauthorized" },
-          isOperational: true,
-          kind: "Unauthorized",
-          layer: "External",
-        }),
-      );
     });
 }
 
