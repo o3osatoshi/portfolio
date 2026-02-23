@@ -41,12 +41,6 @@ export function createAccessTokenPrinResolver(
   });
   const fetchImpl = options.fetchImpl ?? fetch;
   const fetchUserInfo = createOidcUserInfoFetcher({
-    errorCodes: {
-      schemaInvalid: authErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
-      fetchFailed: authErrorCodes.OIDC_USERINFO_FETCH_FAILED,
-      parseFailed: authErrorCodes.OIDC_USERINFO_PARSE_FAILED,
-      unauthorized: authErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
-    },
     fetch: fetchImpl,
     unauthorizedReason: "/userinfo request was rejected by the IdP.",
   });

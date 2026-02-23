@@ -65,16 +65,23 @@ describe("hono-auth/access-token-principal", () => {
         sub: "auth0|123",
       }),
     );
-    const fetchMock = vi.fn().mockResolvedValueOnce({
-      json: async () => ({
-        name: "Ada",
-        email: "ada@example.com",
-        email_verified: true,
-        picture: "https://example.com/ada.png",
-        sub: "auth0|123",
-      }),
-      ok: true,
-    });
+    const fetchMock = vi.fn().mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          name: "Ada",
+          email: "ada@example.com",
+          email_verified: true,
+          picture: "https://example.com/ada.png",
+          sub: "auth0|123",
+        }),
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+          status: 200,
+        },
+      ),
+    );
     const linkExternalIdentityToUserByEmail = vi.fn(() =>
       okAsync(asUserId("u-2")),
     );

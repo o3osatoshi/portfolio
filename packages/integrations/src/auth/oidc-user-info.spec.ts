@@ -1,13 +1,7 @@
 import { describe, expect, it, type MockedFunction, vi } from "vitest";
 
+import { integrationErrorCodes } from "../integration-error-catalog";
 import { createOidcUserInfoFetcher } from "./oidc-user-info";
-
-const errorCodes = {
-  schemaInvalid: "INTEGRATION_USER_INFO_SCHEMA_INVALID",
-  fetchFailed: "INTEGRATION_USER_INFO_FETCH_FAILED",
-  parseFailed: "INTEGRATION_USER_INFO_PARSE_FAILED",
-  unauthorized: "INTEGRATION_USER_INFO_UNAUTHORIZED",
-};
 
 function createMockResponse(
   overrides: {
@@ -45,9 +39,7 @@ describe("createOidcUserInfoFetcher", () => {
     fetchMock.mockResolvedValue(response);
 
     const fetchUserInfo = createOidcUserInfoFetcher({
-      errorCodes,
       fetch: fetchMock,
-      requestAction: "FetchUserInfo",
     });
 
     const res = await fetchUserInfo({
@@ -82,7 +74,6 @@ describe("createOidcUserInfoFetcher", () => {
     fetchMock.mockResolvedValue(response);
 
     const fetchUserInfo = createOidcUserInfoFetcher({
-      errorCodes,
       fetch: fetchMock,
     });
 
@@ -93,7 +84,9 @@ describe("createOidcUserInfoFetcher", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(errorCodes.unauthorized);
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+      );
     }
   });
 
@@ -107,7 +100,6 @@ describe("createOidcUserInfoFetcher", () => {
     fetchMock.mockResolvedValue(response);
 
     const fetchUserInfo = createOidcUserInfoFetcher({
-      errorCodes,
       fetch: fetchMock,
     });
 
@@ -118,7 +110,9 @@ describe("createOidcUserInfoFetcher", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(errorCodes.parseFailed);
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_PARSE_FAILED,
+      );
     }
   });
 
@@ -130,7 +124,6 @@ describe("createOidcUserInfoFetcher", () => {
     fetchMock.mockResolvedValue(response);
 
     const fetchUserInfo = createOidcUserInfoFetcher({
-      errorCodes,
       fetch: fetchMock,
     });
 
@@ -141,7 +134,9 @@ describe("createOidcUserInfoFetcher", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(errorCodes.schemaInvalid);
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+      );
     }
   });
 });
