@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { Prisma } from "../../generated/prisma/client";
 import type { PrismaClient } from "../prisma-client";
+import { externalIdentityErrorCodes } from "./external-identity-error-catalog";
 import { PrismaExternalIdentityStore } from "./external-identity.store";
 
 function asUserId(value: string): UserId {
@@ -65,7 +66,7 @@ describe("PrismaExternalIdentityStore", () => {
     });
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe("PRISMA_EXTERNAL_IDENTITY_EMAIL_UNVERIFIED");
+      expect(res.error.code).toBe(externalIdentityErrorCodes.EMAIL_UNVERIFIED);
     }
   });
 

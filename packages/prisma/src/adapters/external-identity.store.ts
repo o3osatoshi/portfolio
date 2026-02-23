@@ -11,6 +11,7 @@ import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import type { PrismaClient } from "../prisma-client";
 import { newPrismaError } from "../prisma-error";
+import { externalIdentityErrorCodes } from "./external-identity-error-catalog";
 
 /**
  * Identity-backed user resolution for CLI access tokens.
@@ -60,7 +61,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
     if (!claim.email || !claim.emailVerified) {
       return errAsync(
         newRichError({
-          code: "PRISMA_EXTERNAL_IDENTITY_EMAIL_UNVERIFIED",
+          code: externalIdentityErrorCodes.EMAIL_UNVERIFIED,
           details: {
             action: "LinkExternalIdentityToUserByEmail",
             reason:
@@ -137,7 +138,7 @@ function parseUserId(
   return errAsync(
     newRichError({
       cause: result.error,
-      code: "PRISMA_EXTERNAL_IDENTITY_USER_ID_INVALID",
+      code: externalIdentityErrorCodes.USER_ID_INVALID,
       details: {
         action,
         reason: "Persisted user id does not satisfy domain UserId constraints.",
