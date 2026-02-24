@@ -40,22 +40,20 @@ export function buildCliRoutes(deps: Deps) {
       const accessToken = extractBearerToken(c.req.header("authorization"));
       if (accessToken.isErr()) return errorResponse(c, accessToken.error);
 
-      const principalResult = await deps.resolveAccessTokenPrincipal({
+      const result = await deps.resolveAccessTokenPrincipal({
         accessToken: accessToken.value,
       });
-      if (principalResult.isErr())
-        return errorResponse(c, principalResult.error);
+      if (result.isErr()) return errorResponse(c, result.error);
 
-      c.set("accessTokenPrincipal", principalResult.value);
-      c.get("requestLogger")?.setUserId?.(principalResult.value.userId);
+      c.set("accessTokenPrincipal", result.value);
+      c.get("requestLogger")?.setUserId?.(result.value.userId);
       return await next();
     })
     .get("/v1/me", (c) => {
       return respondAsync<AccessTokenPrincipal>(c)(
-        requireScope(
-          c.get("accessTokenPrincipal"),
-          "transactions:read",
-        ).map((resolvedPrincipal) => resolvedPrincipal),
+        requireScope(c.get("accessTokenPrincipal"), "transactions:read").map(
+          (resolvedPrincipal) => resolvedPrincipal,
+        ),
       );
     })
     .get("/v1/transactions", (c) => {
