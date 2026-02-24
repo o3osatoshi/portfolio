@@ -31,6 +31,7 @@ export type {
 } from "./axiom";
 export { createLogger } from "./core/logger";
 export type { CreateLoggerOptions } from "./core/logger";
+export { appendErrorAttributes } from "./core/error-attributes";
 export {
   createTraceContext,
   formatTraceparent,
