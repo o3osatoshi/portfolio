@@ -1,7 +1,7 @@
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import type { RichError } from "@o3osatoshi/toolkit";
+import { httpStatusToKind, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   createSmartFetch,
@@ -82,18 +82,33 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
       .orElse((cause) => errAsync(mapFetchError(cause, action, decodeAction)))
       .andThen((res) => {
         if (!res.response.ok) {
+          const status = res.response.status;
+          if (status === 401 || status === 403) {
+            return errAsync(
+              newIntegrationError({
+                code: integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+                details: {
+                  action,
+                  reason:
+                    options.unauthorizedReason ??
+                    `/userinfo request rejected by the IdP (HTTP ${status}).`,
+                },
+                i18n: { key: "errors.application.unauthorized" },
+                isOperational: true,
+                kind: "Unauthorized",
+              }),
+            );
+          }
+
           return errAsync(
             newIntegrationError({
-              code: integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+              code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
               details: {
                 action,
-                reason:
-                  options.unauthorizedReason ??
-                  "/userinfo request was rejected by the IdP.",
+                reason: `Failed to fetch /userinfo endpoint (HTTP ${status}).`,
               },
-              i18n: { key: "errors.application.unauthorized" },
               isOperational: true,
-              kind: "Unauthorized",
+              kind: httpStatusToKind(status),
             }),
           );
         }

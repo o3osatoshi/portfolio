@@ -92,6 +92,62 @@ describe("createOidcUserInfoFetcher", () => {
     }
   });
 
+  it("returns unauthorized error when /userinfo responds 403", async () => {
+    const fetchMock: MockedFunction<typeof fetch> = vi.fn();
+    const response = createMockResponse({
+      json: async () => ({}),
+      ok: false,
+      status: 403,
+      statusText: "Forbidden",
+    });
+    fetchMock.mockResolvedValue(response);
+
+    const fetchUserInfo = createOidcUserInfoFetcher({
+      fetch: fetchMock,
+    });
+
+    const res = await fetchUserInfo({
+      accessToken: "token",
+      issuer: "https://example.auth0.com",
+    });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+      );
+    }
+  });
+
+  it("returns fetch-failed error for non-auth HTTP status", async () => {
+    const fetchMock: MockedFunction<typeof fetch> = vi.fn();
+    const response = createMockResponse({
+      json: async () => ({}),
+      ok: false,
+      status: 500,
+      statusText: "Internal Server Error",
+    });
+    fetchMock.mockResolvedValue(response);
+
+    const fetchUserInfo = createOidcUserInfoFetcher({
+      fetch: fetchMock,
+    });
+
+    const res = await fetchUserInfo({
+      accessToken: "token",
+      issuer: "https://example.auth0.com",
+    });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+      );
+      expect(res.error.kind).toBe("BadGateway");
+      expect(res.error.details?.reason).toContain("HTTP 500");
+    }
+  });
+
   it("returns parse error when JSON parsing fails", async () => {
     const fetchMock: MockedFunction<typeof fetch> = vi.fn();
     const response = createMockResponse({

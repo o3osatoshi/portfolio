@@ -87,10 +87,14 @@ export function buildApp(deps: Deps) {
  * Usage (Next.js App Router):
  * ```ts
  * // app/api/[...route]/route.ts
- * import { createAuthConfig } from "@repo/auth";
+ * import { createAccessTokenPrincipalResolver, createAuthConfig } from "@repo/auth";
  * import { ExchangeRateApi } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
- * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+ * import {
+ *   createPrismaClient,
+ *   PrismaExternalIdentityStore,
+ *   PrismaTransactionRepository,
+ * } from "@repo/prisma";
  * export const runtime = "nodejs";
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
@@ -98,6 +102,15 @@ export function buildApp(deps: Deps) {
  * const fxQuoteProvider = new ExchangeRateApi({
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
+ * });
+ * const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
+ * const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+ *   audience: process.env.AUTH_OIDC_AUDIENCE!,
+ *   findUserIdByKey: (input) =>
+ *     externalIdentityStore.findUserIdByKey(input),
+ *   issuer: process.env.AUTH_OIDC_ISSUER!,
+ *   linkExternalIdentityToUserByEmail: (input) =>
+ *     externalIdentityStore.linkExternalIdentityToUserByEmail(input),
  * });
  * const authConfig = createAuthConfig({
  *   providers: {

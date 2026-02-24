@@ -32,6 +32,7 @@ import {
 import { respondAsync } from "../../core";
 import type { ContextEnv } from "../../core/types";
 import type { Deps } from "../app";
+import { cliErrorCodes } from "./cli-error-catalog";
 
 export function buildCliRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -50,9 +51,11 @@ export function buildCliRoutes(deps: Deps) {
       return await next();
     })
     .get("/v1/me", (c) => {
-      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       return respondAsync<AccessTokenPrincipal>(c)(
-        requireScope(principal, "transactions:read").map(() => principal),
+        requireScope(
+          c.get("accessTokenPrincipal"),
+          "transactions:read",
+        ).map((resolvedPrincipal) => resolvedPrincipal),
       );
     })
     .get("/v1/transactions", (c) => {
@@ -79,7 +82,7 @@ export function buildCliRoutes(deps: Deps) {
               (cause) =>
                 newRichError({
                   cause,
-                  code: "CLI_REQUEST_BODY_INVALID",
+                  code: cliErrorCodes.REQUEST_BODY_INVALID,
                   details: {
                     action: "ParseCliCreateTransactionBody",
                     reason: "Request body must be valid JSON.",
@@ -113,7 +116,7 @@ export function buildCliRoutes(deps: Deps) {
               (cause) =>
                 newRichError({
                   cause,
-                  code: "CLI_REQUEST_BODY_INVALID",
+                  code: cliErrorCodes.REQUEST_BODY_INVALID,
                   details: {
                     action: "ParseCliUpdateTransactionBody",
                     reason: "Request body must be valid JSON.",
@@ -162,7 +165,7 @@ function extractBearerToken(
   if (!authorization) {
     return err(
       newRichError({
-        code: "CLI_BEARER_TOKEN_MISSING",
+        code: cliErrorCodes.BEARER_TOKEN_MISSING,
         details: {
           action: "ExtractCliBearerToken",
           reason: "Authorization header is missing.",
@@ -179,7 +182,7 @@ function extractBearerToken(
   if (!matched || !matched[1]) {
     return err(
       newRichError({
-        code: "CLI_BEARER_TOKEN_MALFORMED",
+        code: cliErrorCodes.BEARER_TOKEN_MALFORMED,
         details: {
           action: "ExtractCliBearerToken",
           reason: "Authorization header must use Bearer scheme.",
@@ -196,16 +199,32 @@ function extractBearerToken(
 }
 
 function requireScope(
-  principal: AccessTokenPrincipal,
+  principal: AccessTokenPrincipal | undefined,
   requiredScope: string,
-): ResultAsync<void, RichError> {
+): ResultAsync<AccessTokenPrincipal, RichError> {
+  if (principal === undefined) {
+    return errAsync(
+      newRichError({
+        code: cliErrorCodes.SCOPE_FORBIDDEN,
+        details: {
+          action: "AuthorizeCliScope",
+          reason: "Access token principal is missing.",
+        },
+        i18n: { key: "errors.application.forbidden" },
+        isOperational: true,
+        kind: "Forbidden",
+        layer: "Presentation",
+      }),
+    );
+  }
+
   if (principal.scopes.includes(requiredScope)) {
-    return okAsync(undefined);
+    return okAsync(principal);
   }
 
   return errAsync(
     newRichError({
-      code: "CLI_SCOPE_FORBIDDEN",
+      code: cliErrorCodes.SCOPE_FORBIDDEN,
       details: {
         action: "AuthorizeCliScope",
         reason: `Required scope is missing: ${requiredScope}`,
