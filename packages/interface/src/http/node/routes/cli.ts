@@ -1,8 +1,12 @@
+import { zValidator } from "@hono/zod-validator";
 import type {
+  CreateTransactionRequest,
   CreateTransactionResponse,
   GetTransactionsResponse,
+  UpdateTransactionRequest,
 } from "@repo/application";
 import {
+  createTransactionRequestSchema,
   CreateTransactionUseCase,
   DeleteTransactionUseCase,
   GetTransactionsUseCase,
@@ -10,6 +14,7 @@ import {
   parseDeleteTransactionRequest,
   parseGetTransactionsRequest,
   parseUpdateTransactionRequest,
+  updateTransactionRequestSchema,
   UpdateTransactionUseCase,
 } from "@repo/application";
 import type { AccessTokenPrincipal } from "@repo/auth";
@@ -20,7 +25,7 @@ import {
   ok,
   okAsync,
   type Result,
-  ResultAsync,
+  type ResultAsync,
 } from "neverthrow";
 
 import {
@@ -29,10 +34,25 @@ import {
   toHttpErrorResponse,
 } from "@o3osatoshi/toolkit";
 
+import { respondZodError } from "../../core";
 import { respondAsync } from "../../core";
 import type { ContextEnv } from "../../core/types";
 import type { Deps } from "../app";
 import { cliErrorCodes } from "./cli-error-catalog";
+
+const CLI_SCOPES = {
+  transactionsRead: "transactions:read",
+  transactionsWrite: "transactions:write",
+} as const;
+type CliScope = (typeof CLI_SCOPES)[keyof typeof CLI_SCOPES];
+type CreateTransactionBody = Omit<CreateTransactionRequest, "userId">;
+const createTransactionBodySchema = createTransactionRequestSchema.omit({
+  userId: true,
+});
+const updateTransactionBodySchema = updateTransactionRequestSchema
+  .omit({ id: true })
+  .passthrough();
+type UpdateTransactionBody = UpdateTransactionRequest;
 
 export function buildCliRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -51,97 +71,78 @@ export function buildCliRoutes(deps: Deps) {
     })
     .get("/v1/me", (c) => {
       return respondAsync<AccessTokenPrincipal>(c)(
-        requireScope(c.get("accessTokenPrincipal"), "transactions:read").map(
-          (resolvedPrincipal) => resolvedPrincipal,
+        requireScope(
+          c.get("accessTokenPrincipal"),
+          CLI_SCOPES.transactionsRead,
         ),
       );
     })
     .get("/v1/transactions", (c) => {
-      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
       return respondAsync<GetTransactionsResponse>(c)(
-        requireScope(principal, "transactions:read").andThen(() =>
+        requireScope(
+          c.get("accessTokenPrincipal"),
+          CLI_SCOPES.transactionsRead,
+        ).andThen((principal) =>
           parseGetTransactionsRequest({
             userId: principal.userId,
           }).asyncAndThen((res) => getTransactions.execute(res)),
         ),
       );
     })
-    .post("/v1/transactions", (c) => {
-      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
-      const createTransaction = new CreateTransactionUseCase(
-        deps.transactionRepo,
-      );
-      return respondAsync<CreateTransactionResponse>(c)(
-        requireScope(principal, "transactions:write")
-          .andThen(() =>
-            ResultAsync.fromPromise(
-              c.req.json<Record<string, unknown>>(),
-              (cause) =>
-                newRichError({
-                  cause,
-                  code: cliErrorCodes.REQUEST_BODY_INVALID,
-                  details: {
-                    action: "ParseCliCreateTransactionBody",
-                    reason: "Request body must be valid JSON.",
-                  },
-                  i18n: { key: "errors.application.validation" },
-                  isOperational: true,
-                  kind: "Validation",
-                  layer: "Presentation",
-                }),
-            ),
-          )
-          .andThen((body) =>
+    .post(
+      "/v1/transactions",
+      zValidator("json", createTransactionBodySchema, respondZodError),
+      (c) => {
+        const createTransaction = new CreateTransactionUseCase(
+          deps.transactionRepo,
+        );
+        const body = c.req.valid("json") as CreateTransactionBody;
+        return respondAsync<CreateTransactionResponse>(c)(
+          requireScope(
+            c.get("accessTokenPrincipal"),
+            CLI_SCOPES.transactionsWrite,
+          ).andThen((principal) =>
             parseCreateTransactionRequest({
-              ...(body as Record<string, unknown>),
+              ...body,
               userId: principal.userId,
-            }),
-          )
-          .andThen((res) => createTransaction.execute(res)),
-      );
-    })
-    .patch("/v1/transactions/:id", (c) => {
-      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
-      const updateTransaction = new UpdateTransactionUseCase(
-        deps.transactionRepo,
-      );
-      return respondAsync<void>(c)(
-        requireScope(principal, "transactions:write")
-          .andThen(() =>
-            ResultAsync.fromPromise(
-              c.req.json<Record<string, unknown>>(),
-              (cause) =>
-                newRichError({
-                  cause,
-                  code: cliErrorCodes.REQUEST_BODY_INVALID,
-                  details: {
-                    action: "ParseCliUpdateTransactionBody",
-                    reason: "Request body must be valid JSON.",
-                  },
-                  i18n: { key: "errors.application.validation" },
-                  isOperational: true,
-                  kind: "Validation",
-                  layer: "Presentation",
-                }),
-            ),
-          )
-          .andThen((body) =>
+            }).asyncAndThen((res) => createTransaction.execute(res)),
+          ),
+        );
+      },
+    )
+    .patch(
+      "/v1/transactions/:id",
+      zValidator("json", updateTransactionBodySchema, respondZodError),
+      (c) => {
+        const updateTransaction = new UpdateTransactionUseCase(
+          deps.transactionRepo,
+        );
+        const body = c.req.valid("json") as UpdateTransactionBody;
+        return respondAsync<void>(c)(
+          requireScope(
+            c.get("accessTokenPrincipal"),
+            CLI_SCOPES.transactionsWrite,
+          ).andThen((principal) =>
             parseUpdateTransactionRequest({
-              ...(body as Record<string, unknown>),
+              ...body,
               id: c.req.param("id"),
-            }),
-          )
-          .andThen((res) => updateTransaction.execute(res, principal.userId)),
-      );
-    })
+            }).asyncAndThen((res) =>
+              updateTransaction.execute(res, principal.userId),
+            ),
+          ),
+        );
+      },
+    )
     .delete("/v1/transactions/:id", (c) => {
-      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       const deleteTransaction = new DeleteTransactionUseCase(
         deps.transactionRepo,
       );
       return respondAsync<void>(c)(
-        requireScope(principal, "transactions:write").andThen(() =>
+        requireScope(
+          c.get("accessTokenPrincipal"),
+          CLI_SCOPES.transactionsWrite,
+        ).andThen((principal) =>
           parseDeleteTransactionRequest({
             id: c.req.param("id"),
             userId: principal.userId,
@@ -198,7 +199,7 @@ function extractBearerToken(
 
 function requireScope(
   principal: AccessTokenPrincipal | undefined,
-  requiredScope: string,
+  requiredScope: CliScope,
 ): ResultAsync<AccessTokenPrincipal, RichError> {
   if (principal === undefined) {
     return errAsync(

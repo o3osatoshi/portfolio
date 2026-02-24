@@ -14,6 +14,7 @@ import type {
 import type { Context, Next } from "hono";
 import { err, errAsync, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
@@ -142,6 +143,31 @@ const a = vi.hoisted(() => {
 });
 
 vi.mock("@repo/application", () => ({
+  createTransactionRequestSchema: z.object({
+    amount: z.string().min(1),
+    currency: z.string().min(1),
+    datetime: z.coerce.date(),
+    fee: z
+      .string()
+      .refine(
+        (value) =>
+          !Number.isNaN(Number.parseFloat(value)) &&
+          Number.isFinite(Number.parseFloat(value)),
+      )
+      .optional(),
+    feeCurrency: z.string().optional(),
+    price: z.string().min(1),
+    profitLoss: z
+      .string()
+      .refine(
+        (value) =>
+          !Number.isNaN(Number.parseFloat(value)) &&
+          Number.isFinite(Number.parseFloat(value)),
+      )
+      .optional(),
+    type: z.enum(["BUY", "SELL"]),
+    userId: z.string().min(1),
+  }),
   CreateTransactionUseCase: a.CreateTransactionUseCase,
   DeleteTransactionUseCase: a.DeleteTransactionUseCase,
   GetFxQuoteUseCase: a.GetFxQuoteUseCase,
@@ -151,6 +177,49 @@ vi.mock("@repo/application", () => ({
   parseGetFxQuoteRequest: a.parseGetFxQuoteRequest,
   parseGetTransactionsRequest: a.parseGetTransactionsRequest,
   parseUpdateTransactionRequest: a.parseUpdateTransactionRequest,
+  updateTransactionRequestSchema: z
+    .object({
+      id: z.string().min(1).optional(),
+      amount: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)) &&
+            Number.parseFloat(value) > 0,
+        )
+        .optional(),
+      currency: z.string().optional(),
+      datetime: z.coerce.date().optional(),
+      fee: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)),
+        )
+        .optional(),
+      feeCurrency: z.string().optional(),
+      price: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)) &&
+            Number.parseFloat(value) > 0,
+        )
+        .optional(),
+      profitLoss: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)),
+        )
+        .optional(),
+      type: z.enum(["BUY", "SELL"]).optional(),
+    })
+    .passthrough(),
   UpdateTransactionUseCase: a.UpdateTransactionUseCase,
 }));
 
