@@ -39,9 +39,8 @@ export function createAccessTokenPrinResolver(
     audience: options.audience,
     issuer: options.issuer,
   });
-  const fetchImpl = options.fetchImpl ?? fetch;
   const fetchUserInfo = createOidcUserInfoFetcher({
-    fetch: fetchImpl,
+    fetch: options.fetchImpl ?? fetch,
     unauthorizedReason: "/userinfo request was rejected by the IdP.",
   });
 
