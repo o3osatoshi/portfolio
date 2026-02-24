@@ -14,10 +14,10 @@ import { integrationErrorCodes } from "../integration-error-catalog";
 
 export const oidcUserInfoSchema = z.object({
   name: z.string().optional(),
-  email: z.email().optional(),
+  email: z.string().email().optional(),
   email_verified: z.boolean().optional(),
   picture: z.string().optional(),
-  sub: z.string().optional(),
+  sub: z.string().trim().optional(),
 });
 
 const DEFAULT_OIDC_USERINFO_REQUEST_ACTION = "FetchOidcUserInfo";
@@ -63,7 +63,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
       : input.issuer;
     const url = `${normalizedIssuer}/userinfo`;
 
-    return sFetch<typeof oidcUserInfoSchema>({
+    return sFetch({
       cache: input.cache,
       decode: {
         context: {
@@ -113,14 +113,13 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
           );
         }
 
-        if (res.data.sub?.length === 0) {
+        if (!res.data.sub) {
           return errAsync(
             newIntegrationError({
               code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
               details: {
                 action,
-                reason:
-                  "IdP /userinfo payload does not contain a valid subject.",
+                reason: "IdP /userinfo payload does not match expected schema.",
               },
               i18n: { key: "errors.application.unauthorized" },
               isOperational: true,
@@ -134,7 +133,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
           email: res.data.email,
           emailVerified: res.data.email_verified === true,
           image: res.data.picture,
-          subject: res.data.sub ?? "",
+          subject: res.data.sub,
         });
       });
   };
