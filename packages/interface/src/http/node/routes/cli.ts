@@ -12,7 +12,7 @@ import {
   parseUpdateTransactionRequest,
   UpdateTransactionUseCase,
 } from "@repo/application";
-import type { AccessTokenPrin } from "@repo/auth";
+import type { AccessTokenPrincipal } from "@repo/auth";
 import { type Context, Hono } from "hono";
 import {
   err,
@@ -39,24 +39,24 @@ export function buildCliRoutes(deps: Deps) {
       const accessToken = extractBearerToken(c.req.header("authorization"));
       if (accessToken.isErr()) return errorResponse(c, accessToken.error);
 
-      const principalResult = await deps.resolveAccessTokenPrin({
+      const principalResult = await deps.resolveAccessTokenPrincipal({
         accessToken: accessToken.value,
       });
       if (principalResult.isErr())
         return errorResponse(c, principalResult.error);
 
-      c.set("accessTokenPrin", principalResult.value);
+      c.set("accessTokenPrincipal", principalResult.value);
       c.get("requestLogger")?.setUserId?.(principalResult.value.userId);
       return await next();
     })
     .get("/v1/me", (c) => {
-      const principal = c.get("accessTokenPrin") as AccessTokenPrin;
-      return respondAsync<AccessTokenPrin>(c)(
+      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
+      return respondAsync<AccessTokenPrincipal>(c)(
         requireScope(principal, "transactions:read").map(() => principal),
       );
     })
     .get("/v1/transactions", (c) => {
-      const principal = c.get("accessTokenPrin") as AccessTokenPrin;
+      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
       return respondAsync<GetTransactionsResponse>(c)(
         requireScope(principal, "transactions:read").andThen(() =>
@@ -67,7 +67,7 @@ export function buildCliRoutes(deps: Deps) {
       );
     })
     .post("/v1/transactions", (c) => {
-      const principal = c.get("accessTokenPrin") as AccessTokenPrin;
+      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       const createTransaction = new CreateTransactionUseCase(
         deps.transactionRepo,
       );
@@ -101,7 +101,7 @@ export function buildCliRoutes(deps: Deps) {
       );
     })
     .patch("/v1/transactions/:id", (c) => {
-      const principal = c.get("accessTokenPrin") as AccessTokenPrin;
+      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       const updateTransaction = new UpdateTransactionUseCase(
         deps.transactionRepo,
       );
@@ -135,7 +135,7 @@ export function buildCliRoutes(deps: Deps) {
       );
     })
     .delete("/v1/transactions/:id", (c) => {
-      const principal = c.get("accessTokenPrin") as AccessTokenPrin;
+      const principal = c.get("accessTokenPrincipal") as AccessTokenPrincipal;
       const deleteTransaction = new DeleteTransactionUseCase(
         deps.transactionRepo,
       );
@@ -196,7 +196,7 @@ function extractBearerToken(
 }
 
 function requireScope(
-  principal: AccessTokenPrin,
+  principal: AccessTokenPrincipal,
   requiredScope: string,
 ): ResultAsync<void, RichError> {
   if (principal.scopes.includes(requiredScope)) {

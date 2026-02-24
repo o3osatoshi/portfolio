@@ -10,14 +10,14 @@ import {
   parseScopes,
 } from "./oidc-access-token";
 
-export type AccessTokenPrin = {
+export type AccessTokenPrincipal = {
   issuer: string;
   scopes: string[];
   subject: string;
   userId: UserId;
 };
 
-export type CreateAccessTokenPrinResolverOptions = {
+export type CreateAccessTokenPrincipalResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
   findUserIdByKey: ExternalIdentityResolver["findUserIdByKey"];
@@ -25,15 +25,15 @@ export type CreateAccessTokenPrinResolverOptions = {
   linkExternalIdentityToUserByEmail: ExternalIdentityResolver["linkExternalIdentityToUserByEmail"];
 };
 
-export type ResolveAccessTokenPrinParams = {
+export type ResolveAccessTokenPrincipalParams = {
   accessToken: string;
 };
 
 /**
  * Build a resolver that maps an access token onto an internal user id.
  */
-export function createAccessTokenPrinResolver(
-  options: CreateAccessTokenPrinResolverOptions,
+export function createAccessTokenPrincipalResolver(
+  options: CreateAccessTokenPrincipalResolverOptions,
 ) {
   const verifyAccessToken = createOidcAccessTokenVerifier({
     audience: options.audience,
@@ -45,8 +45,8 @@ export function createAccessTokenPrinResolver(
   });
 
   return (
-    params: ResolveAccessTokenPrinParams,
-  ): ResultAsync<AccessTokenPrin, RichError> =>
+    params: ResolveAccessTokenPrincipalParams,
+  ): ResultAsync<AccessTokenPrincipal, RichError> =>
     verifyAccessToken(params.accessToken).andThen((claimSet) => {
       const scopes = parseScopes(claimSet.scope);
       const issuer = normalizeIssuer(claimSet.iss);
@@ -68,7 +68,7 @@ export function createAccessTokenPrinResolver(
                 newRichError({
                   code: authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH,
                   details: {
-                    action: "ResolveAccessTokenPrin",
+                    action: "ResolveAccessTokenPrincipal",
                     reason:
                       "Access token subject does not match /userinfo subject.",
                   },

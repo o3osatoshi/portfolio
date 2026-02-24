@@ -2,7 +2,7 @@ import type { UserId } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createAccessTokenPrinResolver } from "./access-token-principal";
+import { createAccessTokenPrincipalResolver } from "./access-token-principal";
 
 const h = vi.hoisted(() => {
   const createVerifierMock = vi.fn();
@@ -34,7 +34,7 @@ describe("hono-auth/access-token-principal", () => {
       }),
     );
     const fetchMock = vi.fn();
-    const resolve = createAccessTokenPrinResolver({
+  const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByKey: findUserIdByExternalIdentity,
@@ -86,7 +86,7 @@ describe("hono-auth/access-token-principal", () => {
       okAsync(asUserId("u-2")),
     );
 
-    const resolve = createAccessTokenPrinResolver({
+    const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
       fetchImpl: fetchMock as unknown as typeof fetch,
       findUserIdByKey: () => okAsync(null),
