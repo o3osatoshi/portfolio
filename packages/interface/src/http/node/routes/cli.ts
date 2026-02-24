@@ -20,16 +20,10 @@ import {
   extractBearerToken,
   requireScope,
 } from "@repo/auth";
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { okAsync } from "neverthrow";
 
-import {
-  type RichError,
-  toHttpErrorResponse,
-} from "@o3osatoshi/toolkit";
-
-import { respondZodError } from "../../core";
-import { respondAsync } from "../../core";
+import { respond, respondAsync, respondZodError } from "../../core";
 import type { ContextEnv } from "../../core/types";
 import type { Deps } from "../app";
 
@@ -42,12 +36,12 @@ export function buildCliRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
     .use("/v1/*", async (c, next) => {
       const accessToken = extractBearerToken(c.req.header("authorization"));
-      if (accessToken.isErr()) return errorResponse(c, accessToken.error);
+      if (accessToken.isErr()) return respond(c)(accessToken);
 
       const result = await deps.resolveAccessTokenPrincipal({
         accessToken: accessToken.value,
       });
-      if (result.isErr()) return errorResponse(c, result.error);
+      if (result.isErr()) return respond(c)(result);
 
       c.set("accessTokenPrincipal", result.value);
       c.get("requestLogger")?.setUserId?.(result.value.userId);
@@ -58,7 +52,7 @@ export function buildCliRoutes(deps: Deps) {
         requireScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsRead,
-        ).asyncAndThen((resolvedPrincipal) => okAsync(resolvedPrincipal)),
+        ).asyncAndThen((principal) => okAsync(principal)),
       );
     })
     .get("/v1/transactions", (c) => {
@@ -70,7 +64,7 @@ export function buildCliRoutes(deps: Deps) {
         ).asyncAndThen(({ userId }) =>
           parseGetTransactionsRequest({
             userId,
-          }).asyncAndThen((res) => getTransactions.execute(res)),
+          }).asyncAndThen((req) => getTransactions.execute(req)),
         ),
       );
     })
@@ -95,7 +89,7 @@ export function buildCliRoutes(deps: Deps) {
             parseCreateTransactionRequest({
               ...c.req.valid("json"),
               userId,
-            }).asyncAndThen((res) => createTransaction.execute(res)),
+            }).asyncAndThen((req) => createTransaction.execute(req)),
           ),
         );
       },
@@ -119,7 +113,7 @@ export function buildCliRoutes(deps: Deps) {
             parseUpdateTransactionRequest({
               ...c.req.valid("json"),
               id: c.req.param("id"),
-            }).asyncAndThen((res) => updateTransaction.execute(res, userId)),
+            }).asyncAndThen((req) => updateTransaction.execute(req, userId)),
           ),
         );
       },
@@ -136,14 +130,8 @@ export function buildCliRoutes(deps: Deps) {
           parseDeleteTransactionRequest({
             id: c.req.param("id"),
             userId,
-          }).asyncAndThen((res) => deleteTransaction.execute(res)),
+          }).asyncAndThen((req) => deleteTransaction.execute(req)),
         ),
       );
     });
-}
-
-function errorResponse(c: Context<ContextEnv>, error: RichError) {
-  c.set("error", error);
-  const { body, statusCode } = toHttpErrorResponse(error);
-  return c.json(body, { status: statusCode });
 }

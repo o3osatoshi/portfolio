@@ -1,4 +1,8 @@
-import { appendErrorAttributes, type Attributes, type RequestLogger } from "@o3osatoshi/logging";
+import {
+  appendErrorAttributes,
+  type Attributes,
+  type RequestLogger,
+} from "@o3osatoshi/logging";
 
 export function emitRequestSummary(
   requestLogger: RequestLogger,
