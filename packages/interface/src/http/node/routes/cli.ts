@@ -1,9 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import type {
-  CreateTransactionRequest,
   CreateTransactionResponse,
   GetTransactionsResponse,
-  UpdateTransactionRequest,
 } from "@repo/application";
 import {
   createTransactionRequestSchema,
@@ -19,14 +17,7 @@ import {
 } from "@repo/application";
 import type { AccessTokenPrincipal } from "@repo/auth";
 import { type Context, Hono } from "hono";
-import {
-  err,
-  errAsync,
-  ok,
-  okAsync,
-  type Result,
-  type ResultAsync,
-} from "neverthrow";
+import { err, ok, okAsync, type Result } from "neverthrow";
 
 import {
   newRichError,
@@ -45,14 +36,6 @@ const CLI_SCOPES = {
   transactionsWrite: "transactions:write",
 } as const;
 type CliScope = (typeof CLI_SCOPES)[keyof typeof CLI_SCOPES];
-type CreateTransactionBody = Omit<CreateTransactionRequest, "userId">;
-const createTransactionBodySchema = createTransactionRequestSchema.omit({
-  userId: true,
-});
-const updateTransactionBodySchema = updateTransactionRequestSchema
-  .omit({ id: true })
-  .passthrough();
-type UpdateTransactionBody = UpdateTransactionRequest;
 
 export function buildCliRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -74,7 +57,7 @@ export function buildCliRoutes(deps: Deps) {
         requireScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsRead,
-        ),
+        ).asyncAndThen((resolvedPrincipal) => okAsync(resolvedPrincipal)),
       );
     })
     .get("/v1/transactions", (c) => {
@@ -83,29 +66,34 @@ export function buildCliRoutes(deps: Deps) {
         requireScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsRead,
-        ).andThen((principal) =>
+        ).asyncAndThen(({ userId }) =>
           parseGetTransactionsRequest({
-            userId: principal.userId,
+            userId,
           }).asyncAndThen((res) => getTransactions.execute(res)),
         ),
       );
     })
     .post(
       "/v1/transactions",
-      zValidator("json", createTransactionBodySchema, respondZodError),
+      zValidator(
+        "json",
+        createTransactionRequestSchema.omit({
+          userId: true,
+        }),
+        respondZodError,
+      ),
       (c) => {
         const createTransaction = new CreateTransactionUseCase(
           deps.transactionRepo,
         );
-        const body = c.req.valid("json") as CreateTransactionBody;
         return respondAsync<CreateTransactionResponse>(c)(
           requireScope(
             c.get("accessTokenPrincipal"),
             CLI_SCOPES.transactionsWrite,
-          ).andThen((principal) =>
+          ).asyncAndThen(({ userId }) =>
             parseCreateTransactionRequest({
-              ...body,
-              userId: principal.userId,
+              ...c.req.valid("json"),
+              userId,
             }).asyncAndThen((res) => createTransaction.execute(res)),
           ),
         );
@@ -113,23 +101,24 @@ export function buildCliRoutes(deps: Deps) {
     )
     .patch(
       "/v1/transactions/:id",
-      zValidator("json", updateTransactionBodySchema, respondZodError),
+      zValidator(
+        "json",
+        updateTransactionRequestSchema.omit({ id: true }).loose(),
+        respondZodError,
+      ),
       (c) => {
         const updateTransaction = new UpdateTransactionUseCase(
           deps.transactionRepo,
         );
-        const body = c.req.valid("json") as UpdateTransactionBody;
         return respondAsync<void>(c)(
           requireScope(
             c.get("accessTokenPrincipal"),
             CLI_SCOPES.transactionsWrite,
-          ).andThen((principal) =>
+          ).asyncAndThen(({ userId }) =>
             parseUpdateTransactionRequest({
-              ...body,
+              ...c.req.valid("json"),
               id: c.req.param("id"),
-            }).asyncAndThen((res) =>
-              updateTransaction.execute(res, principal.userId),
-            ),
+            }).asyncAndThen((res) => updateTransaction.execute(res, userId)),
           ),
         );
       },
@@ -142,10 +131,10 @@ export function buildCliRoutes(deps: Deps) {
         requireScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsWrite,
-        ).andThen((principal) =>
+        ).asyncAndThen(({ userId }) =>
           parseDeleteTransactionRequest({
             id: c.req.param("id"),
-            userId: principal.userId,
+            userId,
           }).asyncAndThen((res) => deleteTransaction.execute(res)),
         ),
       );
@@ -200,9 +189,9 @@ function extractBearerToken(
 function requireScope(
   principal: AccessTokenPrincipal | undefined,
   requiredScope: CliScope,
-): ResultAsync<AccessTokenPrincipal, RichError> {
+): Result<AccessTokenPrincipal, RichError> {
   if (principal === undefined) {
-    return errAsync(
+    return err(
       newRichError({
         code: cliErrorCodes.SCOPE_FORBIDDEN,
         details: {
@@ -218,10 +207,10 @@ function requireScope(
   }
 
   if (principal.scopes.includes(requiredScope)) {
-    return okAsync(principal);
+    return ok(principal);
   }
 
-  return errAsync(
+  return err(
     newRichError({
       code: cliErrorCodes.SCOPE_FORBIDDEN,
       details: {
