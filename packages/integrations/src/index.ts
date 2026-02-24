@@ -1,7 +1,7 @@
-export * from "./auth/oidc-user-info";
 /**
  * Public surface for external integrations (APIs, infrastructure adapters).
  */
+export * from "./auth/oidc-user-info";
 export * from "./exchange-rate-api";
 export * from "./http";
 export * from "./integration-error";
