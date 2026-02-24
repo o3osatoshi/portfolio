@@ -14,7 +14,7 @@ import { integrationErrorCodes } from "../integration-error-catalog";
 
 export const oidcUserInfoSchema = z.object({
   name: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   email_verified: z.boolean().optional(),
   picture: z.string().optional(),
   sub: z.string().trim().optional(),

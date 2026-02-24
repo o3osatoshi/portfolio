@@ -219,7 +219,7 @@ vi.mock("@repo/application", () => ({
         .optional(),
       type: z.enum(["BUY", "SELL"]).optional(),
     })
-    .passthrough(),
+    .loose(),
   UpdateTransactionUseCase: a.UpdateTransactionUseCase,
 }));
 

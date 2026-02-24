@@ -81,12 +81,8 @@ export function createAccessTokenPrincipalResolver(
             }
 
             return options.linkExternalIdentityToUserByEmail({
-              name: userInfo.name,
-              email: userInfo.email,
-              emailVerified: userInfo.emailVerified,
-              image: userInfo.image,
+              ...userInfo,
               issuer,
-              subject,
             });
           });
         })
