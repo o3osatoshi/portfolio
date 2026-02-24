@@ -2,7 +2,9 @@ import type { UserId } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { authErrorCodes } from "../auth-error-catalog";
 import { createAccessTokenPrincipalResolver } from "./access-token-principal";
+import { extractBearerToken, requireScope } from "./access-token-guard";
 
 const h = vi.hoisted(() => {
   const createVerifierMock = vi.fn();
@@ -105,5 +107,57 @@ describe("hono-auth/access-token-principal", () => {
       issuer: "https://example.auth0.com",
       subject: "auth0|123",
     });
+  });
+
+  it("extractBearerToken returns missing-token error when authorization header is empty", () => {
+    const res = extractBearerToken(undefined);
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(authErrorCodes.AUTHORIZATION_HEADER_MISSING);
+    }
+  });
+
+  it("extractBearerToken validates Bearer scheme", () => {
+    const res = extractBearerToken("invalid-token-format");
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(authErrorCodes.AUTHORIZATION_HEADER_MALFORMED);
+    }
+  });
+
+  it("requireScope accepts principal with required scope", () => {
+    const result = requireScope(
+      { scopes: ["transactions:read"], userId: "u-1" },
+      "transactions:read",
+    );
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual({ scopes: ["transactions:read"], userId: "u-1" });
+    }
+  });
+
+  it("requireScope rejects when principal is missing", () => {
+    const result = requireScope(
+      undefined,
+      "transactions:read",
+    );
+    expect(result.isErr()).toBe(true);
+    if (result.isErr()) {
+      expect(result.error.code).toBe(authErrorCodes.ACCESS_SCOPE_FORBIDDEN);
+    }
+  });
+
+  it("requireScope rejects when scope is missing", () => {
+    const result = requireScope(
+      { scopes: ["transactions:write"], userId: "u-1" },
+      "transactions:read",
+    );
+    expect(result.isErr()).toBe(true);
+    if (result.isErr()) {
+      expect(result.error.code).toBe(authErrorCodes.ACCESS_SCOPE_FORBIDDEN);
+      expect(result.error.details?.reason).toBe(
+        "Required scope is missing: transactions:read",
+      );
+    }
   });
 });

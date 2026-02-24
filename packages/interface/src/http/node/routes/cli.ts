@@ -15,12 +15,15 @@ import {
   updateTransactionRequestSchema,
   UpdateTransactionUseCase,
 } from "@repo/application";
-import type { AccessTokenPrincipal } from "@repo/auth";
+import {
+  type AccessTokenPrincipal,
+  extractBearerToken,
+  requireScope,
+} from "@repo/auth";
 import { type Context, Hono } from "hono";
-import { err, ok, okAsync, type Result } from "neverthrow";
+import { okAsync } from "neverthrow";
 
 import {
-  newRichError,
   type RichError,
   toHttpErrorResponse,
 } from "@o3osatoshi/toolkit";
@@ -29,13 +32,11 @@ import { respondZodError } from "../../core";
 import { respondAsync } from "../../core";
 import type { ContextEnv } from "../../core/types";
 import type { Deps } from "../app";
-import { cliErrorCodes } from "./cli-error-catalog";
 
 const CLI_SCOPES = {
   transactionsRead: "transactions:read",
   transactionsWrite: "transactions:write",
 } as const;
-type CliScope = (typeof CLI_SCOPES)[keyof typeof CLI_SCOPES];
 
 export function buildCliRoutes(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -145,82 +146,4 @@ function errorResponse(c: Context<ContextEnv>, error: RichError) {
   c.set("error", error);
   const { body, statusCode } = toHttpErrorResponse(error);
   return c.json(body, { status: statusCode });
-}
-
-function extractBearerToken(
-  authorization: null | string | undefined,
-): Result<string, RichError> {
-  if (!authorization) {
-    return err(
-      newRichError({
-        code: cliErrorCodes.BEARER_TOKEN_MISSING,
-        details: {
-          action: "ExtractCliBearerToken",
-          reason: "Authorization header is missing.",
-        },
-        i18n: { key: "errors.application.unauthorized" },
-        isOperational: true,
-        kind: "Unauthorized",
-        layer: "Presentation",
-      }),
-    );
-  }
-
-  const matched = authorization.match(/^Bearer\s+(.+)$/i);
-  if (!matched || !matched[1]) {
-    return err(
-      newRichError({
-        code: cliErrorCodes.BEARER_TOKEN_MALFORMED,
-        details: {
-          action: "ExtractCliBearerToken",
-          reason: "Authorization header must use Bearer scheme.",
-        },
-        i18n: { key: "errors.application.unauthorized" },
-        isOperational: true,
-        kind: "Unauthorized",
-        layer: "Presentation",
-      }),
-    );
-  }
-
-  return ok(matched[1]);
-}
-
-function requireScope(
-  principal: AccessTokenPrincipal | undefined,
-  requiredScope: CliScope,
-): Result<AccessTokenPrincipal, RichError> {
-  if (principal === undefined) {
-    return err(
-      newRichError({
-        code: cliErrorCodes.SCOPE_FORBIDDEN,
-        details: {
-          action: "AuthorizeCliScope",
-          reason: "Access token principal is missing.",
-        },
-        i18n: { key: "errors.application.forbidden" },
-        isOperational: true,
-        kind: "Forbidden",
-        layer: "Presentation",
-      }),
-    );
-  }
-
-  if (principal.scopes.includes(requiredScope)) {
-    return ok(principal);
-  }
-
-  return err(
-    newRichError({
-      code: cliErrorCodes.SCOPE_FORBIDDEN,
-      details: {
-        action: "AuthorizeCliScope",
-        reason: `Required scope is missing: ${requiredScope}`,
-      },
-      i18n: { key: "errors.application.forbidden" },
-      isOperational: true,
-      kind: "Forbidden",
-      layer: "Presentation",
-    }),
-  );
 }
