@@ -60,10 +60,11 @@ export function createOidcAccessTokenVerifier(
 ): OidcAccessTokenVerifier {
   const issuer = normalizeIssuer(options.issuer);
   const jwksUri = options.jwksUri ?? `${issuer}/.well-known/jwks.json`;
+  const jwkSet = createRemoteJWKSet(new URL(jwksUri));
 
   return (token: string) =>
     ResultAsync.fromPromise(
-      jwtVerify(token, createRemoteJWKSet(new URL(jwksUri)), {
+      jwtVerify(token, jwkSet, {
         audience: options.audience,
         clockTolerance: options.clockToleranceSeconds ?? 60,
         issuer: [issuer, `${issuer}/`],

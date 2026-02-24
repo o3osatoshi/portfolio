@@ -1,4 +1,7 @@
-import { createAccessTokenPrincipalResolver, createAuthConfig } from "@repo/auth";
+import {
+  createAccessTokenPrincipalResolver,
+  createAuthConfig,
+} from "@repo/auth";
 import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import {
   buildApp,
