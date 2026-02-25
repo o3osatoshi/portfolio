@@ -3,8 +3,8 @@ import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { authErrorCodes } from "../auth-error-catalog";
-import { createAccessTokenPrincipalResolver } from "./access-token-principal";
 import { extractBearerToken, requireScope } from "./access-token-guard";
+import { createAccessTokenPrincipalResolver } from "./access-token-principal";
 
 const h = vi.hoisted(() => {
   const createVerifierMock = vi.fn();
@@ -121,7 +121,9 @@ describe("hono-auth/access-token-principal", () => {
     const res = extractBearerToken("invalid-token-format");
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(authErrorCodes.AUTHORIZATION_HEADER_MALFORMED);
+      expect(res.error.code).toBe(
+        authErrorCodes.AUTHORIZATION_HEADER_MALFORMED,
+      );
     }
   });
 
@@ -132,15 +134,15 @@ describe("hono-auth/access-token-principal", () => {
     );
     expect(result.isOk()).toBe(true);
     if (result.isOk()) {
-      expect(result.value).toEqual({ scopes: ["transactions:read"], userId: "u-1" });
+      expect(result.value).toEqual({
+        scopes: ["transactions:read"],
+        userId: "u-1",
+      });
     }
   });
 
   it("requireScope rejects when principal is missing", () => {
-    const result = requireScope(
-      undefined,
-      "transactions:read",
-    );
+    const result = requireScope(undefined, "transactions:read");
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.code).toBe(authErrorCodes.ACCESS_SCOPE_FORBIDDEN);

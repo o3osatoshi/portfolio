@@ -1,5 +1,5 @@
-export * from "./access-token-principal";
 export * from "./access-token-guard";
+export * from "./access-token-principal";
 export type { AuthConfig } from "./auth-config";
 export { createAuthConfig, getAuthUserId } from "./auth-config";
 export type { CreateAuthConfigOptions } from "./auth-config";

@@ -1,16 +1,13 @@
 import { err, ok, type Result } from "neverthrow";
+
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
-import { authErrorCodes, type AuthErrorCode } from "../auth-error-catalog";
+import { type AuthErrorCode, authErrorCodes } from "../auth-error-catalog";
 
 const DEFAULT_MISSING_BEARER_REASON = "Authorization header is missing.";
 const DEFAULT_MALFORMED_BEARER_REASON =
   "Authorization header must use Bearer scheme.";
 const DEFAULT_SCOPE_MISSING_REASON = "Access token principal is missing.";
-
-type AccessTokenPrincipalLike = {
-  scopes: readonly string[];
-};
 
 export type ExtractBearerTokenOptions = {
   malformedTokenCode?: AuthErrorCode;
@@ -26,14 +23,20 @@ export type RequireScopeOptions = {
   scopeForbiddenReason?: string;
 };
 
+type AccessTokenPrincipalLike = {
+  scopes: readonly string[];
+};
+
 export function extractBearerToken(
-  authorization: string | null | undefined,
+  authorization: null | string | undefined,
   options: ExtractBearerTokenOptions = {},
 ): Result<string, RichError> {
   if (!authorization) {
     return err(
       newRichError({
-        code: options.missingTokenCode ?? authErrorCodes.AUTHORIZATION_HEADER_MISSING,
+        code:
+          options.missingTokenCode ??
+          authErrorCodes.AUTHORIZATION_HEADER_MISSING,
         details: {
           action: "ExtractBearerToken",
           reason: options.missingTokenReason ?? DEFAULT_MISSING_BEARER_REASON,
@@ -50,7 +53,9 @@ export function extractBearerToken(
   if (!matched || !matched[1]) {
     return err(
       newRichError({
-        code: options.malformedTokenCode ?? authErrorCodes.AUTHORIZATION_HEADER_MALFORMED,
+        code:
+          options.malformedTokenCode ??
+          authErrorCodes.AUTHORIZATION_HEADER_MALFORMED,
         details: {
           action: "ExtractBearerToken",
           reason:
@@ -78,7 +83,8 @@ export function requireScope<T extends AccessTokenPrincipalLike>(
         code: options.code ?? authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
         details: {
           action: options.action ?? "AuthorizeScope",
-          reason: options.missingPrincipalReason ?? DEFAULT_SCOPE_MISSING_REASON,
+          reason:
+            options.missingPrincipalReason ?? DEFAULT_SCOPE_MISSING_REASON,
         },
         i18n: { key: "errors.application.forbidden" },
         isOperational: true,
