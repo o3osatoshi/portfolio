@@ -24,9 +24,6 @@ export const oidcUserInfoSchema = z.object({
   sub: z.string().trim().optional(),
 });
 
-const DEFAULT_OIDC_USERINFO_REQUEST_ACTION = "FetchOidcUserInfo";
-const DEFAULT_OIDC_USERINFO_DECODE_BODY_ACTION = "DecodeOidcUserInfoBody";
-
 export type OidcUserInfo = {
   email?: string | undefined;
   emailVerified: boolean;
@@ -51,8 +48,8 @@ export type OidcUserInfoFetcherOptions = {
  * Fetch and validate OIDC user info claims from a provider's userinfo endpoint.
  */
 export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
-  const action = DEFAULT_OIDC_USERINFO_REQUEST_ACTION;
-  const decodeAction = DEFAULT_OIDC_USERINFO_DECODE_BODY_ACTION;
+  const fetchAction = "FetchOidcUserInfo";
+  const decodeAction = "DecodeOidcUserInfoBody";
   const sFetch = createSmartFetch({
     cache: options.cache,
     fetch: options.fetch ?? fetch,
@@ -61,11 +58,8 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
 
   return (
     input: OidcUserInfoFetcherInput,
-  ): ResultAsync<OidcUserInfo, RichError> => {
-    const normalizedIssuer = trimTrailingSlash(input.issuer);
-    const url = `${normalizedIssuer}/userinfo`;
-
-    return sFetch({
+  ): ResultAsync<OidcUserInfo, RichError> =>
+    sFetch({
       cache: input.cache,
       decode: {
         context: {
@@ -79,9 +73,11 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
       },
       method: "GET",
       retry: input.retry,
-      url,
+      url: `${trimTrailingSlash(input.issuer)}/userinfo`,
     })
-      .orElse((cause) => errAsync(mapFetchError(cause, action, decodeAction)))
+      .orElse((cause) =>
+        errAsync(mapFetchError(cause, fetchAction, decodeAction)),
+      )
       .andThen((res) => {
         if (!res.response.ok) {
           const status = res.response.status;
@@ -90,7 +86,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
               newIntegrationError({
                 code: integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
                 details: {
-                  action,
+                  action: fetchAction,
                   reason:
                     options.unauthorizedReason ??
                     `/userinfo request rejected by the IdP (HTTP ${status}).`,
@@ -106,7 +102,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
             newIntegrationError({
               code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
               details: {
-                action,
+                action: fetchAction,
                 reason: `Failed to fetch /userinfo endpoint (HTTP ${status}).`,
               },
               isOperational: true,
@@ -120,7 +116,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
             newIntegrationError({
               code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
               details: {
-                action,
+                action: fetchAction,
                 reason: "IdP /userinfo payload does not match expected schema.",
               },
               i18n: { key: "errors.application.unauthorized" },
@@ -138,7 +134,6 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
           subject: res.data.sub,
         });
       });
-  };
 }
 
 function mapFetchError(
