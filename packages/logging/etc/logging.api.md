@@ -11,7 +11,7 @@ import { Env } from '@o3osatoshi/toolkit';
 import * as _o3osatoshi_toolkit from '@o3osatoshi/toolkit';
 import { z } from 'zod';
 
-// @public (undocumented)
+// @public
 export function appendErrorAttributes(attributes: Attributes, error?: unknown): void;
 
 // @public

@@ -2,6 +2,11 @@ import { toRichError } from "@o3osatoshi/toolkit";
 
 import type { Attributes } from "../types";
 
+/**
+ * Append normalized error details to logging attributes.
+ *
+ * @public
+ */
 export function appendErrorAttributes(
   attributes: Attributes,
   error?: unknown,
