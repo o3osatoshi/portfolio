@@ -2,7 +2,11 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+import {
+  newRichError,
+  type RichError,
+  trimTrailingSlash,
+} from "@o3osatoshi/toolkit";
 
 import { authErrorCodes } from "../auth-error-catalog";
 
@@ -58,7 +62,7 @@ const jwtVerifyFailureSchema = z.object({
 export function createOidcAccessTokenVerifier(
   options: OidcAccessTokenVerifierOptions,
 ): OidcAccessTokenVerifier {
-  const issuer = normalizeIssuer(options.issuer);
+  const issuer = trimTrailingSlash(options.issuer);
   const jwksUri = options.jwksUri ?? `${issuer}/.well-known/jwks.json`;
   const jwkSet = createRemoteJWKSet(new URL(jwksUri));
 
@@ -105,7 +109,7 @@ export function createOidcAccessTokenVerifier(
 
       const claimSet = result.data;
 
-      if (normalizeIssuer(claimSet.iss) !== issuer) {
+      if (trimTrailingSlash(claimSet.iss) !== issuer) {
         return errAsync(
           newRichError({
             code: authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH,
@@ -198,8 +202,4 @@ function normalizeAudience(aud: unknown): string[] {
   }
   if (typeof aud === "string") return [aud];
   return [];
-}
-
-function normalizeIssuer(issuer: string): string {
-  return issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
 }

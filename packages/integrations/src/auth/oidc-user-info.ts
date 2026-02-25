@@ -1,7 +1,11 @@
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { httpStatusToKind, type RichError } from "@o3osatoshi/toolkit";
+import {
+  httpStatusToKind,
+  type RichError,
+  trimTrailingSlash,
+} from "@o3osatoshi/toolkit";
 
 import {
   createSmartFetch,
@@ -58,9 +62,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
   return (
     input: OidcUserInfoFetcherInput,
   ): ResultAsync<OidcUserInfo, RichError> => {
-    const normalizedIssuer = input.issuer.endsWith("/")
-      ? input.issuer.slice(0, -1)
-      : input.issuer;
+    const normalizedIssuer = trimTrailingSlash(input.issuer);
     const url = `${normalizedIssuer}/userinfo`;
 
     return sFetch({

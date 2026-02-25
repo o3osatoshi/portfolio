@@ -1,7 +1,7 @@
 import type { UserId } from "@repo/domain";
+import { integrationErrorCodes } from "@repo/integrations";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { integrationErrorCodes } from "@repo/integrations";
 
 import { authErrorCodes } from "../auth-error-catalog";
 import { extractBearerToken, requireScope } from "./access-token-guard";
