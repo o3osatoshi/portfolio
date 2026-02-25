@@ -4,7 +4,7 @@ import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { authErrorCodes } from "../auth-error-catalog";
-import { extractBearerToken, requireScope } from "./access-token-guard";
+import { authorizeScope, extractBearerToken } from "./access-token-guard";
 import { createAccessTokenPrincipalResolver } from "./access-token-principal";
 
 const h = vi.hoisted(() => {
@@ -163,8 +163,8 @@ describe("hono-auth/access-token-principal", () => {
     }
   });
 
-  it("requireScope accepts principal with required scope", () => {
-    const result = requireScope(
+  it("authorizeScope accepts principal with required scope", () => {
+    const result = authorizeScope(
       { scopes: ["transactions:read"], userId: "u-1" },
       "transactions:read",
     );
@@ -177,16 +177,16 @@ describe("hono-auth/access-token-principal", () => {
     }
   });
 
-  it("requireScope rejects when principal is missing", () => {
-    const result = requireScope(undefined, "transactions:read");
+  it("authorizeScope rejects when principal is missing", () => {
+    const result = authorizeScope(undefined, "transactions:read");
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.code).toBe(authErrorCodes.ACCESS_SCOPE_FORBIDDEN);
     }
   });
 
-  it("requireScope rejects when scope is missing", () => {
-    const result = requireScope(
+  it("authorizeScope rejects when scope is missing", () => {
+    const result = authorizeScope(
       { scopes: ["transactions:write"], userId: "u-1" },
       "transactions:read",
     );

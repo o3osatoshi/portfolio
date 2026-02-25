@@ -17,8 +17,8 @@ import {
 } from "@repo/application";
 import {
   type AccessTokenPrincipal,
+  authorizeScope,
   extractBearerToken,
-  requireScope,
 } from "@repo/auth";
 import { Hono } from "hono";
 import { okAsync } from "neverthrow";
@@ -49,7 +49,7 @@ export function buildCliRoutes(deps: Deps) {
     })
     .get("/v1/me", (c) => {
       return respondAsync<AccessTokenPrincipal>(c)(
-        requireScope(
+        authorizeScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsRead,
         ).asyncAndThen((principal) => okAsync(principal)),
@@ -58,7 +58,7 @@ export function buildCliRoutes(deps: Deps) {
     .get("/v1/transactions", (c) => {
       const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
       return respondAsync<GetTransactionsResponse>(c)(
-        requireScope(
+        authorizeScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsRead,
         ).asyncAndThen(({ userId }) =>
@@ -82,7 +82,7 @@ export function buildCliRoutes(deps: Deps) {
           deps.transactionRepo,
         );
         return respondAsync<CreateTransactionResponse>(c)(
-          requireScope(
+          authorizeScope(
             c.get("accessTokenPrincipal"),
             CLI_SCOPES.transactionsWrite,
           ).asyncAndThen(({ userId }) =>
@@ -106,7 +106,7 @@ export function buildCliRoutes(deps: Deps) {
           deps.transactionRepo,
         );
         return respondAsync<void>(c)(
-          requireScope(
+          authorizeScope(
             c.get("accessTokenPrincipal"),
             CLI_SCOPES.transactionsWrite,
           ).asyncAndThen(({ userId }) =>
@@ -123,7 +123,7 @@ export function buildCliRoutes(deps: Deps) {
         deps.transactionRepo,
       );
       return respondAsync<void>(c)(
-        requireScope(
+        authorizeScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsWrite,
         ).asyncAndThen(({ userId }) =>

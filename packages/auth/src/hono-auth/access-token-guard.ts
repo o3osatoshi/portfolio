@@ -8,6 +8,45 @@ type AccessTokenPrincipalLike = {
   scopes: readonly string[];
 };
 
+export function authorizeScope<T extends AccessTokenPrincipalLike>(
+  principal: T | undefined,
+  requiredScope: string,
+): Result<T, RichError> {
+  if (principal === undefined) {
+    return err(
+      newRichError({
+        code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
+        details: {
+          action: "AuthorizeScope",
+          reason: "Access token principal is missing.",
+        },
+        i18n: { key: "errors.application.forbidden" },
+        isOperational: true,
+        kind: "Forbidden",
+        layer: "Presentation",
+      }),
+    );
+  }
+
+  if (principal.scopes.includes(requiredScope)) {
+    return ok(principal);
+  }
+
+  return err(
+    newRichError({
+      code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
+      details: {
+        action: "AuthorizeScope",
+        reason: `Required scope is missing: ${requiredScope}`,
+      },
+      i18n: { key: "errors.application.forbidden" },
+      isOperational: true,
+      kind: "Forbidden",
+      layer: "Presentation",
+    }),
+  );
+}
+
 export function extractBearerToken(
   authorization: null | string | undefined,
 ): Result<string, RichError> {
@@ -45,43 +84,4 @@ export function extractBearerToken(
   }
 
   return ok(matched[1]);
-}
-
-export function requireScope<T extends AccessTokenPrincipalLike>(
-  principal: T | undefined,
-  requiredScope: string,
-): Result<T, RichError> {
-  if (principal === undefined) {
-    return err(
-      newRichError({
-        code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
-        details: {
-          action: "AuthorizeScope",
-          reason: "Access token principal is missing.",
-        },
-        i18n: { key: "errors.application.forbidden" },
-        isOperational: true,
-        kind: "Forbidden",
-        layer: "Presentation",
-      }),
-    );
-  }
-
-  if (principal.scopes.includes(requiredScope)) {
-    return ok(principal);
-  }
-
-  return err(
-    newRichError({
-      code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
-      details: {
-        action: "AuthorizeScope",
-        reason: `Required scope is missing: ${requiredScope}`,
-      },
-      i18n: { key: "errors.application.forbidden" },
-      isOperational: true,
-      kind: "Forbidden",
-      layer: "Presentation",
-    }),
-  );
 }
