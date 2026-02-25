@@ -16,6 +16,12 @@ import {
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
 
+/**
+ * Raw `/userinfo` response schema fetched from OIDC providers.
+ *
+ * `sub` is optional here to keep decoding permissive before explicit checks.
+ * @public
+ */
 export const oidcUserInfoSchema = z.object({
   name: z.string().optional(),
   email: z.string().email().trim().optional(),
@@ -24,6 +30,11 @@ export const oidcUserInfoSchema = z.object({
   sub: z.string().trim().optional(),
 });
 
+/**
+ * Canonical identity payload used after `/userinfo` validation.
+ *
+ * @public
+ */
 export type OidcUserInfo = {
   email?: string | undefined;
   emailVerified: boolean;
@@ -32,6 +43,11 @@ export type OidcUserInfo = {
   subject: string;
 };
 
+/**
+ * Input required to fetch user info for an access token.
+ *
+ * @public
+ */
 export type OidcUserInfoFetcherInput = {
   accessToken: string;
   cache?: SmartFetchRequestCacheOptions<typeof oidcUserInfoSchema> | undefined;
@@ -39,13 +55,29 @@ export type OidcUserInfoFetcherInput = {
   retry?: SmartFetchRequestRetryOptions<typeof oidcUserInfoSchema> | undefined;
 };
 
+/**
+ * Option bag for `/userinfo` fetcher construction.
+ *
+ * @public
+ */
 export type OidcUserInfoFetcherOptions = {
   fetch?: typeof fetch;
   unauthorizedReason?: string;
 } & Omit<CreateSmartFetchOptions, "fetch">;
 
 /**
- * Fetch and validate OIDC user info claims from a provider's userinfo endpoint.
+ * Fetch and validate OIDC `/userinfo` claims.
+ *
+ * Behavior:
+ * - verifies token through `Authorization` header
+ * - validates response status and schema
+ * - maps 401/403 to `OIDC_USERINFO_UNAUTHORIZED`
+ * - maps body parse/schema failures to `OIDC_USERINFO_SCHEMA_INVALID`
+ * - maps transport/HTTP failures to `OIDC_USERINFO_FETCH_FAILED`
+ *
+ * @param options Configures fetch/cache/retry and custom unauthorized reason.
+ * @returns A smart fetch wrapper that yields {@link OidcUserInfo}.
+ * @public
  */
 export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
   const fetchAction = "FetchOidcUserInfo";

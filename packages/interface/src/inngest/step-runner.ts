@@ -17,6 +17,17 @@ type InngestStepRunner = {
   ) => Promise<unknown>;
 };
 
+/**
+ * Adapt an Inngest `step` runner into `StepRunner` contract.
+ *
+ * `ResultAsync` failure values are converted into `RichError` through
+ * `toRichError` and serialized/unwrapped to match the generic StepRunner
+ * boundary.
+ *
+ * @param step Runner implementation provided by Inngest step runtime.
+ * @returns Domain `StepRunner`.
+ * @public
+ */
 export function createInngestStepRunner(step: InngestStepRunner): StepRunner {
   return <T extends JsonValue>(
     id: string,

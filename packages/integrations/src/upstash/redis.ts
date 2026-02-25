@@ -5,9 +5,16 @@ import { ResultAsync } from "neverthrow";
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
 
+/**
+ * Minimal Upstash client shape required by `wrapUpstashRedis`.
+ *
+ * @public
+ */
 export type UpstashRedisClient = Pick<UpstashRedis, "get" | "set">;
 /**
  * Connection configuration for Upstash Redis.
+ *
+ * @public
  */
 export type UpstashRedisConfig = {
   token?: string;
@@ -16,6 +23,10 @@ export type UpstashRedisConfig = {
 
 /**
  * Wrap a preconfigured Upstash client with the {@link CacheStore} interface.
+ *
+ * @param client Upstash client exposing `get` and `set`.
+ * @returns `CacheStore` adapter with integration errors.
+ * @public
  */
 export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
   return {

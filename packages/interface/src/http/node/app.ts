@@ -22,6 +22,7 @@ import { buildPublicRoutes } from "./routes/public";
  * Concrete Hono app type for the Node HTTP interface.
  *
  * Useful for deriving a typed RPC client via `hono/client`.
+ * @public
  */
 export type AppType = ReturnType<typeof buildApp>;
 
@@ -29,6 +30,7 @@ export type AppType = ReturnType<typeof buildApp>;
  * Dependencies required by {@link buildApp}.
  *
  * Provide infrastructure-backed implementations in production (e.g. DB).
+ * @public
  */
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
@@ -61,6 +63,7 @@ export type Deps = {
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
+ * @public
  */
 export function buildApp(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -131,6 +134,7 @@ export function buildApp(deps: Deps) {
  *   transactionRepo,
  * });
  * ```
+ * @public
  */
 export function buildHandler(deps: Deps) {
   const app = buildApp(deps);

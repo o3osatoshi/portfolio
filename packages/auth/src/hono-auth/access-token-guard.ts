@@ -8,6 +8,14 @@ type AccessTokenPrincipalLike = {
   scopes: readonly string[];
 };
 
+/**
+ * Authorize an access token principal against a required scope.
+ *
+ * @param principal Principal resolved from the incoming token.
+ * @param requiredScope Scope that must be present in `principal.scopes`.
+ * @returns The same principal when authorized, otherwise `AUTH_SCOPE_FORBIDDEN`.
+ * @public
+ */
 export function authorizeScope<T extends AccessTokenPrincipalLike>(
   principal: T | undefined,
   requiredScope: string,
@@ -47,6 +55,16 @@ export function authorizeScope<T extends AccessTokenPrincipalLike>(
   );
 }
 
+/**
+ * Extract the Bearer token from an Authorization header value.
+ *
+ * @param authorization `Authorization` header from the request.
+ * @returns Raw token when header is present and follows `Bearer <token>`.
+ * @remarks Errors:
+ * - `AUTHORIZATION_HEADER_MISSING` if the header is empty.
+ * - `AUTHORIZATION_HEADER_MALFORMED` if the header is not Bearer-shaped.
+ * @public
+ */
 export function extractBearerToken(
   authorization: null | string | undefined,
 ): Result<string, RichError> {

@@ -26,6 +26,7 @@ import { loggerMiddleware } from "./middlewares";
  * Concrete Hono app type for the Edge HTTP interface.
  *
  * Useful for deriving a typed RPC client via `hono/client`.
+ * @public
  */
 export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
 
@@ -33,6 +34,7 @@ export type EdgeAppType = ReturnType<typeof buildEdgeApp>;
  * Dependencies required by {@link buildEdgeApp}.
  *
  * - `AuthConfig` can be created via `createAuthConfig` from `@repo/auth`.
+ * @public
  */
 export type EdgeDeps = EdgeDepsAuth & EdgeDepsCache;
 
@@ -61,6 +63,7 @@ export type EdgeDepsCache = {
  *
  * @param deps Implementations of {@link EdgeDeps}.
  * @returns Configured Hono app instance.
+ * @public
  */
 export function buildEdgeApp(deps: EdgeDeps) {
   const authConfigHandler = (c: Context) => {
@@ -109,6 +112,7 @@ export function buildEdgeApp(deps: EdgeDeps) {
  *
  * export const { GET, POST } = buildEdgeHandler({ authConfig, cacheStore });
  * ```
+ * @public
  */
 export function buildEdgeHandler(deps: EdgeDeps) {
   const app = buildEdgeApp(deps);

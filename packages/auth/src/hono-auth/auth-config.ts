@@ -5,6 +5,16 @@ import type { PrismaClient } from "@repo/prisma";
 
 import type { AuthProviderId, AuthUser } from "./types";
 
+/**
+ * Options for building an Auth.js config compatible with this repository.
+ *
+ * - `secret` is required and forwarded to Auth.js.
+ * - `providers.oidc` should map to one OIDC provider config.
+ * - `prismaClient` is optional; if provided, enables the Prisma adapter.
+ * - `session.strategy` controls token persistence strategy (default: `"jwt"`).
+ *
+ * @public
+ */
 export type CreateAuthConfigOptions = {
   basePath?: string;
   prismaClient?: PrismaClient;
@@ -67,6 +77,19 @@ export function createAuthConfig(options: CreateAuthConfigOptions): AuthConfig {
   };
 }
 
+/**
+ * Resolve a stable user id from either session-backed or user-backed auth state.
+ *
+ * Fallback order:
+ * 1) `authUser.session.user.id`
+ * 2) `authUser.user.id`
+ *
+ * `undefined` is returned when neither source contains a user id.
+ *
+ * @param authUser Auth payload from NextAuth / Hono auth callbacks.
+ * @returns Internal user id if present.
+ * @public
+ */
 export function getAuthUserId(authUser?: AuthUser): string | undefined {
   return authUser?.session?.user?.id ?? authUser?.user?.id;
 }

@@ -10,6 +10,15 @@ import {
 
 import { authErrorCodes } from "../auth-error-catalog";
 
+/**
+ * Verified access-token claims expected by this API.
+ *
+ * Claims use `iss`/`sub` as identity keys, with optional audience/expiry fields
+ * modeled for strict verification and lightweight validation for provider-specific
+ * fields.
+ *
+ * @public
+ */
 export type OidcAccessTokenClaimSet = {
   [key: string]: unknown;
   aud?: string | string[] | undefined;
@@ -39,10 +48,23 @@ const oidcAccessTokenClaimSetSchema: z.ZodType<OidcAccessTokenClaimSet> = z
   })
   .catchall(z.unknown());
 
+/**
+ * Verifier function used by token processing pipelines.
+ *
+ * On success, returns parsed `OidcAccessTokenClaimSet`; on failure returns a
+ * `RichError` with an auth-layer OIDC code.
+ *
+ * @public
+ */
 export type OidcAccessTokenVerifier = (
   token: string,
 ) => ResultAsync<OidcAccessTokenClaimSet, RichError>;
 
+/**
+ * Configuration for constructing an OIDC access-token verifier.
+ *
+ * @public
+ */
 export type OidcAccessTokenVerifierOptions = {
   audience: string;
   clockToleranceSeconds?: number | undefined;
@@ -58,6 +80,23 @@ const jwtVerifyFailureSchema = z.object({
 
 /**
  * Create a verifier for OIDC access tokens issued for this API.
+ *
+ * Verification flow:
+ * - validates JWT signature, issuer and audience via `jwtVerify`
+ * - validates and normalizes claims with `OidcAccessTokenClaimSet` schema
+ * - performs explicit issuer/audience checks to keep trailing-slash handling
+ *   consistent with fetch endpoints
+ *
+ * Error mapping:
+ * - `OIDC_ACCESS_TOKEN_EXPIRED` when token expiration is violated
+ * - `OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH` when audience check fails
+ * - `OIDC_ACCESS_TOKEN_ISSUER_MISMATCH` when issuer does not match
+ * - `OIDC_ACCESS_TOKEN_CLAIMS_INVALID` when claim shape is invalid
+ * - `OIDC_ACCESS_TOKEN_INVALID` for unknown verification failures
+ *
+ * @param options Verifier options such as audience, issuer, clock tolerance.
+ * @returns A verifier function that returns parsed token claims.
+ * @public
  */
 export function createOidcAccessTokenVerifier(
   options: OidcAccessTokenVerifierOptions,
@@ -146,7 +185,11 @@ export function createOidcAccessTokenVerifier(
 }
 
 /**
- * Parse a scope claim into distinct scope names.
+ * Parse a scope claim into a deduplicated, normalized scope list.
+ *
+ * @param scopeClaim Raw `scope` claim from JWT.
+ * @returns Parsed scope values or an empty array when claim is missing/invalid.
+ * @public
  */
 export function parseScopes(scopeClaim: unknown): string[] {
   if (typeof scopeClaim !== "string") return [];

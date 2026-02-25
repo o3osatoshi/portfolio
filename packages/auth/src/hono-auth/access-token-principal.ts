@@ -14,6 +14,16 @@ import {
   parseScopes,
 } from "./oidc-access-token";
 
+/**
+ * Principal derived from a verified access token.
+ *
+ * - `issuer`: normalized OIDC issuer URL (trailing slash trimmed).
+ * - `subject`: subject from the OIDC token (`sub`) and IdP identity linkage key.
+ * - `userId`: canonical repository `UserId` resolved or linked through external identity.
+ * - `scopes`: space-separated scope list parsed from the token claim.
+ *
+ * @public
+ */
 export type AccessTokenPrincipal = {
   issuer: string;
   scopes: string[];
@@ -21,6 +31,16 @@ export type AccessTokenPrincipal = {
   userId: UserId;
 };
 
+/**
+ * Options required to build an access-token principal resolver.
+ *
+ * - `findUserIdByKey`: resolves an existing principal by `(issuer, subject)`.
+ * - `linkExternalIdentityToUserByEmail`: creates missing identity mapping when a
+ *   token is valid but no principal exists yet.
+ * - `fetchImpl`: optional fetch implementation for test/runtime override.
+ *
+ * @public
+ */
 export type CreateAccessTokenPrincipalResolverOptions = {
   audience: string;
   fetchImpl?: typeof fetch;
@@ -29,12 +49,32 @@ export type CreateAccessTokenPrincipalResolverOptions = {
   linkExternalIdentityToUserByEmail: ExternalIdentityResolver["linkExternalIdentityToUserByEmail"];
 };
 
+/**
+ * Input to `createAccessTokenPrincipalResolver` output function.
+ *
+ * @public
+ */
 export type ResolveAccessTokenPrincipalParams = {
   accessToken: string;
 };
 
 /**
- * Build a resolver that maps an access token onto an internal user id.
+ * Build a resolver that maps a token to an `AccessTokenPrincipal`.
+ *
+ * Steps:
+ * 1. Verify and parse the OIDC access token.
+ * 2. Resolve an existing `UserId` by `(issuer, subject)`.
+ * 3. If missing, fetch `/userinfo`, validate subject match, then
+ *    `linkExternalIdentityToUserByEmail` to provision mapping.
+ *
+ * Failure mapping:
+ * - OIDC verification failures use `OIDC_*` errors from the verifier.
+ * - Missing subject match returns `OIDC_IDENTITY_SUB_MISMATCH`.
+ * - `linkExternalIdentityToUserByEmail` / fetch errors are propagated.
+ *
+ * @param options Resolver dependencies and policy.
+ * @returns A function that resolves the caller to `AccessTokenPrincipal`.
+ * @public
  */
 export function createAccessTokenPrincipalResolver(
   options: CreateAccessTokenPrincipalResolverOptions,
