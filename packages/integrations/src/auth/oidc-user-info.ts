@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import {
   httpStatusToKind,
-  parseWith,
   type RichError,
   trimTrailingSlash,
 } from "@o3osatoshi/toolkit";
@@ -82,7 +81,7 @@ export type OidcUserInfoFetcherOptions = {
  */
 export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
   const fetchAction = "FetchOidcUserInfo";
-  const parseAction = "ParseOidcUserInfoBody";
+  const decodeAction = "DecodeOidcUserInfoBody";
   const sFetch = createSmartFetch({
     cache: options.cache,
     fetch: options.fetch ?? fetch,
@@ -93,26 +92,24 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
     input: OidcUserInfoFetcherInput,
   ): ResultAsync<OidcUserInfo, RichError> =>
     sFetch({
-      cache: input.cache as
-        | SmartFetchRequestCacheOptions<z.ZodUnknown>
-        | undefined,
+      cache: input.cache,
       decode: {
         context: {
-          action: "DecodeOidcUserInfoResponse",
+          action: decodeAction,
           layer: "External",
         },
-        schema: z.unknown(),
+        schema: oidcUserInfoSchema,
       },
       headers: {
         Authorization: `Bearer ${input.accessToken}`,
       },
       method: "GET",
-      retry: input.retry as
-        | SmartFetchRequestRetryOptions<z.ZodUnknown>
-        | undefined,
+      retry: input.retry,
       url: `${trimTrailingSlash(input.issuer)}/userinfo`,
     })
-      .orElse((cause) => errAsync(mapFetchError(cause, fetchAction)))
+      .orElse((cause) =>
+        errAsync(mapFetchError(cause, fetchAction, decodeAction)),
+      )
       .andThen((res) => {
         if (!res.response.ok) {
           const status = res.response.status;
@@ -146,15 +143,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
           );
         }
 
-        const parsed = parseWith(oidcUserInfoSchema, {
-          action: parseAction,
-          layer: "External",
-        })(res.data);
-        if (parsed.isErr()) {
-          return errAsync(mapParseError(fetchAction, parsed.error));
-        }
-
-        if (!parsed.value.sub) {
+        if (!res.data.sub) {
           return errAsync(
             newIntegrationError({
               code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
@@ -170,11 +159,11 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
         }
 
         return okAsync({
-          emailVerified: parsed.value.email_verified === true,
-          email: parsed.value.email,
-          image: parsed.value.picture,
-          name: parsed.value.name,
-          subject: parsed.value.sub,
+          name: res.data.name,
+          email: res.data.email,
+          emailVerified: res.data.email_verified === true,
+          image: res.data.picture,
+          subject: res.data.sub,
         });
       });
 }
@@ -182,6 +171,7 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
 function mapFetchError(
   cause: RichError,
   requestAction: string,
+  decodeAction: string,
 ): RichError {
   if (cause.details?.action === "DeserializeResponseBody") {
     return newIntegrationError({
@@ -196,6 +186,20 @@ function mapFetchError(
     });
   }
 
+  if (cause.details?.action === decodeAction) {
+    return newIntegrationError({
+      cause,
+      code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+      details: {
+        action: requestAction,
+        reason: "IdP /userinfo payload does not match expected schema.",
+      },
+      i18n: { key: "errors.application.unauthorized" },
+      isOperational: true,
+      kind: "Unauthorized",
+    });
+  }
+
   return newIntegrationError({
     cause,
     code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
@@ -205,22 +209,5 @@ function mapFetchError(
     },
     isOperational: true,
     kind: "Unavailable",
-  });
-}
-
-function mapParseError(
-  requestAction: string,
-  cause: RichError,
-): RichError {
-  return newIntegrationError({
-    cause,
-    code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
-    details: {
-      action: requestAction,
-      reason: "IdP /userinfo payload does not match expected schema.",
-    },
-    i18n: { key: "errors.application.unauthorized" },
-    isOperational: true,
-    kind: "Unauthorized",
   });
 }
