@@ -1,3 +1,4 @@
+import { authErrorCodes } from "@repo/auth";
 import { describe, expect, it, vi } from "vitest";
 
 import type { RequestLogger } from "@o3osatoshi/logging";
@@ -17,7 +18,7 @@ describe("http/core emit-request", () => {
     const requestLogger = { logger } as unknown as RequestLogger;
 
     const error = newRichError({
-      code: "OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH",
+      code: authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
       details: {
         action: "VerifyOidcAccessToken",
         reason: "Access token audience does not match this API.",
@@ -33,7 +34,9 @@ describe("http/core emit-request", () => {
     expect(warn).toHaveBeenCalledTimes(1);
     const attrs = warn.mock.calls[0]?.[1] as Record<string, unknown>;
     expect(attrs["http.status_code"]).toBe(401);
-    expect(attrs["error.code"]).toBe("OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH");
+    expect(attrs["error.code"]).toBe(
+      authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
+    );
     expect(attrs["error.kind"]).toBe("Unauthorized");
     expect(attrs["error.layer"]).toBe("External");
     expect(attrs["error.reason"]).toBe(

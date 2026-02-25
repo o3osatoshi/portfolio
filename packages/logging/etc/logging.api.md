@@ -12,6 +12,9 @@ import * as _o3osatoshi_toolkit from '@o3osatoshi/toolkit';
 import { z } from 'zod';
 
 // @public
+export function appendErrorAttributes(attributes: Attributes, error?: unknown): void;
+
+// @public
 export type Attributes = z.infer<typeof attributesSchema>;
 
 // @public

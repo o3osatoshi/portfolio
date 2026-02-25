@@ -20,6 +20,10 @@ import type { Env, Hono, Schema } from "hono";
  * 6) Forward all response headers (preserving duplicates like `set-cookie`),
  *    skipping `content-length` to avoid mismatches after re-serialization.
  * 7) Send the response body as JSON or text based on `content-type`.
+ *
+ * @param app Hono app instance.
+ * @returns Express-compatible request handler `(req, res) => Promise<void>`.
+ * @public
  */
 export function createExpressRequestHandler<
   E extends Env,

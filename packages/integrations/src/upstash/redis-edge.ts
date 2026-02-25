@@ -5,6 +5,8 @@ import { type UpstashRedisConfig, wrapUpstashRedis } from "./redis";
 
 /**
  * Create a cache store backed by an Upstash Redis client (Edge runtime).
+ *
+ * @public
  */
 export function createEdgeUpstashRedis(
   config?: UpstashRedisConfig,

@@ -11,6 +11,7 @@ export * from "./json-codec";
 export * from "./next";
 export * from "./rate-limit";
 export * from "./result";
+export * from "./trim-trailing-slash";
 export * from "./truncate";
 export * from "./types";
 export * from "./zod";

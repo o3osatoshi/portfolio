@@ -12,14 +12,31 @@ import type { ContextEnv } from "./types";
  *
  * @param c Hono context for the current request.
  * @param next Function to invoke the downstream handler/middleware.
+ * @returns Resolves after downstream middleware completes.
+ * @public
  */
-export async function requestIdMiddleware(c: Context, next: Next) {
+export async function requestIdMiddleware(
+  c: Context,
+  next: Next,
+): Promise<void> {
   const rid = c.req.header("x-request-id") ?? crypto.randomUUID?.() ?? "";
   c.res.headers.set("x-request-id", rid);
   c.set("requestId", rid);
   await next();
 }
 
+/**
+ * Inject request user id into the active request logger.
+ *
+ * Uses `authUser` from context and sets `userId` on `requestLogger` when both
+ * are present.
+ *
+ * @remarks This middleware should run after auth initialization middleware so that
+ * `authUser` is available.
+ * @param c Hono context.
+ * @param next Next middleware.
+ * @public
+ */
 export const userIdMiddleware: MiddlewareHandler<ContextEnv> = async (
   c,
   next,

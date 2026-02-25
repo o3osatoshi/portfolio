@@ -1,3 +1,3 @@
-/** Prisma adapter implementations for domain repositories. */
-export * from "./prisma-transaction.repository";
-export * from "./prisma-user-identity.store";
+/** Prisma-backed adapter exports for infrastructure composition. */
+export * from "./external-identity.store";
+export * from "./transaction.repository";

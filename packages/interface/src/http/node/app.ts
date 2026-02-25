@@ -1,48 +1,28 @@
-import {
-  CreateTransactionUseCase,
-  DeleteTransactionUseCase,
-  GetFxQuoteUseCase,
-  GetTransactionsUseCase,
-  parseCreateTransactionRequest,
-  parseDeleteTransactionRequest,
-  parseGetFxQuoteRequest,
-  parseGetTransactionsRequest,
-  parseUpdateTransactionRequest,
-  UpdateTransactionUseCase,
-} from "@repo/application";
 import type {
-  CreateTransactionResponse,
-  GetFxQuoteResponse,
-  GetTransactionsResponse,
-} from "@repo/application";
-import { type AuthConfig, type CliPrincipal, getAuthUserId } from "@repo/auth";
-import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
+  AccessTokenPrincipal,
+  AuthConfig,
+  ResolveAccessTokenPrincipalParams,
+} from "@repo/auth";
+import { authHandler, initAuthConfig } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import {
-  err,
-  errAsync,
-  ok,
-  okAsync,
-  type Result,
-  ResultAsync,
-} from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 
-import {
-  newRichError,
-  type RichError,
-  toHttpErrorResponse,
-} from "@o3osatoshi/toolkit";
+import type { RichError } from "@o3osatoshi/toolkit";
 
-import { requestIdMiddleware, respondAsync, userIdMiddleware } from "../core";
+import { requestIdMiddleware } from "../core";
 import type { ContextEnv } from "../core/types";
 import { loggerMiddleware } from "./middlewares";
+import { buildCliRoutes } from "./routes/cli";
+import { buildPrivateRoutes } from "./routes/private";
+import { buildPublicRoutes } from "./routes/public";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
  *
  * Useful for deriving a typed RPC client via `hono/client`.
+ * @public
  */
 export type AppType = ReturnType<typeof buildApp>;
 
@@ -50,6 +30,7 @@ export type AppType = ReturnType<typeof buildApp>;
  * Dependencies required by {@link buildApp}.
  *
  * Provide infrastructure-backed implementations in production (e.g. DB).
+ * @public
  */
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
@@ -57,15 +38,11 @@ export type Deps = {
   /** Provider required by FX-quote use cases. */
   fxQuoteProvider: FxQuoteProvider;
   /** Resolve and provision the internal user principal for CLI access tokens. */
-  resolveCliPrincipal: (
-    input: ResolveCliPrincipalInput,
-  ) => ResultAsync<CliPrincipal, RichError>;
+  resolveAccessTokenPrincipal: (
+    input: ResolveAccessTokenPrincipalParams,
+  ) => ResultAsync<AccessTokenPrincipal, RichError>;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
-};
-
-export type ResolveCliPrincipalInput = {
-  accessToken: string;
 };
 
 /**
@@ -86,6 +63,7 @@ export type ResolveCliPrincipalInput = {
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
+ * @public
  */
 export function buildApp(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -105,16 +83,21 @@ export function buildApp(deps: Deps) {
  * Build Next.js/Vercel-compatible handlers for the Node runtime.
  *
  * Notes:
- * - Both `GET` and `POST` are bound to the same underlying Hono app via
- *   `handle(app)`. Unimplemented methods for a route will return 404.
+ * - `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, and `PUT` are all
+ *   bound to the same underlying Hono app via `handle(app)`.
+ * - Unimplemented methods for a route will return 404.
  *
  * Usage (Next.js App Router):
  * ```ts
  * // app/api/[...route]/route.ts
- * import { createAuthConfig } from "@repo/auth";
+ * import { createAccessTokenPrincipalResolver, createAuthConfig } from "@repo/auth";
  * import { ExchangeRateApi } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
- * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+ * import {
+ *   createPrismaClient,
+ *   PrismaExternalIdentityStore,
+ *   PrismaTransactionRepository,
+ * } from "@repo/prisma";
  * export const runtime = "nodejs";
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
@@ -122,6 +105,15 @@ export function buildApp(deps: Deps) {
  * const fxQuoteProvider = new ExchangeRateApi({
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
+ * });
+ * const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
+ * const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+ *   audience: process.env.AUTH_OIDC_AUDIENCE!,
+ *   findUserIdByKey: (input) =>
+ *     externalIdentityStore.findUserIdByKey(input),
+ *   issuer: process.env.AUTH_OIDC_ISSUER!,
+ *   linkExternalIdentityToUserByEmail: (input) =>
+ *     externalIdentityStore.linkExternalIdentityToUserByEmail(input),
  * });
  * const authConfig = createAuthConfig({
  *   providers: {
@@ -138,236 +130,26 @@ export function buildApp(deps: Deps) {
  * export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
  *   authConfig,
  *   fxQuoteProvider,
- *   resolveCliPrincipal,
+ *   resolveAccessTokenPrincipal,
  *   transactionRepo,
  * });
  * ```
+ * @public
  */
 export function buildHandler(deps: Deps) {
   const app = buildApp(deps);
-  const GET = handle(app);
-  const HEAD = handle(app);
-  const OPTIONS = handle(app);
-  const POST = handle(app);
-  const PATCH = handle(app);
-  const PUT = handle(app);
-  const DELETE = handle(app);
-  return { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT };
+  const handler = handle(app);
+  return {
+    DELETE: handler,
+    GET: handler,
+    HEAD: handler,
+    OPTIONS: handler,
+    PATCH: handler,
+    POST: handler,
+    PUT: handler,
+  };
 }
 
 function buildAuthRoutes() {
   return new Hono<ContextEnv>().use("/*", authHandler());
-}
-
-function buildCliRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .use("/v1/*", async (c, next) => {
-      const accessToken = extractBearerToken(c.req.header("authorization"));
-      if (accessToken.isErr()) return errorResponse(c, accessToken.error);
-
-      const principalResult = await deps.resolveCliPrincipal({
-        accessToken: accessToken.value,
-      });
-      if (principalResult.isErr())
-        return errorResponse(c, principalResult.error);
-
-      c.set("cliPrincipal", principalResult.value);
-      c.get("requestLogger")?.setUserId?.(principalResult.value.userId);
-      return await next();
-    })
-    .get("/v1/me", (c) => {
-      const principal = c.get("cliPrincipal") as CliPrincipal;
-      return respondAsync<CliPrincipal>(c)(
-        requireScope(principal, "transactions:read").map(() => principal),
-      );
-    })
-    .get("/v1/transactions", (c) => {
-      const principal = c.get("cliPrincipal") as CliPrincipal;
-      const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-      return respondAsync<GetTransactionsResponse>(c)(
-        requireScope(principal, "transactions:read").andThen(() =>
-          parseGetTransactionsRequest({
-            userId: principal.userId,
-          }).asyncAndThen((req) => getTransactions.execute(req)),
-        ),
-      );
-    })
-    .post("/v1/transactions", (c) => {
-      const principal = c.get("cliPrincipal") as CliPrincipal;
-      const createTransaction = new CreateTransactionUseCase(
-        deps.transactionRepo,
-      );
-      return respondAsync<CreateTransactionResponse>(c)(
-        requireScope(principal, "transactions:write")
-          .andThen(() =>
-            ResultAsync.fromPromise(
-              c.req.json<Record<string, unknown>>(),
-              (cause) =>
-                newRichError({
-                  cause,
-                  code: "CLI_REQUEST_BODY_INVALID",
-                  details: {
-                    action: "ParseCliCreateTransactionBody",
-                    reason: "Request body must be valid JSON.",
-                  },
-                  i18n: { key: "errors.application.validation" },
-                  isOperational: true,
-                  kind: "Validation",
-                  layer: "Presentation",
-                }),
-            ),
-          )
-          .andThen((body) =>
-            parseCreateTransactionRequest({
-              ...(body as Record<string, unknown>),
-              userId: principal.userId,
-            }),
-          )
-          .andThen((req) => createTransaction.execute(req)),
-      );
-    })
-    .patch("/v1/transactions/:id", (c) => {
-      const principal = c.get("cliPrincipal") as CliPrincipal;
-      const updateTransaction = new UpdateTransactionUseCase(
-        deps.transactionRepo,
-      );
-      return respondAsync<void>(c)(
-        requireScope(principal, "transactions:write")
-          .andThen(() =>
-            ResultAsync.fromPromise(
-              c.req.json<Record<string, unknown>>(),
-              (cause) =>
-                newRichError({
-                  cause,
-                  code: "CLI_REQUEST_BODY_INVALID",
-                  details: {
-                    action: "ParseCliUpdateTransactionBody",
-                    reason: "Request body must be valid JSON.",
-                  },
-                  i18n: { key: "errors.application.validation" },
-                  isOperational: true,
-                  kind: "Validation",
-                  layer: "Presentation",
-                }),
-            ),
-          )
-          .andThen((body) =>
-            parseUpdateTransactionRequest({
-              ...(body as Record<string, unknown>),
-              id: c.req.param("id"),
-            }),
-          )
-          .andThen((req) => updateTransaction.execute(req, principal.userId)),
-      );
-    })
-    .delete("/v1/transactions/:id", (c) => {
-      const principal = c.get("cliPrincipal") as CliPrincipal;
-      const deleteTransaction = new DeleteTransactionUseCase(
-        deps.transactionRepo,
-      );
-      return respondAsync<void>(c)(
-        requireScope(principal, "transactions:write").andThen(() =>
-          parseDeleteTransactionRequest({
-            id: c.req.param("id"),
-            userId: principal.userId,
-          }).asyncAndThen((req) => deleteTransaction.execute(req)),
-        ),
-      );
-    });
-}
-
-function buildPrivateRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .use("/*", verifyAuth(), userIdMiddleware)
-    .get("/labs/transactions", (c) => {
-      const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-      return respondAsync<GetTransactionsResponse>(c)(
-        parseGetTransactionsRequest({
-          userId: getAuthUserId(c.get("authUser")),
-        }).asyncAndThen((res) => getTransactions.execute(res)),
-      );
-    });
-}
-
-function buildPublicRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .get("/healthz", (c) => c.json({ ok: true }))
-    .get("/exchange-rate", (c) => {
-      const query = c.req.query();
-      const getFxQuote = new GetFxQuoteUseCase(deps.fxQuoteProvider);
-      return respondAsync<GetFxQuoteResponse>(c)(
-        parseGetFxQuoteRequest({
-          base: query["base"],
-          quote: query["quote"],
-        }).asyncAndThen((res) => getFxQuote.execute(res)),
-      );
-    });
-}
-
-function errorResponse(c: Context<ContextEnv>, error: RichError) {
-  c.set("error", error);
-  const { body, statusCode } = toHttpErrorResponse(error);
-  return c.json(body, { status: statusCode });
-}
-
-function extractBearerToken(
-  authorization: null | string | undefined,
-): Result<string, RichError> {
-  if (!authorization) {
-    return err(
-      newRichError({
-        code: "CLI_BEARER_TOKEN_MISSING",
-        details: {
-          action: "ExtractCliBearerToken",
-          reason: "Authorization header is missing.",
-        },
-        i18n: { key: "errors.application.unauthorized" },
-        isOperational: true,
-        kind: "Unauthorized",
-        layer: "Presentation",
-      }),
-    );
-  }
-
-  const matched = authorization.match(/^Bearer\s+(.+)$/i);
-  if (!matched || !matched[1]) {
-    return err(
-      newRichError({
-        code: "CLI_BEARER_TOKEN_MALFORMED",
-        details: {
-          action: "ExtractCliBearerToken",
-          reason: "Authorization header must use Bearer scheme.",
-        },
-        i18n: { key: "errors.application.unauthorized" },
-        isOperational: true,
-        kind: "Unauthorized",
-        layer: "Presentation",
-      }),
-    );
-  }
-
-  return ok(matched[1]);
-}
-
-function requireScope(
-  principal: CliPrincipal,
-  requiredScope: string,
-): ResultAsync<void, RichError> {
-  if (principal.scopes.includes(requiredScope)) {
-    return okAsync(undefined);
-  }
-
-  return errAsync(
-    newRichError({
-      code: "CLI_SCOPE_FORBIDDEN",
-      details: {
-        action: "AuthorizeCliScope",
-        reason: `Required scope is missing: ${requiredScope}`,
-      },
-      i18n: { key: "errors.application.forbidden" },
-      isOperational: true,
-      kind: "Forbidden",
-      layer: "Presentation",
-    }),
-  );
 }

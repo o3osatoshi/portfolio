@@ -16,6 +16,13 @@ import { withLogging } from "./with-logging";
 import type { SmartFetchRetryOptions } from "./with-retry";
 import { withRetry } from "./with-retry";
 
+/**
+ * Default configuration used by `createSmartFetch`.
+ *
+ * Options can be set globally and overridden per request.
+ *
+ * @public
+ */
 export type CreateSmartFetchOptions = {
   cache?: SmartFetchCacheOptions | undefined;
   fetch?: typeof fetch | undefined;
@@ -23,6 +30,21 @@ export type CreateSmartFetchOptions = {
   retry?: SmartFetchRetryOptions | true | undefined;
 };
 
+/**
+ * Create a composable typed fetch helper for external APIs.
+ *
+ * Composition order:
+ * 1. retry wrapper (if enabled)
+ * 2. cache wrapper (if enabled)
+ * 3. logging wrapper (if enabled)
+ *
+ * Default retry/cache/logging behavior is delegated to each wrapper's default
+ * options when no option is provided.
+ *
+ * @param options Base options and optional wrapper policies.
+ * @returns A typed `SmartFetch` pipeline.
+ * @public
+ */
 export function createSmartFetch(
   options: CreateSmartFetchOptions = {},
 ): SmartFetch {

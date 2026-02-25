@@ -24,15 +24,39 @@ import { type ExchangeRateApiPair, exchangeRateApiPairSchema } from "./schema";
 const CACHE_TTL_MS = 3_600_000;
 const CACHE_KEY_PREFIX = "fx:rate";
 
+/**
+ * Configuration for ExchangeRate-API provider.
+ *
+ * @public
+ */
 export type ExchangeRateApiConfig = {
   apiKey: string;
   baseUrl: string;
 };
 
+/**
+ * Smart fetch options forwarded to underlying requests.
+ *
+ * Reuses shared cache/retry/logging settings from integrations HTTP helpers.
+ *
+ * @public
+ */
 export type ExchangeRateApiOptions = CreateSmartFetchOptions;
 
 /**
  * ExchangeRate-API-backed implementation of {@link FxQuoteProvider}.
+ *
+ * Behavior:
+ * - base URL is normalized via `normalizeBaseUrl`
+ * - responses are decoded with `exchangeRateApiPairSchema`
+ * - pair responses are cached using `fx:rate:{BASE}:{QUOTE}` key
+ *
+ * Error mapping:
+ * - HTTP errors become `EXCHANGE_RATE_API_HTTP_ERROR`
+ * - API logical errors become `EXCHANGE_RATE_API_LOGICAL_ERROR`
+ * - Missing conversion rate becomes `EXCHANGE_RATE_API_MISSING_RATE`
+ *
+ * @public
  */
 export class ExchangeRateApi implements FxQuoteProvider {
   private readonly apiKey: string;

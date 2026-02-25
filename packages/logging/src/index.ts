@@ -29,6 +29,7 @@ export type {
   AxiomClientOptions,
   ClientMode,
 } from "./axiom";
+export { appendErrorAttributes } from "./core/error-attributes";
 export { createLogger } from "./core/logger";
 export type { CreateLoggerOptions } from "./core/logger";
 export {

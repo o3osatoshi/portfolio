@@ -5,13 +5,22 @@ import type {
   GetTransactionsRequest,
   UpdateTransactionRequest,
 } from "@repo/application";
-import type { AuthConfig } from "@repo/auth";
-import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
+import { type AuthConfig, authErrorCodes } from "@repo/auth";
+import type {
+  FxQuoteProvider,
+  TransactionRepository,
+  UserId,
+} from "@repo/domain";
 import type { Context, Next } from "hono";
 import { err, errAsync, ok, okAsync, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+
+function asUserId(value: string): UserId {
+  return value as UserId;
+}
 
 const h = vi.hoisted(() => {
   const initAuthConfigMock = vi.fn(
@@ -134,6 +143,31 @@ const a = vi.hoisted(() => {
 });
 
 vi.mock("@repo/application", () => ({
+  createTransactionRequestSchema: z.object({
+    amount: z.string().min(1),
+    currency: z.string().min(1),
+    datetime: z.coerce.date(),
+    fee: z
+      .string()
+      .refine(
+        (value) =>
+          !Number.isNaN(Number.parseFloat(value)) &&
+          Number.isFinite(Number.parseFloat(value)),
+      )
+      .optional(),
+    feeCurrency: z.string().optional(),
+    price: z.string().min(1),
+    profitLoss: z
+      .string()
+      .refine(
+        (value) =>
+          !Number.isNaN(Number.parseFloat(value)) &&
+          Number.isFinite(Number.parseFloat(value)),
+      )
+      .optional(),
+    type: z.enum(["BUY", "SELL"]),
+    userId: z.string().min(1),
+  }),
   CreateTransactionUseCase: a.CreateTransactionUseCase,
   DeleteTransactionUseCase: a.DeleteTransactionUseCase,
   GetFxQuoteUseCase: a.GetFxQuoteUseCase,
@@ -143,6 +177,49 @@ vi.mock("@repo/application", () => ({
   parseGetFxQuoteRequest: a.parseGetFxQuoteRequest,
   parseGetTransactionsRequest: a.parseGetTransactionsRequest,
   parseUpdateTransactionRequest: a.parseUpdateTransactionRequest,
+  updateTransactionRequestSchema: z
+    .object({
+      id: z.string().min(1).optional(),
+      amount: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)) &&
+            Number.parseFloat(value) > 0,
+        )
+        .optional(),
+      currency: z.string().optional(),
+      datetime: z.coerce.date().optional(),
+      fee: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)),
+        )
+        .optional(),
+      feeCurrency: z.string().optional(),
+      price: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)) &&
+            Number.parseFloat(value) > 0,
+        )
+        .optional(),
+      profitLoss: z
+        .string()
+        .refine(
+          (value) =>
+            !Number.isNaN(Number.parseFloat(value)) &&
+            Number.isFinite(Number.parseFloat(value)),
+        )
+        .optional(),
+      type: z.enum(["BUY", "SELL"]).optional(),
+    })
+    .loose(),
   UpdateTransactionUseCase: a.UpdateTransactionUseCase,
 }));
 
@@ -152,19 +229,21 @@ describe("http/node app", () => {
   beforeEach(() => vi.clearAllMocks());
 
   function build(
-    resolveCliPrincipal?: Parameters<typeof buildApp>[0]["resolveCliPrincipal"],
+    resolveAccessTokenPrincipal?: Parameters<
+      typeof buildApp
+    >[0]["resolveAccessTokenPrincipal"],
   ) {
     return buildApp({
       fxQuoteProvider: {} as FxQuoteProvider,
       authConfig: {} as AuthConfig,
-      resolveCliPrincipal:
-        resolveCliPrincipal ??
+      resolveAccessTokenPrincipal:
+        resolveAccessTokenPrincipal ??
         ((_) =>
           okAsync({
             issuer: "https://example.auth0.com",
             scopes: ["transactions:read", "transactions:write"],
             subject: "auth0|u-1",
-            userId: "u-1",
+            userId: asUserId("u-1"),
           })),
       transactionRepo: {} as TransactionRepository,
     });
@@ -205,18 +284,44 @@ describe("http/node app", () => {
     expect(res.status).toBe(401);
   });
 
+  it("returns 401 when Authorization header is malformed", async () => {
+    const res = await build().request("/api/cli/v1/transactions", {
+      headers: { Authorization: "invalid-token-format" },
+    });
+    expect(res.status).toBe(401);
+  });
+
   it("GET /api/cli/v1/transactions enforces read scope", async () => {
     const res = await build((_) =>
       okAsync({
         issuer: "https://example.auth0.com",
         scopes: ["transactions:write"],
         subject: "auth0|u-1",
-        userId: "u-1",
+        userId: asUserId("u-1"),
       }),
     ).request("/api/cli/v1/transactions", {
       headers: { Authorization: "Bearer token" },
     });
     expect(res.status).toBe(403);
+  });
+
+  it("GET /api/cli/v1/transactions returns transactions for resolved principal", async () => {
+    const res = await build().request("/api/cli/v1/transactions", {
+      headers: { Authorization: "Bearer token" },
+    });
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    expect(Array.isArray(body)).toBe(true);
+    expect(body[0]).toEqual(
+      expect.objectContaining({
+        id: "t-1",
+        userId: "u-1",
+      }),
+    );
+    expect(a.parseGetTransactionsRequest).toHaveBeenCalledWith({
+      userId: "u-1",
+    });
   });
 
   it("POST /api/cli/v1/transactions injects userId from principal", async () => {
@@ -268,11 +373,11 @@ describe("http/node app", () => {
     });
   });
 
-  it("returns 401 when resolveCliPrincipal fails", async () => {
+  it("returns 401 when resolveAccessTokenPrincipal fails", async () => {
     const res = await build((_) =>
       errAsync(
         newRichError({
-          code: "OIDC_ACCESS_TOKEN_INVALID",
+          code: authErrorCodes.OIDC_ACCESS_TOKEN_INVALID,
           details: { action: "VerifyOidcAccessToken", reason: "invalid" },
           i18n: { key: "errors.application.unauthorized" },
           isOperational: true,

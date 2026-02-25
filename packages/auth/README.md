@@ -14,6 +14,7 @@ Hono + Auth.js configuration and helpers for the monorepo. This package exposes 
   - `@auth/core`
   - `@auth/prisma-adapter` (only if you supply a Prisma client)
 - Environment variables (runtime for apps):
+  - `AUTH_OIDC_AUDIENCE` (required when enabling CLI Bearer token auth)
   - `AUTH_SECRET`
   - `AUTH_OIDC_CLIENT_ID`
   - `AUTH_OIDC_CLIENT_SECRET`
@@ -42,7 +43,8 @@ Node API route:
 import { createAuthConfig } from "@repo/auth";
 import { buildHandler } from "@repo/interface/http/node";
 import { ExchangeRateApi } from "@repo/integrations";
-import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+import { createPrismaClient, PrismaTransactionRepository, PrismaExternalIdentityStore } from "@repo/prisma";
+import { createAccessTokenPrincipalResolver } from "@repo/auth";
 
 const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
 const transactionRepo = new PrismaTransactionRepository(prisma);
@@ -62,11 +64,20 @@ const authConfig = createAuthConfig({
   prismaClient: prisma,
   secret: process.env.AUTH_SECRET!,
 });
+const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
+const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+  audience: process.env.AUTH_OIDC_AUDIENCE!,
+  findUserIdByKey: (input) =>
+    externalIdentityStore.findUserIdByKey(input),
+  issuer: process.env.AUTH_OIDC_ISSUER!,
+  linkExternalIdentityToUserByEmail: (input) =>
+    externalIdentityStore.linkExternalIdentityToUserByEmail(input),
+});
 
 export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   authConfig,
   fxQuoteProvider,
-  resolveCliPrincipal,
+  resolveAccessTokenPrincipal,
   transactionRepo,
 });
 ```

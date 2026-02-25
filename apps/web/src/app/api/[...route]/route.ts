@@ -1,11 +1,17 @@
-import { createAuthConfig } from "@repo/auth";
+import {
+  createAccessTokenPrincipalResolver,
+  createAuthConfig,
+} from "@repo/auth";
 import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
 import { buildHandler } from "@repo/interface/http/node";
-import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+import {
+  createPrismaClient,
+  PrismaExternalIdentityStore,
+  PrismaTransactionRepository,
+} from "@repo/prisma";
 
 import { env } from "@/env/server";
 import { getWebNodeLogger } from "@/lib/logger/node";
-import { resolveCliPrincipal } from "@/server/resolve-cli-principal";
 
 const store = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
@@ -25,6 +31,7 @@ const fxQuoteProvider = new ExchangeRateApi(
 );
 
 const client = createPrismaClient({ connectionString: env.DATABASE_URL });
+
 const authConfig = createAuthConfig({
   providers: {
     oidc: {
@@ -37,11 +44,20 @@ const authConfig = createAuthConfig({
   secret: env.AUTH_SECRET,
 });
 
+const externalIdentityStore = new PrismaExternalIdentityStore(client);
+const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+  audience: env.AUTH_OIDC_AUDIENCE,
+  findUserIdByKey: (input) => externalIdentityStore.findUserIdByKey(input),
+  issuer: env.AUTH_OIDC_ISSUER,
+  linkExternalIdentityToUserByEmail: (input) =>
+    externalIdentityStore.linkExternalIdentityToUserByEmail(input),
+});
+
 const transactionRepo = new PrismaTransactionRepository(client);
 
 export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
   fxQuoteProvider,
   authConfig,
-  resolveCliPrincipal,
+  resolveAccessTokenPrincipal,
   transactionRepo,
 });

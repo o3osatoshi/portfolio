@@ -522,6 +522,9 @@ export function toHttpErrorResponse(error: unknown, status?: ErrorStatusCode, op
 export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;
 
 // @public
+export function trimTrailingSlash(value: string): string;
+
+// @public
 export function truncate(value: string, maxLen?: null | number): string;
 
 // @public

@@ -84,8 +84,10 @@ jobs:
 
       - name: Export .env
         run: |
-          printf "AUTH_GOOGLE_ID=%s\n" "${{ secrets.AUTH_GOOGLE_ID }}" > apps/functions/.env
-          printf "AUTH_GOOGLE_SECRET=%s\n" "${{ secrets.AUTH_GOOGLE_SECRET }}" >> apps/functions/.env
+          printf "AUTH_OIDC_AUDIENCE=%s\n" "${{ secrets.AUTH_OIDC_AUDIENCE }}" > apps/functions/.env
+          printf "AUTH_OIDC_CLIENT_ID=%s\n" "${{ secrets.AUTH_OIDC_CLIENT_ID }}" >> apps/functions/.env
+          printf "AUTH_OIDC_CLIENT_SECRET=%s\n" "${{ secrets.AUTH_OIDC_CLIENT_SECRET }}" >> apps/functions/.env
+          printf "AUTH_OIDC_ISSUER=%s\n" "${{ secrets.AUTH_OIDC_ISSUER }}" >> apps/functions/.env
           printf "AUTH_SECRET=%s\n" "${{ secrets.AUTH_SECRET }}" >> apps/functions/.env
           printf "AUTH_TRUST_HOST=true\n" >> apps/functions/.env
           printf "AXIOM_API_TOKEN=%s\n" "${{ secrets.AXIOM_API_TOKEN }}" >> apps/functions/.env
