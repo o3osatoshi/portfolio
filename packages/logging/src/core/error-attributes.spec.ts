@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { newRichError } from "@o3osatoshi/toolkit";
-import { type Attributes } from "../types";
 
+import type { Attributes } from "../types";
 import { appendErrorAttributes } from "./error-attributes";
 
 describe("appendErrorAttributes", () => {
