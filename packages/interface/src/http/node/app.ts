@@ -109,11 +109,8 @@ export function buildApp(deps: Deps) {
  * const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
  * const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
  *   audience: process.env.AUTH_OIDC_AUDIENCE!,
- *   findUserIdByKey: (input) =>
- *     externalIdentityStore.findUserIdByKey(input),
+ *   externalIdentityResolver: externalIdentityStore,
  *   issuer: process.env.AUTH_OIDC_ISSUER!,
- *   linkExternalIdentityToUserByEmail: (input) =>
- *     externalIdentityStore.linkExternalIdentityToUserByEmail(input),
  * });
  * const authConfig = createAuthConfig({
  *   providers: {

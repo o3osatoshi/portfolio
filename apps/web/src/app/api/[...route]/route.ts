@@ -44,13 +44,11 @@ const authConfig = createAuthConfig({
   secret: env.AUTH_SECRET,
 });
 
-const externalIdentityStore = new PrismaExternalIdentityStore(client);
+const identityStore = new PrismaExternalIdentityStore(client);
 const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
   audience: env.AUTH_OIDC_AUDIENCE,
-  findUserIdByKey: (input) => externalIdentityStore.findUserIdByKey(input),
+  externalIdentityResolver: identityStore,
   issuer: env.AUTH_OIDC_ISSUER,
-  linkExternalIdentityToUserByEmail: (input) =>
-    externalIdentityStore.linkExternalIdentityToUserByEmail(input),
 });
 
 const transactionRepo = new PrismaTransactionRepository(client);

@@ -34,19 +34,18 @@ export type AccessTokenPrincipal = {
 /**
  * Options required to build an access-token principal resolver.
  *
- * - `findUserIdByKey`: resolves an existing principal by `(issuer, subject)`.
- * - `linkExternalIdentityToUserByEmail`: creates missing identity mapping when a
- *   token is valid but no principal exists yet.
+ * - `externalIdentityResolver`: resolves existing principal by `(issuer, subject)`
+ *   and links missing identity mapping when a token is valid but no principal
+ *   exists yet.
  * - `fetchImpl`: optional fetch implementation for test/runtime override.
  *
  * @public
  */
 export type CreateAccessTokenPrincipalResolverOptions = {
   audience: string;
+  externalIdentityResolver: ExternalIdentityResolver;
   fetchImpl?: typeof fetch;
-  findUserIdByKey: ExternalIdentityResolver["findUserIdByKey"];
   issuer: string;
-  linkExternalIdentityToUserByEmail: ExternalIdentityResolver["linkExternalIdentityToUserByEmail"];
 };
 
 /**
@@ -96,7 +95,7 @@ export function createAccessTokenPrincipalResolver(
       const issuer = trimTrailingSlash(claimSet.iss);
       const subject = claimSet.sub;
 
-      return options
+      return options.externalIdentityResolver
         .findUserIdByKey({ issuer, subject })
         .andThen((userId) => {
           if (userId) {
@@ -124,10 +123,12 @@ export function createAccessTokenPrincipalResolver(
               );
             }
 
-            return options.linkExternalIdentityToUserByEmail({
-              ...userInfo,
-              issuer,
-            });
+            return options.externalIdentityResolver.linkExternalIdentityToUserByEmail(
+              {
+                ...userInfo,
+                issuer,
+              },
+            );
           });
         })
         .map((userId) => ({

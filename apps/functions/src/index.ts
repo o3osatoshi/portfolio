@@ -60,10 +60,8 @@ export const api = onRequest(async (req, res) => {
     const identityStore = new PrismaExternalIdentityStore(client);
     const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
       audience: env.AUTH_OIDC_AUDIENCE,
-      findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+      externalIdentityResolver: identityStore,
       issuer: env.AUTH_OIDC_ISSUER,
-      linkExternalIdentityToUserByEmail: (claim) =>
-        identityStore.linkExternalIdentityToUserByEmail(claim),
     });
 
     const transactionRepo = new PrismaTransactionRepository(client);
