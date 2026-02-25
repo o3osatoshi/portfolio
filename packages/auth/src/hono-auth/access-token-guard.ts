@@ -4,11 +4,6 @@ import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { authErrorCodes } from "../auth-error-catalog";
 
-const DEFAULT_MISSING_BEARER_REASON = "Authorization header is missing.";
-const DEFAULT_MALFORMED_BEARER_REASON =
-  "Authorization header must use Bearer scheme.";
-const DEFAULT_SCOPE_MISSING_REASON = "Access token principal is missing.";
-
 type AccessTokenPrincipalLike = {
   scopes: readonly string[];
 };
@@ -22,7 +17,7 @@ export function extractBearerToken(
         code: authErrorCodes.AUTHORIZATION_HEADER_MISSING,
         details: {
           action: "ExtractBearerToken",
-          reason: DEFAULT_MISSING_BEARER_REASON,
+          reason: "Authorization header is missing.",
         },
         i18n: { key: "errors.application.unauthorized" },
         isOperational: true,
@@ -39,7 +34,7 @@ export function extractBearerToken(
         code: authErrorCodes.AUTHORIZATION_HEADER_MALFORMED,
         details: {
           action: "ExtractBearerToken",
-          reason: DEFAULT_MALFORMED_BEARER_REASON,
+          reason: "Authorization header must use Bearer scheme.",
         },
         i18n: { key: "errors.application.unauthorized" },
         isOperational: true,
@@ -62,7 +57,7 @@ export function requireScope<T extends AccessTokenPrincipalLike>(
         code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
         details: {
           action: "AuthorizeScope",
-          reason: DEFAULT_SCOPE_MISSING_REASON,
+          reason: "Access token principal is missing.",
         },
         i18n: { key: "errors.application.forbidden" },
         isOperational: true,
