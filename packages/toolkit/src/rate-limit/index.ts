@@ -122,7 +122,109 @@ function evaluateRule<T>(
   rule: RateLimitRule<T>,
   input: T,
 ): ResultAsync<void, RichError> {
-  const identifier = rule.resolveIdentifier(input).trim();
+  return resolveRuleIdentifier(rule, input).andThen((identifier) =>
+    options.store
+      .consume({
+        identifier,
+        bucket: rule.id,
+        limit: rule.limit,
+        windowSeconds: rule.windowSeconds,
+      })
+      .orElse((error) => {
+        if (failureMode === "fail-open") {
+          try {
+            options.onBypass?.({
+              error,
+              input,
+              rule,
+            });
+          } catch {
+            // Ignore bypass callback failures and continue fail-open behavior.
+          }
+          return okAsync<RateLimitDecision, RichError>({
+            allowed: true,
+            limit: rule.limit,
+            remaining: 0,
+            resetEpochSeconds: 0,
+          });
+        }
+        return errAsync(error);
+      })
+      .andThen((decision) => {
+        if (decision.allowed) {
+          return okAsync(undefined);
+        }
+
+        const error =
+          options.buildRateLimitedError?.({
+            decision,
+            input,
+            rule,
+          }) ??
+          newRichError({
+            code: "RATE_LIMIT_EXCEEDED",
+            details: {
+              action: "CheckRateLimit",
+              reason: `Rate limit exceeded for rule: ${rule.id}.`,
+            },
+            i18n: { key: "errors.application.rate_limit" },
+            isOperational: true,
+            kind: "RateLimit",
+            layer: "Application",
+            meta: {
+              limit: decision.limit,
+              remaining: decision.remaining,
+              resetEpochSeconds: decision.resetEpochSeconds,
+              ruleId: rule.id,
+            },
+          });
+
+        return errAsync(error);
+      }),
+  );
+}
+
+function resolveRuleIdentifier<T>(
+  rule: RateLimitRule<T>,
+  input: T,
+): ResultAsync<string, RichError> {
+  let rawIdentifier: unknown;
+  try {
+    rawIdentifier = rule.resolveIdentifier(input);
+  } catch (cause) {
+    return errAsync(
+      newRichError({
+        cause,
+        code: "RATE_LIMIT_IDENTIFIER_INVALID",
+        details: {
+          action: "CheckRateLimit",
+          reason: `Failed to resolve rate limit identifier for rule: ${rule.id}.`,
+        },
+        i18n: { key: "errors.application.internal" },
+        isOperational: false,
+        kind: "Internal",
+        layer: "Application",
+      }),
+    );
+  }
+
+  if (typeof rawIdentifier !== "string") {
+    return errAsync(
+      newRichError({
+        code: "RATE_LIMIT_IDENTIFIER_INVALID",
+        details: {
+          action: "CheckRateLimit",
+          reason: `Rate limit identifier is not a string for rule: ${rule.id}.`,
+        },
+        i18n: { key: "errors.application.internal" },
+        isOperational: false,
+        kind: "Internal",
+        layer: "Application",
+      }),
+    );
+  }
+
+  const identifier = rawIdentifier.trim();
   if (!identifier) {
     return errAsync(
       newRichError({
@@ -139,62 +241,5 @@ function evaluateRule<T>(
     );
   }
 
-  return options.store
-    .consume({
-      identifier,
-      bucket: rule.id,
-      limit: rule.limit,
-      windowSeconds: rule.windowSeconds,
-    })
-    .orElse((error) => {
-      if (failureMode === "fail-open") {
-        try {
-          options.onBypass?.({
-            error,
-            input,
-            rule,
-          });
-        } catch {
-          // Ignore bypass callback failures and continue fail-open behavior.
-        }
-        return okAsync<RateLimitDecision, RichError>({
-          allowed: true,
-          limit: rule.limit,
-          remaining: 0,
-          resetEpochSeconds: 0,
-        });
-      }
-      return errAsync(error);
-    })
-    .andThen((decision) => {
-      if (decision.allowed) {
-        return okAsync(undefined);
-      }
-
-      const error =
-        options.buildRateLimitedError?.({
-          decision,
-          input,
-          rule,
-        }) ??
-        newRichError({
-          code: "RATE_LIMIT_EXCEEDED",
-          details: {
-            action: "CheckRateLimit",
-            reason: `Rate limit exceeded for rule: ${rule.id}.`,
-          },
-          i18n: { key: "errors.application.rate_limit" },
-          isOperational: true,
-          kind: "RateLimit",
-          layer: "Application",
-          meta: {
-            limit: decision.limit,
-            remaining: decision.remaining,
-            resetEpochSeconds: decision.resetEpochSeconds,
-            ruleId: rule.id,
-          },
-        });
-
-      return errAsync(error);
-    });
+  return okAsync(identifier);
 }

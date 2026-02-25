@@ -156,4 +156,64 @@ describe("rate-limit/createRateLimitGuard", () => {
     if (!result.isErr()) return;
     expect(result.error.code).toBe("INT_RATE_LIMIT_CHECK_FAILED");
   });
+
+  it("returns identifier error when resolveIdentifier throws", async () => {
+    const consume = vi.fn((input: RateLimitConsumeInput) =>
+      okAsync({
+        allowed: true,
+        limit: input.limit,
+        remaining: input.limit,
+        resetEpochSeconds: 1000,
+      }),
+    );
+    const guard = createRateLimitGuard<{ id: string }>({
+      rules: [
+        {
+          id: "subject",
+          limit: 1,
+          resolveIdentifier: () => {
+            throw new Error("boom");
+          },
+          windowSeconds: 300,
+        },
+      ],
+      store: createStore(consume),
+    });
+
+    const result = await guard({ id: "auth0|123" });
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) return;
+    expect(result.error.code).toBe("RATE_LIMIT_IDENTIFIER_INVALID");
+    expect(consume).not.toHaveBeenCalled();
+  });
+
+  it("returns identifier error when resolveIdentifier returns non-string", async () => {
+    const consume = vi.fn((input: RateLimitConsumeInput) =>
+      okAsync({
+        allowed: true,
+        limit: input.limit,
+        remaining: input.limit,
+        resetEpochSeconds: 1000,
+      }),
+    );
+    const guard = createRateLimitGuard<{ id: string }>({
+      rules: [
+        {
+          id: "subject",
+          limit: 1,
+          resolveIdentifier: () => 123 as unknown as string,
+          windowSeconds: 300,
+        },
+      ],
+      store: createStore(consume),
+    });
+
+    const result = await guard({ id: "auth0|123" });
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) return;
+    expect(result.error.code).toBe("RATE_LIMIT_IDENTIFIER_INVALID");
+    expect(consume).not.toHaveBeenCalled();
+  });
 });

@@ -89,6 +89,9 @@ describe("integrations/upstash rate-limit store", () => {
 
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) return;
+    expect(h.instances[0]?.limit).toHaveBeenCalledWith(
+      "https://example.auth0.com",
+    );
     expect(result.value).toEqual({
       allowed: true,
       limit: 60,

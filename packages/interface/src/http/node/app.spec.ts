@@ -391,7 +391,7 @@ describe("http/node app", () => {
     expect(res.status).toBe(401);
   });
 
-  it("returns 429 when resolveCliPrincipal is rate-limited", async () => {
+  it("returns 429 when resolveAccessTokenPrincipal is rate-limited", async () => {
     const res = await build((_) =>
       errAsync(
         newRichError({

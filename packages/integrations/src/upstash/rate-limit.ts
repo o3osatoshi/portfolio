@@ -36,7 +36,7 @@ export function createUpstashRateLimitStore(
         redis,
         windowSeconds: input.windowSeconds,
       });
-      const key = `${input.bucket}:${input.identifier}`;
+      const key = input.identifier;
 
       return ResultAsync.fromPromise(limiter.limit(key), (cause) =>
         newIntegrationError({
