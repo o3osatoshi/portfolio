@@ -10,10 +10,23 @@ import {
   resolveAbortSignal,
 } from "@o3osatoshi/toolkit";
 
+/**
+ * Low-level typed fetch function for external APIs.
+ *
+ * It only performs request transport and response-body decoding; concerns like
+ * cache, logging, and retry are intentionally composed by higher layers.
+ *
+ * @public
+ */
 export type BaseFetch = (
   request: BaseFetchRequest,
 ) => ResultAsync<HttpResponse<unknown>, RichError>;
 
+/**
+ * Request shape for `BaseFetch`.
+ *
+ * @public
+ */
 export type BaseFetchRequest = {
   body?: RequestInit["body"];
   headers?: RequestInit["headers"];
@@ -23,10 +36,29 @@ export type BaseFetchRequest = {
   url: string;
 };
 
+/**
+ * Optional transport options.
+ *
+ * - `fetch`: swap in a test/mocked fetch implementation.
+ *
+ * @public
+ */
 export type CreateBaseFetchOptions = {
   fetch?: typeof fetch;
 };
 
+/**
+ * Create a base fetcher that converts transport responses into `HttpResponse`.
+ *
+ * Behavior:
+ * - builds `RequestInit` from options
+ * - enforces request timeout via `resolveAbortSignal`
+ * - maps fetch/deserialize failures into `RichError` with `newFetchError`
+ *
+ * @param options Base fetch configuration.
+ * @returns `BaseFetch` function.
+ * @public
+ */
 export function createBaseFetch(
   options: CreateBaseFetchOptions = {},
 ): BaseFetch {

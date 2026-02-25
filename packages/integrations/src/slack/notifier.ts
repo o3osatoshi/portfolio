@@ -10,11 +10,31 @@ import { integrationErrorCodes } from "../integration-error-catalog";
 import type { SlackClient } from "./client";
 import type { SlackBlock, SlackMessage, SlackTextObject } from "./types";
 
+/**
+ * Notifier dependencies for Slack delivery.
+ *
+ * - `channelId`: destination channel
+ * - `client`: Slack client used to send formatted messages
+ *
+ * @public
+ */
 export type SlackNotifierConfig = {
   channelId: string;
   client: SlackClient;
 };
 
+/**
+ * Create a domain `Notifier` backed by Slack.
+ *
+ * Side effects:
+ * - formats notifications into Slack blocks
+ * - sends a single `chat.postMessage` request
+ * - maps failures to `SLACK_NOTIFY_FAILED`
+ *
+ * @param config Channel and client configuration.
+ * @returns `Notifier` contract compatible notifier.
+ * @public
+ */
 export function createSlackNotifier(config: SlackNotifierConfig): Notifier {
   return {
     notify: (payload) =>

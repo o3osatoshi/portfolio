@@ -1,27 +1,28 @@
-import {
-  GetFxQuoteUseCase,
-  GetTransactionsUseCase,
-  parseGetFxQuoteRequest,
-  parseGetTransactionsRequest,
-} from "@repo/application";
 import type {
-  GetFxQuoteResponse,
-  GetTransactionsResponse,
-} from "@repo/application";
-import { type AuthConfig, getAuthUserId } from "@repo/auth";
-import { authHandler, initAuthConfig, verifyAuth } from "@repo/auth/middleware";
+  AccessTokenPrincipal,
+  AuthConfig,
+  ResolveAccessTokenPrincipalParams,
+} from "@repo/auth";
+import { authHandler, initAuthConfig } from "@repo/auth/middleware";
 import type { FxQuoteProvider, TransactionRepository } from "@repo/domain";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import type { ResultAsync } from "neverthrow";
 
-import { requestIdMiddleware, respondAsync, userIdMiddleware } from "../core";
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { requestIdMiddleware } from "../core";
 import type { ContextEnv } from "../core/types";
 import { loggerMiddleware } from "./middlewares";
+import { buildCliRoutes } from "./routes/cli";
+import { buildPrivateRoutes } from "./routes/private";
+import { buildPublicRoutes } from "./routes/public";
 
 /**
  * Concrete Hono app type for the Node HTTP interface.
  *
  * Useful for deriving a typed RPC client via `hono/client`.
+ * @public
  */
 export type AppType = ReturnType<typeof buildApp>;
 
@@ -29,12 +30,17 @@ export type AppType = ReturnType<typeof buildApp>;
  * Dependencies required by {@link buildApp}.
  *
  * Provide infrastructure-backed implementations in production (e.g. DB).
+ * @public
  */
 export type Deps = {
   /** Hono Auth.js configuration (see `@repo/auth#createAuthConfig`). */
   authConfig: AuthConfig;
   /** Provider required by FX-quote use cases. */
   fxQuoteProvider: FxQuoteProvider;
+  /** Resolve and provision the internal user principal for CLI access tokens. */
+  resolveAccessTokenPrincipal: (
+    input: ResolveAccessTokenPrincipalParams,
+  ) => ResultAsync<AccessTokenPrincipal, RichError>;
   /** Repository required by transaction use cases. */
   transactionRepo: TransactionRepository;
 };
@@ -57,6 +63,7 @@ export type Deps = {
  *
  * @param deps Implementations of {@link Deps}.
  * @returns Configured Hono app instance.
+ * @public
  */
 export function buildApp(deps: Deps) {
   return new Hono<ContextEnv>()
@@ -67,6 +74,7 @@ export function buildApp(deps: Deps) {
       initAuthConfig(() => deps.authConfig),
     )
     .route("/auth", buildAuthRoutes())
+    .route("/cli", buildCliRoutes(deps))
     .route("/public", buildPublicRoutes(deps))
     .route("/private", buildPrivateRoutes(deps));
 }
@@ -75,16 +83,21 @@ export function buildApp(deps: Deps) {
  * Build Next.js/Vercel-compatible handlers for the Node runtime.
  *
  * Notes:
- * - Both `GET` and `POST` are bound to the same underlying Hono app via
- *   `handle(app)`. Unimplemented methods for a route will return 404.
+ * - `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, and `PUT` are all
+ *   bound to the same underlying Hono app via `handle(app)`.
+ * - Unimplemented methods for a route will return 404.
  *
  * Usage (Next.js App Router):
  * ```ts
  * // app/api/[...route]/route.ts
- * import { createAuthConfig } from "@repo/auth";
+ * import { createAccessTokenPrincipalResolver, createAuthConfig } from "@repo/auth";
  * import { ExchangeRateApi } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
- * import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
+ * import {
+ *   createPrismaClient,
+ *   PrismaExternalIdentityStore,
+ *   PrismaTransactionRepository,
+ * } from "@repo/prisma";
  * export const runtime = "nodejs";
  *
  * const prisma = createPrismaClient({ connectionString: process.env.DATABASE_URL! });
@@ -93,54 +106,50 @@ export function buildApp(deps: Deps) {
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
  * });
+ * const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
+ * const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
+ *   audience: process.env.AUTH_OIDC_AUDIENCE!,
+ *   findUserIdByKey: (input) =>
+ *     externalIdentityStore.findUserIdByKey(input),
+ *   issuer: process.env.AUTH_OIDC_ISSUER!,
+ *   linkExternalIdentityToUserByEmail: (input) =>
+ *     externalIdentityStore.linkExternalIdentityToUserByEmail(input),
+ * });
  * const authConfig = createAuthConfig({
- *   providers: { google: { clientId: process.env.AUTH_GOOGLE_ID!, clientSecret: process.env.AUTH_GOOGLE_SECRET! } },
+ *   providers: {
+ *     oidc: {
+ *       clientId: process.env.AUTH_OIDC_CLIENT_ID!,
+ *       clientSecret: process.env.AUTH_OIDC_CLIENT_SECRET!,
+ *       issuer: process.env.AUTH_OIDC_ISSUER!,
+ *     },
+ *   },
  *   prismaClient: prisma,
  *   secret: process.env.AUTH_SECRET!,
  * });
  *
- * export const { GET, POST } = buildHandler({
+ * export const { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } = buildHandler({
  *   authConfig,
  *   fxQuoteProvider,
+ *   resolveAccessTokenPrincipal,
  *   transactionRepo,
  * });
  * ```
+ * @public
  */
 export function buildHandler(deps: Deps) {
   const app = buildApp(deps);
-  const GET = handle(app);
-  const POST = handle(app);
-  return { GET, POST };
+  const handler = handle(app);
+  return {
+    DELETE: handler,
+    GET: handler,
+    HEAD: handler,
+    OPTIONS: handler,
+    PATCH: handler,
+    POST: handler,
+    PUT: handler,
+  };
 }
 
 function buildAuthRoutes() {
   return new Hono<ContextEnv>().use("/*", authHandler());
-}
-
-function buildPrivateRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .use("/*", verifyAuth(), userIdMiddleware)
-    .get("/labs/transactions", (c) => {
-      const getTransactions = new GetTransactionsUseCase(deps.transactionRepo);
-      return respondAsync<GetTransactionsResponse>(c)(
-        parseGetTransactionsRequest({
-          userId: getAuthUserId(c.get("authUser")),
-        }).asyncAndThen((res) => getTransactions.execute(res)),
-      );
-    });
-}
-
-function buildPublicRoutes(deps: Deps) {
-  return new Hono<ContextEnv>()
-    .get("/healthz", (c) => c.json({ ok: true }))
-    .get("/exchange-rate", (c) => {
-      const query = c.req.query();
-      const getFxQuote = new GetFxQuoteUseCase(deps.fxQuoteProvider);
-      return respondAsync<GetFxQuoteResponse>(c)(
-        parseGetFxQuoteRequest({
-          base: query["base"],
-          quote: query["quote"],
-        }).asyncAndThen((res) => getFxQuote.execute(res)),
-      );
-    });
 }

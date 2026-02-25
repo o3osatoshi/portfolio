@@ -17,10 +17,27 @@ import type {
   SmartFetchResponse,
 } from "./types";
 
+/**
+ * Per-request retry override options merged with global defaults.
+ *
+ * When supplied, `shouldRetry` receives request/attempt/response/error context
+ * and can fully control retry decisions.
+ *
+ * @public
+ */
 export type SmartFetchRequestRetryOptions<S extends z.ZodType> = {
   shouldRetry?: (input: RetryCheckInput<S>) => boolean;
 } & SmartFetchRetryOptions;
 
+/**
+ * Shared retry options for `createSmartFetch` and per-request overrides.
+ *
+ * - Exponential backoff defaults are applied when values are omitted.
+ * - Retry is only attempted for configured methods and status codes
+ *   unless `shouldRetry` is overridden.
+ *
+ * @public
+ */
 export type SmartFetchRetryOptions = {
   baseDelayMs?: number;
   maxAttempts?: number;
@@ -53,6 +70,22 @@ const RETRY_ON_METHODS = ["GET", "HEAD", "OPTIONS"];
 const RETRY_ON_STATUSES = [408, 429, 500, 502, 503, 504];
 const RESPECT_RETRY_AFTER = true;
 
+/**
+ * Compose retry behavior around a `SmartFetch` request.
+ *
+ * Retry is attempted when:
+ * - HTTP status is in `retryOnStatuses` and request method is allowed
+ * - or `shouldRetry` returns `true` for custom logic
+ * - or error is of retryable kind (`Timeout`, `Unavailable`, `RateLimit`, `BadGateway`)
+ *
+ * Final state metadata is attached to `error.meta.retry`:
+ * `attempts`, `exhausted`, `maxAttempts`, `method`, `retryable`.
+ *
+ * @param next Underlying smart-fetch function.
+ * @param options Global retry policy defaults.
+ * @returns Smart-fetch function with retry logic.
+ * @public
+ */
 export function withRetry(
   next: SmartFetch,
   options: SmartFetchRetryOptions = {},

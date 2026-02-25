@@ -1,0 +1,248 @@
+import { createRemoteJWKSet, jwtVerify } from "jose";
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { z } from "zod";
+
+import {
+  newRichError,
+  type RichError,
+  trimTrailingSlash,
+} from "@o3osatoshi/toolkit";
+
+import { authErrorCodes } from "../auth-error-catalog";
+
+/**
+ * Verified access-token claims expected by this API.
+ *
+ * Claims use `iss`/`sub` as identity keys, with optional audience/expiry fields
+ * modeled for strict verification and lightweight validation for provider-specific
+ * fields.
+ *
+ * @public
+ */
+export type OidcAccessTokenClaimSet = {
+  [key: string]: unknown;
+  aud?: string | string[] | undefined;
+  email?: string | undefined;
+  email_verified?: boolean | undefined;
+  exp?: number | undefined;
+  iat?: number | undefined;
+  iss: string;
+  nbf?: number | undefined;
+  picture?: string | undefined;
+  scope?: string | undefined;
+  sub: string;
+};
+
+const oidcAccessTokenClaimSetSchema: z.ZodType<OidcAccessTokenClaimSet> = z
+  .object({
+    aud: z.union([z.string(), z.array(z.string())]).optional(),
+    email: z.string().optional(),
+    email_verified: z.boolean().optional(),
+    exp: z.number().optional(),
+    iat: z.number().optional(),
+    iss: z.string(),
+    nbf: z.number().optional(),
+    picture: z.string().optional(),
+    scope: z.string().optional(),
+    sub: z.string(),
+  })
+  .catchall(z.unknown());
+
+/**
+ * Verifier function used by token processing pipelines.
+ *
+ * On success, returns parsed `OidcAccessTokenClaimSet`; on failure returns a
+ * `RichError` with an auth-layer OIDC code.
+ *
+ * @public
+ */
+export type OidcAccessTokenVerifier = (
+  token: string,
+) => ResultAsync<OidcAccessTokenClaimSet, RichError>;
+
+/**
+ * Configuration for constructing an OIDC access-token verifier.
+ *
+ * @public
+ */
+export type OidcAccessTokenVerifierOptions = {
+  audience: string;
+  clockToleranceSeconds?: number | undefined;
+  issuer: string;
+  jwksUri?: string | undefined;
+};
+
+const jwtVerifyFailureSchema = z.object({
+  name: z.string().optional(),
+  code: z.string().optional(),
+  message: z.string().optional(),
+});
+
+/**
+ * Create a verifier for OIDC access tokens issued for this API.
+ *
+ * Verification flow:
+ * - validates JWT signature, issuer and audience via `jwtVerify`
+ * - validates and normalizes claims with `OidcAccessTokenClaimSet` schema
+ * - performs explicit issuer/audience checks to keep trailing-slash handling
+ *   consistent with fetch endpoints
+ *
+ * Error mapping:
+ * - `OIDC_ACCESS_TOKEN_EXPIRED` when token expiration is violated
+ * - `OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH` when audience check fails
+ * - `OIDC_ACCESS_TOKEN_ISSUER_MISMATCH` when issuer does not match
+ * - `OIDC_ACCESS_TOKEN_CLAIMS_INVALID` when claim shape is invalid
+ * - `OIDC_ACCESS_TOKEN_INVALID` for unknown verification failures
+ *
+ * @param options Verifier options such as audience, issuer, clock tolerance.
+ * @returns A verifier function that returns parsed token claims.
+ * @public
+ */
+export function createOidcAccessTokenVerifier(
+  options: OidcAccessTokenVerifierOptions,
+): OidcAccessTokenVerifier {
+  const issuer = trimTrailingSlash(options.issuer);
+  const jwksUri = options.jwksUri ?? `${issuer}/.well-known/jwks.json`;
+  const jwkSet = createRemoteJWKSet(new URL(jwksUri));
+
+  return (token: string) =>
+    ResultAsync.fromPromise(
+      jwtVerify(token, jwkSet, {
+        audience: options.audience,
+        clockTolerance: options.clockToleranceSeconds ?? 60,
+        issuer: [issuer, `${issuer}/`],
+      }),
+      (cause) => {
+        const { code, reason } = classifyJwtVerifyFailure(cause);
+        return newRichError({
+          cause,
+          code,
+          details: {
+            action: "VerifyOidcAccessToken",
+            reason,
+          },
+          i18n: { key: "errors.application.unauthorized" },
+          isOperational: true,
+          kind: "Unauthorized",
+          layer: "External",
+        });
+      },
+    ).andThen(({ payload }) => {
+      const result = oidcAccessTokenClaimSetSchema.safeParse(payload);
+      if (!result.success) {
+        return errAsync(
+          newRichError({
+            cause: result.error,
+            code: authErrorCodes.OIDC_ACCESS_TOKEN_CLAIMS_INVALID,
+            details: {
+              action: "VerifyOidcAccessToken",
+              reason: "Access token claims did not match expected shape.",
+            },
+            i18n: { key: "errors.application.unauthorized" },
+            isOperational: true,
+            kind: "Unauthorized",
+            layer: "External",
+          }),
+        );
+      }
+
+      const claimSet = result.data;
+
+      if (trimTrailingSlash(claimSet.iss) !== issuer) {
+        return errAsync(
+          newRichError({
+            code: authErrorCodes.OIDC_ACCESS_TOKEN_ISSUER_MISMATCH,
+            details: {
+              action: "VerifyOidcAccessToken",
+              reason: "Access token issuer does not match this API.",
+            },
+            i18n: { key: "errors.application.unauthorized" },
+            isOperational: true,
+            kind: "Unauthorized",
+            layer: "External",
+          }),
+        );
+      }
+
+      if (!normalizeAudience(claimSet.aud).includes(options.audience)) {
+        return errAsync(
+          newRichError({
+            code: authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
+            details: {
+              action: "VerifyOidcAccessToken",
+              reason: "Access token audience does not match this API.",
+            },
+            i18n: { key: "errors.application.unauthorized" },
+            isOperational: true,
+            kind: "Unauthorized",
+            layer: "External",
+          }),
+        );
+      }
+
+      return okAsync(claimSet);
+    });
+}
+
+/**
+ * Parse a scope claim into a deduplicated, normalized scope list.
+ *
+ * @param scopeClaim Raw `scope` claim from JWT.
+ * @returns Parsed scope values or an empty array when claim is missing/invalid.
+ * @public
+ */
+export function parseScopes(scopeClaim: unknown): string[] {
+  if (typeof scopeClaim !== "string") return [];
+  return [
+    ...new Set(
+      scopeClaim
+        .split(" ")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function classifyJwtVerifyFailure(cause: unknown): {
+  code: (typeof authErrorCodes)[keyof typeof authErrorCodes];
+  reason: string;
+} {
+  const result = jwtVerifyFailureSchema.safeParse(cause);
+  const code = result.success ? (result.data.code ?? "") : "";
+  const name = result.success ? (result.data.name ?? "") : "";
+  const message = cause instanceof Error ? cause.message : "";
+
+  if (
+    name === "JWTExpired" ||
+    code === "ERR_JWT_EXPIRED" ||
+    message.includes('"exp" claim timestamp check failed')
+  ) {
+    return {
+      code: authErrorCodes.OIDC_ACCESS_TOKEN_EXPIRED,
+      reason: "Access token has expired.",
+    };
+  }
+
+  if (
+    name === "JWTClaimValidationFailed" &&
+    message.includes('unexpected "aud" claim value')
+  ) {
+    return {
+      code: authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
+      reason: "Access token audience does not match this API.",
+    };
+  }
+
+  return {
+    code: authErrorCodes.OIDC_ACCESS_TOKEN_INVALID,
+    reason: "Access token verification failed.",
+  };
+}
+
+function normalizeAudience(aud: unknown): string[] {
+  if (Array.isArray(aud)) {
+    return aud.filter((v): v is string => typeof v === "string");
+  }
+  if (typeof aud === "string") return [aud];
+  return [];
+}

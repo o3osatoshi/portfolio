@@ -170,6 +170,24 @@ Typically, you use the values from the `*.local` files (for example, fetched via
 - `packages/eth`: `.env.local` for Wagmi code generation.
 - Ensure secrets never leave local `.env.*` files; they are gitignored by default.
 
+## Auth migration guide (Google OAuth -> Auth0 OIDC)
+
+This repository now standardizes user authentication on Auth0 OIDC for both Web and CLI flows.
+
+- Web sign-in provider switched from Google-specific configuration to a single OIDC provider (`oidc`).
+- Existing users must sign in again through Auth0 once after rollout.
+- CLI users must run `o3o auth login` again to obtain Auth0-issued access/refresh tokens.
+- Automatic cross-provider email linking is disabled (`allowDangerousEmailAccountLinking: false`), so legacy provider accounts must be linked via an explicit migration/backfill process.
+- `external_identity` stores `(issuer, subject) -> user_id` mappings for canonical principal resolution (especially for CLI access tokens).
+- First-time CLI linking requires `/userinfo` to return `email_verified=true`; the resolver links by verified email or provisions a new user.
+
+Recommended rollout order:
+
+1. Apply database schema updates (`external_identity` table/indexes) to the target environment.
+2. Deploy API changes that validate Auth0 access tokens and expose `/api/cli/v1/*`.
+3. Deploy Web with Auth0 OIDC provider settings.
+4. Publish/update CLI package and announce re-login requirement.
+
 ## Secrets management (Doppler)
 - This repository uses the Doppler CLI to manage environment variables and materialize local `.env.*` files used by scripts.
 - Authenticate with Doppler before pulling secrets: run `doppler login` (or set a `DOPPLER_TOKEN`).

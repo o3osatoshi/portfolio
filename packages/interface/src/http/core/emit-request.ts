@@ -1,4 +1,8 @@
-import type { Attributes, RequestLogger } from "@o3osatoshi/logging";
+import {
+  appendErrorAttributes,
+  type Attributes,
+  type RequestLogger,
+} from "@o3osatoshi/logging";
 
 export function emitRequestSummary(
   requestLogger: RequestLogger,
@@ -10,6 +14,7 @@ export function emitRequestSummary(
     "http.response.duration_ms": Math.max(0, durationMs),
     "http.status_code": status,
   };
+  appendErrorAttributes(attributes, error);
 
   const isSuccess = status < 400;
   const isClientError = status >= 400 && status < 500;

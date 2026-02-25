@@ -30,7 +30,7 @@ export default function User() {
         {user === undefined ? (
           <SidebarMenuButton
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            onClick={() => signIn("google", { redirectTo: "/" })}
+            onClick={() => signIn("oidc", { redirectTo: "/" })}
             size="lg"
           >
             <Avatar className="h-8 w-8 rounded-lg">

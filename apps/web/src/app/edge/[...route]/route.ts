@@ -9,9 +9,10 @@ initWebEdgeLogger();
 
 const authConfig = createAuthConfig({
   providers: {
-    google: {
-      clientId: env.AUTH_GOOGLE_ID,
-      clientSecret: env.AUTH_GOOGLE_SECRET,
+    oidc: {
+      clientId: env.AUTH_OIDC_CLIENT_ID,
+      clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
+      issuer: env.AUTH_OIDC_ISSUER,
     },
   },
   secret: env.AUTH_SECRET,
