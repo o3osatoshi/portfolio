@@ -9,13 +9,6 @@ const DEFAULT_MALFORMED_BEARER_REASON =
   "Authorization header must use Bearer scheme.";
 const DEFAULT_SCOPE_MISSING_REASON = "Access token principal is missing.";
 
-export type ExtractBearerTokenOptions = {
-  malformedTokenCode?: AuthErrorCode;
-  malformedTokenReason?: string;
-  missingTokenCode?: AuthErrorCode;
-  missingTokenReason?: string;
-};
-
 export type RequireScopeOptions = {
   action?: string;
   code?: AuthErrorCode;
@@ -29,17 +22,14 @@ type AccessTokenPrincipalLike = {
 
 export function extractBearerToken(
   authorization: null | string | undefined,
-  options: ExtractBearerTokenOptions = {},
 ): Result<string, RichError> {
   if (!authorization) {
     return err(
       newRichError({
-        code:
-          options.missingTokenCode ??
-          authErrorCodes.AUTHORIZATION_HEADER_MISSING,
+        code: authErrorCodes.AUTHORIZATION_HEADER_MISSING,
         details: {
           action: "ExtractBearerToken",
-          reason: options.missingTokenReason ?? DEFAULT_MISSING_BEARER_REASON,
+          reason: DEFAULT_MISSING_BEARER_REASON,
         },
         i18n: { key: "errors.application.unauthorized" },
         isOperational: true,
@@ -53,13 +43,10 @@ export function extractBearerToken(
   if (!matched || !matched[1]) {
     return err(
       newRichError({
-        code:
-          options.malformedTokenCode ??
-          authErrorCodes.AUTHORIZATION_HEADER_MALFORMED,
+        code: authErrorCodes.AUTHORIZATION_HEADER_MALFORMED,
         details: {
           action: "ExtractBearerToken",
-          reason:
-            options.malformedTokenReason ?? DEFAULT_MALFORMED_BEARER_REASON,
+          reason: DEFAULT_MALFORMED_BEARER_REASON,
         },
         i18n: { key: "errors.application.unauthorized" },
         isOperational: true,
