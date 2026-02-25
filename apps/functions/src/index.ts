@@ -21,7 +21,7 @@ let handler: ReturnType<typeof createExpressRequestHandler> | undefined;
 
 export const api = onRequest(async (req, res) => {
   if (!handler) {
-    const cacheStore =
+    const store =
       env.UPSTASH_REDIS_REST_TOKEN && env.UPSTASH_REDIS_REST_URL
         ? createUpstashRedis({
             token: env.UPSTASH_REDIS_REST_TOKEN,
@@ -36,7 +36,7 @@ export const api = onRequest(async (req, res) => {
         baseUrl: env.EXCHANGE_RATE_BASE_URL,
       },
       {
-        ...(cacheStore ? { cache: { store: cacheStore } } : {}),
+        ...(store ? { cache: { store } } : {}),
         logging: { logger },
         retry: true,
       },
@@ -57,8 +57,6 @@ export const api = onRequest(async (req, res) => {
       secret: env.AUTH_SECRET,
     });
 
-    const transactionRepo = new PrismaTransactionRepository(client);
-
     const identityStore = new PrismaExternalIdentityStore(client);
     const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
       audience: env.AUTH_OIDC_AUDIENCE,
@@ -67,6 +65,8 @@ export const api = onRequest(async (req, res) => {
       linkExternalIdentityToUserByEmail: (claim) =>
         identityStore.linkExternalIdentityToUserByEmail(claim),
     });
+
+    const transactionRepo = new PrismaTransactionRepository(client);
 
     const app = buildApp({
       fxQuoteProvider,
