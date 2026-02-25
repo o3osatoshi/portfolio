@@ -305,6 +305,25 @@ describe("http/node app", () => {
     expect(res.status).toBe(403);
   });
 
+  it("GET /api/cli/v1/transactions returns transactions for resolved principal", async () => {
+    const res = await build().request("/api/cli/v1/transactions", {
+      headers: { Authorization: "Bearer token" },
+    });
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    expect(Array.isArray(body)).toBe(true);
+    expect(body[0]).toEqual(
+      expect.objectContaining({
+        id: "t-1",
+        userId: "u-1",
+      }),
+    );
+    expect(a.parseGetTransactionsRequest).toHaveBeenCalledWith({
+      userId: "u-1",
+    });
+  });
+
   it("POST /api/cli/v1/transactions injects userId from principal", async () => {
     const res = await build().request("/api/cli/v1/transactions", {
       body: JSON.stringify({

@@ -207,6 +207,68 @@ describe("hono-auth/oidc-access-token", () => {
       expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_EXPIRED);
     }
   });
+
+  it("maps unknown jwt verification errors to invalid token", async () => {
+    h.jwtVerifyMock.mockRejectedValueOnce(new Error("boom"));
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(authErrorCodes.OIDC_ACCESS_TOKEN_INVALID);
+    }
+  });
+
+  it("accepts array audience claims when all entries are strings", async () => {
+    h.jwtVerifyMock.mockResolvedValueOnce({
+      payload: {
+        aud: ["https://api.o3o.app", "https://other.example"],
+        iss: "https://example.auth0.com",
+        sub: "auth0|abc",
+      },
+    });
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isOk()).toBe(true);
+    if (res.isOk()) {
+      expect(res.value.sub).toBe("auth0|abc");
+      expect(res.value.aud).toEqual([
+        "https://api.o3o.app",
+        "https://other.example",
+      ]);
+    }
+  });
+
+  it("returns audience mismatch when audience claim is missing", async () => {
+    h.jwtVerifyMock.mockResolvedValueOnce({
+      payload: {
+        iss: "https://example.auth0.com",
+        sub: "auth0|abc",
+      },
+    });
+
+    const verifier = createOidcAccessTokenVerifier({
+      audience: "https://api.o3o.app",
+      issuer: "https://example.auth0.com",
+    });
+    const res = await verifier("token");
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(
+        authErrorCodes.OIDC_ACCESS_TOKEN_AUDIENCE_MISMATCH,
+      );
+    }
+  });
 });
 
 function joseLikeError(name: string, message: string): Error {

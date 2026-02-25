@@ -110,6 +110,52 @@ describe("hono-auth/access-token-principal", () => {
     });
   });
 
+  it("returns error when userinfo subject does not match access token subject", async () => {
+    h.verifyTokenMock.mockReturnValueOnce(
+      okAsync({
+        iss: "https://example.auth0.com",
+        scope: "transactions:read",
+        sub: "auth0|123",
+      }),
+    );
+    const fetchMock = vi.fn().mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          name: "Ada",
+          email: "ada@example.com",
+          email_verified: true,
+          picture: "https://example.com/ada.png",
+          sub: "auth0|different",
+        }),
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+          status: 200,
+        },
+      ),
+    );
+    const linkExternalIdentityToUserByEmail = vi.fn(() =>
+      okAsync(asUserId("u-2")),
+    );
+
+    const resolve = createAccessTokenPrincipalResolver({
+      audience: "https://api.o3o.app",
+      fetchImpl: fetchMock as unknown as typeof fetch,
+      findUserIdByKey: () => okAsync(null),
+      issuer: "https://example.auth0.com",
+      linkExternalIdentityToUserByEmail,
+    });
+
+    const res = await resolve({ accessToken: "token" });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH);
+    }
+    expect(linkExternalIdentityToUserByEmail).not.toHaveBeenCalled();
+  });
+
   it("propagates /userinfo unauthorized failures as integration-layer error codes", async () => {
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({

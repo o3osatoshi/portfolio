@@ -198,6 +198,75 @@ describe("createOidcUserInfoFetcher", () => {
     }
   });
 
+  it("returns schema-invalid error when subject is missing in /userinfo payload", async () => {
+    const fetchMock: MockedFunction<typeof fetch> = vi.fn();
+    const response = createMockResponse({
+      json: async () => ({}),
+    });
+    fetchMock.mockResolvedValue(response);
+
+    const fetchUserInfo = createOidcUserInfoFetcher({
+      fetch: fetchMock,
+    });
+
+    const res = await fetchUserInfo({
+      accessToken: "token",
+      issuer: "https://example.auth0.com",
+    });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+      );
+    }
+  });
+
+  it("returns schema-invalid error when subject is empty in /userinfo payload", async () => {
+    const fetchMock: MockedFunction<typeof fetch> = vi.fn();
+    const response = createMockResponse({
+      json: async () => ({ sub: "" }),
+    });
+    fetchMock.mockResolvedValue(response);
+
+    const fetchUserInfo = createOidcUserInfoFetcher({
+      fetch: fetchMock,
+    });
+
+    const res = await fetchUserInfo({
+      accessToken: "token",
+      issuer: "https://example.auth0.com",
+    });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+      );
+    }
+  });
+
+  it("returns fetch-failed error when /userinfo request rejects", async () => {
+    const fetchMock: MockedFunction<typeof fetch> = vi.fn();
+    fetchMock.mockRejectedValue(new Error("network down"));
+
+    const fetchUserInfo = createOidcUserInfoFetcher({
+      fetch: fetchMock,
+    });
+
+    const res = await fetchUserInfo({
+      accessToken: "token",
+      issuer: "https://example.auth0.com",
+    });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+      );
+    }
+  });
+
   it("retries OIDC userinfo request on retryable responses", async () => {
     const fetchMock: MockedFunction<typeof fetch> = vi.fn();
     fetchMock
