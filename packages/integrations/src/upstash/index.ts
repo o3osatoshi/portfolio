@@ -4,9 +4,9 @@
  *
  * Exports:
  * - Redis cache integrations.
- * - `createUpstashRateLimitStore`.
+ * - `createUpstashRateLimitStore` is available via
+ *   `@repo/integrations/upstash/rate-limit`.
  */
-export * from "./rate-limit";
 export * from "./redis";
 export * from "./redis-edge";
 export * from "./redis-node";
