@@ -109,6 +109,39 @@ describe("hono-auth/access-token-principal", () => {
     });
   });
 
+  it("maps /userinfo unauthorized failures to an auth-layer error code", async () => {
+    h.verifyTokenMock.mockReturnValueOnce(
+      okAsync({
+        iss: "https://example.auth0.com",
+        scope: "transactions:read",
+        sub: "auth0|123",
+      }),
+    );
+    const fetchMock = vi.fn().mockResolvedValueOnce(
+      new Response(JSON.stringify({ error: "forbidden" }), {
+        headers: {
+          "content-type": "application/json",
+        },
+        status: 401,
+      }),
+    );
+
+    const resolve = createAccessTokenPrincipalResolver({
+      audience: "https://api.o3o.app",
+      fetchImpl: fetchMock as unknown as typeof fetch,
+      findUserIdByKey: () => okAsync(null),
+      issuer: "https://example.auth0.com",
+      linkExternalIdentityToUserByEmail: vi.fn(),
+    });
+
+    const res = await resolve({ accessToken: "token" });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe(authErrorCodes.OIDC_USERINFO_UNAUTHORIZED);
+    }
+  });
+
   it("extractBearerToken returns missing-token error when authorization header is empty", () => {
     const res = extractBearerToken(undefined);
     expect(res.isErr()).toBe(true);
