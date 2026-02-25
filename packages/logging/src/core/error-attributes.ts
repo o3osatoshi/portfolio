@@ -6,6 +6,9 @@ import type { Attributes } from "../types";
  * Append normalized error details to logging attributes.
  *
  * @public
+ * @param attributes - Mutable attribute map where error metadata is added.
+ * @param error - Error-like value to normalize before logging.
+ * @returns void
  */
 export function appendErrorAttributes(
   attributes: Attributes,
