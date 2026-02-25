@@ -13,7 +13,7 @@ type AccessTokenPrincipalLike = {
  *
  * @param principal Principal resolved from the incoming token.
  * @param requiredScope Scope that must be present in `principal.scopes`.
- * @returns The same principal when authorized, otherwise `AUTH_SCOPE_FORBIDDEN`.
+ * @returns The same principal when authorized, otherwise `ACCESS_SCOPE_FORBIDDEN`.
  * @public
  */
 export function authorizeScope<T extends AccessTokenPrincipalLike>(
