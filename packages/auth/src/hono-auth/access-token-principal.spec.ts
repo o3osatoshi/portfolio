@@ -1,6 +1,7 @@
 import type { UserId } from "@repo/domain";
 import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { integrationErrorCodes } from "@repo/integrations";
 
 import { authErrorCodes } from "../auth-error-catalog";
 import { extractBearerToken, requireScope } from "./access-token-guard";
@@ -109,7 +110,7 @@ describe("hono-auth/access-token-principal", () => {
     });
   });
 
-  it("maps /userinfo unauthorized failures to an auth-layer error code", async () => {
+  it("propagates /userinfo unauthorized failures as integration-layer error codes", async () => {
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({
         iss: "https://example.auth0.com",
@@ -138,7 +139,9 @@ describe("hono-auth/access-token-principal", () => {
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
-      expect(res.error.code).toBe(authErrorCodes.OIDC_USERINFO_UNAUTHORIZED);
+      expect(res.error.code).toBe(
+        integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+      );
     }
   });
 

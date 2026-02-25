@@ -1,8 +1,5 @@
 import type { ExternalIdentityResolver, UserId } from "@repo/domain";
-import {
-  createOidcUserInfoFetcher,
-  integrationErrorCodes,
-} from "@repo/integrations";
+import { createOidcUserInfoFetcher } from "@repo/integrations";
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
@@ -66,7 +63,6 @@ export function createAccessTokenPrincipalResolver(
             accessToken: params.accessToken,
             issuer,
           })
-            .mapErr((error) => mapOidcUserInfoError(error))
             .andThen((userInfo) => {
               if (userInfo.subject !== subject) {
                 return errAsync(
@@ -99,49 +95,6 @@ export function createAccessTokenPrincipalResolver(
         }));
     });
 }
-
-function mapOidcUserInfoError(error: RichError): RichError {
-  if (error.code === undefined || !error.code.startsWith("INT_")) {
-    return error;
-  }
-
-  const detailsAction =
-    error.details?.action !== undefined
-      ? error.details.action
-      : "ResolveAccessTokenPrincipal";
-
-  const mappedCode =
-    OIDC_USERINFO_ERROR_MAP[
-      error.code as keyof typeof OIDC_USERINFO_ERROR_MAP
-    ] ?? authErrorCodes.OIDC_USERINFO_FETCH_FAILED;
-
-  return newRichError({
-    cause: error,
-    code: mappedCode,
-    details: {
-      ...error.details,
-      action: detailsAction,
-      reason:
-        error.details?.reason ??
-        "Unable to resolve user identity from OIDC /userinfo response.",
-    },
-    i18n: error.i18n ?? { key: "errors.application.unauthorized" },
-    isOperational: error.isOperational,
-    kind: error.kind,
-    layer: "Auth",
-  });
-}
-
-const OIDC_USERINFO_ERROR_MAP = {
-  [integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED]:
-    authErrorCodes.OIDC_USERINFO_FETCH_FAILED,
-  [integrationErrorCodes.OIDC_USERINFO_PARSE_FAILED]:
-    authErrorCodes.OIDC_USERINFO_PARSE_FAILED,
-  [integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID]:
-    authErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
-  [integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED]:
-    authErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
-} as const;
 
 function normalizeIssuer(issuer: string): string {
   return issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
