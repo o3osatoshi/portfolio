@@ -9,17 +9,20 @@ import type { AppType } from "../http/node/app";
  *
  * Useful for injecting a custom `fetch` implementation, default headers
  * (e.g. auth cookies), or `RequestInit` overrides.
+ * @public
  */
 export type ClientOptions = ClientRequestOptions;
 
 /**
  * Create a typed RPC client for the Edge HTTP API.
  *
- * Routes are mounted under `/edge`.
+ * `hc` enforces route signatures at type level. `options` let callers override
+ * transport behavior (`fetch`, headers, request init).
  *
  * @param baseURL Base URL of the deployed Edge API.
  * @param options Optional Hono client options (headers, fetch, init).
  * @returns Hono RPC client bound to {@link EdgeAppType}.
+ * @public
  */
 export function createEdgeRpcClient(baseURL: string, options?: ClientOptions) {
   return hc<EdgeAppType>(baseURL, options);
@@ -34,6 +37,7 @@ export function createEdgeRpcClient(baseURL: string, options?: ClientOptions) {
  * @param baseURL Base URL of the deployed interface API.
  * @param options Optional Hono client options (headers, fetch, init).
  * @returns Hono RPC client bound to {@link AppType}.
+ * @public
  */
 export function createRpcClient(baseURL: string, options?: ClientOptions) {
   return hc<AppType>(baseURL, options);

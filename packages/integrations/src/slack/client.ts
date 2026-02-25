@@ -25,17 +25,37 @@ const slackPostMessageResponseSchema: z.ZodType<SlackPostMessageResponse> = z
   })
   .loose();
 
+/**
+ * Slack API client interface.
+ *
+ * Currently exposes only `chat.postMessage`; additional methods can be added by
+ * extending the returned adapter.
+ *
+ * @public
+ */
 export type SlackClient = {
   postMessage: (
     message: SlackMessage,
   ) => ResultAsync<SlackPostMessageResponse, RichError>;
 };
 
+/**
+ * Slack client configuration.
+ *
+ * @public
+ */
 export type SlackClientConfig = {
   apiBaseUrl?: string;
   token: string;
 };
 
+/**
+ * Smart fetch options for Slack API calls.
+ *
+ * Reuses shared `createSmartFetch` configuration (`cache`, `logging`, `retry`).
+ *
+ * @public
+ */
 export type SlackClientOptions = CreateSmartFetchOptions;
 
 const slackMessageSchema: z.ZodType<SlackMessage> = z
@@ -69,6 +89,19 @@ const parseSlackMessage = parseWith(slackMessageSchema, {
   layer: "External",
 });
 
+/**
+ * Create a Slack client backed by the shared smart-fetch utilities.
+ *
+ * Behavior:
+ * - validates outgoing message shape before request
+ * - maps transport and API errors to integration errors
+ * - preserves `ok`/`error` semantics from Slack `chat.postMessage` response
+ *
+ * @param config Auth token and base URL.
+ * @param options Shared smart-fetch options (`cache`, `logging`, `retry`).
+ * @returns Slack client implementation.
+ * @public
+ */
 export function createSlackClient(
   config: SlackClientConfig,
   options: SlackClientOptions = {},

@@ -9,8 +9,26 @@ import {
   toHttpErrorResponse,
 } from "@o3osatoshi/toolkit";
 
+/**
+ * JSON success status codes accepted by responder helpers.
+ * @public
+ */
 export type SuccessStatusCode = 200 | 201 | 202 | 203 | 206 | 207 | 208 | 226;
 
+/**
+ * Build a responder for sync `Result` flow.
+ *
+ * Success:
+ * - serialized as JSON with an HTTP status in `SuccessStatusCode`
+ *
+ * Failure:
+ * - stored into context key `error`
+ * - converted with `toHttpErrorResponse` to status/body
+ *
+ * @param c Hono context.
+ * @returns JSON response.
+ * @public
+ */
 export function respond<T>(c: Context) {
   return (ra: Result<T, RichError>) =>
     ra.match(
@@ -33,8 +51,9 @@ export function respond<T>(c: Context) {
  *   `@o3osatoshi/toolkit`) and returns a normalized JSON error with an
  *   appropriate status code.
  *
- * @returns A function that accepts a `ResultAsync<T, RichError>` and yields a
- * `Promise<Response>` suitable for Hono route handlers.
+ * @param c Hono context.
+ * @returns A function that accepts `ResultAsync<T, RichError>`.
+ * @public
  */
 export function respondAsync<T>(c: Context) {
   return (ra: ResultAsync<T, RichError>) =>

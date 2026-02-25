@@ -8,11 +8,28 @@ import type {
   SmartFetchResponse,
 } from "./types";
 
+/**
+ * Cache options shared by all cached smart-fetch requests.
+ *
+ * - `store` must implement `CacheStore`.
+ * - `ttlMs` defines default TTL when request-level TTL is absent.
+ *
+ * @public
+ */
 export type SmartFetchCacheOptions = {
   store: CacheStore;
   ttlMs?: number;
 };
 
+/**
+ * Per-request cache options.
+ *
+ * - `getKey` must return a deterministic cache key or `undefined` to skip cache.
+ * - `serialize` / `deserialize` can customize payload transformation.
+ * - `shouldCache` decides which successful responses should be stored.
+ *
+ * @public
+ */
 export type SmartFetchRequestCacheOptions<S extends z.ZodType> = {
   deserialize?: (data: unknown) => null | z.infer<S>;
   getKey: (request: SmartFetchRequest<S>) => string | undefined;
@@ -21,6 +38,17 @@ export type SmartFetchRequestCacheOptions<S extends z.ZodType> = {
   ttlMs?: number;
 };
 
+/**
+ * Enable response caching for a smart fetch instance.
+ *
+ * Cache is only used when `request.cache?.getKey` returns a key.
+ * Cache hits return a synthetic 200 response.
+ *
+ * @param next Underlying smart fetch function.
+ * @param options Default cache settings (store/ttl).
+ * @returns Cached smart-fetch wrapper.
+ * @public
+ */
 export function withCache(
   next: SmartFetch,
   options: SmartFetchCacheOptions,

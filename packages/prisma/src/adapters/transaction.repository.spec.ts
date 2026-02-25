@@ -31,7 +31,7 @@ import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import type { Result } from "neverthrow";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import type { PrismaTransactionRepository } from "./prisma-transaction.repository";
+import type { PrismaTransactionRepository } from "./transaction.repository";
 
 let container: StartedPostgreSqlContainer | undefined;
 let prisma: import("../prisma-client").PrismaClient | undefined;
@@ -78,7 +78,7 @@ describe("PrismaTransactionRepository (integration with Testcontainers)", () => 
       connectionString: process.env["DATABASE_URL"],
     });
     const { PrismaTransactionRepository } = await import(
-      "./prisma-transaction.repository"
+      "./transaction.repository"
     );
     repo = new PrismaTransactionRepository(prisma);
 

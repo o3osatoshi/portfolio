@@ -475,6 +475,12 @@ importers:
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
+      '@repo/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@repo/integrations':
+        specifier: workspace:*
+        version: link:../integrations
       hono:
         specifier: ^4.0.0
         version: 4.11.7

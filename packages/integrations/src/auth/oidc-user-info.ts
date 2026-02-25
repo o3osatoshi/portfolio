@@ -1,0 +1,213 @@
+import { errAsync, okAsync, type ResultAsync } from "neverthrow";
+import { z } from "zod";
+
+import {
+  httpStatusToKind,
+  type RichError,
+  trimTrailingSlash,
+} from "@o3osatoshi/toolkit";
+
+import {
+  createSmartFetch,
+  type CreateSmartFetchOptions,
+  type SmartFetchRequestCacheOptions,
+  type SmartFetchRequestRetryOptions,
+} from "../http";
+import { newIntegrationError } from "../integration-error";
+import { integrationErrorCodes } from "../integration-error-catalog";
+
+/**
+ * Raw `/userinfo` response schema fetched from OIDC providers.
+ *
+ * `sub` is optional here to keep decoding permissive before explicit checks.
+ * @public
+ */
+export const oidcUserInfoSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().email().trim().optional(),
+  email_verified: z.boolean().optional(),
+  picture: z.string().optional(),
+  sub: z.string().trim().optional(),
+});
+
+/**
+ * Canonical identity payload used after `/userinfo` validation.
+ *
+ * @public
+ */
+export type OidcUserInfo = {
+  email?: string | undefined;
+  emailVerified: boolean;
+  image?: string | undefined;
+  name?: string | undefined;
+  subject: string;
+};
+
+/**
+ * Input required to fetch user info for an access token.
+ *
+ * @public
+ */
+export type OidcUserInfoFetcherInput = {
+  accessToken: string;
+  cache?: SmartFetchRequestCacheOptions<typeof oidcUserInfoSchema> | undefined;
+  issuer: string;
+  retry?: SmartFetchRequestRetryOptions<typeof oidcUserInfoSchema> | undefined;
+};
+
+/**
+ * Option bag for `/userinfo` fetcher construction.
+ *
+ * @public
+ */
+export type OidcUserInfoFetcherOptions = {
+  fetch?: typeof fetch;
+  unauthorizedReason?: string;
+} & Omit<CreateSmartFetchOptions, "fetch">;
+
+/**
+ * Fetch and validate OIDC `/userinfo` claims.
+ *
+ * Behavior:
+ * - verifies token through `Authorization` header
+ * - validates response status and schema
+ * - maps 401/403 to `OIDC_USERINFO_UNAUTHORIZED`
+ * - maps body parse/schema failures to `OIDC_USERINFO_SCHEMA_INVALID`
+ * - maps transport/HTTP failures to `OIDC_USERINFO_FETCH_FAILED`
+ *
+ * @param options Configures fetch/cache/retry and custom unauthorized reason.
+ * @returns A smart fetch wrapper that yields {@link OidcUserInfo}.
+ * @public
+ */
+export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
+  const fetchAction = "FetchOidcUserInfo";
+  const decodeAction = "DecodeOidcUserInfoBody";
+  const sFetch = createSmartFetch({
+    cache: options.cache,
+    fetch: options.fetch ?? fetch,
+    retry: options.retry,
+  });
+
+  return (
+    input: OidcUserInfoFetcherInput,
+  ): ResultAsync<OidcUserInfo, RichError> =>
+    sFetch({
+      cache: input.cache,
+      decode: {
+        context: {
+          action: decodeAction,
+          layer: "External",
+        },
+        schema: oidcUserInfoSchema,
+      },
+      headers: {
+        Authorization: `Bearer ${input.accessToken}`,
+      },
+      method: "GET",
+      retry: input.retry,
+      url: `${trimTrailingSlash(input.issuer)}/userinfo`,
+    })
+      .orElse((cause) =>
+        errAsync(mapFetchError(cause, fetchAction, decodeAction)),
+      )
+      .andThen((res) => {
+        if (!res.response.ok) {
+          const status = res.response.status;
+          if (status === 401 || status === 403) {
+            return errAsync(
+              newIntegrationError({
+                code: integrationErrorCodes.OIDC_USERINFO_UNAUTHORIZED,
+                details: {
+                  action: fetchAction,
+                  reason:
+                    options.unauthorizedReason ??
+                    `/userinfo request rejected by the IdP (HTTP ${status}).`,
+                },
+                i18n: { key: "errors.application.unauthorized" },
+                isOperational: true,
+                kind: "Unauthorized",
+              }),
+            );
+          }
+
+          return errAsync(
+            newIntegrationError({
+              code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+              details: {
+                action: fetchAction,
+                reason: `Failed to fetch /userinfo endpoint (HTTP ${status}).`,
+              },
+              isOperational: true,
+              kind: httpStatusToKind(status),
+            }),
+          );
+        }
+
+        if (!res.data.sub) {
+          return errAsync(
+            newIntegrationError({
+              code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+              details: {
+                action: fetchAction,
+                reason: "IdP /userinfo payload does not match expected schema.",
+              },
+              i18n: { key: "errors.application.unauthorized" },
+              isOperational: true,
+              kind: "Unauthorized",
+            }),
+          );
+        }
+
+        return okAsync({
+          name: res.data.name,
+          email: res.data.email,
+          emailVerified: res.data.email_verified === true,
+          image: res.data.picture,
+          subject: res.data.sub,
+        });
+      });
+}
+
+function mapFetchError(
+  cause: RichError,
+  requestAction: string,
+  decodeAction: string,
+): RichError {
+  if (cause.details?.action === "DeserializeResponseBody") {
+    return newIntegrationError({
+      cause,
+      code: integrationErrorCodes.OIDC_USERINFO_PARSE_FAILED,
+      details: {
+        action: requestAction,
+        reason: "Failed to parse /userinfo response.",
+      },
+      isOperational: true,
+      kind: "Unauthorized",
+    });
+  }
+
+  if (cause.details?.action === decodeAction) {
+    return newIntegrationError({
+      cause,
+      code: integrationErrorCodes.OIDC_USERINFO_SCHEMA_INVALID,
+      details: {
+        action: requestAction,
+        reason: "IdP /userinfo payload does not match expected schema.",
+      },
+      i18n: { key: "errors.application.unauthorized" },
+      isOperational: true,
+      kind: "Unauthorized",
+    });
+  }
+
+  return newIntegrationError({
+    cause,
+    code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+    details: {
+      action: requestAction,
+      reason: "Failed to fetch /userinfo endpoint.",
+    },
+    isOperational: true,
+    kind: "Unavailable",
+  });
+}

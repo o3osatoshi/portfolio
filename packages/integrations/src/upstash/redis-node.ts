@@ -5,6 +5,8 @@ import { type UpstashRedisConfig, wrapUpstashRedis } from "./redis";
 
 /**
  * Create a cache store backed by an Upstash Redis client (Node runtime).
+ *
+ * @public
  */
 export function createUpstashRedis(config?: UpstashRedisConfig): CacheStore {
   return wrapUpstashRedis(

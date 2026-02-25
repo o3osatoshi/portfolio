@@ -1,0 +1,15 @@
+model ExternalIdentity {
+  id      String @id @default(cuid()) @map("id")
+  issuer  String @map("issuer")
+  subject String @map("subject")
+  userId  String @map("user_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@unique([issuer, subject])
+  @@map("external_identity")
+}

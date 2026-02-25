@@ -9,15 +9,46 @@ import type {
   SmartFetchResponse,
 } from "./types";
 
+/**
+ * Logging options shared by all logged smart-fetch requests.
+ *
+ * A logger implementation is required when enabling request/response logging.
+ *
+ * @public
+ */
 export type SmartFetchLoggingOptions = {
   logger: Logger;
 };
 
+/**
+ * Per-request logging context.
+ *
+ * - `requestName` is emitted as `http.request.name`.
+ * - `redactUrl` can hide secrets from logs/metrics.
+ *
+ * @public
+ */
 export type SmartFetchRequestLoggingOptions = {
   redactUrl?: (url: string) => string;
   requestName?: string;
 };
 
+/**
+ * Emit request and failure logs/metrics for each smart fetch call.
+ *
+ * Log events:
+ * - `http_client_error` for 5xx and non-business errors
+ * - `http_client_warn` for non-5xx failures
+ *
+ * Metrics:
+ * - `http.client.requests`
+ * - `http.client.request.duration`
+ *
+ * @param next Underlying smart fetch function.
+ * @param options Logger and global logging settings.
+ * @returns Logged smart-fetch wrapper.
+ * @public
+ */
 export function withLogging(
   next: SmartFetch,
   options: SmartFetchLoggingOptions,
