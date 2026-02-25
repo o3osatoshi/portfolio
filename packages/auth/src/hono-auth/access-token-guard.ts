@@ -2,19 +2,12 @@ import { err, ok, type Result } from "neverthrow";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
-import { type AuthErrorCode, authErrorCodes } from "../auth-error-catalog";
+import { authErrorCodes } from "../auth-error-catalog";
 
 const DEFAULT_MISSING_BEARER_REASON = "Authorization header is missing.";
 const DEFAULT_MALFORMED_BEARER_REASON =
   "Authorization header must use Bearer scheme.";
 const DEFAULT_SCOPE_MISSING_REASON = "Access token principal is missing.";
-
-export type RequireScopeOptions = {
-  action?: string;
-  code?: AuthErrorCode;
-  missingPrincipalReason?: string;
-  scopeForbiddenReason?: string;
-};
 
 type AccessTokenPrincipalLike = {
   scopes: readonly string[];
@@ -62,16 +55,14 @@ export function extractBearerToken(
 export function requireScope<T extends AccessTokenPrincipalLike>(
   principal: T | undefined,
   requiredScope: string,
-  options: RequireScopeOptions = {},
 ): Result<T, RichError> {
   if (principal === undefined) {
     return err(
       newRichError({
-        code: options.code ?? authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
+        code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
         details: {
-          action: options.action ?? "AuthorizeScope",
-          reason:
-            options.missingPrincipalReason ?? DEFAULT_SCOPE_MISSING_REASON,
+          action: "AuthorizeScope",
+          reason: DEFAULT_SCOPE_MISSING_REASON,
         },
         i18n: { key: "errors.application.forbidden" },
         isOperational: true,
@@ -87,12 +78,10 @@ export function requireScope<T extends AccessTokenPrincipalLike>(
 
   return err(
     newRichError({
-      code: options.code ?? authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
+      code: authErrorCodes.ACCESS_SCOPE_FORBIDDEN,
       details: {
-        action: options.action ?? "AuthorizeScope",
-        reason:
-          options.scopeForbiddenReason ??
-          `Required scope is missing: ${requiredScope}`,
+        action: "AuthorizeScope",
+        reason: `Required scope is missing: ${requiredScope}`,
       },
       i18n: { key: "errors.application.forbidden" },
       isOperational: true,
