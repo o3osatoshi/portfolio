@@ -1,12 +1,12 @@
 import { errAsync, okAsync } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { newRichError } from "../error";
+import { newRichError } from "./error";
 import {
   createRateLimitGuard,
   type RateLimitConsumeInput,
   type RateLimitStore,
-} from "./index";
+} from "./rate-limit";
 
 function createStore(
   consume: (

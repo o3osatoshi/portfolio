@@ -1,6 +1,6 @@
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
-import { newRichError, type RichError } from "../error";
+import { newRichError, type RichError } from "./error";
 
 /**
  * Options for creating a reusable rate-limit guard.
