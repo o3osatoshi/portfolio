@@ -23,22 +23,20 @@ export function createUpstashRateLimitStore(
     token: config.token,
     url: config.url,
   });
-  const prefix = config.prefix ?? "o3o:ratelimit";
-  const limiterCache = new Map<string, Ratelimit>();
+  const limiterMap = new Map<string, Ratelimit>();
 
   return {
     consume(input) {
-      const limiter = getOrCreateLimiter({
+      const limiter = getsertLimiter({
         bucket: input.bucket,
         limit: input.limit,
-        limiterCache,
-        prefix,
+        limiterMap,
+        prefix: config.prefix ?? "o3o:ratelimit",
         redis,
         windowSeconds: input.windowSeconds,
       });
-      const key = input.identifier;
 
-      return ResultAsync.fromPromise(limiter.limit(key), (cause) =>
+      return ResultAsync.fromPromise(limiter.limit(input.identifier), (cause) =>
         newIntegrationError({
           cause,
           code: integrationErrorCodes.RATE_LIMIT_CHECK_FAILED,
@@ -60,18 +58,19 @@ export function createUpstashRateLimitStore(
   };
 }
 
-function getOrCreateLimiter(input: {
+function getsertLimiter(input: {
   bucket: string;
   limit: number;
-  limiterCache: Map<string, Ratelimit>;
+  limiterMap: Map<string, Ratelimit>;
   prefix: string;
   redis: Redis;
   windowSeconds: number;
 }): Ratelimit {
-  const limiterCacheKey = `${input.bucket}:${input.limit}:${input.windowSeconds}`;
-  const existing = input.limiterCache.get(limiterCacheKey);
-  if (existing) {
-    return existing;
+  const key = `${input.bucket}:${input.limit}:${input.windowSeconds}`;
+
+  const cachedLimiter = input.limiterMap.get(key);
+  if (cachedLimiter) {
+    return cachedLimiter;
   }
 
   const limiter = new Ratelimit({
@@ -79,6 +78,6 @@ function getOrCreateLimiter(input: {
     prefix: `${input.prefix}:${input.bucket}`,
     redis: input.redis,
   });
-  input.limiterCache.set(limiterCacheKey, limiter);
+  input.limiterMap.set(key, limiter);
   return limiter;
 }

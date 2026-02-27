@@ -189,6 +189,7 @@ function resolveRuleIdentifier<T>(
   input: T,
 ): ResultAsync<string, RichError> {
   let rawIdentifier: unknown;
+
   try {
     rawIdentifier = rule.resolveIdentifier(input);
   } catch (cause) {
