@@ -59,7 +59,10 @@ export async function loginWithOidc(
 
   try {
     return await loginByPkce(config, discovery);
-  } catch {
+  } catch (error) {
+    if (!shouldFallbackToDeviceFlow(error)) {
+      throw error;
+    }
     return loginByDeviceCode(config, discovery);
   }
 }
@@ -116,6 +119,18 @@ export async function revokeRefreshToken(
   if (!response.ok) {
     throw new Error(`Revocation request failed (${response.status})`);
   }
+}
+
+function closeServer(server: ReturnType<typeof createServer>): Promise<void> {
+  return new Promise((resolve, reject) => {
+    server.close((error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
 }
 
 async function discover(issuer: string) {
@@ -246,6 +261,7 @@ async function loginByPkce(
     });
   });
 
+  let disposeCallbackListener: (() => void) | undefined;
   const codePromise = new Promise<string>((resolve, reject) => {
     let callbackDisposed = false;
     const onRequest = (req: IncomingMessage, res: ServerResponse) => {
@@ -281,6 +297,7 @@ async function loginByPkce(
       clearTimeout(timeout);
       server.off("request", onRequest);
     };
+    disposeCallbackListener = cleanup;
 
     const timeout = setTimeout(() => {
       cleanup();
@@ -305,10 +322,15 @@ async function loginByPkce(
 
   let code: string;
   try {
-    await openBrowser(authorizationUrl.toString());
+    await openBrowser(authorizationUrl.toString(), redirectUri);
     code = await codePromise;
+  } catch (error) {
+    // Prevent unhandled rejections if PKCE browser launch fails early.
+    void codePromise.catch(() => {});
+    throw error;
   } finally {
-    server.close();
+    disposeCallbackListener?.();
+    await closeServer(server);
   }
 
   const body = new URLSearchParams({
@@ -336,16 +358,35 @@ async function loginByPkce(
   return withExpiry(parsed);
 }
 
-async function openBrowser(url: string): Promise<void> {
-  if (process.platform === "darwin") {
-    await execFileAsync("open", [url]);
-    return;
+async function openBrowser(url: string, redirectUri: string): Promise<void> {
+  try {
+    if (process.platform === "darwin") {
+      await execFileAsync("open", [url]);
+      return;
+    }
+    if (process.platform === "win32") {
+      await execFileAsync("cmd", ["/c", "start", "", url]);
+      return;
+    }
+    await execFileAsync("xdg-open", [url]);
+  } catch (error) {
+    throw new Error(
+      `Failed to open the system browser for PKCE login (${redirectUri}).`,
+      { cause: error },
+    );
   }
-  if (process.platform === "win32") {
-    await execFileAsync("cmd", ["/c", "start", "", url]);
-    return;
+}
+
+function shouldFallbackToDeviceFlow(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
   }
-  await execFileAsync("xdg-open", [url]);
+
+  return (
+    error.message.startsWith("Failed to start PKCE callback server on ") ||
+    error.message === "Timed out waiting for browser callback." ||
+    error.message.startsWith("Failed to open the system browser for PKCE login")
+  );
 }
 
 function sleep(ms: number): Promise<void> {

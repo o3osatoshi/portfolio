@@ -13,6 +13,7 @@ npm i -g @o3osatoshi/cli
 ```bash
 o3o hello
 o3o auth login
+o3o auth logout
 o3o auth whoami
 o3o tx list
 ```
@@ -28,6 +29,8 @@ O3O_OIDC_AUDIENCE=...
 O3O_API_BASE_URL=...
 O3O_OIDC_REDIRECT_PORT=38080
 ```
+
+`O3O_*` vars are the primary CLI settings. `AUTH_OIDC_*` vars are accepted as a compatibility fallback.
 
 For PKCE login, register this callback URL in Auth0:
 

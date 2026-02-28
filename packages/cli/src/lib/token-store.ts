@@ -46,8 +46,18 @@ export async function writeTokenSet(tokenSet: TokenSet): Promise<void> {
   warnFileFallbackOnce();
 
   await mkdir(dirname(filePath), { recursive: true });
-  await writeFile(filePath, `${serialized}\n`, "utf8");
-  await chmod(filePath, 0o600);
+  await writeFile(filePath, `${serialized}\n`, {
+    encoding: "utf8",
+    mode: 0o600,
+  });
+
+  if (process.platform !== "win32") {
+    try {
+      await chmod(filePath, 0o600);
+    } catch {
+      // best effort
+    }
+  }
 }
 
 function parseTokenSet(raw: string): null | TokenSet {
