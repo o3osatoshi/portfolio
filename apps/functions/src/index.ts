@@ -1,8 +1,13 @@
 import {
   createAccessTokenPrincipalResolver,
   createAuthConfig,
+  createIdentityProvisioningRateLimitGuard,
 } from "@repo/auth";
-import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
+import {
+  createUpstashRateLimitStore,
+  createUpstashRedis,
+  ExchangeRateApi,
+} from "@repo/integrations";
 import {
   buildApp,
   createExpressRequestHandler,
@@ -28,6 +33,7 @@ export const api = onRequest(async (req, res) => {
             url: env.UPSTASH_REDIS_REST_URL,
           })
         : undefined;
+
     const logger = getFunctionsLogger();
     const fxQuoteProvider = new ExchangeRateApi(
       {
@@ -56,16 +62,29 @@ export const api = onRequest(async (req, res) => {
       secret: env.AUTH_SECRET,
     });
 
-    const transactionRepo = new PrismaTransactionRepository(client);
-
     const identityStore = new PrismaExternalIdentityStore(client);
+    const identityProvisioningRateLimitGuard =
+      createIdentityProvisioningRateLimitGuard({
+        issuerLimitPerMinute: env.AUTH_CLI_IDENTITY_ISSUER_LIMIT_PER_MINUTE,
+        store: createUpstashRateLimitStore({
+          token: env.UPSTASH_REDIS_REST_TOKEN,
+          url: env.UPSTASH_REDIS_REST_URL,
+        }),
+        subjectCooldownSeconds: env.AUTH_CLI_IDENTITY_SUBJECT_COOLDOWN_SECONDS,
+      });
     const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
       audience: env.AUTH_OIDC_AUDIENCE,
-      findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+      externalIdentityResolver: {
+        findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+        linkExternalIdentityToUserByEmail: (claimSet) =>
+          identityProvisioningRateLimitGuard(claimSet).andThen(() =>
+            identityStore.linkExternalIdentityToUserByEmail(claimSet),
+          ),
+      },
       issuer: env.AUTH_OIDC_ISSUER,
-      linkExternalIdentityToUserByEmail: (claim) =>
-        identityStore.linkExternalIdentityToUserByEmail(claim),
     });
+
+    const transactionRepo = new PrismaTransactionRepository(client);
 
     const app = buildApp({
       fxQuoteProvider,
@@ -75,6 +94,7 @@ export const api = onRequest(async (req, res) => {
     });
     handler = createExpressRequestHandler(app);
   }
+
   await handler(req, res);
 });
 

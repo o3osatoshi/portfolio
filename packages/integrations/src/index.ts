@@ -14,3 +14,4 @@ export * from "./integration-error";
 export * from "./integration-error-catalog";
 export * from "./slack";
 export * from "./upstash";
+export * from "./upstash/rate-limit";

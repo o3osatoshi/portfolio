@@ -1,7 +1,9 @@
 import type { UserId } from "@repo/domain";
 import { integrationErrorCodes } from "@repo/integrations";
-import { okAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { newRichError } from "@o3osatoshi/toolkit";
 
 import { authErrorCodes } from "../auth-error-catalog";
 import { authorizeScope, extractBearerToken } from "./access-token-guard";
@@ -28,7 +30,12 @@ describe("hono-auth/access-token-principal", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns existing mapped user without calling /userinfo", async () => {
-    const findUserIdByExternalIdentity = vi.fn(() => okAsync(asUserId("u-1")));
+    const externalIdentityResolver = {
+      findUserIdByKey: vi.fn(() => okAsync(asUserId("u-1"))),
+      linkExternalIdentityToUserByEmail: vi.fn(() =>
+        okAsync(asUserId("u-new")),
+      ),
+    };
     h.verifyTokenMock.mockReturnValueOnce(
       okAsync({
         iss: "https://example.auth0.com/",
@@ -39,10 +46,9 @@ describe("hono-auth/access-token-principal", () => {
     const fetchMock = vi.fn();
     const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
+      externalIdentityResolver,
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByKey: findUserIdByExternalIdentity,
       issuer: "https://example.auth0.com",
-      linkExternalIdentityToUserByEmail: () => okAsync(asUserId("u-new")),
     });
 
     const res = await resolve({ accessToken: "token" });
@@ -53,7 +59,7 @@ describe("hono-auth/access-token-principal", () => {
       expect(res.value.userId).toBe("u-1");
       expect(res.value.scopes).toEqual(["transactions:read"]);
     }
-    expect(findUserIdByExternalIdentity).toHaveBeenCalledWith({
+    expect(externalIdentityResolver.findUserIdByKey).toHaveBeenCalledWith({
       issuer: "https://example.auth0.com",
       subject: "auth0|123",
     });
@@ -85,22 +91,24 @@ describe("hono-auth/access-token-principal", () => {
         },
       ),
     );
-    const linkExternalIdentityToUserByEmail = vi.fn(() =>
-      okAsync(asUserId("u-2")),
-    );
+    const externalIdentityResolver = {
+      findUserIdByKey: vi.fn(() => okAsync(null)),
+      linkExternalIdentityToUserByEmail: vi.fn(() => okAsync(asUserId("u-2"))),
+    };
 
     const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
+      externalIdentityResolver,
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByKey: () => okAsync(null),
       issuer: "https://example.auth0.com",
-      linkExternalIdentityToUserByEmail: linkExternalIdentityToUserByEmail,
     });
 
     const res = await resolve({ accessToken: "token" });
 
     expect(res.isOk()).toBe(true);
-    expect(linkExternalIdentityToUserByEmail).toHaveBeenCalledWith({
+    expect(
+      externalIdentityResolver.linkExternalIdentityToUserByEmail,
+    ).toHaveBeenCalledWith({
       name: "Ada",
       email: "ada@example.com",
       emailVerified: true,
@@ -108,6 +116,64 @@ describe("hono-auth/access-token-principal", () => {
       issuer: "https://example.auth0.com",
       subject: "auth0|123",
     });
+  });
+
+  it("propagates CLI_IDENTITY_RATE_LIMITED when linking identity is rate-limited", async () => {
+    h.verifyTokenMock.mockReturnValueOnce(
+      okAsync({
+        iss: "https://example.auth0.com",
+        scope: "transactions:read",
+        sub: "auth0|123",
+      }),
+    );
+    const fetchMock = vi.fn().mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          name: "Ada",
+          email: "ada@example.com",
+          email_verified: true,
+          picture: "https://example.com/ada.png",
+          sub: "auth0|123",
+        }),
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+          status: 200,
+        },
+      ),
+    );
+    const rateLimitedError = newRichError({
+      code: "CLI_IDENTITY_RATE_LIMITED",
+      details: {
+        action: "CheckIdentityProvisioningRateLimit",
+        reason: "Too many requests",
+      },
+      isOperational: true,
+      kind: "RateLimit",
+      layer: "Application",
+    });
+    const externalIdentityResolver = {
+      findUserIdByKey: vi.fn(() => okAsync(null)),
+      linkExternalIdentityToUserByEmail: vi.fn(() =>
+        errAsync(rateLimitedError),
+      ),
+    };
+
+    const resolve = createAccessTokenPrincipalResolver({
+      audience: "https://api.o3o.app",
+      externalIdentityResolver,
+      fetchImpl: fetchMock as unknown as typeof fetch,
+      issuer: "https://example.auth0.com",
+    });
+
+    const res = await resolve({ accessToken: "token" });
+
+    expect(res.isErr()).toBe(true);
+    if (res.isErr()) {
+      expect(res.error.code).toBe("CLI_IDENTITY_RATE_LIMITED");
+      expect(res.error).toBe(rateLimitedError);
+    }
   });
 
   it("returns error when userinfo subject does not match access token subject", async () => {
@@ -135,16 +201,16 @@ describe("hono-auth/access-token-principal", () => {
         },
       ),
     );
-    const linkExternalIdentityToUserByEmail = vi.fn(() =>
-      okAsync(asUserId("u-2")),
-    );
+    const externalIdentityResolver = {
+      findUserIdByKey: vi.fn(() => okAsync(null)),
+      linkExternalIdentityToUserByEmail: vi.fn(() => okAsync(asUserId("u-2"))),
+    };
 
     const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
+      externalIdentityResolver,
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByKey: () => okAsync(null),
       issuer: "https://example.auth0.com",
-      linkExternalIdentityToUserByEmail,
     });
 
     const res = await resolve({ accessToken: "token" });
@@ -153,7 +219,9 @@ describe("hono-auth/access-token-principal", () => {
     if (res.isErr()) {
       expect(res.error.code).toBe(authErrorCodes.OIDC_IDENTITY_SUB_MISMATCH);
     }
-    expect(linkExternalIdentityToUserByEmail).not.toHaveBeenCalled();
+    expect(
+      externalIdentityResolver.linkExternalIdentityToUserByEmail,
+    ).not.toHaveBeenCalled();
   });
 
   it("propagates /userinfo unauthorized failures as integration-layer error codes", async () => {
@@ -173,12 +241,15 @@ describe("hono-auth/access-token-principal", () => {
       }),
     );
 
+    const externalIdentityResolver = {
+      findUserIdByKey: () => okAsync(null),
+      linkExternalIdentityToUserByEmail: vi.fn(),
+    };
     const resolve = createAccessTokenPrincipalResolver({
       audience: "https://api.o3o.app",
+      externalIdentityResolver,
       fetchImpl: fetchMock as unknown as typeof fetch,
-      findUserIdByKey: () => okAsync(null),
       issuer: "https://example.auth0.com",
-      linkExternalIdentityToUserByEmail: vi.fn(),
     });
 
     const res = await resolve({ accessToken: "token" });

@@ -1,11 +1,11 @@
 /**
  * @packageDocumentation
- * Upstash Redis cache integrations.
+ * Upstash integrations.
  *
  * Exports:
- * - `createUpstashRedis` (Node)
- * - `createEdgeUpstashRedis` (Edge)
- * - shared helper wrappers and config types
+ * - Redis cache integrations.
+ * - `createUpstashRateLimitStore` is available via
+ *   `@repo/integrations`.
  */
 export * from "./redis";
 export * from "./redis-edge";
