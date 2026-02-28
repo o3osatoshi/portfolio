@@ -397,7 +397,7 @@ describe("http/node app", () => {
         newRichError({
           code: "CLI_IDENTITY_RATE_LIMITED",
           details: {
-            action: "CheckCliIdentityProvisioningRateLimit",
+            action: "CheckIdentityProvisioningRateLimit",
             reason: "Rate limit exceeded.",
           },
           i18n: { key: "errors.application.rate_limit" },

@@ -2,7 +2,11 @@ import {
   createAccessTokenPrincipalResolver,
   createAuthConfig,
 } from "@repo/auth";
-import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
+import {
+  createUpstashRateLimitStore,
+  createUpstashRedis,
+  ExchangeRateApi,
+} from "@repo/integrations";
 import { buildHandler } from "@repo/interface/http/node";
 import {
   createPrismaClient,
@@ -12,6 +16,7 @@ import {
 
 import { env } from "@/env/server";
 import { getWebNodeLogger } from "@/lib/logger/node";
+import { createRateLimitGuard, newRichError } from "@o3osatoshi/toolkit";
 
 const store = createUpstashRedis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
@@ -45,9 +50,56 @@ const authConfig = createAuthConfig({
 });
 
 const identityStore = new PrismaExternalIdentityStore(client);
+const identityProvisioningRateLimitGuard = createRateLimitGuard<
+  Parameters<typeof identityStore.linkExternalIdentityToUserByEmail>[0]
+>({
+  buildRateLimitedError: ({ decision, rule }) =>
+    newRichError({
+      code: "CLI_IDENTITY_RATE_LIMITED",
+      details: {
+        action: "CheckIdentityProvisioningRateLimit",
+        reason: `Rate limit exceeded for rule: ${rule.id}.`,
+      },
+      i18n: { key: "errors.application.rate_limit" },
+      isOperational: true,
+      kind: "RateLimit",
+      layer: "Application",
+      meta: {
+        limit: decision.limit,
+        remaining: decision.remaining,
+        resetEpochSeconds: decision.resetEpochSeconds,
+        ruleId: rule.id,
+      },
+    }),
+  failureMode: "fail-open",
+  rules: [
+    {
+      id: "identity-provisioning-issuer",
+      limit: env.AUTH_CLI_IDENTITY_ISSUER_LIMIT_PER_MINUTE,
+      resolveIdentifier: (claimSet) => claimSet.issuer,
+      windowSeconds: 60,
+    },
+    {
+      id: "identity-provisioning-subject",
+      limit: 1,
+      resolveIdentifier: (claimSet) => `${claimSet.issuer}:${claimSet.subject}`,
+      windowSeconds: env.AUTH_CLI_IDENTITY_SUBJECT_COOLDOWN_SECONDS,
+    },
+  ],
+  store: createUpstashRateLimitStore({
+    token: env.UPSTASH_REDIS_REST_TOKEN,
+    url: env.UPSTASH_REDIS_REST_URL,
+  }),
+});
 const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
   audience: env.AUTH_OIDC_AUDIENCE,
-  externalIdentityResolver: identityStore,
+  externalIdentityResolver: {
+    findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+    linkExternalIdentityToUserByEmail: (claimSet) =>
+      identityProvisioningRateLimitGuard(claimSet).andThen(() =>
+        identityStore.linkExternalIdentityToUserByEmail(claimSet),
+      ),
+  },
   issuer: env.AUTH_OIDC_ISSUER,
 });
 
