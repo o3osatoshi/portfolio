@@ -216,4 +216,33 @@ describe("rate-limit/createRateLimitGuard", () => {
     expect(result.error.code).toBe("RATE_LIMIT_IDENTIFIER_INVALID");
     expect(consume).not.toHaveBeenCalled();
   });
+
+  it("returns identifier error when resolveIdentifier returns whitespace-only string", async () => {
+    const consume = vi.fn((input: RateLimitConsumeInput) =>
+      okAsync({
+        allowed: true,
+        limit: input.limit,
+        remaining: input.limit,
+        resetEpochSeconds: 1000,
+      }),
+    );
+    const guard = createRateLimitGuard<{ id: string }>({
+      rules: [
+        {
+          id: "subject",
+          limit: 1,
+          resolveIdentifier: () => "   ",
+          windowSeconds: 300,
+        },
+      ],
+      store: createStore(consume),
+    });
+
+    const result = await guard({ id: "auth0|123" });
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) return;
+    expect(result.error.code).toBe("RATE_LIMIT_IDENTIFIER_INVALID");
+    expect(consume).not.toHaveBeenCalled();
+  });
 });
