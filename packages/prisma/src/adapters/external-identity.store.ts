@@ -56,9 +56,9 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
    * Link or create an internal user id using a verified external identity.
    */
   linkExternalIdentityToUserByEmail(
-    claim: ExternalIdentityClaimSet,
+    claimSet: ExternalIdentityClaimSet,
   ): ResultAsync<UserId, RichError> {
-    if (!claim.email || !claim.emailVerified) {
+    if (!claimSet.email || !claimSet.emailVerified) {
       return errAsync(
         newRichError({
           code: externalIdentityErrorCodes.EMAIL_UNVERIFIED,
@@ -78,17 +78,17 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
     return ResultAsync.fromPromise(
       this.db.externalIdentity.upsert({
         create: {
-          issuer: claim.issuer,
-          subject: claim.subject,
+          issuer: claimSet.issuer,
+          subject: claimSet.subject,
           user: {
             connectOrCreate: {
               create: {
-                email: claim.email,
-                ...(claim.name ? { name: claim.name } : {}),
-                ...(claim.image ? { image: claim.image } : {}),
+                email: claimSet.email,
+                ...(claimSet.name ? { name: claimSet.name } : {}),
+                ...(claimSet.image ? { image: claimSet.image } : {}),
               },
               where: {
-                email: claim.email,
+                email: claimSet.email,
               },
             },
           },
@@ -97,8 +97,8 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
         update: {},
         where: {
           issuer_subject: {
-            issuer: claim.issuer,
-            subject: claim.subject,
+            issuer: claimSet.issuer,
+            subject: claimSet.subject,
           },
         },
       }),
@@ -120,7 +120,7 @@ export class PrismaExternalIdentityStore implements ExternalIdentityResolver {
 
         // A concurrent request may have linked the same issuer/subject first.
         // Retry by reading the canonical mapping and return it when available.
-        return this.findUserIdByKey(claim).andThen((userId) =>
+        return this.findUserIdByKey(claimSet).andThen((userId) =>
           userId ? okAsync(userId) : errAsync(error),
         );
       });

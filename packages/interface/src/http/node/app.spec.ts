@@ -391,6 +391,27 @@ describe("http/node app", () => {
     expect(res.status).toBe(401);
   });
 
+  it("returns 429 when resolveAccessTokenPrincipal is rate-limited", async () => {
+    const res = await build((_) =>
+      errAsync(
+        newRichError({
+          code: "CLI_IDENTITY_RATE_LIMITED",
+          details: {
+            action: "CheckIdentityProvisioningRateLimit",
+            reason: "Rate limit exceeded.",
+          },
+          i18n: { key: "errors.application.rate_limit" },
+          isOperational: true,
+          kind: "RateLimit",
+          layer: "Application",
+        }),
+      ),
+    ).request("/api/cli/v1/me", {
+      headers: { Authorization: "Bearer token" },
+    });
+    expect(res.status).toBe(429);
+  });
+
   it("GET /api/auth/some-route is handled by authHandler middleware", async () => {
     const res = await build().request("/api/auth/some-route");
     expect(res.status).toBe(200);

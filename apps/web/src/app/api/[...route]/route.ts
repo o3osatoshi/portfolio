@@ -1,8 +1,13 @@
 import {
   createAccessTokenPrincipalResolver,
   createAuthConfig,
+  createIdentityProvisioningRateLimitGuard,
 } from "@repo/auth";
-import { createUpstashRedis, ExchangeRateApi } from "@repo/integrations";
+import {
+  createUpstashRateLimitStore,
+  createUpstashRedis,
+  ExchangeRateApi,
+} from "@repo/integrations";
 import { buildHandler } from "@repo/interface/http/node";
 import {
   createPrismaClient,
@@ -44,13 +49,26 @@ const authConfig = createAuthConfig({
   secret: env.AUTH_SECRET,
 });
 
-const externalIdentityStore = new PrismaExternalIdentityStore(client);
+const identityStore = new PrismaExternalIdentityStore(client);
+const identityProvisioningRateLimitGuard =
+  createIdentityProvisioningRateLimitGuard({
+    issuerLimitPerMinute: env.AUTH_CLI_IDENTITY_ISSUER_LIMIT_PER_MINUTE,
+    store: createUpstashRateLimitStore({
+      token: env.UPSTASH_REDIS_REST_TOKEN,
+      url: env.UPSTASH_REDIS_REST_URL,
+    }),
+    subjectCooldownSeconds: env.AUTH_CLI_IDENTITY_SUBJECT_COOLDOWN_SECONDS,
+  });
 const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
   audience: env.AUTH_OIDC_AUDIENCE,
-  findUserIdByKey: (input) => externalIdentityStore.findUserIdByKey(input),
+  externalIdentityResolver: {
+    findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+    linkExternalIdentityToUserByEmail: (claimSet) =>
+      identityProvisioningRateLimitGuard(claimSet).andThen(() =>
+        identityStore.linkExternalIdentityToUserByEmail(claimSet),
+      ),
+  },
   issuer: env.AUTH_OIDC_ISSUER,
-  linkExternalIdentityToUserByEmail: (input) =>
-    externalIdentityStore.linkExternalIdentityToUserByEmail(input),
 });
 
 const transactionRepo = new PrismaTransactionRepository(client);
