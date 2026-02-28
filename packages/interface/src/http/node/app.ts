@@ -90,8 +90,12 @@ export function buildApp(deps: Deps) {
  * Usage (Next.js App Router):
  * ```ts
  * // app/api/[...route]/route.ts
- * import { createAccessTokenPrincipalResolver, createAuthConfig } from "@repo/auth";
- * import { ExchangeRateApi } from "@repo/integrations";
+ * import {
+ *   createAccessTokenPrincipalResolver,
+ *   createAuthConfig,
+ *   createIdentityProvisioningRateLimitGuard,
+ * } from "@repo/auth";
+ * import { createUpstashRateLimitStore, ExchangeRateApi } from "@repo/integrations";
  * import { buildHandler } from "@repo/interface/http/node";
  * import {
  *   createPrismaClient,
@@ -106,10 +110,24 @@ export function buildApp(deps: Deps) {
  *   apiKey: process.env.EXCHANGE_RATE_API_KEY,
  *   baseUrl: process.env.EXCHANGE_RATE_BASE_URL,
  * });
- * const externalIdentityStore = new PrismaExternalIdentityStore(prisma);
+ * const identityStore = new PrismaExternalIdentityStore(prisma);
+ * const identityProvisioningRateLimitGuard = createIdentityProvisioningRateLimitGuard({
+ *   issuerLimitPerMinute: Number(process.env.AUTH_CLI_IDENTITY_ISSUER_LIMIT_PER_MINUTE!),
+ *   store: createUpstashRateLimitStore({
+ *     token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+ *     url: process.env.UPSTASH_REDIS_REST_URL!,
+ *   }),
+ *   subjectCooldownSeconds: Number(process.env.AUTH_CLI_IDENTITY_SUBJECT_COOLDOWN_SECONDS!),
+ * });
  * const resolveAccessTokenPrincipal = createAccessTokenPrincipalResolver({
  *   audience: process.env.AUTH_OIDC_AUDIENCE!,
- *   externalIdentityResolver: externalIdentityStore,
+ *   externalIdentityResolver: {
+ *     findUserIdByKey: (key) => identityStore.findUserIdByKey(key),
+ *     linkExternalIdentityToUserByEmail: (claimSet) =>
+ *       identityProvisioningRateLimitGuard(claimSet).andThen(() =>
+ *         identityStore.linkExternalIdentityToUserByEmail(claimSet),
+ *       ),
+ *   },
  *   issuer: process.env.AUTH_OIDC_ISSUER!,
  * });
  * const authConfig = createAuthConfig({
