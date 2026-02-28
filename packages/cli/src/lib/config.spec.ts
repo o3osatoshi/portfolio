@@ -29,4 +29,13 @@ describe("lib/config", () => {
 
     expect(() => getRuntimeConfig()).toThrowError(/apiBaseUrl/i);
   });
+
+  it("throws when oidc issuer is not a valid URL", async () => {
+    vi.stubEnv("AUTH_OIDC_ISSUER", "example.auth0.com");
+    vi.stubEnv("NODE_ENV", "development");
+
+    const { getRuntimeConfig } = await import("./config");
+
+    expect(() => getRuntimeConfig()).toThrowError(/oidcIssuer/i);
+  });
 });

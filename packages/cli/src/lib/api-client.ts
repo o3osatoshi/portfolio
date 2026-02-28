@@ -134,8 +134,9 @@ async function buildUnauthorizedErrorMessage(
   return `${fallback} (${details.join(", ")})`;
 }
 
-async function ensureAccessToken(): Promise<TokenSet> {
-  const config = getRuntimeConfig();
+async function ensureAccessToken(
+  config: ReturnType<typeof getRuntimeConfig>,
+): Promise<TokenSet> {
   const token = await readTokenSet();
   if (!token) throw new Error("Not logged in. Run `o3o auth login`.");
 
@@ -179,9 +180,26 @@ function parseApiError(
   }
 }
 
+async function parseSuccessResponseBody(
+  response: Response,
+  method: RequestInit["method"],
+): Promise<undefined | unknown> {
+  const normalizedMethod = (method ?? "GET").toUpperCase();
+  if (normalizedMethod === "DELETE" || response.status === 204) {
+    return undefined;
+  }
+
+  const text = (await response.text()).trim();
+  if (!text) {
+    return undefined;
+  }
+
+  return JSON.parse(text) as unknown;
+}
+
 async function request(path: string, init: RequestInit): Promise<unknown> {
   const config = getRuntimeConfig();
-  const token = await ensureAccessToken();
+  const token = await ensureAccessToken(config);
 
   const url = new URL(path, config.apiBaseUrl).toString();
   const headers = new Headers(init.headers);
@@ -203,7 +221,5 @@ async function request(path: string, init: RequestInit): Promise<unknown> {
     throw new Error(message);
   }
 
-  const method = (init.method ?? "GET").toUpperCase();
-  if (method === "DELETE" || response.status === 204) return undefined;
-  return response.json();
+  return parseSuccessResponseBody(response, init.method);
 }

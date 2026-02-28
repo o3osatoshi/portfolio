@@ -25,6 +25,7 @@ vi.mock("./token-store", () => ({
 describe("lib/api-client", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    h.getRuntimeConfigMock.mockReset();
     h.getRuntimeConfigMock.mockReturnValue({
       oidc: {
         audience: "https://api.o3o.app",
@@ -101,5 +102,21 @@ describe("lib/api-client", () => {
       "API request failed (403): Required scope is missing: transactions:read (code=CLI_SCOPE_FORBIDDEN)",
     );
     expect(h.clearTokenSetMock).not.toHaveBeenCalled();
+  });
+
+  it("handles successful empty response bodies for update requests", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response("", { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { updateTransaction } = await import("./api-client");
+    await expect(
+      updateTransaction("tx-1", {
+        amount: "10",
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(h.getRuntimeConfigMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -5,7 +5,7 @@ import type { CliRuntimeConfig } from "./types";
 const envSchema = z.object({
   oidcAudience: z.string().min(1),
   oidcClientId: z.string().min(1),
-  oidcIssuer: z.string().min(1),
+  oidcIssuer: z.string().url(),
   oidcRedirectPort: z.coerce.number().int().min(1).max(65535),
   apiBaseUrl: z.string().url(),
 });
