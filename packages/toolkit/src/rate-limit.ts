@@ -100,10 +100,10 @@ export type RateLimitStore = {
  */
 export function createRateLimitGuard<T>(
   options: CreateRateLimitGuardOptions<T>,
-) {
+): (input: T) => ResultAsync<void, RichError> {
   const failureMode = options.failureMode ?? "fail-closed";
 
-  return (input: T): ResultAsync<void, RichError> => {
+  return (input) => {
     let chain: ResultAsync<void, RichError> = okAsync(undefined);
 
     for (const rule of options.rules) {
