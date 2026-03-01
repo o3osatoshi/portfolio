@@ -3,6 +3,7 @@ import type { ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { createTransaction } from "../../lib/api-client";
+import { type OutputMode, printSuccessData } from "../../lib/output";
 
 type CreateArgs = {
   amount: string;
@@ -15,7 +16,10 @@ type CreateArgs = {
   type: "BUY" | "SELL";
 };
 
-export function runTxCreate(args: CreateArgs): ResultAsync<void, RichError> {
+export function runTxCreate(
+  args: CreateArgs,
+  outputMode: OutputMode = "text",
+): ResultAsync<void, RichError> {
   return createTransaction({
     amount: args.amount,
     currency: args.currency,
@@ -26,7 +30,9 @@ export function runTxCreate(args: CreateArgs): ResultAsync<void, RichError> {
     ...(args.profitLoss ? { profitLoss: args.profitLoss } : {}),
     type: args.type,
   }).map((created) => {
-    console.log(JSON.stringify(created, null, 2));
+    printSuccessData("tx.create", created, outputMode, (data) => {
+      console.log(JSON.stringify(data, null, 2));
+    });
     return undefined;
   });
 }

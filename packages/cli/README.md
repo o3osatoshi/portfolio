@@ -33,6 +33,28 @@ o3o tx list --json
 
 By default, the CLI uses built-in production runtime settings, so no environment variables are required for normal usage.
 
+## Codex / Automation First Usage
+
+For tool-driven execution (Codex, CI, scripts), use global JSON output:
+
+```bash
+o3o --output json auth whoami
+o3o --output json tx list
+o3o --output json tx create --type BUY --datetime 2026-01-01T00:00:00.000Z --amount 1 --price 100 --currency USD
+o3o --output json tx delete --id <id> --yes
+```
+
+Behavior in JSON mode:
+
+- Success: `{"ok":true,"command":"...","data":...,"meta":{"schemaVersion":"v1"}}` or `{"ok":true,"command":"...","message":"...","meta":{"schemaVersion":"v1"}}`
+- Error: `{"ok":false,"error":{"code":"...","kind":"...","layer":"...","message":"...","reason":"..."},"meta":{"schemaVersion":"v1"}}`
+- `tx delete` requires `--yes` (no interactive prompt in machine-oriented flows)
+
+Default output mode is `auto`:
+
+- Interactive terminal (TTY): text output
+- Non-interactive environment (Codex/CI/pipes): JSON output
+
 ## Authentication
 
 `o3o auth login` supports two modes:
@@ -67,7 +89,9 @@ o3o --env-file .env.local tx list --json
 ### Basic
 
 ```bash
+o3o help
 o3o hello
+o3o [--output auto|text|json] ...
 o3o auth login [--pkce|--device]
 o3o auth whoami
 o3o auth logout
@@ -96,5 +120,7 @@ o3o tx delete --id <id> [--yes]
   - Ensure your API permissions/scopes are granted to the authenticated user.
 - `Unauthorized. Please run o3o auth login.`
   - Re-run `o3o auth login`, then retry the command.
+- `tx delete requires --yes in non-interactive mode.`
+  - Add `--yes` when running from Codex/CI/shell automation.
 - `Secure token storage (OS keychain) is unavailable`
   - If you explicitly accept file-based token storage for this environment, run with `O3O_ALLOW_FILE_TOKEN_STORE=1`.

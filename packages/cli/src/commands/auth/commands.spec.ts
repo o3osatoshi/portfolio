@@ -189,4 +189,34 @@ describe("commands/auth", () => {
       ),
     );
   });
+
+  it("runAuthWhoami prints machine-readable envelope in json output mode", async () => {
+    h.fetchMeMock.mockReturnValueOnce(
+      okAsync({
+        issuer: "https://example.auth0.com",
+        scopes: ["transactions:read"],
+        subject: "auth0|123",
+        userId: "user-1",
+      }),
+    );
+
+    const result = await runAuthWhoami("json");
+
+    expect(result.isOk()).toBe(true);
+    expect(console.log).toHaveBeenCalledWith(
+      JSON.stringify({
+        command: "auth.whoami",
+        data: {
+          issuer: "https://example.auth0.com",
+          scopes: ["transactions:read"],
+          subject: "auth0|123",
+          userId: "user-1",
+        },
+        meta: {
+          schemaVersion: "v1",
+        },
+        ok: true,
+      }),
+    );
+  });
 });

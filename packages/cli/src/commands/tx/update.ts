@@ -3,6 +3,7 @@ import type { ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { updateTransaction } from "../../lib/api-client";
+import { type OutputMode, printSuccessMessage } from "../../lib/output";
 
 type UpdateArgs = {
   amount?: string | undefined;
@@ -16,7 +17,10 @@ type UpdateArgs = {
   type?: "BUY" | "SELL" | undefined;
 };
 
-export function runTxUpdate(args: UpdateArgs): ResultAsync<void, RichError> {
+export function runTxUpdate(
+  args: UpdateArgs,
+  outputMode: OutputMode = "text",
+): ResultAsync<void, RichError> {
   return updateTransaction(args.id, {
     ...(args.amount ? { amount: args.amount } : {}),
     ...(args.currency ? { currency: args.currency } : {}),
@@ -27,7 +31,7 @@ export function runTxUpdate(args: UpdateArgs): ResultAsync<void, RichError> {
     ...(args.profitLoss ? { profitLoss: args.profitLoss } : {}),
     ...(args.type ? { type: args.type } : {}),
   }).map(() => {
-    console.log("Updated.");
+    printSuccessMessage("tx.update", "Updated.", outputMode);
     return undefined;
   });
 }

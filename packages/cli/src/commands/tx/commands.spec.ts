@@ -29,6 +29,9 @@ import { runTxDelete } from "./delete";
 import { runTxList } from "./list";
 import { runTxUpdate } from "./update";
 
+const originalStdinIsTty = process.stdin.isTTY;
+const originalStdoutIsTty = process.stdout.isTTY;
+
 describe("commands/tx", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -44,6 +47,15 @@ describe("commands/tx", () => {
     h.listTransactionsMock.mockReturnValue(okAsync([]));
     vi.spyOn(console, "log").mockImplementation(() => {});
     vi.spyOn(console, "table").mockImplementation(() => {});
+
+    Object.defineProperty(process.stdin, "isTTY", {
+      configurable: true,
+      value: originalStdinIsTty,
+    });
+    Object.defineProperty(process.stdout, "isTTY", {
+      configurable: true,
+      value: originalStdoutIsTty,
+    });
   });
 
   it("runTxCreate maps args and prints created transaction JSON", async () => {
@@ -185,5 +197,66 @@ describe("commands/tx", () => {
 
     expect(result.isOk()).toBe(true);
     expect(console.table).toHaveBeenCalledWith(rows);
+  });
+
+  it("runTxList prints machine-readable envelope in json output mode", async () => {
+    const rows = [
+      {
+        id: "tx-8",
+        amount: "1",
+        type: "BUY",
+      },
+    ];
+    h.listTransactionsMock.mockReturnValueOnce(okAsync(rows));
+
+    const result = await runTxList(false, "json");
+
+    expect(result.isOk()).toBe(true);
+    expect(console.log).toHaveBeenCalledWith(
+      JSON.stringify({
+        command: "tx.list",
+        data: rows,
+        meta: {
+          schemaVersion: "v1",
+        },
+        ok: true,
+      }),
+    );
+    expect(console.table).not.toHaveBeenCalled();
+  });
+
+  it("runTxDelete requires --yes in json output mode", async () => {
+    const result = await runTxDelete("tx-9", false, "json");
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toBe(
+      "tx delete requires --yes when --output json is used.",
+    );
+    expect(h.questionMock).not.toHaveBeenCalled();
+    expect(h.deleteTransactionMock).not.toHaveBeenCalled();
+  });
+
+  it("runTxDelete requires --yes in non-interactive mode", async () => {
+    Object.defineProperty(process.stdin, "isTTY", {
+      configurable: true,
+      value: false,
+    });
+    Object.defineProperty(process.stdout, "isTTY", {
+      configurable: true,
+      value: false,
+    });
+
+    const result = await runTxDelete("tx-10", false, "text");
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toBe(
+      "tx delete requires --yes in non-interactive mode.",
+    );
+    expect(h.questionMock).not.toHaveBeenCalled();
+    expect(h.deleteTransactionMock).not.toHaveBeenCalled();
   });
 });
