@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { cliErrorCodes } from "./cli-error-catalog";
+
 describe("lib/config", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -15,27 +17,37 @@ describe("lib/config", () => {
     delete process.env["PORTFOLIO_API_BASE_URL"];
 
     const { getRuntimeConfig } = await import("./config");
-    const config = getRuntimeConfig();
+    const result = getRuntimeConfig();
 
-    expect(config.apiBaseUrl).toBe("http://localhost:3000");
+    expect(result.isOk()).toBe(true);
+    if (result.isErr()) throw new Error("Expected ok result");
+    expect(result.value.apiBaseUrl).toBe("http://localhost:3000");
   });
 
-  it("throws in production when apiBaseUrl is not configured", async () => {
+  it("returns validation error in production when apiBaseUrl is not configured", async () => {
     vi.stubEnv("NODE_ENV", "production");
     delete process.env["O3O_API_BASE_URL"];
     delete process.env["PORTFOLIO_API_BASE_URL"];
 
     const { getRuntimeConfig } = await import("./config");
+    const result = getRuntimeConfig();
 
-    expect(() => getRuntimeConfig()).toThrowError(/apiBaseUrl/i);
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
+    expect(result.error.details?.reason).toMatch(/apiBaseUrl/i);
   });
 
-  it("throws when oidc issuer is not a valid URL", async () => {
+  it("returns validation error when oidc issuer is not a valid URL", async () => {
     vi.stubEnv("AUTH_OIDC_ISSUER", "example.auth0.com");
     vi.stubEnv("NODE_ENV", "development");
 
     const { getRuntimeConfig } = await import("./config");
+    const result = getRuntimeConfig();
 
-    expect(() => getRuntimeConfig()).toThrowError(/oidcIssuer/i);
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
+    expect(result.error.details?.reason).toMatch(/oidcIssuer/i);
   });
 });

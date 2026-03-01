@@ -1,3 +1,4 @@
+import { errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
@@ -37,20 +38,27 @@ describe("commands/auth", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     h.getRuntimeConfigMock.mockReset();
-    h.getRuntimeConfigMock.mockReturnValue({
-      oidc: {
-        audience: "https://api.o3o.app",
-        clientId: "cli-client-id",
-        issuer: "https://example.auth0.com",
-        redirectPort: 38080,
-      },
-    });
+    h.getRuntimeConfigMock.mockReturnValue(
+      ok({
+        oidc: {
+          audience: "https://api.o3o.app",
+          clientId: "cli-client-id",
+          issuer: "https://example.auth0.com",
+          redirectPort: 38080,
+        },
+        apiBaseUrl: "http://localhost:3000",
+      }),
+    );
     h.loginWithOidcMock.mockReset();
     h.writeTokenSetMock.mockReset();
     h.readTokenSetMock.mockReset();
     h.revokeRefreshTokenMock.mockReset();
     h.clearTokenSetMock.mockReset();
     h.fetchMeMock.mockReset();
+    h.writeTokenSetMock.mockReturnValue(okAsync(undefined));
+    h.clearTokenSetMock.mockReturnValue(okAsync(undefined));
+    h.readTokenSetMock.mockReturnValue(okAsync(null));
+    h.revokeRefreshTokenMock.mockReturnValue(okAsync(undefined));
     vi.spyOn(console, "log").mockImplementation(() => {});
   });
 
@@ -62,10 +70,11 @@ describe("commands/auth", () => {
       scope: "openid profile",
       token_type: "Bearer",
     };
-    h.loginWithOidcMock.mockResolvedValueOnce(token);
+    h.loginWithOidcMock.mockReturnValueOnce(okAsync(token));
 
-    await runAuthLogin("auto");
+    const result = await runAuthLogin("auto");
 
+    expect(result.isOk()).toBe(true);
     expect(h.loginWithOidcMock).toHaveBeenCalledWith(
       {
         audience: "https://api.o3o.app",
@@ -80,13 +89,16 @@ describe("commands/auth", () => {
   });
 
   it("runAuthLogout revokes refresh token when available", async () => {
-    h.readTokenSetMock.mockResolvedValueOnce({
-      access_token: "access-token",
-      refresh_token: "refresh-token",
-    });
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+        refresh_token: "refresh-token",
+      }),
+    );
 
-    await runAuthLogout();
+    const result = await runAuthLogout();
 
+    expect(result.isOk()).toBe(true);
     expect(h.revokeRefreshTokenMock).toHaveBeenCalledWith(
       {
         audience: "https://api.o3o.app",
@@ -101,41 +113,52 @@ describe("commands/auth", () => {
   });
 
   it("runAuthLogout skips revoke when refresh token is absent", async () => {
-    h.readTokenSetMock.mockResolvedValueOnce({
-      access_token: "access-token",
-    });
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+      }),
+    );
 
-    await runAuthLogout();
+    const result = await runAuthLogout();
 
+    expect(result.isOk()).toBe(true);
     expect(h.revokeRefreshTokenMock).not.toHaveBeenCalled();
     expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
     expect(console.log).toHaveBeenCalledWith("Logged out.");
   });
 
   it("runAuthLogout still clears local tokens when revoke fails", async () => {
-    h.readTokenSetMock.mockResolvedValueOnce({
-      access_token: "access-token",
-      refresh_token: "refresh-token",
-    });
-    h.revokeRefreshTokenMock.mockRejectedValueOnce(new Error("boom"));
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+        refresh_token: "refresh-token",
+      }),
+    );
+    h.revokeRefreshTokenMock.mockReturnValueOnce(
+      errAsync(new Error("boom") as never),
+    );
 
-    await runAuthLogout();
+    const result = await runAuthLogout();
 
+    expect(result.isOk()).toBe(true);
     expect(h.revokeRefreshTokenMock).toHaveBeenCalledTimes(1);
     expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
     expect(console.log).toHaveBeenCalledWith("Logged out.");
   });
 
   it("runAuthWhoami prints formatted JSON", async () => {
-    h.fetchMeMock.mockResolvedValueOnce({
-      issuer: "https://example.auth0.com",
-      scopes: ["transactions:read"],
-      subject: "auth0|123",
-      userId: "user-1",
-    });
+    h.fetchMeMock.mockReturnValueOnce(
+      okAsync({
+        issuer: "https://example.auth0.com",
+        scopes: ["transactions:read"],
+        subject: "auth0|123",
+        userId: "user-1",
+      }),
+    );
 
-    await runAuthWhoami();
+    const result = await runAuthWhoami();
 
+    expect(result.isOk()).toBe(true);
     expect(console.log).toHaveBeenCalledWith(
       JSON.stringify(
         {

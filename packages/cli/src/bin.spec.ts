@@ -1,3 +1,4 @@
+import { okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
@@ -57,14 +58,14 @@ async function runBin(args: string[]): Promise<void> {
 
 describe("bin", () => {
   beforeEach(() => {
-    h.runAuthLoginMock.mockReset().mockResolvedValue(undefined);
-    h.runAuthLogoutMock.mockReset().mockResolvedValue(undefined);
-    h.runAuthWhoamiMock.mockReset().mockResolvedValue(undefined);
-    h.runHelloMock.mockReset().mockResolvedValue(undefined);
-    h.runTxCreateMock.mockReset().mockResolvedValue(undefined);
-    h.runTxDeleteMock.mockReset().mockResolvedValue(undefined);
-    h.runTxListMock.mockReset().mockResolvedValue(undefined);
-    h.runTxUpdateMock.mockReset().mockResolvedValue(undefined);
+    h.runAuthLoginMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runAuthLogoutMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runAuthWhoamiMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runHelloMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runTxCreateMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runTxDeleteMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runTxListMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runTxUpdateMock.mockReset().mockReturnValue(okAsync(undefined));
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "log").mockImplementation(() => {});
   });
@@ -134,7 +135,7 @@ describe("bin", () => {
 
     expect(h.runTxCreateMock).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith(
-      "tx create requires --type --datetime --amount --price --currency",
+      "tx create requires --type --datetime --amount --price --currency (code=CLI_COMMAND_INVALID_ARGUMENT)",
     );
     expect(process.exitCode).toBe(1);
   });
@@ -143,7 +144,9 @@ describe("bin", () => {
     await runBin(["tx", "update", "--type", "BUY"]);
 
     expect(h.runTxUpdateMock).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith("tx update requires --id");
+    expect(console.error).toHaveBeenCalledWith(
+      "tx update requires --id (code=CLI_COMMAND_INVALID_ARGUMENT)",
+    );
     expect(process.exitCode).toBe(1);
   });
 
@@ -151,7 +154,9 @@ describe("bin", () => {
     await runBin(["tx", "delete"]);
 
     expect(h.runTxDeleteMock).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith("tx delete requires --id");
+    expect(console.error).toHaveBeenCalledWith(
+      "tx delete requires --id (code=CLI_COMMAND_INVALID_ARGUMENT)",
+    );
     expect(process.exitCode).toBe(1);
   });
 

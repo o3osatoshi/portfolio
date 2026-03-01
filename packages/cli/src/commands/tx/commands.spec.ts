@@ -1,3 +1,4 @@
+import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
@@ -37,19 +38,25 @@ describe("commands/tx", () => {
     h.listTransactionsMock.mockReset();
     h.questionMock.mockReset();
     h.closeMock.mockReset();
+    h.createTransactionMock.mockReturnValue(okAsync(undefined));
+    h.updateTransactionMock.mockReturnValue(okAsync(undefined));
+    h.deleteTransactionMock.mockReturnValue(okAsync(undefined));
+    h.listTransactionsMock.mockReturnValue(okAsync([]));
     vi.spyOn(console, "log").mockImplementation(() => {});
     vi.spyOn(console, "table").mockImplementation(() => {});
   });
 
   it("runTxCreate maps args and prints created transaction JSON", async () => {
-    h.createTransactionMock.mockResolvedValueOnce({
-      id: "tx-1",
-      amount: "1",
-      currency: "USD",
-      type: "BUY",
-    });
+    h.createTransactionMock.mockReturnValueOnce(
+      okAsync({
+        id: "tx-1",
+        amount: "1",
+        currency: "USD",
+        type: "BUY",
+      }),
+    );
 
-    await runTxCreate({
+    const result = await runTxCreate({
       amount: "1",
       currency: "USD",
       datetime: "2026-01-01T00:00:00.000Z",
@@ -57,6 +64,7 @@ describe("commands/tx", () => {
       type: "BUY",
     });
 
+    expect(result.isOk()).toBe(true);
     expect(h.createTransactionMock).toHaveBeenCalledWith({
       amount: "1",
       currency: "USD",
@@ -79,15 +87,16 @@ describe("commands/tx", () => {
   });
 
   it("runTxUpdate maps partial args and prints completion message", async () => {
-    h.updateTransactionMock.mockResolvedValueOnce(undefined);
+    h.updateTransactionMock.mockReturnValueOnce(okAsync(undefined));
 
-    await runTxUpdate({
+    const result = await runTxUpdate({
       id: "tx-2",
       amount: "2",
       price: "200",
       type: "SELL",
     });
 
+    expect(result.isOk()).toBe(true);
     expect(h.updateTransactionMock).toHaveBeenCalledWith("tx-2", {
       amount: "2",
       price: "200",
@@ -97,10 +106,11 @@ describe("commands/tx", () => {
   });
 
   it("runTxDelete skips prompt when confirmed=true", async () => {
-    h.deleteTransactionMock.mockResolvedValueOnce(undefined);
+    h.deleteTransactionMock.mockReturnValueOnce(okAsync(undefined));
 
-    await runTxDelete("tx-3", true);
+    const result = await runTxDelete("tx-3", true);
 
+    expect(result.isOk()).toBe(true);
     expect(h.questionMock).not.toHaveBeenCalled();
     expect(h.deleteTransactionMock).toHaveBeenCalledWith("tx-3");
     expect(console.log).toHaveBeenCalledWith("Deleted.");
@@ -109,8 +119,9 @@ describe("commands/tx", () => {
   it("runTxDelete cancels when user does not confirm", async () => {
     h.questionMock.mockResolvedValueOnce("n");
 
-    await runTxDelete("tx-4", false);
+    const result = await runTxDelete("tx-4", false);
 
+    expect(result.isOk()).toBe(true);
     expect(h.questionMock).toHaveBeenCalledTimes(1);
     expect(h.deleteTransactionMock).not.toHaveBeenCalled();
     expect(h.closeMock).toHaveBeenCalledTimes(1);
@@ -119,10 +130,11 @@ describe("commands/tx", () => {
 
   it("runTxDelete proceeds when user confirms", async () => {
     h.questionMock.mockResolvedValueOnce("yes");
-    h.deleteTransactionMock.mockResolvedValueOnce(undefined);
+    h.deleteTransactionMock.mockReturnValueOnce(okAsync(undefined));
 
-    await runTxDelete("tx-5", false);
+    const result = await runTxDelete("tx-5", false);
 
+    expect(result.isOk()).toBe(true);
     expect(h.questionMock).toHaveBeenCalledTimes(1);
     expect(h.deleteTransactionMock).toHaveBeenCalledWith("tx-5");
     expect(h.closeMock).toHaveBeenCalledTimes(1);
@@ -130,16 +142,19 @@ describe("commands/tx", () => {
   });
 
   it("runTxList prints JSON when asJson=true", async () => {
-    h.listTransactionsMock.mockResolvedValueOnce([
-      {
-        id: "tx-6",
-        amount: "1",
-        type: "BUY",
-      },
-    ]);
+    h.listTransactionsMock.mockReturnValueOnce(
+      okAsync([
+        {
+          id: "tx-6",
+          amount: "1",
+          type: "BUY",
+        },
+      ]),
+    );
 
-    await runTxList(true);
+    const result = await runTxList(true);
 
+    expect(result.isOk()).toBe(true);
     expect(console.log).toHaveBeenCalledWith(
       JSON.stringify(
         [
@@ -164,10 +179,11 @@ describe("commands/tx", () => {
         type: "BUY",
       },
     ];
-    h.listTransactionsMock.mockResolvedValueOnce(rows);
+    h.listTransactionsMock.mockReturnValueOnce(okAsync(rows));
 
-    await runTxList(false);
+    const result = await runTxList(false);
 
+    expect(result.isOk()).toBe(true);
     expect(console.table).toHaveBeenCalledWith(rows);
   });
 });

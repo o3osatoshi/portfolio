@@ -55,19 +55,23 @@ describe("lib/token-store", () => {
       "./token-store"
     );
 
-    await writeTokenSet({
+    const writeResult = await writeTokenSet({
       access_token: "access-token",
       expires_at: 1735689600,
       refresh_token: "refresh-token",
       scope: "openid profile",
       token_type: "Bearer",
     });
+    expect(writeResult.isOk()).toBe(true);
 
     expect(existsSync(tokenPath)).toBe(true);
     expect(statSync(tokenPath).mode & 0o777).toBe(0o600);
     expect(console.warn).toHaveBeenCalledTimes(1);
 
-    const loaded = await readTokenSet();
+    const loadedResult = await readTokenSet();
+    expect(loadedResult.isOk()).toBe(true);
+    if (loadedResult.isErr()) throw new Error("Expected ok result");
+    const loaded = loadedResult.value;
     expect(loaded).toEqual({
       access_token: "access-token",
       expires_at: 1735689600,
@@ -76,7 +80,8 @@ describe("lib/token-store", () => {
       token_type: "Bearer",
     });
 
-    await clearTokenSet();
+    const clearResult = await clearTokenSet();
+    expect(clearResult.isOk()).toBe(true);
     expect(existsSync(tokenPath)).toBe(false);
   });
 
@@ -86,6 +91,9 @@ describe("lib/token-store", () => {
     writeFileSync(tokenPath, "{broken-json", "utf8");
 
     const { readTokenSet } = await import("./token-store");
-    await expect(readTokenSet()).resolves.toBeNull();
+    const result = await readTokenSet();
+    expect(result.isOk()).toBe(true);
+    if (result.isErr()) throw new Error("Expected ok result");
+    expect(result.value).toBeNull();
   });
 });
