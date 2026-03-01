@@ -52,6 +52,22 @@ export type LoginWithOidcOptions = {
 };
 // Keep callback wait bounded to avoid dangling local servers in failed login flows.
 const PKCE_CALLBACK_TIMEOUT_MS = 180_000;
+const callbackHtmlStyles =
+  'body{margin:40px auto;max-width:640px;padding:0 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;color:#111827}h1{font-size:22px;line-height:1.3;margin:0 0 12px}.status-success{color:#14532d}.status-error{color:#991b1b}p{margin:8px 0}';
+const callbackPageHeaders = {
+  cacheControl: "no-store",
+  contentSecurityPolicy:
+    "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+  contentType: "text/html; charset=utf-8",
+  pragma: "no-cache",
+  xContentTypeOptions: "nosniff",
+} as const;
+type CallbackPageContent = {
+  kind: "error" | "success";
+  messageLine1: string;
+  messageLine2: string;
+  title: string;
+};
 
 export function loginWithOidc(
   config: OidcConfig,
@@ -134,6 +150,15 @@ async function discover(issuer: string) {
   }
   const json = await res.json();
   return discoverySchema.parse(json);
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function info(
@@ -288,18 +313,40 @@ async function loginByPkce(
         return;
       }
 
+      const oauthError = url.searchParams.get("error");
+      if (oauthError) {
+        sendCallbackPage(res, {
+          kind: "error",
+          messageLine1: "Authorization was not completed.",
+          messageLine2: "Return to your terminal and run o3o auth login again.",
+          title: "Sign-in failed",
+        });
+        cleanup();
+        reject(new Error("OAuth authorization failed."));
+        return;
+      }
+
       const returnedState = url.searchParams.get("state");
       const code = url.searchParams.get("code");
       if (!code || returnedState !== state) {
-        res.statusCode = 400;
-        res.end("OAuth callback validation failed.");
+        sendCallbackPage(res, {
+          kind: "error",
+          messageLine1: "Authorization was not completed.",
+          messageLine2: "Return to your terminal and run o3o auth login again.",
+          title: "Sign-in failed",
+        });
         cleanup();
         reject(new Error("OAuth callback validation failed."));
         return;
       }
 
-      res.statusCode = 200;
-      res.end("Login completed. You can close this tab.");
+      sendCallbackPage(res, {
+        kind: "success",
+        messageLine1: "You can close this window and return to your terminal.",
+        messageLine2:
+          "Continue in the same terminal where you ran o3o auth login.",
+        title: "Sign-in complete",
+      });
       cleanup();
       resolve(code);
     };
@@ -480,6 +527,42 @@ async function revokeRefreshTokenUnsafe(
   if (!response.ok) {
     throw new Error(`Revocation request failed (${response.status})`);
   }
+}
+
+function sendCallbackPage(
+  res: ServerResponse,
+  input: CallbackPageContent,
+): void {
+  const headingClass =
+    input.kind === "success" ? "status-success" : "status-error";
+  const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(input.title)}</title>
+    <style>${callbackHtmlStyles}</style>
+  </head>
+  <body>
+    <h1 class="${headingClass}">${escapeHtml(input.title)}</h1>
+    <p>${escapeHtml(input.messageLine1)}</p>
+    <p>${escapeHtml(input.messageLine2)}</p>
+  </body>
+</html>`;
+
+  res.statusCode = 200;
+  res.setHeader("cache-control", callbackPageHeaders.cacheControl);
+  res.setHeader(
+    "content-security-policy",
+    callbackPageHeaders.contentSecurityPolicy,
+  );
+  res.setHeader("content-type", callbackPageHeaders.contentType);
+  res.setHeader("pragma", callbackPageHeaders.pragma);
+  res.setHeader(
+    "x-content-type-options",
+    callbackPageHeaders.xContentTypeOptions,
+  );
+  res.end(html);
 }
 
 function shouldFallbackToDeviceFlow(error: unknown): boolean {
