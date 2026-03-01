@@ -257,6 +257,7 @@ async function createCliEnv(
   const homeDir = await mkdtemp(join(tmpdir(), "o3o-cli-e2e-home-"));
   tempHomes.push(homeDir);
 
+  // @ts-expect-error
   return {
     HOME: homeDir,
     NO_COLOR: "1",
