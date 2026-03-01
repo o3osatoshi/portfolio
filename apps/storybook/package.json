@@ -10,8 +10,8 @@
     "clean": "rimraf storybook-static",
     "dev": "storybook dev -p 6006",
     "preview-storybook": "serve storybook-static",
-    "test": "vitest run --browser --project=storybook",
-    "test:cvrg": "vitest run --browser --coverage --project=storybook",
+    "test": "vitest run --project=storybook",
+    "test:cvrg": "vitest run --coverage --project=storybook",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
