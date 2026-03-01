@@ -1,14 +1,14 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { newRichError, parseWith } from "@o3osatoshi/toolkit";
+import { newRichError, parseWith, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
 import { toAsync } from "./cli-result";
 import { getRuntimeConfig } from "./config";
 import { refreshToken } from "./oidc";
 import { clearTokenSet, readTokenSet, writeTokenSet } from "./token-store";
-import type { CliResultAsync, CliRuntimeConfig, TokenSet } from "./types";
+import type { CliRuntimeConfig, TokenSet } from "./types";
 
 const meSchema = z.object({
   issuer: z.string(),
@@ -47,7 +47,7 @@ export type TransactionResponse = z.infer<typeof transactionSchema>;
 
 export function createTransaction(
   payload: Record<string, unknown>,
-): CliResultAsync<TransactionResponse> {
+): ResultAsync<TransactionResponse, RichError> {
   return request("/api/cli/v1/transactions", {
     body: JSON.stringify(payload),
     headers: {
@@ -64,13 +64,13 @@ export function createTransaction(
   );
 }
 
-export function deleteTransaction(id: string): CliResultAsync<void> {
+export function deleteTransaction(id: string): ResultAsync<void, RichError> {
   return request(`/api/cli/v1/transactions/${encodeURIComponent(id)}`, {
     method: "DELETE",
   }).map(() => undefined);
 }
 
-export function fetchMe(): CliResultAsync<MeResponse> {
+export function fetchMe(): ResultAsync<MeResponse, RichError> {
   return request("/api/cli/v1/me", {
     method: "GET",
   }).andThen((json) =>
@@ -83,7 +83,10 @@ export function fetchMe(): CliResultAsync<MeResponse> {
   );
 }
 
-export function listTransactions(): CliResultAsync<TransactionResponse[]> {
+export function listTransactions(): ResultAsync<
+  TransactionResponse[],
+  RichError
+> {
   return request("/api/cli/v1/transactions", {
     method: "GET",
   }).andThen((json) =>
@@ -99,7 +102,7 @@ export function listTransactions(): CliResultAsync<TransactionResponse[]> {
 export function updateTransaction(
   id: string,
   payload: Record<string, unknown>,
-): CliResultAsync<void> {
+): ResultAsync<void, RichError> {
   return request(`/api/cli/v1/transactions/${encodeURIComponent(id)}`, {
     body: JSON.stringify(payload),
     headers: {
@@ -109,7 +112,9 @@ export function updateTransaction(
   }).map(() => undefined);
 }
 
-function ensureAccessToken(config: CliRuntimeConfig): CliResultAsync<TokenSet> {
+function ensureAccessToken(
+  config: CliRuntimeConfig,
+): ResultAsync<TokenSet, RichError> {
   return readTokenSet().andThen((token) => {
     if (!token) {
       return errAsync(
@@ -201,7 +206,7 @@ function parseApiError(
 function parseSuccessResponseBody(
   response: Response,
   method: RequestInit["method"],
-): CliResultAsync<undefined | unknown> {
+): ResultAsync<undefined | unknown, RichError> {
   const normalizedMethod = (method ?? "GET").toUpperCase();
   if (normalizedMethod === "DELETE" || response.status === 204) {
     return okAsync(undefined);
@@ -243,7 +248,10 @@ function parseSuccessResponseBody(
   });
 }
 
-function request(path: string, init: RequestInit): CliResultAsync<unknown> {
+function request(
+  path: string,
+  init: RequestInit,
+): ResultAsync<unknown, RichError> {
   return toAsync(getRuntimeConfig()).andThen((config) =>
     ensureAccessToken(config).andThen((token) => {
       const url = new URL(path, config.apiBaseUrl).toString();

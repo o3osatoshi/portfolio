@@ -1,5 +1,8 @@
+import type { ResultAsync } from "neverthrow";
+
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { updateTransaction } from "../../lib/api-client";
-import type { CliResultAsync } from "../../lib/types";
 
 type UpdateArgs = {
   amount?: string | undefined;
@@ -13,7 +16,7 @@ type UpdateArgs = {
   type?: "BUY" | "SELL" | undefined;
 };
 
-export function runTxUpdate(args: UpdateArgs): CliResultAsync<void> {
+export function runTxUpdate(args: UpdateArgs): ResultAsync<void, RichError> {
   return updateTransaction(args.id, {
     ...(args.amount ? { amount: args.amount } : {}),
     ...(args.currency ? { currency: args.currency } : {}),

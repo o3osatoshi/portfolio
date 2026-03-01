@@ -1,12 +1,12 @@
 import { config as dotenvConfig } from "dotenv";
-import { errAsync, okAsync } from "neverthrow";
+import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
-import { newRichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
-import type { CliResultAsync } from "./types";
-
-export function loadRuntimeEnvFile(path?: string): CliResultAsync<void> {
+export function loadRuntimeEnvFile(
+  path?: string,
+): ResultAsync<void, RichError> {
   if (!path) {
     return okAsync(undefined);
   }

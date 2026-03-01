@@ -1,11 +1,11 @@
-import { err, ok } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 import { z } from "zod";
 
-import { newRichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
 import { DEFAULT_RUNTIME_CONFIG } from "./default-runtime-config";
-import type { CliResult, CliRuntimeConfig } from "./types";
+import type { CliRuntimeConfig } from "./types";
 
 const envSchema = z.object({
   oidcAudience: z.string().min(1),
@@ -15,7 +15,7 @@ const envSchema = z.object({
   apiBaseUrl: z.string().url(),
 });
 
-export function getRuntimeConfig(): CliResult<CliRuntimeConfig> {
+export function getRuntimeConfig(): Result<CliRuntimeConfig, RichError> {
   const parsed = envSchema.safeParse({
     oidcAudience:
       process.env["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_CONFIG.oidc.audience,

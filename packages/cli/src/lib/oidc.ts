@@ -10,10 +10,10 @@ import { promisify } from "node:util";
 import { ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { toRichError } from "@o3osatoshi/toolkit";
+import { type RichError, toRichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
-import type { CliResultAsync, OidcConfig, TokenSet } from "./types";
+import type { OidcConfig, TokenSet } from "./types";
 
 const execFileAsync = promisify(execFile);
 
@@ -52,7 +52,7 @@ const PKCE_CALLBACK_TIMEOUT_MS = 180_000;
 export function loginWithOidc(
   config: OidcConfig,
   mode: LoginMode,
-): CliResultAsync<TokenSet> {
+): ResultAsync<TokenSet, RichError> {
   return ResultAsync.fromPromise(loginWithOidcUnsafe(config, mode), (cause) =>
     toRichError(cause, {
       code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
@@ -70,7 +70,7 @@ export function loginWithOidc(
 export function refreshToken(
   config: OidcConfig,
   refreshTokenValue: string,
-): CliResultAsync<TokenSet> {
+): ResultAsync<TokenSet, RichError> {
   return ResultAsync.fromPromise(
     refreshTokenUnsafe(config, refreshTokenValue),
     (cause) =>
@@ -90,7 +90,7 @@ export function refreshToken(
 export function revokeRefreshToken(
   config: OidcConfig,
   refreshTokenValue: string,
-): CliResultAsync<void> {
+): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
     revokeRefreshTokenUnsafe(config, refreshTokenValue),
     (cause) =>

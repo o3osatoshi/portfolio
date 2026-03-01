@@ -7,10 +7,10 @@ import { promisify } from "node:util";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { newRichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
-import type { CliResultAsync, TokenSet } from "./types";
+import type { TokenSet } from "./types";
 
 const execFileAsync = promisify(execFile);
 
@@ -27,7 +27,7 @@ const ACCOUNT = "default";
 const filePath = join(homedir(), ".config", "o3o", "auth.json");
 let didWarnFileFallback = false;
 
-export function clearTokenSet(): CliResultAsync<void> {
+export function clearTokenSet(): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
     (async () => {
       await tryDeleteKeychain();
@@ -48,7 +48,7 @@ export function clearTokenSet(): CliResultAsync<void> {
   );
 }
 
-export function readTokenSet(): CliResultAsync<null | TokenSet> {
+export function readTokenSet(): ResultAsync<null | TokenSet, RichError> {
   return tryReadKeychain().andThen((keychainValue) => {
     if (keychainValue) return okAsync(keychainValue);
 
@@ -76,7 +76,9 @@ export function readTokenSet(): CliResultAsync<null | TokenSet> {
   });
 }
 
-export function writeTokenSet(tokenSet: TokenSet): CliResultAsync<void> {
+export function writeTokenSet(
+  tokenSet: TokenSet,
+): ResultAsync<void, RichError> {
   const parsed = tokenSchema.safeParse(tokenSet);
   if (!parsed.success) {
     return errAsync(
@@ -179,7 +181,7 @@ function tryDeleteKeychain(): Promise<void> {
   })();
 }
 
-function tryReadKeychain(): CliResultAsync<null | TokenSet> {
+function tryReadKeychain(): ResultAsync<null | TokenSet, RichError> {
   return ResultAsync.fromPromise(
     (async () => {
       try {

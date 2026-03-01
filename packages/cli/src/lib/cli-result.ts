@@ -1,13 +1,15 @@
 import { errAsync, okAsync, Result, ResultAsync } from "neverthrow";
 
-import { type NewRichError, toRichError } from "@o3osatoshi/toolkit";
-
-import type { CliResult, CliResultAsync } from "./types";
+import {
+  type NewRichError,
+  type RichError,
+  toRichError,
+} from "@o3osatoshi/toolkit";
 
 export function fromPromise<T>(
   promise: Promise<T>,
   fallback: Partial<NewRichError>,
-): CliResultAsync<T> {
+): ResultAsync<T, RichError> {
   return ResultAsync.fromPromise(promise, (cause) =>
     toRichError(cause, fallback),
   );
@@ -16,15 +18,17 @@ export function fromPromise<T>(
 export function fromThrowable<T>(
   fn: () => T,
   fallback: Partial<NewRichError>,
-): CliResult<T> {
+): Result<T, RichError> {
   return Result.fromThrowable(fn, (cause) => toRichError(cause, fallback))();
 }
 
-export function okVoidAsync(): CliResultAsync<void> {
+export function okVoidAsync(): ResultAsync<void, RichError> {
   return okAsync(undefined);
 }
 
-export function toAsync<T>(result: CliResult<T>): CliResultAsync<T> {
+export function toAsync<T>(
+  result: Result<T, RichError>,
+): ResultAsync<T, RichError> {
   return result.match(
     (value) => okAsync(value),
     (error) => errAsync(error),

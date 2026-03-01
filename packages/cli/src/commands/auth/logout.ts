@@ -1,12 +1,13 @@
-import { okAsync } from "neverthrow";
+import { okAsync, type ResultAsync } from "neverthrow";
+
+import type { RichError } from "@o3osatoshi/toolkit";
 
 import { toAsync } from "../../lib/cli-result";
 import { getRuntimeConfig } from "../../lib/config";
 import { revokeRefreshToken } from "../../lib/oidc";
 import { clearTokenSet, readTokenSet } from "../../lib/token-store";
-import type { CliResultAsync } from "../../lib/types";
 
-export function runAuthLogout(): CliResultAsync<void> {
+export function runAuthLogout(): ResultAsync<void, RichError> {
   return readTokenSet()
     .andThen((token) => {
       const refreshTokenValue = token?.refresh_token;

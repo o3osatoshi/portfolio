@@ -1,7 +1,10 @@
-import { listTransactions } from "../../lib/api-client";
-import type { CliResultAsync } from "../../lib/types";
+import type { ResultAsync } from "neverthrow";
 
-export function runTxList(asJson: boolean): CliResultAsync<void> {
+import type { RichError } from "@o3osatoshi/toolkit";
+
+import { listTransactions } from "../../lib/api-client";
+
+export function runTxList(asJson: boolean): ResultAsync<void, RichError> {
   return listTransactions().map((rows) => {
     if (asJson) {
       console.log(JSON.stringify(rows, null, 2));

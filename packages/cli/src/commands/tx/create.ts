@@ -1,5 +1,8 @@
+import type { ResultAsync } from "neverthrow";
+
+import type { RichError } from "@o3osatoshi/toolkit";
+
 import { createTransaction } from "../../lib/api-client";
-import type { CliResultAsync } from "../../lib/types";
 
 type CreateArgs = {
   amount: string;
@@ -12,7 +15,7 @@ type CreateArgs = {
   type: "BUY" | "SELL";
 };
 
-export function runTxCreate(args: CreateArgs): CliResultAsync<void> {
+export function runTxCreate(args: CreateArgs): ResultAsync<void, RichError> {
   return createTransaction({
     amount: args.amount,
     currency: args.currency,

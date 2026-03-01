@@ -1,8 +1,8 @@
-import { okAsync } from "neverthrow";
+import { okAsync, type ResultAsync } from "neverthrow";
 
-import type { CliResultAsync } from "../lib/types";
+import type { RichError } from "@o3osatoshi/toolkit";
 
-export function runHello(): CliResultAsync<void> {
+export function runHello(): ResultAsync<void, RichError> {
   console.log("hello world");
   return okAsync(undefined);
 }

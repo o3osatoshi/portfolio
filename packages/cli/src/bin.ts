@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
-import { err, errAsync, ok, okAsync } from "neverthrow";
+import {
+  err,
+  errAsync,
+  ok,
+  okAsync,
+  type Result,
+  type ResultAsync,
+} from "neverthrow";
 
-import { newRichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { runAuthLogin } from "./commands/auth/login";
 import { runAuthLogout } from "./commands/auth/logout";
@@ -17,7 +24,6 @@ import { cliErrorCodes } from "./lib/cli-error-catalog";
 import { toCliErrorMessage } from "./lib/cli-error-message";
 import { toAsync } from "./lib/cli-result";
 import { loadRuntimeEnvFile } from "./lib/env-file";
-import type { CliResult, CliResultAsync } from "./lib/types";
 
 type GlobalOptions = {
   commandArgv: string[];
@@ -26,14 +32,14 @@ type GlobalOptions = {
 
 export function main(
   argv: string[] = process.argv.slice(2),
-): CliResultAsync<void> {
+): ResultAsync<void, RichError> {
   return toAsync(extractGlobalOptions(argv)).andThen(
     ({ commandArgv, envFilePath }) =>
       loadRuntimeEnvFile(envFilePath).andThen(() => dispatch(commandArgv)),
   );
 }
 
-function dispatch(argv: string[]): CliResultAsync<void> {
+function dispatch(argv: string[]): ResultAsync<void, RichError> {
   const args = parseArgs(argv);
   const [group, action] = args.positionals;
 
@@ -123,7 +129,9 @@ function dispatch(argv: string[]): CliResultAsync<void> {
   return okAsync(undefined);
 }
 
-function extractGlobalOptions(argv: string[]): CliResult<GlobalOptions> {
+function extractGlobalOptions(
+  argv: string[],
+): Result<GlobalOptions, RichError> {
   const commandArgv: string[] = [];
   let envFilePath: string | undefined;
 
@@ -181,7 +189,7 @@ function extractGlobalOptions(argv: string[]): CliResult<GlobalOptions> {
   });
 }
 
-function invalidArgumentError(reason: string): CliResultAsync<void> {
+function invalidArgumentError(reason: string): ResultAsync<void, RichError> {
   return errAsync(
     newRichError({
       code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,

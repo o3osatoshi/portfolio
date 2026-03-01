@@ -3,16 +3,15 @@ import { createInterface } from "node:readline/promises";
 
 import { okAsync, ResultAsync } from "neverthrow";
 
-import { newRichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { deleteTransaction } from "../../lib/api-client";
 import { cliErrorCodes } from "../../lib/cli-error-catalog";
-import type { CliResultAsync } from "../../lib/types";
 
 export function runTxDelete(
   id: string,
   confirmed: boolean,
-): CliResultAsync<void> {
+): ResultAsync<void, RichError> {
   if (confirmed) {
     return deleteTransaction(id).map(() => {
       console.log("Deleted.");
