@@ -191,9 +191,22 @@ async function loginByDeviceCode(
       method: "POST",
     });
 
-    const json: unknown = await tokenResponse.json();
+    const responseText = await tokenResponse.text();
+    const json = parseJsonSafely(responseText);
     if (tokenResponse.ok) {
+      if (json === null) {
+        throw new Error(
+          `Device login failed: received invalid JSON from token endpoint (status ${tokenResponse.status}).`,
+        );
+      }
       return withExpiry(tokenSchema.parse(json));
+    }
+
+    if (json === null) {
+      const detail = responseText.trim() || "no response body";
+      throw new Error(
+        `Device login failed with status ${tokenResponse.status}: ${detail}`,
+      );
     }
 
     const parsedError = deviceTokenErrorSchema.safeParse(json);
@@ -382,6 +395,19 @@ async function openBrowser(url: string, redirectUri: string): Promise<void> {
       `Failed to open the system browser for PKCE login (${redirectUri}).`,
       { cause: error },
     );
+  }
+}
+
+function parseJsonSafely(text: string): null | unknown {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return null;
   }
 }
 

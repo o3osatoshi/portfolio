@@ -46,6 +46,7 @@ describe("lib/token-store", () => {
   });
 
   afterEach(async () => {
+    vi.restoreAllMocks();
     await rm(h.homeDir, { force: true, recursive: true });
   });
 

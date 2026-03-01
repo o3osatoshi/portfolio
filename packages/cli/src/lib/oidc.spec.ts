@@ -328,6 +328,48 @@ describe("lib/oidc", () => {
     );
   });
 
+  it("returns status-based error when device token response is non-json", async () => {
+    vi.useFakeTimers();
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          authorization_endpoint: "https://example.auth0.com/authorize",
+          device_authorization_endpoint:
+            "https://example.auth0.com/oauth/device/code",
+          token_endpoint: "https://example.auth0.com/oauth/token",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          device_code: "device-code",
+          expires_in: 600,
+          interval: 1,
+          user_code: "ABCD-EFGH",
+          verification_uri: "https://example.auth0.com/activate",
+        }),
+      )
+      .mockResolvedValueOnce(
+        new Response("gateway timeout", {
+          headers: {
+            "content-type": "text/plain",
+          },
+          status: 502,
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const resultPromise = loginWithOidc(config, "device");
+    await vi.advanceTimersByTimeAsync(1000);
+    const result = await resultPromise;
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
+    expect(result.error.details?.reason).toMatch(
+      /Device login failed with status 502: gateway timeout/,
+    );
+  });
+
   it("skips refresh token revocation when discovery has no endpoint", async () => {
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValueOnce(
       jsonResponse({

@@ -1,5 +1,4 @@
 import { execFile } from "node:child_process";
-import { existsSync } from "node:fs";
 import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
@@ -52,21 +51,28 @@ export function clearTokenSet(): CliResultAsync<void> {
 export function readTokenSet(): CliResultAsync<null | TokenSet> {
   return tryReadKeychain().andThen((keychainValue) => {
     if (keychainValue) return okAsync(keychainValue);
-    if (!existsSync(filePath)) return okAsync(null);
 
-    return ResultAsync.fromPromise(readFile(filePath, "utf8"), (cause) =>
-      newRichError({
-        cause,
-        code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
-        details: {
-          action: "ReadTokenSet",
-          reason: "Failed to read local token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-    ).map((raw) => parseTokenSet(raw));
+    return ResultAsync.fromPromise(readFile(filePath, "utf8"), (cause) => cause)
+      .orElse((cause) => {
+        if (isErrnoException(cause) && cause.code === "ENOENT") {
+          return okAsync(null);
+        }
+
+        return errAsync(
+          newRichError({
+            cause,
+            code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
+            details: {
+              action: "ReadTokenSet",
+              reason: "Failed to read local token state.",
+            },
+            isOperational: true,
+            kind: "Internal",
+            layer: "Presentation",
+          }),
+        );
+      })
+      .map((raw) => (raw === null ? null : parseTokenSet(raw)));
   });
 }
 
@@ -123,6 +129,15 @@ export function writeTokenSet(tokenSet: TokenSet): CliResultAsync<void> {
         kind: "Internal",
         layer: "Presentation",
       }),
+  );
+}
+
+function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "code" in value &&
+    typeof (value as { code?: unknown }).code === "string"
   );
 }
 
@@ -212,21 +227,12 @@ function tryReadKeychain(): CliResultAsync<null | TokenSet> {
   );
 }
 
-function tryWriteKeychain(serialized: string): Promise<boolean> {
+function tryWriteKeychain(_serialized: string): Promise<boolean> {
   return (async () => {
     try {
       if (process.platform === "darwin") {
-        await execFileAsync("security", [
-          "add-generic-password",
-          "-U",
-          "-a",
-          ACCOUNT,
-          "-s",
-          SERVICE,
-          "-w",
-          serialized,
-        ]);
-        return true;
+        // Avoid leaking token content via process args. Use file fallback on macOS.
+        return false;
       }
 
       if (process.platform === "linux") {

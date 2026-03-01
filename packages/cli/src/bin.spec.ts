@@ -71,6 +71,7 @@ describe("bin", () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     process.argv = [...originalArgv];
     process.exitCode = originalExitCode;
   });
@@ -164,5 +165,8 @@ describe("bin", () => {
     await runBin(["unknown"]);
 
     expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Usage:"));
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining("--fee-currency"),
+    );
   });
 });

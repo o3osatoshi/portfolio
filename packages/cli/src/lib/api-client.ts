@@ -286,7 +286,7 @@ function request(path: string, init: RequestInit): CliResultAsync<unknown> {
           }),
         ).andThen((text) => {
           const parsed = parseApiError(text);
-          const reason = parsed?.details?.reason ?? parsed?.message;
+          const reason = parsed?.details?.reason;
 
           if (response.status === 401) {
             return clearTokenSet()

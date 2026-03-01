@@ -15,7 +15,12 @@ o3o hello
 o3o auth login
 o3o auth logout
 o3o auth whoami
+
+# Transactions
 o3o tx list
+o3o tx create --type BUY|SELL --datetime <iso> --amount <num> --price <num> --currency <code> [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]
+o3o tx update --id <id> [--type BUY|SELL] [--datetime <iso>] [--amount <num>] [--price <num>] [--currency <code>] [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]
+o3o tx delete --id <id> [--yes]
 ```
 
 ## Environment

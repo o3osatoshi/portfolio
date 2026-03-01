@@ -133,8 +133,8 @@ Usage:
   o3o auth whoami
   o3o auth logout
   o3o tx list [--json]
-  o3o tx create --type BUY|SELL --datetime <iso> --amount <num> --price <num> --currency <code>
-  o3o tx update --id <id> [--type BUY|SELL] [--datetime <iso>] [--amount <num>] [--price <num>] [--currency <code>]
+  o3o tx create --type BUY|SELL --datetime <iso> --amount <num> --price <num> --currency <code> [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]
+  o3o tx update --id <id> [--type BUY|SELL] [--datetime <iso>] [--amount <num>] [--price <num>] [--currency <code>] [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]
   o3o tx delete --id <id> [--yes]
 `);
 }
