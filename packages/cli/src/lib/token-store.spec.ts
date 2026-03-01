@@ -74,6 +74,7 @@ describe("lib/token-store", () => {
     h.keychainMode = "ok";
     h.keychainStore.clear();
     delete process.env["O3O_ALLOW_FILE_TOKEN_STORE"];
+    delete process.env["O3O_TOKEN_STORE_BACKEND"];
     vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.resetModules();
   });
@@ -135,6 +136,64 @@ describe("lib/token-store", () => {
     expect(loadedResult.isErr()).toBe(true);
     if (loadedResult.isOk()) throw new Error("Expected err result");
     expect(loadedResult.error.code).toBe(
+      cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
+    );
+  });
+
+  it("uses file backend when O3O_TOKEN_STORE_BACKEND=file", async () => {
+    h.keychainMode = "unavailable";
+    process.env["O3O_TOKEN_STORE_BACKEND"] = "file";
+
+    const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
+      "./token-store"
+    );
+
+    const token = {
+      access_token: "access-token",
+      expires_at: 1735689600,
+      refresh_token: "refresh-token",
+      scope: "openid profile",
+      token_type: "Bearer",
+    };
+
+    const writeResult = await writeTokenSet(token);
+    expect(writeResult.isOk()).toBe(true);
+    expect(existsSync(tokenPath())).toBe(true);
+    expect(h.keychainStore.size).toBe(0);
+
+    const readResult = await readTokenSet();
+    expect(readResult.isOk()).toBe(true);
+    if (readResult.isErr()) throw new Error("Expected ok result");
+    expect(readResult.value).toEqual(token);
+
+    const clearResult = await clearTokenSet();
+    expect(clearResult.isOk()).toBe(true);
+    expect(existsSync(tokenPath())).toBe(false);
+  });
+
+  it("uses keychain backend only when O3O_TOKEN_STORE_BACKEND=keychain", async () => {
+    h.keychainMode = "unavailable";
+    process.env["O3O_TOKEN_STORE_BACKEND"] = "keychain";
+
+    const { readTokenSet, writeTokenSet } = await import("./token-store");
+
+    const writeResult = await writeTokenSet({
+      access_token: "access-token",
+      expires_at: 1735689600,
+      refresh_token: "refresh-token",
+      scope: "openid profile",
+      token_type: "Bearer",
+    });
+    expect(writeResult.isErr()).toBe(true);
+    if (writeResult.isOk()) throw new Error("Expected err result");
+    expect(writeResult.error.code).toBe(
+      cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
+    );
+
+    const readResult = await readTokenSet();
+    expect(readResult.isErr()).toBe(true);
+    if (readResult.isOk()) throw new Error("Expected err result");
+    expect(readResult.error.code).toBe(
       cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
     );
   });

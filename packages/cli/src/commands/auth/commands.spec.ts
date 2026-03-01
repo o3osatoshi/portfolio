@@ -83,6 +83,9 @@ describe("commands/auth", () => {
         redirectPort: 38080,
       },
       "auto",
+      {
+        onInfo: expect.any(Function),
+      },
     );
     expect(h.writeTokenSetMock).toHaveBeenCalledWith(token);
     expect(console.log).toHaveBeenCalledWith("Login successful.");

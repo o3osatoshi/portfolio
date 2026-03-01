@@ -23,6 +23,7 @@ const SERVICE = "o3o-cli";
 const ACCOUNT = "default";
 const filePath = join(homedir(), ".config", "o3o", "auth.json");
 const fileFallbackEnvName = "O3O_ALLOW_FILE_TOKEN_STORE";
+const tokenStoreBackendEnvName = "O3O_TOKEN_STORE_BACKEND";
 const keychainEntry = new Entry(SERVICE, ACCOUNT);
 let didWarnFileFallback = false;
 const keychainUnavailableReason =
@@ -33,11 +34,24 @@ type KeychainReadResult =
   | { available: true; token: null | TokenSet };
 
 type KeychainWriteResult = { cause: unknown; ok: false } | { ok: true };
+type TokenStoreBackend = "auto" | "file" | "keychain";
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
+  const backend = getTokenStoreBackend();
+
   return ResultAsync.fromPromise(
     (async () => {
-      await deleteKeychainToken();
+      if (backend === "file") {
+        await rm(filePath, { force: true });
+        return;
+      }
+
+      if (backend === "keychain") {
+        await deleteKeychainToken({ strict: true });
+        return;
+      }
+
+      await deleteKeychainToken({ strict: false });
       await rm(filePath, { force: true });
     })(),
     (cause) =>
@@ -55,11 +69,26 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
 }
 
 export function readTokenSet(): ResultAsync<null | TokenSet, RichError> {
+  const backend = getTokenStoreBackend();
+
   return ResultAsync.fromPromise(
     (async () => {
-      const keychainResult = await getKeychainToken();
-      const fileToken = await getFileToken();
+      if (backend === "file") {
+        return await getFileToken();
+      }
 
+      const keychainResult = await getKeychainToken();
+      if (backend === "keychain") {
+        if (!keychainResult.available) {
+          throw newBackendUnavailableError(
+            "ReadTokenSet",
+            keychainResult.cause,
+          );
+        }
+        return keychainResult.token;
+      }
+
+      const fileToken = await getFileToken();
       if (!keychainResult.available) {
         if (!isFileFallbackAllowed()) {
           throw newBackendUnavailableError(
@@ -121,6 +150,7 @@ export function readTokenSet(): ResultAsync<null | TokenSet, RichError> {
 export function writeTokenSet(
   tokenSet: TokenSet,
 ): ResultAsync<void, RichError> {
+  const backend = getTokenStoreBackend();
   const parsed = tokenSchema.safeParse(tokenSet);
   if (!parsed.success) {
     return errAsync(
@@ -141,7 +171,23 @@ export function writeTokenSet(
   const serialized = JSON.stringify(parsed.data);
   return ResultAsync.fromPromise(
     (async () => {
+      if (backend === "file") {
+        await persistTokenToFile(serialized);
+        return;
+      }
+
       const keychainWrite = await setKeychainToken(serialized);
+      if (backend === "keychain") {
+        if (!keychainWrite.ok) {
+          throw newBackendUnavailableError(
+            "WriteTokenSet",
+            keychainWrite.cause,
+          );
+        }
+        await rm(filePath, { force: true }).catch(() => undefined);
+        return;
+      }
+
       if (keychainWrite.ok) {
         await rm(filePath, { force: true }).catch(() => undefined);
         return;
@@ -168,14 +214,19 @@ export function writeTokenSet(
   );
 }
 
-async function deleteKeychainToken(): Promise<void> {
+async function deleteKeychainToken(options: {
+  strict: boolean;
+}): Promise<void> {
   try {
     await keychainEntry.deletePassword();
   } catch (cause) {
     if (isKeychainNotFoundError(cause)) {
       return;
     }
-    // best effort
+    if (options.strict) {
+      throw cause;
+    }
+    // best effort in auto mode
   }
 }
 
@@ -221,6 +272,14 @@ async function getKeychainToken(): Promise<KeychainReadResult> {
     }
     return { available: false, cause };
   }
+}
+
+function getTokenStoreBackend(): TokenStoreBackend {
+  const value = process.env[tokenStoreBackendEnvName];
+  if (value === "file" || value === "keychain" || value === "auto") {
+    return value;
+  }
+  return "auto";
 }
 
 function isErrnoException(value: unknown): value is NodeJS.ErrnoException {

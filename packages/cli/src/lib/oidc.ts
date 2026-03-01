@@ -46,24 +46,31 @@ const deviceTokenErrorSchema = z.object({
 });
 
 export type LoginMode = "auto" | "device" | "pkce";
+
+export type LoginWithOidcOptions = {
+  onInfo?: ((message: string) => void) | undefined;
+};
 // Keep callback wait bounded to avoid dangling local servers in failed login flows.
 const PKCE_CALLBACK_TIMEOUT_MS = 180_000;
 
 export function loginWithOidc(
   config: OidcConfig,
   mode: LoginMode,
+  options?: LoginWithOidcOptions,
 ): ResultAsync<TokenSet, RichError> {
-  return ResultAsync.fromPromise(loginWithOidcUnsafe(config, mode), (cause) =>
-    toRichError(cause, {
-      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-      details: {
-        action: "LoginWithOidc",
-        reason: toReason(cause, "OIDC login failed."),
-      },
-      isOperational: true,
-      kind: "Unauthorized",
-      layer: "Presentation",
-    }),
+  return ResultAsync.fromPromise(
+    loginWithOidcUnsafe(config, mode, options),
+    (cause) =>
+      toRichError(cause, {
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        details: {
+          action: "LoginWithOidc",
+          reason: toReason(cause, "OIDC login failed."),
+        },
+        isOperational: true,
+        kind: "Unauthorized",
+        layer: "Presentation",
+      }),
   );
 }
 
@@ -129,9 +136,17 @@ async function discover(issuer: string) {
   return discoverySchema.parse(json);
 }
 
+function info(
+  options: LoginWithOidcOptions | undefined,
+  message: string,
+): void {
+  options?.onInfo?.(message);
+}
+
 async function loginByDeviceCode(
   config: OidcConfig,
   discovery: z.infer<typeof discoverySchema>,
+  options?: LoginWithOidcOptions,
 ): Promise<TokenSet> {
   if (!discovery.device_authorization_endpoint) {
     throw new Error(
@@ -164,9 +179,10 @@ async function loginByDeviceCode(
   const url =
     deviceCode.verification_uri_complete ?? deviceCode.verification_uri;
   if (deviceCode.verification_uri_complete) {
-    console.log(`Open this URL to continue login:\n${url}`);
+    info(options, `Open this URL to continue login:\n${url}`);
   } else {
-    console.log(
+    info(
+      options,
       `Open ${deviceCode.verification_uri} and enter code: ${deviceCode.user_code}`,
     );
   }
@@ -360,10 +376,11 @@ async function loginByPkce(
 async function loginWithOidcUnsafe(
   config: OidcConfig,
   mode: LoginMode,
+  options?: LoginWithOidcOptions,
 ): Promise<TokenSet> {
   const discovery = await discover(config.issuer);
   if (mode === "device") {
-    return loginByDeviceCode(config, discovery);
+    return loginByDeviceCode(config, discovery, options);
   }
   if (mode === "pkce") {
     return loginByPkce(config, discovery);
@@ -375,7 +392,7 @@ async function loginWithOidcUnsafe(
     if (!shouldFallbackToDeviceFlow(error)) {
       throw error;
     }
-    return loginByDeviceCode(config, discovery);
+    return loginByDeviceCode(config, discovery, options);
   }
 }
 

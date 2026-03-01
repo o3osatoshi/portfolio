@@ -125,6 +125,53 @@ describe("lib/oidc", () => {
     expect(token.refresh_token).toBe("device-refresh-token");
   });
 
+  it("routes device flow progress logs to onInfo callback", async () => {
+    vi.useFakeTimers();
+    const onInfo = vi.fn();
+
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          authorization_endpoint: "https://example.auth0.com/authorize",
+          device_authorization_endpoint:
+            "https://example.auth0.com/oauth/device/code",
+          token_endpoint: "https://example.auth0.com/oauth/token",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          device_code: "device-code",
+          expires_in: 600,
+          interval: 1,
+          user_code: "ABCD-EFGH",
+          verification_uri: "https://example.auth0.com/activate",
+          verification_uri_complete:
+            "https://example.auth0.com/activate?user_code=ABCD-EFGH",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          access_token: "device-access-token",
+          expires_in: 1800,
+          refresh_token: "device-refresh-token",
+          scope: "openid profile email",
+          token_type: "Bearer",
+        }),
+      );
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    const resultPromise = loginWithOidc(config, "device", { onInfo });
+    await vi.advanceTimersByTimeAsync(1000);
+    const result = await resultPromise;
+
+    expect(result.isOk()).toBe(true);
+    expect(onInfo).toHaveBeenCalledWith(
+      expect.stringContaining("Open this URL to continue login"),
+    );
+  });
+
   it("falls back from auto PKCE to device flow when callback port is unavailable", async () => {
     vi.useFakeTimers();
     const blocker = createServer();

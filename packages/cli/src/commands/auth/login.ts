@@ -12,8 +12,13 @@ export function runAuthLogin(
   mode: LoginMode,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
+  const onInfo =
+    outputMode === "json"
+      ? (message: string) => console.error(message)
+      : (message: string) => console.log(message);
+
   return toAsync(getRuntimeConfig())
-    .andThen((config) => loginWithOidc(config.oidc, mode))
+    .andThen((config) => loginWithOidc(config.oidc, mode, { onInfo }))
     .andThen((token) => writeTokenSet(token))
     .map(() => {
       printSuccessMessage("auth.login", "Login successful.", outputMode);
