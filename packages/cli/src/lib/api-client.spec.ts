@@ -1,4 +1,4 @@
-import { ok, okAsync } from "neverthrow";
+import { errAsync, ok, okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cliErrorCodes } from "./cli-error-catalog";
@@ -303,5 +303,34 @@ describe("lib/api-client", () => {
     expect(result.error.details?.reason).toBe(
       "Not logged in. Run `o3o auth login`.",
     );
+  });
+
+  it("clears token state and returns unauthorized when refresh fails", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "expired-access-token",
+        expires_at: Math.floor(Date.now() / 1000) - 10,
+        refresh_token: "refresh-token",
+      }),
+    );
+    h.refreshTokenMock.mockReturnValueOnce(
+      errAsync(new Error("boom") as never),
+    );
+
+    const fetchMock = vi.fn<typeof fetch>();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { fetchMe } = await import("./api-client");
+    const result = await fetchMe();
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe(cliErrorCodes.CLI_API_UNAUTHORIZED);
+    expect(result.error.details?.reason).toBe(
+      "Session expired. Run `o3o auth login` again.",
+    );
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(h.writeTokenSetMock).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

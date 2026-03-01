@@ -153,8 +153,27 @@ function ensureAccessToken(
       );
     }
 
-    return refreshToken(config.oidc, token.refresh_token).andThen(
-      (refreshed) => {
+    return refreshToken(config.oidc, token.refresh_token)
+      .orElse((refreshError) =>
+        clearTokenSet()
+          .orElse(() => okAsync(undefined))
+          .andThen(() =>
+            errAsync(
+              newRichError({
+                cause: refreshError,
+                code: cliErrorCodes.CLI_API_UNAUTHORIZED,
+                details: {
+                  action: "RefreshAccessToken",
+                  reason: "Session expired. Run `o3o auth login` again.",
+                },
+                isOperational: true,
+                kind: "Unauthorized",
+                layer: "Presentation",
+              }),
+            ),
+          ),
+      )
+      .andThen((refreshed) => {
         const merged: TokenSet = {
           ...token,
           ...refreshed,
@@ -162,8 +181,7 @@ function ensureAccessToken(
         };
 
         return writeTokenSet(merged).map(() => merged);
-      },
-    );
+      });
   });
 }
 

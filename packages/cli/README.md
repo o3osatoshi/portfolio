@@ -84,8 +84,8 @@ o3o tx delete --id <id> [--yes]
 
 ## Token Storage
 
-- New login sessions are stored in `~/.config/o3o/auth.json`.
-- The file is written with `0600` permissions (owner read/write only).
+- By default, login sessions are stored in the OS secure credential store (Keychain / Credential Manager / Secret Service).
+- When secure storage is unavailable, auth commands fail with a storage error instead of silently downgrading storage.
 - `o3o auth logout` clears local token state.
 
 ## Troubleshooting
@@ -96,3 +96,5 @@ o3o tx delete --id <id> [--yes]
   - Ensure your API permissions/scopes are granted to the authenticated user.
 - `Unauthorized. Please run o3o auth login.`
   - Re-run `o3o auth login`, then retry the command.
+- `Secure token storage (OS keychain) is unavailable`
+  - If you explicitly accept file-based token storage for this environment, run with `O3O_ALLOW_FILE_TOKEN_STORE=1`.

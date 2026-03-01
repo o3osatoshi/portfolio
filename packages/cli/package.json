@@ -47,6 +47,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@napi-rs/keyring": "^1.2.0",
     "@o3osatoshi/toolkit": "workspace:*",
     "dotenv": "catalog:",
     "neverthrow": "catalog:",
