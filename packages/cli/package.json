@@ -40,7 +40,7 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "dev": "tsup --watch --no-clean",
-    "env:pull": "doppler secrets download --project portfolio-cli --config prd --no-file --format env > ./.env",
+    "env:pull": "doppler secrets download --project portfolio-cli --config dev --no-file --format env > ./.env",
     "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test && NODE_ENV=production pnpm build",
     "test": "vitest run",
     "test:cvrg": "vitest run --coverage",
