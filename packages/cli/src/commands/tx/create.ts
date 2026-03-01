@@ -1,4 +1,5 @@
 import { createTransaction } from "../../lib/api-client";
+import type { CliResultAsync } from "../../lib/types";
 
 type CreateArgs = {
   amount: string;
@@ -11,8 +12,8 @@ type CreateArgs = {
   type: "BUY" | "SELL";
 };
 
-export async function runTxCreate(args: CreateArgs): Promise<void> {
-  const created = await createTransaction({
+export function runTxCreate(args: CreateArgs): CliResultAsync<void> {
+  return createTransaction({
     amount: args.amount,
     currency: args.currency,
     datetime: args.datetime,
@@ -21,7 +22,8 @@ export async function runTxCreate(args: CreateArgs): Promise<void> {
     price: args.price,
     ...(args.profitLoss ? { profitLoss: args.profitLoss } : {}),
     type: args.type,
+  }).map((created) => {
+    console.log(JSON.stringify(created, null, 2));
+    return undefined;
   });
-
-  console.log(JSON.stringify(created, null, 2));
 }

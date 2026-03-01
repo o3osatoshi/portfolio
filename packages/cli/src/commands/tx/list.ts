@@ -1,10 +1,13 @@
 import { listTransactions } from "../../lib/api-client";
+import type { CliResultAsync } from "../../lib/types";
 
-export async function runTxList(asJson: boolean): Promise<void> {
-  const rows = await listTransactions();
-  if (asJson) {
-    console.log(JSON.stringify(rows, null, 2));
-    return;
-  }
-  console.table(rows);
+export function runTxList(asJson: boolean): CliResultAsync<void> {
+  return listTransactions().map((rows) => {
+    if (asJson) {
+      console.log(JSON.stringify(rows, null, 2));
+      return undefined;
+    }
+    console.table(rows);
+    return undefined;
+  });
 }

@@ -1,10 +1,15 @@
+import { toAsync } from "../../lib/cli-result";
 import { getRuntimeConfig } from "../../lib/config";
 import { type LoginMode, loginWithOidc } from "../../lib/oidc";
 import { writeTokenSet } from "../../lib/token-store";
+import type { CliResultAsync } from "../../lib/types";
 
-export async function runAuthLogin(mode: LoginMode): Promise<void> {
-  const config = getRuntimeConfig();
-  const token = await loginWithOidc(config.oidc, mode);
-  await writeTokenSet(token);
-  console.log("Login successful.");
+export function runAuthLogin(mode: LoginMode): CliResultAsync<void> {
+  return toAsync(getRuntimeConfig())
+    .andThen((config) => loginWithOidc(config.oidc, mode))
+    .andThen((token) => writeTokenSet(token))
+    .map(() => {
+      console.log("Login successful.");
+      return undefined;
+    });
 }

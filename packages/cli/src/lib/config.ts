@@ -1,6 +1,10 @@
+import { err, ok } from "neverthrow";
 import { z } from "zod";
 
-import type { CliRuntimeConfig } from "./types";
+import { newRichError } from "@o3osatoshi/toolkit";
+
+import { cliErrorCodes } from "./cli-error-catalog";
+import type { CliResult, CliRuntimeConfig } from "./types";
 
 const envSchema = z.object({
   oidcAudience: z.string().min(1),
@@ -10,7 +14,7 @@ const envSchema = z.object({
   apiBaseUrl: z.string().url(),
 });
 
-export function getRuntimeConfig(): CliRuntimeConfig {
+export function getRuntimeConfig(): CliResult<CliRuntimeConfig> {
   const fallbackApiBaseUrl =
     process.env["NODE_ENV"] === "production"
       ? undefined
@@ -34,10 +38,21 @@ export function getRuntimeConfig(): CliRuntimeConfig {
     const reason = parsed.error.issues
       .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
       .join("; ");
-    throw new Error(`Invalid CLI runtime config: ${reason}`);
+    return err(
+      newRichError({
+        code: cliErrorCodes.CLI_CONFIG_INVALID,
+        details: {
+          action: "ResolveCliRuntimeConfig",
+          reason: `Invalid CLI runtime config: ${reason}`,
+        },
+        isOperational: true,
+        kind: "Validation",
+        layer: "Presentation",
+      }),
+    );
   }
 
-  return {
+  return ok({
     oidc: {
       audience: parsed.data.oidcAudience,
       clientId: parsed.data.oidcClientId,
@@ -45,5 +60,5 @@ export function getRuntimeConfig(): CliRuntimeConfig {
       redirectPort: parsed.data.oidcRedirectPort,
     },
     apiBaseUrl: parsed.data.apiBaseUrl,
-  };
+  });
 }

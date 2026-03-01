@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+import { errAsync, okAsync } from "neverthrow";
+
+import { newRichError } from "@o3osatoshi/toolkit";
+
 import { runAuthLogin } from "./commands/auth/login";
 import { runAuthLogout } from "./commands/auth/logout";
 import { runAuthWhoami } from "./commands/auth/whoami";
@@ -9,14 +13,18 @@ import { runTxDelete } from "./commands/tx/delete";
 import { runTxList } from "./commands/tx/list";
 import { runTxUpdate } from "./commands/tx/update";
 import { hasFlag, parseArgs, readStringFlag } from "./lib/args";
+import { cliErrorCodes } from "./lib/cli-error-catalog";
+import { toCliErrorMessage } from "./lib/cli-error-message";
+import type { CliResultAsync } from "./lib/types";
 
-async function main() {
-  const args = parseArgs(process.argv.slice(2));
+export function main(
+  argv: string[] = process.argv.slice(2),
+): CliResultAsync<void> {
+  const args = parseArgs(argv);
   const [group, action] = args.positionals;
 
   if (group === "hello") {
-    await runHello();
-    return;
+    return runHello();
   }
 
   if (group === "auth" && action === "login") {
@@ -25,23 +33,19 @@ async function main() {
       : hasFlag(args, "device")
         ? "device"
         : "auto";
-    await runAuthLogin(mode);
-    return;
+    return runAuthLogin(mode);
   }
 
   if (group === "auth" && action === "whoami") {
-    await runAuthWhoami();
-    return;
+    return runAuthWhoami();
   }
 
   if (group === "auth" && action === "logout") {
-    await runAuthLogout();
-    return;
+    return runAuthLogout();
   }
 
   if (group === "tx" && action === "list") {
-    await runTxList(hasFlag(args, "json"));
-    return;
+    return runTxList(hasFlag(args, "json"));
   }
 
   if (group === "tx" && action === "create") {
@@ -52,16 +56,16 @@ async function main() {
     const currency = readStringFlag(args, "currency");
 
     if (!type || !datetime || !amount || !price || !currency) {
-      throw new Error(
+      return invalidArgumentError(
         "tx create requires --type --datetime --amount --price --currency",
       );
     }
 
     if (type !== "BUY" && type !== "SELL") {
-      throw new Error("--type must be BUY or SELL");
+      return invalidArgumentError("--type must be BUY or SELL");
     }
 
-    await runTxCreate({
+    return runTxCreate({
       amount,
       currency,
       datetime,
@@ -71,19 +75,18 @@ async function main() {
       profitLoss: readStringFlag(args, "profit-loss"),
       type,
     });
-    return;
   }
 
   if (group === "tx" && action === "update") {
     const id = readStringFlag(args, "id");
-    if (!id) throw new Error("tx update requires --id");
+    if (!id) return invalidArgumentError("tx update requires --id");
 
     const type = readStringFlag(args, "type");
     if (type && type !== "BUY" && type !== "SELL") {
-      throw new Error("--type must be BUY or SELL");
+      return invalidArgumentError("--type must be BUY or SELL");
     }
 
-    await runTxUpdate({
+    return runTxUpdate({
       id,
       amount: readStringFlag(args, "amount"),
       currency: readStringFlag(args, "currency"),
@@ -94,17 +97,31 @@ async function main() {
       profitLoss: readStringFlag(args, "profit-loss"),
       type: type as "BUY" | "SELL" | undefined,
     });
-    return;
   }
 
   if (group === "tx" && action === "delete") {
     const id = readStringFlag(args, "id");
-    if (!id) throw new Error("tx delete requires --id");
-    await runTxDelete(id, hasFlag(args, "yes"));
-    return;
+    if (!id) return invalidArgumentError("tx delete requires --id");
+    return runTxDelete(id, hasFlag(args, "yes"));
   }
 
   printHelp();
+  return okAsync(undefined);
+}
+
+function invalidArgumentError(reason: string): CliResultAsync<void> {
+  return errAsync(
+    newRichError({
+      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+      details: {
+        action: "ParseCliArguments",
+        reason,
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+    }),
+  );
 }
 
 function printHelp() {
@@ -122,8 +139,10 @@ Usage:
 `);
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(message);
-  process.exitCode = 1;
-});
+void main().match(
+  () => undefined,
+  (error) => {
+    console.error(toCliErrorMessage(error));
+    process.exitCode = 1;
+  },
+);

@@ -1,6 +1,9 @@
 import { fetchMe } from "../../lib/api-client";
+import type { CliResultAsync } from "../../lib/types";
 
-export async function runAuthWhoami(): Promise<void> {
-  const me = await fetchMe();
-  console.log(JSON.stringify(me, null, 2));
+export function runAuthWhoami(): CliResultAsync<void> {
+  return fetchMe().map((me) => {
+    console.log(JSON.stringify(me, null, 2));
+    return undefined;
+  });
 }

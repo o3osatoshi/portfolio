@@ -7,9 +7,13 @@ import {
 } from "node:http";
 import { promisify } from "node:util";
 
+import { ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import type { OidcConfig, TokenSet } from "./types";
+import { toRichError } from "@o3osatoshi/toolkit";
+
+import { cliErrorCodes } from "./cli-error-catalog";
+import type { CliResultAsync, OidcConfig, TokenSet } from "./types";
 
 const execFileAsync = promisify(execFile);
 
@@ -45,80 +49,62 @@ export type LoginMode = "auto" | "device" | "pkce";
 // Keep callback wait bounded to avoid dangling local servers in failed login flows.
 const PKCE_CALLBACK_TIMEOUT_MS = 180_000;
 
-export async function loginWithOidc(
+export function loginWithOidc(
   config: OidcConfig,
   mode: LoginMode,
-): Promise<TokenSet> {
-  const discovery = await discover(config.issuer);
-  if (mode === "device") {
-    return loginByDeviceCode(config, discovery);
-  }
-  if (mode === "pkce") {
-    return loginByPkce(config, discovery);
-  }
-
-  try {
-    return await loginByPkce(config, discovery);
-  } catch (error) {
-    if (!shouldFallbackToDeviceFlow(error)) {
-      throw error;
-    }
-    return loginByDeviceCode(config, discovery);
-  }
+): CliResultAsync<TokenSet> {
+  return ResultAsync.fromPromise(loginWithOidcUnsafe(config, mode), (cause) =>
+    toRichError(cause, {
+      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+      details: {
+        action: "LoginWithOidc",
+        reason: toReason(cause, "OIDC login failed."),
+      },
+      isOperational: true,
+      kind: "Unauthorized",
+      layer: "Presentation",
+    }),
+  );
 }
 
-export async function refreshToken(
+export function refreshToken(
   config: OidcConfig,
   refreshTokenValue: string,
-): Promise<TokenSet> {
-  const discovery = await discover(config.issuer);
-  const body = new URLSearchParams({
-    client_id: config.clientId,
-    grant_type: "refresh_token",
-    refresh_token: refreshTokenValue,
-  });
-
-  const response = await fetch(discovery.token_endpoint, {
-    body,
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-    },
-    method: "POST",
-  });
-
-  if (!response.ok) {
-    throw new Error(`Refresh token request failed (${response.status})`);
-  }
-
-  const json = await response.json();
-  const parsed = tokenSchema.parse(json);
-  return withExpiry(parsed);
+): CliResultAsync<TokenSet> {
+  return ResultAsync.fromPromise(
+    refreshTokenUnsafe(config, refreshTokenValue),
+    (cause) =>
+      toRichError(cause, {
+        code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+        details: {
+          action: "RefreshOidcToken",
+          reason: toReason(cause, "Failed to refresh access token."),
+        },
+        isOperational: true,
+        kind: "Unauthorized",
+        layer: "Presentation",
+      }),
+  );
 }
 
-export async function revokeRefreshToken(
+export function revokeRefreshToken(
   config: OidcConfig,
   refreshTokenValue: string,
-): Promise<void> {
-  const discovery = await discover(config.issuer);
-  if (!discovery.revocation_endpoint) return;
-
-  const body = new URLSearchParams({
-    client_id: config.clientId,
-    token: refreshTokenValue,
-    token_type_hint: "refresh_token",
-  });
-
-  const response = await fetch(discovery.revocation_endpoint, {
-    body,
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-    },
-    method: "POST",
-  });
-
-  if (!response.ok) {
-    throw new Error(`Revocation request failed (${response.status})`);
-  }
+): CliResultAsync<void> {
+  return ResultAsync.fromPromise(
+    revokeRefreshTokenUnsafe(config, refreshTokenValue),
+    (cause) =>
+      toRichError(cause, {
+        code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
+        details: {
+          action: "RevokeOidcRefreshToken",
+          reason: toReason(cause, "Failed to revoke refresh token."),
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
 }
 
 function closeServer(server: ReturnType<typeof createServer>): Promise<void> {
@@ -358,6 +344,28 @@ async function loginByPkce(
   return withExpiry(parsed);
 }
 
+async function loginWithOidcUnsafe(
+  config: OidcConfig,
+  mode: LoginMode,
+): Promise<TokenSet> {
+  const discovery = await discover(config.issuer);
+  if (mode === "device") {
+    return loginByDeviceCode(config, discovery);
+  }
+  if (mode === "pkce") {
+    return loginByPkce(config, discovery);
+  }
+
+  try {
+    return await loginByPkce(config, discovery);
+  } catch (error) {
+    if (!shouldFallbackToDeviceFlow(error)) {
+      throw error;
+    }
+    return loginByDeviceCode(config, discovery);
+  }
+}
+
 async function openBrowser(url: string, redirectUri: string): Promise<void> {
   try {
     if (process.platform === "darwin") {
@@ -377,6 +385,60 @@ async function openBrowser(url: string, redirectUri: string): Promise<void> {
   }
 }
 
+async function refreshTokenUnsafe(
+  config: OidcConfig,
+  refreshTokenValue: string,
+): Promise<TokenSet> {
+  const discovery = await discover(config.issuer);
+  const body = new URLSearchParams({
+    client_id: config.clientId,
+    grant_type: "refresh_token",
+    refresh_token: refreshTokenValue,
+  });
+
+  const response = await fetch(discovery.token_endpoint, {
+    body,
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Refresh token request failed (${response.status})`);
+  }
+
+  const json = await response.json();
+  const parsed = tokenSchema.parse(json);
+  return withExpiry(parsed);
+}
+
+async function revokeRefreshTokenUnsafe(
+  config: OidcConfig,
+  refreshTokenValue: string,
+): Promise<void> {
+  const discovery = await discover(config.issuer);
+  if (!discovery.revocation_endpoint) return;
+
+  const body = new URLSearchParams({
+    client_id: config.clientId,
+    token: refreshTokenValue,
+    token_type_hint: "refresh_token",
+  });
+
+  const response = await fetch(discovery.revocation_endpoint, {
+    body,
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Revocation request failed (${response.status})`);
+  }
+}
+
 function shouldFallbackToDeviceFlow(error: unknown): boolean {
   if (!(error instanceof Error)) {
     return false;
@@ -391,6 +453,13 @@ function shouldFallbackToDeviceFlow(error: unknown): boolean {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function toReason(cause: unknown, fallback: string): string {
+  if (cause instanceof Error && cause.message.trim().length > 0) {
+    return cause.message;
+  }
+  return fallback;
 }
 
 function withExpiry(token: z.infer<typeof tokenSchema>): TokenSet {

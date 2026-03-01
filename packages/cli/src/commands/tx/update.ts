@@ -1,4 +1,5 @@
 import { updateTransaction } from "../../lib/api-client";
+import type { CliResultAsync } from "../../lib/types";
 
 type UpdateArgs = {
   amount?: string | undefined;
@@ -12,8 +13,8 @@ type UpdateArgs = {
   type?: "BUY" | "SELL" | undefined;
 };
 
-export async function runTxUpdate(args: UpdateArgs): Promise<void> {
-  await updateTransaction(args.id, {
+export function runTxUpdate(args: UpdateArgs): CliResultAsync<void> {
+  return updateTransaction(args.id, {
     ...(args.amount ? { amount: args.amount } : {}),
     ...(args.currency ? { currency: args.currency } : {}),
     ...(args.datetime ? { datetime: args.datetime } : {}),
@@ -22,7 +23,8 @@ export async function runTxUpdate(args: UpdateArgs): Promise<void> {
     ...(args.price ? { price: args.price } : {}),
     ...(args.profitLoss ? { profitLoss: args.profitLoss } : {}),
     ...(args.type ? { type: args.type } : {}),
+  }).map(() => {
+    console.log("Updated.");
+    return undefined;
   });
-
-  console.log("Updated.");
 }

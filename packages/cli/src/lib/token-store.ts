@@ -5,9 +5,13 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import type { TokenSet } from "./types";
+import { newRichError } from "@o3osatoshi/toolkit";
+
+import { cliErrorCodes } from "./cli-error-catalog";
+import type { CliResultAsync, TokenSet } from "./types";
 
 const execFileAsync = promisify(execFile);
 
@@ -24,40 +28,102 @@ const ACCOUNT = "default";
 const filePath = join(homedir(), ".config", "o3o", "auth.json");
 let didWarnFileFallback = false;
 
-export async function clearTokenSet(): Promise<void> {
-  await tryDeleteKeychain();
-  await rm(filePath, { force: true });
+export function clearTokenSet(): CliResultAsync<void> {
+  return ResultAsync.fromPromise(
+    (async () => {
+      await tryDeleteKeychain();
+      await rm(filePath, { force: true });
+    })(),
+    (cause) =>
+      newRichError({
+        cause,
+        code: cliErrorCodes.CLI_TOKEN_STORE_CLEAR_FAILED,
+        details: {
+          action: "ClearTokenSet",
+          reason: "Failed to clear local token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
 }
 
-export async function readTokenSet(): Promise<null | TokenSet> {
-  const keychainValue = await tryReadKeychain();
-  if (keychainValue) return keychainValue;
+export function readTokenSet(): CliResultAsync<null | TokenSet> {
+  return tryReadKeychain().andThen((keychainValue) => {
+    if (keychainValue) return okAsync(keychainValue);
+    if (!existsSync(filePath)) return okAsync(null);
 
-  if (!existsSync(filePath)) return null;
-  const raw = await readFile(filePath, "utf8");
-  return parseTokenSet(raw);
-}
-
-export async function writeTokenSet(tokenSet: TokenSet): Promise<void> {
-  const parsed = tokenSchema.parse(tokenSet);
-  const serialized = JSON.stringify(parsed);
-
-  if (await tryWriteKeychain(serialized)) return;
-  warnFileFallbackOnce();
-
-  await mkdir(dirname(filePath), { recursive: true });
-  await writeFile(filePath, `${serialized}\n`, {
-    encoding: "utf8",
-    mode: 0o600,
+    return ResultAsync.fromPromise(readFile(filePath, "utf8"), (cause) =>
+      newRichError({
+        cause,
+        code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
+        details: {
+          action: "ReadTokenSet",
+          reason: "Failed to read local token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+    ).map((raw) => parseTokenSet(raw));
   });
+}
 
-  if (process.platform !== "win32") {
-    try {
-      await chmod(filePath, 0o600);
-    } catch {
-      // best effort
-    }
+export function writeTokenSet(tokenSet: TokenSet): CliResultAsync<void> {
+  const parsed = tokenSchema.safeParse(tokenSet);
+  if (!parsed.success) {
+    return errAsync(
+      newRichError({
+        cause: parsed.error,
+        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+        details: {
+          action: "WriteTokenSet",
+          reason: "Token payload is invalid.",
+        },
+        isOperational: true,
+        kind: "Validation",
+        layer: "Presentation",
+      }),
+    );
   }
+
+  const serialized = JSON.stringify(parsed.data);
+  return ResultAsync.fromPromise(
+    (async () => {
+      if (await tryWriteKeychain(serialized)) {
+        return;
+      }
+
+      warnFileFallbackOnce();
+
+      await mkdir(dirname(filePath), { recursive: true });
+      await writeFile(filePath, `${serialized}\n`, {
+        encoding: "utf8",
+        mode: 0o600,
+      });
+
+      if (process.platform !== "win32") {
+        try {
+          await chmod(filePath, 0o600);
+        } catch {
+          // best effort
+        }
+      }
+    })(),
+    (cause) =>
+      newRichError({
+        cause,
+        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+        details: {
+          action: "WriteTokenSet",
+          reason: "Failed to persist token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
 }
 
 function parseTokenSet(raw: string): null | TokenSet {
@@ -69,90 +135,110 @@ function parseTokenSet(raw: string): null | TokenSet {
   }
 }
 
-async function tryDeleteKeychain(): Promise<void> {
-  try {
-    if (process.platform === "darwin") {
-      await execFileAsync("security", [
-        "delete-generic-password",
-        "-a",
-        ACCOUNT,
-        "-s",
-        SERVICE,
-      ]);
-      return;
-    }
+function tryDeleteKeychain(): Promise<void> {
+  return (async () => {
+    try {
+      if (process.platform === "darwin") {
+        await execFileAsync("security", [
+          "delete-generic-password",
+          "-a",
+          ACCOUNT,
+          "-s",
+          SERVICE,
+        ]);
+        return;
+      }
 
-    if (process.platform === "linux") {
-      await execFileAsync("secret-tool", [
-        "clear",
-        "service",
-        SERVICE,
-        "account",
-        ACCOUNT,
-      ]);
+      if (process.platform === "linux") {
+        await execFileAsync("secret-tool", [
+          "clear",
+          "service",
+          SERVICE,
+          "account",
+          ACCOUNT,
+        ]);
+      }
+    } catch {
+      // no-op
     }
-  } catch {
-    // no-op
-  }
+  })();
 }
 
-async function tryReadKeychain(): Promise<null | TokenSet> {
-  try {
-    if (process.platform === "darwin") {
-      const { stdout } = await execFileAsync("security", [
-        "find-generic-password",
-        "-a",
-        ACCOUNT,
-        "-s",
-        SERVICE,
-        "-w",
-      ]);
-      return parseTokenSet(stdout);
-    }
+function tryReadKeychain(): CliResultAsync<null | TokenSet> {
+  return ResultAsync.fromPromise(
+    (async () => {
+      try {
+        if (process.platform === "darwin") {
+          const { stdout } = await execFileAsync("security", [
+            "find-generic-password",
+            "-a",
+            ACCOUNT,
+            "-s",
+            SERVICE,
+            "-w",
+          ]);
+          return parseTokenSet(stdout);
+        }
 
-    if (process.platform === "linux") {
-      const { stdout } = await execFileAsync("secret-tool", [
-        "lookup",
-        "service",
-        SERVICE,
-        "account",
-        ACCOUNT,
-      ]);
-      if (!stdout.trim()) return null;
-      return parseTokenSet(stdout);
-    }
+        if (process.platform === "linux") {
+          const { stdout } = await execFileAsync("secret-tool", [
+            "lookup",
+            "service",
+            SERVICE,
+            "account",
+            ACCOUNT,
+          ]);
+          if (!stdout.trim()) return null;
+          return parseTokenSet(stdout);
+        }
 
-    return null;
-  } catch {
-    return null;
-  }
+        return null;
+      } catch {
+        return null;
+      }
+    })(),
+    (cause) =>
+      newRichError({
+        cause,
+        code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
+        details: {
+          action: "ReadTokenSetFromKeychain",
+          reason: "Failed to read token from system keychain.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
 }
 
-async function tryWriteKeychain(serialized: string): Promise<boolean> {
-  try {
-    if (process.platform === "darwin") {
-      await execFileAsync("security", [
-        "add-generic-password",
-        "-U",
-        "-a",
-        ACCOUNT,
-        "-s",
-        SERVICE,
-        "-w",
-        serialized,
-      ]);
-      return true;
-    }
+function tryWriteKeychain(serialized: string): Promise<boolean> {
+  return (async () => {
+    try {
+      if (process.platform === "darwin") {
+        await execFileAsync("security", [
+          "add-generic-password",
+          "-U",
+          "-a",
+          ACCOUNT,
+          "-s",
+          SERVICE,
+          "-w",
+          serialized,
+        ]);
+        return true;
+      }
 
-    if (process.platform === "linux") {
-      // Avoid hard dependency on secret-tool stdin behavior; fall back to file.
+      if (process.platform === "linux") {
+        // Avoid hard dependency on secret-tool stdin behavior; fall back to file.
+        return false;
+      }
+
+      return false;
+    } catch {
       return false;
     }
-
-    return false;
-  } catch {
-    return false;
-  }
+  })();
 }
 
 function warnFileFallbackOnce(): void {

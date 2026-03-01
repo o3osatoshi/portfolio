@@ -1,9 +1,14 @@
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
+import { newRichError, parseWith } from "@o3osatoshi/toolkit";
+
+import { cliErrorCodes } from "./cli-error-catalog";
+import { toAsync } from "./cli-result";
 import { getRuntimeConfig } from "./config";
 import { refreshToken } from "./oidc";
 import { clearTokenSet, readTokenSet, writeTokenSet } from "./token-store";
-import type { TokenSet } from "./types";
+import type { CliResultAsync, CliRuntimeConfig, TokenSet } from "./types";
 
 const meSchema = z.object({
   issuer: z.string(),
@@ -33,136 +38,149 @@ const apiErrorResponseSchema = z.looseObject({
     .optional(),
   message: z.string().optional(),
 });
+
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
 
 export type MeResponse = z.infer<typeof meSchema>;
 export type TransactionResponse = z.infer<typeof transactionSchema>;
 
-export async function createTransaction(
+export function createTransaction(
   payload: Record<string, unknown>,
-): Promise<TransactionResponse> {
-  const json = await request("/api/cli/v1/transactions", {
+): CliResultAsync<TransactionResponse> {
+  return request("/api/cli/v1/transactions", {
     body: JSON.stringify(payload),
     headers: {
       "content-type": "application/json",
     },
     method: "POST",
-  });
-  return transactionSchema.parse(json);
+  }).andThen((json) =>
+    toAsync(
+      parseWith(transactionSchema, {
+        action: "DecodeCreateTransactionResponse",
+        layer: "Presentation",
+      })(json),
+    ),
+  );
 }
 
-export async function deleteTransaction(id: string): Promise<void> {
-  await request(`/api/cli/v1/transactions/${encodeURIComponent(id)}`, {
+export function deleteTransaction(id: string): CliResultAsync<void> {
+  return request(`/api/cli/v1/transactions/${encodeURIComponent(id)}`, {
     method: "DELETE",
-  });
+  }).map(() => undefined);
 }
 
-export async function fetchMe(): Promise<MeResponse> {
-  const json = await request("/api/cli/v1/me", {
+export function fetchMe(): CliResultAsync<MeResponse> {
+  return request("/api/cli/v1/me", {
     method: "GET",
-  });
-  return meSchema.parse(json);
+  }).andThen((json) =>
+    toAsync(
+      parseWith(meSchema, {
+        action: "DecodeCliPrincipalResponse",
+        layer: "Presentation",
+      })(json),
+    ),
+  );
 }
 
-export async function listTransactions(): Promise<TransactionResponse[]> {
-  const json = await request("/api/cli/v1/transactions", {
+export function listTransactions(): CliResultAsync<TransactionResponse[]> {
+  return request("/api/cli/v1/transactions", {
     method: "GET",
-  });
-  return z.array(transactionSchema).parse(json);
+  }).andThen((json) =>
+    toAsync(
+      parseWith(z.array(transactionSchema), {
+        action: "DecodeListTransactionsResponse",
+        layer: "Presentation",
+      })(json),
+    ),
+  );
 }
 
-export async function updateTransaction(
+export function updateTransaction(
   id: string,
   payload: Record<string, unknown>,
-): Promise<void> {
-  await request(`/api/cli/v1/transactions/${encodeURIComponent(id)}`, {
+): CliResultAsync<void> {
+  return request(`/api/cli/v1/transactions/${encodeURIComponent(id)}`, {
     body: JSON.stringify(payload),
     headers: {
       "content-type": "application/json",
     },
     method: "PATCH",
+  }).map(() => undefined);
+}
+
+function ensureAccessToken(config: CliRuntimeConfig): CliResultAsync<TokenSet> {
+  return readTokenSet().andThen((token) => {
+    if (!token) {
+      return errAsync(
+        newRichError({
+          code: cliErrorCodes.CLI_API_UNAUTHORIZED,
+          details: {
+            action: "EnsureAccessToken",
+            reason: "Not logged in. Run `o3o auth login`.",
+          },
+          isOperational: true,
+          kind: "Unauthorized",
+          layer: "Presentation",
+        }),
+      );
+    }
+
+    if (
+      !token.expires_at ||
+      token.expires_at > nowSeconds() + ACCESS_TOKEN_REFRESH_SKEW_SECONDS
+    ) {
+      return okAsync(token);
+    }
+
+    if (!token.refresh_token) {
+      return errAsync(
+        newRichError({
+          code: cliErrorCodes.CLI_API_UNAUTHORIZED,
+          details: {
+            action: "EnsureAccessToken",
+            reason: "Session expired. Run `o3o auth login` again.",
+          },
+          isOperational: true,
+          kind: "Unauthorized",
+          layer: "Presentation",
+        }),
+      );
+    }
+
+    return refreshToken(config.oidc, token.refresh_token).andThen(
+      (refreshed) => {
+        const merged: TokenSet = {
+          ...token,
+          ...refreshed,
+          refresh_token: refreshed.refresh_token ?? token.refresh_token,
+        };
+
+        return writeTokenSet(merged).map(() => merged);
+      },
+    );
   });
 }
 
-async function buildRequestErrorMessage(response: Response): Promise<string> {
-  const fallback = response.statusText
-    ? `API request failed (${response.status}): ${response.statusText}`
-    : `API request failed (${response.status}).`;
-  const text = (await response.text()).trim();
-  if (!text) return fallback;
-
-  const parsed = parseApiError(text);
-  if (!parsed) return fallback;
-
-  const reason = parsed.details?.reason ?? parsed.message;
-  if (reason && parsed.code) {
-    return `API request failed (${response.status}): ${reason} (code=${parsed.code})`;
-  }
-  if (reason) {
-    return `API request failed (${response.status}): ${reason}`;
-  }
-  if (parsed.code) {
-    return `API request failed (${response.status}): code=${parsed.code}`;
-  }
-  return fallback;
-}
-
-async function buildUnauthorizedErrorMessage(
-  response: Response,
-): Promise<string> {
-  const fallback = "Unauthorized. Please run `o3o auth login`.";
-  const text = (await response.text()).trim();
-  if (!text) return fallback;
-
-  const parsed = parseApiError(text);
-  if (!parsed) {
-    return fallback;
-  }
-
-  const details: string[] = [];
-  if (parsed.code) {
-    details.push(`code=${parsed.code}`);
-  }
-  if (parsed.details?.reason) {
-    details.push(`reason=${parsed.details.reason}`);
-  } else if (parsed.message) {
-    details.push(`message=${parsed.message}`);
-  }
-
-  if (details.length === 0) return fallback;
-  return `${fallback} (${details.join(", ")})`;
-}
-
-async function ensureAccessToken(
-  config: ReturnType<typeof getRuntimeConfig>,
-): Promise<TokenSet> {
-  const token = await readTokenSet();
-  if (!token) throw new Error("Not logged in. Run `o3o auth login`.");
-
-  if (
-    !token.expires_at ||
-    token.expires_at > nowSeconds() + ACCESS_TOKEN_REFRESH_SKEW_SECONDS
-  ) {
-    return token;
-  }
-
-  if (!token.refresh_token) {
-    throw new Error("Session expired. Run `o3o auth login` again.");
-  }
-
-  const refreshed = await refreshToken(config.oidc, token.refresh_token);
-  await writeTokenSet({
-    ...token,
-    ...refreshed,
-    refresh_token: refreshed.refresh_token ?? token.refresh_token,
-  });
-
-  return {
-    ...token,
-    ...refreshed,
-    refresh_token: refreshed.refresh_token ?? token.refresh_token,
-  };
+function mapHttpKind(
+  status: number,
+):
+  | "BadGateway"
+  | "BadRequest"
+  | "Conflict"
+  | "Forbidden"
+  | "NotFound"
+  | "RateLimit"
+  | "Unauthorized"
+  | "Unprocessable" {
+  if (status === 400) return "BadRequest";
+  if (status === 401) return "Unauthorized";
+  if (status === 403) return "Forbidden";
+  if (status === 404) return "NotFound";
+  if (status === 409) return "Conflict";
+  if (status === 422) return "Unprocessable";
+  if (status === 429) return "RateLimit";
+  return "BadGateway";
 }
 
 function nowSeconds() {
@@ -180,46 +198,134 @@ function parseApiError(
   }
 }
 
-async function parseSuccessResponseBody(
+function parseSuccessResponseBody(
   response: Response,
   method: RequestInit["method"],
-): Promise<undefined | unknown> {
+): CliResultAsync<undefined | unknown> {
   const normalizedMethod = (method ?? "GET").toUpperCase();
   if (normalizedMethod === "DELETE" || response.status === 204) {
-    return undefined;
+    return okAsync(undefined);
   }
 
-  const text = (await response.text()).trim();
-  if (!text) {
-    return undefined;
-  }
+  return ResultAsync.fromPromise(response.text(), (cause) =>
+    newRichError({
+      cause,
+      code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+      details: {
+        action: "ReadCliApiResponseBody",
+        reason: "Failed to read API response body.",
+      },
+      isOperational: true,
+      kind: "BadGateway",
+      layer: "Presentation",
+    }),
+  ).andThen((text) => {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      return okAsync(undefined);
+    }
 
-  return JSON.parse(text) as unknown;
+    return ResultAsync.fromPromise(
+      (async () => JSON.parse(trimmed) as unknown)(),
+      (cause) =>
+        newRichError({
+          cause,
+          code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+          details: {
+            action: "DecodeCliApiResponseBody",
+            reason: "API response was not valid JSON.",
+          },
+          isOperational: true,
+          kind: "BadGateway",
+          layer: "Presentation",
+        }),
+    );
+  });
 }
 
-async function request(path: string, init: RequestInit): Promise<unknown> {
-  const config = getRuntimeConfig();
-  const token = await ensureAccessToken(config);
+function request(path: string, init: RequestInit): CliResultAsync<unknown> {
+  return toAsync(getRuntimeConfig()).andThen((config) =>
+    ensureAccessToken(config).andThen((token) => {
+      const url = new URL(path, config.apiBaseUrl).toString();
+      const headers = new Headers(init.headers);
+      headers.set("authorization", `Bearer ${token.access_token}`);
 
-  const url = new URL(path, config.apiBaseUrl).toString();
-  const headers = new Headers(init.headers);
-  headers.set("authorization", `Bearer ${token.access_token}`);
+      return ResultAsync.fromPromise(
+        fetch(url, {
+          ...init,
+          headers,
+        }),
+        (cause) =>
+          newRichError({
+            cause,
+            code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+            details: {
+              action: "RequestCliApi",
+              reason: "Failed to reach the API endpoint.",
+            },
+            isOperational: true,
+            kind: "BadGateway",
+            layer: "Presentation",
+          }),
+      ).andThen((response) => {
+        if (response.ok) {
+          return parseSuccessResponseBody(response, init.method);
+        }
 
-  const response = await fetch(url, {
-    ...init,
-    headers,
-  });
+        return ResultAsync.fromPromise(response.text(), (cause) =>
+          newRichError({
+            cause,
+            code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+            details: {
+              action: "ReadCliApiErrorResponseBody",
+              reason: "Failed to read API error response body.",
+            },
+            isOperational: true,
+            kind: "BadGateway",
+            layer: "Presentation",
+          }),
+        ).andThen((text) => {
+          const parsed = parseApiError(text);
+          const reason = parsed?.details?.reason ?? parsed?.message;
 
-  if (response.status === 401) {
-    const message = await buildUnauthorizedErrorMessage(response);
-    await clearTokenSet();
-    throw new Error(message);
-  }
+          if (response.status === 401) {
+            return clearTokenSet()
+              .orElse(() => okAsync(undefined))
+              .andThen(() =>
+                errAsync(
+                  newRichError({
+                    code: parsed?.code ?? cliErrorCodes.CLI_API_UNAUTHORIZED,
+                    details: {
+                      action: "AuthorizeCliRequest",
+                      reason:
+                        reason ?? "Unauthorized. Please run `o3o auth login`.",
+                    },
+                    isOperational: true,
+                    kind: "Unauthorized",
+                    layer: "Presentation",
+                  }),
+                ),
+              );
+          }
 
-  if (!response.ok) {
-    const message = await buildRequestErrorMessage(response);
-    throw new Error(message);
-  }
+          const fallback = response.statusText
+            ? `API request failed (${response.status}): ${response.statusText}`
+            : `API request failed (${response.status}).`;
 
-  return parseSuccessResponseBody(response, init.method);
+          return errAsync(
+            newRichError({
+              code: parsed?.code ?? cliErrorCodes.CLI_API_REQUEST_FAILED,
+              details: {
+                action: "RequestCliApi",
+                reason: reason ?? fallback,
+              },
+              isOperational: true,
+              kind: mapHttpKind(response.status),
+              layer: "Presentation",
+            }),
+          );
+        });
+      });
+    }),
+  );
 }
