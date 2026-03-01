@@ -32,6 +32,10 @@
         "dist/**",
         ".next/**",
         "!.next/cache/**",
+        "!.next/dev/**",
+        "!.next/trace",
+        "!.next/trace-build",
+        "!.next/diagnostics/**",
         "storybook-static/**"
       ]
     },
