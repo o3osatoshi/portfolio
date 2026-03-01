@@ -4,7 +4,7 @@ Official `o3o` command-line interface for authentication and transaction CRUD.
 
 ## Requirements
 
-- Node.js `22.x` or later
+- Node.js `22.x`
 - Access to an OIDC/Auth0 tenant configured for the o3o API
 
 ## Install

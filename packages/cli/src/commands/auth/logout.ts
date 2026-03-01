@@ -7,18 +7,21 @@ import { clearTokenSet, readTokenSet } from "../../lib/token-store";
 import type { CliResultAsync } from "../../lib/types";
 
 export function runAuthLogout(): CliResultAsync<void> {
-  return toAsync(getRuntimeConfig())
-    .andThen((config) =>
-      readTokenSet().andThen((token) => {
-        if (!token?.refresh_token) {
-          return okAsync(undefined);
-        }
+  return readTokenSet()
+    .andThen((token) => {
+      const refreshTokenValue = token?.refresh_token;
+      if (!refreshTokenValue) {
+        return okAsync(undefined);
+      }
 
-        return revokeRefreshToken(config.oidc, token.refresh_token).orElse(() =>
-          okAsync(undefined),
-        );
-      }),
-    )
+      return toAsync(getRuntimeConfig())
+        .andThen((config) =>
+          revokeRefreshToken(config.oidc, refreshTokenValue).orElse(() =>
+            okAsync(undefined),
+          ),
+        )
+        .orElse(() => okAsync(undefined));
+    })
     .andThen(() => clearTokenSet())
     .map(() => {
       console.log("Logged out.");

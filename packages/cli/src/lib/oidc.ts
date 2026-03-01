@@ -386,7 +386,7 @@ async function openBrowser(url: string, redirectUri: string): Promise<void> {
       return;
     }
     if (process.platform === "win32") {
-      await execFileAsync("cmd", ["/c", "start", "", url]);
+      await execFileAsync("explorer.exe", [url]);
       return;
     }
     await execFileAsync("xdg-open", [url]);

@@ -1,4 +1,4 @@
-import { errAsync, ok, okAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
@@ -142,6 +142,23 @@ describe("commands/auth", () => {
 
     expect(result.isOk()).toBe(true);
     expect(h.revokeRefreshTokenMock).toHaveBeenCalledTimes(1);
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout still clears local tokens when runtime config is invalid", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+        refresh_token: "refresh-token",
+      }),
+    );
+    h.getRuntimeConfigMock.mockReturnValueOnce(err(new Error("boom") as never));
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).not.toHaveBeenCalled();
     expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
     expect(console.log).toHaveBeenCalledWith("Logged out.");
   });
