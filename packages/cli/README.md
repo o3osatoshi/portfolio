@@ -112,6 +112,18 @@ o3o tx delete --id <id> [--yes]
 - When secure storage is unavailable, auth commands fail with a storage error instead of silently downgrading storage.
 - `o3o auth logout` clears local token state.
 
+## Development Testing
+
+For package-local development:
+
+```bash
+pnpm -C /Users/o3osatoshi/.codex/worktrees/016b/portfolio/packages/cli test
+pnpm -C /Users/o3osatoshi/.codex/worktrees/016b/portfolio/packages/cli typecheck
+pnpm -C /Users/o3osatoshi/.codex/worktrees/016b/portfolio/packages/cli test:e2e
+```
+
+`test:e2e` runs subprocess-based integration tests against mock OIDC/API servers, so it does not require a real Auth0 tenant or running `apps/web`.
+
 ## Troubleshooting
 
 - `Callback URL mismatch`
