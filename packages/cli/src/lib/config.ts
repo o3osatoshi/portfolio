@@ -4,6 +4,7 @@ import { z } from "zod";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
+import { DEFAULT_RUNTIME_CONFIG } from "./default-runtime-config";
 import type { CliResult, CliRuntimeConfig } from "./types";
 
 const envSchema = z.object({
@@ -15,23 +16,18 @@ const envSchema = z.object({
 });
 
 export function getRuntimeConfig(): CliResult<CliRuntimeConfig> {
-  const fallbackApiBaseUrl =
-    process.env["NODE_ENV"] === "production"
-      ? undefined
-      : "http://localhost:3000";
-
   const parsed = envSchema.safeParse({
     oidcAudience:
-      process.env["O3O_OIDC_AUDIENCE"] ?? process.env["AUTH_OIDC_AUDIENCE"],
+      process.env["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_CONFIG.oidc.audience,
     oidcClientId:
-      process.env["O3O_OIDC_CLIENT_ID"] ?? process.env["AUTH_OIDC_CLIENT_ID"],
+      process.env["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_CONFIG.oidc.clientId,
     oidcIssuer:
-      process.env["O3O_OIDC_ISSUER"] ?? process.env["AUTH_OIDC_ISSUER"],
-    oidcRedirectPort: process.env["O3O_OIDC_REDIRECT_PORT"] ?? "38080",
+      process.env["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_CONFIG.oidc.issuer,
+    oidcRedirectPort:
+      process.env["O3O_OIDC_REDIRECT_PORT"] ??
+      String(DEFAULT_RUNTIME_CONFIG.oidc.redirectPort),
     apiBaseUrl:
-      process.env["O3O_API_BASE_URL"] ??
-      process.env["PORTFOLIO_API_BASE_URL"] ??
-      fallbackApiBaseUrl,
+      process.env["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_CONFIG.apiBaseUrl,
   });
 
   if (!parsed.success) {

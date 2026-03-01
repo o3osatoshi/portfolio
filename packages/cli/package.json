@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@o3osatoshi/toolkit": "workspace:*",
+    "dotenv": "catalog:",
     "neverthrow": "catalog:",
     "zod": "catalog:"
   },

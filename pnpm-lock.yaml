@@ -524,6 +524,9 @@ importers:
       '@o3osatoshi/toolkit':
         specifier: workspace:*
         version: link:../toolkit
+      dotenv:
+        specifier: 'catalog:'
+        version: 17.2.3
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0

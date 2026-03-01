@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { errAsync, okAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync } from "neverthrow";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
@@ -15,11 +15,25 @@ import { runTxUpdate } from "./commands/tx/update";
 import { hasFlag, parseArgs, readStringFlag } from "./lib/args";
 import { cliErrorCodes } from "./lib/cli-error-catalog";
 import { toCliErrorMessage } from "./lib/cli-error-message";
-import type { CliResultAsync } from "./lib/types";
+import { toAsync } from "./lib/cli-result";
+import { loadRuntimeEnvFile } from "./lib/env-file";
+import type { CliResult, CliResultAsync } from "./lib/types";
+
+type GlobalOptions = {
+  commandArgv: string[];
+  envFilePath?: string | undefined;
+};
 
 export function main(
   argv: string[] = process.argv.slice(2),
 ): CliResultAsync<void> {
+  return toAsync(extractGlobalOptions(argv)).andThen(
+    ({ commandArgv, envFilePath }) =>
+      loadRuntimeEnvFile(envFilePath).andThen(() => dispatch(commandArgv)),
+  );
+}
+
+function dispatch(argv: string[]): CliResultAsync<void> {
   const args = parseArgs(argv);
   const [group, action] = args.positionals;
 
@@ -109,6 +123,64 @@ export function main(
   return okAsync(undefined);
 }
 
+function extractGlobalOptions(argv: string[]): CliResult<GlobalOptions> {
+  const commandArgv: string[] = [];
+  let envFilePath: string | undefined;
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const token = argv[i];
+    if (!token) continue;
+
+    if (token === "--env-file") {
+      const value = argv[i + 1];
+      if (!value || value.startsWith("--")) {
+        return err(
+          newRichError({
+            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+            details: {
+              action: "ParseCliArguments",
+              reason: "--env-file requires a non-empty path value",
+            },
+            isOperational: true,
+            kind: "Validation",
+            layer: "Presentation",
+          }),
+        );
+      }
+      envFilePath = value;
+      i += 1;
+      continue;
+    }
+
+    if (token.startsWith("--env-file=")) {
+      const value = token.slice("--env-file=".length);
+      if (!value.trim()) {
+        return err(
+          newRichError({
+            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+            details: {
+              action: "ParseCliArguments",
+              reason: "--env-file requires a non-empty path value",
+            },
+            isOperational: true,
+            kind: "Validation",
+            layer: "Presentation",
+          }),
+        );
+      }
+      envFilePath = value;
+      continue;
+    }
+
+    commandArgv.push(token);
+  }
+
+  return ok({
+    commandArgv,
+    envFilePath: envFilePath ?? process.env["O3O_ENV_FILE"],
+  });
+}
+
 function invalidArgumentError(reason: string): CliResultAsync<void> {
   return errAsync(
     newRichError({
@@ -128,6 +200,12 @@ function printHelp() {
   console.log(`o3o CLI
 
 Usage:
+  o3o [--env-file <path>] <command> [options]
+
+Global options:
+  --env-file <path>  Load env vars from file (env vars in shell take precedence)
+
+Commands:
   o3o hello
   o3o auth login [--pkce|--device]
   o3o auth whoami
