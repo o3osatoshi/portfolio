@@ -47,6 +47,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@o3osatoshi/toolkit": "workspace:*",
+    "neverthrow": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

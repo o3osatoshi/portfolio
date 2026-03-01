@@ -521,6 +521,12 @@ importers:
 
   packages/cli:
     dependencies:
+      '@o3osatoshi/toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
+      neverthrow:
+        specifier: 'catalog:'
+        version: 8.2.0
       zod:
         specifier: 'catalog:'
         version: 4.3.6
