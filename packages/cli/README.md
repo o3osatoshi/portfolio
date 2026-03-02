@@ -31,7 +31,7 @@ o3o auth whoami
 o3o tx list --json
 ```
 
-By default, the CLI uses built-in production runtime settings, so no environment variables are required for normal usage.
+By default, the CLI uses built-in runtime settings for the standard o3o environment, so no environment variables are required for normal usage.
 
 ## Codex / Automation First Usage
 
@@ -57,7 +57,7 @@ Default output mode is `auto`:
 
 ## Authentication
 
-`o3o auth login` supports two modes:
+`o3o auth login` supports three modes:
 
 - `auto` (default): PKCE first, then falls back to Device Flow when PKCE is unavailable.
 - `pkce`: force browser + localhost callback.
@@ -117,9 +117,9 @@ o3o tx delete --id <id> [--yes]
 For package-local development:
 
 ```bash
-pnpm -C /Users/o3osatoshi/.codex/worktrees/016b/portfolio/packages/cli test
-pnpm -C /Users/o3osatoshi/.codex/worktrees/016b/portfolio/packages/cli typecheck
-pnpm -C /Users/o3osatoshi/.codex/worktrees/016b/portfolio/packages/cli test:e2e
+pnpm -C packages/cli test
+pnpm -C packages/cli typecheck
+pnpm -C packages/cli test:e2e
 ```
 
 `test:e2e` runs subprocess-based integration tests against mock OIDC/API servers, so it does not require a real Auth0 tenant or running `apps/web`.
