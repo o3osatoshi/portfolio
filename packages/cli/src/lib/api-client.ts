@@ -23,7 +23,10 @@ const transactionSchema = z.object({
   createdAt: z.string().or(z.date()),
   currency: z.string(),
   datetime: z.string().or(z.date()),
+  fee: z.string().optional(),
+  feeCurrency: z.string().optional(),
   price: z.string(),
+  profitLoss: z.string().optional(),
   type: z.enum(["BUY", "SELL"]),
   updatedAt: z.string().or(z.date()),
   userId: z.string(),
@@ -210,6 +213,15 @@ function mapHttpKind(
   return "BadGateway";
 }
 
+function normalizeApiPath(path: string): string {
+  const trimmed = path.trim();
+  if (!trimmed) {
+    return "/";
+  }
+
+  return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+}
+
 function nowSeconds() {
   return Math.floor(Date.now() / 1000);
 }
@@ -276,7 +288,7 @@ function request(
 ): ResultAsync<unknown, RichError> {
   return toAsync(getRuntimeConfig()).andThen((config) =>
     ensureAccessToken(config).andThen((token) => {
-      const url = new URL(path, config.apiBaseUrl).toString();
+      const url = resolveApiRequestUrl(config.apiBaseUrl, path);
       const headers = new Headers(init.headers);
       headers.set("authorization", `Bearer ${token.access_token}`);
 
@@ -358,4 +370,29 @@ function request(
       });
     }),
   );
+}
+
+function resolveApiRequestUrl(apiBaseUrl: string, apiPath: string): string {
+  const baseUrl = new URL(apiBaseUrl);
+  const normalizedApiPath = normalizeApiPath(apiPath);
+  const normalizedBasePath = trimTrailingSlash(baseUrl.pathname);
+
+  const resolvedPath =
+    normalizedBasePath.endsWith("/api") &&
+    (normalizedApiPath === "/api" || normalizedApiPath.startsWith("/api/"))
+      ? `${normalizedBasePath}${normalizedApiPath.slice("/api".length)}`
+      : `${normalizedBasePath}${normalizedApiPath}`;
+
+  baseUrl.pathname = resolvedPath || "/";
+  baseUrl.search = "";
+  baseUrl.hash = "";
+  return baseUrl.toString();
+}
+
+function trimTrailingSlash(pathname: string): string {
+  if (pathname === "/") {
+    return "";
+  }
+
+  return pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
 }

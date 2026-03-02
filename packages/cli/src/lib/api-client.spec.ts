@@ -168,6 +168,70 @@ describe("lib/api-client", () => {
     });
   });
 
+  it("resolves request URL when API base URL is origin root", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          issuer: "https://example.auth0.com",
+          scopes: ["transactions:read", "transactions:write"],
+          subject: "auth0|123",
+          userId: "user-1",
+        }),
+        {
+          headers: { "content-type": "application/json" },
+          status: 200,
+        },
+      ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { fetchMe } = await import("./api-client");
+    const result = await fetchMe();
+
+    expect(result.isOk()).toBe(true);
+    const [calledUrl] = fetchMock.mock.calls[0] ?? [];
+    expect(calledUrl).toBe("http://localhost:3000/api/cli/v1/me");
+  });
+
+  it("resolves request URL when API base URL includes /api path", async () => {
+    h.getRuntimeConfigMock.mockReturnValueOnce(
+      ok({
+        oidc: {
+          audience: "https://api.o3o.app",
+          clientId: "cli-client-id",
+          issuer: "https://example.auth0.com",
+          redirectPort: 38080,
+        },
+        apiBaseUrl: "http://127.0.0.1:5001/portfolio-bd22d/us-central1/api",
+      }),
+    );
+
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          issuer: "https://example.auth0.com",
+          scopes: ["transactions:read", "transactions:write"],
+          subject: "auth0|123",
+          userId: "user-1",
+        }),
+        {
+          headers: { "content-type": "application/json" },
+          status: 200,
+        },
+      ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { fetchMe } = await import("./api-client");
+    const result = await fetchMe();
+
+    expect(result.isOk()).toBe(true);
+    const [calledUrl] = fetchMock.mock.calls[0] ?? [];
+    expect(calledUrl).toBe(
+      "http://127.0.0.1:5001/portfolio-bd22d/us-central1/api/cli/v1/me",
+    );
+  });
+
   it("creates transaction and returns parsed response", async () => {
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
       new Response(
@@ -177,7 +241,10 @@ describe("lib/api-client", () => {
           createdAt: "2026-01-01T00:00:00.000Z",
           currency: "USD",
           datetime: "2026-01-01T00:00:00.000Z",
+          fee: "0.25",
+          feeCurrency: "USD",
           price: "100",
+          profitLoss: "-10",
           type: "BUY",
           updatedAt: "2026-01-01T00:00:00.000Z",
           userId: "user-1",
@@ -207,11 +274,64 @@ describe("lib/api-client", () => {
       createdAt: "2026-01-01T00:00:00.000Z",
       currency: "USD",
       datetime: "2026-01-01T00:00:00.000Z",
+      fee: "0.25",
+      feeCurrency: "USD",
       price: "100",
+      profitLoss: "-10",
       type: "BUY",
       updatedAt: "2026-01-01T00:00:00.000Z",
       userId: "user-1",
     });
+  });
+
+  it("preserves optional transaction fields when listing transactions", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify([
+          {
+            id: "tx-1",
+            amount: "1",
+            createdAt: "2026-01-01T00:00:00.000Z",
+            currency: "USD",
+            datetime: "2026-01-01T00:00:00.000Z",
+            fee: "0.1",
+            feeCurrency: "USD",
+            price: "100",
+            profitLoss: "1.5",
+            type: "BUY",
+            updatedAt: "2026-01-01T00:00:00.000Z",
+            userId: "user-1",
+          },
+        ]),
+        {
+          headers: { "content-type": "application/json" },
+          status: 200,
+        },
+      ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { listTransactions } = await import("./api-client");
+    const result = await listTransactions();
+
+    expect(result.isOk()).toBe(true);
+    if (result.isErr()) throw new Error("Expected ok result");
+    expect(result.value).toEqual([
+      {
+        id: "tx-1",
+        amount: "1",
+        createdAt: "2026-01-01T00:00:00.000Z",
+        currency: "USD",
+        datetime: "2026-01-01T00:00:00.000Z",
+        fee: "0.1",
+        feeCurrency: "USD",
+        price: "100",
+        profitLoss: "1.5",
+        type: "BUY",
+        updatedAt: "2026-01-01T00:00:00.000Z",
+        userId: "user-1",
+      },
+    ]);
   });
 
   it("refreshes expired token and persists merged token state", async () => {
