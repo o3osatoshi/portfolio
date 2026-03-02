@@ -1,0 +1,72 @@
+{
+  "name": "@o3osatoshi/cli",
+  "version": "0.1.0",
+  "private": false,
+  "description": "o3o command line interface",
+  "keywords": [
+    "cli",
+    "oauth",
+    "auth0",
+    "portfolio"
+  ],
+  "homepage": "https://github.com/o3osatoshi/portfolio/tree/main/packages/cli",
+  "bugs": {
+    "url": "https://github.com/o3osatoshi/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o3osatoshi/portfolio.git",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "o3o": "./dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "dev": "tsup --watch --no-clean",
+    "env:pull": "doppler secrets download --project portfolio-cli --config dev --no-file --format env > ./.env",
+    "prepublishOnly": "pnpm clean && pnpm typecheck && pnpm test && NODE_ENV=production pnpm build",
+    "test": "vitest run",
+    "test:cvrg": "vitest run --coverage",
+    "test:e2e": "pnpm build && vitest run --config vitest.e2e.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@napi-rs/keyring": "^1.2.0",
+    "@o3osatoshi/toolkit": "workspace:*",
+    "dotenv": "catalog:",
+    "neverthrow": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@o3osatoshi/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
