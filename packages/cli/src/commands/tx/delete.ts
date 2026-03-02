@@ -86,5 +86,5 @@ export function runTxDelete(
 }
 
 function isInteractiveTerminal(): boolean {
-  return stdin.isTTY !== false && stdout.isTTY !== false;
+  return stdin.isTTY === true && stdout.isTTY === true;
 }

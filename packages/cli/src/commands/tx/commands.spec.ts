@@ -29,9 +29,6 @@ import { runTxDelete } from "./delete";
 import { runTxList } from "./list";
 import { runTxUpdate } from "./update";
 
-const originalStdinIsTty = process.stdin.isTTY;
-const originalStdoutIsTty = process.stdout.isTTY;
-
 describe("commands/tx", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -50,11 +47,11 @@ describe("commands/tx", () => {
 
     Object.defineProperty(process.stdin, "isTTY", {
       configurable: true,
-      value: originalStdinIsTty,
+      value: true,
     });
     Object.defineProperty(process.stdout, "isTTY", {
       configurable: true,
-      value: originalStdoutIsTty,
+      value: true,
     });
   });
 
@@ -249,6 +246,50 @@ describe("commands/tx", () => {
     });
 
     const result = await runTxDelete("tx-10", false, "text");
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toBe(
+      "tx delete requires --yes in non-interactive mode.",
+    );
+    expect(h.questionMock).not.toHaveBeenCalled();
+    expect(h.deleteTransactionMock).not.toHaveBeenCalled();
+  });
+
+  it("runTxDelete requires --yes when tty flags are undefined", async () => {
+    Object.defineProperty(process.stdin, "isTTY", {
+      configurable: true,
+      value: undefined,
+    });
+    Object.defineProperty(process.stdout, "isTTY", {
+      configurable: true,
+      value: undefined,
+    });
+
+    const result = await runTxDelete("tx-11", false, "text");
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toBe(
+      "tx delete requires --yes in non-interactive mode.",
+    );
+    expect(h.questionMock).not.toHaveBeenCalled();
+    expect(h.deleteTransactionMock).not.toHaveBeenCalled();
+  });
+
+  it("runTxDelete requires --yes when only one tty stream is interactive", async () => {
+    Object.defineProperty(process.stdin, "isTTY", {
+      configurable: true,
+      value: true,
+    });
+    Object.defineProperty(process.stdout, "isTTY", {
+      configurable: true,
+      value: undefined,
+    });
+
+    const result = await runTxDelete("tx-12", false, "text");
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
