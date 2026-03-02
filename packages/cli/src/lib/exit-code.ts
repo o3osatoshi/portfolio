@@ -27,7 +27,10 @@ export function resolveCliExitCode(error: RichError): number {
     return EXIT_CODE_UNAUTHORIZED;
   }
 
-  if (error.kind === "Forbidden" || code === cliErrorCodes.CLI_SCOPE_FORBIDDEN) {
+  if (
+    error.kind === "Forbidden" ||
+    code === cliErrorCodes.CLI_SCOPE_FORBIDDEN
+  ) {
     return EXIT_CODE_FORBIDDEN;
   }
 
