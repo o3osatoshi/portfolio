@@ -165,37 +165,7 @@ describe("commands/tx", () => {
     expect(h.deleteTransactionMock).not.toHaveBeenCalled();
   });
 
-  it("runTxList prints JSON when asJson=true", async () => {
-    h.listTransactionsMock.mockReturnValueOnce(
-      okAsync([
-        {
-          id: "tx-6",
-          amount: "1",
-          type: "BUY",
-        },
-      ]),
-    );
-
-    const result = await runTxList(true);
-
-    expect(result.isOk()).toBe(true);
-    expect(console.log).toHaveBeenCalledWith(
-      JSON.stringify(
-        [
-          {
-            id: "tx-6",
-            amount: "1",
-            type: "BUY",
-          },
-        ],
-        null,
-        2,
-      ),
-    );
-    expect(console.table).not.toHaveBeenCalled();
-  });
-
-  it("runTxList prints table when asJson=false", async () => {
+  it("runTxList prints table in text mode", async () => {
     const rows = [
       {
         id: "tx-7",
@@ -205,7 +175,7 @@ describe("commands/tx", () => {
     ];
     h.listTransactionsMock.mockReturnValueOnce(okAsync(rows));
 
-    const result = await runTxList(false);
+    const result = await runTxList();
 
     expect(result.isOk()).toBe(true);
     expect(console.table).toHaveBeenCalledWith(rows);
@@ -221,17 +191,17 @@ describe("commands/tx", () => {
     ];
     h.listTransactionsMock.mockReturnValueOnce(okAsync(rows));
 
-    const result = await runTxList(false, "json");
+    const result = await runTxList("json");
 
     expect(result.isOk()).toBe(true);
     expect(console.log).toHaveBeenCalledWith(
       JSON.stringify({
         command: "tx.list",
-        data: rows,
         meta: {
-          schemaVersion: "v1",
+          version: 1,
         },
         ok: true,
+        value: rows,
       }),
     );
     expect(console.table).not.toHaveBeenCalled();

@@ -50,6 +50,7 @@
   "dependencies": {
     "@napi-rs/keyring": "^1.2.0",
     "@o3osatoshi/toolkit": "workspace:*",
+    "commander": "^14.0.3",
     "dotenv": "catalog:",
     "neverthrow": "catalog:",
     "zod": "catalog:"

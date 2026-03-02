@@ -12,24 +12,25 @@ import { parseJsonFromStdout, runCli } from "./helpers/run-cli";
 const cliPackageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 type JsonErrorEnvelope = {
+  command?: string | undefined;
   error: {
     code?: string | undefined;
     message: string;
   };
   meta: {
-    schemaVersion: string;
+    version: number;
   };
   ok: false;
 };
 
 type JsonSuccessEnvelope = {
   command: string;
-  data?: unknown;
   message?: string;
   meta: {
-    schemaVersion: string;
+    version: number;
   };
   ok: true;
+  value: unknown;
 };
 
 describe("CLI E2E (mock OIDC/API)", () => {
@@ -71,7 +72,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     expectJsonSuccess(hello.stdout, "hello");
 
     const login = await runCli({
-      args: ["--output", "json", "auth", "login", "--device"],
+      args: ["--output", "json", "auth", "login", "--mode", "device"],
       cwd: cliPackageDir,
       env,
     });
@@ -86,7 +87,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     });
     expect(whoami.exitCode).toBe(0);
     const whoamiPayload = expectJsonSuccess(whoami.stdout, "auth.whoami");
-    expect(whoamiPayload.data).toMatchObject({
+    expect(whoamiPayload.value).toMatchObject({
       issuer: oidc.issuer,
       userId: "user-e2e-1",
     });
@@ -98,7 +99,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     });
     expect(initialList.exitCode).toBe(0);
     const initialListPayload = expectJsonSuccess(initialList.stdout, "tx.list");
-    expect(initialListPayload.data).toEqual([]);
+    expect(initialListPayload.value).toEqual([]);
 
     const create = await runCli({
       args: [
@@ -122,7 +123,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     });
     expect(create.exitCode).toBe(0);
     const createdPayload = expectJsonSuccess(create.stdout, "tx.create");
-    const created = createdPayload.data as { id: string };
+    const created = createdPayload.value as { id: string };
     expect(created.id).toMatch(/^tx-/);
 
     const listAfterCreate = await runCli({
@@ -135,7 +136,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
       listAfterCreate.stdout,
       "tx.list",
     );
-    const rows = listAfterCreatePayload.data as Array<{ id: string }>;
+    const rows = listAfterCreatePayload.value as Array<{ id: string }>;
     expect(rows).toHaveLength(1);
     expect(rows[0]?.id).toBe(created.id);
 
@@ -215,7 +216,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     const env = await createCliEnv(oidc.issuer, api.baseUrl, tempHomes);
 
     const login = await runCli({
-      args: ["--output", "json", "auth", "login", "--device"],
+      args: ["--output", "json", "auth", "login", "--mode", "device"],
       cwd: cliPackageDir,
       env,
     });
@@ -237,7 +238,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     const env = await createCliEnv(oidc.issuer, api.baseUrl, tempHomes);
 
     const login = await runCli({
-      args: ["--output", "json", "auth", "login", "--device"],
+      args: ["--output", "json", "auth", "login", "--mode", "device"],
       cwd: cliPackageDir,
       env,
     });
@@ -275,7 +276,7 @@ async function createCliEnv(
 function expectJsonError(stdout: string): JsonErrorEnvelope {
   const parsed = parseJsonFromStdout(stdout) as JsonErrorEnvelope;
   expect(parsed.ok).toBe(false);
-  expect(parsed.meta.schemaVersion).toBe("v1");
+  expect(parsed.meta.version).toBe(1);
   expect(typeof parsed.error.message).toBe("string");
   return parsed;
 }
@@ -287,6 +288,6 @@ function expectJsonSuccess(
   const parsed = parseJsonFromStdout(stdout) as JsonSuccessEnvelope;
   expect(parsed.ok).toBe(true);
   expect(parsed.command).toBe(command);
-  expect(parsed.meta.schemaVersion).toBe("v1");
+  expect(parsed.meta.version).toBe(1);
   return parsed;
 }

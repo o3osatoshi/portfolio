@@ -209,16 +209,16 @@ describe("commands/auth", () => {
     expect(console.log).toHaveBeenCalledWith(
       JSON.stringify({
         command: "auth.whoami",
-        data: {
+        meta: {
+          version: 1,
+        },
+        ok: true,
+        value: {
           issuer: "https://example.auth0.com",
           scopes: ["transactions:read"],
           subject: "auth0|123",
           userId: "user-1",
         },
-        meta: {
-          schemaVersion: "v1",
-        },
-        ok: true,
       }),
     );
   });

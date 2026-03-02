@@ -3,15 +3,14 @@
 import { stdin, stdout } from "node:process";
 
 import {
-  err,
-  errAsync,
-  ok,
-  okAsync,
-  type Result,
-  type ResultAsync,
-} from "neverthrow";
+  Command,
+  CommanderError,
+  InvalidArgumentError,
+  Option,
+} from "commander";
+import { okAsync, ResultAsync } from "neverthrow";
 
-import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+import { isRichError, newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { runAuthLogin } from "./commands/auth/login";
 import { runAuthLogout } from "./commands/auth/logout";
@@ -21,372 +20,332 @@ import { runTxCreate } from "./commands/tx/create";
 import { runTxDelete } from "./commands/tx/delete";
 import { runTxList } from "./commands/tx/list";
 import { runTxUpdate } from "./commands/tx/update";
-import { hasFlag, parseArgs, readStringFlag } from "./lib/args";
 import { cliErrorCodes } from "./lib/cli-error-catalog";
-import { toAsync } from "./lib/cli-result";
 import { loadRuntimeEnvFile } from "./lib/env-file";
 import { resolveCliExitCode } from "./lib/exit-code";
-import {
-  cliOutputSchemaVersion,
-  type OutputMode,
-  type OutputModeOption,
-  printCliError,
-} from "./lib/output";
+import { type OutputMode, printCliError } from "./lib/output";
 
-type GlobalOptions = {
-  commandArgv: string[];
-  envFilePath?: string | undefined;
-  outputMode: OutputModeOption;
+type AuthLoginMode = "auto" | "device" | "pkce";
+type GlobalCliOptions = {
+  envFile?: string | undefined;
+  output?: OutputMode | undefined;
 };
 
-const commandList = [
-  "o3o hello",
-  "o3o auth login [--pkce|--device]",
-  "o3o auth whoami",
-  "o3o auth logout",
-  "o3o tx list [--json]",
-  "o3o tx create --type BUY|SELL --datetime <iso> --amount <num> --price <num> --currency <code> [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]",
-  "o3o tx update --id <id> [--type BUY|SELL] [--datetime <iso>] [--amount <num>] [--price <num>] [--currency <code>] [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]",
-  "o3o tx delete --id <id> [--yes]",
-] as const;
+type TransactionType = "BUY" | "SELL";
+
+type TxCreateOptions = {
+  amount: string;
+  currency: string;
+  datetime: string;
+  fee?: string | undefined;
+  feeCurrency?: string | undefined;
+  price: string;
+  profitLoss?: string | undefined;
+  type: TransactionType;
+};
+
+type TxDeleteOptions = {
+  id: string;
+  yes: boolean;
+};
+
+type TxUpdateOptions = {
+  amount?: string | undefined;
+  currency?: string | undefined;
+  datetime?: string | undefined;
+  fee?: string | undefined;
+  feeCurrency?: string | undefined;
+  id: string;
+  price?: string | undefined;
+  profitLoss?: string | undefined;
+  type?: TransactionType | undefined;
+};
 
 export function main(
   argv: string[] = process.argv.slice(2),
   resolvedOutputMode?: OutputMode,
 ): ResultAsync<void, RichError> {
-  return toAsync(extractGlobalOptions(argv)).andThen(
-    ({ commandArgv, envFilePath, outputMode }) => {
-      const effectiveOutputMode =
-        resolvedOutputMode ?? resolveEffectiveOutputMode(outputMode);
+  const outputMode =
+    resolvedOutputMode ?? resolveEffectiveOutputModeFromArgv(argv);
+  const program = createProgram(outputMode);
 
-      return loadRuntimeEnvFile(envFilePath).andThen(() =>
-        dispatch(commandArgv, effectiveOutputMode),
-      );
-    },
-  );
-}
-
-function dispatch(
-  argv: string[],
-  outputMode: OutputMode,
-): ResultAsync<void, RichError> {
-  const args = parseArgs(argv);
-  const [group, action] = args.positionals;
-
-  if (group === "help" || hasFlag(args, "h") || hasFlag(args, "help")) {
-    printHelp(outputMode);
+  if (argv.length === 0) {
+    program.outputHelp();
     return okAsync(undefined);
   }
 
-  if (group === "hello") {
-    return runHello(outputMode);
-  }
-
-  if (group === "auth" && action === "login") {
-    const mode = hasFlag(args, "pkce")
-      ? "pkce"
-      : hasFlag(args, "device")
-        ? "device"
-        : "auto";
-    return runAuthLogin(mode, outputMode);
-  }
-
-  if (group === "auth" && action === "whoami") {
-    return runAuthWhoami(outputMode);
-  }
-
-  if (group === "auth" && action === "logout") {
-    return runAuthLogout(outputMode);
-  }
-
-  if (group === "tx" && action === "list") {
-    return runTxList(hasFlag(args, "json"), outputMode);
-  }
-
-  if (group === "tx" && action === "create") {
-    const type = readStringFlag(args, "type");
-    const datetime = readStringFlag(args, "datetime");
-    const amount = readStringFlag(args, "amount");
-    const price = readStringFlag(args, "price");
-    const currency = readStringFlag(args, "currency");
-
-    if (!type || !datetime || !amount || !price || !currency) {
-      return invalidArgumentError(
-        "tx create requires --type --datetime --amount --price --currency",
-      );
-    }
-
-    if (type !== "BUY" && type !== "SELL") {
-      return invalidArgumentError("--type must be BUY or SELL");
-    }
-
-    return runTxCreate(
-      {
-        amount,
-        currency,
-        datetime,
-        fee: readStringFlag(args, "fee"),
-        feeCurrency: readStringFlag(args, "fee-currency"),
-        price,
-        profitLoss: readStringFlag(args, "profit-loss"),
-        type,
-      },
-      outputMode,
-    );
-  }
-
-  if (group === "tx" && action === "update") {
-    const id = readStringFlag(args, "id");
-    if (!id) return invalidArgumentError("tx update requires --id");
-
-    const type = readStringFlag(args, "type");
-    if (type && type !== "BUY" && type !== "SELL") {
-      return invalidArgumentError("--type must be BUY or SELL");
-    }
-
-    return runTxUpdate(
-      {
-        id,
-        amount: readStringFlag(args, "amount"),
-        currency: readStringFlag(args, "currency"),
-        datetime: readStringFlag(args, "datetime"),
-        fee: readStringFlag(args, "fee"),
-        feeCurrency: readStringFlag(args, "fee-currency"),
-        price: readStringFlag(args, "price"),
-        profitLoss: readStringFlag(args, "profit-loss"),
-        type: type as "BUY" | "SELL" | undefined,
-      },
-      outputMode,
-    );
-  }
-
-  if (group === "tx" && action === "delete") {
-    const id = readStringFlag(args, "id");
-    if (!id) return invalidArgumentError("tx delete requires --id");
-    return runTxDelete(id, hasFlag(args, "yes"), outputMode);
-  }
-
-  if (!group) {
-    printHelp(outputMode);
-    return okAsync(undefined);
-  }
-
-  return invalidArgumentError(
-    `Unknown command: ${args.positionals.join(" ")}. Run \`o3o help\`.`,
+  return ResultAsync.fromPromise(
+    program
+      .parseAsync(argv, { from: "user" })
+      .then(() => undefined)
+      .catch((cause) => {
+        if (
+          cause instanceof CommanderError &&
+          cause.code === "commander.helpDisplayed"
+        ) {
+          return undefined;
+        }
+        throw cause;
+      }),
+    (cause) => toCliInvocationError(cause),
   );
 }
 
-function extractGlobalOptions(
-  argv: string[],
-): Result<GlobalOptions, RichError> {
-  const commandArgv: string[] = [];
-  let envFilePath: string | undefined;
-  let outputMode: OutputModeOption = "auto";
+function createProgram(outputMode: OutputMode): Command {
+  const program = new Command();
+  let envLoaded = false;
+
+  program
+    .name("o3o")
+    .description("Official o3o command-line interface")
+    .option(
+      "--env-file <path>",
+      "Load env vars from file (env vars in shell take precedence)",
+      parseNonEmptyString("--env-file"),
+    )
+    .addOption(
+      new Option("--output <mode>", "Output mode for humans or tools").choices([
+        "text",
+        "json",
+      ]),
+    )
+    .configureOutput({
+      outputError: () => undefined,
+    })
+    .exitOverride()
+    .hook("preAction", async () => {
+      if (envLoaded) return;
+      const options = program.opts<GlobalCliOptions>();
+      const envFilePath = options.envFile ?? process.env["O3O_ENV_FILE"];
+      await runResult(loadRuntimeEnvFile(envFilePath));
+      envLoaded = true;
+    });
+
+  program
+    .command("hello")
+    .description("Print hello message")
+    .action(async () => {
+      await runResult(runHello(outputMode));
+    });
+
+  const auth = program.command("auth").description("Authentication commands");
+
+  auth
+    .command("login")
+    .description("Authenticate with OIDC")
+    .addOption(
+      new Option("--mode <mode>", "Login mode")
+        .choices(["auto", "pkce", "device"])
+        .default("auto"),
+    )
+    .action(async ({ mode }: { mode: AuthLoginMode }) => {
+      await runResult(runAuthLogin(mode, outputMode));
+    });
+
+  auth
+    .command("whoami")
+    .description("Show the authenticated principal")
+    .action(async () => {
+      await runResult(runAuthWhoami(outputMode));
+    });
+
+  auth
+    .command("logout")
+    .description("Clear local tokens and revoke refresh token")
+    .action(async () => {
+      await runResult(runAuthLogout(outputMode));
+    });
+
+  const tx = program.command("tx").description("Transaction commands");
+
+  tx.command("list")
+    .description("List transactions")
+    .action(async () => {
+      await runResult(runTxList(outputMode));
+    });
+
+  tx.command("create")
+    .description("Create a transaction")
+    .addOption(
+      new Option("--type <type>", "Transaction type")
+        .choices(["BUY", "SELL"])
+        .makeOptionMandatory(),
+    )
+    .requiredOption("--datetime <iso>", "ISO8601 datetime")
+    .requiredOption("--amount <num>", "Amount")
+    .requiredOption("--price <num>", "Price")
+    .requiredOption("--currency <code>", "Currency code")
+    .option("--fee <num>", "Fee")
+    .option("--fee-currency <code>", "Fee currency code")
+    .option("--profit-loss <num>", "Profit/loss")
+    .action(async (options: TxCreateOptions) => {
+      await runResult(
+        runTxCreate(
+          {
+            amount: options.amount,
+            currency: options.currency,
+            datetime: options.datetime,
+            fee: options.fee,
+            feeCurrency: options.feeCurrency,
+            price: options.price,
+            profitLoss: options.profitLoss,
+            type: options.type,
+          },
+          outputMode,
+        ),
+      );
+    });
+
+  tx.command("update")
+    .description("Update a transaction")
+    .requiredOption("--id <id>", "Transaction ID", parseNonEmptyString("--id"))
+    .addOption(
+      new Option("--type <type>", "Transaction type").choices(["BUY", "SELL"]),
+    )
+    .option("--datetime <iso>", "ISO8601 datetime")
+    .option("--amount <num>", "Amount")
+    .option("--price <num>", "Price")
+    .option("--currency <code>", "Currency code")
+    .option("--fee <num>", "Fee")
+    .option("--fee-currency <code>", "Fee currency code")
+    .option("--profit-loss <num>", "Profit/loss")
+    .action(async (options: TxUpdateOptions) => {
+      await runResult(
+        runTxUpdate(
+          {
+            id: options.id,
+            amount: options.amount,
+            currency: options.currency,
+            datetime: options.datetime,
+            fee: options.fee,
+            feeCurrency: options.feeCurrency,
+            price: options.price,
+            profitLoss: options.profitLoss,
+            type: options.type,
+          },
+          outputMode,
+        ),
+      );
+    });
+
+  tx.command("delete")
+    .description("Delete a transaction")
+    .requiredOption("--id <id>", "Transaction ID", parseNonEmptyString("--id"))
+    .option("--yes", "Skip confirmation prompt", false)
+    .action(async (options: TxDeleteOptions) => {
+      await runResult(runTxDelete(options.id, options.yes, outputMode));
+    });
+
+  return program;
+}
+
+function extractRequestedOutputMode(argv: string[]): OutputMode | undefined {
+  let requested: OutputMode | undefined;
 
   for (let i = 0; i < argv.length; i += 1) {
     const token = argv[i];
     if (!token) continue;
 
-    if (token === "--env-file") {
-      const value = argv[i + 1];
-      if (!value || value.startsWith("--")) {
-        return err(
-          newRichError({
-            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-            details: {
-              action: "ParseCliArguments",
-              reason: "--env-file requires a non-empty path value",
-            },
-            isOperational: true,
-            kind: "Validation",
-            layer: "Presentation",
-          }),
-        );
-      }
-      envFilePath = value;
-      i += 1;
-      continue;
-    }
-
-    if (token.startsWith("--env-file=")) {
-      const value = token.slice("--env-file=".length);
-      if (!value.trim()) {
-        return err(
-          newRichError({
-            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-            details: {
-              action: "ParseCliArguments",
-              reason: "--env-file requires a non-empty path value",
-            },
-            isOperational: true,
-            kind: "Validation",
-            layer: "Presentation",
-          }),
-        );
-      }
-      envFilePath = value;
-      continue;
-    }
-
     if (token === "--output") {
       const value = argv[i + 1];
-      if (!value || value.startsWith("--")) {
-        return err(
-          newRichError({
-            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-            details: {
-              action: "ParseCliArguments",
-              reason: "--output requires auto, text, or json",
-            },
-            isOperational: true,
-            kind: "Validation",
-            layer: "Presentation",
-          }),
-        );
+      if (!value) continue;
+      if (value === "json" || value === "text") {
+        requested = value;
       }
-      if (!isOutputModeOption(value)) {
-        return err(
-          newRichError({
-            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-            details: {
-              action: "ParseCliArguments",
-              reason: "--output must be auto, text, or json",
-            },
-            isOperational: true,
-            kind: "Validation",
-            layer: "Presentation",
-          }),
-        );
-      }
-      outputMode = value;
       i += 1;
       continue;
     }
 
     if (token.startsWith("--output=")) {
       const value = token.slice("--output=".length);
-      if (!isOutputModeOption(value)) {
-        return err(
-          newRichError({
-            code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-            details: {
-              action: "ParseCliArguments",
-              reason: "--output must be auto, text, or json",
-            },
-            isOperational: true,
-            kind: "Validation",
-            layer: "Presentation",
-          }),
-        );
-      }
-      outputMode = value;
-      continue;
-    }
-
-    commandArgv.push(token);
-  }
-
-  return ok({
-    commandArgv,
-    envFilePath: envFilePath ?? process.env["O3O_ENV_FILE"],
-    outputMode,
-  });
-}
-
-function extractRequestedOutputMode(argv: string[]): OutputModeOption {
-  let mode: OutputModeOption = "auto";
-  for (let i = 0; i < argv.length; i += 1) {
-    const token = argv[i];
-    if (!token) continue;
-    if (token === "--output") {
-      const value = argv[i + 1];
-      if (value && isOutputModeOption(value)) {
-        mode = value;
-        i += 1;
-      }
-      continue;
-    }
-    if (token.startsWith("--output=")) {
-      const value = token.slice("--output=".length);
-      if (isOutputModeOption(value)) {
-        mode = value;
+      if (value === "json" || value === "text") {
+        requested = value;
       }
     }
   }
-  return mode;
-}
 
-function invalidArgumentError(reason: string): ResultAsync<void, RichError> {
-  return errAsync(
-    newRichError({
-      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-      details: {
-        action: "ParseCliArguments",
-        reason,
-      },
-      isOperational: true,
-      kind: "Validation",
-      layer: "Presentation",
-    }),
-  );
+  return requested;
 }
 
 function isInteractiveTerminal(): boolean {
   return stdin.isTTY === true && stdout.isTTY === true;
 }
 
-function isOutputModeOption(value: string): value is OutputModeOption {
-  return value === "auto" || value === "json" || value === "text";
+function normalizeCommanderMessage(message: string): string {
+  const trimmed = message.replace(/^error:\s*/i, "").trim();
+  return trimmed || "Failed to parse command arguments.";
 }
 
-function printHelp(outputMode: OutputMode) {
-  if (outputMode === "json") {
-    console.log(
-      JSON.stringify({
-        command: "help",
-        data: {
-          commands: commandList,
-          globalOptions: {
-            envFile:
-              "--env-file <path> (load env vars from file; shell env has priority)",
-            output:
-              "--output <mode> (auto|text|json; auto selects json on non-TTY)",
-          },
-          usage:
-            "o3o [--env-file <path>] [--output auto|text|json] <command> [options]",
-        },
-        meta: {
-          schemaVersion: cliOutputSchemaVersion,
-        },
-        ok: true,
-      }),
-    );
-    return;
-  }
-
-  console.log(`o3o CLI
-
-Usage:
-  o3o [--env-file <path>] [--output auto|text|json] <command> [options]
-
-Global options:
-  --env-file <path>  Load env vars from file (env vars in shell take precedence)
-  --output <mode>    Output mode for humans or tools (auto|text|json)
-
-Commands:
-  ${commandList.join("\n  ")}
-`);
-}
-
-function resolveEffectiveOutputMode(outputMode: OutputModeOption): OutputMode {
-  if (outputMode === "auto") {
-    return isInteractiveTerminal() ? "text" : "json";
-  }
-  return outputMode;
+function parseNonEmptyString(optionName: string) {
+  return (value: string): string => {
+    if (!value.trim()) {
+      throw new InvalidArgumentError(
+        `${optionName} requires a non-empty value`,
+      );
+    }
+    return value;
+  };
 }
 
 function resolveEffectiveOutputModeFromArgv(argv: string[]): OutputMode {
-  return resolveEffectiveOutputMode(extractRequestedOutputMode(argv));
+  const requested = extractRequestedOutputMode(argv);
+  if (requested) return requested;
+  return isInteractiveTerminal() ? "text" : "json";
+}
+
+async function runResult(
+  resultAsync: ResultAsync<void, RichError>,
+): Promise<void> {
+  const result = await resultAsync;
+  if (result.isErr()) {
+    throw result.error;
+  }
+}
+
+function toCliInvocationError(cause: unknown): RichError {
+  if (isRichError(cause)) {
+    return cause;
+  }
+
+  if (cause instanceof CommanderError) {
+    return newRichError({
+      cause,
+      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+      details: {
+        action: "ParseCliArguments",
+        reason: normalizeCommanderMessage(cause.message),
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+    });
+  }
+
+  if (cause instanceof Error) {
+    return newRichError({
+      cause,
+      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+      details: {
+        action: "ParseCliArguments",
+        reason: cause.message,
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+    });
+  }
+
+  return newRichError({
+    cause,
+    code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+    details: {
+      action: "ParseCliArguments",
+      reason: "Failed to parse command arguments.",
+    },
+    isOperational: true,
+    kind: "Validation",
+    layer: "Presentation",
+  });
 }
 
 const invocationArgv = process.argv.slice(2);

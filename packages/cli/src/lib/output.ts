@@ -1,34 +1,66 @@
+import { ok } from "neverthrow";
+import type { Result } from "neverthrow";
+
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { toCliErrorMessage, toCliErrorPayload } from "./cli-error-message";
+import {
+  type CliErrorPayload,
+  toCliErrorMessage,
+  toCliErrorPayload,
+} from "./cli-error-message";
 
-export const cliOutputSchemaVersion = "v1";
+export const cliOutputVersion = 1;
 
-export type OutputMode = "json" | "text";
-export type OutputModeOption = "auto" | OutputMode;
+export type CliJsonEnvelope = CliJsonFailure | CliJsonSuccess;
 
-type JsonSuccessPayload = {
-  command: string;
-  data?: unknown;
-  message?: string;
-  meta: {
-    schemaVersion: typeof cliOutputSchemaVersion;
-  };
-  ok: true;
+export type CliJsonFailure = {
+  command?: string;
+  error: CliErrorPayload["error"];
+  meta: CliOutputMeta;
+  ok: false;
 };
 
-export function printCliError(error: RichError, outputMode: OutputMode): void {
+export type CliJsonSuccess = {
+  command: string;
+  message?: string;
+  meta: CliOutputMeta;
+  ok: true;
+  value: unknown;
+};
+
+export type OutputMode = "json" | "text";
+
+type CliOutputMeta = {
+  version: typeof cliOutputVersion;
+};
+
+type CliPrintResult = Result<CliSuccessValue, RichError>;
+
+type CliSuccessValue = {
+  command: string;
+  message?: string;
+  value: unknown;
+};
+
+export function printCliError(
+  error: RichError,
+  outputMode: OutputMode,
+  command?: string,
+): void {
   if (outputMode === "json") {
-    console.error(
-      JSON.stringify({
-        ...toCliErrorPayload(error),
-        meta: {
-          schemaVersion: cliOutputSchemaVersion,
-        },
-      }),
-    );
+    const basePayload = toCliErrorPayload(error);
+    const payload: CliJsonFailure = {
+      error: basePayload.error,
+      meta: {
+        version: cliOutputVersion,
+      },
+      ok: false,
+      ...(command ? { command } : {}),
+    };
+    console.error(JSON.stringify(payload));
     return;
   }
+
   console.error(toCliErrorMessage(error));
 }
 
@@ -39,16 +71,10 @@ export function printSuccessData(
   textRenderer: (data: unknown) => void,
 ): void {
   if (outputMode === "json") {
-    printJsonSuccess({
-      command,
-      data,
-      meta: {
-        schemaVersion: cliOutputSchemaVersion,
-      },
-      ok: true,
-    });
+    printCliResult(ok({ command, value: data }), outputMode);
     return;
   }
+
   textRenderer(data);
 }
 
@@ -58,19 +84,30 @@ export function printSuccessMessage(
   outputMode: OutputMode,
 ): void {
   if (outputMode === "json") {
-    printJsonSuccess({
-      command,
-      message,
-      meta: {
-        schemaVersion: cliOutputSchemaVersion,
-      },
-      ok: true,
-    });
+    printCliResult(ok({ command, message, value: null }), outputMode);
     return;
   }
+
   console.log(message);
 }
 
-function printJsonSuccess(payload: JsonSuccessPayload): void {
-  console.log(JSON.stringify(payload));
+function printCliResult(result: CliPrintResult, outputMode: OutputMode): void {
+  result.match(
+    ({ command, message, value }) => {
+      if (outputMode !== "json") return;
+      const payload: CliJsonSuccess = {
+        command,
+        ...(message ? { message } : {}),
+        meta: {
+          version: cliOutputVersion,
+        },
+        ok: true,
+        value,
+      };
+      console.log(JSON.stringify(payload));
+    },
+    (error) => {
+      printCliError(error, outputMode);
+    },
+  );
 }

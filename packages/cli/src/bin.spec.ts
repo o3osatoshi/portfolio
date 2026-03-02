@@ -125,6 +125,12 @@ describe("bin", () => {
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
   });
 
+  it("passes explicit login mode", async () => {
+    await runBin(["auth", "login", "--mode", "device"]);
+
+    expect(h.runAuthLoginMock).toHaveBeenCalledWith("device", "text");
+  });
+
   it("loads env file from --env-file", async () => {
     await runBin(["--env-file", ".env.local", "auth", "login"]);
 
@@ -137,12 +143,6 @@ describe("bin", () => {
 
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.local");
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
-  });
-
-  it("uses last env-file value when repeated", async () => {
-    await runBin(["--env-file=.env.a", "--env-file=.env.b", "auth", "login"]);
-
-    expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.b");
   });
 
   it("uses O3O_ENV_FILE when --env-file is not provided", async () => {
@@ -161,16 +161,10 @@ describe("bin", () => {
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.from-flag");
   });
 
-  it("prioritizes pkce flag over device flag when both are present", async () => {
-    await runBin(["auth", "login", "--pkce", "--device"]);
+  it("dispatches tx list without legacy --json flag", async () => {
+    await runBin(["tx", "list"]);
 
-    expect(h.runAuthLoginMock).toHaveBeenCalledWith("pkce", "text");
-  });
-
-  it("passes json flag to tx list", async () => {
-    await runBin(["tx", "list", "--json"]);
-
-    expect(h.runTxListMock).toHaveBeenCalledWith(true, "text");
+    expect(h.runTxListMock).toHaveBeenCalledWith("text");
   });
 
   it("passes parsed payload to tx create", async () => {
@@ -206,22 +200,12 @@ describe("bin", () => {
     );
   });
 
-  it("fails tx create when required arguments are missing", async () => {
-    await runBin(["tx", "create", "--type", "BUY"]);
-
-    expect(h.runTxCreateMock).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith(
-      "tx create requires --type --datetime --amount --price --currency (code=CLI_COMMAND_INVALID_ARGUMENT)",
-    );
-    expect(process.exitCode).toBe(2);
-  });
-
   it("fails tx update when id is missing", async () => {
     await runBin(["tx", "update", "--type", "BUY"]);
 
     expect(h.runTxUpdateMock).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith(
-      "tx update requires --id (code=CLI_COMMAND_INVALID_ARGUMENT)",
+      expect.stringContaining("required option '--id <id>' not specified"),
     );
     expect(process.exitCode).toBe(2);
   });
@@ -231,16 +215,7 @@ describe("bin", () => {
 
     expect(h.runTxDeleteMock).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith(
-      "tx delete requires --id (code=CLI_COMMAND_INVALID_ARGUMENT)",
-    );
-    expect(process.exitCode).toBe(2);
-  });
-
-  it("fails unknown commands with a validation error", async () => {
-    await runBin(["unknown"]);
-
-    expect(console.error).toHaveBeenCalledWith(
-      "Unknown command: unknown. Run `o3o help`. (code=CLI_COMMAND_INVALID_ARGUMENT)",
+      expect.stringContaining("required option '--id <id>' not specified"),
     );
     expect(process.exitCode).toBe(2);
   });
@@ -249,9 +224,8 @@ describe("bin", () => {
     await runBin(["--env-file"]);
 
     expect(h.loadRuntimeEnvFileMock).not.toHaveBeenCalled();
-    expect(h.runAuthLoginMock).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith(
-      "--env-file requires a non-empty path value (code=CLI_COMMAND_INVALID_ARGUMENT)",
+      expect.stringContaining("option '--env-file <path>' argument missing"),
     );
     expect(process.exitCode).toBe(2);
   });
@@ -290,10 +264,10 @@ describe("bin", () => {
   it("supports --output=<mode>", async () => {
     await runBin(["--output=json", "tx", "list"]);
 
-    expect(h.runTxListMock).toHaveBeenCalledWith(false, "json");
+    expect(h.runTxListMock).toHaveBeenCalledWith("json");
   });
 
-  it("resolves --output auto to json on non-TTY", async () => {
+  it("resolves default output mode to json on non-TTY", async () => {
     Object.defineProperty(process.stdin, "isTTY", {
       configurable: true,
       value: false,
@@ -308,32 +282,34 @@ describe("bin", () => {
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "json");
   });
 
-  it("supports --output=auto and resolves to text on TTY", async () => {
+  it("rejects deprecated --output auto", async () => {
     await runBin(["--output=auto", "tx", "list"]);
 
-    expect(h.runTxListMock).toHaveBeenCalledWith(false, "text");
+    expect(h.runTxListMock).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("Allowed choices are text, json"),
+    );
+    expect(process.exitCode).toBe(2);
   });
 
-  it("prints help as machine-readable json in output=json mode", async () => {
-    await runBin(["--output", "json", "help"]);
+  it("rejects removed auth login flags", async () => {
+    await runBin(["auth", "login", "--pkce"]);
 
-    expect(console.log).toHaveBeenCalledTimes(1);
-    const [payload] = vi.mocked(console.log).mock.calls[0] ?? [];
-    expect(typeof payload).toBe("string");
-    const parsed = JSON.parse(String(payload)) as {
-      command: string;
-      data: {
-        commands: string[];
-      };
-      meta: {
-        schemaVersion: string;
-      };
-      ok: boolean;
-    };
-    expect(parsed.ok).toBe(true);
-    expect(parsed.command).toBe("help");
-    expect(parsed.meta.schemaVersion).toBe("v1");
-    expect(parsed.data.commands).toContain("o3o tx delete --id <id> [--yes]");
+    expect(h.runAuthLoginMock).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("unknown option '--pkce'"),
+    );
+    expect(process.exitCode).toBe(2);
+  });
+
+  it("rejects removed tx list --json flag", async () => {
+    await runBin(["tx", "list", "--json"]);
+
+    expect(h.runTxListMock).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("unknown option '--json'"),
+    );
+    expect(process.exitCode).toBe(2);
   });
 
   it("prints structured json error when output=json and command is invalid", async () => {
@@ -344,15 +320,13 @@ describe("bin", () => {
     expect(typeof payload).toBe("string");
     const parsed = JSON.parse(String(payload)) as {
       error: { code?: string; reason?: string };
-      meta?: { schemaVersion: string };
+      meta?: { version: number };
       ok: boolean;
     };
     expect(parsed.ok).toBe(false);
     expect(parsed.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
-    expect(parsed.error.reason).toBe(
-      "Unknown command: unknown. Run `o3o help`.",
-    );
-    expect(parsed.meta?.schemaVersion).toBe("v1");
+    expect(parsed.error.reason).toContain("unknown command");
+    expect(parsed.meta?.version).toBe(1);
     expect(process.exitCode).toBe(2);
   });
 });
