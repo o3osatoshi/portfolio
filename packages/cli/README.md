@@ -26,16 +26,30 @@ o3o
 3. Run transaction commands.
 
 ```bash
-o3o auth login
+o3o auth login --mode auto
 o3o auth whoami
-o3o tx list --json
+o3o --output json tx list
 ```
 
 By default, the CLI uses built-in runtime settings for the standard o3o environment, so no environment variables are required for normal usage.
 
+## Output Modes
+
+Global output option:
+
+```bash
+o3o --output text ...
+o3o --output json ...
+```
+
+When `--output` is omitted, output mode is selected automatically:
+
+- Interactive terminal (TTY): `text`
+- Non-interactive environment (Codex/CI/pipes): `json`
+
 ## Codex / Automation First Usage
 
-For tool-driven execution (Codex, CI, scripts), use global JSON output:
+For tool-driven execution (Codex, CI, scripts), use `--output json`:
 
 ```bash
 o3o --output json auth whoami
@@ -44,29 +58,30 @@ o3o --output json tx create --type BUY --datetime 2026-01-01T00:00:00.000Z --amo
 o3o --output json tx delete --id <id> --yes
 ```
 
-Behavior in JSON mode:
+JSON contract (`v1`):
 
-- Success: `{"ok":true,"command":"...","data":...,"meta":{"schemaVersion":"v1"}}` or `{"ok":true,"command":"...","message":"...","meta":{"schemaVersion":"v1"}}`
-- Error: `{"ok":false,"error":{"code":"...","kind":"...","layer":"...","message":"...","reason":"..."},"meta":{"schemaVersion":"v1"}}`
-- `tx delete` requires `--yes` (no interactive prompt in machine-oriented flows)
+- Success: `{"ok":true,"command":"...","value":...,"message":"...","meta":{"version":1}}`
+- Error: `{"ok":false,"error":{"code":"...","kind":"...","layer":"...","message":"...","reason":"..."},"meta":{"version":1}}`
 
-Default output mode is `auto`:
+Notes:
 
-- Interactive terminal (TTY): text output
-- Non-interactive environment (Codex/CI/pipes): JSON output
+- `value` is the machine-readable payload.
+- `message` is optional summary text for humans.
+- `tx delete` requires `--yes` in JSON mode / non-interactive mode.
+- In JSON mode, stdout contains only machine-readable JSON (informational prompts go to stderr).
 
 ## Authentication
 
-`o3o auth login` supports three modes:
+`o3o auth login` supports three modes via `--mode`:
 
 - `auto` (default): PKCE first, then falls back to Device Flow when PKCE is unavailable.
 - `pkce`: force browser + localhost callback.
 - `device`: force Device Authorization Flow.
 
 ```bash
-o3o auth login
-o3o auth login --pkce
-o3o auth login --device
+o3o auth login --mode auto
+o3o auth login --mode pkce
+o3o auth login --mode device
 ```
 
 For PKCE with the default port, register this callback URL in your OIDC app:
@@ -80,8 +95,8 @@ If your local callback port differs, update the callback URL accordingly.
 For local development, you can switch runtime settings with an env file:
 
 ```bash
-o3o --env-file .env.local auth login
-o3o --env-file .env.local tx list --json
+o3o --env-file .env.local auth login --mode auto
+o3o --env-file .env.local tx list
 ```
 
 ## Commands
@@ -89,10 +104,10 @@ o3o --env-file .env.local tx list --json
 ### Basic
 
 ```bash
-o3o help
+o3o --help
 o3o hello
-o3o [--output auto|text|json] ...
-o3o auth login [--pkce|--device]
+o3o [--output text|json] [--env-file <path>] ...
+o3o auth login [--mode auto|pkce|device]
 o3o auth whoami
 o3o auth logout
 ```
@@ -100,7 +115,7 @@ o3o auth logout
 ### Transactions
 
 ```bash
-o3o tx list [--json]
+o3o tx list
 o3o tx create --type BUY|SELL --datetime <iso> --amount <num> --price <num> --currency <code> [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]
 o3o tx update --id <id> [--type BUY|SELL] [--datetime <iso>] [--amount <num>] [--price <num>] [--currency <code>] [--fee <num>] [--fee-currency <code>] [--profit-loss <num>]
 o3o tx delete --id <id> [--yes]
@@ -131,7 +146,7 @@ pnpm -C packages/cli test:e2e
 - `Required scope is missing: transactions:read` / `transactions:write`
   - Ensure your API permissions/scopes are granted to the authenticated user.
 - `Unauthorized. Please run o3o auth login.`
-  - Re-run `o3o auth login`, then retry the command.
+  - Re-run `o3o auth login --mode auto`, then retry the command.
 - `tx delete requires --yes in non-interactive mode.`
   - Add `--yes` when running from Codex/CI/shell automation.
 - `Secure token storage (OS keychain) is unavailable`
