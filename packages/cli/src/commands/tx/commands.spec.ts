@@ -150,6 +150,21 @@ describe("commands/tx", () => {
     expect(console.log).toHaveBeenCalledWith("Deleted.");
   });
 
+  it("runTxDelete returns local prompt error when confirmation input fails", async () => {
+    h.questionMock.mockRejectedValueOnce(new Error("stdin unavailable"));
+
+    const result = await runTxDelete("tx-prompt-failed", false, "text");
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_PROMPT_READ_FAILED");
+    expect(result.error.details?.reason).toBe(
+      "Failed to read confirmation input.",
+    );
+    expect(h.closeMock).toHaveBeenCalledTimes(1);
+    expect(h.deleteTransactionMock).not.toHaveBeenCalled();
+  });
+
   it("runTxList prints JSON when asJson=true", async () => {
     h.listTransactionsMock.mockReturnValueOnce(
       okAsync([

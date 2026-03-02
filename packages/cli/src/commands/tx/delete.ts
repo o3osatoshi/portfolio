@@ -63,7 +63,7 @@ export function runTxDelete(
     (cause) =>
       newRichError({
         cause,
-        code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+        code: cliErrorCodes.CLI_PROMPT_READ_FAILED,
         details: {
           action: "ConfirmDeleteTransaction",
           reason: "Failed to read confirmation input.",

@@ -30,7 +30,7 @@ describe("lib/exit-code", () => {
 
   it("maps forbidden errors to 4", () => {
     const error = newRichError({
-      code: "CLI_SCOPE_FORBIDDEN",
+      code: cliErrorCodes.CLI_SCOPE_FORBIDDEN,
       isOperational: true,
       kind: "Forbidden",
       layer: "Presentation",
@@ -53,6 +53,17 @@ describe("lib/exit-code", () => {
   it("maps local runtime errors to 6", () => {
     const error = newRichError({
       code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
+      isOperational: true,
+      kind: "Internal",
+      layer: "Presentation",
+    });
+
+    expect(resolveCliExitCode(error)).toBe(6);
+  });
+
+  it("maps prompt read errors to 6", () => {
+    const error = newRichError({
+      code: cliErrorCodes.CLI_PROMPT_READ_FAILED,
       isOperational: true,
       kind: "Internal",
       layer: "Presentation",

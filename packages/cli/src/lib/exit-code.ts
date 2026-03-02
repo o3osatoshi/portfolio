@@ -27,7 +27,7 @@ export function resolveCliExitCode(error: RichError): number {
     return EXIT_CODE_UNAUTHORIZED;
   }
 
-  if (error.kind === "Forbidden" || code === "CLI_SCOPE_FORBIDDEN") {
+  if (error.kind === "Forbidden" || code === cliErrorCodes.CLI_SCOPE_FORBIDDEN) {
     return EXIT_CODE_FORBIDDEN;
   }
 
@@ -44,6 +44,7 @@ export function resolveCliExitCode(error: RichError): number {
 
   if (
     code === cliErrorCodes.CLI_ENV_FILE_LOAD_FAILED ||
+    code === cliErrorCodes.CLI_PROMPT_READ_FAILED ||
     code === cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE ||
     code === cliErrorCodes.CLI_TOKEN_STORE_CLEAR_FAILED ||
     code === cliErrorCodes.CLI_TOKEN_STORE_MIGRATION_FAILED ||
