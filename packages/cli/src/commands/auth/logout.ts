@@ -12,6 +12,7 @@ export function runAuthLogout(
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
   return readTokenSet()
+    .orElse(() => okAsync(null))
     .andThen((token) => {
       const refreshTokenValue = token?.refresh_token;
       if (!refreshTokenValue) {

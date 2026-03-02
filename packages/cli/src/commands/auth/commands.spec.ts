@@ -166,6 +166,30 @@ describe("commands/auth", () => {
     expect(console.log).toHaveBeenCalledWith("Logged out.");
   });
 
+  it("runAuthLogout still clears local tokens when readTokenSet fails", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      errAsync(new Error("boom") as never),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).not.toHaveBeenCalled();
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout returns error when clearTokenSet fails", async () => {
+    h.clearTokenSetMock.mockReturnValueOnce(
+      errAsync(new Error("clear failed") as never),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isErr()).toBe(true);
+    expect(console.log).not.toHaveBeenCalledWith("Logged out.");
+  });
+
   it("runAuthWhoami prints formatted JSON", async () => {
     h.fetchMeMock.mockReturnValueOnce(
       okAsync({
