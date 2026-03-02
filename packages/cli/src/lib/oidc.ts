@@ -589,13 +589,18 @@ function toReason(cause: unknown, fallback: string): string {
 }
 
 function withExpiry(token: z.infer<typeof tokenSchema>): TokenSet {
+  const expiresAt =
+    token.expires_in !== undefined
+      ? Math.floor(Date.now() / 1000) + token.expires_in
+      : undefined;
+
   return {
     access_token: token.access_token,
-    expires_at: token.expires_in
-      ? Math.floor(Date.now() / 1000) + token.expires_in
-      : undefined,
-    refresh_token: token.refresh_token,
-    scope: token.scope,
-    token_type: token.token_type,
+    ...(expiresAt !== undefined ? { expires_at: expiresAt } : {}),
+    ...(token.refresh_token !== undefined
+      ? { refresh_token: token.refresh_token }
+      : {}),
+    ...(token.scope !== undefined ? { scope: token.scope } : {}),
+    ...(token.token_type !== undefined ? { token_type: token.token_type } : {}),
   };
 }

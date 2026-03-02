@@ -174,10 +174,14 @@ function ensureAccessToken(
           ),
       )
       .andThen((refreshed) => {
+        const refreshTokenValue =
+          refreshed.refresh_token ?? token.refresh_token;
         const merged: TokenSet = {
           ...token,
           ...refreshed,
-          refresh_token: refreshed.refresh_token ?? token.refresh_token,
+          ...(refreshTokenValue !== undefined
+            ? { refresh_token: refreshTokenValue }
+            : {}),
         };
 
         return writeTokenSet(merged).map(() => merged);

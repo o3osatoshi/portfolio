@@ -324,7 +324,23 @@ function newBackendUnavailableError(action: string, cause: unknown): RichError {
 function parseTokenSet(raw: string): null | TokenSet {
   try {
     const parsed = tokenSchema.safeParse(JSON.parse(raw));
-    return parsed.success ? parsed.data : null;
+    if (!parsed.success) {
+      return null;
+    }
+
+    return {
+      access_token: parsed.data.access_token,
+      ...(parsed.data.expires_at !== undefined
+        ? { expires_at: parsed.data.expires_at }
+        : {}),
+      ...(parsed.data.refresh_token !== undefined
+        ? { refresh_token: parsed.data.refresh_token }
+        : {}),
+      ...(parsed.data.scope !== undefined ? { scope: parsed.data.scope } : {}),
+      ...(parsed.data.token_type !== undefined
+        ? { token_type: parsed.data.token_type }
+        : {}),
+    };
   } catch {
     return null;
   }
