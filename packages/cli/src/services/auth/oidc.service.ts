@@ -435,6 +435,7 @@ async function loginByPkce(
   authorizationUrl.searchParams.set("code_challenge_method", "S256");
 
   let code: string;
+  let closeError: unknown;
   let primaryError: unknown;
   try {
     await openBrowser(authorizationUrl.toString(), redirectUri);
@@ -446,13 +447,13 @@ async function loginByPkce(
     throw error;
   } finally {
     disposeCallbackListener?.();
-    try {
-      await closeServer(server);
-    } catch (closeError) {
-      if (primaryError === undefined) {
-        throw closeError;
-      }
-    }
+    await closeServer(server).catch((error) => {
+      closeError = error;
+    });
+  }
+
+  if (closeError !== undefined && primaryError === undefined) {
+    throw closeError;
   }
 
   const body = new URLSearchParams({
