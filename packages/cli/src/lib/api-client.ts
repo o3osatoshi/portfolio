@@ -1,5 +1,4 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
-import { z } from "zod";
 
 import { newRichError, parseWith, type RichError } from "@o3osatoshi/toolkit";
 
@@ -7,46 +6,20 @@ import { cliErrorCodes } from "./cli-error-catalog";
 import { toAsync } from "./cli-result";
 import { getRuntimeConfig } from "./config";
 import { refreshToken } from "./oidc";
+import {
+  type ApiErrorResponse,
+  apiErrorResponseSchema,
+  type MeResponse,
+  meSchema,
+  transactionListSchema,
+  type TransactionResponse,
+  transactionSchema,
+} from "./schemas/api";
 import { clearTokenSet, readTokenSet, writeTokenSet } from "./token-store";
 import type { CliRuntimeConfig, TokenSet } from "./types";
 
-const meSchema = z.object({
-  issuer: z.string(),
-  scopes: z.array(z.string()),
-  subject: z.string(),
-  userId: z.string(),
-});
-
-const transactionSchema = z.object({
-  id: z.string(),
-  amount: z.string(),
-  createdAt: z.string().or(z.date()),
-  currency: z.string(),
-  datetime: z.string().or(z.date()),
-  fee: z.string().optional(),
-  feeCurrency: z.string().optional(),
-  price: z.string(),
-  profitLoss: z.string().optional(),
-  type: z.enum(["BUY", "SELL"]),
-  updatedAt: z.string().or(z.date()),
-  userId: z.string(),
-});
-
-const apiErrorResponseSchema = z.looseObject({
-  code: z.string().optional(),
-  details: z
-    .looseObject({
-      reason: z.string().optional(),
-    })
-    .optional(),
-  message: z.string().optional(),
-});
-
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
-
-export type MeResponse = z.infer<typeof meSchema>;
-export type TransactionResponse = z.infer<typeof transactionSchema>;
 
 export function createTransaction(
   payload: Record<string, unknown>,
@@ -94,7 +67,7 @@ export function listTransactions(): ResultAsync<
     method: "GET",
   }).andThen((json) =>
     toAsync(
-      parseWith(z.array(transactionSchema), {
+      parseWith(transactionListSchema, {
         action: "DecodeListTransactionsResponse",
         layer: "Presentation",
       })(json),
@@ -226,9 +199,7 @@ function nowSeconds() {
   return Math.floor(Date.now() / 1000);
 }
 
-function parseApiError(
-  text: string,
-): null | z.infer<typeof apiErrorResponseSchema> {
+function parseApiError(text: string): ApiErrorResponse | null {
   try {
     const parsed = apiErrorResponseSchema.safeParse(JSON.parse(text));
     return parsed.success ? parsed.data : null;
