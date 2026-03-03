@@ -14,8 +14,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cliErrorCodes } from "../../common/error-catalog";
 
 const h = vi.hoisted(() => ({
-  keychainConstructFailuresRemaining: 0,
   homeDir: "",
+  keychainConstructFailuresRemaining: 0,
   keychainMode: "ok" as "ok" | "unavailable",
   keychainStore: new Map<string, string>(),
 }));
