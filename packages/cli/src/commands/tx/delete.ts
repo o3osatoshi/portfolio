@@ -2,18 +2,41 @@ import { stdin, stdout } from "node:process";
 import { createInterface } from "node:readline/promises";
 
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { z } from "zod";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { deleteTransaction } from "../../lib/api-client";
 import { cliErrorCodes } from "../../lib/cli-error-catalog";
+import { parseCliWithSchema } from "../../lib/cli-zod";
 import { type OutputMode, printSuccessMessage } from "../../lib/output";
+
+const txDeleteArgsSchema = z.object({
+  id: z.string().trim().min(1),
+});
 
 export function runTxDelete(
   id: string,
   confirmed: boolean,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
+  const parsedArgs = parseCliWithSchema(
+    txDeleteArgsSchema,
+    { id },
+    {
+      action: "ParseTxDeleteArguments",
+      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+      context: "tx delete arguments",
+      fallbackHint: "Use `o3o tx delete --id <id> [--yes]`.",
+    },
+  );
+
+  if (parsedArgs.isErr()) {
+    return errAsync(parsedArgs.error);
+  }
+
+  const transactionId = parsedArgs.value.id;
+
   if (outputMode === "json" && !confirmed) {
     return errAsync(
       newRichError({
@@ -45,7 +68,7 @@ export function runTxDelete(
   }
 
   if (confirmed) {
-    return deleteTransaction(id).map(() => {
+    return deleteTransaction(transactionId).map(() => {
       printSuccessMessage("tx.delete", "Deleted.", outputMode);
       return undefined;
     });
@@ -55,7 +78,7 @@ export function runTxDelete(
     (async () => {
       const rl = createInterface({ input: stdin, output: stdout });
       try {
-        return await rl.question(`Delete transaction ${id}? [y/N] `);
+        return await rl.question(`Delete transaction ${transactionId}? [y/N] `);
       } finally {
         rl.close();
       }
@@ -78,7 +101,7 @@ export function runTxDelete(
       return okAsync(undefined);
     }
 
-    return deleteTransaction(id).map(() => {
+    return deleteTransaction(transactionId).map(() => {
       printSuccessMessage("tx.delete", "Deleted.", outputMode);
       return undefined;
     });

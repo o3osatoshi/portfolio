@@ -95,6 +95,22 @@ describe("commands/tx", () => {
     );
   });
 
+  it("runTxCreate returns validation error when required value is empty", async () => {
+    const result = await runTxCreate({
+      amount: "1",
+      currency: "",
+      datetime: "2026-01-01T00:00:00.000Z",
+      price: "100",
+      type: "BUY",
+    });
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toContain("currency");
+    expect(h.createTransactionMock).not.toHaveBeenCalled();
+  });
+
   it("runTxUpdate maps partial args and prints completion message", async () => {
     h.updateTransactionMock.mockReturnValueOnce(okAsync(undefined));
 
@@ -114,6 +130,35 @@ describe("commands/tx", () => {
     expect(console.log).toHaveBeenCalledWith("Updated.");
   });
 
+  it("runTxUpdate keeps zero-like values instead of dropping them", async () => {
+    h.updateTransactionMock.mockReturnValueOnce(okAsync(undefined));
+
+    const result = await runTxUpdate({
+      id: "tx-zero",
+      fee: "0",
+      price: "0",
+    });
+
+    expect(result.isOk()).toBe(true);
+    expect(h.updateTransactionMock).toHaveBeenCalledWith("tx-zero", {
+      fee: "0",
+      price: "0",
+    });
+  });
+
+  it("runTxUpdate returns validation error when optional value is empty string", async () => {
+    const result = await runTxUpdate({
+      id: "tx-empty",
+      currency: "",
+    });
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toContain("currency");
+    expect(h.updateTransactionMock).not.toHaveBeenCalled();
+  });
+
   it("runTxDelete skips prompt when confirmed=true", async () => {
     h.deleteTransactionMock.mockReturnValueOnce(okAsync(undefined));
 
@@ -123,6 +168,16 @@ describe("commands/tx", () => {
     expect(h.questionMock).not.toHaveBeenCalled();
     expect(h.deleteTransactionMock).toHaveBeenCalledWith("tx-3");
     expect(console.log).toHaveBeenCalledWith("Deleted.");
+  });
+
+  it("runTxDelete validates transaction id at command boundary", async () => {
+    const result = await runTxDelete("   ", true);
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(result.error.details?.reason).toContain("tx delete arguments");
+    expect(h.deleteTransactionMock).not.toHaveBeenCalled();
   });
 
   it("runTxDelete cancels when user does not confirm", async () => {

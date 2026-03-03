@@ -15,6 +15,13 @@ type JsonErrorEnvelope = {
   command?: string | undefined;
   error: {
     code?: string | undefined;
+    issues?: Array<{
+      code: string;
+      expected?: string | undefined;
+      message: string;
+      path: string;
+      receivedType?: string | undefined;
+    }>;
     message: string;
   };
   meta: {
@@ -209,6 +216,49 @@ describe("CLI E2E (mock OIDC/API)", () => {
     expect(result.exitCode).toBe(2);
     const payload = expectJsonError(result.stderr);
     expect(payload.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+  });
+
+  it("includes validation issues in json error only when --debug is enabled", async () => {
+    const env = await createCliEnv(oidc.issuer, api.baseUrl, tempHomes);
+
+    const withoutDebug = await runCli({
+      args: [
+        "--output",
+        "json",
+        "tx",
+        "update",
+        "--id",
+        "tx-1",
+        "--currency",
+        "",
+      ],
+      cwd: cliPackageDir,
+      env,
+    });
+    expect(withoutDebug.exitCode).toBe(2);
+    const withoutDebugPayload = expectJsonError(withoutDebug.stderr);
+    expect(withoutDebugPayload.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(withoutDebugPayload.error.issues).toBeUndefined();
+
+    const withDebug = await runCli({
+      args: [
+        "--output",
+        "json",
+        "--debug",
+        "tx",
+        "update",
+        "--id",
+        "tx-1",
+        "--currency",
+        "",
+      ],
+      cwd: cliPackageDir,
+      env,
+    });
+    expect(withDebug.exitCode).toBe(2);
+    const withDebugPayload = expectJsonError(withDebug.stderr);
+    expect(withDebugPayload.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
+    expect(withDebugPayload.error.issues?.[0]?.path).toBe("currency");
   });
 
   it("refreshes expired tokens before calling API", async () => {
