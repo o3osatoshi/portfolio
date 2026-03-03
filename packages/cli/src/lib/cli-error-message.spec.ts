@@ -46,4 +46,73 @@ describe("lib/cli-error-message", () => {
       ok: false,
     });
   });
+
+  it("prints debug details block in text output when validation issues exist", () => {
+    const error = newRichError({
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      details: {
+        action: "ParseTxUpdateArguments",
+        hint: "Use `o3o tx update --help` to review accepted options.",
+        reason:
+          "Invalid tx update arguments: currency: Too small string: min 1 (inclusive)",
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+      meta: {
+        validationIssues: [
+          {
+            code: "too_small",
+            expected: "string",
+            message: "Too small string: min 1 (inclusive)",
+            path: "currency",
+            receivedType: "string",
+          },
+        ],
+      },
+    });
+
+    expect(toCliErrorMessage(error, { debug: true })).toBe(
+      [
+        "Invalid tx update arguments: currency: Too small string: min 1 (inclusive) (code=CLI_COMMAND_INVALID_ARGUMENT)",
+        "Details:",
+        "- currency: Too small string: min 1 (inclusive) (code=too_small, expected=string, receivedType=string)",
+        "Try: Use `o3o tx update --help` to review accepted options.",
+      ].join("\n"),
+    );
+  });
+
+  it("includes validation issues in json payload only when debug is enabled", () => {
+    const error = newRichError({
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      details: {
+        action: "ParseTxUpdateArguments",
+        reason:
+          "Invalid tx update arguments: currency: Too small string: min 1 (inclusive)",
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+      meta: {
+        validationIssues: [
+          {
+            code: "too_small",
+            expected: "string",
+            message: "Too small string: min 1 (inclusive)",
+            path: "currency",
+          },
+        ],
+      },
+    });
+
+    expect(toCliErrorPayload(error).error.issues).toBeUndefined();
+    expect(toCliErrorPayload(error, { debug: true }).error.issues).toEqual([
+      {
+        code: "too_small",
+        expected: "string",
+        message: "Too small string: min 1 (inclusive)",
+        path: "currency",
+      },
+    ]);
+  });
 });

@@ -1,9 +1,12 @@
 import type { RichError } from "@o3osatoshi/toolkit";
 
+import { type CliValidationIssue, extractCliValidationIssues } from "./cli-zod";
+
 export type CliErrorPayload = {
   error: {
     action?: string | undefined;
     code?: string | undefined;
+    issues?: CliValidationIssue[] | undefined;
     kind: string;
     layer: string;
     message: string;
@@ -12,19 +15,57 @@ export type CliErrorPayload = {
   ok: false;
 };
 
-export function toCliErrorMessage(error: RichError): string {
+type CliErrorRenderOptions = {
+  debug?: boolean | undefined;
+};
+
+export function toCliErrorMessage(
+  error: RichError,
+  options: CliErrorRenderOptions = {},
+): string {
   const message = toCliErrorShortMessage(error);
-  if (!error.code) {
-    return message;
+  const base = !error.code ? message : `${message} (code=${error.code})`;
+  if (!options.debug) {
+    return base;
   }
-  return `${message} (code=${error.code})`;
+
+  const issues = extractCliValidationIssues(error);
+  if (issues.length === 0) {
+    return base;
+  }
+
+  const lines = [base, "Details:"];
+  for (const issue of issues) {
+    const attrs = [`code=${issue.code}`];
+    if (issue.expected) {
+      attrs.push(`expected=${issue.expected}`);
+    }
+    if (issue.receivedType) {
+      attrs.push(`receivedType=${issue.receivedType}`);
+    }
+
+    lines.push(`- ${issue.path}: ${issue.message} (${attrs.join(", ")})`);
+  }
+
+  const hint = error.details?.hint?.trim();
+  if (hint) {
+    lines.push(`Try: ${hint}`);
+  }
+
+  return lines.join("\n");
 }
 
-export function toCliErrorPayload(error: RichError): CliErrorPayload {
+export function toCliErrorPayload(
+  error: RichError,
+  options: CliErrorRenderOptions = {},
+): CliErrorPayload {
+  const issues = options.debug ? extractCliValidationIssues(error) : [];
+
   return {
     error: {
       action: error.details?.action,
       code: error.code,
+      ...(issues.length > 0 ? { issues } : {}),
       kind: error.kind,
       layer: error.layer,
       message: toCliErrorShortMessage(error),

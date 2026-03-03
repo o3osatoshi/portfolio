@@ -92,4 +92,54 @@ describe("lib/output", () => {
     expect(parsed.error.message).toBe("tx delete requires --id");
     expect(parsed.meta.version).toBe(cliOutputVersion);
   });
+
+  it("includes validation issues in json envelope only when debug is enabled", () => {
+    const error = newRichError({
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      details: {
+        action: "ParseTxUpdateArguments",
+        reason:
+          "Invalid tx update arguments: currency: Too small string: min 1 (inclusive)",
+      },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+      meta: {
+        validationIssues: [
+          {
+            code: "too_small",
+            expected: "string",
+            message: "Too small string: min 1 (inclusive)",
+            path: "currency",
+          },
+        ],
+      },
+    });
+
+    printCliError(error, "json");
+    let [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
+    let parsed = JSON.parse(String(payload)) as {
+      error: {
+        issues?: unknown[];
+      };
+    };
+    expect(parsed.error.issues).toBeUndefined();
+
+    vi.mocked(console.error).mockClear();
+    printCliError(error, "json", undefined, { debug: true });
+    [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
+    parsed = JSON.parse(String(payload)) as {
+      error: {
+        issues?: unknown[];
+      };
+    };
+    expect(parsed.error.issues).toEqual([
+      {
+        code: "too_small",
+        expected: "string",
+        message: "Too small string: min 1 (inclusive)",
+        path: "currency",
+      },
+    ]);
+  });
 });

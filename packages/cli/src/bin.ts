@@ -27,6 +27,7 @@ import { type OutputMode, printCliError } from "./lib/output";
 
 type AuthLoginMode = "auto" | "device" | "pkce";
 type GlobalCliOptions = {
+  debug?: boolean | undefined;
   envFile?: string | undefined;
   output?: OutputMode | undefined;
 };
@@ -98,6 +99,7 @@ function createProgram(outputMode: OutputMode): Command {
   program
     .name("o3o")
     .description("Official o3o command-line interface")
+    .option("--debug", "Enable verbose diagnostics for errors")
     .option(
       "--env-file <path>",
       "Load env vars from file (env vars in shell take precedence)",
@@ -287,6 +289,10 @@ function parseNonEmptyString(optionName: string) {
   };
 }
 
+function resolveDebugModeFromArgv(argv: string[]): boolean {
+  return argv.includes("--debug");
+}
+
 function resolveEffectiveOutputModeFromArgv(argv: string[]): OutputMode {
   const requested = extractRequestedOutputMode(argv);
   if (requested) return requested;
@@ -350,11 +356,14 @@ function toCliInvocationError(cause: unknown): RichError {
 
 const invocationArgv = process.argv.slice(2);
 const invocationOutputMode = resolveEffectiveOutputModeFromArgv(invocationArgv);
+const invocationDebugMode = resolveDebugModeFromArgv(invocationArgv);
 
 void main(invocationArgv, invocationOutputMode).match(
   () => undefined,
   (error) => {
-    printCliError(error, invocationOutputMode);
+    printCliError(error, invocationOutputMode, undefined, {
+      debug: invocationDebugMode,
+    });
     process.exitCode = resolveCliExitCode(error);
   },
 );

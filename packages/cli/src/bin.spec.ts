@@ -261,6 +261,12 @@ describe("bin", () => {
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "json");
   });
 
+  it("passes debug flag without changing command dispatch", async () => {
+    await runBin(["--debug", "auth", "login"]);
+
+    expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
+  });
+
   it("supports --output=<mode>", async () => {
     await runBin(["--output=json", "tx", "list"]);
 
@@ -327,6 +333,116 @@ describe("bin", () => {
     expect(parsed.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
     expect(parsed.error.reason).toContain("unknown command");
     expect(parsed.meta?.version).toBe(1);
+    expect(process.exitCode).toBe(2);
+  });
+
+  it("includes validation issues in json error when --debug is enabled", async () => {
+    h.runTxUpdateMock.mockReturnValueOnce(
+      errAsync(
+        newRichError({
+          code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+          details: {
+            action: "ParseTxUpdateArguments",
+            hint: "Use `o3o tx update --help` to review accepted options.",
+            reason:
+              "Invalid tx update arguments: currency: Too small string: min 1 (inclusive)",
+          },
+          isOperational: true,
+          kind: "Validation",
+          layer: "Presentation",
+          meta: {
+            validationIssues: [
+              {
+                code: "too_small",
+                expected: "string",
+                message: "Too small string: min 1 (inclusive)",
+                path: "currency",
+                receivedType: "string",
+              },
+            ],
+          },
+        }),
+      ),
+    );
+
+    await runBin([
+      "--output",
+      "json",
+      "--debug",
+      "tx",
+      "update",
+      "--id",
+      "tx-1",
+      "--currency",
+      "",
+    ]);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
+    const [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
+    expect(typeof payload).toBe("string");
+    const parsed = JSON.parse(String(payload)) as {
+      error: { issues?: unknown[] };
+      ok: boolean;
+    };
+    expect(parsed.ok).toBe(false);
+    expect(parsed.error.issues).toEqual([
+      {
+        code: "too_small",
+        expected: "string",
+        message: "Too small string: min 1 (inclusive)",
+        path: "currency",
+        receivedType: "string",
+      },
+    ]);
+    expect(process.exitCode).toBe(2);
+  });
+
+  it("keeps json error contract unchanged when --debug is not enabled", async () => {
+    h.runTxUpdateMock.mockReturnValueOnce(
+      errAsync(
+        newRichError({
+          code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+          details: {
+            action: "ParseTxUpdateArguments",
+            reason:
+              "Invalid tx update arguments: currency: Too small string: min 1 (inclusive)",
+          },
+          isOperational: true,
+          kind: "Validation",
+          layer: "Presentation",
+          meta: {
+            validationIssues: [
+              {
+                code: "too_small",
+                message: "Too small string: min 1 (inclusive)",
+                path: "currency",
+              },
+            ],
+          },
+        }),
+      ),
+    );
+
+    await runBin([
+      "--output",
+      "json",
+      "tx",
+      "update",
+      "--id",
+      "tx-1",
+      "--currency",
+      "",
+    ]);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
+    const [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
+    expect(typeof payload).toBe("string");
+    const parsed = JSON.parse(String(payload)) as {
+      error: { issues?: unknown[] };
+      ok: boolean;
+    };
+    expect(parsed.ok).toBe(false);
+    expect(parsed.error.issues).toBeUndefined();
     expect(process.exitCode).toBe(2);
   });
 });

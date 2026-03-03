@@ -34,6 +34,10 @@ type CliOutputMeta = {
   version: typeof cliOutputVersion;
 };
 
+type CliPrintOptions = {
+  debug?: boolean | undefined;
+};
+
 type CliPrintResult = Result<CliSuccessValue, RichError>;
 
 type CliSuccessValue = {
@@ -46,9 +50,10 @@ export function printCliError(
   error: RichError,
   outputMode: OutputMode,
   command?: string,
+  options: CliPrintOptions = {},
 ): void {
   if (outputMode === "json") {
-    const basePayload = toCliErrorPayload(error);
+    const basePayload = toCliErrorPayload(error, { debug: options.debug });
     const payload: CliJsonFailure = {
       error: basePayload.error,
       meta: {
@@ -61,7 +66,7 @@ export function printCliError(
     return;
   }
 
-  console.error(toCliErrorMessage(error));
+  console.error(toCliErrorMessage(error, { debug: options.debug }));
 }
 
 export function printSuccessData(
