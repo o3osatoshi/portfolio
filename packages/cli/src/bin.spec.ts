@@ -145,6 +145,13 @@ describe("bin", () => {
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
   });
 
+  it("trims --env-file value before loading", async () => {
+    await runBin(["--env-file", ".env.local ", "auth", "login"]);
+
+    expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.local");
+    expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
+  });
+
   it("uses O3O_ENV_FILE when --env-file is not provided", async () => {
     process.env["O3O_ENV_FILE"] = ".env.from-env-var";
 

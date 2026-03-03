@@ -263,7 +263,10 @@ function getFreshnessScore(token: TokenSet): number {
 
 function getKeychainEntry(): Promise<KeychainEntry> {
   if (!keychainEntryPromise) {
-    keychainEntryPromise = loadKeychainEntry();
+    keychainEntryPromise = loadKeychainEntry().catch((error) => {
+      keychainEntryPromise = undefined;
+      throw error;
+    });
   }
   return keychainEntryPromise;
 }

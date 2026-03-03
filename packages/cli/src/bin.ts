@@ -280,12 +280,13 @@ function normalizeCommanderMessage(message: string): string {
 
 function parseNonEmptyString(optionName: string) {
   return (value: string): string => {
-    if (!value.trim()) {
+    const trimmed = value.trim();
+    if (!trimmed) {
       throw new InvalidArgumentError(
         `${optionName} requires a non-empty value`,
       );
     }
-    return value;
+    return trimmed;
   };
 }
 

@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cliErrorCodes } from "../../common/error-catalog";
 
 const h = vi.hoisted(() => ({
+  keychainConstructFailuresRemaining: 0,
   homeDir: "",
   keychainMode: "ok" as "ok" | "unavailable",
   keychainStore: new Map<string, string>(),
@@ -24,6 +25,10 @@ vi.mock("@napi-rs/keyring", () => ({
     private readonly key: string;
 
     constructor(service: string, account: string) {
+      if (h.keychainConstructFailuresRemaining > 0) {
+        h.keychainConstructFailuresRemaining -= 1;
+        throw new Error("keychain entry init failed");
+      }
       this.key = `${service}:${account}`;
     }
 
@@ -70,6 +75,7 @@ describe("services/auth/token-store.service", () => {
   const tokenPath = () => join(h.homeDir, ".config", "o3o", "auth.json");
 
   beforeEach(() => {
+    h.keychainConstructFailuresRemaining = 0;
     h.homeDir = mkdtempSync(join(tmpdir(), "o3o-cli-token-store-"));
     h.keychainMode = "ok";
     h.keychainStore.clear();
@@ -218,6 +224,26 @@ describe("services/auth/token-store.service", () => {
     expect(writeResult.isOk()).toBe(true);
     expect(h.keychainStore.get(keychainTokenKey)).toBe(JSON.stringify(token));
     expect(existsSync(tokenPath())).toBe(false);
+  });
+
+  it("recovers from transient keychain entry load failure", async () => {
+    h.keychainConstructFailuresRemaining = 1;
+    const { writeTokenSet } = await import("./token-store.service");
+
+    const token = {
+      access_token: "access-token",
+      expires_at: 1735689600,
+      refresh_token: "refresh-token",
+      scope: "openid profile",
+      token_type: "Bearer",
+    };
+
+    const firstWriteResult = await writeTokenSet(token);
+    expect(firstWriteResult.isErr()).toBe(true);
+
+    const secondWriteResult = await writeTokenSet(token);
+    expect(secondWriteResult.isOk()).toBe(true);
+    expect(h.keychainStore.get(keychainTokenKey)).toBe(JSON.stringify(token));
   });
 
   it("falls back to file storage when keychain is unavailable and opt-in is enabled", async () => {
