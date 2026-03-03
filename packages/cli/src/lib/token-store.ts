@@ -2,13 +2,13 @@ import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 
-import { Entry } from "@napi-rs/keyring";
 import { errAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import { newRichError, type RichError, toRichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
+import { parseCliWithSchema } from "./cli-zod";
 import type { TokenSet } from "./types";
 
 const tokenSchema = z.object({
@@ -19,21 +19,32 @@ const tokenSchema = z.object({
   token_type: z.string().optional(),
 });
 
+const tokenStoreBackendSchema = z
+  .enum(["auto", "file", "keychain"])
+  .catch("auto");
+const fileFallbackEnvSchema = z.enum(["0", "1"]).catch("0");
+
 const SERVICE = "o3o-cli";
 const ACCOUNT = "default";
 const filePath = join(homedir(), ".config", "o3o", "auth.json");
 const fileFallbackEnvName = "O3O_ALLOW_FILE_TOKEN_STORE";
 const tokenStoreBackendEnvName = "O3O_TOKEN_STORE_BACKEND";
-const keychainEntry = new Entry(SERVICE, ACCOUNT);
 let didWarnFileFallback = false;
+let keychainEntryPromise: Promise<KeychainEntry> | undefined;
 const keychainUnavailableReason =
   "Secure token storage (OS keychain) is unavailable. Set O3O_ALLOW_FILE_TOKEN_STORE=1 only if you accept file-based token storage.";
+
+type KeychainEntry = {
+  deletePassword(): MaybePromise<boolean | undefined>;
+  getPassword(): MaybePromise<null | string | undefined>;
+  setPassword(value: string): MaybePromise<void>;
+};
 
 type KeychainReadResult =
   | { available: false; cause: unknown }
   | { available: true; token: null | TokenSet };
-
 type KeychainWriteResult = { cause: unknown; ok: false } | { ok: true };
+type MaybePromise<T> = Promise<T> | T;
 type TokenStoreBackend = "auto" | "file" | "keychain";
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
@@ -151,24 +162,17 @@ export function writeTokenSet(
   tokenSet: TokenSet,
 ): ResultAsync<void, RichError> {
   const backend = getTokenStoreBackend();
-  const parsed = tokenSchema.safeParse(tokenSet);
-  if (!parsed.success) {
-    return errAsync(
-      newRichError({
-        cause: parsed.error,
-        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
-        details: {
-          action: "WriteTokenSet",
-          reason: "Token payload is invalid.",
-        },
-        isOperational: true,
-        kind: "Validation",
-        layer: "Presentation",
-      }),
-    );
+  const parsed = parseCliWithSchema(tokenSchema, tokenSet, {
+    action: "WriteTokenSet",
+    code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+    context: "token payload",
+    fallbackHint: "Run `o3o auth login` to refresh local credentials.",
+  });
+  if (parsed.isErr()) {
+    return errAsync(parsed.error);
   }
 
-  const serialized = JSON.stringify(parsed.data);
+  const serialized = JSON.stringify(parsed.value);
   return ResultAsync.fromPromise(
     (async () => {
       if (backend === "file") {
@@ -218,6 +222,7 @@ async function deleteKeychainToken(options: {
   strict: boolean;
 }): Promise<void> {
   try {
+    const keychainEntry = await getKeychainEntry();
     await keychainEntry.deletePassword();
   } catch (cause) {
     if (isKeychainNotFoundError(cause)) {
@@ -256,8 +261,16 @@ function getFreshnessScore(token: TokenSet): number {
   return typeof token.expires_at === "number" ? token.expires_at : 0;
 }
 
+function getKeychainEntry(): Promise<KeychainEntry> {
+  if (!keychainEntryPromise) {
+    keychainEntryPromise = loadKeychainEntry();
+  }
+  return keychainEntryPromise;
+}
+
 async function getKeychainToken(): Promise<KeychainReadResult> {
   try {
+    const keychainEntry = await getKeychainEntry();
     const raw = await keychainEntry.getPassword();
     if (!raw) {
       return { available: true, token: null };
@@ -275,11 +288,7 @@ async function getKeychainToken(): Promise<KeychainReadResult> {
 }
 
 function getTokenStoreBackend(): TokenStoreBackend {
-  const value = process.env[tokenStoreBackendEnvName];
-  if (value === "file" || value === "keychain" || value === "auto") {
-    return value;
-  }
-  return "auto";
+  return tokenStoreBackendSchema.parse(process.env[tokenStoreBackendEnvName]);
 }
 
 function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
@@ -292,7 +301,7 @@ function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
 }
 
 function isFileFallbackAllowed(): boolean {
-  return process.env[fileFallbackEnvName] === "1";
+  return fileFallbackEnvSchema.parse(process.env[fileFallbackEnvName]) === "1";
 }
 
 function isKeychainNotFoundError(cause: unknown): boolean {
@@ -305,6 +314,11 @@ function isKeychainNotFoundError(cause: unknown): boolean {
     message.includes("no matching") ||
     message.includes("does not exist")
   );
+}
+
+async function loadKeychainEntry(): Promise<KeychainEntry> {
+  const { Entry } = await import("@napi-rs/keyring");
+  return new Entry(SERVICE, ACCOUNT);
 }
 
 function newBackendUnavailableError(action: string, cause: unknown): RichError {
@@ -389,6 +403,7 @@ async function setKeychainToken(
 ): Promise<KeychainWriteResult> {
   return (async () => {
     try {
+      const keychainEntry = await getKeychainEntry();
       await keychainEntry.setPassword(serialized);
       return { ok: true };
     } catch (cause) {

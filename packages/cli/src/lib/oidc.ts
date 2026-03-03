@@ -13,6 +13,7 @@ import { z } from "zod";
 import { type RichError, toRichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./cli-error-catalog";
+import { parseCliWithSchema } from "./cli-zod";
 import type { OidcConfig, TokenSet } from "./types";
 
 const execFileAsync = promisify(execFile);
@@ -43,6 +44,12 @@ const deviceCodeSchema = z.object({
 
 const deviceTokenErrorSchema = z.object({
   error: z.string().optional(),
+});
+
+const callbackQuerySchema = z.object({
+  code: z.string().trim().min(1).optional(),
+  error: z.string().trim().min(1).optional(),
+  state: z.string().trim().min(1).optional(),
 });
 
 export type LoginMode = "auto" | "device" | "pkce";
@@ -142,14 +149,19 @@ function closeServer(server: ReturnType<typeof createServer>): Promise<void> {
   });
 }
 
-async function discover(issuer: string) {
+async function discover(issuer: string, errorCode: string) {
   const normalized = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
   const res = await fetch(`${normalized}/.well-known/openid-configuration`);
   if (!res.ok) {
     throw new Error(`Failed to fetch OIDC discovery document (${res.status})`);
   }
   const json = await res.json();
-  return discoverySchema.parse(json);
+  return parseOrThrow(discoverySchema, json, {
+    action: "DecodeOidcDiscoveryResponse",
+    code: errorCode,
+    context: "OIDC discovery response",
+    fallbackHint: "Verify OIDC issuer configuration and retry.",
+  });
 }
 
 function escapeHtml(value: string): string {
@@ -199,7 +211,12 @@ async function loginByDeviceCode(
   }
 
   const deviceJson = await deviceResponse.json();
-  const deviceCode = deviceCodeSchema.parse(deviceJson);
+  const deviceCode = parseOrThrow(deviceCodeSchema, deviceJson, {
+    action: "DecodeOidcDeviceCodeResponse",
+    code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+    context: "OIDC device authorization response",
+    fallbackHint: "Retry `o3o auth login --mode device`.",
+  });
 
   const url =
     deviceCode.verification_uri_complete ?? deviceCode.verification_uri;
@@ -240,7 +257,14 @@ async function loginByDeviceCode(
           `Device login failed: received invalid JSON from token endpoint (status ${tokenResponse.status}).`,
         );
       }
-      return withExpiry(tokenSchema.parse(json));
+      return withExpiry(
+        parseOrThrow(tokenSchema, json, {
+          action: "DecodeOidcTokenResponseFromDeviceFlow",
+          code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+          context: "OIDC token response",
+          fallbackHint: "Retry `o3o auth login --mode device`.",
+        }),
+      );
     }
 
     if (json === null) {
@@ -313,7 +337,35 @@ async function loginByPkce(
         return;
       }
 
-      const oauthError = url.searchParams.get("error");
+      const callbackQueryResult = parseCliWithSchema(
+        callbackQuerySchema,
+        {
+          code: url.searchParams.get("code") ?? undefined,
+          error: url.searchParams.get("error") ?? undefined,
+          state: url.searchParams.get("state") ?? undefined,
+        },
+        {
+          action: "DecodePkceCallbackQuery",
+          code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+          context: "PKCE callback query",
+          fallbackHint: "Retry `o3o auth login --mode pkce`.",
+        },
+      );
+
+      if (callbackQueryResult.isErr()) {
+        sendCallbackPage(res, {
+          kind: "error",
+          messageLine1: "Authorization was not completed.",
+          messageLine2: "Return to your terminal and run o3o auth login again.",
+          title: "Sign-in failed",
+        });
+        cleanup();
+        reject(callbackQueryResult.error);
+        return;
+      }
+
+      const callbackQuery = callbackQueryResult.value;
+      const oauthError = callbackQuery.error;
       if (oauthError) {
         sendCallbackPage(res, {
           kind: "error",
@@ -326,8 +378,8 @@ async function loginByPkce(
         return;
       }
 
-      const returnedState = url.searchParams.get("state");
-      const code = url.searchParams.get("code");
+      const returnedState = callbackQuery.state;
+      const code = callbackQuery.code;
       if (!code || returnedState !== state) {
         sendCallbackPage(res, {
           kind: "error",
@@ -416,7 +468,12 @@ async function loginByPkce(
   }
 
   const json = await response.json();
-  const parsed = tokenSchema.parse(json);
+  const parsed = parseOrThrow(tokenSchema, json, {
+    action: "DecodeOidcTokenResponseFromPkceFlow",
+    code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+    context: "OIDC token response",
+    fallbackHint: "Retry `o3o auth login --mode pkce`.",
+  });
   return withExpiry(parsed);
 }
 
@@ -425,7 +482,10 @@ async function loginWithOidcUnsafe(
   mode: LoginMode,
   options?: LoginWithOidcOptions,
 ): Promise<TokenSet> {
-  const discovery = await discover(config.issuer);
+  const discovery = await discover(
+    config.issuer,
+    cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+  );
   if (mode === "device") {
     return loginByDeviceCode(config, discovery, options);
   }
@@ -475,11 +535,32 @@ function parseJsonSafely(text: string): null | unknown {
   }
 }
 
+function parseOrThrow<T extends z.ZodType>(
+  schema: T,
+  input: unknown,
+  options: {
+    action: string;
+    code: string;
+    context: string;
+    fallbackHint?: string | undefined;
+  },
+): z.infer<T> {
+  const parsed = parseCliWithSchema(schema, input, options);
+  if (parsed.isErr()) {
+    throw parsed.error;
+  }
+
+  return parsed.value;
+}
+
 async function refreshTokenUnsafe(
   config: OidcConfig,
   refreshTokenValue: string,
 ): Promise<TokenSet> {
-  const discovery = await discover(config.issuer);
+  const discovery = await discover(
+    config.issuer,
+    cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+  );
   const body = new URLSearchParams({
     client_id: config.clientId,
     grant_type: "refresh_token",
@@ -499,7 +580,12 @@ async function refreshTokenUnsafe(
   }
 
   const json = await response.json();
-  const parsed = tokenSchema.parse(json);
+  const parsed = parseOrThrow(tokenSchema, json, {
+    action: "DecodeOidcTokenResponseFromRefreshFlow",
+    code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+    context: "OIDC token response",
+    fallbackHint: "Run `o3o auth login` and retry.",
+  });
   return withExpiry(parsed);
 }
 
@@ -507,7 +593,10 @@ async function revokeRefreshTokenUnsafe(
   config: OidcConfig,
   refreshTokenValue: string,
 ): Promise<void> {
-  const discovery = await discover(config.issuer);
+  const discovery = await discover(
+    config.issuer,
+    cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
+  );
   if (!discovery.revocation_endpoint) return;
 
   const body = new URLSearchParams({

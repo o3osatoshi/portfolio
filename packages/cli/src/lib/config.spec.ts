@@ -62,6 +62,19 @@ describe("lib/config", () => {
     expect(result.error.details?.reason).toMatch(/oidcRedirectPort/i);
   });
 
+  it("returns validation error when API base URL includes query/hash", async () => {
+    vi.stubEnv("O3O_API_BASE_URL", "https://api.example.com?env=dev#anchor");
+
+    const { getRuntimeConfig } = await import("./config");
+    const result = getRuntimeConfig();
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
+    expect(result.error.details?.reason).toMatch(/apiBaseUrl/i);
+    expect(result.error.details?.reason).toMatch(/query or hash/i);
+  });
+
   it("ignores unrelated environment variables", async () => {
     vi.stubEnv("LEGACY_UNUSED_OIDC_AUDIENCE", "https://legacy-api.example");
     vi.stubEnv("LEGACY_UNUSED_OIDC_CLIENT_ID", "legacy-client-id");

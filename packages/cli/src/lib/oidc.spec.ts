@@ -94,6 +94,31 @@ describe("lib/oidc", () => {
     );
   });
 
+  it("returns validation reason when refresh token response payload is invalid", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          authorization_endpoint: "https://example.auth0.com/authorize",
+          token_endpoint: "https://example.auth0.com/oauth/token",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          expires_in: 3600,
+          refresh_token: "new-refresh-token",
+        }),
+      );
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await refreshToken(config, "old-refresh-token");
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);
+    expect(result.error.details?.reason).toMatch(/Invalid OIDC token response/);
+  });
+
   it("executes device flow and returns tokens", async () => {
     vi.useFakeTimers();
 

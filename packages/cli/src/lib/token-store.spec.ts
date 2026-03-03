@@ -198,6 +198,24 @@ describe("lib/token-store", () => {
     );
   });
 
+  it("falls back to auto backend when O3O_TOKEN_STORE_BACKEND is invalid", async () => {
+    process.env["O3O_TOKEN_STORE_BACKEND"] = "invalid-backend";
+    const { writeTokenSet } = await import("./token-store");
+
+    const token = {
+      access_token: "access-token",
+      expires_at: 1735689600,
+      refresh_token: "refresh-token",
+      scope: "openid profile",
+      token_type: "Bearer",
+    };
+
+    const writeResult = await writeTokenSet(token);
+    expect(writeResult.isOk()).toBe(true);
+    expect(h.keychainStore.get(keychainTokenKey)).toBe(JSON.stringify(token));
+    expect(existsSync(tokenPath())).toBe(false);
+  });
+
   it("falls back to file storage when keychain is unavailable and opt-in is enabled", async () => {
     h.keychainMode = "unavailable";
     process.env["O3O_ALLOW_FILE_TOKEN_STORE"] = "1";
