@@ -11,7 +11,7 @@ import { join } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { cliErrorCodes } from "./cli-error-catalog";
+import { cliErrorCodes } from "../../common/error-catalog";
 
 const h = vi.hoisted(() => ({
   homeDir: "",
@@ -65,7 +65,7 @@ vi.mock("node:os", async () => {
   };
 });
 
-describe("lib/token-store", () => {
+describe("services/auth/token-store.service", () => {
   const keychainTokenKey = "o3o-cli:default";
   const tokenPath = () => join(h.homeDir, ".config", "o3o", "auth.json");
 
@@ -86,7 +86,7 @@ describe("lib/token-store", () => {
 
   it("stores token in keychain and avoids file fallback when keychain is available", async () => {
     const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
-      "./token-store"
+      "./token-store.service"
     );
 
     const token = {
@@ -116,7 +116,9 @@ describe("lib/token-store", () => {
 
   it("returns backend-unavailable error when keychain is unavailable and file fallback is not opted-in", async () => {
     h.keychainMode = "unavailable";
-    const { readTokenSet, writeTokenSet } = await import("./token-store");
+    const { readTokenSet, writeTokenSet } = await import(
+      "./token-store.service"
+    );
 
     const writeResult = await writeTokenSet({
       access_token: "access-token",
@@ -145,7 +147,7 @@ describe("lib/token-store", () => {
     process.env["O3O_TOKEN_STORE_BACKEND"] = "file";
 
     const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
-      "./token-store"
+      "./token-store.service"
     );
 
     const token = {
@@ -175,7 +177,9 @@ describe("lib/token-store", () => {
     h.keychainMode = "unavailable";
     process.env["O3O_TOKEN_STORE_BACKEND"] = "keychain";
 
-    const { readTokenSet, writeTokenSet } = await import("./token-store");
+    const { readTokenSet, writeTokenSet } = await import(
+      "./token-store.service"
+    );
 
     const writeResult = await writeTokenSet({
       access_token: "access-token",
@@ -200,7 +204,7 @@ describe("lib/token-store", () => {
 
   it("falls back to auto backend when O3O_TOKEN_STORE_BACKEND is invalid", async () => {
     process.env["O3O_TOKEN_STORE_BACKEND"] = "invalid-backend";
-    const { writeTokenSet } = await import("./token-store");
+    const { writeTokenSet } = await import("./token-store.service");
 
     const token = {
       access_token: "access-token",
@@ -220,7 +224,7 @@ describe("lib/token-store", () => {
     h.keychainMode = "unavailable";
     process.env["O3O_ALLOW_FILE_TOKEN_STORE"] = "1";
     const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
-      "./token-store"
+      "./token-store.service"
     );
 
     const token = {
@@ -266,7 +270,7 @@ describe("lib/token-store", () => {
     mkdirSync(join(h.homeDir, ".config", "o3o"), { recursive: true });
     writeFileSync(tokenPath(), `${JSON.stringify(freshToken)}\n`, "utf8");
 
-    const { readTokenSet } = await import("./token-store");
+    const { readTokenSet } = await import("./token-store.service");
     const result = await readTokenSet();
 
     expect(result.isOk()).toBe(true);
@@ -283,7 +287,7 @@ describe("lib/token-store", () => {
     mkdirSync(join(h.homeDir, ".config", "o3o"), { recursive: true });
     writeFileSync(tokenPath(), "{broken-json", "utf8");
 
-    const { readTokenSet } = await import("./token-store");
+    const { readTokenSet } = await import("./token-store.service");
     const result = await readTokenSet();
     expect(result.isOk()).toBe(true);
     if (result.isErr()) throw new Error("Expected ok result");

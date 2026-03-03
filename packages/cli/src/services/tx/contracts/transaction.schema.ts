@@ -1,12 +1,5 @@
 import { z } from "zod";
 
-export const meSchema = z.object({
-  issuer: z.string(),
-  scopes: z.array(z.string()),
-  subject: z.string(),
-  userId: z.string(),
-});
-
 export const transactionSchema = z.object({
   id: z.string(),
   amount: z.string(),
@@ -24,16 +17,4 @@ export const transactionSchema = z.object({
 
 export const transactionListSchema = z.array(transactionSchema);
 
-export const apiErrorResponseSchema = z.looseObject({
-  code: z.string().optional(),
-  details: z
-    .looseObject({
-      reason: z.string().optional(),
-    })
-    .optional(),
-  message: z.string().optional(),
-});
-
-export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>;
-export type MeResponse = z.infer<typeof meSchema>;
 export type TransactionResponse = z.infer<typeof transactionSchema>;

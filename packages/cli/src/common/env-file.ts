@@ -3,7 +3,7 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./cli-error-catalog";
+import { cliErrorCodes } from "./error-catalog";
 export function loadRuntimeEnvFile(
   path?: string,
 ): ResultAsync<void, RichError> {

@@ -1,6 +1,9 @@
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { type CliValidationIssue, extractCliValidationIssues } from "./cli-zod";
+import {
+  type CliValidationIssue,
+  extractCliValidationIssues,
+} from "./zod-validation";
 
 export type CliErrorPayload = {
   error: {

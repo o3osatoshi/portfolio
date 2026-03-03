@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { cliErrorCodes } from "./cli-error-catalog";
-import { DEFAULT_RUNTIME_CONFIG } from "./default-runtime-config";
+import { cliErrorCodes } from "./error-catalog";
+import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
 
-describe("lib/config", () => {
+describe("common/runtime-config", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllEnvs();
@@ -19,7 +19,7 @@ describe("lib/config", () => {
   });
 
   it("uses built-in defaults when O3O env vars are not set", async () => {
-    const { getRuntimeConfig } = await import("./config");
+    const { getRuntimeConfig } = await import("./runtime-config");
     const result = getRuntimeConfig();
 
     expect(result.isOk()).toBe(true);
@@ -34,7 +34,7 @@ describe("lib/config", () => {
     vi.stubEnv("O3O_OIDC_REDIRECT_PORT", "39090");
     vi.stubEnv("O3O_API_BASE_URL", "https://api.example.com");
 
-    const { getRuntimeConfig } = await import("./config");
+    const { getRuntimeConfig } = await import("./runtime-config");
     const result = getRuntimeConfig();
 
     expect(result.isOk()).toBe(true);
@@ -53,7 +53,7 @@ describe("lib/config", () => {
   it("returns validation error for invalid redirect port", async () => {
     vi.stubEnv("O3O_OIDC_REDIRECT_PORT", "abc");
 
-    const { getRuntimeConfig } = await import("./config");
+    const { getRuntimeConfig } = await import("./runtime-config");
     const result = getRuntimeConfig();
 
     expect(result.isErr()).toBe(true);
@@ -65,7 +65,7 @@ describe("lib/config", () => {
   it("returns validation error when API base URL includes query/hash", async () => {
     vi.stubEnv("O3O_API_BASE_URL", "https://api.example.com?env=dev#anchor");
 
-    const { getRuntimeConfig } = await import("./config");
+    const { getRuntimeConfig } = await import("./runtime-config");
     const result = getRuntimeConfig();
 
     expect(result.isErr()).toBe(true);
@@ -81,7 +81,7 @@ describe("lib/config", () => {
     vi.stubEnv("LEGACY_UNUSED_OIDC_ISSUER", "https://legacy.example.auth0.com");
     vi.stubEnv("LEGACY_UNUSED_API_BASE_URL", "https://legacy.example.com");
 
-    const { getRuntimeConfig } = await import("./config");
+    const { getRuntimeConfig } = await import("./runtime-config");
     const result = getRuntimeConfig();
 
     expect(result.isOk()).toBe(true);

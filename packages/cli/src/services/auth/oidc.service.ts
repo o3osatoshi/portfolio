@@ -12,9 +12,9 @@ import { z } from "zod";
 
 import { type RichError, toRichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./cli-error-catalog";
-import { parseCliWithSchema } from "./cli-zod";
-import type { OidcConfig, TokenSet } from "./types";
+import { cliErrorCodes } from "../../common/error-catalog";
+import type { OidcConfig, TokenSet } from "../../common/types";
+import { parseCliWithSchema } from "../../common/zod-validation";
 
 const execFileAsync = promisify(execFile);
 

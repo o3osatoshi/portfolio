@@ -10,7 +10,7 @@ const h = vi.hoisted(() => ({
   updateTransactionMock: vi.fn(),
 }));
 
-vi.mock("../../lib/api-client", () => ({
+vi.mock("../../services/tx/transaction-api.service", () => ({
   createTransaction: h.createTransactionMock,
   deleteTransaction: h.deleteTransactionMock,
   listTransactions: h.listTransactionsMock,

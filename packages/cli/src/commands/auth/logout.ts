@@ -2,11 +2,14 @@ import { okAsync, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { toAsync } from "../../lib/cli-result";
-import { getRuntimeConfig } from "../../lib/config";
-import { revokeRefreshToken } from "../../lib/oidc";
-import { type OutputMode, printSuccessMessage } from "../../lib/output";
-import { clearTokenSet, readTokenSet } from "../../lib/token-store";
+import { type OutputMode, printSuccessMessage } from "../../common/output";
+import { toAsync } from "../../common/result";
+import { getRuntimeConfig } from "../../common/runtime-config";
+import { revokeRefreshToken } from "../../services/auth/oidc.service";
+import {
+  clearTokenSet,
+  readTokenSet,
+} from "../../services/auth/token-store.service";
 
 export function runAuthLogout(
   outputMode: OutputMode = "text",

@@ -20,10 +20,10 @@ import { runTxCreate } from "./commands/tx/create";
 import { runTxDelete } from "./commands/tx/delete";
 import { runTxList } from "./commands/tx/list";
 import { runTxUpdate } from "./commands/tx/update";
-import { cliErrorCodes } from "./lib/cli-error-catalog";
-import { loadRuntimeEnvFile } from "./lib/env-file";
-import { resolveCliExitCode } from "./lib/exit-code";
-import { type OutputMode, printCliError } from "./lib/output";
+import { loadRuntimeEnvFile } from "./common/env-file";
+import { cliErrorCodes } from "./common/error-catalog";
+import { resolveCliExitCode } from "./common/exit-code";
+import { type OutputMode, printCliError } from "./common/output";
 
 type AuthLoginMode = "auto" | "device" | "pkce";
 type GlobalCliOptions = {

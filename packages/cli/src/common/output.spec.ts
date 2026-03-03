@@ -9,7 +9,7 @@ import {
   printSuccessMessage,
 } from "./output";
 
-describe("lib/output", () => {
+describe("common/output", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "log").mockImplementation(() => {});

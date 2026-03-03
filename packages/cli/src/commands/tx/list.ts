@@ -2,8 +2,8 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { listTransactions } from "../../lib/api-client";
-import { type OutputMode, printSuccessData } from "../../lib/output";
+import { type OutputMode, printSuccessData } from "../../common/output";
+import { listTransactions } from "../../services/tx/transaction-api.service";
 
 export function runTxList(
   outputMode: OutputMode = "text",

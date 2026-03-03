@@ -11,20 +11,20 @@ const h = vi.hoisted(() => ({
   writeTokenSetMock: vi.fn(),
 }));
 
-vi.mock("../../lib/api-client", () => ({
+vi.mock("../../services/auth/principal-api.service", () => ({
   fetchMe: h.fetchMeMock,
 }));
 
-vi.mock("../../lib/config", () => ({
+vi.mock("../../common/runtime-config", () => ({
   getRuntimeConfig: h.getRuntimeConfigMock,
 }));
 
-vi.mock("../../lib/oidc", () => ({
+vi.mock("../../services/auth/oidc.service", () => ({
   loginWithOidc: h.loginWithOidcMock,
   revokeRefreshToken: h.revokeRefreshTokenMock,
 }));
 
-vi.mock("../../lib/token-store", () => ({
+vi.mock("../../services/auth/token-store.service", () => ({
   clearTokenSet: h.clearTokenSetMock,
   readTokenSet: h.readTokenSetMock,
   writeTokenSet: h.writeTokenSetMock,

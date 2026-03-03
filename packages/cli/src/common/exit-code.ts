@@ -1,6 +1,6 @@
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./cli-error-catalog";
+import { cliErrorCodes } from "./error-catalog";
 
 const EXIT_CODE_API_OR_NETWORK = 5;
 const EXIT_CODE_FORBIDDEN = 4;

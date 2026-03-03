@@ -18,9 +18,13 @@ vi.mock("node:child_process", () => ({
   execFile: h.execFileMock,
 }));
 
-import { cliErrorCodes } from "./cli-error-catalog";
-import { loginWithOidc, refreshToken, revokeRefreshToken } from "./oidc";
-import type { OidcConfig } from "./types";
+import { cliErrorCodes } from "../../common/error-catalog";
+import type { OidcConfig } from "../../common/types";
+import {
+  loginWithOidc,
+  refreshToken,
+  revokeRefreshToken,
+} from "./oidc.service";
 
 const config: OidcConfig = {
   audience: "https://api.o3o.app",
@@ -29,7 +33,7 @@ const config: OidcConfig = {
   redirectPort: 38080,
 };
 
-describe("lib/oidc", () => {
+describe("services/auth/oidc.service", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     h.execFileMock.mockClear();

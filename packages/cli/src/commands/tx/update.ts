@@ -3,10 +3,10 @@ import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { updateTransaction } from "../../lib/api-client";
-import { cliErrorCodes } from "../../lib/cli-error-catalog";
-import { parseCliWithSchema } from "../../lib/cli-zod";
-import { type OutputMode, printSuccessMessage } from "../../lib/output";
+import { cliErrorCodes } from "../../common/error-catalog";
+import { type OutputMode, printSuccessMessage } from "../../common/output";
+import { parseCliWithSchema } from "../../common/zod-validation";
+import { updateTransaction } from "../../services/tx/transaction-api.service";
 
 type UpdateArgs = {
   amount?: string | undefined;

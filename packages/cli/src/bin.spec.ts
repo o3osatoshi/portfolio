@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./lib/cli-error-catalog";
+import { cliErrorCodes } from "./common/error-catalog";
 
 const h = vi.hoisted(() => ({
   loadRuntimeEnvFileMock: vi.fn(),
@@ -49,7 +49,7 @@ vi.mock("./commands/tx/update", () => ({
   runTxUpdate: h.runTxUpdateMock,
 }));
 
-vi.mock("./lib/env-file", () => ({
+vi.mock("./common/env-file", () => ({
   loadRuntimeEnvFile: h.loadRuntimeEnvFileMock,
 }));
 

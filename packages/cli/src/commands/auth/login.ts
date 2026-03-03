@@ -2,11 +2,14 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { toAsync } from "../../lib/cli-result";
-import { getRuntimeConfig } from "../../lib/config";
-import { type LoginMode, loginWithOidc } from "../../lib/oidc";
-import { type OutputMode, printSuccessMessage } from "../../lib/output";
-import { writeTokenSet } from "../../lib/token-store";
+import { type OutputMode, printSuccessMessage } from "../../common/output";
+import { toAsync } from "../../common/result";
+import { getRuntimeConfig } from "../../common/runtime-config";
+import {
+  type LoginMode,
+  loginWithOidc,
+} from "../../services/auth/oidc.service";
+import { writeTokenSet } from "../../services/auth/token-store.service";
 
 export function runAuthLogin(
   mode: LoginMode,

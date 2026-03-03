@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
-import { toCliErrorMessage, toCliErrorPayload } from "./cli-error-message";
+import { toCliErrorMessage, toCliErrorPayload } from "./error-message";
 
-describe("lib/cli-error-message", () => {
+describe("common/error-message", () => {
   it("adds (code=...) suffix in text messages", () => {
     const error = newRichError({
       code: "CLI_COMMAND_INVALID_ARGUMENT",

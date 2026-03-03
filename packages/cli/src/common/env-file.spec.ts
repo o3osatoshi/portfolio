@@ -4,10 +4,10 @@ import { join } from "node:path";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { cliErrorCodes } from "./cli-error-catalog";
 import { loadRuntimeEnvFile } from "./env-file";
+import { cliErrorCodes } from "./error-catalog";
 
-describe("lib/env-file", () => {
+describe("common/env-file", () => {
   beforeEach(() => {
     vi.unstubAllEnvs();
     delete process.env["O3O_API_BASE_URL"];

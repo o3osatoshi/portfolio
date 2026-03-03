@@ -7,7 +7,7 @@ import {
   type CliErrorPayload,
   toCliErrorMessage,
   toCliErrorPayload,
-} from "./cli-error-message";
+} from "./error-message";
 
 export const cliOutputVersion = 1;
 

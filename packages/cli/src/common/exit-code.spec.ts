@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./cli-error-catalog";
+import { cliErrorCodes } from "./error-catalog";
 import { resolveCliExitCode } from "./exit-code";
 
-describe("lib/exit-code", () => {
+describe("common/exit-code", () => {
   it("maps validation/usage errors to 2", () => {
     const error = newRichError({
       code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,

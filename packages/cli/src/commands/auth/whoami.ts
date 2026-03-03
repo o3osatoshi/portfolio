@@ -2,8 +2,8 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { fetchMe } from "../../lib/api-client";
-import { type OutputMode, printSuccessData } from "../../lib/output";
+import { type OutputMode, printSuccessData } from "../../common/output";
+import { fetchMe } from "../../services/auth/principal-api.service";
 
 export function runAuthWhoami(
   outputMode: OutputMode = "text",

@@ -6,10 +6,10 @@ import { z } from "zod";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
-import { deleteTransaction } from "../../lib/api-client";
-import { cliErrorCodes } from "../../lib/cli-error-catalog";
-import { parseCliWithSchema } from "../../lib/cli-zod";
-import { type OutputMode, printSuccessMessage } from "../../lib/output";
+import { cliErrorCodes } from "../../common/error-catalog";
+import { type OutputMode, printSuccessMessage } from "../../common/output";
+import { parseCliWithSchema } from "../../common/zod-validation";
+import { deleteTransaction } from "../../services/tx/transaction-api.service";
 
 const txDeleteArgsSchema = z.object({
   id: z.string().trim().min(1),

@@ -7,9 +7,9 @@ import { z } from "zod";
 
 import { newRichError, type RichError, toRichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./cli-error-catalog";
-import { parseCliWithSchema } from "./cli-zod";
-import type { TokenSet } from "./types";
+import { cliErrorCodes } from "../../common/error-catalog";
+import type { TokenSet } from "../../common/types";
+import { parseCliWithSchema } from "../../common/zod-validation";
 
 const tokenSchema = z.object({
   access_token: z.string().min(1),

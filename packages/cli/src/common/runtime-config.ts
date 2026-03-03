@@ -3,10 +3,10 @@ import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { cliErrorCodes } from "./cli-error-catalog";
-import { parseCliWithSchema } from "./cli-zod";
-import { DEFAULT_RUNTIME_CONFIG } from "./default-runtime-config";
+import { cliErrorCodes } from "./error-catalog";
+import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
 import type { CliRuntimeConfig } from "./types";
+import { parseCliWithSchema } from "./zod-validation";
 
 const envSchema = z.object({
   oidcAudience: z.string().min(1),

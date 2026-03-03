@@ -2,7 +2,7 @@ import { okAsync, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { type OutputMode, printSuccessMessage } from "../lib/output";
+import { type OutputMode, printSuccessMessage } from "../common/output";
 
 export function runHello(
   outputMode: OutputMode = "text",
