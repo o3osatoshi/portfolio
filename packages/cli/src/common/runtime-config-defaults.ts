@@ -1,6 +1,6 @@
-import type { CliRuntimeConfig } from "./types";
+import type { RuntimeConfig } from "./types";
 
-export const DEFAULT_RUNTIME_CONFIG: CliRuntimeConfig = {
+export const DEFAULT_RUNTIME_CONFIG: RuntimeConfig = {
   oidc: {
     audience: "https://api.o3o.app",
     clientId: "NCWwZFxrbAu2TR1gJy2jPJNOqb7NInuf",

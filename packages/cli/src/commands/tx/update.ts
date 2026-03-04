@@ -8,7 +8,7 @@ import { type OutputMode, printSuccessMessage } from "../../common/output";
 import { parseCliWithSchema } from "../../common/zod-validation";
 import { updateTransaction } from "../../services/tx/transaction-api.service";
 
-type UpdateArgs = {
+type TxUpdateArgs = {
   amount?: string | undefined;
   currency?: string | undefined;
   datetime?: string | undefined;
@@ -35,7 +35,7 @@ const txUpdateArgsSchema = z.object({
 });
 
 export function runTxUpdate(
-  args: UpdateArgs,
+  args: TxUpdateArgs,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
   const parsed = parseCliWithSchema(txUpdateArgsSchema, args, {

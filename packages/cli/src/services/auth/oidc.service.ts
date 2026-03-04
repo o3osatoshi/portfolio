@@ -13,19 +13,19 @@ import { z } from "zod";
 import { type RichError, toRichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import type { OidcConfig, TokenSet } from "../../common/types";
+import type { OidcClientConfig, OidcTokenSet } from "../../common/types";
 import { parseCliWithSchema } from "../../common/zod-validation";
 
 const execFileAsync = promisify(execFile);
 
-const discoverySchema = z.object({
+const oidcDiscoveryResponseSchema = z.object({
   authorization_endpoint: z.string().url(),
   device_authorization_endpoint: z.string().url().optional(),
   revocation_endpoint: z.string().url().optional(),
   token_endpoint: z.string().url(),
 });
 
-const tokenSchema = z.object({
+const oidcTokenResponseSchema = z.object({
   access_token: z.string().min(1),
   expires_in: z.number().optional(),
   refresh_token: z.string().optional(),
@@ -33,7 +33,7 @@ const tokenSchema = z.object({
   token_type: z.string().optional(),
 });
 
-const deviceCodeSchema = z.object({
+const oidcDeviceAuthorizationResponseSchema = z.object({
   device_code: z.string().min(1),
   expires_in: z.number().min(1),
   interval: z.number().min(1).default(5),
@@ -42,19 +42,19 @@ const deviceCodeSchema = z.object({
   verification_uri_complete: z.string().url().optional(),
 });
 
-const deviceTokenErrorSchema = z.object({
+const oidcDeviceTokenErrorSchema = z.object({
   error: z.string().optional(),
 });
 
-const callbackQuerySchema = z.object({
+const pkceCallbackQuerySchema = z.object({
   code: z.string().trim().min(1).optional(),
   error: z.string().trim().min(1).optional(),
   state: z.string().trim().min(1).optional(),
 });
 
-export type LoginMode = "auto" | "device" | "pkce";
+export type OidcLoginMode = "auto" | "device" | "pkce";
 
-export type LoginWithOidcOptions = {
+export type OidcLoginOptions = {
   onInfo?: ((message: string) => void) | undefined;
 };
 // Keep callback wait bounded to avoid dangling local servers in failed login flows.
@@ -77,10 +77,10 @@ type CallbackPageContent = {
 };
 
 export function loginWithOidc(
-  config: OidcConfig,
-  mode: LoginMode,
-  options?: LoginWithOidcOptions,
-): ResultAsync<TokenSet, RichError> {
+  config: OidcClientConfig,
+  mode: OidcLoginMode,
+  options?: OidcLoginOptions,
+): ResultAsync<OidcTokenSet, RichError> {
   return ResultAsync.fromPromise(
     loginWithOidcUnsafe(config, mode, options),
     (cause) =>
@@ -98,9 +98,9 @@ export function loginWithOidc(
 }
 
 export function refreshToken(
-  config: OidcConfig,
+  config: OidcClientConfig,
   refreshTokenValue: string,
-): ResultAsync<TokenSet, RichError> {
+): ResultAsync<OidcTokenSet, RichError> {
   return ResultAsync.fromPromise(
     refreshTokenUnsafe(config, refreshTokenValue),
     (cause) =>
@@ -118,7 +118,7 @@ export function refreshToken(
 }
 
 export function revokeRefreshToken(
-  config: OidcConfig,
+  config: OidcClientConfig,
   refreshTokenValue: string,
 ): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
@@ -156,7 +156,7 @@ async function discover(issuer: string, errorCode: string) {
     throw new Error(`Failed to fetch OIDC discovery document (${res.status})`);
   }
   const json = await res.json();
-  return parseOrThrow(discoverySchema, json, {
+  return parseOrThrow(oidcDiscoveryResponseSchema, json, {
     action: "DecodeOidcDiscoveryResponse",
     code: errorCode,
     context: "OIDC discovery response",
@@ -173,18 +173,15 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
-function info(
-  options: LoginWithOidcOptions | undefined,
-  message: string,
-): void {
+function info(options: OidcLoginOptions | undefined, message: string): void {
   options?.onInfo?.(message);
 }
 
 async function loginByDeviceCode(
-  config: OidcConfig,
-  discovery: z.infer<typeof discoverySchema>,
-  options?: LoginWithOidcOptions,
-): Promise<TokenSet> {
+  config: OidcClientConfig,
+  discovery: z.infer<typeof oidcDiscoveryResponseSchema>,
+  options?: OidcLoginOptions,
+): Promise<OidcTokenSet> {
   if (!discovery.device_authorization_endpoint) {
     throw new Error(
       "The issuer does not expose a device authorization endpoint.",
@@ -211,12 +208,16 @@ async function loginByDeviceCode(
   }
 
   const deviceJson = await deviceResponse.json();
-  const deviceCode = parseOrThrow(deviceCodeSchema, deviceJson, {
-    action: "DecodeOidcDeviceCodeResponse",
-    code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-    context: "OIDC device authorization response",
-    fallbackHint: "Retry `o3o auth login --mode device`.",
-  });
+  const deviceCode = parseOrThrow(
+    oidcDeviceAuthorizationResponseSchema,
+    deviceJson,
+    {
+      action: "DecodeOidcDeviceCodeResponse",
+      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+      context: "OIDC device authorization response",
+      fallbackHint: "Retry `o3o auth login --mode device`.",
+    },
+  );
 
   const url =
     deviceCode.verification_uri_complete ?? deviceCode.verification_uri;
@@ -257,8 +258,8 @@ async function loginByDeviceCode(
           `Device login failed: received invalid JSON from token endpoint (status ${tokenResponse.status}).`,
         );
       }
-      return withExpiry(
-        parseOrThrow(tokenSchema, json, {
+      return toTokenSetWithExpiry(
+        parseOrThrow(oidcTokenResponseSchema, json, {
           action: "DecodeOidcTokenResponseFromDeviceFlow",
           code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
           context: "OIDC token response",
@@ -274,7 +275,7 @@ async function loginByDeviceCode(
       );
     }
 
-    const parsedError = deviceTokenErrorSchema.safeParse(json);
+    const parsedError = oidcDeviceTokenErrorSchema.safeParse(json);
     const error =
       parsedError.success && parsedError.data.error
         ? parsedError.data.error
@@ -297,9 +298,9 @@ async function loginByDeviceCode(
 }
 
 async function loginByPkce(
-  config: OidcConfig,
-  discovery: z.infer<typeof discoverySchema>,
-): Promise<TokenSet> {
+  config: OidcClientConfig,
+  discovery: z.infer<typeof oidcDiscoveryResponseSchema>,
+): Promise<OidcTokenSet> {
   const redirectHost = "127.0.0.1";
   const redirectUri = `http://${redirectHost}:${config.redirectPort}/callback`;
   const state = randomBytes(16).toString("hex");
@@ -338,7 +339,7 @@ async function loginByPkce(
       }
 
       const callbackQueryResult = parseCliWithSchema(
-        callbackQuerySchema,
+        pkceCallbackQuerySchema,
         {
           code: url.searchParams.get("code") ?? undefined,
           error: url.searchParams.get("error") ?? undefined,
@@ -477,20 +478,20 @@ async function loginByPkce(
   }
 
   const json = await response.json();
-  const parsed = parseOrThrow(tokenSchema, json, {
+  const parsed = parseOrThrow(oidcTokenResponseSchema, json, {
     action: "DecodeOidcTokenResponseFromPkceFlow",
     code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
     context: "OIDC token response",
     fallbackHint: "Retry `o3o auth login --mode pkce`.",
   });
-  return withExpiry(parsed);
+  return toTokenSetWithExpiry(parsed);
 }
 
 async function loginWithOidcUnsafe(
-  config: OidcConfig,
-  mode: LoginMode,
-  options?: LoginWithOidcOptions,
-): Promise<TokenSet> {
+  config: OidcClientConfig,
+  mode: OidcLoginMode,
+  options?: OidcLoginOptions,
+): Promise<OidcTokenSet> {
   const discovery = await discover(
     config.issuer,
     cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
@@ -563,9 +564,9 @@ function parseOrThrow<T extends z.ZodType>(
 }
 
 async function refreshTokenUnsafe(
-  config: OidcConfig,
+  config: OidcClientConfig,
   refreshTokenValue: string,
-): Promise<TokenSet> {
+): Promise<OidcTokenSet> {
   const discovery = await discover(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
@@ -589,17 +590,17 @@ async function refreshTokenUnsafe(
   }
 
   const json = await response.json();
-  const parsed = parseOrThrow(tokenSchema, json, {
+  const parsed = parseOrThrow(oidcTokenResponseSchema, json, {
     action: "DecodeOidcTokenResponseFromRefreshFlow",
     code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
     context: "OIDC token response",
     fallbackHint: "Run `o3o auth login` and retry.",
   });
-  return withExpiry(parsed);
+  return toTokenSetWithExpiry(parsed);
 }
 
 async function revokeRefreshTokenUnsafe(
-  config: OidcConfig,
+  config: OidcClientConfig,
   refreshTokenValue: string,
 ): Promise<void> {
   const discovery = await discover(
@@ -686,7 +687,9 @@ function toReason(cause: unknown, fallback: string): string {
   return fallback;
 }
 
-function withExpiry(token: z.infer<typeof tokenSchema>): TokenSet {
+function toTokenSetWithExpiry(
+  token: z.infer<typeof oidcTokenResponseSchema>,
+): OidcTokenSet {
   const expiresAt =
     token.expires_in !== undefined
       ? Math.floor(Date.now() / 1000) + token.expires_in

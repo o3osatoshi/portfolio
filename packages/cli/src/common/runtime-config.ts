@@ -5,7 +5,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./error-catalog";
 import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
-import type { CliRuntimeConfig } from "./types";
+import type { RuntimeConfig } from "./types";
 import { parseCliWithSchema } from "./zod-validation";
 
 const envSchema = z.object({
@@ -25,7 +25,7 @@ const envSchema = z.object({
     ),
 });
 
-export function getRuntimeConfig(): Result<CliRuntimeConfig, RichError> {
+export function getRuntimeConfig(): Result<RuntimeConfig, RichError> {
   const parsed = parseCliWithSchema(
     envSchema,
     {

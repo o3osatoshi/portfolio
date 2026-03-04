@@ -1,19 +1,19 @@
-export type CliRuntimeConfig = {
-  apiBaseUrl: string;
-  oidc: OidcConfig;
-};
-
-export type OidcConfig = {
+export type OidcClientConfig = {
   audience: string;
   clientId: string;
   issuer: string;
   redirectPort: number;
 };
 
-export type TokenSet = {
+export type OidcTokenSet = {
   access_token: string;
   expires_at?: number;
   refresh_token?: string;
   scope?: string;
   token_type?: string;
+};
+
+export type RuntimeConfig = {
+  apiBaseUrl: string;
+  oidc: OidcClientConfig;
 };

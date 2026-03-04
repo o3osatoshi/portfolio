@@ -24,8 +24,8 @@ import { loadRuntimeEnvFile } from "./common/env-file";
 import { cliErrorCodes } from "./common/error-catalog";
 import { resolveCliExitCode } from "./common/exit-code";
 import { type OutputMode, printCliError } from "./common/output";
+import type { OidcLoginMode } from "./services/auth/oidc.service";
 
-type AuthLoginMode = "auto" | "device" | "pkce";
 type GlobalCliOptions = {
   debug?: boolean | undefined;
   envFile?: string | undefined;
@@ -140,7 +140,7 @@ function createProgram(outputMode: OutputMode): Command {
         .choices(["auto", "pkce", "device"])
         .default("auto"),
     )
-    .action(async ({ mode }: { mode: AuthLoginMode }) => {
+    .action(async ({ mode }: { mode: OidcLoginMode }) => {
       await runResult(runAuthLogin(mode, outputMode));
     });
 

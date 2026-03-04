@@ -6,13 +6,13 @@ import { type OutputMode, printSuccessMessage } from "../../common/output";
 import { toAsync } from "../../common/result";
 import { getRuntimeConfig } from "../../common/runtime-config";
 import {
-  type LoginMode,
   loginWithOidc,
+  type OidcLoginMode,
 } from "../../services/auth/oidc.service";
 import { writeTokenSet } from "../../services/auth/token-store.service";
 
 export function runAuthLogin(
-  mode: LoginMode,
+  mode: OidcLoginMode,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
   const onInfo =

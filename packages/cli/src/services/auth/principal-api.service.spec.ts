@@ -24,8 +24,10 @@ describe("services/auth/principal-api.service", () => {
       }),
     );
 
-    const { fetchMe } = await import("./principal-api.service");
-    const result = await fetchMe();
+    const { fetchAccessTokenPrincipal } = await import(
+      "./principal-api.service"
+    );
+    const result = await fetchAccessTokenPrincipal();
 
     expect(result.isOk()).toBe(true);
     if (result.isErr()) throw new Error("Expected ok result");
@@ -50,8 +52,10 @@ describe("services/auth/principal-api.service", () => {
       }),
     );
 
-    const { fetchMe } = await import("./principal-api.service");
-    const result = await fetchMe();
+    const { fetchAccessTokenPrincipal } = await import(
+      "./principal-api.service"
+    );
+    const result = await fetchAccessTokenPrincipal();
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");

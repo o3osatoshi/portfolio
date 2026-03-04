@@ -13,7 +13,7 @@ import { apiErrorResponseSchema } from "../contracts/api-error.schema";
 import { cliErrorCodes } from "../error-catalog";
 import { toAsync } from "../result";
 import { getRuntimeConfig } from "../runtime-config";
-import type { CliRuntimeConfig, TokenSet } from "../types";
+import type { OidcTokenSet, RuntimeConfig } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
@@ -110,8 +110,8 @@ export function requestAuthenticatedApi(
 }
 
 function ensureAccessToken(
-  config: CliRuntimeConfig,
-): ResultAsync<TokenSet, RichError> {
+  config: RuntimeConfig,
+): ResultAsync<OidcTokenSet, RichError> {
   return readTokenSet().andThen((token) => {
     if (!token) {
       return errAsync(
@@ -173,7 +173,7 @@ function ensureAccessToken(
       .andThen((refreshed) => {
         const refreshTokenValue =
           refreshed.refresh_token ?? token.refresh_token;
-        const merged: TokenSet = {
+        const merged: OidcTokenSet = {
           ...token,
           ...refreshed,
           ...(refreshTokenValue !== undefined

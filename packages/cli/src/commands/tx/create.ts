@@ -8,7 +8,7 @@ import { type OutputMode, printSuccessData } from "../../common/output";
 import { parseCliWithSchema } from "../../common/zod-validation";
 import { createTransaction } from "../../services/tx/transaction-api.service";
 
-type CreateArgs = {
+type TxCreateArgs = {
   amount: string;
   currency: string;
   datetime: string;
@@ -33,7 +33,7 @@ const txCreateArgsSchema = z.object({
 });
 
 export function runTxCreate(
-  args: CreateArgs,
+  args: TxCreateArgs,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
   const parsed = parseCliWithSchema(txCreateArgsSchema, args, {

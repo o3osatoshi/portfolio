@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const h = vi.hoisted(() => ({
   loginWithOidcMock: vi.fn(),
   clearTokenSetMock: vi.fn(),
-  fetchMeMock: vi.fn(),
+  fetchAccessTokenPrincipalMock: vi.fn(),
   getRuntimeConfigMock: vi.fn(),
   readTokenSetMock: vi.fn(),
   revokeRefreshTokenMock: vi.fn(),
@@ -12,7 +12,7 @@ const h = vi.hoisted(() => ({
 }));
 
 vi.mock("../../services/auth/principal-api.service", () => ({
-  fetchMe: h.fetchMeMock,
+  fetchAccessTokenPrincipal: h.fetchAccessTokenPrincipalMock,
 }));
 
 vi.mock("../../common/runtime-config", () => ({
@@ -54,7 +54,7 @@ describe("commands/auth", () => {
     h.readTokenSetMock.mockReset();
     h.revokeRefreshTokenMock.mockReset();
     h.clearTokenSetMock.mockReset();
-    h.fetchMeMock.mockReset();
+    h.fetchAccessTokenPrincipalMock.mockReset();
     h.writeTokenSetMock.mockReturnValue(okAsync(undefined));
     h.clearTokenSetMock.mockReturnValue(okAsync(undefined));
     h.readTokenSetMock.mockReturnValue(okAsync(null));
@@ -191,7 +191,7 @@ describe("commands/auth", () => {
   });
 
   it("runAuthWhoami prints formatted JSON", async () => {
-    h.fetchMeMock.mockReturnValueOnce(
+    h.fetchAccessTokenPrincipalMock.mockReturnValueOnce(
       okAsync({
         issuer: "https://example.auth0.com",
         scopes: ["transactions:read"],
@@ -218,7 +218,7 @@ describe("commands/auth", () => {
   });
 
   it("runAuthWhoami prints machine-readable envelope in json output mode", async () => {
-    h.fetchMeMock.mockReturnValueOnce(
+    h.fetchAccessTokenPrincipalMock.mockReturnValueOnce(
       okAsync({
         issuer: "https://example.auth0.com",
         scopes: ["transactions:read"],
