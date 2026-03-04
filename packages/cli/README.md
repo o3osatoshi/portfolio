@@ -134,10 +134,10 @@ For package-local development:
 ```bash
 pnpm -C packages/cli test
 pnpm -C packages/cli typecheck
-pnpm -C packages/cli test:e2e
+pnpm -C packages/cli test:int
 ```
 
-`test:e2e` runs subprocess-based integration tests against mock OIDC/API servers, so it does not require a real Auth0 tenant or running `apps/web`.
+`test:int` runs subprocess-based integration tests against mock OIDC/API servers, so it does not require a real Auth0 tenant or running `apps/web`.
 
 ## Troubleshooting
 

@@ -40,7 +40,7 @@ type JsonSuccessEnvelope = {
   value: unknown;
 };
 
-describe("CLI E2E (mock OIDC/API)", () => {
+describe("CLI INT (mock OIDC/API)", () => {
   const tempHomes: string[] = [];
   const oidc = new MockOidcServer();
   const api = new MockApiServer({
@@ -96,7 +96,7 @@ describe("CLI E2E (mock OIDC/API)", () => {
     const whoamiPayload = expectJsonSuccess(whoami.stdout, "auth.whoami");
     expect(whoamiPayload.value).toMatchObject({
       issuer: oidc.issuer,
-      userId: "user-e2e-1",
+      userId: "user-int-1",
     });
 
     const initialList = await runCli({
@@ -305,9 +305,10 @@ async function createCliEnv(
   apiBaseUrl: string,
   tempHomes: string[],
 ): Promise<NodeJS.ProcessEnv> {
-  const homeDir = await mkdtemp(join(tmpdir(), "o3o-cli-e2e-home-"));
+  const homeDir = await mkdtemp(join(tmpdir(), "o3o-cli-int-home-"));
   tempHomes.push(homeDir);
 
+  // @ts-expect-error
   return {
     HOME: homeDir,
     NO_COLOR: "1",

@@ -37,9 +37,9 @@ export class MockOidcServer {
   private readonly refreshTokens = new Map<string, MockOidcPrincipal>();
   private readonly server: Server;
 
-  private readonly subject = "google-oauth2|e2e-user";
+  private readonly subject = "google-oauth2|int-user";
 
-  private readonly userId = "user-e2e-1";
+  private readonly userId = "user-int-1";
 
   public constructor(options: MockOidcServerOptions = {}) {
     this.accessTokenExpiresInSeconds =
