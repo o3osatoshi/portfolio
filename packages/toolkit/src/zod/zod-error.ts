@@ -8,6 +8,7 @@ import {
   type RichError,
   type RichErrorDetails,
 } from "../error";
+import { isRecord } from "../object-guards";
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.
@@ -42,6 +43,20 @@ export type ValidationIssue = {
   code: string;
   message: string;
   path: string;
+};
+
+/**
+ * Formatting options for compact validation issues.
+ *
+ * @public
+ */
+export type ValidationIssueFormat = {
+  /**
+   * Path label used when an issue has no explicit path segments.
+   *
+   * @defaultValue "(root)"
+   */
+  rootPath?: string | undefined;
 };
 
 /**
@@ -141,16 +156,18 @@ export function summarizeZodIssue(issue: ZodIssue): string {
  */
 export function toValidationIssues(
   source: undefined | unknown | ZodIssue[],
+  options: ValidationIssueFormat = {},
 ): ValidationIssue[] {
   const issues = normalizeZodIssues(source);
   if (!issues || issues.length === 0) {
     return [];
   }
+  const rootPath = options.rootPath ?? "(root)";
 
   return issues.map((issue) => ({
     code: String(issue.code),
     message: issue.message,
-    path: issue.path?.length ? issue.path.join(".") : "(root)",
+    path: issue.path?.length ? issue.path.join(".") : rootPath,
   }));
 }
 
@@ -195,10 +212,6 @@ function inferZodCode(issues: undefined | ZodIssue[]): string {
     default:
       return "ZOD_VALIDATION_ERROR";
   }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return !!value && typeof value === "object" && !Array.isArray(value);
 }
 
 /** Generate a concise message for a single Zod issue. */

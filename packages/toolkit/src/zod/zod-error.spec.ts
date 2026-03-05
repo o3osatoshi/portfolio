@@ -148,6 +148,17 @@ describe("zod-error helpers (with real Zod)", () => {
     expect(rootIssues[0]?.message.toLowerCase()).toContain("expected string");
   });
 
+  it("toValidationIssues supports custom root path labels", () => {
+    const rootErr = parseZodError(z.string(), 42);
+    const rootIssues = toValidationIssues(rootErr, { rootPath: "<root>" });
+
+    expect(rootIssues).toHaveLength(1);
+    expect(rootIssues[0]).toMatchObject({
+      code: "invalid_type",
+      path: "<root>",
+    });
+  });
+
   it("newZodError appends validationIssues into meta when requested", () => {
     const schema = z.object({ name: z.string() });
     const err = newZodError({

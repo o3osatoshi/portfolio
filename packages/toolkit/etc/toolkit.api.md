@@ -226,6 +226,15 @@ export function isDeserializableBody(res: Response): boolean;
 export function isDeserializableResponse(response: Response): boolean;
 
 // @public
+export function isObjectLike(value: unknown): value is object;
+
+// @public
+export function isPlainObject(value: unknown): value is Record<string, unknown>;
+
+// @public
+export function isRecord(value: unknown): value is Record<string, unknown>;
+
+// @public
 export function isRichError(error: unknown): error is RichError;
 
 // @public
@@ -347,6 +356,16 @@ export function normalizeBaseUrl(baseUrl: string): string;
 
 // @public
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
+
+// @public
+export function omitUndefined<T extends object>(input: T): OmitUndefinedDeep<T>;
+
+// @public
+export type OmitUndefinedDeep<T> = T extends ((...args: never[]) => unknown) | bigint | boolean | Date | Error | Map<unknown, unknown> | null | number | Promise<unknown> | ReadonlyMap<unknown, unknown> | ReadonlySet<unknown> | RegExp | Set<unknown> | string | symbol | WeakMap<object, unknown> | WeakSet<object> ? Exclude<T, undefined> : T extends readonly unknown[] ? T : T extends Record<string, unknown> ? {
+    [K in keyof T as undefined extends T[K] ? K : never]?: OmitUndefinedDeep<Exclude<T[K], undefined>>;
+} & {
+    [K in keyof T as undefined extends T[K] ? never : K]: OmitUndefinedDeep<T[K]>;
+} : Exclude<T, undefined>;
 
 // @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
@@ -525,7 +544,7 @@ export function toHttpErrorResponse(error: unknown, status?: ErrorStatusCode, op
 export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;
 
 // @public
-export function toValidationIssues(source: undefined | unknown | ZodIssue[]): ValidationIssue[];
+export function toValidationIssues(source: undefined | unknown | ZodIssue[], options?: ValidationIssueFormat): ValidationIssue[];
 
 // @public
 export function trimTrailingSlash(value: string): string;
@@ -553,6 +572,11 @@ export type ValidationIssue = {
     code: string;
     message: string;
     path: string;
+};
+
+// @public
+export type ValidationIssueFormat = {
+    rootPath?: string | undefined;
 };
 
 // @public
