@@ -15,7 +15,6 @@ import { isRichError, newRichError, type RichError } from "@o3osatoshi/toolkit";
 import { runAuthLogin } from "./commands/auth/login";
 import { runAuthLogout } from "./commands/auth/logout";
 import { runAuthWhoami } from "./commands/auth/whoami";
-import { runHello } from "./commands/hello";
 import { runTxCreate } from "./commands/tx/create";
 import { runTxDelete } from "./commands/tx/delete";
 import { runTxList } from "./commands/tx/list";
@@ -121,13 +120,6 @@ function createProgram(outputMode: OutputMode): Command {
       const envFilePath = options.envFile ?? process.env["O3O_ENV_FILE"];
       await runResult(loadRuntimeEnvFile(envFilePath));
       envLoaded = true;
-    });
-
-  program
-    .command("hello")
-    .description("Print hello message")
-    .action(async () => {
-      await runResult(runHello(outputMode));
     });
 
   const auth = program.command("auth").description("Authentication commands");

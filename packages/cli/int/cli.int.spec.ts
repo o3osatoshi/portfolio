@@ -67,16 +67,8 @@ describe("CLI INT (mock OIDC/API)", () => {
     );
   });
 
-  it("runs hello/auth/tx CRUD/logout flow via subprocess", async () => {
+  it("runs auth/tx CRUD/logout flow via subprocess", async () => {
     const env = await createCliEnv(oidc.issuer, api.baseUrl, tempHomes);
-
-    const hello = await runCli({
-      args: ["--output", "json", "hello"],
-      cwd: cliPackageDir,
-      env,
-    });
-    expect(hello.exitCode).toBe(0);
-    expectJsonSuccess(hello.stdout, "hello");
 
     const login = await runCli({
       args: ["--output", "json", "auth", "login", "--mode", "device"],

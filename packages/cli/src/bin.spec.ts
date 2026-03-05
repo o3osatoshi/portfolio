@@ -10,7 +10,6 @@ const h = vi.hoisted(() => ({
   runAuthLoginMock: vi.fn(),
   runAuthLogoutMock: vi.fn(),
   runAuthWhoamiMock: vi.fn(),
-  runHelloMock: vi.fn(),
   runTxCreateMock: vi.fn(),
   runTxDeleteMock: vi.fn(),
   runTxListMock: vi.fn(),
@@ -27,10 +26,6 @@ vi.mock("./commands/auth/logout", () => ({
 
 vi.mock("./commands/auth/whoami", () => ({
   runAuthWhoami: h.runAuthWhoamiMock,
-}));
-
-vi.mock("./commands/hello", () => ({
-  runHello: h.runHelloMock,
 }));
 
 vi.mock("./commands/tx/create", () => ({
@@ -74,7 +69,6 @@ describe("bin", () => {
     h.runAuthLoginMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runAuthLogoutMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runAuthWhoamiMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runHelloMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runTxCreateMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runTxDeleteMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runTxListMock.mockReset().mockReturnValue(okAsync(undefined));
@@ -109,13 +103,6 @@ describe("bin", () => {
     });
     process.argv = [...originalArgv];
     process.exitCode = originalExitCode;
-  });
-
-  it("dispatches hello command", async () => {
-    await runBin(["hello"]);
-
-    expect(h.runHelloMock).toHaveBeenCalledTimes(1);
-    expect(process.exitCode).toBeUndefined();
   });
 
   it("uses auto mode for auth login by default", async () => {
@@ -263,9 +250,11 @@ describe("bin", () => {
   });
 
   it("maps unexpected command runtime errors to internal CLI errors", async () => {
-    h.runHelloMock.mockReturnValueOnce(errAsync(new Error("boom") as never));
+    h.runAuthLoginMock.mockReturnValueOnce(
+      errAsync(new Error("boom") as never),
+    );
 
-    await runBin(["hello"]);
+    await runBin(["auth", "login"]);
 
     expect(console.error).toHaveBeenCalledWith(
       "boom (code=CLI_INTERNAL_ERROR)",

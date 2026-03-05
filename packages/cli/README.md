@@ -105,7 +105,6 @@ o3o --env-file .env.local tx list
 
 ```bash
 o3o --help
-o3o hello
 o3o [--output text|json] [--env-file <path>] ...
 o3o auth login [--mode auto|pkce|device]
 o3o auth whoami
