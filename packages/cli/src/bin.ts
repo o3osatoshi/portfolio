@@ -331,27 +331,28 @@ function toCliInvocationError(cause: unknown): RichError {
   if (cause instanceof Error) {
     return newRichError({
       cause,
-      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+      code: cliErrorCodes.CLI_INTERNAL_ERROR,
       details: {
-        action: "ParseCliArguments",
-        reason: cause.message,
+        action: "ExecuteCliCommand",
+        reason:
+          cause.message || "Unexpected error during CLI command execution.",
       },
-      isOperational: true,
-      kind: "Validation",
-      layer: "Presentation",
+      isOperational: false,
+      kind: "Internal",
+      layer: "Application",
     });
   }
 
   return newRichError({
     cause,
-    code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+    code: cliErrorCodes.CLI_INTERNAL_ERROR,
     details: {
-      action: "ParseCliArguments",
-      reason: "Failed to parse command arguments.",
+      action: "ExecuteCliCommand",
+      reason: "Unexpected error during CLI command execution.",
     },
-    isOperational: true,
-    kind: "Validation",
-    layer: "Presentation",
+    isOperational: false,
+    kind: "Internal",
+    layer: "Application",
   });
 }
 

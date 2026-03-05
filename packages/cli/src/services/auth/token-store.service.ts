@@ -26,13 +26,11 @@ const fileFallbackEnvSchema = z.enum(["0", "1"]).catch("0");
 
 const keychainServiceName = "o3o-cli";
 const keychainAccountName = "default";
-const tokenStoreFilePath = join(homedir(), ".config", "o3o", "auth.json");
+const tokenStoreFilePath = resolveTokenStoreFilePath();
 const fileFallbackEnvName = "O3O_ALLOW_FILE_TOKEN_STORE";
 const tokenStoreBackendEnvName = "O3O_TOKEN_STORE_BACKEND";
 let didWarnFileFallback = false;
 let keychainEntryPromise: Promise<KeychainEntry> | undefined;
-const keychainUnavailableReason =
-  "Secure token storage (OS keychain) is unavailable. Set O3O_ALLOW_FILE_TOKEN_STORE=1 only if you accept file-based token storage.";
 
 type KeychainEntry = {
   deletePassword(): MaybePromise<boolean | undefined>;
@@ -94,6 +92,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
           throw newBackendUnavailableError(
             "ReadTokenSet",
             keychainResult.cause,
+            backend,
           );
         }
         return keychainResult.token;
@@ -105,6 +104,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
           throw newBackendUnavailableError(
             "ReadTokenSet",
             keychainResult.cause,
+            backend,
           );
         }
         if (!fileToken) return null;
@@ -188,6 +188,7 @@ export function writeTokenSet(
           throw newBackendUnavailableError(
             "WriteTokenSet",
             keychainWrite.cause,
+            backend,
           );
         }
         await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
@@ -200,7 +201,11 @@ export function writeTokenSet(
       }
 
       if (!isFileFallbackAllowed()) {
-        throw newBackendUnavailableError("WriteTokenSet", keychainWrite.cause);
+        throw newBackendUnavailableError(
+          "WriteTokenSet",
+          keychainWrite.cause,
+          backend,
+        );
       }
 
       warnFileFallbackOnce();
@@ -285,18 +290,50 @@ async function loadKeychainEntry(): Promise<KeychainEntry> {
   return new Entry(keychainServiceName, keychainAccountName);
 }
 
-function newBackendUnavailableError(action: string, cause: unknown): RichError {
+function newBackendUnavailableError(
+  action: string,
+  cause: unknown,
+  backend: TokenStoreBackend,
+): RichError {
   return newRichError({
     cause,
     code: cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
     details: {
       action,
-      reason: keychainUnavailableReason,
+      reason: buildKeychainUnavailableReason(backend),
     },
     isOperational: true,
     kind: "Internal",
     layer: "Presentation",
   });
+}
+
+function buildKeychainUnavailableReason(backend: TokenStoreBackend): string {
+  if (backend === "keychain") {
+    return "Secure token storage (OS keychain) is unavailable. Set O3O_TOKEN_STORE_BACKEND=file to force file storage, or unset O3O_TOKEN_STORE_BACKEND and set O3O_ALLOW_FILE_TOKEN_STORE=1 to allow file fallback in auto mode.";
+  }
+
+  return "Secure token storage (OS keychain) is unavailable. Set O3O_ALLOW_FILE_TOKEN_STORE=1 only if you accept file-based token storage, or set O3O_TOKEN_STORE_BACKEND=file to force file storage.";
+}
+
+function resolveTokenStoreFilePath(): string {
+  if (process.platform === "win32") {
+    const appData = normalizeOptionalPath(process.env["APPDATA"]);
+    const basePath = appData ?? join(homedir(), "AppData", "Roaming");
+    return join(basePath, "o3o", "auth.json");
+  }
+
+  const xdgConfigHome = normalizeOptionalPath(process.env["XDG_CONFIG_HOME"]);
+  if (xdgConfigHome) {
+    return join(xdgConfigHome, "o3o", "auth.json");
+  }
+
+  return join(homedir(), ".config", "o3o", "auth.json");
+}
+
+function normalizeOptionalPath(value: undefined | string): string | undefined {
+  const normalized = value?.trim();
+  return normalized && normalized.length > 0 ? normalized : undefined;
 }
 
 function parseStoredTokenSet(raw: string): null | OidcTokenSet {

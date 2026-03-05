@@ -72,7 +72,19 @@ vi.mock("node:os", async () => {
 
 describe("services/auth/token-store.service", () => {
   const keychainTokenKey = "o3o-cli:default";
-  const tokenPath = () => join(h.homeDir, ".config", "o3o", "auth.json");
+  const tokenPath = () => {
+    if (process.platform === "win32") {
+      const appData = process.env["APPDATA"];
+      const basePath = appData?.trim()
+        ? appData.trim()
+        : join(h.homeDir, "AppData", "Roaming");
+      return join(basePath, "o3o", "auth.json");
+    }
+
+    const xdgConfigHome = process.env["XDG_CONFIG_HOME"]?.trim();
+    const basePath = xdgConfigHome ? xdgConfigHome : join(h.homeDir, ".config");
+    return join(basePath, "o3o", "auth.json");
+  };
 
   beforeEach(() => {
     h.keychainConstructFailuresRemaining = 0;
@@ -81,6 +93,8 @@ describe("services/auth/token-store.service", () => {
     h.keychainStore.clear();
     delete process.env["O3O_ALLOW_FILE_TOKEN_STORE"];
     delete process.env["O3O_TOKEN_STORE_BACKEND"];
+    delete process.env["XDG_CONFIG_HOME"];
+    delete process.env["APPDATA"];
     vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.resetModules();
   });
@@ -138,6 +152,12 @@ describe("services/auth/token-store.service", () => {
     expect(writeResult.error.code).toBe(
       cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
     );
+    expect(writeResult.error.details?.reason).toContain(
+      "O3O_ALLOW_FILE_TOKEN_STORE=1",
+    );
+    expect(writeResult.error.details?.reason).toContain(
+      "O3O_TOKEN_STORE_BACKEND=file",
+    );
     expect(existsSync(tokenPath())).toBe(false);
 
     const loadedResult = await readTokenSet();
@@ -145,6 +165,9 @@ describe("services/auth/token-store.service", () => {
     if (loadedResult.isOk()) throw new Error("Expected err result");
     expect(loadedResult.error.code).toBe(
       cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
+    );
+    expect(loadedResult.error.details?.reason).toContain(
+      "O3O_ALLOW_FILE_TOKEN_STORE=1",
     );
   });
 
@@ -179,6 +202,37 @@ describe("services/auth/token-store.service", () => {
     expect(existsSync(tokenPath())).toBe(false);
   });
 
+  it("uses XDG_CONFIG_HOME for file backend on non-windows platforms", async () => {
+    if (process.platform === "win32") return;
+
+    const xdgConfigHome = join(h.homeDir, ".xdg-config");
+    process.env["O3O_TOKEN_STORE_BACKEND"] = "file";
+    process.env["XDG_CONFIG_HOME"] = xdgConfigHome;
+
+    const { readTokenSet, writeTokenSet } = await import(
+      "./token-store.service"
+    );
+    const token = {
+      access_token: "access-token",
+      expires_at: 1735689600,
+      refresh_token: "refresh-token",
+      scope: "openid profile",
+      token_type: "Bearer",
+    };
+
+    const writeResult = await writeTokenSet(token);
+    expect(writeResult.isOk()).toBe(true);
+    expect(existsSync(join(xdgConfigHome, "o3o", "auth.json"))).toBe(true);
+    expect(existsSync(join(h.homeDir, ".config", "o3o", "auth.json"))).toBe(
+      false,
+    );
+
+    const readResult = await readTokenSet();
+    expect(readResult.isOk()).toBe(true);
+    if (readResult.isErr()) throw new Error("Expected ok result");
+    expect(readResult.value).toEqual(token);
+  });
+
   it("uses keychain backend only when O3O_TOKEN_STORE_BACKEND=keychain", async () => {
     h.keychainMode = "unavailable";
     process.env["O3O_TOKEN_STORE_BACKEND"] = "keychain";
@@ -199,12 +253,18 @@ describe("services/auth/token-store.service", () => {
     expect(writeResult.error.code).toBe(
       cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
     );
+    expect(writeResult.error.details?.reason).toContain(
+      "O3O_TOKEN_STORE_BACKEND=file",
+    );
 
     const readResult = await readTokenSet();
     expect(readResult.isErr()).toBe(true);
     if (readResult.isOk()) throw new Error("Expected err result");
     expect(readResult.error.code).toBe(
       cliErrorCodes.CLI_TOKEN_STORE_BACKEND_UNAVAILABLE,
+    );
+    expect(readResult.error.details?.reason).toContain(
+      "O3O_TOKEN_STORE_BACKEND=file",
     );
   });
 

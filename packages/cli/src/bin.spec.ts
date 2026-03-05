@@ -262,6 +262,17 @@ describe("bin", () => {
     expect(process.exitCode).toBe(6);
   });
 
+  it("maps unexpected command runtime errors to internal CLI errors", async () => {
+    h.runHelloMock.mockReturnValueOnce(errAsync(new Error("boom") as never));
+
+    await runBin(["hello"]);
+
+    expect(console.error).toHaveBeenCalledWith(
+      "boom (code=CLI_INTERNAL_ERROR)",
+    );
+    expect(process.exitCode).toBe(1);
+  });
+
   it("passes json output mode to commands", async () => {
     await runBin(["--output", "json", "auth", "login"]);
 
