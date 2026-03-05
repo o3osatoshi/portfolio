@@ -1,5 +1,7 @@
 import { getToken } from "@auth/core/jwt";
 
+import { isRecord } from "@o3osatoshi/toolkit";
+
 export type AuthJwt = Awaited<ReturnType<typeof getToken>>;
 
 export type GetUserIdOptions = {
@@ -35,7 +37,7 @@ export async function getUserId({
     secret,
   });
 
-  if (!token || typeof token !== "object") return undefined;
+  if (!isRecord(token)) return undefined;
   if (typeof token["id"] === "string") return token["id"];
   if (typeof token["sub"] === "string") return token["sub"];
   return undefined;

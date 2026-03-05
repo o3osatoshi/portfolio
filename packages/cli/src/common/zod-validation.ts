@@ -2,6 +2,7 @@ import type { Result } from "neverthrow";
 import type { z } from "zod";
 
 import {
+  isRecord,
   newRichError,
   parseWith,
   type RichError,
@@ -84,8 +85,4 @@ export function parseCliWithSchema<T extends z.ZodType>(
       });
     },
   })(input);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
