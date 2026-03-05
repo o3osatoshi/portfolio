@@ -1,6 +1,6 @@
 import { err, ok, Result } from "neverthrow";
 
-import type { RichError } from "@o3osatoshi/toolkit";
+import { omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import { newDomainError } from "../domain-error";
 import { domainErrorCodes } from "../domain-error-catalog";
@@ -235,16 +235,22 @@ export function updateTransaction(
       profitLoss,
       fee,
       feeCurrency,
-    ]) => ({
-      ...tx,
-      ...(type && { type }),
-      ...(datetime && { datetime }),
-      ...(amount !== undefined && { amount }),
-      ...(price !== undefined && { price }),
-      ...(currency && { currency }),
-      ...(profitLoss !== undefined && { profitLoss }),
-      ...(fee !== undefined && { fee }),
-      ...(feeCurrency && { feeCurrency }),
-    }),
+    ]) => {
+      const partialTx: Partial<TransactionCore> = omitUndefined({
+        amount,
+        currency,
+        datetime,
+        fee,
+        feeCurrency,
+        price,
+        profitLoss,
+        type,
+      });
+
+      return {
+        ...tx,
+        ...partialTx,
+      };
+    },
   );
 }

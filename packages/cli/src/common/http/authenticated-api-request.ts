@@ -1,6 +1,10 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 
-import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+import {
+  newRichError,
+  omitUndefined,
+  type RichError,
+} from "@o3osatoshi/toolkit";
 
 import { refreshToken } from "../../services/auth/oidc.service";
 import {
@@ -112,8 +116,8 @@ export function requestAuthenticatedApi(
 function ensureAccessToken(
   config: RuntimeConfig,
 ): ResultAsync<OidcTokenSet, RichError> {
-  return readTokenSet().andThen((token) => {
-    if (!token) {
+  return readTokenSet().andThen((tokenSet) => {
+    if (!tokenSet) {
       return errAsync(
         newRichError({
           code: cliErrorCodes.CLI_API_UNAUTHORIZED,
@@ -129,13 +133,13 @@ function ensureAccessToken(
     }
 
     if (
-      !token.expires_at ||
-      token.expires_at > nowSeconds() + ACCESS_TOKEN_REFRESH_SKEW_SECONDS
+      !tokenSet.expires_at ||
+      tokenSet.expires_at > nowSeconds() + ACCESS_TOKEN_REFRESH_SKEW_SECONDS
     ) {
-      return okAsync(token);
+      return okAsync(tokenSet);
     }
 
-    if (!token.refresh_token) {
+    if (!tokenSet.refresh_token) {
       return errAsync(
         newRichError({
           code: cliErrorCodes.CLI_API_UNAUTHORIZED,
@@ -150,7 +154,7 @@ function ensureAccessToken(
       );
     }
 
-    return refreshToken(config.oidc, token.refresh_token)
+    return refreshToken(config.oidc, tokenSet.refresh_token)
       .orElse((refreshError) =>
         clearTokenSet()
           .orElse(() => okAsync(undefined))
@@ -170,18 +174,14 @@ function ensureAccessToken(
             ),
           ),
       )
-      .andThen((refreshed) => {
-        const refreshTokenValue =
-          refreshed.refresh_token ?? token.refresh_token;
-        const merged: OidcTokenSet = {
-          ...token,
-          ...refreshed,
-          ...(refreshTokenValue !== undefined
-            ? { refresh_token: refreshTokenValue }
-            : {}),
-        };
+      .andThen((newTokenSet) => {
+        const mergedTokenSet: OidcTokenSet = omitUndefined({
+          ...tokenSet,
+          ...newTokenSet,
+          refresh_token: newTokenSet.refresh_token ?? tokenSet.refresh_token,
+        });
 
-        return writeTokenSet(merged).map(() => merged);
+        return writeTokenSet(mergedTokenSet).map(() => mergedTokenSet);
       });
   });
 }

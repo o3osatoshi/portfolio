@@ -1,7 +1,7 @@
 import { errAsync, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import type { RichError } from "@o3osatoshi/toolkit";
+import { omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { type OutputMode, printSuccessData } from "../../common/output";
@@ -47,20 +47,18 @@ export function runTxCreate(
     return errAsync(parsed.error);
   }
 
-  return createTransaction({
-    amount: parsed.value.amount,
-    currency: parsed.value.currency,
-    datetime: parsed.value.datetime,
-    ...(parsed.value.fee !== undefined ? { fee: parsed.value.fee } : {}),
-    ...(parsed.value.feeCurrency !== undefined
-      ? { feeCurrency: parsed.value.feeCurrency }
-      : {}),
-    price: parsed.value.price,
-    ...(parsed.value.profitLoss !== undefined
-      ? { profitLoss: parsed.value.profitLoss }
-      : {}),
-    type: parsed.value.type,
-  }).map((created) => {
+  return createTransaction(
+    omitUndefined({
+      amount: parsed.value.amount,
+      currency: parsed.value.currency,
+      datetime: parsed.value.datetime,
+      fee: parsed.value.fee,
+      feeCurrency: parsed.value.feeCurrency,
+      price: parsed.value.price,
+      profitLoss: parsed.value.profitLoss,
+      type: parsed.value.type,
+    }),
+  ).map((created) => {
     printSuccessData("tx.create", created, outputMode, (data) => {
       console.log(JSON.stringify(data, null, 2));
     });

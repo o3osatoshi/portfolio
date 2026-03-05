@@ -10,7 +10,11 @@ import { promisify } from "node:util";
 import { ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { type RichError, toRichError } from "@o3osatoshi/toolkit";
+import {
+  omitUndefined,
+  type RichError,
+  toRichError,
+} from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import type { OidcClientConfig, OidcTokenSet } from "../../common/types";
@@ -695,13 +699,11 @@ function toTokenSetWithExpiry(
       ? Math.floor(Date.now() / 1000) + token.expires_in
       : undefined;
 
-  return {
+  return omitUndefined({
     access_token: token.access_token,
-    ...(expiresAt !== undefined ? { expires_at: expiresAt } : {}),
-    ...(token.refresh_token !== undefined
-      ? { refresh_token: token.refresh_token }
-      : {}),
-    ...(token.scope !== undefined ? { scope: token.scope } : {}),
-    ...(token.token_type !== undefined ? { token_type: token.token_type } : {}),
-  };
+    expires_at: expiresAt,
+    refresh_token: token.refresh_token,
+    scope: token.scope,
+    token_type: token.token_type,
+  });
 }

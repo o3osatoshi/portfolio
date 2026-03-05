@@ -5,7 +5,12 @@ import { dirname, join } from "node:path";
 import { errAsync, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { newRichError, type RichError, toRichError } from "@o3osatoshi/toolkit";
+import {
+  newRichError,
+  omitUndefined,
+  type RichError,
+  toRichError,
+} from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import type { OidcTokenSet } from "../../common/types";
@@ -328,19 +333,13 @@ function parseStoredTokenSet(raw: string): null | OidcTokenSet {
       return null;
     }
 
-    return {
+    return omitUndefined({
       access_token: parsed.data.access_token,
-      ...(parsed.data.expires_at !== undefined
-        ? { expires_at: parsed.data.expires_at }
-        : {}),
-      ...(parsed.data.refresh_token !== undefined
-        ? { refresh_token: parsed.data.refresh_token }
-        : {}),
-      ...(parsed.data.scope !== undefined ? { scope: parsed.data.scope } : {}),
-      ...(parsed.data.token_type !== undefined
-        ? { token_type: parsed.data.token_type }
-        : {}),
-    };
+      expires_at: parsed.data.expires_at,
+      refresh_token: parsed.data.refresh_token,
+      scope: parsed.data.scope,
+      token_type: parsed.data.token_type,
+    });
   } catch {
     return null;
   }
