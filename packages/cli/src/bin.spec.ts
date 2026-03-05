@@ -372,10 +372,8 @@ describe("bin", () => {
             validationIssues: [
               {
                 code: "too_small",
-                expected: "string",
                 message: "Too small string: min 1 (inclusive)",
                 path: "currency",
-                receivedType: "string",
               },
             ],
           },
@@ -406,10 +404,8 @@ describe("bin", () => {
     expect(parsed.error.issues).toEqual([
       {
         code: "too_small",
-        expected: "string",
         message: "Too small string: min 1 (inclusive)",
         path: "currency",
-        receivedType: "string",
       },
     ]);
     expect(process.exitCode).toBe(2);

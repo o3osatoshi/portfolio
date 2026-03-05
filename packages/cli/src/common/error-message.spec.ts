@@ -63,10 +63,8 @@ describe("common/error-message", () => {
         validationIssues: [
           {
             code: "too_small",
-            expected: "string",
             message: "Too small string: min 1 (inclusive)",
             path: "currency",
-            receivedType: "string",
           },
         ],
       },
@@ -76,7 +74,7 @@ describe("common/error-message", () => {
       [
         "Invalid tx update arguments: currency: Too small string: min 1 (inclusive) (code=CLI_COMMAND_INVALID_ARGUMENT)",
         "Details:",
-        "- currency: Too small string: min 1 (inclusive) (code=too_small, expected=string, receivedType=string)",
+        "- currency: Too small string: min 1 (inclusive) (code=too_small)",
         "Try: Use `o3o tx update --help` to review accepted options.",
       ].join("\n"),
     );
@@ -97,7 +95,6 @@ describe("common/error-message", () => {
         validationIssues: [
           {
             code: "too_small",
-            expected: "string",
             message: "Too small string: min 1 (inclusive)",
             path: "currency",
           },
@@ -109,7 +106,6 @@ describe("common/error-message", () => {
     expect(toCliErrorPayload(error, { debug: true }).error.issues).toEqual([
       {
         code: "too_small",
-        expected: "string",
         message: "Too small string: min 1 (inclusive)",
         path: "currency",
       },

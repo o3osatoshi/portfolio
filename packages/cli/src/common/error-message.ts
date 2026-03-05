@@ -39,15 +39,7 @@ export function toCliErrorMessage(
 
   const lines = [base, "Details:"];
   for (const issue of issues) {
-    const attrs = [`code=${issue.code}`];
-    if (issue.expected) {
-      attrs.push(`expected=${issue.expected}`);
-    }
-    if (issue.receivedType) {
-      attrs.push(`receivedType=${issue.receivedType}`);
-    }
-
-    lines.push(`- ${issue.path}: ${issue.message} (${attrs.join(", ")})`);
+    lines.push(`- ${issue.path}: ${issue.message} (code=${issue.code})`);
   }
 
   const hint = error.details?.hint?.trim();

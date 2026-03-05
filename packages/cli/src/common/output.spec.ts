@@ -108,7 +108,6 @@ describe("common/output", () => {
         validationIssues: [
           {
             code: "too_small",
-            expected: "string",
             message: "Too small string: min 1 (inclusive)",
             path: "currency",
           },
@@ -136,7 +135,6 @@ describe("common/output", () => {
     expect(parsed.error.issues).toEqual([
       {
         code: "too_small",
-        expected: "string",
         message: "Too small string: min 1 (inclusive)",
         path: "currency",
       },
