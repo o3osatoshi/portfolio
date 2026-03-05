@@ -334,8 +334,8 @@ export function newRichError(params: NewRichError): RichError;
 export type NewZodError = {
     cause?: undefined | unknown;
     details?: RichErrorDetails | undefined;
+    includeValidationIssues?: boolean | undefined;
     isOperational?: boolean | undefined;
-    issues?: undefined | ZodIssue[];
     layer?: Layer | undefined;
 } & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
@@ -351,7 +351,10 @@ export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 // @public
 export function parseWith<T extends z.ZodType>(schema: T, ctx: {
     action: string;
+    code?: string | undefined;
+    includeValidationIssues?: boolean | undefined;
     layer?: Layer;
+    mapError?: ((error: RichError) => RichError) | undefined;
 }): (input: unknown) => Result<z.infer<T>, RichError>;
 
 // @public
@@ -522,6 +525,9 @@ export function toHttpErrorResponse(error: unknown, status?: ErrorStatusCode, op
 export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;
 
 // @public
+export function toValidationIssues(source: undefined | unknown | ZodIssue[]): ValidationIssue[];
+
+// @public
 export function trimTrailingSlash(value: string): string;
 
 // @public
@@ -540,6 +546,13 @@ export function unwrapResultAsync<T, E extends RichError = RichError>(result: Re
 export type UrlRedactorOptions = {
     placeholder?: string;
     secrets: Array<string | undefined>;
+};
+
+// @public
+export type ValidationIssue = {
+    code: string;
+    message: string;
+    path: string;
 };
 
 // @public

@@ -12,7 +12,7 @@ import { newZodError } from "./zod-error";
  *
  * @typeParam T - Zod schema type inferred from the provided `schema`.
  * @param schema - Zod schema used to validate or transform incoming data.
- * @param ctx - Context describing the logical action and optional layer override.
+ * @param ctx - Context describing action plus optional code/layer/error mapping controls.
  * @returns A function that yields a neverthrow Result containing the inferred schema output.
  * @example
  * ```ts
@@ -24,11 +24,33 @@ import { newZodError } from "./zod-error";
  */
 export function parseWith<T extends z.ZodType>(
   schema: T,
-  ctx: { action: string; layer?: Layer },
+  ctx: {
+    action: string;
+    code?: string | undefined;
+    includeValidationIssues?: boolean | undefined;
+    layer?: Layer;
+    mapError?: ((error: RichError) => RichError) | undefined;
+  },
 ): (input: unknown) => Result<z.infer<T>, RichError> {
-  const { action, layer } = ctx;
+  const { action, mapError, ...rest } = ctx;
   return Result.fromThrowable(
     (input: unknown) => schema.parse(input),
-    (cause) => newZodError({ cause, details: { action }, layer }),
+    (cause) => {
+      const error = newZodError({
+        ...rest,
+        cause,
+        details: { action },
+      });
+
+      if (!mapError) {
+        return error;
+      }
+
+      try {
+        return mapError(error);
+      } catch {
+        return error;
+      }
+    },
   );
 }
