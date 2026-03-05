@@ -225,6 +225,14 @@ export function writeTokenSet(
   );
 }
 
+function buildKeychainUnavailableReason(backend: TokenStoreBackend): string {
+  if (backend === "keychain") {
+    return "Secure token storage (OS keychain) is unavailable. Set O3O_TOKEN_STORE_BACKEND=file to force file storage, or unset O3O_TOKEN_STORE_BACKEND and set O3O_ALLOW_FILE_TOKEN_STORE=1 to allow file fallback in auto mode.";
+  }
+
+  return "Secure token storage (OS keychain) is unavailable. Set O3O_ALLOW_FILE_TOKEN_STORE=1 only if you accept file-based token storage, or set O3O_TOKEN_STORE_BACKEND=file to force file storage.";
+}
+
 async function deleteKeychainToken(options: {
   strict: boolean;
 }): Promise<void> {
@@ -308,30 +316,7 @@ function newBackendUnavailableError(
   });
 }
 
-function buildKeychainUnavailableReason(backend: TokenStoreBackend): string {
-  if (backend === "keychain") {
-    return "Secure token storage (OS keychain) is unavailable. Set O3O_TOKEN_STORE_BACKEND=file to force file storage, or unset O3O_TOKEN_STORE_BACKEND and set O3O_ALLOW_FILE_TOKEN_STORE=1 to allow file fallback in auto mode.";
-  }
-
-  return "Secure token storage (OS keychain) is unavailable. Set O3O_ALLOW_FILE_TOKEN_STORE=1 only if you accept file-based token storage, or set O3O_TOKEN_STORE_BACKEND=file to force file storage.";
-}
-
-function resolveTokenStoreFilePath(): string {
-  if (process.platform === "win32") {
-    const appData = normalizeOptionalPath(process.env["APPDATA"]);
-    const basePath = appData ?? join(homedir(), "AppData", "Roaming");
-    return join(basePath, "o3o", "auth.json");
-  }
-
-  const xdgConfigHome = normalizeOptionalPath(process.env["XDG_CONFIG_HOME"]);
-  if (xdgConfigHome) {
-    return join(xdgConfigHome, "o3o", "auth.json");
-  }
-
-  return join(homedir(), ".config", "o3o", "auth.json");
-}
-
-function normalizeOptionalPath(value: undefined | string): string | undefined {
+function normalizeOptionalPath(value: string | undefined): string | undefined {
   const normalized = value?.trim();
   return normalized && normalized.length > 0 ? normalized : undefined;
 }
@@ -416,6 +401,21 @@ async function readKeychainTokenSet(): Promise<KeychainReadResult> {
     }
     return { available: false, cause };
   }
+}
+
+function resolveTokenStoreFilePath(): string {
+  if (process.platform === "win32") {
+    const appData = normalizeOptionalPath(process.env["APPDATA"]);
+    const basePath = appData ?? join(homedir(), "AppData", "Roaming");
+    return join(basePath, "o3o", "auth.json");
+  }
+
+  const xdgConfigHome = normalizeOptionalPath(process.env["XDG_CONFIG_HOME"]);
+  if (xdgConfigHome) {
+    return join(xdgConfigHome, "o3o", "auth.json");
+  }
+
+  return join(homedir(), ".config", "o3o", "auth.json");
 }
 
 function selectTokenSource(
