@@ -59,7 +59,7 @@ describe("common/runtime-config", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
-    expect(result.error.details?.reason).toMatch(/oidcRedirectPort/i);
+    expect(result.error.details?.reason).toMatch(/oidc\.redirectPort/i);
   });
 
   it("returns validation error when API base URL includes query/hash", async () => {

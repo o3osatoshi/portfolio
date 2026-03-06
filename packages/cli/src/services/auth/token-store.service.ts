@@ -2,7 +2,7 @@ import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 
-import { errAsync, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, type Result, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import {
@@ -13,6 +13,10 @@ import {
 } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
+import {
+  type CliTokenStoreEnv,
+  resolveTokenStoreEnvFromEnv,
+} from "../../common/runtime-env";
 import type { OidcTokenSet } from "../../common/types";
 import { parseCliWithSchema } from "../../common/zod-validation";
 
@@ -24,16 +28,9 @@ const tokenSetSchema = z.object({
   token_type: z.string().optional(),
 });
 
-const tokenStoreBackendSchema = z
-  .enum(["auto", "file", "keychain"])
-  .catch("auto");
-const fileFallbackEnvSchema = z.enum(["0", "1"]).catch("0");
-
 const keychainServiceName = "o3o-cli";
 const keychainAccountName = "default";
-const tokenStoreFilePath = resolveTokenStoreFilePath();
 const fileFallbackEnvName = "O3O_ALLOW_FILE_TOKEN_STORE";
-const tokenStoreBackendEnvName = "O3O_TOKEN_STORE_BACKEND";
 let didWarnFileFallback = false;
 let keychainEntryPromise: Promise<KeychainEntry> | undefined;
 
@@ -48,10 +45,19 @@ type KeychainReadResult =
   | { available: true; token: null | OidcTokenSet };
 type KeychainWriteResult = { cause: unknown; ok: false } | { ok: true };
 type MaybePromise<T> = Promise<T> | T;
-type TokenStoreBackend = "auto" | "file" | "keychain";
+type ResolvedTokenStoreConfig = {
+  allowFileFallback: boolean;
+  backend: TokenStoreBackend;
+  tokenStoreFilePath: string;
+};
+type TokenStoreBackend = CliTokenStoreEnv["tokenStoreBackend"];
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
-  const backend = getTokenStoreBackend();
+  const tokenStoreConfig = getResolvedTokenStoreConfig();
+  if (tokenStoreConfig.isErr()) {
+    return errAsync(tokenStoreConfig.error);
+  }
+  const { backend, tokenStoreFilePath } = tokenStoreConfig.value;
 
   return ResultAsync.fromPromise(
     (async () => {
@@ -83,12 +89,17 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
 }
 
 export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
-  const backend = getTokenStoreBackend();
+  const tokenStoreConfig = getResolvedTokenStoreConfig();
+  if (tokenStoreConfig.isErr()) {
+    return errAsync(tokenStoreConfig.error);
+  }
+  const { allowFileFallback, backend, tokenStoreFilePath } =
+    tokenStoreConfig.value;
 
   return ResultAsync.fromPromise(
     (async () => {
       if (backend === "file") {
-        return await readFileTokenSet();
+        return await readFileTokenSet(tokenStoreFilePath);
       }
 
       const keychainResult = await readKeychainTokenSet();
@@ -103,9 +114,9 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         return keychainResult.token;
       }
 
-      const fileToken = await readFileTokenSet();
+      const fileToken = await readFileTokenSet(tokenStoreFilePath);
       if (!keychainResult.available) {
-        if (!isFileFallbackAllowed()) {
+        if (!allowFileFallback) {
           throw newBackendUnavailableError(
             "ReadTokenSet",
             keychainResult.cause,
@@ -113,7 +124,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
           );
         }
         if (!fileToken) return null;
-        warnFileFallbackOnce();
+        warnFileFallbackOnce(tokenStoreFilePath);
         return fileToken;
       }
 
@@ -133,7 +144,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         return selected.token;
       }
 
-      if (!isFileFallbackAllowed()) {
+      if (!allowFileFallback) {
         throw newRichError({
           cause: syncResult.cause,
           code: cliErrorCodes.CLI_TOKEN_STORE_MIGRATION_FAILED,
@@ -148,7 +159,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         });
       }
 
-      warnFileFallbackOnce();
+      warnFileFallbackOnce(tokenStoreFilePath);
       return selected.token;
     })(),
     (cause) =>
@@ -168,7 +179,13 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
 export function writeTokenSet(
   tokenSet: OidcTokenSet,
 ): ResultAsync<void, RichError> {
-  const backend = getTokenStoreBackend();
+  const tokenStoreConfig = getResolvedTokenStoreConfig();
+  if (tokenStoreConfig.isErr()) {
+    return errAsync(tokenStoreConfig.error);
+  }
+  const { allowFileFallback, backend, tokenStoreFilePath } =
+    tokenStoreConfig.value;
+
   const parsed = parseCliWithSchema(tokenSetSchema, tokenSet, {
     action: "WriteTokenSet",
     code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
@@ -183,7 +200,7 @@ export function writeTokenSet(
   return ResultAsync.fromPromise(
     (async () => {
       if (backend === "file") {
-        await persistTokenToFile(serialized);
+        await persistTokenToFile(serialized, tokenStoreFilePath);
         return;
       }
 
@@ -205,7 +222,7 @@ export function writeTokenSet(
         return;
       }
 
-      if (!isFileFallbackAllowed()) {
+      if (!allowFileFallback) {
         throw newBackendUnavailableError(
           "WriteTokenSet",
           keychainWrite.cause,
@@ -213,8 +230,8 @@ export function writeTokenSet(
         );
       }
 
-      warnFileFallbackOnce();
-      await persistTokenToFile(serialized);
+      warnFileFallbackOnce(tokenStoreFilePath);
+      await persistTokenToFile(serialized, tokenStoreFilePath);
     })(),
     (cause) =>
       toRichError(cause, {
@@ -269,8 +286,20 @@ function getKeychainEntry(): Promise<KeychainEntry> {
   return keychainEntryPromise;
 }
 
-function getTokenStoreBackend(): TokenStoreBackend {
-  return tokenStoreBackendSchema.parse(process.env[tokenStoreBackendEnvName]);
+function getResolvedTokenStoreConfig(): Result<
+  ResolvedTokenStoreConfig,
+  RichError
+> {
+  const parsed = resolveTokenStoreEnvFromEnv();
+  if (parsed.isErr()) {
+    return err(parsed.error);
+  }
+
+  return ok({
+    allowFileFallback: parsed.value.allowFileFallback,
+    backend: parsed.value.tokenStoreBackend,
+    tokenStoreFilePath: resolveTokenStoreFilePath(parsed.value),
+  });
 }
 
 function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
@@ -280,10 +309,6 @@ function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
     "code" in value &&
     typeof (value as { code?: unknown }).code === "string"
   );
-}
-
-function isFileFallbackAllowed(): boolean {
-  return fileFallbackEnvSchema.parse(process.env[fileFallbackEnvName]) === "1";
 }
 
 function isKeychainNotFoundError(cause: unknown): boolean {
@@ -321,11 +346,6 @@ function newBackendUnavailableError(
   });
 }
 
-function normalizeOptionalPath(value: string | undefined): string | undefined {
-  const normalized = value?.trim();
-  return normalized && normalized.length > 0 ? normalized : undefined;
-}
-
 function parseStoredTokenSet(raw: string): null | OidcTokenSet {
   try {
     const parsed = tokenSetSchema.safeParse(JSON.parse(raw));
@@ -345,7 +365,10 @@ function parseStoredTokenSet(raw: string): null | OidcTokenSet {
   }
 }
 
-async function persistTokenToFile(serialized: string): Promise<void> {
+async function persistTokenToFile(
+  serialized: string,
+  tokenStoreFilePath: string,
+): Promise<void> {
   await mkdir(dirname(tokenStoreFilePath), { recursive: true });
   await writeFile(tokenStoreFilePath, `${serialized}\n`, {
     encoding: "utf8",
@@ -361,7 +384,9 @@ async function persistTokenToFile(serialized: string): Promise<void> {
   }
 }
 
-async function readFileTokenSet(): Promise<null | OidcTokenSet> {
+async function readFileTokenSet(
+  tokenStoreFilePath: string,
+): Promise<null | OidcTokenSet> {
   try {
     const raw = await readFile(tokenStoreFilePath, "utf8");
     return parseStoredTokenSet(raw);
@@ -402,16 +427,14 @@ async function readKeychainTokenSet(): Promise<KeychainReadResult> {
   }
 }
 
-function resolveTokenStoreFilePath(): string {
+function resolveTokenStoreFilePath(env: CliTokenStoreEnv): string {
   if (process.platform === "win32") {
-    const appData = normalizeOptionalPath(process.env["APPDATA"]);
-    const basePath = appData ?? join(homedir(), "AppData", "Roaming");
+    const basePath = env.appData ?? join(homedir(), "AppData", "Roaming");
     return join(basePath, "o3o", "auth.json");
   }
 
-  const xdgConfigHome = normalizeOptionalPath(process.env["XDG_CONFIG_HOME"]);
-  if (xdgConfigHome) {
-    return join(xdgConfigHome, "o3o", "auth.json");
+  if (env.xdgConfigHome) {
+    return join(env.xdgConfigHome, "o3o", "auth.json");
   }
 
   return join(homedir(), ".config", "o3o", "auth.json");
@@ -439,7 +462,7 @@ function selectTokenSource(
   return { source: "keychain", token: keychainToken };
 }
 
-function warnFileFallbackOnce(): void {
+function warnFileFallbackOnce(tokenStoreFilePath: string): void {
   if (didWarnFileFallback) return;
   didWarnFileFallback = true;
   console.warn(

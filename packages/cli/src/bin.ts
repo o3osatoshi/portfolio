@@ -23,6 +23,7 @@ import { loadRuntimeEnvFile } from "./common/env-file";
 import { cliErrorCodes } from "./common/error-catalog";
 import { resolveCliExitCode } from "./common/exit-code";
 import { type OutputMode, printCliError } from "./common/output";
+import { resolveEnvFilePathFromEnv } from "./common/runtime-env";
 import type { OidcLoginMode } from "./services/auth/oidc.service";
 
 type GlobalCliOptions = {
@@ -117,8 +118,17 @@ function createProgram(outputMode: OutputMode): Command {
     .hook("preAction", async () => {
       if (envLoaded) return;
       const options = program.opts<GlobalCliOptions>();
-      const envFilePath = options.envFile ?? process.env["O3O_ENV_FILE"];
-      await runResult(loadRuntimeEnvFile(envFilePath));
+      const envFilePath = options.envFile;
+
+      if (envFilePath !== undefined) {
+        await runResult(loadRuntimeEnvFile(envFilePath));
+      } else {
+        await runResult(
+          resolveEnvFilePathFromEnv().asyncAndThen((resolvedEnvFilePath) =>
+            loadRuntimeEnvFile(resolvedEnvFilePath),
+          ),
+        );
+      }
       envLoaded = true;
     });
 

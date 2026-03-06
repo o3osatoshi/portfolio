@@ -99,6 +99,24 @@ o3o --env-file .env.local auth login --mode auto
 o3o --env-file .env.local tx list
 ```
 
+### Environment Variables
+
+`o3o` supports the following runtime env vars:
+
+- `O3O_OIDC_ISSUER` (optional, default: built-in issuer)
+- `O3O_OIDC_CLIENT_ID` (optional, default: built-in client id)
+- `O3O_OIDC_AUDIENCE` (optional, default: built-in audience)
+- `O3O_OIDC_REDIRECT_PORT` (optional, default: `38080`)
+- `O3O_API_BASE_URL` (optional, default: built-in API base URL, query/hash are not allowed)
+- `O3O_ENV_FILE` (optional path, used when `--env-file` is not provided)
+- `O3O_TOKEN_STORE_BACKEND` (optional enum: `auto | file | keychain`, default: `auto`)
+- `O3O_ALLOW_FILE_TOKEN_STORE` (optional enum: `0 | 1`, default: `0`)
+
+Rules:
+
+- Unset optional env vars fall back to defaults.
+- If an enum env var is set to an invalid value, CLI exits with a config validation error.
+
 ## Commands
 
 ### Basic

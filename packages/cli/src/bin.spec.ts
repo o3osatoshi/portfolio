@@ -1,4 +1,4 @@
-import { errAsync, okAsync } from "neverthrow";
+import { errAsync, ok, okAsync } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { newRichError } from "@o3osatoshi/toolkit";
@@ -7,6 +7,7 @@ import { cliErrorCodes } from "./common/error-catalog";
 
 const h = vi.hoisted(() => ({
   loadRuntimeEnvFileMock: vi.fn(),
+  resolveEnvFilePathFromEnvMock: vi.fn(),
   runAuthLoginMock: vi.fn(),
   runAuthLogoutMock: vi.fn(),
   runAuthWhoamiMock: vi.fn(),
@@ -48,6 +49,10 @@ vi.mock("./common/env-file", () => ({
   loadRuntimeEnvFile: h.loadRuntimeEnvFileMock,
 }));
 
+vi.mock("./common/runtime-env", () => ({
+  resolveEnvFilePathFromEnv: h.resolveEnvFilePathFromEnvMock,
+}));
+
 const originalArgv = [...process.argv];
 const originalExitCode = process.exitCode;
 const originalEnvFile = process.env["O3O_ENV_FILE"];
@@ -66,6 +71,11 @@ async function runBin(args: string[]): Promise<void> {
 describe("bin", () => {
   beforeEach(() => {
     h.loadRuntimeEnvFileMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.resolveEnvFilePathFromEnvMock
+      .mockReset()
+      .mockImplementation(() =>
+        ok(process.env["O3O_ENV_FILE"]?.trim() || undefined),
+      );
     h.runAuthLoginMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runAuthLogoutMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runAuthWhoamiMock.mockReset().mockReturnValue(okAsync(undefined));
@@ -109,6 +119,7 @@ describe("bin", () => {
     await runBin(["auth", "login"]);
 
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(undefined);
+    expect(h.resolveEnvFilePathFromEnvMock).toHaveBeenCalledTimes(1);
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
   });
 
@@ -122,6 +133,7 @@ describe("bin", () => {
     await runBin(["--env-file", ".env.local", "auth", "login"]);
 
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.local");
+    expect(h.resolveEnvFilePathFromEnvMock).not.toHaveBeenCalled();
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
   });
 
@@ -129,6 +141,7 @@ describe("bin", () => {
     await runBin(["--env-file=.env.local", "auth", "login"]);
 
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.local");
+    expect(h.resolveEnvFilePathFromEnvMock).not.toHaveBeenCalled();
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
   });
 
@@ -136,6 +149,7 @@ describe("bin", () => {
     await runBin(["--env-file", ".env.local ", "auth", "login"]);
 
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.local");
+    expect(h.resolveEnvFilePathFromEnvMock).not.toHaveBeenCalled();
     expect(h.runAuthLoginMock).toHaveBeenCalledWith("auto", "text");
   });
 
@@ -144,6 +158,7 @@ describe("bin", () => {
 
     await runBin(["auth", "login"]);
 
+    expect(h.resolveEnvFilePathFromEnvMock).toHaveBeenCalledTimes(1);
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.from-env-var");
   });
 
@@ -152,6 +167,7 @@ describe("bin", () => {
 
     await runBin(["--env-file", ".env.from-flag", "auth", "login"]);
 
+    expect(h.resolveEnvFilePathFromEnvMock).not.toHaveBeenCalled();
     expect(h.loadRuntimeEnvFileMock).toHaveBeenCalledWith(".env.from-flag");
   });
 

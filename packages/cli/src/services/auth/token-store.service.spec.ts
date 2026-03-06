@@ -268,7 +268,7 @@ describe("services/auth/token-store.service", () => {
     );
   });
 
-  it("falls back to auto backend when O3O_TOKEN_STORE_BACKEND is invalid", async () => {
+  it("returns config error when O3O_TOKEN_STORE_BACKEND is invalid", async () => {
     process.env["O3O_TOKEN_STORE_BACKEND"] = "invalid-backend";
     const { writeTokenSet } = await import("./token-store.service");
 
@@ -281,9 +281,10 @@ describe("services/auth/token-store.service", () => {
     };
 
     const writeResult = await writeTokenSet(token);
-    expect(writeResult.isOk()).toBe(true);
-    expect(h.keychainStore.get(keychainTokenKey)).toBe(JSON.stringify(token));
-    expect(existsSync(tokenPath())).toBe(false);
+    expect(writeResult.isErr()).toBe(true);
+    if (writeResult.isOk()) throw new Error("Expected err result");
+    expect(writeResult.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
+    expect(writeResult.error.details?.reason).toMatch(/tokenStoreBackend/i);
   });
 
   it("recovers from transient keychain entry load failure", async () => {
