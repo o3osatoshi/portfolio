@@ -2,6 +2,7 @@ import { type Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
 import {
+  isRecord,
   type JsonObject,
   newRichError,
   type RichError,
@@ -301,13 +302,8 @@ function mergeRetryMeta(
   meta: JsonObject | undefined,
   retry: RetryMeta,
 ): JsonObject {
-  const currentRetry =
-    meta &&
-    typeof meta["retry"] === "object" &&
-    meta["retry"] !== null &&
-    !Array.isArray(meta["retry"])
-      ? (meta["retry"] as Record<string, unknown>)
-      : undefined;
+  const metaRetry = meta?.["retry"];
+  const currentRetry = isRecord(metaRetry) ? metaRetry : undefined;
 
   return {
     ...(meta ?? {}),

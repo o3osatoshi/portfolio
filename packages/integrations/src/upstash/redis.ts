@@ -2,6 +2,8 @@ import type { CacheSetOptions, CacheStore } from "@repo/domain";
 import type { Redis as UpstashRedis } from "@upstash/redis";
 import { ResultAsync } from "neverthrow";
 
+import { omitUndefined } from "@o3osatoshi/toolkit";
+
 import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
 
@@ -46,14 +48,11 @@ export function wrapUpstashRedis(client: UpstashRedisClient): CacheStore {
         }),
       ),
     set: (key, value, options: CacheSetOptions = {}) => {
-      const px = options.ttlMs;
-      const nx = options.onlyIfAbsent;
-      const xx = options.onlyIfPresent;
-      const opts: Record<string, unknown> = {
-        ...(px !== undefined ? { px } : {}),
-        ...(nx !== undefined ? { nx } : {}),
-        ...(xx !== undefined ? { xx } : {}),
-      };
+      const opts: Record<string, unknown> = omitUndefined({
+        nx: options.onlyIfAbsent,
+        px: options.ttlMs,
+        xx: options.onlyIfPresent,
+      });
       return ResultAsync.fromPromise(client.set(key, value, opts), (cause) =>
         newIntegrationError({
           cause,

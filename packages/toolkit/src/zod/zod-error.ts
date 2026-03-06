@@ -8,6 +8,7 @@ import {
   type RichError,
   type RichErrorDetails,
 } from "../error";
+import { isRecord } from "../object-guards";
 
 /**
  * Options accepted by {@link newZodError} when normalizing validation issues.
@@ -18,18 +19,45 @@ import {
 export type NewZodError = {
   /**
    * Original throwable (ideally a `ZodError`) used to derive issues.
-   * Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
    */
   cause?: undefined | unknown;
   /** Optional diagnostic context that will be merged with inferred details. */
   details?: RichErrorDetails | undefined;
+  /**
+   * Whether to attach normalized validation issues in `meta.validationIssues`.
+   * Disabled by default to preserve payload compactness for non-debug flows.
+   */
+  includeValidationIssues?: boolean | undefined;
   /** Optional operationality override (defaults to Validation semantics). */
   isOperational?: boolean | undefined;
-  /** Explicit Zod issues list; inferred from the `cause` when absent. */
-  issues?: undefined | ZodIssue[];
   /** Architectural layer responsible for validation (default `"Application"`). */
   layer?: Layer | undefined;
 } & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
+
+/**
+ * Minimal serialized validation issue payload suitable for debug surfaces.
+ *
+ * @public
+ */
+export type ValidationIssue = {
+  code: string;
+  message: string;
+  path: string;
+};
+
+/**
+ * Formatting options for compact validation issues.
+ *
+ * @public
+ */
+export type ValidationIssueFormat = {
+  /**
+   * Path label used when an issue has no explicit path segments.
+   *
+   * @defaultValue "(root)"
+   */
+  rootPath?: string | undefined;
+};
 
 /**
  * Zod issue type used in toolkit helpers.
@@ -63,39 +91,41 @@ export function isZodError(e: unknown): e is ZodError {
  */
 export function newZodError(options: NewZodError): RichError {
   const {
+    includeValidationIssues,
     cause,
     details,
     isOperational,
-    issues,
     layer = "Application",
     ...rest
   } = options;
-  const zIssues: undefined | ZodIssue[] = issues
-    ? issues
-    : isZodError(cause)
-      ? cause.issues
-      : undefined;
+  const issues = isZodError(cause) ? cause.issues : undefined;
 
   const reason =
-    zIssues && zIssues.length > 0
-      ? zIssues.map(summarizeZodIssue).join("; ")
+    issues && issues.length > 0
+      ? issues.map(summarizeZodIssue).join("; ")
       : "Invalid request payload";
 
-  const hint =
-    details?.hint ?? (zIssues ? inferHintFromIssues(zIssues) : undefined);
+  const validationIssues = toValidationIssues(issues);
+  const meta =
+    includeValidationIssues && validationIssues.length > 0
+      ? {
+          ...(rest.meta ?? {}),
+          validationIssues,
+        }
+      : rest.meta;
 
   return newRichError({
     ...rest,
     cause,
-    code: rest.code ?? inferZodCode(zIssues),
+    code: rest.code ?? inferZodCode(issues),
     details: {
       ...details,
-      hint,
       reason: details?.reason ?? reason,
     },
     isOperational: isOperational ?? resolveOperationalFromKind("Validation"),
     kind: "Validation",
     layer,
+    meta,
   });
 }
 
@@ -107,6 +137,7 @@ export function newZodError(options: NewZodError): RichError {
 export function summarizeZodError(err: ZodError): string {
   return err.issues.map(summarizeZodIssue).join("; ");
 }
+
 /**
  * Serializes one Zod issue into the "path: message" format used by the toolkit.
  *
@@ -117,29 +148,48 @@ export function summarizeZodIssue(issue: ZodIssue): string {
   const msg = issueMessage(issue);
   return `${path}: ${msg}`;
 }
-/** Attempt to produce user-friendly hints based on the first validation issue. */
-function inferHintFromIssues(issues: ZodIssue[]): string | undefined {
-  const i = issues[0];
-  switch (i?.code) {
-    case "invalid_format":
-      return "Ensure string matches the required format.";
-    case "invalid_type":
-      if (i.expected === "date") return "Provide a valid date value.";
-      return "Check field types match the schema.";
-    case "invalid_value":
-      return "Use one of the allowed enum values.";
-    case "not_multiple_of":
-      return "Adjust value to a valid multiple.";
-    case "too_big":
-      return "Reduce value/length to meet the maximum.";
-    case "too_small":
-      return "Increase value/length to meet the minimum.";
-    case "unrecognized_keys":
-      return "Remove unknown fields from the payload.";
-    default:
-      return undefined;
+
+/**
+ * Projects Zod issues into a compact, JSON-safe debug payload.
+ *
+ * @public
+ */
+export function toValidationIssues(
+  source: undefined | unknown | ZodIssue[],
+  options: ValidationIssueFormat = {},
+): ValidationIssue[] {
+  const issues = normalizeZodIssues(source);
+  if (!issues || issues.length === 0) {
+    return [];
   }
+  const rootPath = options.rootPath ?? "(root)";
+
+  return issues.map((issue) => ({
+    code: String(issue.code),
+    message: issue.message,
+    path: issue.path?.length ? issue.path.join(".") : rootPath,
+  }));
 }
+
+function collectInvalidUnionOptions(
+  issue: Extract<ZodIssue, { code: "invalid_union" }>,
+): string[] {
+  const values = new Set<string>();
+  for (const branch of issue.errors) {
+    for (const branchIssue of branch) {
+      if (branchIssue.code !== "invalid_value") {
+        continue;
+      }
+
+      for (const value of branchIssue.values) {
+        values.add(String(value));
+      }
+    }
+  }
+
+  return Array.from(values).sort((left, right) => left.localeCompare(right));
+}
+
 function inferZodCode(issues: undefined | ZodIssue[]): string {
   const first = issues?.[0];
   if (!first) return "ZOD_VALIDATION_ERROR";
@@ -163,105 +213,33 @@ function inferZodCode(issues: undefined | ZodIssue[]): string {
       return "ZOD_VALIDATION_ERROR";
   }
 }
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return !!value && typeof value === "object" && !Array.isArray(value);
-}
+
 /** Generate a concise message for a single Zod issue. */
 function issueMessage(issue: ZodIssue): string {
-  switch (issue.code) {
-    case "custom": {
-      return issue.message || "Invalid value";
-    }
-    case "invalid_element": {
-      return `Invalid value in ${issue.origin}`;
-    }
-    case "invalid_format": {
-      // Keep legacy-style wording used in tests
-      return `Invalid string (${issue.format})`;
-    }
-    case "invalid_key": {
-      return `Invalid key in ${issue.origin}`;
-    }
-    case "invalid_type": {
-      const expected = String(issue.expected);
-      // v4 does not always include `input`; prefer parsing the locale message.
-      if (expected === "date") return "Invalid date";
-      const msg = issue.message ?? "";
-      const m = /received\s+([^,]+)$/i.exec(msg);
-      const received = m
-        ? m[1]?.trim()
-        : issue.input !== undefined
-          ? z.util.getParsedType(issue.input)
-          : "unknown";
-      return `Expected ${expected}, received ${received}`;
-    }
-    case "invalid_union": {
-      // If discriminator provided, use it directly
-      if (issue.discriminator) {
-        const valueOptions = new Set<string>();
-        for (const branch of issue.errors) {
-          for (const sub of branch) {
-            if (sub.code === "invalid_value") {
-              // biome-ignore lint/suspicious/useIterableCallbackReturn: allow forEach due to very simple processing
-              sub.values.forEach((v) => valueOptions.add(String(v)));
-            }
-          }
-        }
-        const opts = Array.from(valueOptions).join(", ");
-        return `Invalid discriminator value${opts ? ` (expected one of: ${opts})` : ""}`;
-      }
-      // unionFallback case (no discriminator field on the top-level issue)
-      let candidateKey: string | undefined;
-      const allowed = new Set<string>();
-      for (const branch of issue.errors) {
-        for (const sub of branch) {
-          if (
-            sub.code === "invalid_value" &&
-            sub.path.length === 1 &&
-            typeof sub.path[0] === "string"
-          ) {
-            candidateKey = sub.path[0];
-            // biome-ignore lint/suspicious/useIterableCallbackReturn: allow forEach due to very simple processing
-            sub.values.forEach((v) => allowed.add(String(v)));
-          }
-        }
-      }
-      if (candidateKey && allowed.size > 0) {
-        const opts = Array.from(allowed).join(", ");
-        return `Invalid discriminator value${opts ? ` (expected one of: ${opts})` : ""}`;
-      }
-      const first = issue.errors?.[0]?.[0];
-      const hint = first ? ` (${summarizeZodIssue(first)})` : "";
-      return `Invalid value for union type${hint}`;
-    }
-    case "invalid_value": {
-      const values = issue.values;
-      if (values.length <= 1) {
-        const v = values[0];
-        return `Invalid literal, expected ${JSON.stringify(v)}`;
-      }
-      return `Invalid enum value, expected one of: ${values.join(", ")}`;
-    }
-    case "not_multiple_of": {
-      return `Not a multiple of ${issue.divisor}`;
-    }
-    case "too_big": {
-      const what = issue.origin;
-      const max = issue.maximum;
-      const incl = issue.inclusive ? "(inclusive)" : "";
-      return `Too big ${what}: max ${max} ${incl}`.trim();
-    }
-    case "too_small": {
-      const what = issue.origin;
-      const min = issue.minimum;
-      const incl = issue.inclusive ? "(inclusive)" : "";
-      return `Too small ${what}: min ${min} ${incl}`.trim();
-    }
-    case "unrecognized_keys": {
-      return `Unrecognized keys: ${issue.keys.join(", ")}`;
-    }
-    default: {
-      return "Invalid input";
+  if (issue.code === "invalid_union") {
+    const unionOptions = collectInvalidUnionOptions(issue);
+    if (unionOptions.length > 0) {
+      return `Invalid input (expected one of: ${unionOptions.join(", ")})`;
     }
   }
+
+  if (typeof issue.message === "string" && issue.message.trim().length > 0) {
+    return issue.message;
+  }
+
+  return "Invalid input";
+}
+
+function normalizeZodIssues(
+  source: undefined | unknown | ZodIssue[],
+): undefined | ZodIssue[] {
+  if (Array.isArray(source)) {
+    return source;
+  }
+
+  if (isZodError(source)) {
+    return source.issues;
+  }
+
+  return undefined;
 }

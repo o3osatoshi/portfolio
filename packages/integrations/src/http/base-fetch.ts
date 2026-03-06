@@ -7,6 +7,7 @@ import {
   type HttpRequest,
   type HttpResponse,
   newFetchError,
+  omitUndefined,
   resolveAbortSignal,
 } from "@o3osatoshi/toolkit";
 
@@ -99,12 +100,12 @@ function performFetch(
     timeoutMs: request.timeoutMs,
   });
 
-  const init: RequestInit = {
-    ...(request.method !== undefined ? { method: request.method } : {}),
-    ...(request.headers !== undefined ? { headers: request.headers } : {}),
-    ...(request.body !== undefined ? { body: request.body } : {}),
-    ...(signal !== undefined ? { signal } : {}),
-  };
+  const init: RequestInit = omitUndefined({
+    body: request.body,
+    headers: request.headers,
+    method: request.method,
+    signal,
+  });
 
   return ResultAsync.fromPromise(fetcher(request.url, init), (cause) =>
     newFetchError({

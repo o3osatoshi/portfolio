@@ -2,6 +2,7 @@ import { err, ok, type Result } from "neverthrow";
 import type { ZodIssue } from "zod";
 
 import type { JsonObject } from "../types";
+import { toValidationIssues } from "../zod/zod-error";
 import {
   isRichError,
   newRichError,
@@ -305,14 +306,7 @@ function deserializeSerializedError(value: SerializedError): Error {
 }
 
 function mapZodIssues(issues: ZodIssue[]): DeserializeRichErrorIssue[] {
-  return issues.map((issue) => ({
-    code: issue.code,
-    message: issue.message,
-    path:
-      issue.path.length > 0
-        ? issue.path.map((segment) => String(segment)).join(".")
-        : "<root>",
-  }));
+  return toValidationIssues(issues, { rootPath: "<root>" });
 }
 
 function resolveInputType(input: unknown): string {
