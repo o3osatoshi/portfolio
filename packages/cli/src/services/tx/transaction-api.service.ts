@@ -3,7 +3,6 @@ import type { ResultAsync } from "neverthrow";
 import { parseWith, type RichError } from "@o3osatoshi/toolkit";
 
 import { requestAuthenticatedApi } from "../../common/http/authenticated-api-request";
-import { toAsync } from "../../common/result";
 import {
   transactionListSchema,
   type TransactionResponse,
@@ -20,12 +19,10 @@ export function createTransaction(
     },
     method: "POST",
   }).andThen((json) =>
-    toAsync(
-      parseWith(transactionSchema, {
-        action: "DecodeCreateTransactionResponse",
-        layer: "Presentation",
-      })(json),
-    ),
+    parseWith(transactionSchema, {
+      action: "DecodeCreateTransactionResponse",
+      layer: "Presentation",
+    })(json),
   );
 }
 
@@ -45,12 +42,10 @@ export function listTransactions(): ResultAsync<
   return requestAuthenticatedApi("/api/cli/v1/transactions", {
     method: "GET",
   }).andThen((json) =>
-    toAsync(
-      parseWith(transactionListSchema, {
-        action: "DecodeListTransactionsResponse",
-        layer: "Presentation",
-      })(json),
-    ),
+    parseWith(transactionListSchema, {
+      action: "DecodeListTransactionsResponse",
+      layer: "Presentation",
+    })(json),
   );
 }
 
