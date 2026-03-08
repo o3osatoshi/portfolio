@@ -3,7 +3,6 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 
 import { err, errAsync, ok, type Result, ResultAsync } from "neverthrow";
-import { z } from "zod";
 
 import {
   newRichError,
@@ -14,19 +13,11 @@ import {
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import {
-  type CliTokenStoreEnv,
   resolveTokenStoreEnv,
+  type TokenStoreEnv,
 } from "../../common/runtime-env";
-import type { OidcTokenSet } from "../../common/types";
+import { type OidcTokenSet, oidcTokenSetSchema } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
-
-const tokenSetSchema = z.object({
-  access_token: z.string().min(1),
-  expires_at: z.number().optional(),
-  refresh_token: z.string().optional(),
-  scope: z.string().optional(),
-  token_type: z.string().optional(),
-});
 
 const keychainServiceName = "o3o-cli";
 const keychainAccountName = "default";
@@ -50,7 +41,7 @@ type ResolvedTokenStoreConfig = {
   backend: TokenStoreBackend;
   tokenStoreFilePath: string;
 };
-type TokenStoreBackend = CliTokenStoreEnv["tokenStoreBackend"];
+type TokenStoreBackend = TokenStoreEnv["tokenStoreBackend"];
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
   const tokenStoreConfig = getResolvedTokenStoreConfig();
@@ -186,7 +177,7 @@ export function writeTokenSet(
   const { allowFileFallback, backend, tokenStoreFilePath } =
     tokenStoreConfig.value;
 
-  const parsed = makeCliSchemaParser(tokenSetSchema, {
+  const parsed = makeCliSchemaParser(oidcTokenSetSchema, {
     action: "WriteTokenSet",
     code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
     context: "token payload",
@@ -348,7 +339,7 @@ function newBackendUnavailableError(
 
 function parseStoredTokenSet(raw: string): null | OidcTokenSet {
   try {
-    const parsed = tokenSetSchema.safeParse(JSON.parse(raw));
+    const parsed = oidcTokenSetSchema.safeParse(JSON.parse(raw));
     if (!parsed.success) {
       return null;
     }
@@ -427,7 +418,7 @@ async function readKeychainTokenSet(): Promise<KeychainReadResult> {
   }
 }
 
-function resolveTokenStoreFilePath(env: CliTokenStoreEnv): string {
+function resolveTokenStoreFilePath(env: TokenStoreEnv): string {
   if (process.platform === "win32") {
     const basePath = env.appData ?? join(homedir(), "AppData", "Roaming");
     return join(basePath, "o3o", "auth.json");

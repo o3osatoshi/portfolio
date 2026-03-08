@@ -19,14 +19,14 @@ vi.mock("node:child_process", () => ({
 }));
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import type { OidcClientConfig } from "../../common/types";
+import type { Oidc } from "../../common/types";
 import {
   loginWithOidc,
   refreshToken,
   revokeRefreshToken,
 } from "./oidc.service";
 
-const config: OidcClientConfig = {
+const config: Oidc = {
   audience: "https://api.o3o.app",
   clientId: "cli-client-id",
   issuer: "https://example.auth0.com",
@@ -423,7 +423,7 @@ describe("services/auth/oidc.service", () => {
 
   it("renders minimal success callback page with secure headers", async () => {
     const redirectPort = await getAvailablePort();
-    const pkceConfig: OidcClientConfig = { ...config, redirectPort };
+    const pkceConfig: Oidc = { ...config, redirectPort };
     const issuedCode = "code-secret-value-for-test";
 
     const fetchMock = vi
@@ -482,7 +482,7 @@ describe("services/auth/oidc.service", () => {
 
   it("renders failed callback page on state mismatch without leaking query secrets", async () => {
     const redirectPort = await getAvailablePort();
-    const pkceConfig: OidcClientConfig = { ...config, redirectPort };
+    const pkceConfig: Oidc = { ...config, redirectPort };
     const issuedCode = "state-mismatch-code-value";
 
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValueOnce(
@@ -524,7 +524,7 @@ describe("services/auth/oidc.service", () => {
 
   it("renders failed callback page for oauth error query", async () => {
     const redirectPort = await getAvailablePort();
-    const pkceConfig: OidcClientConfig = { ...config, redirectPort };
+    const pkceConfig: Oidc = { ...config, redirectPort };
 
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValueOnce(
       jsonResponse({

@@ -16,7 +16,7 @@ import type { ApiErrorResponse } from "../contracts/api-error.schema";
 import { apiErrorResponseSchema } from "../contracts/api-error.schema";
 import { cliErrorCodes } from "../error-catalog";
 import { resolveRuntimeEnv } from "../runtime-env";
-import type { OidcTokenSet, RuntimeConfig } from "../types";
+import type { OidcTokenSet, RuntimeEnv } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
@@ -113,7 +113,7 @@ export function requestAuthenticatedApi(
 }
 
 function ensureAccessToken(
-  config: RuntimeConfig,
+  config: RuntimeEnv,
 ): ResultAsync<OidcTokenSet, RichError> {
   return readTokenSet().andThen((tokenSet) => {
     if (!tokenSet) {

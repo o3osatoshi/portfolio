@@ -1,6 +1,6 @@
-import type { RuntimeConfig } from "./types";
+import type { RuntimeEnv } from "./types";
 
-export const DEFAULT_RUNTIME_CONFIG: RuntimeConfig = {
+export const DEFAULT_RUNTIME_ENV: RuntimeEnv = {
   oidc: {
     audience: "https://api.o3o.app",
     clientId: "NCWwZFxrbAu2TR1gJy2jPJNOqb7NInuf",

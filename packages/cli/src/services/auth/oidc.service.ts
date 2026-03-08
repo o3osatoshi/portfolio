@@ -17,7 +17,7 @@ import {
 } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import type { OidcClientConfig, OidcTokenSet } from "../../common/types";
+import type { Oidc, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 
 const execFileAsync = promisify(execFile);
@@ -81,7 +81,7 @@ type CallbackPageContent = {
 };
 
 export function loginWithOidc(
-  config: OidcClientConfig,
+  config: Oidc,
   mode: OidcLoginMode,
   options?: OidcLoginOptions,
 ): ResultAsync<OidcTokenSet, RichError> {
@@ -102,7 +102,7 @@ export function loginWithOidc(
 }
 
 export function refreshToken(
-  config: OidcClientConfig,
+  config: Oidc,
   refreshTokenValue: string,
 ): ResultAsync<OidcTokenSet, RichError> {
   return ResultAsync.fromPromise(
@@ -122,7 +122,7 @@ export function refreshToken(
 }
 
 export function revokeRefreshToken(
-  config: OidcClientConfig,
+  config: Oidc,
   refreshTokenValue: string,
 ): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
@@ -182,7 +182,7 @@ function info(options: OidcLoginOptions | undefined, message: string): void {
 }
 
 async function loginByDeviceCode(
-  config: OidcClientConfig,
+  config: Oidc,
   discovery: z.infer<typeof oidcDiscoveryResponseSchema>,
   options?: OidcLoginOptions,
 ): Promise<OidcTokenSet> {
@@ -302,7 +302,7 @@ async function loginByDeviceCode(
 }
 
 async function loginByPkce(
-  config: OidcClientConfig,
+  config: Oidc,
   discovery: z.infer<typeof oidcDiscoveryResponseSchema>,
 ): Promise<OidcTokenSet> {
   const redirectHost = "127.0.0.1";
@@ -488,7 +488,7 @@ async function loginByPkce(
 }
 
 async function loginWithOidcUnsafe(
-  config: OidcClientConfig,
+  config: Oidc,
   mode: OidcLoginMode,
   options?: OidcLoginOptions,
 ): Promise<OidcTokenSet> {
@@ -564,7 +564,7 @@ function parseOrThrow<T extends z.ZodType>(
 }
 
 async function refreshTokenUnsafe(
-  config: OidcClientConfig,
+  config: Oidc,
   refreshTokenValue: string,
 ): Promise<OidcTokenSet> {
   const discovery = await discover(
@@ -600,7 +600,7 @@ async function refreshTokenUnsafe(
 }
 
 async function revokeRefreshTokenUnsafe(
-  config: OidcClientConfig,
+  config: Oidc,
   refreshTokenValue: string,
 ): Promise<void> {
   const discovery = await discover(

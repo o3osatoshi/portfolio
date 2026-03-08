@@ -4,8 +4,8 @@ import { z } from "zod";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "./error-catalog";
-import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
-import type { RuntimeConfig } from "./types";
+import { DEFAULT_RUNTIME_ENV } from "./runtime-config-defaults";
+import { type RuntimeEnv, runtimeEnvSchema } from "./types";
 import { makeCliSchemaParser } from "./zod-validation";
 
 const optionalTrimmedStringSchema = z.preprocess((value) => {
@@ -16,25 +16,6 @@ const optionalTrimmedStringSchema = z.preprocess((value) => {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 }, z.string().min(1).optional());
-
-const runtimeConfigSchema = z.object({
-  oidc: z.object({
-    audience: z.string().min(1),
-    clientId: z.string().min(1),
-    issuer: z.string().url(),
-    redirectPort: z.coerce.number().int().min(1).max(65535),
-  }),
-  apiBaseUrl: z
-    .string()
-    .url()
-    .refine(
-      (value) => {
-        const parsed = new URL(value);
-        return parsed.search.length === 0 && parsed.hash.length === 0;
-      },
-      { message: "Must not include query or hash" },
-    ),
-});
 
 const runtimeEnvFileSchema = z.object({
   envFilePath: optionalTrimmedStringSchema,
@@ -57,7 +38,7 @@ const tokenStoreEnvSchema = z
     xdgConfigHome: value.xdgConfigHome,
   }));
 
-export type CliTokenStoreEnv = z.infer<typeof tokenStoreEnvSchema>;
+export type TokenStoreEnv = z.infer<typeof tokenStoreEnvSchema>;
 
 export function resolveEnvFilePathFromEnv(
   source: Record<string, string | undefined> = process.env,
@@ -80,8 +61,8 @@ export function resolveEnvFilePathFromEnv(
 
 export function resolveRuntimeEnv(
   source: Record<string, string | undefined> = process.env,
-): Result<RuntimeConfig, RichError> {
-  const env = makeCliSchemaParser(runtimeConfigSchema, {
+): Result<RuntimeEnv, RichError> {
+  const env = makeCliSchemaParser(runtimeEnvSchema, {
     action: "ResolveCliRuntimeConfig",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI runtime config",
@@ -89,15 +70,16 @@ export function resolveRuntimeEnv(
   })({
     oidc: {
       audience:
-        source["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_CONFIG.oidc.audience,
+        source["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_ENV.oidc.audience,
       clientId:
-        source["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_CONFIG.oidc.clientId,
-      issuer: source["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_CONFIG.oidc.issuer,
-      redirectPort:
+        source["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_ENV.oidc.clientId,
+      issuer: source["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_ENV.oidc.issuer,
+      redirectPort: Number(
         source["O3O_OIDC_REDIRECT_PORT"] ??
-        String(DEFAULT_RUNTIME_CONFIG.oidc.redirectPort),
+          String(DEFAULT_RUNTIME_ENV.oidc.redirectPort),
+      ),
     },
-    apiBaseUrl: source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_CONFIG.apiBaseUrl,
+    apiBaseUrl: source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_ENV.apiBaseUrl,
   });
 
   if (env.isErr()) {
@@ -109,7 +91,7 @@ export function resolveRuntimeEnv(
 
 export function resolveTokenStoreEnv(
   source: Record<string, string | undefined> = process.env,
-): Result<CliTokenStoreEnv, RichError> {
+): Result<TokenStoreEnv, RichError> {
   const env = makeCliSchemaParser(tokenStoreEnvSchema, {
     action: "ResolveCliTokenStoreEnv",
     code: cliErrorCodes.CLI_CONFIG_INVALID,

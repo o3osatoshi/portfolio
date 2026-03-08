@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { cliErrorCodes } from "./error-catalog";
-import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
+import { DEFAULT_RUNTIME_ENV } from "./runtime-config-defaults";
 import {
   resolveEnvFilePathFromEnv,
   resolveRuntimeEnv,
@@ -14,7 +14,7 @@ describe("common/runtime-env", () => {
 
     expect(env.isOk()).toBe(true);
     if (env.isErr()) throw new Error("Expected ok result");
-    expect(env.value).toEqual(DEFAULT_RUNTIME_CONFIG);
+    expect(env.value).toEqual(DEFAULT_RUNTIME_ENV);
   });
 
   it("rejects O3O_API_BASE_URL that includes query/hash", () => {
