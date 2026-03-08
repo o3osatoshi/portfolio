@@ -9,8 +9,6 @@ import {
   type ValidationIssue,
 } from "@o3osatoshi/toolkit";
 
-export type CliValidationIssue = ValidationIssue;
-
 type CliSchemaParserOptions = {
   action: string;
   code: string;
@@ -20,9 +18,7 @@ type CliSchemaParserOptions = {
 
 const defaultHint = "Review the input and retry.";
 
-export function extractCliValidationIssues(
-  error: RichError,
-): CliValidationIssue[] {
+export function extractValidationIssues(error: RichError): ValidationIssue[] {
   const value = error.meta?.["validationIssues"];
   if (!Array.isArray(value)) {
     return [];

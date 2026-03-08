@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import {
-  extractCliValidationIssues,
-  makeCliSchemaParser,
-} from "./zod-validation";
+import { extractValidationIssues, makeCliSchemaParser } from "./zod-validation";
 
 describe("common/zod-validation", () => {
   it("prefixes validation reason with context", () => {
@@ -77,7 +74,7 @@ describe("common/zod-validation", () => {
 
     expect(parsed.isErr()).toBe(true);
     if (parsed.isErr()) {
-      const issues = extractCliValidationIssues(parsed.error);
+      const issues = extractValidationIssues(parsed.error);
       expect(issues).toHaveLength(1);
       expect(issues[0]).toMatchObject({
         code: "invalid_type",

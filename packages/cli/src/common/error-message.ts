@@ -1,15 +1,12 @@
-import type { RichError } from "@o3osatoshi/toolkit";
+import type { RichError, ValidationIssue } from "@o3osatoshi/toolkit";
 
-import {
-  type CliValidationIssue,
-  extractCliValidationIssues,
-} from "./zod-validation";
+import { extractValidationIssues } from "./zod-validation";
 
 export type CliErrorPayload = {
   error: {
     action?: string | undefined;
     code?: string | undefined;
-    issues?: CliValidationIssue[] | undefined;
+    issues?: undefined | ValidationIssue[];
     kind: string;
     layer: string;
     message: string;
@@ -27,17 +24,17 @@ export function toCliErrorMessage(
   options: CliErrorRenderOptions = {},
 ): string {
   const message = toCliErrorShortMessage(error);
-  const base = !error.code ? message : `${message} (code=${error.code})`;
+  const baseMessage = !error.code ? message : `${message} (code=${error.code})`;
   if (!options.debug) {
-    return base;
+    return baseMessage;
   }
 
-  const issues = extractCliValidationIssues(error);
+  const issues = extractValidationIssues(error);
   if (issues.length === 0) {
-    return base;
+    return baseMessage;
   }
 
-  const lines = [base, "Details:"];
+  const lines = [baseMessage, "Details:"];
   for (const issue of issues) {
     lines.push(`- ${issue.path}: ${issue.message} (code=${issue.code})`);
   }
@@ -54,7 +51,7 @@ export function toCliErrorPayload(
   error: RichError,
   options: CliErrorRenderOptions = {},
 ): CliErrorPayload {
-  const issues = options.debug ? extractCliValidationIssues(error) : [];
+  const issues = options.debug ? extractValidationIssues(error) : [];
 
   return {
     error: {
