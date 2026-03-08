@@ -192,18 +192,7 @@ export function writeTokenSet(
 
   const serialized = encode(parsed.value);
   if (serialized.isErr()) {
-    return errAsync(
-      toRichError(serialized.error, {
-        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
-        details: {
-          action: "WriteTokenSet",
-          reason: "Failed to persist token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-    );
+    return errAsync(serialized.error);
   }
   return ResultAsync.fromPromise(
     (async () => {

@@ -1,11 +1,6 @@
 import type { ResultAsync } from "neverthrow";
 
-import {
-  encode,
-  makeSchemaParser,
-  type RichError,
-  toRichError,
-} from "@o3osatoshi/toolkit";
+import { encode, makeSchemaParser, type RichError } from "@o3osatoshi/toolkit";
 
 import { requestAuthenticatedApi } from "../../common/http/authenticated-api-request";
 import {
@@ -18,17 +13,6 @@ export function createTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<TransactionResponse, RichError> {
   return encode(payload)
-    .mapErr((cause) =>
-      toRichError(cause, {
-        details: {
-          action: "CreateTransaction",
-          reason: "Failed to serialize create transaction payload.",
-        },
-        isOperational: false,
-        kind: "Serialization",
-        layer: "Presentation",
-      }),
-    )
     .asyncAndThen((serializedPayload) =>
       requestAuthenticatedApi("/api/cli/v1/transactions", {
         body: serializedPayload,
@@ -73,28 +57,16 @@ export function updateTransaction(
   id: string,
   payload: Record<string, unknown>,
 ): ResultAsync<void, RichError> {
-  return encode(payload)
-    .mapErr((cause) =>
-      toRichError(cause, {
-        details: {
-          action: "UpdateTransaction",
-          reason: "Failed to serialize update transaction payload.",
+  return encode(payload).asyncAndThen((serializedPayload) =>
+    requestAuthenticatedApi(
+      `/api/cli/v1/transactions/${encodeURIComponent(id)}`,
+      {
+        body: serializedPayload,
+        headers: {
+          "content-type": "application/json",
         },
-        isOperational: false,
-        kind: "Serialization",
-        layer: "Presentation",
-      }),
-    )
-    .asyncAndThen((serializedPayload) =>
-      requestAuthenticatedApi(
-        `/api/cli/v1/transactions/${encodeURIComponent(id)}`,
-        {
-          body: serializedPayload,
-          headers: {
-            "content-type": "application/json",
-          },
-          method: "PATCH",
-        },
-      ).map(() => undefined),
-    );
+        method: "PATCH",
+      },
+    ).map(() => undefined),
+  );
 }

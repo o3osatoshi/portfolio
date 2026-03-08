@@ -1,4 +1,4 @@
-import { encode, type RichError, toRichError } from "@o3osatoshi/toolkit";
+import { encode, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   type CliErrorPayload,
@@ -59,7 +59,7 @@ export function printCliError(
     };
     const serialized = encode(payload);
     if (serialized.isErr()) {
-      console.error(toCliErrorMessage(toRichError(serialized.error)));
+      console.error(toCliErrorMessage(serialized.error));
       return;
     }
     console.error(serialized.value);
@@ -110,7 +110,7 @@ function printCliResult(result: CliSuccessValue, outputMode: OutputMode): void {
   };
   const serialized = encode(payload);
   if (serialized.isErr()) {
-    console.error(toCliErrorMessage(toRichError(serialized.error)));
+    console.error(toCliErrorMessage(serialized.error));
     return;
   }
   console.log(serialized.value);
