@@ -8,8 +8,6 @@ import {
 
 export const cliOutputVersion = 1;
 
-export type CliJsonEnvelope = CliJsonFailure | CliJsonSuccess;
-
 export type CliJsonFailure = {
   command?: string;
   error: CliErrorPayload["error"];
@@ -35,38 +33,35 @@ type CliPrintOptions = {
   debug?: boolean | undefined;
 };
 
-type CliSuccessValue = {
-  command: string;
-  message?: string;
-  value: unknown;
-};
-
-export function printCliError(
+export function printFailure(
   error: RichError,
   outputMode: OutputMode,
   command?: string,
   options: CliPrintOptions = {},
 ): void {
-  if (outputMode === "json") {
-    const basePayload = toCliErrorPayload(error, { debug: options.debug });
-    const payload: CliJsonFailure = {
-      error: basePayload.error,
-      meta: {
-        version: cliOutputVersion,
-      },
-      ok: false,
-      ...(command ? { command } : {}),
-    };
-    const serialized = encode(payload);
-    if (serialized.isErr()) {
-      console.error(toCliErrorMessage(serialized.error));
+  switch (outputMode) {
+    case "text":
+      console.error(toCliErrorMessage(error, { debug: options.debug }));
+      return;
+    case "json": {
+      const basePayload = toCliErrorPayload(error, { debug: options.debug });
+      const payload: CliJsonFailure = {
+        error: basePayload.error,
+        meta: {
+          version: cliOutputVersion,
+        },
+        ok: false,
+        ...(command ? { command } : {}),
+      };
+      const serialized = encode(payload);
+      if (serialized.isErr()) {
+        console.error(toCliErrorMessage(serialized.error));
+        return;
+      }
+      console.error(serialized.value);
       return;
     }
-    console.error(serialized.value);
-    return;
   }
-
-  console.error(toCliErrorMessage(error, { debug: options.debug }));
 }
 
 export function printSuccessData(
@@ -75,12 +70,14 @@ export function printSuccessData(
   outputMode: OutputMode,
   textRenderer: (data: unknown) => void,
 ): void {
-  if (outputMode === "json") {
-    printCliResult({ command, value: data }, outputMode);
-    return;
+  switch (outputMode) {
+    case "json":
+      printSuccessJson({ command, value: data }, outputMode);
+      return;
+    case "text":
+      textRenderer(data);
+      return;
   }
-
-  textRenderer(data);
 }
 
 export function printSuccessMessage(
@@ -88,30 +85,40 @@ export function printSuccessMessage(
   message: string,
   outputMode: OutputMode,
 ): void {
-  if (outputMode === "json") {
-    printCliResult({ command, message, value: null }, outputMode);
-    return;
+  switch (outputMode) {
+    case "json":
+      printSuccessJson({ command, message, value: null }, outputMode);
+      return;
+    case "text":
+      console.log(message);
+      return;
   }
-
-  console.log(message);
 }
 
-function printCliResult(result: CliSuccessValue, outputMode: OutputMode): void {
-  if (outputMode !== "json") return;
-
-  const payload: CliJsonSuccess = {
-    command: result.command,
-    ...(result.message ? { message: result.message } : {}),
-    meta: {
-      version: cliOutputVersion,
-    },
-    ok: true,
-    value: result.value,
-  };
-  const serialized = encode(payload);
-  if (serialized.isErr()) {
-    console.error(toCliErrorMessage(serialized.error));
-    return;
+function printSuccessJson(
+  result: { command: string; message?: string; value: unknown },
+  outputMode: OutputMode,
+): void {
+  switch (outputMode) {
+    case "text":
+      return;
+    case "json": {
+      const payload: CliJsonSuccess = {
+        command: result.command,
+        ...(result.message ? { message: result.message } : {}),
+        meta: {
+          version: cliOutputVersion,
+        },
+        ok: true,
+        value: result.value,
+      };
+      const serialized = encode(payload);
+      if (serialized.isErr()) {
+        console.error(toCliErrorMessage(serialized.error));
+        return;
+      }
+      console.log(serialized.value);
+      return;
+    }
   }
-  console.log(serialized.value);
 }

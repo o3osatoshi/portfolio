@@ -22,7 +22,7 @@ import { runTxUpdate } from "./commands/tx/update";
 import { loadRuntimeEnvFile } from "./common/env-file";
 import { cliErrorCodes } from "./common/error-catalog";
 import { resolveCliExitCode } from "./common/exit-code";
-import { type OutputMode, printCliError } from "./common/output";
+import { type OutputMode, printFailure } from "./common/output";
 import { resolveEnvFilePathFromEnv } from "./common/runtime-env";
 import type { OidcLoginMode } from "./services/auth/oidc.service";
 
@@ -365,7 +365,7 @@ const invocationDebugMode = resolveDebugModeFromArgv(invocationArgv);
 void main(invocationArgv, invocationOutputMode).match(
   () => undefined,
   (error) => {
-    printCliError(error, invocationOutputMode, undefined, {
+    printFailure(error, invocationOutputMode, undefined, {
       debug: invocationDebugMode,
     });
     process.exitCode = resolveCliExitCode(error);

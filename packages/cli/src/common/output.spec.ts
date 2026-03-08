@@ -4,7 +4,7 @@ import { newRichError } from "@o3osatoshi/toolkit";
 
 import {
   cliOutputVersion,
-  printCliError,
+  printFailure,
   printSuccessData,
   printSuccessMessage,
 } from "./output";
@@ -75,7 +75,7 @@ describe("common/output", () => {
       layer: "Presentation",
     });
 
-    printCliError(error, "json");
+    printFailure(error, "json");
 
     const [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
     const parsed = JSON.parse(String(payload)) as {
@@ -115,7 +115,7 @@ describe("common/output", () => {
       },
     });
 
-    printCliError(error, "json");
+    printFailure(error, "json");
     let [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
     let parsed = JSON.parse(String(payload)) as {
       error: {
@@ -125,7 +125,7 @@ describe("common/output", () => {
     expect(parsed.error.issues).toBeUndefined();
 
     vi.mocked(console.error).mockClear();
-    printCliError(error, "json", undefined, { debug: true });
+    printFailure(error, "json", undefined, { debug: true });
     [payload] = vi.mocked(console.error).mock.calls[0] ?? [];
     parsed = JSON.parse(String(payload)) as {
       error: {
