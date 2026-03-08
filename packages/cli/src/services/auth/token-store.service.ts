@@ -18,7 +18,7 @@ import {
   resolveTokenStoreEnvFromEnv,
 } from "../../common/runtime-env";
 import type { OidcTokenSet } from "../../common/types";
-import { parseCliWithSchema } from "../../common/zod-validation";
+import { makeCliSchemaParser } from "../../common/zod-validation";
 
 const tokenSetSchema = z.object({
   access_token: z.string().min(1),
@@ -186,12 +186,12 @@ export function writeTokenSet(
   const { allowFileFallback, backend, tokenStoreFilePath } =
     tokenStoreConfig.value;
 
-  const parsed = parseCliWithSchema(tokenSetSchema, tokenSet, {
+  const parsed = makeCliSchemaParser(tokenSetSchema, {
     action: "WriteTokenSet",
     code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
     context: "token payload",
     fallbackHint: "Run `o3o auth login` to refresh local credentials.",
-  });
+  })(tokenSet);
   if (parsed.isErr()) {
     return errAsync(parsed.error);
   }

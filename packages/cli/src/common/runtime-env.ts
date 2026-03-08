@@ -6,7 +6,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 import { cliErrorCodes } from "./error-catalog";
 import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
 import type { RuntimeConfig } from "./types";
-import { parseCliWithSchema } from "./zod-validation";
+import { makeCliSchemaParser } from "./zod-validation";
 
 const optionalTrimmedStringSchema = z.preprocess((value) => {
   if (typeof value !== "string") {
@@ -62,18 +62,14 @@ export type CliTokenStoreEnv = z.infer<typeof tokenStoreEnvSchema>;
 export function resolveEnvFilePathFromEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<string | undefined, RichError> {
-  const parsed = parseCliWithSchema(
-    runtimeEnvFileSchema,
-    {
-      envFilePath: source["O3O_ENV_FILE"],
-    },
-    {
-      action: "ResolveCliEnvFilePath",
-      code: cliErrorCodes.CLI_CONFIG_INVALID,
-      context: "CLI env file path",
-      fallbackHint: "Set O3O_ENV_FILE to a non-empty path and retry.",
-    },
-  );
+  const parsed = makeCliSchemaParser(runtimeEnvFileSchema, {
+    action: "ResolveCliEnvFilePath",
+    code: cliErrorCodes.CLI_CONFIG_INVALID,
+    context: "CLI env file path",
+    fallbackHint: "Set O3O_ENV_FILE to a non-empty path and retry.",
+  })({
+    envFilePath: source["O3O_ENV_FILE"],
+  });
 
   if (parsed.isErr()) {
     return err(parsed.error);
@@ -85,29 +81,24 @@ export function resolveEnvFilePathFromEnv(
 export function resolveRuntimeConfigFromEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<RuntimeConfig, RichError> {
-  const parsed = parseCliWithSchema(
-    runtimeConfigSchema,
-    {
-      oidc: {
-        audience:
-          source["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_CONFIG.oidc.audience,
-        clientId:
-          source["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_CONFIG.oidc.clientId,
-        issuer: source["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_CONFIG.oidc.issuer,
-        redirectPort:
-          source["O3O_OIDC_REDIRECT_PORT"] ??
-          String(DEFAULT_RUNTIME_CONFIG.oidc.redirectPort),
-      },
-      apiBaseUrl:
-        source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_CONFIG.apiBaseUrl,
+  const parsed = makeCliSchemaParser(runtimeConfigSchema, {
+    action: "ResolveCliRuntimeConfig",
+    code: cliErrorCodes.CLI_CONFIG_INVALID,
+    context: "CLI runtime config",
+    fallbackHint: "Set valid O3O_* environment variables and retry.",
+  })({
+    oidc: {
+      audience:
+        source["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_CONFIG.oidc.audience,
+      clientId:
+        source["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_CONFIG.oidc.clientId,
+      issuer: source["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_CONFIG.oidc.issuer,
+      redirectPort:
+        source["O3O_OIDC_REDIRECT_PORT"] ??
+        String(DEFAULT_RUNTIME_CONFIG.oidc.redirectPort),
     },
-    {
-      action: "ResolveCliRuntimeConfig",
-      code: cliErrorCodes.CLI_CONFIG_INVALID,
-      context: "CLI runtime config",
-      fallbackHint: "Set valid O3O_* environment variables and retry.",
-    },
-  );
+    apiBaseUrl: source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_CONFIG.apiBaseUrl,
+  });
 
   if (parsed.isErr()) {
     return err(parsed.error);
@@ -119,22 +110,18 @@ export function resolveRuntimeConfigFromEnv(
 export function resolveTokenStoreEnvFromEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<CliTokenStoreEnv, RichError> {
-  const parsed = parseCliWithSchema(
-    tokenStoreEnvSchema,
-    {
-      allowFileFallback: source["O3O_ALLOW_FILE_TOKEN_STORE"],
-      appData: source["APPDATA"],
-      tokenStoreBackend: source["O3O_TOKEN_STORE_BACKEND"],
-      xdgConfigHome: source["XDG_CONFIG_HOME"],
-    },
-    {
-      action: "ResolveCliTokenStoreEnv",
-      code: cliErrorCodes.CLI_CONFIG_INVALID,
-      context: "CLI token store env",
-      fallbackHint:
-        "Set O3O_TOKEN_STORE_BACKEND to auto|file|keychain and O3O_ALLOW_FILE_TOKEN_STORE to 0|1.",
-    },
-  );
+  const parsed = makeCliSchemaParser(tokenStoreEnvSchema, {
+    action: "ResolveCliTokenStoreEnv",
+    code: cliErrorCodes.CLI_CONFIG_INVALID,
+    context: "CLI token store env",
+    fallbackHint:
+      "Set O3O_TOKEN_STORE_BACKEND to auto|file|keychain and O3O_ALLOW_FILE_TOKEN_STORE to 0|1.",
+  })({
+    allowFileFallback: source["O3O_ALLOW_FILE_TOKEN_STORE"],
+    appData: source["APPDATA"],
+    tokenStoreBackend: source["O3O_TOKEN_STORE_BACKEND"],
+    xdgConfigHome: source["XDG_CONFIG_HOME"],
+  });
 
   if (parsed.isErr()) {
     return err(parsed.error);

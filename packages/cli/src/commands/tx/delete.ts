@@ -8,7 +8,7 @@ import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { type OutputMode, printSuccessMessage } from "../../common/output";
-import { parseCliWithSchema } from "../../common/zod-validation";
+import { makeCliSchemaParser } from "../../common/zod-validation";
 import { deleteTransaction } from "../../services/tx/transaction-api.service";
 
 const txDeleteArgsSchema = z.object({
@@ -20,16 +20,12 @@ export function runTxDelete(
   confirmed: boolean,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
-  const parsedArgs = parseCliWithSchema(
-    txDeleteArgsSchema,
-    { id },
-    {
-      action: "ParseTxDeleteArguments",
-      code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
-      context: "tx delete arguments",
-      fallbackHint: "Use `o3o tx delete --id <id> [--yes]`.",
-    },
-  );
+  const parsedArgs = makeCliSchemaParser(txDeleteArgsSchema, {
+    action: "ParseTxDeleteArguments",
+    code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
+    context: "tx delete arguments",
+    fallbackHint: "Use `o3o tx delete --id <id> [--yes]`.",
+  })({ id });
 
   if (parsedArgs.isErr()) {
     return errAsync(parsedArgs.error);

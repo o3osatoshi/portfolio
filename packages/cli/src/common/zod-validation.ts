@@ -11,7 +11,7 @@ import {
 
 export type CliValidationIssue = ValidationIssue;
 
-type ParseCliWithSchemaOptions = {
+type CliSchemaParserOptions = {
   action: string;
   code: string;
   context: string;
@@ -51,11 +51,10 @@ export function extractCliValidationIssues(
   });
 }
 
-export function parseCliWithSchema<T extends z.ZodType>(
+export function makeCliSchemaParser<T extends z.ZodType>(
   schema: T,
-  input: unknown,
-  options: ParseCliWithSchemaOptions,
-): Result<z.infer<T>, RichError> {
+  options: CliSchemaParserOptions,
+): (input: unknown) => Result<z.infer<T>, RichError> {
   return makeSchemaParser(schema, {
     includeValidationIssues: true,
     action: options.action,
@@ -84,5 +83,5 @@ export function parseCliWithSchema<T extends z.ZodType>(
         meta: error.meta,
       });
     },
-  })(input);
+  });
 }

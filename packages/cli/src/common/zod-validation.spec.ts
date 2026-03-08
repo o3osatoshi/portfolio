@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import {
   extractCliValidationIssues,
-  parseCliWithSchema,
+  makeCliSchemaParser,
 } from "./zod-validation";
 
 describe("common/zod-validation", () => {
@@ -12,16 +12,12 @@ describe("common/zod-validation", () => {
       name: z.string(),
     });
 
-    const parsed = parseCliWithSchema(
-      schema,
-      { name: 123 },
-      {
-        action: "ParseName",
-        code: "CLI_COMMAND_INVALID_ARGUMENT",
-        context: "name argument",
-        fallbackHint: "Use `--name <value>`.",
-      },
-    );
+    const parsed = makeCliSchemaParser(schema, {
+      action: "ParseName",
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      context: "name argument",
+      fallbackHint: "Use `--name <value>`.",
+    })({ name: 123 });
 
     expect(parsed.isErr()).toBe(true);
     if (parsed.isErr()) {
@@ -37,16 +33,12 @@ describe("common/zod-validation", () => {
       name: z.string(),
     });
 
-    const parsed = parseCliWithSchema(
-      schema,
-      { name: 123 },
-      {
-        action: "ParseName",
-        code: "CLI_COMMAND_INVALID_ARGUMENT",
-        context: "name argument",
-        fallbackHint: "Use `--name <value>`.",
-      },
-    );
+    const parsed = makeCliSchemaParser(schema, {
+      action: "ParseName",
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      context: "name argument",
+      fallbackHint: "Use `--name <value>`.",
+    })({ name: 123 });
 
     expect(parsed.isErr()).toBe(true);
     if (parsed.isErr()) {
@@ -59,16 +51,12 @@ describe("common/zod-validation", () => {
       name: z.string().refine((value) => value === "ok", "Must be ok"),
     });
 
-    const parsed = parseCliWithSchema(
-      schema,
-      { name: "ng" },
-      {
-        action: "ParseName",
-        code: "CLI_COMMAND_INVALID_ARGUMENT",
-        context: "name argument",
-        fallbackHint: "Use `--name ok`.",
-      },
-    );
+    const parsed = makeCliSchemaParser(schema, {
+      action: "ParseName",
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      context: "name argument",
+      fallbackHint: "Use `--name ok`.",
+    })({ name: "ng" });
 
     expect(parsed.isErr()).toBe(true);
     if (parsed.isErr()) {
@@ -81,15 +69,11 @@ describe("common/zod-validation", () => {
       name: z.string(),
     });
 
-    const parsed = parseCliWithSchema(
-      schema,
-      { name: 123 },
-      {
-        action: "ParseName",
-        code: "CLI_COMMAND_INVALID_ARGUMENT",
-        context: "name argument",
-      },
-    );
+    const parsed = makeCliSchemaParser(schema, {
+      action: "ParseName",
+      code: "CLI_COMMAND_INVALID_ARGUMENT",
+      context: "name argument",
+    })({ name: 123 });
 
     expect(parsed.isErr()).toBe(true);
     if (parsed.isErr()) {

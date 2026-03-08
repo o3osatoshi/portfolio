@@ -18,7 +18,7 @@ import {
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import type { OidcClientConfig, OidcTokenSet } from "../../common/types";
-import { parseCliWithSchema } from "../../common/zod-validation";
+import { makeCliSchemaParser } from "../../common/zod-validation";
 
 const execFileAsync = promisify(execFile);
 
@@ -342,20 +342,16 @@ async function loginByPkce(
         return;
       }
 
-      const callbackQueryResult = parseCliWithSchema(
-        pkceCallbackQuerySchema,
-        {
-          code: url.searchParams.get("code") ?? undefined,
-          error: url.searchParams.get("error") ?? undefined,
-          state: url.searchParams.get("state") ?? undefined,
-        },
-        {
-          action: "DecodePkceCallbackQuery",
-          code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-          context: "PKCE callback query",
-          fallbackHint: "Retry `o3o auth login --mode pkce`.",
-        },
-      );
+      const callbackQueryResult = makeCliSchemaParser(pkceCallbackQuerySchema, {
+        action: "DecodePkceCallbackQuery",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        context: "PKCE callback query",
+        fallbackHint: "Retry `o3o auth login --mode pkce`.",
+      })({
+        code: url.searchParams.get("code") ?? undefined,
+        error: url.searchParams.get("error") ?? undefined,
+        state: url.searchParams.get("state") ?? undefined,
+      });
 
       if (callbackQueryResult.isErr()) {
         sendCallbackPage(res, {
@@ -559,7 +555,7 @@ function parseOrThrow<T extends z.ZodType>(
     fallbackHint?: string | undefined;
   },
 ): z.infer<T> {
-  const parsed = parseCliWithSchema(schema, input, options);
+  const parsed = makeCliSchemaParser(schema, options)(input);
   if (parsed.isErr()) {
     throw parsed.error;
   }

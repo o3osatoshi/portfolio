@@ -5,7 +5,7 @@ import { omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { type OutputMode, printSuccessData } from "../../common/output";
-import { parseCliWithSchema } from "../../common/zod-validation";
+import { makeCliSchemaParser } from "../../common/zod-validation";
 import { createTransaction } from "../../services/tx/transaction-api.service";
 
 type TxCreateArgs = {
@@ -36,12 +36,12 @@ export function runTxCreate(
   args: TxCreateArgs,
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
-  const parsed = parseCliWithSchema(txCreateArgsSchema, args, {
+  const parsed = makeCliSchemaParser(txCreateArgsSchema, {
     action: "ParseTxCreateArguments",
     code: cliErrorCodes.CLI_COMMAND_INVALID_ARGUMENT,
     context: "tx create arguments",
     fallbackHint: "Use `o3o tx create --help` to review required options.",
-  });
+  })(args);
 
   if (parsed.isErr()) {
     return errAsync(parsed.error);
