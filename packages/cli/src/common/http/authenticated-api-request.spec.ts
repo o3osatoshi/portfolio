@@ -32,7 +32,7 @@ describe("common/http/authenticated-api-request", () => {
     h.resolveRuntimeEnvMock.mockReset();
     h.resolveRuntimeEnvMock.mockReturnValue(
       ok({
-        oidc: {
+        oidcConfig: {
           audience: "https://api.o3o.app",
           clientId: "cli-client-id",
           issuer: "https://example.auth0.com",
@@ -177,7 +177,7 @@ describe("common/http/authenticated-api-request", () => {
   it("resolves request URL when API base URL includes /api path", async () => {
     h.resolveRuntimeEnvMock.mockReturnValueOnce(
       ok({
-        oidc: {
+        oidcConfig: {
           audience: "https://api.o3o.app",
           clientId: "cli-client-id",
           issuer: "https://example.auth0.com",

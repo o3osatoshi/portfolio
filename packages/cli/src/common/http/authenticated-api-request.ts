@@ -113,7 +113,7 @@ export function requestAuthenticatedApi(
 }
 
 function ensureAccessToken(
-  config: RuntimeEnv,
+  env: RuntimeEnv,
 ): ResultAsync<OidcTokenSet, RichError> {
   return readTokenSet().andThen((tokenSet) => {
     if (!tokenSet) {
@@ -153,7 +153,7 @@ function ensureAccessToken(
       );
     }
 
-    return refreshToken(config.oidc, tokenSet.refresh_token)
+    return refreshToken(env.oidcConfig, tokenSet.refresh_token)
       .orElse((refreshError) =>
         clearTokenSet()
           .orElse(() => okAsync(undefined))

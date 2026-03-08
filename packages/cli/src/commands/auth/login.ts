@@ -20,7 +20,7 @@ export function runAuthLogin(
       : (message: string) => console.log(message);
 
   return resolveRuntimeEnv()
-    .asyncAndThen((env) => loginWithOidc(env.oidc, mode, { onInfo }))
+    .asyncAndThen((env) => loginWithOidc(env.oidcConfig, mode, { onInfo }))
     .andThen((token) => writeTokenSet(token))
     .map(() => {
       printSuccessMessage("auth.login", "Login successful.", outputMode);

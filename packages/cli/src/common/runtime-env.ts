@@ -68,15 +68,16 @@ export function resolveRuntimeEnv(
     context: "CLI runtime config",
     fallbackHint: "Set valid O3O_* environment variables and retry.",
   })({
-    oidc: {
+    oidcConfig: {
       audience:
-        source["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_ENV.oidc.audience,
+        source["O3O_OIDC_AUDIENCE"] ?? DEFAULT_RUNTIME_ENV.oidcConfig.audience,
       clientId:
-        source["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_ENV.oidc.clientId,
-      issuer: source["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_ENV.oidc.issuer,
+        source["O3O_OIDC_CLIENT_ID"] ?? DEFAULT_RUNTIME_ENV.oidcConfig.clientId,
+      issuer:
+        source["O3O_OIDC_ISSUER"] ?? DEFAULT_RUNTIME_ENV.oidcConfig.issuer,
       redirectPort: Number(
         source["O3O_OIDC_REDIRECT_PORT"] ??
-          String(DEFAULT_RUNTIME_ENV.oidc.redirectPort),
+          String(DEFAULT_RUNTIME_ENV.oidcConfig.redirectPort),
       ),
     },
     apiBaseUrl: source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_ENV.apiBaseUrl,

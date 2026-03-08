@@ -40,7 +40,7 @@ describe("commands/auth", () => {
     h.resolveRuntimeEnvMock.mockReset();
     h.resolveRuntimeEnvMock.mockReturnValue(
       ok({
-        oidc: {
+        oidcConfig: {
           audience: "https://api.o3o.app",
           clientId: "cli-client-id",
           issuer: "https://example.auth0.com",

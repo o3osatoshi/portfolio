@@ -23,7 +23,7 @@ export function runAuthLogout(
 
       return resolveRuntimeEnv()
         .asyncAndThen((env) =>
-          revokeRefreshToken(env.oidc, refreshTokenValue).orElse(() =>
+          revokeRefreshToken(env.oidcConfig, refreshTokenValue).orElse(() =>
             okAsync(undefined),
           ),
         )

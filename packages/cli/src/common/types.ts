@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const oidcSchema = z.object({
+export const oidcConfigSchema = z.object({
   audience: z.string().min(1),
   clientId: z.string().min(1),
   issuer: z.url(),
   redirectPort: z.number().int().min(1).max(65535),
 });
 
-export type Oidc = z.infer<typeof oidcSchema>;
+export type OidcConfig = z.infer<typeof oidcConfigSchema>;
 
 export const oidcTokenSetSchema = z.object({
   access_token: z.string().min(1),
@@ -20,7 +20,7 @@ export const oidcTokenSetSchema = z.object({
 export type OidcTokenSet = z.infer<typeof oidcTokenSetSchema>;
 
 export const runtimeEnvSchema = z.object({
-  oidc: oidcSchema,
+  oidcConfig: oidcConfigSchema,
   apiBaseUrl: z.url().refine(
     (value) => {
       const parsed = new URL(value);
