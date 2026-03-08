@@ -496,20 +496,20 @@ async function unsafeOidcLogin(
     config.issuer,
     cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
   );
-  if (mode === "device") {
-    return loginByDeviceCode(config, discovery, options);
-  }
-  if (mode === "pkce") {
-    return loginByPkce(config, discovery);
-  }
-
-  try {
-    return await loginByPkce(config, discovery);
-  } catch (error) {
-    if (!shouldFallbackToDeviceFlow(error)) {
-      throw error;
-    }
-    return loginByDeviceCode(config, discovery, options);
+  switch (mode) {
+    case "device":
+      return loginByDeviceCode(config, discovery, options);
+    case "pkce":
+      return loginByPkce(config, discovery);
+    case "auto":
+      try {
+        return await loginByPkce(config, discovery);
+      } catch (error) {
+        if (!shouldFallbackToDeviceFlow(error)) {
+          throw error;
+        }
+        return loginByDeviceCode(config, discovery, options);
+      }
   }
 }
 
