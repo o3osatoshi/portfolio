@@ -1,4 +1,4 @@
-import { encode, type RichError } from "@o3osatoshi/toolkit";
+import { encode, omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   type CliErrorPayload,
@@ -46,12 +46,14 @@ export function printFailure(
     case "json": {
       const basePayload = toCliErrorPayload(error, { debug: options.debug });
       const payload: CliJsonFailure = {
+        ...omitUndefined({
+          command,
+        }),
         error: basePayload.error,
         meta: {
           version: cliOutputVersion,
         },
         ok: false,
-        ...(command ? { command } : {}),
       };
       const serialized = encode(payload);
       if (serialized.isErr()) {
@@ -105,7 +107,9 @@ function printSuccessJson(
     case "json": {
       const payload: CliJsonSuccess = {
         command: result.command,
-        ...(result.message ? { message: result.message } : {}),
+        ...omitUndefined({
+          message: result.message,
+        }),
         meta: {
           version: cliOutputVersion,
         },
