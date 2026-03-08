@@ -313,6 +313,15 @@ export const layerSchema: z.ZodEnum<{
 }>;
 
 // @public
+export function makeSchemaParser<T extends z.ZodType>(schema: T, ctx: {
+    action: string;
+    code?: string | undefined;
+    includeValidationIssues?: boolean | undefined;
+    layer?: Layer;
+    mapError?: ((error: RichError) => RichError) | undefined;
+}): (input: unknown) => Result<z.infer<T>, RichError>;
+
+// @public
 export type NewFetchError = {
     cause?: unknown;
     details?: RichErrorDetails | undefined;
@@ -366,15 +375,6 @@ export type OmitUndefinedDeep<T> = T extends ((...args: never[]) => unknown) | b
 } & {
     [K in keyof T as undefined extends T[K] ? never : K]: OmitUndefinedDeep<T[K]>;
 } : Exclude<T, undefined>;
-
-// @public
-export function parseWith<T extends z.ZodType>(schema: T, ctx: {
-    action: string;
-    code?: string | undefined;
-    includeValidationIssues?: boolean | undefined;
-    layer?: Layer;
-    mapError?: ((error: RichError) => RichError) | undefined;
-}): (input: unknown) => Result<z.infer<T>, RichError>;
 
 // @public
 export type RateLimitBypassContext<T> = {

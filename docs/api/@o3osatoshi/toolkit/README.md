@@ -39,12 +39,12 @@ throw newError({
 
 ```ts
 import { z } from "zod";
-import { parseWith, parseAsyncWith, newZodError } from "@o3osatoshi/toolkit";
+import { makeSchemaParser, parseAsyncWith, newZodError } from "@o3osatoshi/toolkit";
 
 const userSchema = z.object({ name: z.string(), age: z.number().min(0) });
 
-const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
-const res = parseUser({ name: "alice", age: 20 }); // Result<User, Error>
+const userParser = makeSchemaParser(userSchema, { action: "ParseUser", layer: "UI" });
+const res = userParser({ name: "alice", age: 20 }); // Result<User, Error>
 
 // Async
 const parseUserAsync = parseAsyncWith(userSchema, { action: "ParseUser", layer: "UI" });
@@ -95,7 +95,7 @@ Note: Some gateways use non‑standard 499 (Client Closed Request). The default 
   - Human‑readable messages for common Zod issues.
 - `newZodError(opts)`
   - Wraps a `ZodError` (or issues array) into a structured `Error` via `newError`.
-- `parseWith(schema, ctx)` / `parseAsyncWith(schema, ctx)`
+- `makeSchemaParser(schema, ctx)` / `parseAsyncWith(schema, ctx)`
   - Create functions returning `neverthrow` `Result` / `ResultAsync` from a Zod schema. Errors are normalized via `newZodError`.
 - `@o3osatoshi/toolkit/next`
   - Helpers for Next.js Server Actions. See below.
@@ -204,7 +204,7 @@ Toolkit utilities for structured errors and Zod helpers.
 - [parseAsyncWith](functions/parseAsyncWith.md)
 - [parseErrorMessage](functions/parseErrorMessage.md)
 - [parseErrorName](functions/parseErrorName.md)
-- [parseWith](functions/parseWith.md)
+- [makeSchemaParser](functions/makeSchemaParser.md)
 - [serializeError](functions/serializeError.md)
 - [sleep](functions/sleep.md)
 - [summarizeZodError](functions/summarizeZodError.md)

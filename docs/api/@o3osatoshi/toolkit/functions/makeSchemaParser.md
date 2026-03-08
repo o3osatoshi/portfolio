@@ -2,11 +2,11 @@
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / parseWith
+[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / makeSchemaParser
 
-# Function: parseWith()
+# Function: makeSchemaParser()
 
-> **parseWith**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
+> **makeSchemaParser**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
 
 Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-parse.ts#L55)
 
@@ -62,7 +62,7 @@ A function that yields a neverthrow Result containing the inferred schema output
 ## Example
 
 ```ts
-const parseUser = parseWith(userSchema, { action: "ParseUser", layer: "UI" });
-const res = parseUser(someInput);
+const userParser = makeSchemaParser(userSchema, { action: "ParseUser", layer: "UI" });
+const res = userParser(someInput);
 // Result of parsed type
 ```

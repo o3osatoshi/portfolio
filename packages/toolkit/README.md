@@ -18,7 +18,7 @@ import {
   err,
   newRichError,
   ok,
-  parseWith,
+  makeSchemaParser,
   serializeRichError,
   toRichError,
 } from "@o3osatoshi/toolkit";
@@ -93,7 +93,7 @@ const restored = deserializeRichError(payload);
 ### Zod integration
 
 ```ts
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 import { z } from "zod";
 
 const userSchema = z.object({
@@ -101,12 +101,12 @@ const userSchema = z.object({
   name: z.string(),
 });
 
-const parseUser = parseWith(userSchema, {
+const userParser = makeSchemaParser(userSchema, {
   action: "ParseUser",
   layer: "Presentation",
 });
 
-const result = parseUser({ age: 20, name: "alice" });
+const result = userParser({ age: 20, name: "alice" });
 // Result<{ age: number; name: string }, RichError>
 ```
 
@@ -171,7 +171,7 @@ export async function createItem(
 - `createEnv(schema, options?)`
 - `createLazyEnv(schema, options?)`
 - `newZodError(options)`
-- `parseWith(schema, context)`
+- `makeSchemaParser(schema, context)`
 - `ok(data)` / `err(error)` / `ActionState`
 - `unwrapResultAsync(result)`
 

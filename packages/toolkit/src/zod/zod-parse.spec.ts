@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
 import { newRichError } from "../error";
-import { parseWith } from "./zod-parse";
+import { makeSchemaParser } from "./zod-parse";
 
-describe("zod-parse: parseWith", () => {
+describe("zod-parse: makeSchemaParser", () => {
   it("returns ok for valid input", () => {
     const schema = z.object({ name: z.string(), age: z.number() });
-    const parse = parseWith(schema, { action: "ParseUser" });
-    const res = parse({ name: "alice", age: 42 });
+    const userParser = makeSchemaParser(schema, { action: "ParseUser" });
+    const res = userParser({ name: "alice", age: 42 });
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
       expect(res.value).toEqual({ name: "alice", age: 42 });
@@ -17,8 +17,8 @@ describe("zod-parse: parseWith", () => {
 
   it("returns err with ApplicationValidationError by default", () => {
     const schema = z.object({ name: z.string(), age: z.number() });
-    const parse = parseWith(schema, { action: "ParseUser" });
-    const res = parse({ name: 123, age: "x" });
+    const userParser = makeSchemaParser(schema, { action: "ParseUser" });
+    const res = userParser({ name: 123, age: "x" });
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("ApplicationValidationError");
@@ -33,11 +33,11 @@ describe("zod-parse: parseWith", () => {
 
   it("respects custom layer in error name", () => {
     const schema = z.object({ email: z.string().email() });
-    const parse = parseWith(schema, {
+    const formParser = makeSchemaParser(schema, {
       action: "ParseForm",
       layer: "Presentation",
     });
-    const res = parse({ email: "invalid" });
+    const res = formParser({ email: "invalid" });
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
       expect(res.error.name).toBe("PresentationValidationError");
@@ -50,11 +50,11 @@ describe("zod-parse: parseWith", () => {
 
   it("allows overriding error code", () => {
     const schema = z.object({ name: z.string() });
-    const parse = parseWith(schema, {
+    const userParser = makeSchemaParser(schema, {
       action: "ParseUser",
       code: "CLI_COMMAND_INVALID_ARGUMENT",
     });
-    const res = parse({ name: 123 });
+    const res = userParser({ name: 123 });
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -64,11 +64,11 @@ describe("zod-parse: parseWith", () => {
 
   it("can include normalized validation issues into error meta", () => {
     const schema = z.object({ name: z.string() });
-    const parse = parseWith(schema, {
+    const userParser = makeSchemaParser(schema, {
       includeValidationIssues: true,
       action: "ParseUser",
     });
-    const res = parse({ name: 123 });
+    const res = userParser({ name: 123 });
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -86,7 +86,7 @@ describe("zod-parse: parseWith", () => {
 
   it("applies mapError transform when provided", () => {
     const schema = z.object({ name: z.string() });
-    const parse = parseWith(schema, {
+    const userParser = makeSchemaParser(schema, {
       action: "ParseUser",
       mapError: (error) =>
         newRichError({
@@ -102,7 +102,7 @@ describe("zod-parse: parseWith", () => {
           meta: error.meta,
         }),
     });
-    const res = parse({ name: 123 });
+    const res = userParser({ name: 123 });
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {
@@ -113,14 +113,14 @@ describe("zod-parse: parseWith", () => {
 
   it("falls back to base error if mapError throws", () => {
     const schema = z.object({ name: z.string() });
-    const parse = parseWith(schema, {
+    const userParser = makeSchemaParser(schema, {
       action: "ParseUser",
       code: "CUSTOM_CODE",
       mapError: () => {
         throw new Error("map failed");
       },
     });
-    const res = parse({ name: 123 });
+    const res = userParser({ name: 123 });
 
     expect(res.isErr()).toBe(true);
     if (res.isErr()) {

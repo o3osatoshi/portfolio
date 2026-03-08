@@ -9,14 +9,14 @@ import {
   summarizeZodIssue,
   toValidationIssues,
 } from "./zod-error";
-import { parseWith } from "./zod-parse";
+import { makeSchemaParser } from "./zod-parse";
 
 function parseZodError<T extends z.ZodTypeAny>(
   schema: T,
   input: unknown,
 ): z.ZodError {
-  const parse = parseWith(schema, { action: "TestParse" });
-  const result = parse(input);
+  const schemaParser = makeSchemaParser(schema, { action: "TestParse" });
+  const result = schemaParser(input);
   if (result.isOk()) throw new Error("Expected failure");
   const cause = (result.error as { cause?: unknown }).cause;
   if (!(cause instanceof z.ZodError)) {
