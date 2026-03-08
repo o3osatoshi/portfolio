@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { err, errAsync, ok, type Result, ResultAsync } from "neverthrow";
 
 import {
+  encode,
   newRichError,
   omitUndefined,
   type RichError,
@@ -127,9 +128,11 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         return selected.token;
       }
 
-      const syncResult = await writeKeychainTokenSet(
-        JSON.stringify(selected.token),
-      );
+      const serialized = encode(selected.token);
+      if (serialized.isErr()) {
+        throw serialized.error;
+      }
+      const syncResult = await writeKeychainTokenSet(serialized.value);
       if (syncResult.ok) {
         await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
         return selected.token;
@@ -187,15 +190,29 @@ export function writeTokenSet(
     return errAsync(parsed.error);
   }
 
-  const serialized = JSON.stringify(parsed.value);
+  const serialized = encode(parsed.value);
+  if (serialized.isErr()) {
+    return errAsync(
+      toRichError(serialized.error, {
+        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+        details: {
+          action: "WriteTokenSet",
+          reason: "Failed to persist token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+    );
+  }
   return ResultAsync.fromPromise(
     (async () => {
       if (backend === "file") {
-        await persistTokenToFile(serialized, tokenStoreFilePath);
+        await persistTokenToFile(serialized.value, tokenStoreFilePath);
         return;
       }
 
-      const keychainWrite = await writeKeychainTokenSet(serialized);
+      const keychainWrite = await writeKeychainTokenSet(serialized.value);
       if (backend === "keychain") {
         if (!keychainWrite.ok) {
           throw newBackendUnavailableError(
@@ -222,7 +239,7 @@ export function writeTokenSet(
       }
 
       warnFileFallbackOnce(tokenStoreFilePath);
-      await persistTokenToFile(serialized, tokenStoreFilePath);
+      await persistTokenToFile(serialized.value, tokenStoreFilePath);
     })(),
     (cause) =>
       toRichError(cause, {

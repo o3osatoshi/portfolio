@@ -1,7 +1,4 @@
-import { ok } from "neverthrow";
-import type { Result } from "neverthrow";
-
-import type { RichError } from "@o3osatoshi/toolkit";
+import { encode, type RichError, toRichError } from "@o3osatoshi/toolkit";
 
 import {
   type CliErrorPayload,
@@ -38,8 +35,6 @@ type CliPrintOptions = {
   debug?: boolean | undefined;
 };
 
-type CliPrintResult = Result<CliSuccessValue, RichError>;
-
 type CliSuccessValue = {
   command: string;
   message?: string;
@@ -62,7 +57,12 @@ export function printCliError(
       ok: false,
       ...(command ? { command } : {}),
     };
-    console.error(JSON.stringify(payload));
+    const serialized = encode(payload);
+    if (serialized.isErr()) {
+      console.error(toCliErrorMessage(toRichError(serialized.error)));
+      return;
+    }
+    console.error(serialized.value);
     return;
   }
 
@@ -76,7 +76,7 @@ export function printSuccessData(
   textRenderer: (data: unknown) => void,
 ): void {
   if (outputMode === "json") {
-    printCliResult(ok({ command, value: data }), outputMode);
+    printCliResult({ command, value: data }, outputMode);
     return;
   }
 
@@ -89,30 +89,29 @@ export function printSuccessMessage(
   outputMode: OutputMode,
 ): void {
   if (outputMode === "json") {
-    printCliResult(ok({ command, message, value: null }), outputMode);
+    printCliResult({ command, message, value: null }, outputMode);
     return;
   }
 
   console.log(message);
 }
 
-function printCliResult(result: CliPrintResult, outputMode: OutputMode): void {
-  result.match(
-    ({ command, message, value }) => {
-      if (outputMode !== "json") return;
-      const payload: CliJsonSuccess = {
-        command,
-        ...(message ? { message } : {}),
-        meta: {
-          version: cliOutputVersion,
-        },
-        ok: true,
-        value,
-      };
-      console.log(JSON.stringify(payload));
+function printCliResult(result: CliSuccessValue, outputMode: OutputMode): void {
+  if (outputMode !== "json") return;
+
+  const payload: CliJsonSuccess = {
+    command: result.command,
+    ...(result.message ? { message: result.message } : {}),
+    meta: {
+      version: cliOutputVersion,
     },
-    (error) => {
-      printCliError(error, outputMode);
-    },
-  );
+    ok: true,
+    value: result.value,
+  };
+  const serialized = encode(payload);
+  if (serialized.isErr()) {
+    console.error(toCliErrorMessage(toRichError(serialized.error)));
+    return;
+  }
+  console.log(serialized.value);
 }

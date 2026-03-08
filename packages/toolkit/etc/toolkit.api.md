@@ -75,7 +75,7 @@ export type CreateRateLimitGuardOptions<T> = {
 export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
 
 // @public
-export function decode(value: string): Result<JsonContainer, RichError>;
+export function decode(value: string, options?: JsonDecodeOptions): Result<JsonContainer, RichError>;
 
 // @public
 export function deserializeResponseBody(response: Response): Promise<unknown>;
@@ -107,7 +107,7 @@ export type DeserializeRichErrorOptions = {
 };
 
 // @public
-export function encode(value: unknown): Result<string, RichError>;
+export function encode(value: unknown, options?: JsonEncodeOptions): Result<string, RichError>;
 
 // @public
 export type Env = "development" | "local" | "production" | "staging";
@@ -256,6 +256,17 @@ export const jsonArraySchema: z.ZodType<JsonArray>;
 export type JsonContainer = JsonArray | JsonObject;
 
 // @public
+export type JsonDecodeOptions = {
+    reviver?: Parameters<typeof JSON.parse>[1];
+};
+
+// @public
+export type JsonEncodeOptions = {
+    replacer?: Parameters<typeof JSON.stringify>[1];
+    space?: Parameters<typeof JSON.stringify>[2];
+};
+
+// @public
 export type JsonObject = {
     [key: string]: JsonValue;
 };
@@ -280,6 +291,7 @@ export type Kind = z.infer<typeof kindSchema>;
 
 // @public
 export const kindSchema: z.ZodEnum<{
+    Serialization: "Serialization";
     BadGateway: "BadGateway";
     BadRequest: "BadRequest";
     Canceled: "Canceled";
@@ -289,7 +301,6 @@ export const kindSchema: z.ZodEnum<{
     MethodNotAllowed: "MethodNotAllowed";
     NotFound: "NotFound";
     RateLimit: "RateLimit";
-    Serialization: "Serialization";
     Timeout: "Timeout";
     Unauthorized: "Unauthorized";
     Unavailable: "Unavailable";
@@ -302,11 +313,11 @@ export type Layer = z.infer<typeof layerSchema>;
 
 // @public
 export const layerSchema: z.ZodEnum<{
+    Infrastructure: "Infrastructure";
     Application: "Application";
     Auth: "Auth";
     Domain: "Domain";
     External: "External";
-    Infrastructure: "Infrastructure";
     Interface: "Interface";
     Persistence: "Persistence";
     Presentation: "Presentation";

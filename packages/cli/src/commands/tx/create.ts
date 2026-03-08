@@ -1,7 +1,7 @@
 import { errAsync, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { omitUndefined, type RichError } from "@o3osatoshi/toolkit";
+import { encode, omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { type OutputMode, printSuccessData } from "../../common/output";
@@ -60,7 +60,12 @@ export function runTxCreate(
     }),
   ).map((created) => {
     printSuccessData("tx.create", created, outputMode, (data) => {
-      console.log(JSON.stringify(data, null, 2));
+      const serialized = encode(data, { space: 2 });
+      if (serialized.isErr()) {
+        console.log(String(data));
+        return;
+      }
+      console.log(serialized.value);
     });
     return undefined;
   });

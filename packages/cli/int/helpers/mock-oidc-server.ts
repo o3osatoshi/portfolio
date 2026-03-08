@@ -1,5 +1,7 @@
 import { createServer, type IncomingMessage, type Server } from "node:http";
 
+import { encode } from "@o3osatoshi/toolkit";
+
 export type MockOidcPrincipal = {
   issuer: string;
   scopes: string[];
@@ -219,8 +221,12 @@ export class MockOidcServer {
     status: number,
     payload: unknown,
   ): void {
-    res.statusCode = status;
+    const serialized = encode(payload);
+    const body = serialized.isOk()
+      ? serialized.value
+      : '{"error":"serialization_failed"}';
+    res.statusCode = serialized.isOk() ? status : 500;
     res.setHeader("content-type", "application/json");
-    res.end(JSON.stringify(payload));
+    res.end(body);
   }
 }

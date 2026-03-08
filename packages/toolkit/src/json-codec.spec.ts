@@ -48,6 +48,36 @@ describe("json-codec encode", () => {
       );
     }
   });
+
+  it("supports stringify options", () => {
+    const value = { count: 1, foo: "bar" };
+
+    const result = encode(value, { space: 2 });
+
+    expect(result.isOk()).toBe(true);
+    if (!result.isOk()) throw new Error("Expected encode to succeed");
+    expect(result.value).toBe('{\n  "count": 1,\n  "foo": "bar"\n}');
+  });
+
+  it("returns structured Serialization error when JSON.stringify yields undefined", () => {
+    const result = encode(undefined);
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) throw new Error("Expected encode to fail");
+
+    const error = result.error;
+    expect(error).toBeInstanceOf(Error);
+    expect(error.name).toBe("InfrastructureSerializationError");
+
+    expect(isRichError(error)).toBe(true);
+    if (isRichError(error)) {
+      expect(error.details?.action).toBe("EncodeJson");
+      expect(error.details?.reason).toBe("Failed to encode value as JSON");
+      expect(error.details?.hint).toBe(
+        "Ensure the value is JSON-serializable.",
+      );
+    }
+  });
 });
 
 describe("json-codec decode", () => {
@@ -88,6 +118,21 @@ describe("json-codec decode", () => {
     expect(result.isOk()).toBe(true);
     if (!result.isOk()) throw new Error("Expected decode to succeed");
     expect(result.value).toEqual(value);
+  });
+
+  it("supports parse options", () => {
+    const result = decode('{"count":"1"}', {
+      reviver: (key, value) => {
+        if (key === "count" && typeof value === "string") {
+          return Number(value);
+        }
+        return value;
+      },
+    });
+
+    expect(result.isOk()).toBe(true);
+    if (!result.isOk()) throw new Error("Expected decode to succeed");
+    expect(result.value).toEqual({ count: 1 });
   });
 
   it("returns structured Serialization error when JSON.parse throws", () => {

@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 
-import { toRichError } from "@o3osatoshi/toolkit";
+import { encode, toRichError } from "@o3osatoshi/toolkit";
 
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
@@ -263,8 +263,13 @@ export function createProxyTransport(
   };
 
   const sendBatch = async (eventSets: EventSet[]) => {
+    const serialized = encode({ eventSets } satisfies ProxyPayload);
+    if (serialized.isErr()) {
+      throw serialized.error;
+    }
+
     const init: RequestInit = {
-      body: JSON.stringify({ eventSets } satisfies ProxyPayload),
+      body: serialized.value,
       headers: {
         "content-type": "application/json",
         ...(options.headers ?? {}),
@@ -323,10 +328,16 @@ export function createProxyTransport(
 }
 
 function json(data: Record<string, unknown>, status: number): Response {
-  return new Response(JSON.stringify(data), {
+  const serialized = encode(data);
+  const body = serialized.isOk()
+    ? serialized.value
+    : '{"status":"error","message":"serialization_failed"}';
+  const responseStatus = serialized.isOk() ? status : 500;
+
+  return new Response(body, {
     headers: {
       "content-type": "application/json",
     },
-    status,
+    status: responseStatus,
   });
 }
