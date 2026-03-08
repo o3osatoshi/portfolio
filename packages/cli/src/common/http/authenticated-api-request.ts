@@ -15,7 +15,7 @@ import {
 import type { ApiErrorResponse } from "../contracts/api-error.schema";
 import { apiErrorResponseSchema } from "../contracts/api-error.schema";
 import { cliErrorCodes } from "../error-catalog";
-import { getRuntimeConfig } from "../runtime-config";
+import { resolveRuntimeEnv } from "../runtime-env";
 import type { OidcTokenSet, RuntimeConfig } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
 
@@ -26,9 +26,9 @@ export function requestAuthenticatedApi(
   path: string,
   init: RequestInit,
 ): ResultAsync<unknown, RichError> {
-  return getRuntimeConfig().asyncAndThen((config) =>
-    ensureAccessToken(config).andThen((token) => {
-      const url = resolveApiRequestUrl(config.apiBaseUrl, path);
+  return resolveRuntimeEnv().asyncAndThen((env) =>
+    ensureAccessToken(env).andThen((token) => {
+      const url = resolveApiRequestUrl(env.apiBaseUrl, path);
       const headers = new Headers(init.headers);
       headers.set("authorization", `Bearer ${token.access_token}`);
 

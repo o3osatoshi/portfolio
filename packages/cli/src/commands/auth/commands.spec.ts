@@ -5,8 +5,8 @@ const h = vi.hoisted(() => ({
   loginWithOidcMock: vi.fn(),
   clearTokenSetMock: vi.fn(),
   fetchAccessTokenPrincipalMock: vi.fn(),
-  getRuntimeConfigMock: vi.fn(),
   readTokenSetMock: vi.fn(),
+  resolveRuntimeEnvMock: vi.fn(),
   revokeRefreshTokenMock: vi.fn(),
   writeTokenSetMock: vi.fn(),
 }));
@@ -15,8 +15,8 @@ vi.mock("../../services/auth/principal-api.service", () => ({
   fetchAccessTokenPrincipal: h.fetchAccessTokenPrincipalMock,
 }));
 
-vi.mock("../../common/runtime-config", () => ({
-  getRuntimeConfig: h.getRuntimeConfigMock,
+vi.mock("../../common/runtime-env", () => ({
+  resolveRuntimeEnv: h.resolveRuntimeEnvMock,
 }));
 
 vi.mock("../../services/auth/oidc.service", () => ({
@@ -37,8 +37,8 @@ import { runAuthWhoami } from "./whoami";
 describe("commands/auth", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    h.getRuntimeConfigMock.mockReset();
-    h.getRuntimeConfigMock.mockReturnValue(
+    h.resolveRuntimeEnvMock.mockReset();
+    h.resolveRuntimeEnvMock.mockReturnValue(
       ok({
         oidc: {
           audience: "https://api.o3o.app",
@@ -156,7 +156,9 @@ describe("commands/auth", () => {
         refresh_token: "refresh-token",
       }),
     );
-    h.getRuntimeConfigMock.mockReturnValueOnce(err(new Error("boom") as never));
+    h.resolveRuntimeEnvMock.mockReturnValueOnce(
+      err(new Error("boom") as never),
+    );
 
     const result = await runAuthLogout();
 

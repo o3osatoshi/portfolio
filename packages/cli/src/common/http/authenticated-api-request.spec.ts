@@ -5,14 +5,14 @@ import { cliErrorCodes } from "../error-catalog";
 
 const h = vi.hoisted(() => ({
   clearTokenSetMock: vi.fn(),
-  getRuntimeConfigMock: vi.fn(),
   readTokenSetMock: vi.fn(),
   refreshTokenMock: vi.fn(),
+  resolveRuntimeEnvMock: vi.fn(),
   writeTokenSetMock: vi.fn(),
 }));
 
-vi.mock("../runtime-config", () => ({
-  getRuntimeConfig: h.getRuntimeConfigMock,
+vi.mock("../runtime-env", () => ({
+  resolveRuntimeEnv: h.resolveRuntimeEnvMock,
 }));
 
 vi.mock("../../services/auth/oidc.service", () => ({
@@ -29,8 +29,8 @@ describe("common/http/authenticated-api-request", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
 
-    h.getRuntimeConfigMock.mockReset();
-    h.getRuntimeConfigMock.mockReturnValue(
+    h.resolveRuntimeEnvMock.mockReset();
+    h.resolveRuntimeEnvMock.mockReturnValue(
       ok({
         oidc: {
           audience: "https://api.o3o.app",
@@ -175,7 +175,7 @@ describe("common/http/authenticated-api-request", () => {
   });
 
   it("resolves request URL when API base URL includes /api path", async () => {
-    h.getRuntimeConfigMock.mockReturnValueOnce(
+    h.resolveRuntimeEnvMock.mockReturnValueOnce(
       ok({
         oidc: {
           audience: "https://api.o3o.app",

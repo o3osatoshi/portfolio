@@ -15,7 +15,7 @@ import {
 import { cliErrorCodes } from "../../common/error-catalog";
 import {
   type CliTokenStoreEnv,
-  resolveTokenStoreEnvFromEnv,
+  resolveTokenStoreEnv,
 } from "../../common/runtime-env";
 import type { OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
@@ -290,15 +290,15 @@ function getResolvedTokenStoreConfig(): Result<
   ResolvedTokenStoreConfig,
   RichError
 > {
-  const parsed = resolveTokenStoreEnvFromEnv();
-  if (parsed.isErr()) {
-    return err(parsed.error);
+  const env = resolveTokenStoreEnv();
+  if (env.isErr()) {
+    return err(env.error);
   }
 
   return ok({
-    allowFileFallback: parsed.value.allowFileFallback,
-    backend: parsed.value.tokenStoreBackend,
-    tokenStoreFilePath: resolveTokenStoreFilePath(parsed.value),
+    allowFileFallback: env.value.allowFileFallback,
+    backend: env.value.tokenStoreBackend,
+    tokenStoreFilePath: resolveTokenStoreFilePath(env.value),
   });
 }
 

@@ -4,29 +4,29 @@ import { cliErrorCodes } from "./error-catalog";
 import { DEFAULT_RUNTIME_CONFIG } from "./runtime-config-defaults";
 import {
   resolveEnvFilePathFromEnv,
-  resolveRuntimeConfigFromEnv,
-  resolveTokenStoreEnvFromEnv,
+  resolveRuntimeEnv,
+  resolveTokenStoreEnv,
 } from "./runtime-env";
 
 describe("common/runtime-env", () => {
   it("resolves runtime config defaults when O3O env vars are not set", () => {
-    const result = resolveRuntimeConfigFromEnv({});
+    const env = resolveRuntimeEnv({});
 
-    expect(result.isOk()).toBe(true);
-    if (result.isErr()) throw new Error("Expected ok result");
-    expect(result.value).toEqual(DEFAULT_RUNTIME_CONFIG);
+    expect(env.isOk()).toBe(true);
+    if (env.isErr()) throw new Error("Expected ok result");
+    expect(env.value).toEqual(DEFAULT_RUNTIME_CONFIG);
   });
 
   it("rejects O3O_API_BASE_URL that includes query/hash", () => {
-    const result = resolveRuntimeConfigFromEnv({
+    const env = resolveRuntimeEnv({
       O3O_API_BASE_URL: "https://api.example.com?env=dev#anchor",
     });
 
-    expect(result.isErr()).toBe(true);
-    if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
-    expect(result.error.details?.reason).toMatch(/apiBaseUrl/i);
-    expect(result.error.details?.reason).toMatch(/query or hash/i);
+    expect(env.isErr()).toBe(true);
+    if (env.isOk()) throw new Error("Expected err result");
+    expect(env.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
+    expect(env.error.details?.reason).toMatch(/apiBaseUrl/i);
+    expect(env.error.details?.reason).toMatch(/query or hash/i);
   });
 
   it("treats empty O3O_ENV_FILE as undefined", () => {
@@ -40,11 +40,11 @@ describe("common/runtime-env", () => {
   });
 
   it("resolves token-store env defaults when env vars are not set", () => {
-    const result = resolveTokenStoreEnvFromEnv({});
+    const env = resolveTokenStoreEnv({});
 
-    expect(result.isOk()).toBe(true);
-    if (result.isErr()) throw new Error("Expected ok result");
-    expect(result.value).toEqual({
+    expect(env.isOk()).toBe(true);
+    if (env.isErr()) throw new Error("Expected ok result");
+    expect(env.value).toEqual({
       allowFileFallback: false,
       appData: undefined,
       tokenStoreBackend: "auto",
@@ -53,13 +53,13 @@ describe("common/runtime-env", () => {
   });
 
   it("fails when O3O_TOKEN_STORE_BACKEND has invalid value", () => {
-    const result = resolveTokenStoreEnvFromEnv({
+    const env = resolveTokenStoreEnv({
       O3O_TOKEN_STORE_BACKEND: "invalid-backend",
     });
 
-    expect(result.isErr()).toBe(true);
-    if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
-    expect(result.error.details?.reason).toMatch(/tokenStoreBackend/i);
+    expect(env.isErr()).toBe(true);
+    if (env.isOk()) throw new Error("Expected err result");
+    expect(env.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
+    expect(env.error.details?.reason).toMatch(/tokenStoreBackend/i);
   });
 });

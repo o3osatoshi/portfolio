@@ -3,7 +3,7 @@ import type { ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { type OutputMode, printSuccessMessage } from "../../common/output";
-import { getRuntimeConfig } from "../../common/runtime-config";
+import { resolveRuntimeEnv } from "../../common/runtime-env";
 import {
   loginWithOidc,
   type OidcLoginMode,
@@ -19,8 +19,8 @@ export function runAuthLogin(
       ? (message: string) => console.error(message)
       : (message: string) => console.log(message);
 
-  return getRuntimeConfig()
-    .asyncAndThen((config) => loginWithOidc(config.oidc, mode, { onInfo }))
+  return resolveRuntimeEnv()
+    .asyncAndThen((env) => loginWithOidc(env.oidc, mode, { onInfo }))
     .andThen((token) => writeTokenSet(token))
     .map(() => {
       printSuccessMessage("auth.login", "Login successful.", outputMode);

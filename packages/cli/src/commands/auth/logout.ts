@@ -3,7 +3,7 @@ import { okAsync, type ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { type OutputMode, printSuccessMessage } from "../../common/output";
-import { getRuntimeConfig } from "../../common/runtime-config";
+import { resolveRuntimeEnv } from "../../common/runtime-env";
 import { revokeRefreshToken } from "../../services/auth/oidc.service";
 import {
   clearTokenSet,
@@ -21,9 +21,9 @@ export function runAuthLogout(
         return okAsync(undefined);
       }
 
-      return getRuntimeConfig()
-        .asyncAndThen((config) =>
-          revokeRefreshToken(config.oidc, refreshTokenValue).orElse(() =>
+      return resolveRuntimeEnv()
+        .asyncAndThen((env) =>
+          revokeRefreshToken(env.oidc, refreshTokenValue).orElse(() =>
             okAsync(undefined),
           ),
         )

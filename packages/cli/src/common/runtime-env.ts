@@ -62,7 +62,7 @@ export type CliTokenStoreEnv = z.infer<typeof tokenStoreEnvSchema>;
 export function resolveEnvFilePathFromEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<string | undefined, RichError> {
-  const parsed = makeCliSchemaParser(runtimeEnvFileSchema, {
+  const env = makeCliSchemaParser(runtimeEnvFileSchema, {
     action: "ResolveCliEnvFilePath",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI env file path",
@@ -71,17 +71,17 @@ export function resolveEnvFilePathFromEnv(
     envFilePath: source["O3O_ENV_FILE"],
   });
 
-  if (parsed.isErr()) {
-    return err(parsed.error);
+  if (env.isErr()) {
+    return err(env.error);
   }
 
-  return ok(parsed.value.envFilePath);
+  return ok(env.value.envFilePath);
 }
 
-export function resolveRuntimeConfigFromEnv(
+export function resolveRuntimeEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<RuntimeConfig, RichError> {
-  const parsed = makeCliSchemaParser(runtimeConfigSchema, {
+  const env = makeCliSchemaParser(runtimeConfigSchema, {
     action: "ResolveCliRuntimeConfig",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI runtime config",
@@ -100,17 +100,17 @@ export function resolveRuntimeConfigFromEnv(
     apiBaseUrl: source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_CONFIG.apiBaseUrl,
   });
 
-  if (parsed.isErr()) {
-    return err(parsed.error);
+  if (env.isErr()) {
+    return err(env.error);
   }
 
-  return ok(parsed.value);
+  return ok(env.value);
 }
 
-export function resolveTokenStoreEnvFromEnv(
+export function resolveTokenStoreEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<CliTokenStoreEnv, RichError> {
-  const parsed = makeCliSchemaParser(tokenStoreEnvSchema, {
+  const env = makeCliSchemaParser(tokenStoreEnvSchema, {
     action: "ResolveCliTokenStoreEnv",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI token store env",
@@ -123,9 +123,9 @@ export function resolveTokenStoreEnvFromEnv(
     xdgConfigHome: source["XDG_CONFIG_HOME"],
   });
 
-  if (parsed.isErr()) {
-    return err(parsed.error);
+  if (env.isErr()) {
+    return err(env.error);
   }
 
-  return ok(parsed.value);
+  return ok(env.value);
 }
