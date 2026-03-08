@@ -8,14 +8,14 @@ import {
 
 export const cliOutputVersion = 1;
 
-export type CliJsonFailure = {
+export type CliFailureJson = {
   command?: string;
   error: CliErrorPayload["error"];
   meta: CliOutputMeta;
   ok: false;
 };
 
-export type CliJsonSuccess = {
+export type CliSuccessJson = {
   command: string;
   message?: string;
   meta: CliOutputMeta;
@@ -45,7 +45,7 @@ export function printFailure(
       return;
     case "json": {
       const basePayload = toCliErrorPayload(error, { debug: options.debug });
-      const payload: CliJsonFailure = {
+      const payload: CliFailureJson = {
         ...omitUndefined({
           command,
         }),
@@ -105,7 +105,7 @@ function printSuccessJson(
     case "text":
       return;
     case "json": {
-      const payload: CliJsonSuccess = {
+      const payload: CliSuccessJson = {
         command: result.command,
         ...omitUndefined({
           message: result.message,
