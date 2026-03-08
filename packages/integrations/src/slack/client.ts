@@ -2,7 +2,7 @@ import { err, ok, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
-import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
+import { httpStatusToKind, makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import { createSmartFetch, type CreateSmartFetchOptions } from "../http";
 import {
@@ -84,11 +84,6 @@ const slackMessageSchema: z.ZodType<SlackMessage> = z
     }
   });
 
-const parseSlackMessage = parseWith(slackMessageSchema, {
-  action: "SlackPostMessage",
-  layer: "External",
-});
-
 /**
  * Create a Slack client backed by the shared smart-fetch utilities.
  *
@@ -111,7 +106,10 @@ export function createSlackClient(
 
   return {
     postMessage: (message) =>
-      parseSlackMessage(message).asyncAndThen((validated) =>
+      makeSchemaParser(slackMessageSchema, {
+        action: "SlackPostMessage",
+        layer: "External",
+      })(message).asyncAndThen((validated) =>
         sFetch<typeof slackPostMessageResponseSchema>({
           body: JSON.stringify(validated),
           decode: {

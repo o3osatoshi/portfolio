@@ -2,7 +2,7 @@ import type { ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import { createBaseFetch } from "./base-fetch";
 import type {
@@ -57,12 +57,15 @@ export function createSmartFetch(
       options.fetch ? { fetch: options.fetch } : {},
     );
 
-    return baseFetch(baseRequest).andThen((response) => {
-      return parseWith(decode.schema, {
+    return baseFetch(baseRequest).andThen((response) =>
+      makeSchemaParser(decode.schema, {
         action: decode.context?.action ?? "DecodeResponseBody",
         layer: decode.context?.layer ?? "External",
-      })(response.data).map((data) => ({ ...response, data }));
-    });
+      })(response.data).map((data) => ({
+        ...response,
+        data,
+      })),
+    );
   };
 
   let fetch = smartFetch;

@@ -3,8 +3,8 @@ import type { z } from "zod";
 
 import {
   isRecord,
+  makeSchemaParser,
   newRichError,
-  parseWith,
   type RichError,
   type ValidationIssue,
 } from "@o3osatoshi/toolkit";
@@ -56,7 +56,7 @@ export function parseCliWithSchema<T extends z.ZodType>(
   input: unknown,
   options: ParseCliWithSchemaOptions,
 ): Result<z.infer<T>, RichError> {
-  return parseWith(schema, {
+  return makeSchemaParser(schema, {
     includeValidationIssues: true,
     action: options.action,
     code: options.code,

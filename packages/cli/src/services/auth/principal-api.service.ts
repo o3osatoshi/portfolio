@@ -1,6 +1,6 @@
 import type { ResultAsync } from "neverthrow";
 
-import { parseWith, type RichError } from "@o3osatoshi/toolkit";
+import { makeSchemaParser, type RichError } from "@o3osatoshi/toolkit";
 
 import { requestAuthenticatedApi } from "../../common/http/authenticated-api-request";
 import {
@@ -14,10 +14,10 @@ export function fetchAccessTokenPrincipal(): ResultAsync<
 > {
   return requestAuthenticatedApi("/api/cli/v1/me", {
     method: "GET",
-  }).andThen((json) =>
-    parseWith(accessTokenPrincipalSchema, {
+  }).andThen(
+    makeSchemaParser(accessTokenPrincipalSchema, {
       action: "DecodeAccessTokenPrincipalResponse",
       layer: "Presentation",
-    })(json),
+    }),
   );
 }

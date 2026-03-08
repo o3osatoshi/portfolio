@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import { createTransactionSchema, updateTransactionSchema } from "./validation";
 
-const parseCreateTransaction = parseWith(createTransactionSchema, {
+const createTransactionParser = makeSchemaParser(createTransactionSchema, {
   action: "ParseCreateTransaction",
 });
-const parseUpdateTransaction = parseWith(updateTransactionSchema, {
+const updateTransactionParser = makeSchemaParser(updateTransactionSchema, {
   action: "ParseUpdateTransaction",
 });
 
@@ -22,7 +22,7 @@ describe("utils/validation createTransactionSchema", () => {
       type: "BUY",
     };
 
-    const res = parseCreateTransaction(input);
+    const res = createTransactionParser(input);
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
@@ -47,7 +47,7 @@ describe("utils/validation createTransactionSchema", () => {
       type: "SELL",
     };
 
-    const res = parseCreateTransaction(input);
+    const res = createTransactionParser(input);
 
     expect(res.isOk()).toBe(true);
     if (res.isOk()) {
@@ -71,14 +71,14 @@ describe("utils/validation createTransactionSchema", () => {
       type: "BUY",
     };
 
-    const res = parseCreateTransaction(input);
+    const res = createTransactionParser(input);
     expect(res.isErr()).toBe(true);
   });
 });
 
 describe("utils/validation updateTransactionSchema", () => {
   it("parses minimal valid payload with id only", () => {
-    const res = parseUpdateTransaction({
+    const res = updateTransactionParser({
       id: "tx-1",
     });
 
@@ -90,7 +90,7 @@ describe("utils/validation updateTransactionSchema", () => {
 
   it("parses partial update with numeric fields", () => {
     const now = new Date();
-    const res = parseUpdateTransaction({
+    const res = updateTransactionParser({
       id: "tx-2",
       amount: 2,
       datetime: now.toISOString(),
@@ -107,7 +107,7 @@ describe("utils/validation updateTransactionSchema", () => {
   });
 
   it("rejects payload without id", () => {
-    const res = parseUpdateTransaction({
+    const res = updateTransactionParser({
       amount: "1.0",
     } as unknown);
     expect(res.isErr()).toBe(true);

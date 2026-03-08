@@ -1,6 +1,6 @@
 import type { ResultAsync } from "neverthrow";
 
-import { parseWith, type RichError } from "@o3osatoshi/toolkit";
+import { makeSchemaParser, type RichError } from "@o3osatoshi/toolkit";
 
 import { requestAuthenticatedApi } from "../../common/http/authenticated-api-request";
 import {
@@ -18,11 +18,11 @@ export function createTransaction(
       "content-type": "application/json",
     },
     method: "POST",
-  }).andThen((json) =>
-    parseWith(transactionSchema, {
+  }).andThen(
+    makeSchemaParser(transactionSchema, {
       action: "DecodeCreateTransactionResponse",
       layer: "Presentation",
-    })(json),
+    }),
   );
 }
 
@@ -41,11 +41,11 @@ export function listTransactions(): ResultAsync<
 > {
   return requestAuthenticatedApi("/api/cli/v1/transactions", {
     method: "GET",
-  }).andThen((json) =>
-    parseWith(transactionListSchema, {
+  }).andThen(
+    makeSchemaParser(transactionListSchema, {
       action: "DecodeListTransactionsResponse",
       layer: "Presentation",
-    })(json),
+    }),
   );
 }
 
