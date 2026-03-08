@@ -2,7 +2,7 @@ import { err, errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
-  loginWithOidcMock: vi.fn(),
+  oidcLoginMock: vi.fn(),
   clearTokenSetMock: vi.fn(),
   fetchAccessTokenPrincipalMock: vi.fn(),
   readTokenSetMock: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock("../../common/runtime-env", () => ({
 }));
 
 vi.mock("../../services/auth/oidc.service", () => ({
-  loginWithOidc: h.loginWithOidcMock,
+  oidcLogin: h.oidcLoginMock,
   revokeRefreshToken: h.revokeRefreshTokenMock,
 }));
 
@@ -49,7 +49,7 @@ describe("commands/auth", () => {
         apiBaseUrl: "http://localhost:3000",
       }),
     );
-    h.loginWithOidcMock.mockReset();
+    h.oidcLoginMock.mockReset();
     h.writeTokenSetMock.mockReset();
     h.readTokenSetMock.mockReset();
     h.revokeRefreshTokenMock.mockReset();
@@ -70,12 +70,12 @@ describe("commands/auth", () => {
       scope: "openid profile",
       token_type: "Bearer",
     };
-    h.loginWithOidcMock.mockReturnValueOnce(okAsync(token));
+    h.oidcLoginMock.mockReturnValueOnce(okAsync(token));
 
     const result = await runAuthLogin("auto");
 
     expect(result.isOk()).toBe(true);
-    expect(h.loginWithOidcMock).toHaveBeenCalledWith(
+    expect(h.oidcLoginMock).toHaveBeenCalledWith(
       {
         audience: "https://api.o3o.app",
         clientId: "cli-client-id",

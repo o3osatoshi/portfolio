@@ -5,7 +5,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 import { type OutputMode, printSuccessMessage } from "../../common/output";
 import { resolveRuntimeEnv } from "../../common/runtime-env";
 import {
-  loginWithOidc,
+  oidcLogin,
   type OidcLoginMode,
 } from "../../services/auth/oidc.service";
 import { writeTokenSet } from "../../services/auth/token-store.service";
@@ -20,7 +20,7 @@ export function runAuthLogin(
       : (message: string) => console.log(message);
 
   return resolveRuntimeEnv()
-    .asyncAndThen((env) => loginWithOidc(env.oidcConfig, mode, { onInfo }))
+    .asyncAndThen((env) => oidcLogin(env.oidcConfig, mode, { onInfo }))
     .andThen((token) => writeTokenSet(token))
     .map(() => {
       printSuccessMessage("auth.login", "Login successful.", outputMode);

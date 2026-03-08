@@ -20,11 +20,7 @@ vi.mock("node:child_process", () => ({
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import type { OidcConfig } from "../../common/types";
-import {
-  loginWithOidc,
-  refreshToken,
-  revokeRefreshToken,
-} from "./oidc.service";
+import { oidcLogin, refreshToken, revokeRefreshToken } from "./oidc.service";
 
 const config: OidcConfig = {
   audience: "https://api.o3o.app",
@@ -159,7 +155,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "device");
+    const resultPromise = oidcLogin(config, "device");
     await vi.advanceTimersByTimeAsync(1000);
 
     const result = await resultPromise;
@@ -208,7 +204,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "device", { onInfo });
+    const resultPromise = oidcLogin(config, "device", { onInfo });
     await vi.advanceTimersByTimeAsync(1000);
     const result = await resultPromise;
 
@@ -256,7 +252,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "auto");
+    const resultPromise = oidcLogin(config, "auto");
     await vi.advanceTimersByTimeAsync(1000);
     const result = await resultPromise;
 
@@ -304,7 +300,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "device");
+    const resultPromise = oidcLogin(config, "device");
     await vi.advanceTimersByTimeAsync(9000);
     const result = await resultPromise;
     expect(result.isOk()).toBe(true);
@@ -321,7 +317,7 @@ describe("services/auth/oidc.service", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await loginWithOidc(config, "device");
+    const result = await oidcLogin(config, "device");
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
@@ -344,7 +340,7 @@ describe("services/auth/oidc.service", () => {
       .mockResolvedValueOnce(new Response("", { status: 400 }));
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await loginWithOidc(config, "device");
+    const result = await oidcLogin(config, "device");
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
@@ -377,7 +373,7 @@ describe("services/auth/oidc.service", () => {
       .mockResolvedValueOnce(jsonErrorResponse("expired_token"));
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "device");
+    const resultPromise = oidcLogin(config, "device");
     await vi.advanceTimersByTimeAsync(1000);
     const result = await resultPromise;
     expect(result.isErr()).toBe(true);
@@ -410,7 +406,7 @@ describe("services/auth/oidc.service", () => {
       .mockResolvedValueOnce(jsonErrorResponse("access_denied"));
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "device");
+    const resultPromise = oidcLogin(config, "device");
     await vi.advanceTimersByTimeAsync(1000);
     const result = await resultPromise;
     expect(result.isErr()).toBe(true);
@@ -445,7 +441,7 @@ describe("services/auth/oidc.service", () => {
       );
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(pkceConfig, "pkce");
+    const resultPromise = oidcLogin(pkceConfig, "pkce");
     const authorizationUrl = await waitForAuthorizationUrl();
     const state = authorizationUrl.searchParams.get("state");
     expect(state).toBeTruthy();
@@ -493,7 +489,7 @@ describe("services/auth/oidc.service", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(pkceConfig, "pkce");
+    const resultPromise = oidcLogin(pkceConfig, "pkce");
     await waitForAuthorizationUrl();
     const callbackResponse = await requestLocal(
       `http://127.0.0.1:${redirectPort}/callback?code=${encodeURIComponent(
@@ -534,7 +530,7 @@ describe("services/auth/oidc.service", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(pkceConfig, "pkce");
+    const resultPromise = oidcLogin(pkceConfig, "pkce");
     const authorizationUrl = await waitForAuthorizationUrl();
     const state = authorizationUrl.searchParams.get("state");
     expect(state).toBeTruthy();
@@ -592,7 +588,7 @@ describe("services/auth/oidc.service", () => {
       );
     vi.stubGlobal("fetch", fetchMock);
 
-    const resultPromise = loginWithOidc(config, "device");
+    const resultPromise = oidcLogin(config, "device");
     await vi.advanceTimersByTimeAsync(1000);
     const result = await resultPromise;
     expect(result.isErr()).toBe(true);

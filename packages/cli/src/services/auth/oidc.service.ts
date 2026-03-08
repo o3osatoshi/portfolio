@@ -80,13 +80,13 @@ type CallbackPageContent = {
   title: string;
 };
 
-export function loginWithOidc(
+export function oidcLogin(
   config: OidcConfig,
   mode: OidcLoginMode,
   options?: OidcLoginOptions,
 ): ResultAsync<OidcTokenSet, RichError> {
   return ResultAsync.fromPromise(
-    loginWithOidcUnsafe(config, mode, options),
+    unsafeOidcLogin(config, mode, options),
     (cause) =>
       toRichError(cause, {
         code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
@@ -487,7 +487,7 @@ async function loginByPkce(
   return toTokenSetWithExpiry(parsed);
 }
 
-async function loginWithOidcUnsafe(
+async function unsafeOidcLogin(
   config: OidcConfig,
   mode: OidcLoginMode,
   options?: OidcLoginOptions,
