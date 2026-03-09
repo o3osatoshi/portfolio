@@ -30,18 +30,18 @@ export function unsafeOidcLogin(
   return requestOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-  ).andThen((oidcDiscovery) => {
+  ).andThen((discovery) => {
     switch (mode) {
       case "device":
-        return loginByDeviceCode(config, oidcDiscovery, options);
+        return loginByDeviceCode(config, discovery, options);
       case "pkce":
-        return loginByPkce(config, oidcDiscovery);
+        return loginByPkce(config, discovery);
       case "auto":
-        return loginByPkce(config, oidcDiscovery).orElse((error) => {
+        return loginByPkce(config, discovery).orElse((error) => {
           if (!shouldFallbackToDeviceFlow(error)) {
             return errAsync(error);
           }
-          return loginByDeviceCode(config, oidcDiscovery, options);
+          return loginByDeviceCode(config, discovery, options);
         });
     }
   });
@@ -54,7 +54,7 @@ export function unsafeRefreshTokens(
   return requestOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-  ).andThen((oidcDiscovery) => {
+  ).andThen((discovery) => {
     const body = new URLSearchParams({
       client_id: config.clientId,
       grant_type: "refresh_token",
@@ -62,7 +62,7 @@ export function unsafeRefreshTokens(
     });
 
     return requestParsedJson(
-      oidcDiscovery.token_endpoint,
+      discovery.token_endpoint,
       {
         body,
         headers: {
@@ -101,8 +101,8 @@ export function unsafeRevokeRefreshToken(
   return requestOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
-  ).andThen((oidcDiscovery) => {
-    if (!oidcDiscovery.revocation_endpoint) {
+  ).andThen((discovery) => {
+    if (!discovery.revocation_endpoint) {
       return okAsync(undefined);
     }
 
@@ -113,7 +113,7 @@ export function unsafeRevokeRefreshToken(
     });
 
     return requestHttp(
-      oidcDiscovery.revocation_endpoint,
+      discovery.revocation_endpoint,
       {
         body,
         headers: {
