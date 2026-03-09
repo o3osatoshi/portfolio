@@ -6,6 +6,15 @@ This document defines how `neverthrow` should be used across the monorepo.
 
 Use `neverthrow` to make success and failure flow explicit, especially across validation, I/O, and service boundaries.
 
+## When to Consult This Guide
+
+Open this guide when a change introduces or updates any of the following:
+
+- `Result` or `ResultAsync` control flow
+- `map`, `mapErr`, `andThen`, `orElse`, `andTee`, or `orTee`
+- `ok`, `err`, `okAsync`, or `errAsync` branching choices
+- refactors that move side effects, fallbacks, or error remapping inside a result chain
+
 ## Core operators
 
 - `map`: transform a success value.

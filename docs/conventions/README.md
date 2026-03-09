@@ -13,3 +13,4 @@ These documents do not replace package-specific `README.md` files. They define s
 
 - Use these guides for shared engineering rules.
 - Keep package-specific setup, public APIs, and operational notes in the relevant package/app `README.md`.
+- Consult only the guide that matches the concern you are changing or reviewing; do not load every convention file by default.

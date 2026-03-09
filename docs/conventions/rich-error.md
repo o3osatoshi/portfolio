@@ -8,6 +8,15 @@ This document defines how `RichError` should be used across the monorepo.
 
 Use it to keep error handling consistent across packages and apps.
 
+## When to Consult This Guide
+
+Open this guide when a change introduces or updates any of the following:
+
+- `RichError` creation or wrapping
+- `details.action`, `reason`, or `hint` naming
+- `kind` or `layer` classification
+- serialized error payloads, logging, or transport contracts based on `RichError`
+
 ## Fields
 
 - `code`: stable contract identifier for callers, tests, and transport.
