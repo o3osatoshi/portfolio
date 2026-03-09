@@ -1,4 +1,4 @@
-import { errAsync, ResultAsync } from "neverthrow";
+import { errAsync, type ResultAsync } from "neverthrow";
 
 import { sleep, type RichError } from "@o3osatoshi/toolkit";
 
@@ -37,7 +37,7 @@ export function loginByDeviceCode(
     );
   }
 
-  const requestBody = new URLSearchParams({
+  const body = new URLSearchParams({
     client_id: config.clientId,
     audience: config.audience,
     scope:
@@ -47,7 +47,7 @@ export function loginByDeviceCode(
   return requestParsedJson(
     discovery.device_authorization_endpoint,
     {
-      body: requestBody,
+      body,
       headers: {
         "content-type": "application/x-www-form-urlencoded",
       },
@@ -113,7 +113,7 @@ export function pollDeviceAuth(
   }
 
   return sleep(interval * 1000).andThen(() => {
-    const tokenBody = new URLSearchParams({
+    const body = new URLSearchParams({
       client_id: config.clientId,
       device_code: deviceAuth.device_code,
       grant_type: "urn:ietf:params:oauth:grant-type:device_code",
@@ -122,7 +122,7 @@ export function pollDeviceAuth(
     return requestHttp(
       discovery.token_endpoint,
       {
-        body: tokenBody,
+        body,
         headers: {
           "content-type": "application/x-www-form-urlencoded",
         },
