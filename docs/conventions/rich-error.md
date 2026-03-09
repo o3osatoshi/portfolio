@@ -53,6 +53,17 @@ Open this guide when a change introduces or updates any of the following:
 - vague names such as `HandleError` or `DoThing`
 - names that describe the caller rather than the failed step
 
+### Common vocabulary
+
+- `Parse*`: parse raw or schema-bound input into typed local input.
+- `Decode*`: decode already-structured data into a typed value.
+- `Deserialize*`: deserialize raw body, JSON, or transport payloads.
+- `Fetch*`: perform an outbound HTTP request.
+- `Read*`: read cookies, response text, token stores, cache entries, or similar local data.
+- `Load*`: load files or file-like resources.
+- `Resolve*`: resolve env, config, or runtime values.
+- `Create*`, `Update*`, `Delete*`, `Find*`, `Check*`, `Verify*`, `Authorize*`, `Consume*`, `Write*`, `Clear*`, `Flush*`, `Emit*`, `Retry*`, `Run*`: use these directly when they describe the failed processing step clearly.
+
 ## `reason` and `hint`
 
 - `reason` should explain the failure itself.
