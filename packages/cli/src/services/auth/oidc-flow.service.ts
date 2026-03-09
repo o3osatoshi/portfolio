@@ -11,7 +11,7 @@ import {
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import { oidcTokenResponseSchema } from "./contracts/oidc.schema";
-import { loginByDeviceCode } from "./oidc-device.service";
+import { loginByDevice } from "./oidc-device.service";
 import { requestOidcDiscovery } from "./oidc-http";
 import { loginByPkce, shouldFallbackToDeviceFlow } from "./oidc-pkce.service";
 import { toTokenSetWithExpiry } from "./oidc-token-set";
@@ -33,7 +33,7 @@ export function unsafeOidcLogin(
   ).andThen((discovery) => {
     switch (mode) {
       case "device":
-        return loginByDeviceCode(config, discovery, options);
+        return loginByDevice(config, discovery, options);
       case "pkce":
         return loginByPkce(config, discovery);
       case "auto":
@@ -41,7 +41,7 @@ export function unsafeOidcLogin(
           if (!shouldFallbackToDeviceFlow(error)) {
             return errAsync(error);
           }
-          return loginByDeviceCode(config, discovery, options);
+          return loginByDevice(config, discovery, options);
         });
     }
   });

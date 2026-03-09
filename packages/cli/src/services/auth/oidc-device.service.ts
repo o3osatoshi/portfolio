@@ -1,14 +1,10 @@
 import { errAsync, type ResultAsync } from "neverthrow";
 
-import { sleep, type RichError } from "@o3osatoshi/toolkit";
+import { decode, type RichError, sleep } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http";
-import {
-  decodeHttpJson,
-  readHttpText,
-  requestParsedJson,
-} from "../../common/http/http";
+import { readHttpText, requestParsedJson } from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -21,7 +17,7 @@ import {
 import { newOidcError } from "./oidc-error";
 import { toTokenSetWithExpiry } from "./oidc-token-set";
 
-export function loginByDeviceCode(
+export function loginByDevice(
   config: OidcConfig,
   discovery: OidcDiscoveryResponse,
   options?: { onInfo?: ((message: string) => void) | undefined },
@@ -135,112 +131,105 @@ export function pollDeviceAuth(
         reason: "Failed to poll OIDC device token.",
       },
     )
-      .andThen((tokenResponse) =>
-        readHttpText(tokenResponse, {
+      .andThen((res) =>
+        readHttpText(res, {
           action: "ReadOidcTokenResponseBody",
           code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
           kind: "BadGateway",
           reason: "Failed to read OIDC token response body.",
-        }).map((responseText) => ({
-          json: parseJsonSafely(responseText),
-          responseText,
-          tokenResponse,
-        })),
+        }).map((resText) => {
+          const trimmedText = resText.trim();
+          const resJson =
+            trimmedText.length === 0
+              ? null
+              : decode(trimmedText).match(
+                  (decodedText) => decodedText,
+                  () => null,
+                );
+
+          return {
+            res,
+            resJson,
+            resText,
+          };
+        }),
       )
-      .andThen(({ json, responseText, tokenResponse }) => {
-        if (tokenResponse.ok) {
-          if (json === null) {
+      .andThen(({ res, resJson, resText }) => {
+        if (res.ok) {
+          if (resJson === null) {
             return errAsync(
               newOidcError({
                 action: "DeserializeOidcTokenResponseBody",
                 code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
                 kind: "BadGateway",
-                reason: `Device login failed: received invalid JSON from token endpoint (status ${tokenResponse.status}).`,
+                reason: `Device login failed: received invalid JSON from token endpoint (status ${res.status}).`,
               }),
             );
           }
 
-          const parsed = makeCliSchemaParser(oidcTokenResponseSchema, {
+          const result = makeCliSchemaParser(oidcTokenResponseSchema, {
             action: "DecodeOidcTokenResponseFromDeviceFlow",
             code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
             context: "OIDC token response",
             fallbackHint: "Retry `o3o auth login --mode device`.",
-          })(json);
-          return parsed.map(toTokenSetWithExpiry);
+          })(resJson);
+          return result.map(toTokenSetWithExpiry);
         }
 
-        if (json === null) {
-          const detail = responseText.trim() || "no response body";
+        if (resJson === null) {
+          const detail = resText.trim() || "no response body";
           return errAsync(
             newOidcError({
               action: "PollOidcDeviceToken",
               code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
               kind: "Unauthorized",
-              reason: `Device login failed with status ${tokenResponse.status}: ${detail}`,
+              reason: `Device login failed with status ${res.status}: ${detail}`,
             }),
           );
         }
 
-        const parsedError = oidcDeviceTokenErrorSchema.safeParse(json);
-        const error =
-          parsedError.success && parsedError.data.error
-            ? parsedError.data.error
+        const result = oidcDeviceTokenErrorSchema.safeParse(resJson);
+        const errorCode =
+          result.success && result.data.error
+            ? result.data.error
             : "unknown_error";
 
-        if (error === "authorization_pending") {
-          return pollDeviceAuth(
-            config,
-            discovery,
-            deviceAuth,
-            interval,
-            expiresAt,
-          );
+        switch (errorCode) {
+          case "authorization_pending":
+            return pollDeviceAuth(
+              config,
+              discovery,
+              deviceAuth,
+              interval,
+              expiresAt,
+            );
+          case "slow_down":
+            return pollDeviceAuth(
+              config,
+              discovery,
+              deviceAuth,
+              interval + 5,
+              expiresAt,
+            );
+          case "expired_token":
+            return errAsync(
+              newOidcError({
+                action: "PollOidcDeviceToken",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "Unauthorized",
+                reason: "Device login expired. Please retry.",
+              }),
+            );
+          default:
+            return errAsync(
+              newOidcError({
+                action: "PollOidcDeviceToken",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "Unauthorized",
+                reason: `Device login failed: ${errorCode}`,
+              }),
+            );
         }
-
-        if (error === "slow_down") {
-          return pollDeviceAuth(
-            config,
-            discovery,
-            deviceAuth,
-            interval + 5,
-            expiresAt,
-          );
-        }
-
-        if (error === "expired_token") {
-          return errAsync(
-            newOidcError({
-              action: "PollOidcDeviceToken",
-              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-              kind: "Unauthorized",
-              reason: "Device login expired. Please retry.",
-            }),
-          );
-        }
-
-        return errAsync(
-          newOidcError({
-            action: "PollOidcDeviceToken",
-            code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-            kind: "Unauthorized",
-            reason: `Device login failed: ${error}`,
-          }),
-        );
       });
   });
-}
-
-function parseJsonSafely(text: string): null | unknown {
-  const trimmed = text.trim();
-  if (!trimmed) {
-    return null;
-  }
-
-  const parsed = decodeHttpJson(trimmed, {
-    action: "DeserializeOidcTokenResponseBody",
-    code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-    kind: "BadGateway",
-    reason: "Failed to deserialize OIDC token response body.",
-  });
-  return parsed.isOk() ? parsed.value : null;
 }
