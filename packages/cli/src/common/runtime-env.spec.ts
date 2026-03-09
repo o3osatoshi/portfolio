@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import { cliErrorCodes } from "./error-catalog";
 import { DEFAULT_RUNTIME_ENV } from "./runtime-config-defaults";
 import {
-  resolveEnvFilePathFromEnv,
   resolveRuntimeEnv,
+  resolveRuntimeEnvFile,
   resolveTokenStoreEnv,
 } from "./runtime-env";
 
@@ -30,13 +30,13 @@ describe("common/runtime-env", () => {
   });
 
   it("treats empty O3O_ENV_FILE as undefined", () => {
-    const result = resolveEnvFilePathFromEnv({
+    const result = resolveRuntimeEnvFile({
       O3O_ENV_FILE: "   ",
     });
 
     expect(result.isOk()).toBe(true);
     if (result.isErr()) throw new Error("Expected ok result");
-    expect(result.value).toBeUndefined();
+    expect(result.value).toEqual({ envFilePath: undefined });
   });
 
   it("resolves token-store env defaults when env vars are not set", () => {

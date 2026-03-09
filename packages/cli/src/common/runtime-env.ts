@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "neverthrow";
+import type { Result } from "neverthrow";
 import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
@@ -12,7 +12,6 @@ const optionalTrimmedStringSchema = z.preprocess((value) => {
   if (typeof value !== "string") {
     return value;
   }
-
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 }, z.string().min(1).optional());
@@ -20,6 +19,8 @@ const optionalTrimmedStringSchema = z.preprocess((value) => {
 const runtimeEnvFileSchema = z.object({
   envFilePath: optionalTrimmedStringSchema,
 });
+
+export type RuntimeEnvFile = z.infer<typeof runtimeEnvFileSchema>;
 
 const tokenStoreEnvSchema = z
   .object({
@@ -40,29 +41,10 @@ const tokenStoreEnvSchema = z
 
 export type TokenStoreEnv = z.infer<typeof tokenStoreEnvSchema>;
 
-export function resolveEnvFilePathFromEnv(
-  source: Record<string, string | undefined> = process.env,
-): Result<string | undefined, RichError> {
-  const env = makeCliSchemaParser(runtimeEnvFileSchema, {
-    action: "ResolveCliEnvFilePath",
-    code: cliErrorCodes.CLI_CONFIG_INVALID,
-    context: "CLI env file path",
-    fallbackHint: "Set O3O_ENV_FILE to a non-empty path and retry.",
-  })({
-    envFilePath: source["O3O_ENV_FILE"],
-  });
-
-  if (env.isErr()) {
-    return err(env.error);
-  }
-
-  return ok(env.value.envFilePath);
-}
-
 export function resolveRuntimeEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<RuntimeEnv, RichError> {
-  const env = makeCliSchemaParser(runtimeEnvSchema, {
+  return makeCliSchemaParser(runtimeEnvSchema, {
     action: "ResolveCliRuntimeEnv",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI runtime config",
@@ -82,18 +64,25 @@ export function resolveRuntimeEnv(
     },
     apiBaseUrl: source["O3O_API_BASE_URL"] ?? DEFAULT_RUNTIME_ENV.apiBaseUrl,
   });
+}
 
-  if (env.isErr()) {
-    return err(env.error);
-  }
-
-  return ok(env.value);
+export function resolveRuntimeEnvFile(
+  source: Record<string, string | undefined> = process.env,
+): Result<RuntimeEnvFile, RichError> {
+  return makeCliSchemaParser(runtimeEnvFileSchema, {
+    action: "ResolveCliEnvFilePath",
+    code: cliErrorCodes.CLI_CONFIG_INVALID,
+    context: "CLI env file path",
+    fallbackHint: "Set O3O_ENV_FILE to a non-empty path and retry.",
+  })({
+    envFilePath: source["O3O_ENV_FILE"],
+  });
 }
 
 export function resolveTokenStoreEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<TokenStoreEnv, RichError> {
-  const env = makeCliSchemaParser(tokenStoreEnvSchema, {
+  return makeCliSchemaParser(tokenStoreEnvSchema, {
     action: "ResolveCliTokenStoreEnv",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI token store env",
@@ -105,10 +94,4 @@ export function resolveTokenStoreEnv(
     tokenStoreBackend: source["O3O_TOKEN_STORE_BACKEND"],
     xdgConfigHome: source["XDG_CONFIG_HOME"],
   });
-
-  if (env.isErr()) {
-    return err(env.error);
-  }
-
-  return ok(env.value);
 }

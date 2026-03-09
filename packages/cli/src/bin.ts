@@ -23,7 +23,7 @@ import { loadRuntimeEnvFile } from "./common/env-file";
 import { cliErrorCodes } from "./common/error-catalog";
 import { resolveCliExitCode } from "./common/exit-code";
 import { type OutputMode, printFailure } from "./common/output";
-import { resolveEnvFilePathFromEnv } from "./common/runtime-env";
+import { resolveRuntimeEnvFile } from "./common/runtime-env";
 import type { OidcLoginMode } from "./services/auth/oidc.service";
 
 type GlobalCliOptions = {
@@ -124,8 +124,8 @@ function createProgram(outputMode: OutputMode): Command {
         await runResult(loadRuntimeEnvFile(envFilePath));
       } else {
         await runResult(
-          resolveEnvFilePathFromEnv().asyncAndThen((resolvedEnvFilePath) =>
-            loadRuntimeEnvFile(resolvedEnvFilePath),
+          resolveRuntimeEnvFile().asyncAndThen((runtimeEnvFile) =>
+            loadRuntimeEnvFile(runtimeEnvFile.envFilePath),
           ),
         );
       }

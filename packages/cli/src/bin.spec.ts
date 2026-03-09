@@ -50,7 +50,7 @@ vi.mock("./common/env-file", () => ({
 }));
 
 vi.mock("./common/runtime-env", () => ({
-  resolveEnvFilePathFromEnv: h.resolveEnvFilePathFromEnvMock,
+  resolveRuntimeEnvFile: h.resolveEnvFilePathFromEnvMock,
 }));
 
 const originalArgv = [...process.argv];
@@ -74,7 +74,7 @@ describe("bin", () => {
     h.resolveEnvFilePathFromEnvMock
       .mockReset()
       .mockImplementation(() =>
-        ok(process.env["O3O_ENV_FILE"]?.trim() || undefined),
+        ok({ envFilePath: process.env["O3O_ENV_FILE"]?.trim() || undefined }),
       );
     h.runAuthLoginMock.mockReset().mockReturnValue(okAsync(undefined));
     h.runAuthLogoutMock.mockReset().mockReturnValue(okAsync(undefined));
