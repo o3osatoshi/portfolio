@@ -55,11 +55,11 @@ throw newRichError({
 import { toRichError } from "@o3osatoshi/toolkit";
 
 try {
-  await doSomething();
+  await runTask();
 } catch (cause) {
   const error = toRichError(cause, {
-    code: "APP_DO_SOMETHING_FAILED",
-    details: { action: "DoSomething" },
+    code: "APP_RUN_TASK_FAILED",
+    details: { action: "RunTask" },
     layer: "Application",
   });
 

@@ -14,11 +14,11 @@ import {
 import type { StepRunner } from "../../services";
 import { generateStorePingContext, StorePingUseCase } from "./store-ping";
 
-const testError = (reason: string) =>
+const testError = (action: string, reason: string) =>
   newApplicationError({
     code: applicationErrorCodes.INTERNAL,
     details: {
-      action: "StorePingUseCaseSpec",
+      action,
       reason,
     },
     i18n: { key: applicationErrorI18nKeys.INTERNAL },
@@ -28,8 +28,8 @@ const testError = (reason: string) =>
 
 function makeCache(overrides: Partial<CacheStore> = {}): CacheStore {
   const base: CacheStore = {
-    get: () => errAsync(testError("not implemented")),
-    set: () => errAsync(testError("not implemented")),
+    get: () => errAsync(testError("ReadCacheStore", "not implemented")),
+    set: () => errAsync(testError("WriteCacheStore", "not implemented")),
   };
   return { ...base, ...overrides } as CacheStore;
 }
@@ -38,11 +38,13 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
-    create: () => errAsync(testError("not implemented")),
-    delete: () => errAsync(testError("not implemented")),
-    findById: () => errAsync(testError("not implemented")),
-    findByUserId: () => errAsync(testError("not implemented")),
-    update: () => errAsync(testError("not implemented")),
+    create: () => errAsync(testError("CreateTransaction", "not implemented")),
+    delete: () => errAsync(testError("DeleteTransaction", "not implemented")),
+    findById: () =>
+      errAsync(testError("FindTransactionById", "not implemented")),
+    findByUserId: () =>
+      errAsync(testError("FindTransactionsByUserId", "not implemented")),
+    update: () => errAsync(testError("UpdateTransaction", "not implemented")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }

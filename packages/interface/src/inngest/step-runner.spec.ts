@@ -44,7 +44,7 @@ describe("interface/inngest createInngestStepRunner", () => {
     if (!result.isErr()) return;
     expect(result.error.kind).toBe("Internal");
     expect(result.error.layer).toBe("Infrastructure");
-    expect(result.error.details?.action).toBe("InngestStepRunner");
+    expect(result.error.details?.action).toBe("RunInngestStep");
     expect(result.error.details?.reason).toBe(
       "step.run rejected with an unexpected error value",
     );

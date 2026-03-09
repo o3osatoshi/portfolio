@@ -7,11 +7,11 @@ import { newIntegrationError } from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
 import { withCache } from "./with-cache";
 
-const testError = (reason: string) =>
+const testError = (action: string, reason: string) =>
   newIntegrationError({
     code: integrationErrorCodes.CACHE_READ_FAILED,
     details: {
-      action: "WithCacheSpec",
+      action,
       reason,
     },
     isOperational: false,
@@ -229,7 +229,9 @@ describe("integrations/http withCache", () => {
 
   it("falls back to fetch when cache get fails", async () => {
     const cacheStore: CacheStore = {
-      get: vi.fn(() => errAsync(testError("cache get failed"))),
+      get: vi.fn(() =>
+        errAsync(testError("ReadCacheStore", "cache get failed")),
+      ),
       // @ts-expect-error
       set: vi.fn(() => okAsync("OK")),
     };
@@ -252,7 +254,9 @@ describe("integrations/http withCache", () => {
   it("ignores cache set failures", async () => {
     const cacheStore: CacheStore = {
       get: vi.fn(() => okAsync(null)),
-      set: vi.fn(() => errAsync(testError("cache set failed"))),
+      set: vi.fn(() =>
+        errAsync(testError("WriteCacheStore", "cache set failed")),
+      ),
     };
     const next = vi.fn(() => buildResponse({ value: "fresh" }));
     // @ts-expect-error

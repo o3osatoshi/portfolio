@@ -173,7 +173,7 @@ function mapFetchError(
   requestAction: string,
   decodeAction: string,
 ): RichError {
-  if (cause.details?.action === "DeserializeResponseBody") {
+  if (cause.details?.action === "DeserializeExternalApiResponseBody") {
     return newIntegrationError({
       cause,
       code: integrationErrorCodes.OIDC_USERINFO_PARSE_FAILED,

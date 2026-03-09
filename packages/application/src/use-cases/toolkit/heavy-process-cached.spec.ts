@@ -26,11 +26,11 @@ const h = vi.hoisted(() => {
 const CACHE_KEY = "edge:public:heavy";
 const CACHE_TTL_MS = 200_000;
 
-const testError = (reason: string) =>
+const testError = (action: string, reason: string) =>
   newApplicationError({
     code: applicationErrorCodes.INTERNAL,
     details: {
-      action: "HeavyProcessCachedUseCaseSpec",
+      action,
       reason,
     },
     i18n: { key: applicationErrorI18nKeys.INTERNAL },
@@ -116,7 +116,7 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   });
 
   it("falls back to heavy process when cache get fails", async () => {
-    const cacheError = testError("cache get failed");
+    const cacheError = testError("ReadCacheStore", "cache get failed");
     const heavyTimestamp = new Date("2025-01-03T00:00:00Z");
 
     h.cacheGetMock.mockReturnValueOnce(
@@ -138,7 +138,7 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
   it("propagates error when heavy process fails", async () => {
     h.cacheGetMock.mockReturnValueOnce(okAsync<null, RichError>(null));
 
-    const heavyError = testError("heavy process failed");
+    const heavyError = testError("RunHeavyProcess", "heavy process failed");
     h.heavyExecuteMock.mockReturnValueOnce(
       errAsync<HeavyProcessResponse, RichError>(heavyError),
     );
@@ -163,7 +163,7 @@ describe("application/use-cases: HeavyProcessCachedUseCase", () => {
       okAsync<HeavyProcessResponse, RichError>({ timestamp: heavyTimestamp }),
     );
 
-    const cacheSetError = testError("cache set failed");
+    const cacheSetError = testError("WriteCacheStore", "cache set failed");
     h.cacheSetMock.mockReturnValueOnce(
       errAsync<"OK" | null, RichError>(cacheSetError),
     );

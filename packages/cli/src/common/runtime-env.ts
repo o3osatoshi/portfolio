@@ -63,7 +63,7 @@ export function resolveRuntimeEnv(
   source: Record<string, string | undefined> = process.env,
 ): Result<RuntimeEnv, RichError> {
   const env = makeCliSchemaParser(runtimeEnvSchema, {
-    action: "ResolveCliRuntimeConfig",
+    action: "ResolveCliRuntimeEnv",
     code: cliErrorCodes.CLI_CONFIG_INVALID,
     context: "CLI runtime config",
     fallbackHint: "Set valid O3O_* environment variables and retry.",

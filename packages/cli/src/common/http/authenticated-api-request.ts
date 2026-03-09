@@ -163,7 +163,7 @@ function ensureAccessToken(
                 cause: refreshError,
                 code: cliErrorCodes.CLI_API_UNAUTHORIZED,
                 details: {
-                  action: "RefreshAccessToken",
+                  action: "RefreshCliAccessToken",
                   reason: "Session expired. Run `o3o auth login` again.",
                 },
                 isOperational: true,

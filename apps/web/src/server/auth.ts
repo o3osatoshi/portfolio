@@ -15,7 +15,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 export function getUserId(): ResultAsync<string, RichError> {
   return ResultAsync.fromPromise(cookies(), (cause) =>
     newWebError({
-      action: "ReadCookies",
+      action: "ReadRequestCookies",
       cause,
       code: webErrorCodes.AUTH_COOKIE_READ_FAILED,
       i18n: { key: webErrorI18nKeys.INTERNAL },

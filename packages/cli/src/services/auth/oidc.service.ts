@@ -106,7 +106,7 @@ export function oidcLogin(
     toRichError(cause, {
       code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
       details: {
-        action: "LoginWithOidc",
+        action: "AuthenticateWithOidc",
         reason: toReason(cause, "OIDC login failed."),
       },
       isOperational: true,
@@ -124,7 +124,7 @@ export function refreshTokens(
     toRichError(cause, {
       code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
       details: {
-        action: "RefreshOidcToken",
+        action: "RefreshOidcTokens",
         reason: toReason(cause, "Failed to refresh access token."),
       },
       isOperational: true,

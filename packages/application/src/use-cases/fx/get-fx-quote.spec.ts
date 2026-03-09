@@ -75,7 +75,7 @@ describe("application/use-cases: GetFxQuoteUseCase", () => {
     const providerError = newApplicationError({
       code: applicationErrorCodes.UNAVAILABLE,
       details: {
-        action: "GetFxQuoteUseCaseSpec",
+        action: "FetchFxQuote",
         reason: "provider failed",
       },
       i18n: { key: applicationErrorI18nKeys.UNAVAILABLE },

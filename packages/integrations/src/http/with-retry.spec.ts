@@ -74,7 +74,7 @@ describe("integrations/http withRetry", () => {
     const error = newIntegrationError({
       code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
       details: {
-        action: "WithRetrySpec",
+        action: "RetryExternalApi",
         reason: "timeout",
       },
       isOperational: true,
@@ -111,7 +111,7 @@ describe("integrations/http withRetry", () => {
     const error = newIntegrationError({
       code: integrationErrorCodes.EXTERNAL_RETRY_EXHAUSTED,
       details: {
-        action: "WithRetrySpec",
+        action: "RetryExternalApi",
         reason: "bad request",
       },
       isOperational: true,

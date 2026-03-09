@@ -147,7 +147,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       onError(
         toRichError(error, {
           details: {
-            action: "LoggingProxyParseRequest",
+            action: "ParseLoggingProxyRequest",
             reason:
               "proxy payload parsing failed with an unexpected error value",
           },
@@ -193,7 +193,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       onError(
         toRichError(error, {
           details: {
-            action: "LoggingProxyEmit",
+            action: "EmitLoggingProxyEvents",
             reason: "proxy emission failed with an unexpected error value",
           },
           kind: "Internal",
@@ -305,7 +305,7 @@ export function createProxyTransport(
         onError(
           toRichError(error, {
             details: {
-              action: "LoggingProxyTransportFlush",
+              action: "FlushLoggingProxyTransport",
               reason:
                 "proxy transport flush failed with an unexpected error value",
             },

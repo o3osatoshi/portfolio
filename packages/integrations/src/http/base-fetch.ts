@@ -84,7 +84,7 @@ function deserializeBody(
   return ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
     newFetchError({
       cause,
-      details: { action: "DeserializeResponseBody" },
+      details: { action: "DeserializeExternalApiResponseBody" },
       kind: "BadGateway",
       request,
     }),
