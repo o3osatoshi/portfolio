@@ -89,6 +89,7 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);
+    expect(result.error.details?.action).toBe("RefreshOidcTokens");
     expect(result.error.details?.reason).toMatch(
       /Refresh token request failed/,
     );
@@ -116,6 +117,7 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);
+    expect(result.error.details?.action).toBe("RefreshOidcTokens");
     expect(result.error.details?.reason).toMatch(/Invalid OIDC token response/);
   });
 
@@ -321,6 +323,7 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
+    expect(result.error.details?.action).toBe("AuthenticateWithOidc");
     expect(result.error.details?.reason).toMatch(
       /does not expose a device authorization endpoint/i,
     );
@@ -344,8 +347,9 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
+    expect(result.error.details?.action).toBe("AuthenticateWithOidc");
     expect(result.error.details?.reason).toMatch(
-      /Device authorization failed \(400\)/,
+      /Device authorization failed\. \(400\)/,
     );
   });
 
@@ -379,6 +383,7 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
+    expect(result.error.details?.action).toBe("AuthenticateWithOidc");
     expect(result.error.details?.reason).toMatch(/Device login expired/);
   });
 
@@ -412,6 +417,7 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
+    expect(result.error.details?.action).toBe("AuthenticateWithOidc");
     expect(result.error.details?.reason).toMatch(
       /Device login failed: access_denied/,
     );
@@ -512,6 +518,7 @@ describe("services/auth/oidc.service", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
+    expect(result.error.details?.action).toBe("AuthenticateWithOidc");
     expect(result.error.details?.reason).toMatch(
       /OAuth callback validation failed/,
     );
@@ -649,7 +656,7 @@ describe("services/auth/oidc.service", () => {
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REVOKE_FAILED);
     expect(result.error.details?.reason).toMatch(
-      /Revocation request failed \(500\)/,
+      /Revocation request failed\. \(500\)/,
     );
   });
 });

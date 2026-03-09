@@ -11,9 +11,10 @@ import { err, errAsync, ok, okAsync, Result, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import {
+  isRichError,
+  newRichError,
   omitUndefined,
   type RichError,
-  toRichError,
 } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
@@ -90,6 +91,13 @@ type CallbackPageContent = {
   title: string;
 };
 
+type OidcErrorOptions = {
+  action: string;
+  code: string;
+  kind?: RichError["kind"];
+  reason: string;
+};
+
 type ParseSchemaOptions = {
   action: string;
   code: string;
@@ -103,15 +111,11 @@ export function oidcLogin(
   options?: OidcLoginOptions,
 ): ResultAsync<OidcTokenSet, RichError> {
   return unsafeOidcLogin(config, mode, options).mapErr((cause) =>
-    toRichError(cause, {
+    remapOidcError(cause, {
+      action: "AuthenticateWithOidc",
       code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-      details: {
-        action: "AuthenticateWithOidc",
-        reason: toReason(cause, "OIDC login failed."),
-      },
-      isOperational: true,
       kind: "Unauthorized",
-      layer: "Presentation",
+      reason: "OIDC login failed.",
     }),
   );
 }
@@ -121,15 +125,11 @@ export function refreshTokens(
   refreshToken: string,
 ): ResultAsync<OidcTokenSet, RichError> {
   return unsafeRefreshTokens(config, refreshToken).mapErr((cause) =>
-    toRichError(cause, {
+    remapOidcError(cause, {
+      action: "RefreshOidcTokens",
       code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-      details: {
-        action: "RefreshOidcTokens",
-        reason: toReason(cause, "Failed to refresh access token."),
-      },
-      isOperational: true,
       kind: "Unauthorized",
-      layer: "Presentation",
+      reason: "Failed to refresh access token.",
     }),
   );
 }
@@ -139,15 +139,11 @@ export function revokeRefreshToken(
   refreshToken: string,
 ): ResultAsync<void, RichError> {
   return revokeRefreshTokenUnsafe(config, refreshToken).mapErr((cause) =>
-    toRichError(cause, {
+    remapOidcError(cause, {
+      action: "RevokeOidcRefreshToken",
       code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
-      details: {
-        action: "RevokeOidcRefreshToken",
-        reason: toReason(cause, "Failed to revoke refresh token."),
-      },
-      isOperational: true,
       kind: "Internal",
-      layer: "Presentation",
+      reason: "Failed to revoke refresh token.",
     }),
   );
 }
@@ -166,20 +162,51 @@ function closeServer(server: ReturnType<typeof createServer>): Promise<void> {
 
 function closeServerResult(
   server: ReturnType<typeof createServer>,
-): ResultAsync<void, unknown> {
-  return ResultAsync.fromPromise(closeServer(server), (cause) => cause);
+): ResultAsync<void, RichError> {
+  return ResultAsync.fromPromise(closeServer(server), (cause) =>
+    newOidcError(
+      {
+        action: "ClosePkceCallbackServer",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "Internal",
+        reason: "Failed to close PKCE callback server.",
+      },
+      cause,
+    ),
+  );
 }
 
 function discover(
   issuer: string,
   errorCode: string,
-): ResultAsync<OidcDiscoveryResponse, unknown> {
+): ResultAsync<OidcDiscoveryResponse, RichError> {
   const normalized = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  return fetchResponse(`${normalized}/.well-known/openid-configuration`)
+  return fetchResponse(
+    `${normalized}/.well-known/openid-configuration`,
+    undefined,
+    {
+      action: "FetchOidcDiscoveryDocument",
+      code: errorCode,
+      kind: "BadGateway",
+      reason: "Failed to fetch OIDC discovery document.",
+    },
+  )
     .andThen((response) =>
-      expectOkResponse(response, "Failed to fetch OIDC discovery document"),
+      expectOkResponse(response, {
+        action: "FetchOidcDiscoveryDocument",
+        code: errorCode,
+        kind: "BadGateway",
+        reason: "Failed to fetch OIDC discovery document.",
+      }),
     )
-    .andThen((response) => readJson(response))
+    .andThen((response) =>
+      readJson(response, {
+        action: "ReadOidcDiscoveryResponseBody",
+        code: errorCode,
+        kind: "BadGateway",
+        reason: "Failed to read OIDC discovery response body.",
+      }),
+    )
     .andThen((json) =>
       parseWithSchemaAsync(oidcDiscoveryResponseSchema, json, {
         action: "DecodeOidcDiscoveryResponse",
@@ -201,10 +228,15 @@ function escapeHtml(value: string): string {
 
 function expectOkResponse(
   response: Response,
-  reason: string,
-): ResultAsync<Response, unknown> {
+  options: OidcErrorOptions,
+): ResultAsync<Response, RichError> {
   if (!response.ok) {
-    return errAsync(new Error(`${reason} (${response.status})`));
+    return errAsync(
+      newOidcError({
+        ...options,
+        reason: `${options.reason} (${response.status})`,
+      }),
+    );
   }
   return okAsync(response);
 }
@@ -212,8 +244,18 @@ function expectOkResponse(
 function fetchResponse(
   url: string,
   init?: RequestInit,
-): ResultAsync<Response, unknown> {
-  return ResultAsync.fromPromise(fetch(url, init), (cause) => cause);
+  options?: OidcErrorOptions,
+): ResultAsync<Response, RichError> {
+  const errorOptions = options ?? {
+    action: "FetchOidcEndpoint",
+    code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+    kind: "BadGateway" as const,
+    reason: "Failed to reach the OIDC endpoint.",
+  };
+
+  return ResultAsync.fromPromise(fetch(url, init), (cause) =>
+    newOidcError(errorOptions, cause),
+  );
 }
 
 function info(options: OidcLoginOptions | undefined, message: string): void {
@@ -224,10 +266,15 @@ function loginByDeviceCode(
   config: OidcConfig,
   discovery: OidcDiscoveryResponse,
   options?: OidcLoginOptions,
-): ResultAsync<OidcTokenSet, unknown> {
+): ResultAsync<OidcTokenSet, RichError> {
   if (!discovery.device_authorization_endpoint) {
     return errAsync(
-      new Error("The issuer does not expose a device authorization endpoint."),
+      newOidcError({
+        action: "RequestOidcDeviceAuthorization",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "Unauthorized",
+        reason: "The issuer does not expose a device authorization endpoint.",
+      }),
     );
   }
 
@@ -238,17 +285,38 @@ function loginByDeviceCode(
       "openid profile email offline_access transactions:read transactions:write",
   });
 
-  return fetchResponse(discovery.device_authorization_endpoint, {
-    body: requestBody,
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
+  return fetchResponse(
+    discovery.device_authorization_endpoint,
+    {
+      body: requestBody,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
     },
-    method: "POST",
-  })
+    {
+      action: "RequestOidcDeviceAuthorization",
+      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+      kind: "BadGateway",
+      reason: "Device authorization failed.",
+    },
+  )
     .andThen((response) =>
-      expectOkResponse(response, "Device authorization failed"),
+      expectOkResponse(response, {
+        action: "RequestOidcDeviceAuthorization",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "BadGateway",
+        reason: "Device authorization failed.",
+      }),
     )
-    .andThen((response) => readJson(response))
+    .andThen((response) =>
+      readJson(response, {
+        action: "ReadOidcDeviceAuthorizationResponseBody",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "BadGateway",
+        reason: "Failed to read OIDC device authorization response body.",
+      }),
+    )
     .andThen((json) =>
       parseWithSchemaAsync(oidcDeviceAuthorizationResponseSchema, json, {
         action: "DecodeOidcDeviceCodeResponse",
@@ -282,7 +350,7 @@ function loginByDeviceCode(
 function loginByPkce(
   config: OidcConfig,
   discovery: OidcDiscoveryResponse,
-): ResultAsync<OidcTokenSet, unknown> {
+): ResultAsync<OidcTokenSet, RichError> {
   const redirectHost = "127.0.0.1";
   const redirectUri = `http://${redirectHost}:${config.redirectPort}/callback`;
   const state = randomBytes(16).toString("hex");
@@ -347,7 +415,14 @@ function loginByPkce(
             title: "Sign-in failed",
           });
           cleanup();
-          reject(new Error("OAuth authorization failed."));
+          reject(
+            newOidcError({
+              action: "ValidatePkceCallback",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "Unauthorized",
+              reason: "OAuth authorization failed.",
+            }),
+          );
           return;
         }
 
@@ -360,7 +435,14 @@ function loginByPkce(
             title: "Sign-in failed",
           });
           cleanup();
-          reject(new Error("OAuth callback validation failed."));
+          reject(
+            newOidcError({
+              action: "ValidatePkceCallback",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "Unauthorized",
+              reason: "OAuth callback validation failed.",
+            }),
+          );
           return;
         }
 
@@ -388,7 +470,14 @@ function loginByPkce(
 
       const timeout = setTimeout(() => {
         cleanup();
-        reject(new Error("Timed out waiting for browser callback."));
+        reject(
+          newOidcError({
+            action: "AwaitPkceCallback",
+            code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+            kind: "Unauthorized",
+            reason: "Timed out waiting for browser callback.",
+          }),
+        );
       }, PKCE_CALLBACK_TIMEOUT_MS);
 
       server.on("request", onRequest);
@@ -408,7 +497,24 @@ function loginByPkce(
     authorizationUrl.searchParams.set("code_challenge_method", "S256");
 
     return openBrowser(authorizationUrl.toString(), redirectUri)
-      .andThen(() => ResultAsync.fromPromise(codePromise, (cause) => cause))
+      .andThen(() =>
+        ResultAsync.fromPromise(codePromise, (cause) =>
+          isRichError(cause)
+            ? cause
+            : newOidcError(
+                {
+                  action: "AwaitPkceCallback",
+                  code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                  kind: "Unauthorized",
+                  reason: toReason(
+                    cause,
+                    "Timed out waiting for browser callback.",
+                  ),
+                },
+                cause,
+              ),
+        ),
+      )
       .andThen((code) => {
         disposeCallbackListener?.();
 
@@ -421,17 +527,38 @@ function loginByPkce(
             redirect_uri: redirectUri,
           });
 
-          return fetchResponse(discovery.token_endpoint, {
-            body,
-            headers: {
-              "content-type": "application/x-www-form-urlencoded",
+          return fetchResponse(
+            discovery.token_endpoint,
+            {
+              body,
+              headers: {
+                "content-type": "application/x-www-form-urlencoded",
+              },
+              method: "POST",
             },
-            method: "POST",
-          })
+            {
+              action: "ExchangePkceAuthorizationCode",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "BadGateway",
+              reason: "Token exchange failed.",
+            },
+          )
             .andThen((response) =>
-              expectOkResponse(response, "Token exchange failed"),
+              expectOkResponse(response, {
+                action: "ExchangePkceAuthorizationCode",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "BadGateway",
+                reason: "Token exchange failed.",
+              }),
             )
-            .andThen((response) => readJson(response))
+            .andThen((response) =>
+              readJson(response, {
+                action: "ReadOidcTokenResponseBody",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "BadGateway",
+                reason: "Failed to read OIDC token response body.",
+              }),
+            )
             .andThen((json) =>
               parseWithSchemaAsync(oidcTokenResponseSchema, json, {
                 action: "DecodeOidcTokenResponseFromPkceFlow",
@@ -455,10 +582,24 @@ function loginByPkce(
   });
 }
 
+function newOidcError(options: OidcErrorOptions, cause?: unknown): RichError {
+  return newRichError({
+    cause,
+    code: options.code,
+    details: {
+      action: options.action,
+      reason: options.reason,
+    },
+    isOperational: true,
+    kind: options.kind ?? "Internal",
+    layer: "Presentation",
+  });
+}
+
 function openBrowser(
   url: string,
   redirectUri: string,
-): ResultAsync<void, unknown> {
+): ResultAsync<void, RichError> {
   const openCommand =
     process.platform === "darwin"
       ? "open"
@@ -466,13 +607,16 @@ function openBrowser(
         ? "explorer.exe"
         : "xdg-open";
 
-  return ResultAsync.fromPromise(
-    execFileAsync(openCommand, [url]),
-    (cause) =>
-      new Error(
-        `Failed to open the system browser for PKCE login (${redirectUri}).`,
-        { cause },
-      ),
+  return ResultAsync.fromPromise(execFileAsync(openCommand, [url]), (cause) =>
+    newOidcError(
+      {
+        action: "OpenOidcBrowser",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "Internal",
+        reason: `Failed to open the system browser for PKCE login (${redirectUri}).`,
+      },
+      cause,
+    ),
   ).map(() => undefined);
 }
 
@@ -513,9 +657,16 @@ function pollDeviceToken(
   deviceCode: OidcDeviceAuthorizationResponse,
   interval: number,
   expiresAt: number,
-): ResultAsync<OidcTokenSet, unknown> {
+): ResultAsync<OidcTokenSet, RichError> {
   if (Date.now() >= expiresAt) {
-    return errAsync(new Error("Device login timed out."));
+    return errAsync(
+      newOidcError({
+        action: "PollOidcDeviceToken",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "Unauthorized",
+        reason: "Device login timed out.",
+      }),
+    );
   }
 
   return ResultAsync.fromSafePromise(sleep(interval * 1000)).andThen(() => {
@@ -525,15 +676,29 @@ function pollDeviceToken(
       grant_type: "urn:ietf:params:oauth:grant-type:device_code",
     });
 
-    return fetchResponse(discovery.token_endpoint, {
-      body: tokenBody,
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
+    return fetchResponse(
+      discovery.token_endpoint,
+      {
+        body: tokenBody,
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        method: "POST",
       },
-      method: "POST",
-    })
+      {
+        action: "PollOidcDeviceToken",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "BadGateway",
+        reason: "Failed to poll OIDC device token.",
+      },
+    )
       .andThen((tokenResponse) =>
-        readText(tokenResponse).map((responseText) => ({
+        readText(tokenResponse, {
+          action: "ReadOidcTokenResponseBody",
+          code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+          kind: "BadGateway",
+          reason: "Failed to read OIDC token response body.",
+        }).map((responseText) => ({
           json: parseJsonSafely(responseText),
           responseText,
           tokenResponse,
@@ -543,9 +708,12 @@ function pollDeviceToken(
         if (tokenResponse.ok) {
           if (json === null) {
             return errAsync(
-              new Error(
-                `Device login failed: received invalid JSON from token endpoint (status ${tokenResponse.status}).`,
-              ),
+              newOidcError({
+                action: "DeserializeOidcTokenResponseBody",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "BadGateway",
+                reason: `Device login failed: received invalid JSON from token endpoint (status ${tokenResponse.status}).`,
+              }),
             );
           }
 
@@ -560,9 +728,12 @@ function pollDeviceToken(
         if (json === null) {
           const detail = responseText.trim() || "no response body";
           return errAsync(
-            new Error(
-              `Device login failed with status ${tokenResponse.status}: ${detail}`,
-            ),
+            newOidcError({
+              action: "PollOidcDeviceToken",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "Unauthorized",
+              reason: `Device login failed with status ${tokenResponse.status}: ${detail}`,
+            }),
           );
         }
 
@@ -593,26 +764,83 @@ function pollDeviceToken(
         }
 
         if (error === "expired_token") {
-          return errAsync(new Error("Device login expired. Please retry."));
+          return errAsync(
+            newOidcError({
+              action: "PollOidcDeviceToken",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "Unauthorized",
+              reason: "Device login expired. Please retry.",
+            }),
+          );
         }
 
-        return errAsync(new Error(`Device login failed: ${error}`));
+        return errAsync(
+          newOidcError({
+            action: "PollOidcDeviceToken",
+            code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+            kind: "Unauthorized",
+            reason: `Device login failed: ${error}`,
+          }),
+        );
       });
   });
 }
 
-function readJson(response: Response): ResultAsync<unknown, unknown> {
-  return ResultAsync.fromPromise(response.json(), (cause) => cause);
+function readJson(
+  response: Response,
+  options: OidcErrorOptions,
+): ResultAsync<unknown, RichError> {
+  return ResultAsync.fromPromise(response.json(), (cause) =>
+    newOidcError(options, cause),
+  );
 }
 
-function readText(response: Response): ResultAsync<string, unknown> {
-  return ResultAsync.fromPromise(response.text(), (cause) => cause);
+function readText(
+  response: Response,
+  options: OidcErrorOptions,
+): ResultAsync<string, RichError> {
+  return ResultAsync.fromPromise(response.text(), (cause) =>
+    newOidcError(options, cause),
+  );
+}
+
+function remapOidcError(
+  cause: RichError,
+  options: OidcErrorOptions,
+): RichError {
+  const reason = toReason(cause, options.reason);
+  const kind = options.kind ?? cause.kind;
+
+  if (
+    cause.code === options.code &&
+    cause.details?.action === options.action &&
+    cause.details?.reason === reason &&
+    cause.kind === kind &&
+    cause.layer === "Presentation"
+  ) {
+    return cause;
+  }
+
+  return newRichError({
+    cause: cause.cause,
+    code: options.code,
+    details: {
+      ...cause.details,
+      action: options.action,
+      reason,
+    },
+    i18n: cause.i18n,
+    isOperational: cause.isOperational,
+    kind,
+    layer: "Presentation",
+    meta: cause.meta,
+  });
 }
 
 function revokeRefreshTokenUnsafe(
   config: OidcConfig,
   refreshToken: string,
-): ResultAsync<void, unknown> {
+): ResultAsync<void, RichError> {
   return discover(config.issuer, cliErrorCodes.CLI_AUTH_REVOKE_FAILED).andThen(
     (discovery) => {
       if (!discovery.revocation_endpoint) {
@@ -625,15 +853,29 @@ function revokeRefreshTokenUnsafe(
         token_type_hint: "refresh_token",
       });
 
-      return fetchResponse(discovery.revocation_endpoint, {
-        body,
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
+      return fetchResponse(
+        discovery.revocation_endpoint,
+        {
+          body,
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+          },
+          method: "POST",
         },
-        method: "POST",
-      })
+        {
+          action: "RevokeOidcRefreshToken",
+          code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
+          kind: "BadGateway",
+          reason: "Revocation request failed.",
+        },
+      )
         .andThen((response) =>
-          expectOkResponse(response, "Revocation request failed"),
+          expectOkResponse(response, {
+            action: "RevokeOidcRefreshToken",
+            code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
+            kind: "BadGateway",
+            reason: "Revocation request failed.",
+          }),
         )
         .map(() => undefined);
     },
@@ -677,6 +919,14 @@ function sendCallbackPage(
 }
 
 function shouldFallbackToDeviceFlow(error: unknown): boolean {
+  if (isRichError(error)) {
+    return (
+      error.details?.action === "StartPkceCallbackServer" ||
+      error.details?.action === "AwaitPkceCallback" ||
+      error.details?.action === "OpenOidcBrowser"
+    );
+  }
+
   if (!(error instanceof Error)) {
     return false;
   }
@@ -697,14 +947,19 @@ function startCallbackServer(
   redirectHost: string,
   redirectPort: number,
   redirectUri: string,
-): ResultAsync<void, unknown> {
+): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
     new Promise<void>((resolve, reject) => {
       const onError = (error: Error) => {
         reject(
-          new Error(
-            `Failed to start PKCE callback server on ${redirectUri}. Ensure the port is free and retry.`,
-            { cause: error },
+          newOidcError(
+            {
+              action: "StartPkceCallbackServer",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "Internal",
+              reason: `Failed to start PKCE callback server on ${redirectUri}. Ensure the port is free and retry.`,
+            },
+            error,
           ),
         );
       };
@@ -715,11 +970,25 @@ function startCallbackServer(
         resolve();
       });
     }),
-    (cause) => cause,
+    (cause) =>
+      isRichError(cause)
+        ? cause
+        : newOidcError(
+            {
+              action: "StartPkceCallbackServer",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "Internal",
+              reason: `Failed to start PKCE callback server on ${redirectUri}. Ensure the port is free and retry.`,
+            },
+            cause,
+          ),
   );
 }
 
 function toReason(cause: unknown, fallback: string): string {
+  if (isRichError(cause) && cause.details?.reason?.trim()) {
+    return cause.details.reason;
+  }
   if (cause instanceof Error && cause.message.trim().length > 0) {
     return cause.message;
   }
@@ -745,7 +1014,7 @@ function unsafeOidcLogin(
   config: OidcConfig,
   mode: OidcLoginMode,
   options?: OidcLoginOptions,
-): ResultAsync<OidcTokenSet, unknown> {
+): ResultAsync<OidcTokenSet, RichError> {
   return discover(config.issuer, cliErrorCodes.CLI_AUTH_LOGIN_FAILED).andThen(
     (discovery) => {
       switch (mode) {
@@ -768,7 +1037,7 @@ function unsafeOidcLogin(
 function unsafeRefreshTokens(
   config: OidcConfig,
   refreshToken: string,
-): ResultAsync<OidcTokenSet, unknown> {
+): ResultAsync<OidcTokenSet, RichError> {
   return discover(config.issuer, cliErrorCodes.CLI_AUTH_REFRESH_FAILED).andThen(
     (discovery) => {
       const body = new URLSearchParams({
@@ -777,17 +1046,38 @@ function unsafeRefreshTokens(
         refresh_token: refreshToken,
       });
 
-      return fetchResponse(discovery.token_endpoint, {
-        body,
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
+      return fetchResponse(
+        discovery.token_endpoint,
+        {
+          body,
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+          },
+          method: "POST",
         },
-        method: "POST",
-      })
+        {
+          action: "RefreshOidcTokens",
+          code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+          kind: "BadGateway",
+          reason: "Refresh token request failed.",
+        },
+      )
         .andThen((response) =>
-          expectOkResponse(response, "Refresh token request failed"),
+          expectOkResponse(response, {
+            action: "RefreshOidcTokens",
+            code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+            kind: "BadGateway",
+            reason: "Refresh token request failed.",
+          }),
         )
-        .andThen((response) => readJson(response))
+        .andThen((response) =>
+          readJson(response, {
+            action: "ReadOidcTokenResponseBody",
+            code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+            kind: "BadGateway",
+            reason: "Failed to read OIDC token response body.",
+          }),
+        )
         .andThen((json) =>
           parseWithSchemaAsync(oidcTokenResponseSchema, json, {
             action: "DecodeOidcTokenResponseFromRefreshFlow",
