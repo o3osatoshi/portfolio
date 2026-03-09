@@ -1,6 +1,6 @@
 import { errAsync, ResultAsync } from "neverthrow";
 
-import type { RichError } from "@o3osatoshi/toolkit";
+import { sleep, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http";
@@ -73,31 +73,31 @@ export function loginByDeviceCode(
         reason: "Device authorization failed.",
       },
     },
-  ).andThen((deviceCode) => {
-    const url =
-      deviceCode.verification_uri_complete ?? deviceCode.verification_uri;
-    if (deviceCode.verification_uri_complete) {
-      options?.onInfo?.(`Open this URL to continue login:\n${url}`);
+  ).andThen((deviceAuth) => {
+    if (deviceAuth.verification_uri_complete) {
+      options?.onInfo?.(
+        `Open this URL to continue login:\n${deviceAuth.verification_uri_complete ?? deviceAuth.verification_uri}`,
+      );
     } else {
       options?.onInfo?.(
-        `Open ${deviceCode.verification_uri} and enter code: ${deviceCode.user_code}`,
+        `Open ${deviceAuth.verification_uri} and enter code: ${deviceAuth.user_code}`,
       );
     }
 
-    return pollDeviceToken(
+    return pollDeviceAuth(
       config,
       discovery,
-      deviceCode,
-      deviceCode.interval,
-      Date.now() + deviceCode.expires_in * 1000,
+      deviceAuth,
+      deviceAuth.interval,
+      Date.now() + deviceAuth.expires_in * 1000,
     );
   });
 }
 
-export function pollDeviceToken(
+export function pollDeviceAuth(
   config: OidcConfig,
   discovery: OidcDiscoveryResponse,
-  deviceCode: OidcDeviceAuthorizationResponse,
+  deviceAuth: OidcDeviceAuthorizationResponse,
   interval: number,
   expiresAt: number,
 ): ResultAsync<OidcTokenSet, RichError> {
@@ -112,10 +112,10 @@ export function pollDeviceToken(
     );
   }
 
-  return ResultAsync.fromSafePromise(sleep(interval * 1000)).andThen(() => {
+  return sleep(interval * 1000).andThen(() => {
     const tokenBody = new URLSearchParams({
       client_id: config.clientId,
-      device_code: deviceCode.device_code,
+      device_code: deviceAuth.device_code,
       grant_type: "urn:ietf:params:oauth:grant-type:device_code",
     });
 
@@ -188,20 +188,20 @@ export function pollDeviceToken(
             : "unknown_error";
 
         if (error === "authorization_pending") {
-          return pollDeviceToken(
+          return pollDeviceAuth(
             config,
             discovery,
-            deviceCode,
+            deviceAuth,
             interval,
             expiresAt,
           );
         }
 
         if (error === "slow_down") {
-          return pollDeviceToken(
+          return pollDeviceAuth(
             config,
             discovery,
-            deviceCode,
+            deviceAuth,
             interval + 5,
             expiresAt,
           );
@@ -243,8 +243,4 @@ function parseJsonSafely(text: string): null | unknown {
     reason: "Failed to deserialize OIDC token response body.",
   });
   return parsed.isOk() ? parsed.value : null;
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
