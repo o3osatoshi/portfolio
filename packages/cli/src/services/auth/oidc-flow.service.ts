@@ -3,11 +3,11 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import { requestHttp } from "../../common/http/http-request";
+import { requestHttp } from "../../common/http/http";
 import {
   expectOkHttpResponse,
   requestParsedJson,
-} from "../../common/http/http-response";
+} from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import { oidcTokenResponseSchema } from "./contracts/oidc.schema";

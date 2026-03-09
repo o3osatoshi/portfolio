@@ -1,12 +1,14 @@
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
-import type { RichError } from "@o3osatoshi/toolkit";
+import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
-import {
-  type HttpErrorOptions,
-  newHttpError,
-  requestHttp,
-} from "./http-request";
+export type HttpErrorOptions = {
+  action: string;
+  code: string;
+  kind?: RichError["kind"];
+  layer?: RichError["layer"];
+  reason: string;
+};
 
 export type ParsedJsonParser<T> = (input: unknown) => Result<T, RichError>;
 
@@ -36,6 +38,23 @@ export function expectOkHttpResponse(
   return ok(response);
 }
 
+export function newHttpError(
+  options: HttpErrorOptions,
+  cause?: unknown,
+): RichError {
+  return newRichError({
+    cause,
+    code: options.code,
+    details: {
+      action: options.action,
+      reason: options.reason,
+    },
+    isOperational: true,
+    kind: options.kind ?? "Internal",
+    layer: options.layer ?? "Presentation",
+  });
+}
+
 export function readHttpJson(
   response: Response,
   options: HttpErrorOptions,
@@ -60,6 +79,16 @@ export function readParsedJson<T>(
   parser: ParsedJsonParser<T>,
 ): ResultAsync<T, RichError> {
   return readHttpJson(response, options).andThen(parser);
+}
+
+export function requestHttp(
+  url: string,
+  init: RequestInit | undefined,
+  options: HttpErrorOptions,
+): ResultAsync<Response, RichError> {
+  return ResultAsync.fromPromise(fetch(url, init), (cause) =>
+    newHttpError(options, cause),
+  );
 }
 
 export function requestParsedJson<T>(

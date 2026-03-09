@@ -25,8 +25,7 @@ import { cliErrorCodes } from "../error-catalog";
 import { resolveRuntimeEnv } from "../runtime-env";
 import type { OidcTokenSet, RuntimeEnv } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
-import { requestHttp } from "./http-request";
-import { decodeHttpJson, readHttpText } from "./http-response";
+import { decodeHttpJson, readHttpText, requestHttp } from "./http";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;

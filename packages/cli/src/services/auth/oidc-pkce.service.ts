@@ -12,7 +12,7 @@ import { err, ok, ResultAsync } from "neverthrow";
 import { isRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import { requestParsedJson } from "../../common/http/http-response";
+import { requestParsedJson } from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
