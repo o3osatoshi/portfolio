@@ -7,6 +7,11 @@ const h = vi.hoisted(() => ({
 
 vi.mock("../../common/http/authenticated-api-request", () => ({
   requestAuthenticatedApi: h.requestAuthenticatedApiMock,
+  requestAuthenticatedApiWithParser: (
+    path: string,
+    init: RequestInit,
+    parser: (input: unknown) => ReturnType<typeof okAsync> | unknown,
+  ) => h.requestAuthenticatedApiMock(path, init).andThen(parser),
 }));
 
 describe("services/tx/transaction-api.service", () => {
