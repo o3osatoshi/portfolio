@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const oidcDiscoveryResponseSchema = z.object({
-  authorization_endpoint: z.string().url(),
-  device_authorization_endpoint: z.string().url().optional(),
-  revocation_endpoint: z.string().url().optional(),
-  token_endpoint: z.string().url(),
+  authorization_endpoint: z.url(),
+  device_authorization_endpoint: z.url().optional(),
+  revocation_endpoint: z.url().optional(),
+  token_endpoint: z.url(),
 });
 
 export type OidcDiscoveryResponse = z.infer<typeof oidcDiscoveryResponseSchema>;
@@ -24,8 +24,8 @@ export const oidcDeviceAuthorizationResponseSchema = z.object({
   expires_in: z.number().min(1),
   interval: z.number().min(1).default(5),
   user_code: z.string().min(1),
-  verification_uri: z.string().url(),
-  verification_uri_complete: z.string().url().optional(),
+  verification_uri: z.url(),
+  verification_uri_complete: z.url().optional(),
 });
 
 export type OidcDeviceAuthorizationResponse = z.infer<
