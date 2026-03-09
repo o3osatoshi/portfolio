@@ -18,6 +18,13 @@ This document reflects the current state of the repository. The commands listed 
 - Open [docs/conventions/neverthrow.md](/Users/o3osatoshi/.codex/worktrees/016b/portfolio/docs/conventions/neverthrow.md) when introducing, refactoring, or reviewing `Result` / `ResultAsync` flows.
 - When a code change conflicts with an existing convention, follow the convention unless the change intentionally updates the shared rule. In that case, update the convention document in the same change.
 
+## Convention Update Rule
+
+- If implementation, review, or design discussion establishes a new monorepo-wide rule that should remain stable beyond the current file or package, update `docs/conventions` in the same change.
+- Record only durable shared engineering rules in `docs/conventions`. Keep package-specific, temporary, or purely local decisions in the relevant package `README.md` or implementation comments.
+- Prefer extending an existing guide before creating a new convention file. Create a new guide only when the rule introduces a distinct cross-cutting concern.
+- Treat `AGENTS.md` as the operational trigger for when to update conventions, and treat `docs/conventions` as the canonical store of those shared rules.
+
 ## Architecture Overview
 
 - **Domain (`@repo/domain`)**: Value objects, entities, and ports. Internal dependencies are limited to `@o3osatoshi/toolkit` plus external libraries.

@@ -10,6 +10,6 @@ This directory contains repository-level documentation.
 
 ## Notes
 
-- `docs/conventions` contains stable implementation rules, not package-specific usage guides.
+- `docs/conventions` is the canonical home for stable shared engineering rules across the monorepo, not package-specific usage guides.
 - `docs/api` is generated documentation and should not be hand-edited.
 - Package-level `README.md` files remain the primary place for package-specific behavior and setup.
