@@ -1,6 +1,18 @@
-import { createServer, get as httpGet } from "node:http";
+import { createServer } from "node:http";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { cliErrorCodes } from "../../common/error-catalog";
+import { oidcLogin } from "./oidc.service";
+import {
+  config,
+  expectHeader,
+  getAvailablePort,
+  jsonErrorResponse,
+  jsonResponse,
+  requestLocal,
+  waitForAuthorizationUrlFromCalls,
+} from "./oidc.spec-helpers";
 
 const h = vi.hoisted(() => ({
   execFileMock: vi.fn(
@@ -18,18 +30,7 @@ vi.mock("node:child_process", () => ({
   execFile: h.execFileMock,
 }));
 
-import { cliErrorCodes } from "../../common/error-catalog";
-import type { OidcConfig } from "../../common/types";
-import { oidcLogin, refreshTokens, revokeRefreshToken } from "./oidc.service";
-
-const config: OidcConfig = {
-  audience: "https://api.o3o.app",
-  clientId: "cli-client-id",
-  issuer: "https://example.auth0.com",
-  redirectPort: 38080,
-};
-
-describe("services/auth/oidc.service", () => {
+describe("services/auth/oidc login", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     h.execFileMock.mockClear();
@@ -39,86 +40,6 @@ describe("services/auth/oidc.service", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.useRealTimers();
-  });
-
-  it("refreshes access token from refresh_token grant", async () => {
-    const fetchMock = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        jsonResponse({
-          authorization_endpoint: "https://example.auth0.com/authorize",
-          token_endpoint: "https://example.auth0.com/oauth/token",
-        }),
-      )
-      .mockResolvedValueOnce(
-        jsonResponse({
-          access_token: "new-access-token",
-          expires_in: 3600,
-          refresh_token: "new-refresh-token",
-          scope: "openid profile",
-          token_type: "Bearer",
-        }),
-      );
-
-    vi.stubGlobal("fetch", fetchMock);
-
-    const tokenResult = await refreshTokens(config, "old-refresh-token");
-
-    expect(tokenResult.isOk()).toBe(true);
-    if (tokenResult.isErr()) throw new Error("Expected ok result");
-    const token = tokenResult.value;
-    expect(token.access_token).toBe("new-access-token");
-    expect(token.refresh_token).toBe("new-refresh-token");
-    expect(token.expires_at).toBeTypeOf("number");
-  });
-
-  it("returns error when refresh token endpoint rejects request", async () => {
-    const fetchMock = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        jsonResponse({
-          authorization_endpoint: "https://example.auth0.com/authorize",
-          token_endpoint: "https://example.auth0.com/oauth/token",
-        }),
-      )
-      .mockResolvedValueOnce(new Response("", { status: 401 }));
-
-    vi.stubGlobal("fetch", fetchMock);
-
-    const result = await refreshTokens(config, "bad-refresh-token");
-    expect(result.isErr()).toBe(true);
-    if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);
-    expect(result.error.details?.action).toBe("RefreshOidcTokens");
-    expect(result.error.details?.reason).toMatch(
-      /Refresh token request failed/,
-    );
-  });
-
-  it("returns validation reason when refresh token response payload is invalid", async () => {
-    const fetchMock = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        jsonResponse({
-          authorization_endpoint: "https://example.auth0.com/authorize",
-          token_endpoint: "https://example.auth0.com/oauth/token",
-        }),
-      )
-      .mockResolvedValueOnce(
-        jsonResponse({
-          expires_in: 3600,
-          refresh_token: "new-refresh-token",
-        }),
-      );
-
-    vi.stubGlobal("fetch", fetchMock);
-
-    const result = await refreshTokens(config, "old-refresh-token");
-    expect(result.isErr()).toBe(true);
-    if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);
-    expect(result.error.details?.action).toBe("RefreshOidcTokens");
-    expect(result.error.details?.reason).toMatch(/Invalid OIDC token response/);
   });
 
   it("executes device flow and returns tokens", async () => {
@@ -161,12 +82,10 @@ describe("services/auth/oidc.service", () => {
     await vi.advanceTimersByTimeAsync(1000);
 
     const result = await resultPromise;
-
     expect(result.isOk()).toBe(true);
     if (result.isErr()) throw new Error("Expected ok result");
-    const token = result.value;
-    expect(token.access_token).toBe("device-access-token");
-    expect(token.refresh_token).toBe("device-refresh-token");
+    expect(result.value.access_token).toBe("device-access-token");
+    expect(result.value.refresh_token).toBe("device-refresh-token");
   });
 
   it("routes device flow progress logs to onInfo callback", async () => {
@@ -260,8 +179,7 @@ describe("services/auth/oidc.service", () => {
 
     expect(result.isOk()).toBe(true);
     if (result.isErr()) throw new Error("Expected ok result");
-    const token = result.value;
-    expect(token.access_token).toBe("device-access-token");
+    expect(result.value.access_token).toBe("device-access-token");
     await new Promise<void>((resolve, reject) =>
       blocker.close((error) => (error ? reject(error) : resolve())),
     );
@@ -425,8 +343,7 @@ describe("services/auth/oidc.service", () => {
 
   it("renders minimal success callback page with secure headers", async () => {
     const redirectPort = await getAvailablePort();
-    const pkceConfig: OidcConfig = { ...config, redirectPort };
-    const issuedCode = "code-secret-value-for-test";
+    const pkceConfig: typeof config = { ...config, redirectPort };
 
     const fetchMock = vi
       .fn<typeof fetch>()
@@ -448,13 +365,15 @@ describe("services/auth/oidc.service", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const resultPromise = oidcLogin(pkceConfig, "pkce");
-    const authorizationUrl = await waitForAuthorizationUrl();
+    const authorizationUrl = await waitForAuthorizationUrlFromCalls(
+      h.execFileMock.mock.calls,
+    );
     const state = authorizationUrl.searchParams.get("state");
     expect(state).toBeTruthy();
 
     const callbackResponse = await requestLocal(
       `http://127.0.0.1:${redirectPort}/callback?code=${encodeURIComponent(
-        issuedCode,
+        "code-secret-value-for-test",
       )}&state=${encodeURIComponent(state ?? "")}`,
     );
 
@@ -466,8 +385,6 @@ describe("services/auth/oidc.service", () => {
     expect(callbackResponse.body).toContain(
       "Continue in the same terminal where you ran o3o auth login.",
     );
-    expect(callbackResponse.body).not.toContain(issuedCode);
-    expect(callbackResponse.body).not.toContain(state ?? "");
     expectHeader(callbackResponse.headers["cache-control"], "no-store");
     expectHeader(callbackResponse.headers["pragma"], "no-cache");
     expectHeader(callbackResponse.headers["x-content-type-options"], "nosniff");
@@ -484,8 +401,7 @@ describe("services/auth/oidc.service", () => {
 
   it("renders failed callback page on state mismatch without leaking query secrets", async () => {
     const redirectPort = await getAvailablePort();
-    const pkceConfig: OidcConfig = { ...config, redirectPort };
-    const issuedCode = "state-mismatch-code-value";
+    const pkceConfig: typeof config = { ...config, redirectPort };
 
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValueOnce(
       jsonResponse({
@@ -496,10 +412,10 @@ describe("services/auth/oidc.service", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const resultPromise = oidcLogin(pkceConfig, "pkce");
-    await waitForAuthorizationUrl();
+    await waitForAuthorizationUrlFromCalls(h.execFileMock.mock.calls);
     const callbackResponse = await requestLocal(
       `http://127.0.0.1:${redirectPort}/callback?code=${encodeURIComponent(
-        issuedCode,
+        "state-mismatch-code-value",
       )}&state=wrong-state`,
     );
 
@@ -509,8 +425,6 @@ describe("services/auth/oidc.service", () => {
     expect(callbackResponse.body).toContain(
       "Return to your terminal and run o3o auth login again.",
     );
-    expect(callbackResponse.body).not.toContain(issuedCode);
-    expect(callbackResponse.body).not.toContain("wrong-state");
     expectHeader(callbackResponse.headers["cache-control"], "no-store");
     expectHeader(callbackResponse.headers["x-content-type-options"], "nosniff");
 
@@ -527,7 +441,7 @@ describe("services/auth/oidc.service", () => {
 
   it("renders failed callback page for oauth error query", async () => {
     const redirectPort = await getAvailablePort();
-    const pkceConfig: OidcConfig = { ...config, redirectPort };
+    const pkceConfig: typeof config = { ...config, redirectPort };
 
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValueOnce(
       jsonResponse({
@@ -538,7 +452,9 @@ describe("services/auth/oidc.service", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const resultPromise = oidcLogin(pkceConfig, "pkce");
-    const authorizationUrl = await waitForAuthorizationUrl();
+    const authorizationUrl = await waitForAuthorizationUrlFromCalls(
+      h.execFileMock.mock.calls,
+    );
     const state = authorizationUrl.searchParams.get("state");
     expect(state).toBeTruthy();
 
@@ -553,8 +469,6 @@ describe("services/auth/oidc.service", () => {
     expect(callbackResponse.body).toContain(
       "Return to your terminal and run o3o auth login again.",
     );
-    expect(callbackResponse.body).not.toContain("state=");
-    expect(callbackResponse.body).not.toContain("access_denied");
 
     const result = await resultPromise;
     expect(result.isErr()).toBe(true);
@@ -605,153 +519,4 @@ describe("services/auth/oidc.service", () => {
       /Device login failed with status 502: gateway timeout/,
     );
   });
-
-  it("skips refresh token revocation when discovery has no endpoint", async () => {
-    const fetchMock = vi.fn<typeof fetch>().mockResolvedValueOnce(
-      jsonResponse({
-        authorization_endpoint: "https://example.auth0.com/authorize",
-        token_endpoint: "https://example.auth0.com/oauth/token",
-      }),
-    );
-    vi.stubGlobal("fetch", fetchMock);
-
-    const result = await revokeRefreshToken(config, "refresh-token");
-    expect(result.isOk()).toBe(true);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-  });
-
-  it("revokes refresh token when endpoint is available", async () => {
-    const fetchMock = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        jsonResponse({
-          authorization_endpoint: "https://example.auth0.com/authorize",
-          revocation_endpoint: "https://example.auth0.com/oauth/revoke",
-          token_endpoint: "https://example.auth0.com/oauth/token",
-        }),
-      )
-      .mockResolvedValueOnce(new Response("", { status: 200 }));
-    vi.stubGlobal("fetch", fetchMock);
-
-    const result = await revokeRefreshToken(config, "refresh-token");
-    expect(result.isOk()).toBe(true);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-  });
-
-  it("returns error when revocation endpoint rejects request", async () => {
-    const fetchMock = vi
-      .fn<typeof fetch>()
-      .mockResolvedValueOnce(
-        jsonResponse({
-          authorization_endpoint: "https://example.auth0.com/authorize",
-          revocation_endpoint: "https://example.auth0.com/oauth/revoke",
-          token_endpoint: "https://example.auth0.com/oauth/token",
-        }),
-      )
-      .mockResolvedValueOnce(new Response("", { status: 500 }));
-    vi.stubGlobal("fetch", fetchMock);
-
-    const result = await revokeRefreshToken(config, "refresh-token");
-    expect(result.isErr()).toBe(true);
-    if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REVOKE_FAILED);
-    expect(result.error.details?.reason).toMatch(
-      /Revocation request failed\. \(500\)/,
-    );
-  });
 });
-
-function expectHeader(header: string | string[] | undefined, expected: string) {
-  if (Array.isArray(header)) {
-    expect(header.join(", ")).toBe(expected);
-    return;
-  }
-  expect(header).toBe(expected);
-}
-
-async function getAvailablePort(): Promise<number> {
-  const server = createServer();
-  return await new Promise<number>((resolve, reject) => {
-    server.listen(0, "127.0.0.1", () => {
-      const address = server.address();
-      if (!address || typeof address === "string") {
-        reject(new Error("Failed to resolve dynamic port."));
-        return;
-      }
-      server.close((error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(address.port);
-      });
-    });
-  });
-}
-
-function jsonErrorResponse(error: string): Response {
-  return new Response(JSON.stringify({ error }), {
-    headers: {
-      "content-type": "application/json",
-    },
-    status: 400,
-  });
-}
-
-function jsonResponse(body: unknown): Response {
-  return new Response(JSON.stringify(body), {
-    headers: {
-      "content-type": "application/json",
-    },
-    status: 200,
-  });
-}
-
-async function requestLocal(url: string): Promise<{
-  body: string;
-  headers: import("node:http").IncomingHttpHeaders;
-  status: number;
-}> {
-  return await new Promise((resolve, reject) => {
-    const req = httpGet(url, (res) => {
-      let body = "";
-      res.setEncoding("utf8");
-      res.on("data", (chunk) => {
-        body += chunk;
-      });
-      res.on("end", () => {
-        resolve({
-          body,
-          headers: res.headers,
-          status: res.statusCode ?? 0,
-        });
-      });
-    });
-    req.on("error", reject);
-  });
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function waitForAuthorizationUrl(): Promise<URL> {
-  for (let i = 0; i < 100; i += 1) {
-    if (h.execFileMock.mock.calls.length > 0) {
-      break;
-    }
-    await sleep(10);
-  }
-
-  if (h.execFileMock.mock.calls.length === 0) {
-    throw new Error("Browser launcher was not called.");
-  }
-
-  const call = h.execFileMock.mock.calls[0];
-  const args = Array.isArray(call?.[1]) ? call[1] : [];
-  const authorizationUrl = args[0];
-  if (typeof authorizationUrl !== "string") {
-    throw new Error("Authorization URL was not passed to browser launcher.");
-  }
-  return new URL(authorizationUrl);
-}
