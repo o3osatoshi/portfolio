@@ -1,4 +1,4 @@
-import { okAsync, type ResultAsync } from "neverthrow";
+import { ok, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
@@ -14,24 +14,24 @@ export function runAuthLogout(
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
   return readTokenSet()
-    .orElse(() => okAsync(null))
+    .orElse(() => ok(null))
     .andThen((token) => {
       const refreshTokenValue = token?.refresh_token;
       if (!refreshTokenValue) {
-        return okAsync(undefined);
+        return ok(undefined);
       }
 
       return resolveRuntimeEnv()
         .asyncAndThen((env) =>
           revokeRefreshToken(env.oidcConfig, refreshTokenValue).orElse(() =>
-            okAsync(undefined),
+            ok(undefined),
           ),
         )
-        .orElse(() => okAsync(undefined));
+        .orElse(() => ok(undefined));
     })
     .andThen(() => clearTokenSet())
-    .map(() => {
+    .andTee(() => {
       printSuccessMessage("auth.logout", "Logged out.", outputMode);
-      return undefined;
-    });
+    })
+    .map(() => undefined);
 }

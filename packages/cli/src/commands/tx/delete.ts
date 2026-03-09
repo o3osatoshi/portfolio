@@ -1,7 +1,7 @@
 import { stdin, stdout } from "node:process";
 import { createInterface } from "node:readline/promises";
 
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { errAsync, ok, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
@@ -64,10 +64,11 @@ export function runTxDelete(
   }
 
   if (confirmed) {
-    return deleteTransaction(transactionId).map(() => {
-      printSuccessMessage("tx.delete", "Deleted.", outputMode);
-      return undefined;
-    });
+    return deleteTransaction(transactionId)
+      .andTee(() => {
+        printSuccessMessage("tx.delete", "Deleted.", outputMode);
+      })
+      .map(() => undefined);
   }
 
   return ResultAsync.fromPromise(
@@ -94,13 +95,14 @@ export function runTxDelete(
   ).andThen((answer) => {
     if (!["y", "yes"].includes(answer.trim().toLowerCase())) {
       printSuccessMessage("tx.delete", "Canceled.", outputMode);
-      return okAsync(undefined);
+      return ok(undefined);
     }
 
-    return deleteTransaction(transactionId).map(() => {
-      printSuccessMessage("tx.delete", "Deleted.", outputMode);
-      return undefined;
-    });
+    return deleteTransaction(transactionId)
+      .andTee(() => {
+        printSuccessMessage("tx.delete", "Deleted.", outputMode);
+      })
+      .map(() => undefined);
   });
 }
 

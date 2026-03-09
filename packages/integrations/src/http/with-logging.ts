@@ -64,7 +64,7 @@ export function withLogging(
     const startedAt = Date.now();
 
     return next(request)
-      .map((res) => {
+      .andTee((res) => {
         const durationMs = Math.max(0, Date.now() - startedAt);
 
         emitMetrics({
@@ -89,10 +89,8 @@ export function withLogging(
             logger.warn("http_client_warn", attributes);
           }
         }
-
-        return res;
       })
-      .mapErr((error) => {
+      .orTee((error) => {
         const durationMs = Math.max(0, Date.now() - startedAt);
 
         emitMetrics({
@@ -116,8 +114,6 @@ export function withLogging(
         } else {
           logger.warn("http_client_warn", attributes);
         }
-
-        return error;
       });
   };
 }

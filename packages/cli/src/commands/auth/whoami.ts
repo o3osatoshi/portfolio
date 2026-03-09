@@ -8,15 +8,16 @@ import { fetchAccessTokenPrincipal } from "../../services/auth/principal-api.ser
 export function runAuthWhoami(
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
-  return fetchAccessTokenPrincipal().map((principal) => {
-    printSuccessData("auth.whoami", principal, outputMode, (data) => {
-      const serialized = encode(data, { space: 2 });
-      if (serialized.isErr()) {
-        console.log(String(data));
-        return;
-      }
-      console.log(serialized.value);
-    });
-    return undefined;
-  });
+  return fetchAccessTokenPrincipal()
+    .andTee((principal) => {
+      printSuccessData("auth.whoami", principal, outputMode, (data) => {
+        const serialized = encode(data, { space: 2 });
+        if (serialized.isErr()) {
+          console.log(String(data));
+          return;
+        }
+        console.log(serialized.value);
+      });
+    })
+    .map(() => undefined);
 }

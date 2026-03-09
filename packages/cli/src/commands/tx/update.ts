@@ -61,8 +61,9 @@ export function runTxUpdate(
       profitLoss: parsed.value.profitLoss,
       type: parsed.value.type,
     }),
-  ).map(() => {
-    printSuccessMessage("tx.update", "Updated.", outputMode);
-    return undefined;
-  });
+  )
+    .andTee(() => {
+      printSuccessMessage("tx.update", "Updated.", outputMode);
+    })
+    .map(() => undefined);
 }
