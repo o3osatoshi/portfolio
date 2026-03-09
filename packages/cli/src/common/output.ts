@@ -1,35 +1,35 @@
 import { encode, omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import {
-  type CliErrorPayload,
+  type FailurePayload,
   toFailureMessage,
   toFailurePayload,
 } from "./error-message";
 
-export const cliOutputVersion = 1;
+export const OutputVersion = 1;
 
-export type CliFailureJson = {
+export type FailureJson = {
   command?: string;
-  error: CliErrorPayload["error"];
-  meta: CliOutputMeta;
+  error: FailurePayload["error"];
+  meta: OutputMeta;
   ok: false;
-};
-
-export type CliSuccessJson = {
-  command: string;
-  message?: string;
-  meta: CliOutputMeta;
-  ok: true;
-  value: unknown;
 };
 
 export type OutputMode = "json" | "text";
 
-type CliOutputMeta = {
-  version: typeof cliOutputVersion;
+export type SuccessJson = {
+  command: string;
+  message?: string;
+  meta: OutputMeta;
+  ok: true;
+  value: unknown;
 };
 
-type CliPrintOptions = {
+type OutputMeta = {
+  version: typeof OutputVersion;
+};
+
+type PrintOptions = {
   debug?: boolean | undefined;
 };
 
@@ -37,7 +37,7 @@ export function printFailure(
   error: RichError,
   outputMode: OutputMode,
   command?: string,
-  options: CliPrintOptions = {},
+  options: PrintOptions = {},
 ): void {
   switch (outputMode) {
     case "text":
@@ -45,13 +45,13 @@ export function printFailure(
       return;
     case "json": {
       const basePayload = toFailurePayload(error, { debug: options.debug });
-      const payload: CliFailureJson = {
+      const payload: FailureJson = {
         ...omitUndefined({
           command,
         }),
         error: basePayload.error,
         meta: {
-          version: cliOutputVersion,
+          version: OutputVersion,
         },
         ok: false,
       };
@@ -105,13 +105,13 @@ function printSuccessJson(
     case "text":
       return;
     case "json": {
-      const payload: CliSuccessJson = {
+      const payload: SuccessJson = {
         command: result.command,
         ...omitUndefined({
           message: result.message,
         }),
         meta: {
-          version: cliOutputVersion,
+          version: OutputVersion,
         },
         ok: true,
         value: result.value,

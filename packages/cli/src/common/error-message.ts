@@ -4,7 +4,7 @@ import {
   type ValidationIssue,
 } from "@o3osatoshi/toolkit";
 
-export type CliErrorPayload = {
+export type FailurePayload = {
   error: {
     action?: string | undefined;
     code?: string | undefined;
@@ -17,13 +17,13 @@ export type CliErrorPayload = {
   ok: false;
 };
 
-type CliErrorRenderOptions = {
+type FailureRenderOptions = {
   debug?: boolean | undefined;
 };
 
 export function toFailureMessage(
   error: RichError,
-  options: CliErrorRenderOptions = {},
+  options: FailureRenderOptions = {},
 ): string {
   const message = toFailureShortMessage(error);
   const baseMessage = !error.code ? message : `${message} (code=${error.code})`;
@@ -36,23 +36,23 @@ export function toFailureMessage(
     return baseMessage;
   }
 
-  const lines = [baseMessage, "Details:"];
+  const messages = [baseMessage, "Details:"];
   for (const issue of issues) {
-    lines.push(`- ${issue.path}: ${issue.message} (code=${issue.code})`);
+    messages.push(`- ${issue.path}: ${issue.message} (code=${issue.code})`);
   }
 
   const hint = error.details?.hint?.trim();
   if (hint) {
-    lines.push(`Try: ${hint}`);
+    messages.push(`Try: ${hint}`);
   }
 
-  return lines.join("\n");
+  return messages.join("\n");
 }
 
 export function toFailurePayload(
   error: RichError,
-  options: CliErrorRenderOptions = {},
-): CliErrorPayload {
+  options: FailureRenderOptions = {},
+): FailurePayload {
   const issues = options.debug ? extractValidationIssues(error) : [];
 
   return {

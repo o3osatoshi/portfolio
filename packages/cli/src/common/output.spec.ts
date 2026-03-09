@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import {
-  cliOutputVersion,
+  OutputVersion,
   printFailure,
   printSuccessData,
   printSuccessMessage,
@@ -33,7 +33,7 @@ describe("common/output", () => {
     expect(parsed).toEqual({
       command: "tx.list",
       meta: {
-        version: cliOutputVersion,
+        version: OutputVersion,
       },
       ok: true,
       value: [{ id: "tx-1" }],
@@ -56,7 +56,7 @@ describe("common/output", () => {
       command: "auth.logout",
       message: "Logged out.",
       meta: {
-        version: cliOutputVersion,
+        version: OutputVersion,
       },
       ok: true,
       value: null,
@@ -90,7 +90,7 @@ describe("common/output", () => {
     expect(parsed.ok).toBe(false);
     expect(parsed.error.code).toBe("CLI_COMMAND_INVALID_ARGUMENT");
     expect(parsed.error.message).toBe("tx delete requires --id");
-    expect(parsed.meta.version).toBe(cliOutputVersion);
+    expect(parsed.meta.version).toBe(OutputVersion);
   });
 
   it("includes validation issues in json envelope only when debug is enabled", () => {
