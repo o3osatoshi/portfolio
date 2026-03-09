@@ -2,21 +2,19 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { requestHttp } from "../../common/http/http-request";
-import { requestHttpJsonWithParser } from "../../common/http/http-response";
+import { requestParsedJson } from "../../common/http/http-response";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
   type OidcDiscoveryResponse,
   oidcDiscoveryResponseSchema,
 } from "./contracts/oidc.schema";
-import type { OidcErrorOptions } from "./oidc-error";
 
 export function discover(
   issuer: string,
   errorCode: string,
 ): ResultAsync<OidcDiscoveryResponse, RichError> {
   const normalizedIssuer = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  return requestHttpJsonWithParser(
+  return requestParsedJson(
     `${normalizedIssuer}/.well-known/openid-configuration`,
     undefined,
     {
@@ -40,12 +38,4 @@ export function discover(
       },
     },
   );
-}
-
-export function oidcFetch(
-  url: string,
-  init: RequestInit | undefined,
-  options: OidcErrorOptions,
-): ResultAsync<Response, RichError> {
-  return requestHttp(url, init, options);
 }

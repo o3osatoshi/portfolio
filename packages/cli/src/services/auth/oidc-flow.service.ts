@@ -6,7 +6,7 @@ import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http-request";
 import {
   expectOkHttpResponse,
-  requestHttpJsonWithParser,
+  requestParsedJson,
 } from "../../common/http/http-response";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
@@ -58,7 +58,7 @@ export function unsafeRefreshTokens(
         refresh_token: refreshToken,
       });
 
-      return requestHttpJsonWithParser(
+      return requestParsedJson(
         discovery.token_endpoint,
         {
           body,

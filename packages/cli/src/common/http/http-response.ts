@@ -8,7 +8,7 @@ import {
   requestHttp,
 } from "./http-request";
 
-export type HttpJsonParser<T> = (input: unknown) => Result<T, RichError>;
+export type ParsedJsonParser<T> = (input: unknown) => Result<T, RichError>;
 
 export function decodeHttpJson(
   text: string,
@@ -45,14 +45,6 @@ export function readHttpJson(
   );
 }
 
-export function readHttpJsonWithParser<T>(
-  response: Response,
-  options: HttpErrorOptions,
-  parser: HttpJsonParser<T>,
-): ResultAsync<T, RichError> {
-  return readHttpJson(response, options).andThen(parser);
-}
-
 export function readHttpText(
   response: Response,
   options: HttpErrorOptions,
@@ -62,11 +54,19 @@ export function readHttpText(
   );
 }
 
-export function requestHttpJsonWithParser<T>(
+export function readParsedJson<T>(
+  response: Response,
+  options: HttpErrorOptions,
+  parser: ParsedJsonParser<T>,
+): ResultAsync<T, RichError> {
+  return readHttpJson(response, options).andThen(parser);
+}
+
+export function requestParsedJson<T>(
   url: string,
   init: RequestInit | undefined,
   options: {
-    parser: HttpJsonParser<T>;
+    parser: ParsedJsonParser<T>;
     read: HttpErrorOptions;
     request: HttpErrorOptions;
   },
@@ -74,6 +74,6 @@ export function requestHttpJsonWithParser<T>(
   return requestHttp(url, init, options.request)
     .andThen((response) => expectOkHttpResponse(response, options.request))
     .andThen((response) =>
-      readHttpJsonWithParser(response, options.read, options.parser),
+      readParsedJson(response, options.read, options.parser),
     );
 }

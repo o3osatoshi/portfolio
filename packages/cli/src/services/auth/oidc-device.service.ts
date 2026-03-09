@@ -7,7 +7,7 @@ import { requestHttp } from "../../common/http/http-request";
 import {
   decodeHttpJson,
   readHttpText,
-  requestHttpJsonWithParser,
+  requestParsedJson,
 } from "../../common/http/http-response";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
@@ -44,7 +44,7 @@ export function loginByDeviceCode(
       "openid profile email offline_access transactions:read transactions:write",
   });
 
-  return requestHttpJsonWithParser(
+  return requestParsedJson(
     discovery.device_authorization_endpoint,
     {
       body: requestBody,

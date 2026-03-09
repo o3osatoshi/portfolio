@@ -12,7 +12,7 @@ import { err, ok, ResultAsync } from "neverthrow";
 import { isRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import { requestHttpJsonWithParser } from "../../common/http/http-response";
+import { requestParsedJson } from "../../common/http/http-response";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -223,7 +223,7 @@ export function loginByPkce(
             redirect_uri: redirectUri,
           });
 
-          return requestHttpJsonWithParser(
+          return requestParsedJson(
             discovery.token_endpoint,
             {
               body,

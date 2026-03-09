@@ -7,9 +7,9 @@ import {
   decodeHttpJson,
   expectOkHttpResponse,
   readHttpJson,
-  readHttpJsonWithParser,
   readHttpText,
-  requestHttpJsonWithParser,
+  readParsedJson,
+  requestParsedJson,
 } from "./http-response";
 
 describe("common/http/http-response", () => {
@@ -83,7 +83,7 @@ describe("common/http/http-response", () => {
   it("returns parsed value when JSON and parser both succeed", async () => {
     const parser = vi.fn((input: unknown) => ok({ value: input }));
 
-    const result = await readHttpJsonWithParser(
+    const result = await readParsedJson(
       new Response(JSON.stringify({ ok: true }), {
         headers: { "content-type": "application/json" },
         status: 200,
@@ -118,7 +118,7 @@ describe("common/http/http-response", () => {
       ),
     );
 
-    const result = await readHttpJsonWithParser(
+    const result = await readParsedJson(
       new Response(JSON.stringify({ ok: true }), {
         headers: { "content-type": "application/json" },
         status: 200,
@@ -141,7 +141,7 @@ describe("common/http/http-response", () => {
       vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
     );
 
-    const result = await requestHttpJsonWithParser(
+    const result = await requestParsedJson(
       "https://example.com/data",
       { method: "GET" },
       {
@@ -174,7 +174,7 @@ describe("common/http/http-response", () => {
         .mockResolvedValue(new Response("Forbidden", { status: 403 })),
     );
 
-    const result = await requestHttpJsonWithParser(
+    const result = await requestParsedJson(
       "https://example.com/data",
       { method: "GET" },
       {
@@ -209,7 +209,7 @@ describe("common/http/http-response", () => {
 
     vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(response));
 
-    const result = await requestHttpJsonWithParser(
+    const result = await requestParsedJson(
       "https://example.com/data",
       { method: "GET" },
       {
