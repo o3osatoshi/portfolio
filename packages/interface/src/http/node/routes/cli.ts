@@ -21,7 +21,6 @@ import {
   extractBearerToken,
 } from "@repo/auth";
 import { Hono } from "hono";
-import { okAsync } from "neverthrow";
 
 import { respond, respondAsync, respondZodError } from "../../core";
 import type { ContextEnv } from "../../core/types";
@@ -48,11 +47,11 @@ export function buildCliRoutes(deps: Deps) {
       return await next();
     })
     .get("/v1/me", (c) => {
-      return respondAsync<AccessTokenPrincipal>(c)(
+      return respond<AccessTokenPrincipal>(c)(
         authorizeScope(
           c.get("accessTokenPrincipal"),
           CLI_SCOPES.transactionsRead,
-        ).asyncAndThen((principal) => okAsync(principal)),
+        ),
       );
     })
     .get("/v1/transactions", (c) => {

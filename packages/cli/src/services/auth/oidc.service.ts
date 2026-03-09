@@ -7,7 +7,7 @@ import {
 } from "node:http";
 import { promisify } from "node:util";
 
-import { errAsync, okAsync, Result, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync, Result, ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import {
@@ -449,8 +449,8 @@ function loginByPkce(
         disposeCallbackListener?.();
 
         return closeServerResult(server)
-          .orElse(() => okAsync(undefined))
-          .andThen(() => errAsync(cause));
+          .orElse(() => ok(undefined))
+          .andThen(() => err(cause));
       });
   });
 }

@@ -1,4 +1,4 @@
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync, ResultAsync } from "neverthrow";
 
 import {
   newRichError,
@@ -72,9 +72,9 @@ export function requestAuthenticatedApi(
 
           if (response.status === 401) {
             return clearTokenSet()
-              .orElse(() => okAsync(undefined))
+              .orElse(() => ok(undefined))
               .andThen(() =>
-                errAsync(
+                err(
                   newRichError({
                     code: parsed?.code ?? cliErrorCodes.CLI_API_UNAUTHORIZED,
                     details: {
@@ -156,9 +156,9 @@ function ensureAccessToken(
     return refreshToken(env.oidcConfig, tokenSet.refresh_token)
       .orElse((refreshError) =>
         clearTokenSet()
-          .orElse(() => okAsync(undefined))
+          .orElse(() => ok(undefined))
           .andThen(() =>
-            errAsync(
+            err(
               newRichError({
                 cause: refreshError,
                 code: cliErrorCodes.CLI_API_UNAUTHORIZED,

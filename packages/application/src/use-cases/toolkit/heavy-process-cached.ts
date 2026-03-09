@@ -1,5 +1,5 @@
 import type { CacheStore } from "@repo/domain";
-import { okAsync, type ResultAsync } from "neverthrow";
+import { ok, type ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
@@ -36,10 +36,10 @@ export class HeavyProcessCachedUseCase {
   execute(): ResultAsync<HeavyProcessCachedResponse, RichError> {
     return this.cacheStore
       .get<HeavyProcessResponse>(CACHE_KEY_PREFIX)
-      .orElse(() => okAsync(null))
+      .orElse(() => ok(null))
       .andThen((value) => {
         if (value !== null) {
-          return okAsync({ ...value, cached: true });
+          return ok({ ...value, cached: true });
         }
 
         return this.heavyProcess.execute().andThen((heavyProcess) =>
@@ -47,7 +47,7 @@ export class HeavyProcessCachedUseCase {
             .set(CACHE_KEY_PREFIX, heavyProcess, {
               ttlMs: CACHE_TTL_MS,
             })
-            .orElse(() => okAsync(null))
+            .orElse(() => ok(null))
             .map(() => ({ ...heavyProcess, cached: false })),
         );
       })

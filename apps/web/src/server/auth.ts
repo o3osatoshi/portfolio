@@ -1,7 +1,7 @@
 import "server-only";
 
 import { getUserId as authGetUserId } from "@repo/auth";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 import { cookies } from "next/headers";
 
 import { env } from "@/env/server";
@@ -44,8 +44,8 @@ export function getUserId(): ResultAsync<string, RichError> {
     )
     .andThen((userId) =>
       userId
-        ? okAsync(userId)
-        : errAsync(
+        ? ok(userId)
+        : err(
             newWebError({
               action: "DecodeAuthToken",
               code: webErrorCodes.AUTH_USER_ID_MISSING,
