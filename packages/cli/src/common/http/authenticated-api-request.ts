@@ -6,7 +6,7 @@ import {
   type RichError,
 } from "@o3osatoshi/toolkit";
 
-import { refreshToken } from "../../services/auth/oidc.service";
+import { refreshTokens } from "../../services/auth/oidc.service";
 import {
   clearTokenSet,
   readTokenSet,
@@ -153,7 +153,7 @@ function ensureAccessToken(
       );
     }
 
-    return refreshToken(env.oidcConfig, tokenSet.refresh_token)
+    return refreshTokens(env.oidcConfig, tokenSet.refresh_token)
       .orElse((refreshError) =>
         clearTokenSet()
           .orElse(() => ok(undefined))

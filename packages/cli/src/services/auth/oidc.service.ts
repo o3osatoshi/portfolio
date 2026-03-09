@@ -116,11 +116,11 @@ export function oidcLogin(
   );
 }
 
-export function refreshToken(
+export function refreshTokens(
   config: OidcConfig,
-  refreshTokenValue: string,
+  refreshToken: string,
 ): ResultAsync<OidcTokenSet, RichError> {
-  return refreshTokenUnsafe(config, refreshTokenValue).mapErr((cause) =>
+  return unsafeRefreshTokens(config, refreshToken).mapErr((cause) =>
     toRichError(cause, {
       code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
       details: {
@@ -136,9 +136,9 @@ export function refreshToken(
 
 export function revokeRefreshToken(
   config: OidcConfig,
-  refreshTokenValue: string,
+  refreshToken: string,
 ): ResultAsync<void, RichError> {
-  return revokeRefreshTokenUnsafe(config, refreshTokenValue).mapErr((cause) =>
+  return revokeRefreshTokenUnsafe(config, refreshToken).mapErr((cause) =>
     toRichError(cause, {
       code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
       details: {
@@ -609,45 +609,9 @@ function readText(response: Response): ResultAsync<string, unknown> {
   return ResultAsync.fromPromise(response.text(), (cause) => cause);
 }
 
-function refreshTokenUnsafe(
-  config: OidcConfig,
-  refreshTokenValue: string,
-): ResultAsync<OidcTokenSet, unknown> {
-  return discover(config.issuer, cliErrorCodes.CLI_AUTH_REFRESH_FAILED).andThen(
-    (discovery) => {
-      const body = new URLSearchParams({
-        client_id: config.clientId,
-        grant_type: "refresh_token",
-        refresh_token: refreshTokenValue,
-      });
-
-      return fetchResponse(discovery.token_endpoint, {
-        body,
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-        },
-        method: "POST",
-      })
-        .andThen((response) =>
-          expectOkResponse(response, "Refresh token request failed"),
-        )
-        .andThen((response) => readJson(response))
-        .andThen((json) =>
-          parseWithSchemaAsync(oidcTokenResponseSchema, json, {
-            action: "DecodeOidcTokenResponseFromRefreshFlow",
-            code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-            context: "OIDC token response",
-            fallbackHint: "Run `o3o auth login` and retry.",
-          }),
-        )
-        .map((token) => toTokenSetWithExpiry(token));
-    },
-  );
-}
-
 function revokeRefreshTokenUnsafe(
   config: OidcConfig,
-  refreshTokenValue: string,
+  refreshToken: string,
 ): ResultAsync<void, unknown> {
   return discover(config.issuer, cliErrorCodes.CLI_AUTH_REVOKE_FAILED).andThen(
     (discovery) => {
@@ -657,7 +621,7 @@ function revokeRefreshTokenUnsafe(
 
       const body = new URLSearchParams({
         client_id: config.clientId,
-        token: refreshTokenValue,
+        token: refreshToken,
         token_type_hint: "refresh_token",
       });
 
@@ -797,6 +761,42 @@ function unsafeOidcLogin(
             return loginByDeviceCode(config, discovery, options);
           });
       }
+    },
+  );
+}
+
+function unsafeRefreshTokens(
+  config: OidcConfig,
+  refreshToken: string,
+): ResultAsync<OidcTokenSet, unknown> {
+  return discover(config.issuer, cliErrorCodes.CLI_AUTH_REFRESH_FAILED).andThen(
+    (discovery) => {
+      const body = new URLSearchParams({
+        client_id: config.clientId,
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      });
+
+      return fetchResponse(discovery.token_endpoint, {
+        body,
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        method: "POST",
+      })
+        .andThen((response) =>
+          expectOkResponse(response, "Refresh token request failed"),
+        )
+        .andThen((response) => readJson(response))
+        .andThen((json) =>
+          parseWithSchemaAsync(oidcTokenResponseSchema, json, {
+            action: "DecodeOidcTokenResponseFromRefreshFlow",
+            code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+            context: "OIDC token response",
+            fallbackHint: "Run `o3o auth login` and retry.",
+          }),
+        )
+        .map((token) => toTokenSetWithExpiry(token));
     },
   );
 }

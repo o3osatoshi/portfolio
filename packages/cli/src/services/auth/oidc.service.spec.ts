@@ -20,7 +20,7 @@ vi.mock("node:child_process", () => ({
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import type { OidcConfig } from "../../common/types";
-import { oidcLogin, refreshToken, revokeRefreshToken } from "./oidc.service";
+import { oidcLogin, refreshTokens, revokeRefreshToken } from "./oidc.service";
 
 const config: OidcConfig = {
   audience: "https://api.o3o.app",
@@ -62,7 +62,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const tokenResult = await refreshToken(config, "old-refresh-token");
+    const tokenResult = await refreshTokens(config, "old-refresh-token");
 
     expect(tokenResult.isOk()).toBe(true);
     if (tokenResult.isErr()) throw new Error("Expected ok result");
@@ -85,7 +85,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await refreshToken(config, "bad-refresh-token");
+    const result = await refreshTokens(config, "bad-refresh-token");
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);
@@ -112,7 +112,7 @@ describe("services/auth/oidc.service", () => {
 
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await refreshToken(config, "old-refresh-token");
+    const result = await refreshTokens(config, "old-refresh-token");
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_REFRESH_FAILED);

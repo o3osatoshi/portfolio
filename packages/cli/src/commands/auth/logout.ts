@@ -16,14 +16,14 @@ export function runAuthLogout(
   return readTokenSet()
     .orElse(() => ok(null))
     .andThen((token) => {
-      const refreshTokenValue = token?.refresh_token;
-      if (!refreshTokenValue) {
+      const refreshToken = token?.refresh_token;
+      if (!refreshToken) {
         return ok(undefined);
       }
 
       return resolveRuntimeEnv()
         .asyncAndThen((env) =>
-          revokeRefreshToken(env.oidcConfig, refreshTokenValue).orElse(() =>
+          revokeRefreshToken(env.oidcConfig, refreshToken).orElse(() =>
             ok(undefined),
           ),
         )

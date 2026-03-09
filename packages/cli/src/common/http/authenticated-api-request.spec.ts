@@ -6,7 +6,7 @@ import { cliErrorCodes } from "../error-catalog";
 const h = vi.hoisted(() => ({
   clearTokenSetMock: vi.fn(),
   readTokenSetMock: vi.fn(),
-  refreshTokenMock: vi.fn(),
+  refreshTokensMock: vi.fn(),
   resolveRuntimeEnvMock: vi.fn(),
   writeTokenSetMock: vi.fn(),
 }));
@@ -16,7 +16,7 @@ vi.mock("../runtime-env", () => ({
 }));
 
 vi.mock("../../services/auth/oidc.service", () => ({
-  refreshToken: h.refreshTokenMock,
+  refreshTokens: h.refreshTokensMock,
 }));
 
 vi.mock("../../services/auth/token-store.service", () => ({
@@ -53,7 +53,7 @@ describe("common/http/authenticated-api-request", () => {
     );
     h.writeTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
     h.clearTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.refreshTokenMock.mockReset();
+    h.refreshTokensMock.mockReset();
   });
 
   afterEach(() => {
@@ -219,7 +219,7 @@ describe("common/http/authenticated-api-request", () => {
         token_type: "Bearer",
       }),
     );
-    h.refreshTokenMock.mockReturnValueOnce(
+    h.refreshTokensMock.mockReturnValueOnce(
       okAsync({
         access_token: "new-access-token",
         expires_at: Math.floor(Date.now() / 1000) + 3600,
@@ -246,7 +246,7 @@ describe("common/http/authenticated-api-request", () => {
     });
 
     expect(result.isOk()).toBe(true);
-    expect(h.refreshTokenMock).toHaveBeenCalledWith(
+    expect(h.refreshTokensMock).toHaveBeenCalledWith(
       {
         audience: "https://api.o3o.app",
         clientId: "cli-client-id",
@@ -314,7 +314,7 @@ describe("common/http/authenticated-api-request", () => {
         refresh_token: "refresh-token",
       }),
     );
-    h.refreshTokenMock.mockReturnValueOnce(
+    h.refreshTokensMock.mockReturnValueOnce(
       errAsync(new Error("boom") as never),
     );
 
