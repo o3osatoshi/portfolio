@@ -1,8 +1,9 @@
 import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
+import { join } from "node:path";
 
-import { err, errAsync, ok, type Result, ResultAsync } from "neverthrow";
+import { errAsync, ResultAsync } from "neverthrow";
 
 import {
   encode,
@@ -37,19 +38,15 @@ type KeychainReadResult =
   | { available: true; token: null | OidcTokenSet };
 type KeychainWriteResult = { cause: unknown; ok: false } | { ok: true };
 type MaybePromise<T> = Promise<T> | T;
-type ResolvedTokenStoreConfig = {
-  allowFileFallback: boolean;
-  backend: TokenStoreBackend;
-  tokenStoreFilePath: string;
-};
 type TokenStoreBackend = TokenStoreEnv["tokenStoreBackend"];
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
-  const tokenStoreConfig = getResolvedTokenStoreConfig();
-  if (tokenStoreConfig.isErr()) {
-    return errAsync(tokenStoreConfig.error);
+  const env = resolveTokenStoreEnv();
+  if (env.isErr()) {
+    return errAsync(env.error);
   }
-  const { backend, tokenStoreFilePath } = tokenStoreConfig.value;
+  const { tokenStoreBackend: backend } = env.value;
+  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
 
   return ResultAsync.fromPromise(
     (async () => {
@@ -81,12 +78,12 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
 }
 
 export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
-  const tokenStoreConfig = getResolvedTokenStoreConfig();
-  if (tokenStoreConfig.isErr()) {
-    return errAsync(tokenStoreConfig.error);
+  const env = resolveTokenStoreEnv();
+  if (env.isErr()) {
+    return errAsync(env.error);
   }
-  const { allowFileFallback, backend, tokenStoreFilePath } =
-    tokenStoreConfig.value;
+  const { allowFileFallback, tokenStoreBackend: backend } = env.value;
+  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
 
   return ResultAsync.fromPromise(
     (async () => {
@@ -173,12 +170,12 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
 export function writeTokenSet(
   tokenSet: OidcTokenSet,
 ): ResultAsync<void, RichError> {
-  const tokenStoreConfig = getResolvedTokenStoreConfig();
-  if (tokenStoreConfig.isErr()) {
-    return errAsync(tokenStoreConfig.error);
+  const env = resolveTokenStoreEnv();
+  if (env.isErr()) {
+    return errAsync(env.error);
   }
-  const { allowFileFallback, backend, tokenStoreFilePath } =
-    tokenStoreConfig.value;
+  const { allowFileFallback, tokenStoreBackend: backend } = env.value;
+  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
 
   const parsed = makeCliSchemaParser(oidcTokenSetSchema, {
     action: "WriteTokenSet",
@@ -281,22 +278,6 @@ function getKeychainEntry(): Promise<KeychainEntry> {
     });
   }
   return keychainEntryPromise;
-}
-
-function getResolvedTokenStoreConfig(): Result<
-  ResolvedTokenStoreConfig,
-  RichError
-> {
-  const env = resolveTokenStoreEnv();
-  if (env.isErr()) {
-    return err(env.error);
-  }
-
-  return ok({
-    allowFileFallback: env.value.allowFileFallback,
-    backend: env.value.tokenStoreBackend,
-    tokenStoreFilePath: resolveTokenStoreFilePath(env.value),
-  });
 }
 
 function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
