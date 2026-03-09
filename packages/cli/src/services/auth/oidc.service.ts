@@ -8,9 +8,9 @@ import { remapOidcError } from "./oidc-error";
 import {
   type OidcLoginMode,
   type OidcLoginOptions,
-  revokeRefreshTokenUnsafe,
   unsafeOidcLogin,
   unsafeRefreshTokens,
+  unsafeRevokeRefreshToken,
 } from "./oidc-flow.service";
 
 export type { OidcLoginMode, OidcLoginOptions } from "./oidc-flow.service";
@@ -48,7 +48,7 @@ export function revokeRefreshToken(
   config: OidcConfig,
   refreshToken: string,
 ): ResultAsync<void, RichError> {
-  return revokeRefreshTokenUnsafe(config, refreshToken).mapErr((cause) =>
+  return unsafeRevokeRefreshToken(config, refreshToken).mapErr((cause) =>
     remapOidcError(cause, {
       action: "RevokeOidcRefreshToken",
       code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,

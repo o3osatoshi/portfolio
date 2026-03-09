@@ -22,51 +22,6 @@ export type OidcLoginOptions = {
   onInfo?: ((message: string) => void) | undefined;
 };
 
-export function revokeRefreshTokenUnsafe(
-  config: OidcConfig,
-  refreshToken: string,
-): ResultAsync<void, RichError> {
-  return discover(config.issuer, cliErrorCodes.CLI_AUTH_REVOKE_FAILED).andThen(
-    (discovery) => {
-      if (!discovery.revocation_endpoint) {
-        return okAsync(undefined);
-      }
-
-      const body = new URLSearchParams({
-        client_id: config.clientId,
-        token: refreshToken,
-        token_type_hint: "refresh_token",
-      });
-
-      return fetchResponse(
-        discovery.revocation_endpoint,
-        {
-          body,
-          headers: {
-            "content-type": "application/x-www-form-urlencoded",
-          },
-          method: "POST",
-        },
-        {
-          action: "RevokeOidcRefreshToken",
-          code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
-          kind: "BadGateway",
-          reason: "Revocation request failed.",
-        },
-      )
-        .andThen((response) =>
-          expectOkResponse(response, {
-            action: "RevokeOidcRefreshToken",
-            code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
-            kind: "BadGateway",
-            reason: "Revocation request failed.",
-          }),
-        )
-        .map(() => undefined);
-    },
-  );
-}
-
 export function unsafeOidcLogin(
   config: OidcConfig,
   mode: OidcLoginMode,
@@ -147,6 +102,51 @@ export function unsafeRefreshTokens(
             ? okAsync(toTokenSetWithExpiry(parsed.value))
             : errAsync(parsed.error);
         });
+    },
+  );
+}
+
+export function unsafeRevokeRefreshToken(
+  config: OidcConfig,
+  refreshToken: string,
+): ResultAsync<void, RichError> {
+  return discover(config.issuer, cliErrorCodes.CLI_AUTH_REVOKE_FAILED).andThen(
+    (discovery) => {
+      if (!discovery.revocation_endpoint) {
+        return okAsync(undefined);
+      }
+
+      const body = new URLSearchParams({
+        client_id: config.clientId,
+        token: refreshToken,
+        token_type_hint: "refresh_token",
+      });
+
+      return fetchResponse(
+        discovery.revocation_endpoint,
+        {
+          body,
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+          },
+          method: "POST",
+        },
+        {
+          action: "RevokeOidcRefreshToken",
+          code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
+          kind: "BadGateway",
+          reason: "Revocation request failed.",
+        },
+      )
+        .andThen((response) =>
+          expectOkResponse(response, {
+            action: "RevokeOidcRefreshToken",
+            code: cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
+            kind: "BadGateway",
+            reason: "Revocation request failed.",
+          }),
+        )
+        .map(() => undefined);
     },
   );
 }
