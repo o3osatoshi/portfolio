@@ -9,7 +9,7 @@ import {
   oidcDiscoveryResponseSchema,
 } from "./contracts/oidc.schema";
 
-export function discover(
+export function requestOidcDiscovery(
   issuer: string,
   errorCode: string,
 ): ResultAsync<OidcDiscoveryResponse, RichError> {
