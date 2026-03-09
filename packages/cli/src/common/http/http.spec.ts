@@ -9,12 +9,40 @@ import {
   readHttpJson,
   readHttpText,
   readParsedJson,
+  requestHttp,
   requestParsedJson,
-} from "./http-response";
+} from "./http";
 
-describe("common/http/http-response", () => {
+describe("common/http/http", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("returns RichError when fetch fails", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
+    );
+
+    const result = await requestHttp(
+      "https://example.com/data",
+      { method: "GET" },
+      {
+        action: "FetchExternalApi",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to reach the API endpoint.",
+      },
+    );
+
+    expect(result.isErr()).toBe(true);
+    if (result.isOk()) throw new Error("Expected err result");
+    expect(result.error.code).toBe("CLI_API_REQUEST_FAILED");
+    expect(result.error.details?.action).toBe("FetchExternalApi");
+    expect(result.error.details?.reason).toBe(
+      "Failed to reach the API endpoint.",
+    );
+    expect(result.error.kind).toBe("BadGateway");
   });
 
   it("returns status-aware reason for non-2xx responses", () => {
@@ -135,7 +163,7 @@ describe("common/http/http-response", () => {
     expect(result.isErr()).toBe(true);
   });
 
-  it("returns transport error when fetch fails", async () => {
+  it("returns transport error when parsed request fetch fails", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
@@ -166,7 +194,7 @@ describe("common/http/http-response", () => {
     expect(result.error.details?.action).toBe("RequestCliApi");
   });
 
-  it("returns status error when response is non-2xx during parser-aware request", async () => {
+  it("returns status error when parsed request response is non-2xx", async () => {
     vi.stubGlobal(
       "fetch",
       vi
@@ -201,7 +229,7 @@ describe("common/http/http-response", () => {
     );
   });
 
-  it("returns read error when parser-aware response body cannot be read", async () => {
+  it("returns read error when parsed request body cannot be read", async () => {
     const response = {
       json: () => Promise.reject(new Error("body failed")),
       ok: true,
