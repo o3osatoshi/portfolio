@@ -1,4 +1,11 @@
-import { err, errAsync, ok, okAsync, ResultAsync } from "neverthrow";
+import {
+  err,
+  errAsync,
+  ok,
+  okAsync,
+  type Result,
+  type ResultAsync,
+} from "neverthrow";
 
 import {
   newRichError,
@@ -18,6 +25,8 @@ import { cliErrorCodes } from "../error-catalog";
 import { resolveRuntimeEnv } from "../runtime-env";
 import type { OidcTokenSet, RuntimeEnv } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
+import { requestHttp } from "./http-request";
+import { decodeHttpJson, readHttpText } from "./http-response";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
@@ -32,41 +41,29 @@ export function requestAuthenticatedApi(
       const headers = new Headers(init.headers);
       headers.set("authorization", `Bearer ${token.access_token}`);
 
-      return ResultAsync.fromPromise(
-        fetch(url, {
+      return requestHttp(
+        url,
+        {
           ...init,
           headers,
-        }),
-        (cause) =>
-          newRichError({
-            cause,
-            code: cliErrorCodes.CLI_API_REQUEST_FAILED,
-            details: {
-              action: "RequestCliApi",
-              reason: "Failed to reach the API endpoint.",
-            },
-            isOperational: true,
-            kind: "BadGateway",
-            layer: "Presentation",
-          }),
+        },
+        {
+          action: "RequestCliApi",
+          code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+          kind: "BadGateway",
+          reason: "Failed to reach the API endpoint.",
+        },
       ).andThen((response) => {
         if (response.ok) {
           return parseSuccessResponseBody(response, init.method);
         }
 
-        return ResultAsync.fromPromise(response.text(), (cause) =>
-          newRichError({
-            cause,
-            code: cliErrorCodes.CLI_API_REQUEST_FAILED,
-            details: {
-              action: "ReadCliApiErrorResponseBody",
-              reason: "Failed to read API error response body.",
-            },
-            isOperational: true,
-            kind: "BadGateway",
-            layer: "Presentation",
-          }),
-        ).andThen((text) => {
+        return readHttpText(response, {
+          action: "ReadCliApiErrorResponseBody",
+          code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+          kind: "BadGateway",
+          reason: "Failed to read API error response body.",
+        }).andThen((text) => {
           const parsed = parseApiError(text);
           const reason = parsed?.details?.reason;
 
@@ -110,6 +107,14 @@ export function requestAuthenticatedApi(
       });
     }),
   );
+}
+
+export function requestAuthenticatedApiWithParser<T>(
+  path: string,
+  init: RequestInit,
+  parser: (input: unknown) => Result<T, RichError>,
+): ResultAsync<T, RichError> {
+  return requestAuthenticatedApi(path, init).andThen(parser);
 }
 
 function ensureAccessToken(
@@ -228,38 +233,22 @@ function parseSuccessResponseBody(
     return okAsync(undefined);
   }
 
-  return ResultAsync.fromPromise(response.text(), (cause) =>
-    newRichError({
-      cause,
-      code: cliErrorCodes.CLI_API_REQUEST_FAILED,
-      details: {
-        action: "ReadCliApiResponseBody",
-        reason: "Failed to read API response body.",
-      },
-      isOperational: true,
-      kind: "BadGateway",
-      layer: "Presentation",
-    }),
-  ).andThen((text) => {
+  return readHttpText(response, {
+    action: "ReadCliApiResponseBody",
+    code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+    kind: "BadGateway",
+    reason: "Failed to read API response body.",
+  }).andThen((text) => {
     const trimmed = text.trim();
     if (!trimmed) {
       return okAsync(undefined);
     }
 
-    return ResultAsync.fromPromise(
-      (async () => JSON.parse(trimmed) as unknown)(),
-      (cause) =>
-        newRichError({
-          cause,
-          code: cliErrorCodes.CLI_API_REQUEST_FAILED,
-          details: {
-            action: "DecodeCliApiResponseBody",
-            reason: "API response was not valid JSON.",
-          },
-          isOperational: true,
-          kind: "BadGateway",
-          layer: "Presentation",
-        }),
-    );
+    return decodeHttpJson(trimmed, {
+      action: "DecodeCliApiResponseBody",
+      code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+      kind: "BadGateway",
+      reason: "API response was not valid JSON.",
+    });
   });
 }

@@ -2,7 +2,10 @@ import type { ResultAsync } from "neverthrow";
 
 import { encode, makeSchemaParser, type RichError } from "@o3osatoshi/toolkit";
 
-import { requestAuthenticatedApi } from "../../common/http/authenticated-api-request";
+import {
+  requestAuthenticatedApi,
+  requestAuthenticatedApiWithParser,
+} from "../../common/http/authenticated-api-request";
 import {
   transactionListSchema,
   type TransactionResponse,
@@ -12,22 +15,22 @@ import {
 export function createTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<TransactionResponse, RichError> {
-  return encode(payload)
-    .asyncAndThen((serializedPayload) =>
-      requestAuthenticatedApi("/api/cli/v1/transactions", {
+  return encode(payload).asyncAndThen((serializedPayload) =>
+    requestAuthenticatedApiWithParser(
+      "/api/cli/v1/transactions",
+      {
         body: serializedPayload,
         headers: {
           "content-type": "application/json",
         },
         method: "POST",
-      }),
-    )
-    .andThen(
+      },
       makeSchemaParser(transactionSchema, {
         action: "DecodeCreateTransactionResponse",
         layer: "Presentation",
       }),
-    );
+    ),
+  );
 }
 
 export function deleteTransaction(id: string): ResultAsync<void, RichError> {
@@ -43,9 +46,11 @@ export function listTransactions(): ResultAsync<
   TransactionResponse[],
   RichError
 > {
-  return requestAuthenticatedApi("/api/cli/v1/transactions", {
-    method: "GET",
-  }).andThen(
+  return requestAuthenticatedApiWithParser(
+    "/api/cli/v1/transactions",
+    {
+      method: "GET",
+    },
     makeSchemaParser(transactionListSchema, {
       action: "DecodeListTransactionsResponse",
       layer: "Presentation",

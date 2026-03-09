@@ -1,8 +1,11 @@
-import { errAsync, Result, ResultAsync } from "neverthrow";
+import { errAsync, ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
+import { requestHttpJsonWithParser } from "../../common/http/http-json";
+import { requestHttp } from "../../common/http/http-request";
+import { decodeHttpJson, readHttpText } from "../../common/http/http-response";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -13,12 +16,6 @@ import {
   oidcTokenResponseSchema,
 } from "./contracts/oidc.schema";
 import { newOidcError } from "./oidc-error";
-import {
-  expectOkResponse,
-  fetchResponse,
-  readJson,
-  readText,
-} from "./oidc-http";
 import { toTokenSetWithExpiry } from "./oidc-token-set";
 
 export function loginByDeviceCode(
@@ -44,7 +41,7 @@ export function loginByDeviceCode(
       "openid profile email offline_access transactions:read transactions:write",
   });
 
-  return fetchResponse(
+  return requestHttpJsonWithParser(
     discovery.device_authorization_endpoint,
     {
       body: requestBody,
@@ -54,61 +51,44 @@ export function loginByDeviceCode(
       method: "POST",
     },
     {
-      action: "RequestOidcDeviceAuthorization",
-      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-      kind: "BadGateway",
-      reason: "Device authorization failed.",
-    },
-  )
-    .andThen((response) =>
-      expectOkResponse(response, {
-        action: "RequestOidcDeviceAuthorization",
+      parser: makeCliSchemaParser(oidcDeviceAuthorizationResponseSchema, {
+        action: "DecodeOidcDeviceCodeResponse",
         code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-        kind: "BadGateway",
-        reason: "Device authorization failed.",
+        context: "OIDC device authorization response",
+        fallbackHint: "Retry `o3o auth login --mode device`.",
       }),
-    )
-    .andThen((response) =>
-      readJson(response, {
+      read: {
         action: "ReadOidcDeviceAuthorizationResponseBody",
         code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
         kind: "BadGateway",
         reason: "Failed to read OIDC device authorization response body.",
-      }),
-    )
-    .andThen((json) => {
-      const parsed = makeCliSchemaParser(
-        oidcDeviceAuthorizationResponseSchema,
-        {
-          action: "DecodeOidcDeviceCodeResponse",
-          code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-          context: "OIDC device authorization response",
-          fallbackHint: "Retry `o3o auth login --mode device`.",
-        },
-      )(json);
-      return parsed.isOk()
-        ? ResultAsync.fromSafePromise(Promise.resolve(parsed.value))
-        : errAsync(parsed.error);
-    })
-    .andThen((deviceCode) => {
-      const url =
-        deviceCode.verification_uri_complete ?? deviceCode.verification_uri;
-      if (deviceCode.verification_uri_complete) {
-        options?.onInfo?.(`Open this URL to continue login:\n${url}`);
-      } else {
-        options?.onInfo?.(
-          `Open ${deviceCode.verification_uri} and enter code: ${deviceCode.user_code}`,
-        );
-      }
-
-      return pollDeviceToken(
-        config,
-        discovery,
-        deviceCode,
-        deviceCode.interval,
-        Date.now() + deviceCode.expires_in * 1000,
+      },
+      request: {
+        action: "RequestOidcDeviceAuthorization",
+        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+        kind: "BadGateway",
+        reason: "Device authorization failed.",
+      },
+    },
+  ).andThen((deviceCode) => {
+    const url =
+      deviceCode.verification_uri_complete ?? deviceCode.verification_uri;
+    if (deviceCode.verification_uri_complete) {
+      options?.onInfo?.(`Open this URL to continue login:\n${url}`);
+    } else {
+      options?.onInfo?.(
+        `Open ${deviceCode.verification_uri} and enter code: ${deviceCode.user_code}`,
       );
-    });
+    }
+
+    return pollDeviceToken(
+      config,
+      discovery,
+      deviceCode,
+      deviceCode.interval,
+      Date.now() + deviceCode.expires_in * 1000,
+    );
+  });
 }
 
 export function pollDeviceToken(
@@ -136,7 +116,7 @@ export function pollDeviceToken(
       grant_type: "urn:ietf:params:oauth:grant-type:device_code",
     });
 
-    return fetchResponse(
+    return requestHttp(
       discovery.token_endpoint,
       {
         body: tokenBody,
@@ -153,7 +133,7 @@ export function pollDeviceToken(
       },
     )
       .andThen((tokenResponse) =>
-        readText(tokenResponse, {
+        readHttpText(tokenResponse, {
           action: "ReadOidcTokenResponseBody",
           code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
           kind: "BadGateway",
@@ -183,11 +163,7 @@ export function pollDeviceToken(
             context: "OIDC token response",
             fallbackHint: "Retry `o3o auth login --mode device`.",
           })(json);
-          return parsed.isOk()
-            ? ResultAsync.fromSafePromise(
-                Promise.resolve(toTokenSetWithExpiry(parsed.value)),
-              )
-            : errAsync(parsed.error);
+          return parsed.map(toTokenSetWithExpiry);
         }
 
         if (json === null) {
@@ -257,11 +233,12 @@ function parseJsonSafely(text: string): null | unknown {
     return null;
   }
 
-  const parseJson = Result.fromThrowable(
-    (value: string) => JSON.parse(value),
-    () => null,
-  );
-  const parsed = parseJson(trimmed);
+  const parsed = decodeHttpJson(trimmed, {
+    action: "DeserializeOidcTokenResponseBody",
+    code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+    kind: "BadGateway",
+    reason: "Failed to deserialize OIDC token response body.",
+  });
   return parsed.isOk() ? parsed.value : null;
 }
 

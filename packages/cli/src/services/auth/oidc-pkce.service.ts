@@ -7,11 +7,12 @@ import {
 } from "node:http";
 import { promisify } from "node:util";
 
-import { err, ok, okAsync, ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 import { isRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
+import { requestHttpJsonWithParser } from "../../common/http/http-json";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -20,7 +21,6 @@ import {
   pkceCallbackQuerySchema,
 } from "./contracts/oidc.schema";
 import { newOidcError, toReason } from "./oidc-error";
-import { expectOkResponse, fetchResponse, readJson } from "./oidc-http";
 import { toTokenSetWithExpiry } from "./oidc-token-set";
 
 const execFileAsync = promisify(execFile);
@@ -223,7 +223,7 @@ export function loginByPkce(
             redirect_uri: redirectUri,
           });
 
-          return fetchResponse(
+          return requestHttpJsonWithParser(
             discovery.token_endpoint,
             {
               body,
@@ -233,39 +233,26 @@ export function loginByPkce(
               method: "POST",
             },
             {
-              action: "ExchangePkceAuthorizationCode",
-              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-              kind: "BadGateway",
-              reason: "Token exchange failed.",
-            },
-          )
-            .andThen((response) =>
-              expectOkResponse(response, {
-                action: "ExchangePkceAuthorizationCode",
-                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-                kind: "BadGateway",
-                reason: "Token exchange failed.",
-              }),
-            )
-            .andThen((response) =>
-              readJson(response, {
-                action: "ReadOidcTokenResponseBody",
-                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-                kind: "BadGateway",
-                reason: "Failed to read OIDC token response body.",
-              }),
-            )
-            .andThen((json) => {
-              const parsed = makeCliSchemaParser(oidcTokenResponseSchema, {
+              parser: makeCliSchemaParser(oidcTokenResponseSchema, {
                 action: "DecodeOidcTokenResponseFromPkceFlow",
                 code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
                 context: "OIDC token response",
                 fallbackHint: "Retry `o3o auth login --mode pkce`.",
-              })(json);
-              return parsed.isOk()
-                ? okAsync(toTokenSetWithExpiry(parsed.value))
-                : err(parsed.error);
-            });
+              }),
+              read: {
+                action: "ReadOidcTokenResponseBody",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "BadGateway",
+                reason: "Failed to read OIDC token response body.",
+              },
+              request: {
+                action: "ExchangePkceAuthorizationCode",
+                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+                kind: "BadGateway",
+                reason: "Token exchange failed.",
+              },
+            },
+          ).map(toTokenSetWithExpiry);
         });
       })
       .orElse((cause) => {
