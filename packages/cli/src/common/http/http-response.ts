@@ -2,7 +2,13 @@ import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { type HttpErrorOptions, newHttpError } from "./http-request";
+import {
+  type HttpErrorOptions,
+  newHttpError,
+  requestHttp,
+} from "./http-request";
+
+export type HttpJsonParser<T> = (input: unknown) => Result<T, RichError>;
 
 export function decodeHttpJson(
   text: string,
@@ -39,6 +45,14 @@ export function readHttpJson(
   );
 }
 
+export function readHttpJsonWithParser<T>(
+  response: Response,
+  options: HttpErrorOptions,
+  parser: HttpJsonParser<T>,
+): ResultAsync<T, RichError> {
+  return readHttpJson(response, options).andThen(parser);
+}
+
 export function readHttpText(
   response: Response,
   options: HttpErrorOptions,
@@ -46,4 +60,20 @@ export function readHttpText(
   return ResultAsync.fromPromise(response.text(), (cause) =>
     newHttpError(options, cause),
   );
+}
+
+export function requestHttpJsonWithParser<T>(
+  url: string,
+  init: RequestInit | undefined,
+  options: {
+    parser: HttpJsonParser<T>;
+    read: HttpErrorOptions;
+    request: HttpErrorOptions;
+  },
+): ResultAsync<T, RichError> {
+  return requestHttp(url, init, options.request)
+    .andThen((response) => expectOkHttpResponse(response, options.request))
+    .andThen((response) =>
+      readHttpJsonWithParser(response, options.read, options.parser),
+    );
 }

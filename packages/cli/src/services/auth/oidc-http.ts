@@ -2,8 +2,8 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { requestHttpJsonWithParser } from "../../common/http/http-json";
 import { requestHttp } from "../../common/http/http-request";
+import { requestHttpJsonWithParser } from "../../common/http/http-response";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
   type OidcDiscoveryResponse,
