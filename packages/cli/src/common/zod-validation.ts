@@ -2,11 +2,9 @@ import type { Result } from "neverthrow";
 import type { z } from "zod";
 
 import {
-  isRecord,
   makeSchemaParser,
   newRichError,
   type RichError,
-  type ValidationIssue,
 } from "@o3osatoshi/toolkit";
 
 type CliSchemaParserOptions = {
@@ -15,37 +13,6 @@ type CliSchemaParserOptions = {
   context: string;
   fallbackHint?: string | undefined;
 };
-
-const defaultHint = "Review the input and retry.";
-
-export function extractValidationIssues(error: RichError): ValidationIssue[] {
-  const value = error.meta?.["validationIssues"];
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  return value.flatMap((entry) => {
-    if (!isRecord(entry)) {
-      return [];
-    }
-
-    const path = typeof entry["path"] === "string" ? entry["path"] : undefined;
-    const message =
-      typeof entry["message"] === "string" ? entry["message"] : undefined;
-    const code = typeof entry["code"] === "string" ? entry["code"] : undefined;
-    if (!path || !message || !code) {
-      return [];
-    }
-
-    return [
-      {
-        code,
-        message,
-        path,
-      },
-    ];
-  });
-}
 
 export function makeCliSchemaParser<T extends z.ZodType>(
   schema: T,
@@ -69,7 +36,8 @@ export function makeCliSchemaParser<T extends z.ZodType>(
         details: {
           ...error.details,
           action: options.action,
-          hint: baseHint || options.fallbackHint || defaultHint,
+          hint:
+            baseHint || options.fallbackHint || "Review the input and retry.",
           reason,
         },
         i18n: error.i18n,

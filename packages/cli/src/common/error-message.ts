@@ -1,6 +1,8 @@
-import type { RichError, ValidationIssue } from "@o3osatoshi/toolkit";
-
-import { extractValidationIssues } from "./zod-validation";
+import {
+  extractValidationIssues,
+  type RichError,
+  type ValidationIssue,
+} from "@o3osatoshi/toolkit";
 
 export type CliErrorPayload = {
   error: {
@@ -19,11 +21,11 @@ type CliErrorRenderOptions = {
   debug?: boolean | undefined;
 };
 
-export function toCliErrorMessage(
+export function toFailureMessage(
   error: RichError,
   options: CliErrorRenderOptions = {},
 ): string {
-  const message = toCliErrorShortMessage(error);
+  const message = toFailureShortMessage(error);
   const baseMessage = !error.code ? message : `${message} (code=${error.code})`;
   if (!options.debug) {
     return baseMessage;
@@ -47,7 +49,7 @@ export function toCliErrorMessage(
   return lines.join("\n");
 }
 
-export function toCliErrorPayload(
+export function toFailurePayload(
   error: RichError,
   options: CliErrorRenderOptions = {},
 ): CliErrorPayload {
@@ -60,13 +62,13 @@ export function toCliErrorPayload(
       ...(issues.length > 0 ? { issues } : {}),
       kind: error.kind,
       layer: error.layer,
-      message: toCliErrorShortMessage(error),
+      message: toFailureShortMessage(error),
       reason: error.details?.reason,
     },
     ok: false,
   };
 }
 
-function toCliErrorShortMessage(error: RichError): string {
+function toFailureShortMessage(error: RichError): string {
   return error.details?.reason?.trim() || error.message.trim();
 }

@@ -150,6 +150,45 @@ export function summarizeZodIssue(issue: ZodIssue): string {
 }
 
 /**
+ * Extracts compact validation issues previously attached to `error.meta.validationIssues`.
+ *
+ * @remarks
+ * This is intended to read the payload produced by {@link newZodError} when
+ * `includeValidationIssues` is enabled. Invalid or non-array metadata is ignored.
+ *
+ * @param error - RichError that may carry compact validation issues in `meta`.
+ * @returns Normalized validation issues safe for debug rendering.
+ * @public
+ */
+export function extractValidationIssues(error: RichError): ValidationIssue[] {
+  const value = error.meta?.["validationIssues"];
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((entry) => {
+    if (!isRecord(entry)) {
+      return [];
+    }
+
+    const code = typeof entry["code"] === "string" && entry["code"];
+    const message = typeof entry["message"] === "string" && entry["message"];
+    const path = typeof entry["path"] === "string" && entry["path"];
+    if (!code || !message || !path) {
+      return [];
+    }
+
+    return [
+      {
+        code,
+        message,
+        path,
+      },
+    ];
+  });
+}
+
+/**
  * Projects Zod issues into a compact, JSON-safe debug payload.
  *
  * @public

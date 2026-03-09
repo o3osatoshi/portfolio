@@ -2,8 +2,8 @@ import { encode, omitUndefined, type RichError } from "@o3osatoshi/toolkit";
 
 import {
   type CliErrorPayload,
-  toCliErrorMessage,
-  toCliErrorPayload,
+  toFailureMessage,
+  toFailurePayload,
 } from "./error-message";
 
 export const cliOutputVersion = 1;
@@ -41,10 +41,10 @@ export function printFailure(
 ): void {
   switch (outputMode) {
     case "text":
-      console.error(toCliErrorMessage(error, { debug: options.debug }));
+      console.error(toFailureMessage(error, { debug: options.debug }));
       return;
     case "json": {
-      const basePayload = toCliErrorPayload(error, { debug: options.debug });
+      const basePayload = toFailurePayload(error, { debug: options.debug });
       const payload: CliFailureJson = {
         ...omitUndefined({
           command,
@@ -57,7 +57,7 @@ export function printFailure(
       };
       const serialized = encode(payload);
       if (serialized.isErr()) {
-        console.error(toCliErrorMessage(serialized.error));
+        console.error(toFailureMessage(serialized.error));
         return;
       }
       console.error(serialized.value);
@@ -118,7 +118,7 @@ function printSuccessJson(
       };
       const serialized = encode(payload);
       if (serialized.isErr()) {
-        console.error(toCliErrorMessage(serialized.error));
+        console.error(toFailureMessage(serialized.error));
         return;
       }
       console.log(serialized.value);

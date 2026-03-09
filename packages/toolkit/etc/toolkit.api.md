@@ -148,6 +148,9 @@ export function extractErrorMessage(cause: unknown): string | undefined;
 export function extractErrorName(cause: unknown): string | undefined;
 
 // @public
+export function extractValidationIssues(error: RichError): ValidationIssue[];
+
+// @public
 export type FetchRequest = {
     method?: string;
     url?: string;

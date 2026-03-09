@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
-import { toCliErrorMessage, toCliErrorPayload } from "./error-message";
+import { toFailureMessage, toFailurePayload } from "./error-message";
 
 describe("common/error-message", () => {
   it("adds (code=...) suffix in text messages", () => {
@@ -17,7 +17,7 @@ describe("common/error-message", () => {
       layer: "Presentation",
     });
 
-    expect(toCliErrorMessage(error)).toBe(
+    expect(toFailureMessage(error)).toBe(
       "tx delete requires --id (code=CLI_COMMAND_INVALID_ARGUMENT)",
     );
   });
@@ -34,7 +34,7 @@ describe("common/error-message", () => {
       layer: "Presentation",
     });
 
-    expect(toCliErrorPayload(error)).toEqual({
+    expect(toFailurePayload(error)).toEqual({
       error: {
         action: "ParseCliArguments",
         code: "CLI_COMMAND_INVALID_ARGUMENT",
@@ -70,7 +70,7 @@ describe("common/error-message", () => {
       },
     });
 
-    expect(toCliErrorMessage(error, { debug: true })).toBe(
+    expect(toFailureMessage(error, { debug: true })).toBe(
       [
         "Invalid tx update arguments: currency: Too small string: min 1 (inclusive) (code=CLI_COMMAND_INVALID_ARGUMENT)",
         "Details:",
@@ -102,8 +102,8 @@ describe("common/error-message", () => {
       },
     });
 
-    expect(toCliErrorPayload(error).error.issues).toBeUndefined();
-    expect(toCliErrorPayload(error, { debug: true }).error.issues).toEqual([
+    expect(toFailurePayload(error).error.issues).toBeUndefined();
+    expect(toFailurePayload(error, { debug: true }).error.issues).toEqual([
       {
         code: "too_small",
         message: "Too small string: min 1 (inclusive)",

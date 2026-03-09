@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import { extractValidationIssues, makeCliSchemaParser } from "./zod-validation";
+import { extractValidationIssues } from "@o3osatoshi/toolkit";
+
+import { makeCliSchemaParser } from "./zod-validation";
 
 describe("common/zod-validation", () => {
   it("prefixes validation reason with context", () => {

@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
+import { newRichError } from "../error";
 import { isRichError } from "../error";
 import {
+  extractValidationIssues,
   isZodError,
   newZodError,
   summarizeZodError,
@@ -183,6 +185,38 @@ describe("zod-error helpers (with real Zod)", () => {
       err.meta?.["validationIssues"] as Array<{ message?: string }> | undefined
     )?.[0];
     expect(firstIssue?.message?.toLowerCase()).toContain("expected string");
+  });
+
+  it("extractValidationIssues reads compact validation issues from rich error meta", () => {
+    const err = newZodError({
+      includeValidationIssues: true,
+      cause: parseZodError(z.object({ name: z.string() }), { name: 123 }),
+      details: { action: "ParseUser" },
+    });
+
+    const issues = extractValidationIssues(err);
+
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({
+      code: "invalid_type",
+      path: "name",
+    });
+    expect(issues[0]?.message.toLowerCase()).toContain("expected string");
+  });
+
+  it("extractValidationIssues ignores malformed validation issue metadata", () => {
+    const err = newRichError({
+      code: "TEST",
+      details: { action: "Test", reason: "x" },
+      isOperational: true,
+      kind: "Validation",
+      layer: "Presentation",
+      meta: {
+        validationIssues: [{ code: "invalid_type", path: "name" }, 1, null],
+      },
+    });
+
+    expect(extractValidationIssues(err)).toEqual([]);
   });
 
   it("covers common issue codes with path-aware summary", () => {
