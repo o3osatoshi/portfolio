@@ -1,14 +1,14 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / makeSchemaParser
+[@o3osatoshi/toolkit](../README.md) / makeSchemaParser
 
 # Function: makeSchemaParser()
 
-> **makeSchemaParser**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, `Error`\>
+> **makeSchemaParser**\<`T`\>(`schema`, `ctx`): (`input`) => `Result`\<`output`\<`T`\>, [`RichError`](../classes/RichError.md)\>
 
-Defined in: [zod/zod-parse.ts:55](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-parse.ts#L55)
+Defined in: [packages/toolkit/src/zod/zod-parse.ts:25](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/zod/zod-parse.ts#L25)
 
 Creates a synchronous Result-returning parser from a Zod schema.
 
@@ -33,21 +33,33 @@ Zod schema used to validate or transform incoming data.
 
 ### ctx
 
-Context describing the logical action and optional layer override.
+Context describing action plus optional code/layer/error mapping controls.
 
 #### action
 
 `string`
 
+#### code?
+
+`string`
+
+#### includeValidationIssues?
+
+`boolean`
+
 #### layer?
 
-[`Layer`](../type-aliases/Layer.md)
+`"Infrastructure"` \| `"Application"` \| `"Auth"` \| `"Domain"` \| `"External"` \| `"Interface"` \| `"Persistence"` \| `"Presentation"`
+
+#### mapError?
+
+(`error`) => [`RichError`](../classes/RichError.md)
 
 ## Returns
 
 A function that yields a neverthrow Result containing the inferred schema output.
 
-> (`input`): `Result`\<`output`\<`T`\>, `Error`\>
+> (`input`): `Result`\<`output`\<`T`\>, [`RichError`](../classes/RichError.md)\>
 
 ### Parameters
 
@@ -57,12 +69,12 @@ A function that yields a neverthrow Result containing the inferred schema output
 
 ### Returns
 
-`Result`\<`output`\<`T`\>, `Error`\>
+`Result`\<`output`\<`T`\>, [`RichError`](../classes/RichError.md)\>
 
 ## Example
 
 ```ts
-const userParser = makeSchemaParser(userSchema, { action: "ParseUser", layer: "UI" });
+const userParser = makeSchemaParser(userSchema, { action: "ParseUser", layer: "Presentation" });
 const res = userParser(someInput);
 // Result of parsed type
 ```

@@ -1,16 +1,16 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / SerializeOptions
+[@o3osatoshi/toolkit](../README.md) / SerializeOptions
 
 # Type Alias: SerializeOptions
 
 > **SerializeOptions** = `object`
 
-Defined in: [error/error-serializer.ts:39](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-serializer.ts#L39)
+Defined in: [packages/toolkit/src/error/error-serializer.ts:94](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-serializer.ts#L94)
 
-Tuning knobs for [serializeError](../functions/serializeError.md).
+Tuning knobs for [serializeRichError](../functions/serializeRichError.md).
 
 ## Properties
 
@@ -18,9 +18,19 @@ Tuning knobs for [serializeError](../functions/serializeError.md).
 
 > `optional` **depth**: `number`
 
-Defined in: [error/error-serializer.ts:41](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-serializer.ts#L41)
+Defined in: [packages/toolkit/src/error/error-serializer.ts:96](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-serializer.ts#L96)
 
 Maximum depth of `cause` chain to serialize (default: 2).
+
+***
+
+### includeCause?
+
+> `optional` **includeCause**: `boolean`
+
+Defined in: [packages/toolkit/src/error/error-serializer.ts:98](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-serializer.ts#L98)
+
+Include `cause` chain in output (default: true).
 
 ***
 
@@ -28,6 +38,6 @@ Maximum depth of `cause` chain to serialize (default: 2).
 
 > `optional` **includeStack**: `boolean`
 
-Defined in: [error/error-serializer.ts:43](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-serializer.ts#L43)
+Defined in: [packages/toolkit/src/error/error-serializer.ts:100](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-serializer.ts#L100)
 
 Include `stack` in output (default: true in development, false otherwise).

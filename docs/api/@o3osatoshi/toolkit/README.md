@@ -1,214 +1,138 @@
-[**Documentation**](../../README.md)
+**@o3osatoshi/toolkit**
 
 ***
 
-[Documentation](../../README.md) / @o3osatoshi/toolkit
-
 # @o3osatoshi/toolkit
 
-Utility helpers for error shaping and Zod integration, designed for TypeScript apps.
+TypeScript utilities for structured error flows, HTTP/Next helpers,
+environment validation, and Zod integration.
 
-## Install
+## Classes
 
-```bash
-pnpm add @o3osatoshi/toolkit                # runtime
-pnpm add -D typescript vitest               # dev (optional for typecheck/tests)
-```
-
-## Quick Start
-
-### Structured errors
-
-```ts
-import { newError } from "@o3osatoshi/toolkit";
-
-throw newError({
-  layer: "Application",
-  kind: "Validation",
-  action: "CreateUser",
-  reason: "email format is invalid",
-  impact: "user cannot be registered",
-  hint: "ensure email has @",
-  cause: new Error("zod: Expected string, received number"),
-});
-// name: ApplicationValidationError
-// message example: "CreateUser failed because email format is invalid. Impact: user cannot be registered. Hint: ensure email has @. Cause: zod: Expected string, received number."
-```
-
-### Zod integration
-
-```ts
-import { z } from "zod";
-import { makeSchemaParser, parseAsyncWith, newZodError } from "@o3osatoshi/toolkit";
-
-const userSchema = z.object({ name: z.string(), age: z.number().min(0) });
-
-const userParser = makeSchemaParser(userSchema, { action: "ParseUser", layer: "UI" });
-const res = userParser({ name: "alice", age: 20 }); // Result<User, Error>
-
-// Async
-const parseUserAsync = parseAsyncWith(userSchema, { action: "ParseUser", layer: "UI" });
-const resAsync = await parseUserAsync({ name: "alice", age: 20 }); // ResultAsync<User, Error>
-
-// When you catch a ZodError and want a normalized Error:
-try {
-  userSchema.parse({ name: 1 });
-} catch (e) {
-  throw newZodError({ action: "ParseUser", cause: e });
-}
-```
-
-### Error kinds
-
-`newError` expects a `kind` that conveys how callers or HTTP layers should react. The defaults below are what `toHttpErrorResponse` uses when translating errors into status codes (override as needed):
-
-| Kind             | Default HTTP status | Description |
-| ---------------- | ------------------- | ----------- |
-| `BadRequest`     | 400                 | Malformed payload or transport-level input issue caught before validation. |
-| `Validation`     | 400                 | Domain/application validation failure (e.g., Zod, business rules). |
-| `Unauthorized`   | 401                 | Authentication missing, expired, or invalid. |
-| `Forbidden`      | 403                 | Authenticated caller lacks permission. |
-| `NotFound`       | 404                 | Entity, route, or resource is missing. |
-| `MethodNotAllowed` | 405               | HTTP verb is not supported for the requested resource. |
-| `Conflict`       | 409                 | Version/state conflict such as optimistic locking. |
-| `Integrity`      | 409                 | Constraint violation (unique/index/foreign key). |
-| `Deadlock`       | 409                 | Database or concurrency deadlock detected by the engine. |
-| `Unprocessable`  | 422                 | Semantically invalid request despite being well-formed. |
-| `RateLimit`      | 429                 | Quota exceeded or throttling triggered. |
-| `Canceled`       | 408                 | Caller aborted or connection closed mid-flight. |
-| `Config`         | 500                 | Server-side misconfiguration or missing secrets. |
-| `Serialization`  | 500                 | Encode/decode failure when handling data. |
-| `Unknown`        | 500                 | Fallback when no other kind matches. |
-| `BadGateway`     | 502                 | Upstream dependency returned an invalid or 5xx response. |
-| `Unavailable`    | 503                 | Dependency temporarily offline or service paused. |
-| `Timeout`        | 504                 | Operation exceeded configured timeout. |
-
-Note: Some gateways use non‑standard 499 (Client Closed Request). The default mapping here uses 408 for broader compatibility.
-
-## API
-
-- `newError(opts)`
-  - Builds an `Error` with a consistent `name` (`<Layer><Kind>Error`) and rich `message` composed from `action`, `reason`, `impact`, `hint`, and a summarized `cause`.
-- `isZodError(e)`
-  - Robust detection using `instanceof` or duck-typing fallback when Zod instances differ.
-- `summarizeZodIssue(issue)` / `summarizeZodError(err)`
-  - Human‑readable messages for common Zod issues.
-- `newZodError(opts)`
-  - Wraps a `ZodError` (or issues array) into a structured `Error` via `newError`.
-- `makeSchemaParser(schema, ctx)` / `parseAsyncWith(schema, ctx)`
-  - Create functions returning `neverthrow` `Result` / `ResultAsync` from a Zod schema. Errors are normalized via `newZodError`.
-- `@o3osatoshi/toolkit/next`
-  - Helpers for Next.js Server Actions. See below.
-
-## Next.js helpers (`@o3osatoshi/toolkit/next`)
-
-Lightweight utilities for `useActionState` and Server Actions.
-
-```ts
-import {
-  err,
-  ok,
-  type ActionState,
-  userMessageFromError,
-} from "@o3osatoshi/toolkit/next";
-
-// Server Action example
-export const createItem = async (
-  _prev: ActionState | undefined,
-  formData: FormData,
-): Promise<ActionState> => {
-  try {
-    const data = await doSomething(formData);
-    return ok(data);
-  } catch (e) {
-    return err(e as Error); // user-facing message derived from toolkit error metadata
-  }
-};
-```
-
-- `err(error)` – accepts `Error | ActionError | string` and returns `{ ok: false, error }` with a user-friendly message derived from `@o3osatoshi/toolkit` errors (`kind`, `reason`, `hint`, `impact` are considered). Falls back to a generic safe message.
-- `ok(data)` – wraps success payload as `{ ok: true, data }`.
-- `userMessageFromError(error)` – converts an `Error` (ideally produced by `newError`) into user-facing copy, using kind-based defaults and any structured message fields.
-
-## Notes
-
-- ESM + CJS outputs are provided; typings are included.
-- Target Node >= 22 (see `engines`).
-- When targeting different Zod instances (e.g., multiple versions), `isZodError` uses duck typing to remain resilient.
-
-## Quality
-
-- Tests: `pnpm -C packages/toolkit test` / `pnpm -C packages/toolkit test:cvrg`
-- Coverage: [![Coverage: @o3osatoshi/toolkit](https://codecov.io/gh/o3osatoshi/portfolio/branch/main/graph/badge.svg?component=toolkit)](https://app.codecov.io/github/o3osatoshi/portfolio?component=toolkit)
-
-Toolkit utilities for structured errors and Zod helpers.
-
-## Interfaces
-
-- [SerializedError](interfaces/SerializedError.md)
+- [RichError](classes/RichError.md)
 
 ## Type Aliases
 
 - [ActionData](type-aliases/ActionData.md)
-- [ActionError](type-aliases/ActionError.md)
 - [ActionState](type-aliases/ActionState.md)
+- [BuildHttpResponseOptions](type-aliases/BuildHttpResponseOptions.md)
 - [CreateEnvOptions](type-aliases/CreateEnvOptions.md)
+- [CreateLazyEnvOptions](type-aliases/CreateLazyEnvOptions.md)
+- [CreateRateLimitGuardOptions](type-aliases/CreateRateLimitGuardOptions.md)
+- [DeserializeRichErrorFailure](type-aliases/DeserializeRichErrorFailure.md)
+- [DeserializeRichErrorIssue](type-aliases/DeserializeRichErrorIssue.md)
+- [DeserializeRichErrorOptions](type-aliases/DeserializeRichErrorOptions.md)
+- [Env](type-aliases/Env.md)
 - [EnvOf](type-aliases/EnvOf.md)
 - [EnvSchema](type-aliases/EnvSchema.md)
 - [ErrorHttpResponse](type-aliases/ErrorHttpResponse.md)
-- [ErrorMessageParts](type-aliases/ErrorMessageParts.md)
-- [ErrorMessagePayload](type-aliases/ErrorMessagePayload.md)
-- [ErrorNameParts](type-aliases/ErrorNameParts.md)
+- [ErrorMessageFallback](type-aliases/ErrorMessageFallback.md)
+- [ErrorMessageTranslator](type-aliases/ErrorMessageTranslator.md)
 - [ErrorStatusCode](type-aliases/ErrorStatusCode.md)
 - [FetchRequest](type-aliases/FetchRequest.md)
+- [FormatHttpStatusReasonOptions](type-aliases/FormatHttpStatusReasonOptions.md)
+- [HttpRequest](type-aliases/HttpRequest.md)
+- [HttpResponse](type-aliases/HttpResponse.md)
+- [HttpStatusKind](type-aliases/HttpStatusKind.md)
+- [HttpStatusLike](type-aliases/HttpStatusLike.md)
+- [InterpretErrorMessageOptions](type-aliases/InterpretErrorMessageOptions.md)
 - [JsonArray](type-aliases/JsonArray.md)
 - [JsonContainer](type-aliases/JsonContainer.md)
+- [JsonDeserializeOptions](type-aliases/JsonDeserializeOptions.md)
 - [JsonObject](type-aliases/JsonObject.md)
 - [JsonPrimitive](type-aliases/JsonPrimitive.md)
+- [JsonSerializeOptions](type-aliases/JsonSerializeOptions.md)
 - [JsonValue](type-aliases/JsonValue.md)
 - [Kind](type-aliases/Kind.md)
-- [KvOptions](type-aliases/KvOptions.md)
 - [Layer](type-aliases/Layer.md)
-- [NewError](type-aliases/NewError.md)
 - [NewFetchError](type-aliases/NewFetchError.md)
+- [NewRichError](type-aliases/NewRichError.md)
 - [NewZodError](type-aliases/NewZodError.md)
-- [RedisClientOptions](type-aliases/RedisClientOptions.md)
+- [OmitUndefinedDeep](type-aliases/OmitUndefinedDeep.md)
+- [RateLimitBypassContext](type-aliases/RateLimitBypassContext.md)
+- [RateLimitConsumeInput](type-aliases/RateLimitConsumeInput.md)
+- [RateLimitDecision](type-aliases/RateLimitDecision.md)
+- [RateLimitExceededContext](type-aliases/RateLimitExceededContext.md)
+- [RateLimitFailureMode](type-aliases/RateLimitFailureMode.md)
+- [RateLimitRule](type-aliases/RateLimitRule.md)
+- [RateLimitStore](type-aliases/RateLimitStore.md)
+- [ResolveAbortSignalOptions](type-aliases/ResolveAbortSignalOptions.md)
+- [ResolvedAbortSignal](type-aliases/ResolvedAbortSignal.md)
+- [RichErrorDetails](type-aliases/RichErrorDetails.md)
+- [RichErrorI18n](type-aliases/RichErrorI18n.md)
 - [SerializedCause](type-aliases/SerializedCause.md)
+- [SerializedError](type-aliases/SerializedError.md)
+- [SerializedRichError](type-aliases/SerializedRichError.md)
 - [SerializeOptions](type-aliases/SerializeOptions.md)
-- [SetOptions](type-aliases/SetOptions.md)
 - [SleepOptions](type-aliases/SleepOptions.md)
 - [UnknownRecord](type-aliases/UnknownRecord.md)
+- [UrlRedactorOptions](type-aliases/UrlRedactorOptions.md)
+- [ValidationIssue](type-aliases/ValidationIssue.md)
+- [ValidationIssueFormat](type-aliases/ValidationIssueFormat.md)
+- [ZodIssue](type-aliases/ZodIssue.md)
+
+## Variables
+
+- [jsonArraySchema](variables/jsonArraySchema.md)
+- [jsonObjectSchema](variables/jsonObjectSchema.md)
+- [jsonPrimitiveSchema](variables/jsonPrimitiveSchema.md)
+- [jsonValueSchema](variables/jsonValueSchema.md)
+- [kindSchema](variables/kindSchema.md)
+- [layerSchema](variables/layerSchema.md)
+- [richErrorDetailsSchema](variables/richErrorDetailsSchema.md)
+- [richErrorI18nSchema](variables/richErrorI18nSchema.md)
+- [serializedErrorSchema](variables/serializedErrorSchema.md)
+- [serializedRichErrorSchema](variables/serializedRichErrorSchema.md)
 
 ## Functions
 
-- [composeErrorMessage](functions/composeErrorMessage.md)
+- [buildErrorSummary](functions/buildErrorSummary.md)
+- [buildHttpResponse](functions/buildHttpResponse.md)
+- [coerceErrorMessage](functions/coerceErrorMessage.md)
 - [composeErrorName](functions/composeErrorName.md)
-- [createEdgeRedisClient](functions/createEdgeRedisClient.md)
 - [createEnv](functions/createEnv.md)
-- [createRedisClient](functions/createRedisClient.md)
-- [decode](functions/decode.md)
-- [deserializeError](functions/deserializeError.md)
-- [encode](functions/encode.md)
+- [createLazyEnv](functions/createLazyEnv.md)
+- [createRateLimitGuard](functions/createRateLimitGuard.md)
+- [createUrlRedactor](functions/createUrlRedactor.md)
+- [deserialize](functions/deserialize.md)
+- [deserializeResponseBody](functions/deserializeResponseBody.md)
+- [deserializeRichError](functions/deserializeRichError.md)
 - [err](functions/err.md)
 - [extractErrorMessage](functions/extractErrorMessage.md)
 - [extractErrorName](functions/extractErrorName.md)
+- [extractValidationIssues](functions/extractValidationIssues.md)
 - [formatFetchTarget](functions/formatFetchTarget.md)
+- [formatHttpStatusReason](functions/formatHttpStatusReason.md)
+- [formatPayloadPreview](functions/formatPayloadPreview.md)
+- [httpStatusToKind](functions/httpStatusToKind.md)
+- [interpretErrorMessage](functions/interpretErrorMessage.md)
+- [isDeserializableBody](functions/isDeserializableBody.md)
+- [isDeserializableResponse](functions/isDeserializableResponse.md)
+- [isObjectLike](functions/isObjectLike.md)
+- [isPlainObject](functions/isPlainObject.md)
+- [isRecord](functions/isRecord.md)
+- [isRichError](functions/isRichError.md)
 - [isSerializedError](functions/isSerializedError.md)
+- [isSerializedRichError](functions/isSerializedRichError.md)
 - [isZodError](functions/isZodError.md)
-- [kvGet](functions/kvGet.md)
-- [kvSet](functions/kvSet.md)
-- [newError](functions/newError.md)
-- [newFetchError](functions/newFetchError.md)
-- [newZodError](functions/newZodError.md)
-- [ok](functions/ok.md)
-- [parseAsyncWith](functions/parseAsyncWith.md)
-- [parseErrorMessage](functions/parseErrorMessage.md)
-- [parseErrorName](functions/parseErrorName.md)
 - [makeSchemaParser](functions/makeSchemaParser.md)
-- [serializeError](functions/serializeError.md)
+- [newFetchError](functions/newFetchError.md)
+- [newRichError](functions/newRichError.md)
+- [newZodError](functions/newZodError.md)
+- [normalizeBaseUrl](functions/normalizeBaseUrl.md)
+- [ok](functions/ok.md)
+- [omitUndefined](functions/omitUndefined.md)
+- [resolveAbortSignal](functions/resolveAbortSignal.md)
+- [resolveOperationalFromKind](functions/resolveOperationalFromKind.md)
+- [serialize](functions/serialize.md)
+- [serializeRichError](functions/serializeRichError.md)
 - [sleep](functions/sleep.md)
 - [summarizeZodError](functions/summarizeZodError.md)
 - [summarizeZodIssue](functions/summarizeZodIssue.md)
 - [toHttpErrorResponse](functions/toHttpErrorResponse.md)
+- [toRichError](functions/toRichError.md)
+- [toValidationIssues](functions/toValidationIssues.md)
+- [trimTrailingSlash](functions/trimTrailingSlash.md)
 - [truncate](functions/truncate.md)
-- [userMessageFromError](functions/userMessageFromError.md)
+- [tryDeserializeRichError](functions/tryDeserializeRichError.md)
+- [unwrapResultAsync](functions/unwrapResultAsync.md)

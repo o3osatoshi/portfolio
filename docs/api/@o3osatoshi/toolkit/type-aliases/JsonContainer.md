@@ -1,13 +1,13 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / JsonContainer
+[@o3osatoshi/toolkit](../README.md) / JsonContainer
 
 # Type Alias: JsonContainer
 
 > **JsonContainer** = [`JsonArray`](JsonArray.md) \| [`JsonObject`](JsonObject.md)
 
-Defined in: [types.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/types.ts#L13)
+Defined in: [packages/toolkit/src/types.ts:26](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/types.ts#L26)
 
 JSON container value (object or array) at the top level.

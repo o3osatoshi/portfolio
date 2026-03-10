@@ -1,13 +1,13 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / JsonArray
+[@o3osatoshi/toolkit](../README.md) / JsonArray
 
 # Type Alias: JsonArray
 
 > **JsonArray** = [`JsonValue`](JsonValue.md)[]
 
-Defined in: [types.ts:6](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/types.ts#L6)
+Defined in: [packages/toolkit/src/types.ts:19](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/types.ts#L19)
 
 JSON array value.
