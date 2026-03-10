@@ -11,7 +11,6 @@ import {
   omitUndefined,
   type RichError,
   serialize,
-  toRichError,
 } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
@@ -36,108 +35,107 @@ type MaybePromise<T> = Promise<T> | T;
 type TokenStoreBackend = TokenStoreEnv["tokenStoreBackend"];
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
-  return resolveTokenStoreEnv()
-    .asyncAndThen((env) => {
-      const tokenStoreFilePath = resolveTokenStoreFilePath(env);
+  return resolveTokenStoreEnv().asyncAndThen((env) => {
+    const tokenStoreFilePath = resolveTokenStoreFilePath(env);
 
-      switch (env.tokenStoreBackend) {
-        case "file": {
-          return removeTokenStoreFile(tokenStoreFilePath);
-        }
-
-        case "keychain": {
-          return deleteKeychainToken({
-            action: "ClearTokenSet",
-            backend: env.tokenStoreBackend,
-            strict: true,
-          });
-        }
-
-        case "auto": {
-          return deleteKeychainToken({
-            action: "ClearTokenSet",
-            backend: env.tokenStoreBackend,
-            strict: false,
-          }).andThen(() =>
-            removeTokenStoreFile(tokenStoreFilePath).orElse(() =>
-              ok(undefined),
-            ),
-          );
-        }
+    switch (env.tokenStoreBackend) {
+      case "file": {
+        return removeTokenStoreFile(tokenStoreFilePath);
       }
-    })
-    .mapErr((cause) =>
-      toRichError(cause, {
-        code: cliErrorCodes.CLI_TOKEN_STORE_CLEAR_FAILED,
-        details: {
+
+      case "keychain": {
+        return deleteKeychainToken({
           action: "ClearTokenSet",
-          reason: "Failed to clear local token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-    );
+          backend: env.tokenStoreBackend,
+          strict: true,
+        });
+      }
+
+      case "auto": {
+        return deleteKeychainToken({
+          action: "ClearTokenSet",
+          backend: env.tokenStoreBackend,
+          strict: false,
+        }).andThen(() =>
+          removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok(undefined)),
+        );
+      }
+    }
+  });
 }
 
 export function persistTokenSet(
   tokenSet: OidcTokenSet,
 ): ResultAsync<void, RichError> {
-  return resolveTokenStoreEnv()
-    .asyncAndThen((env) =>
-      serialize(tokenSet).asyncAndThen((serializedTokenSet) =>
-        persistTokenSetToBackend(
-          env,
-          resolveTokenStoreFilePath(env),
-          serializedTokenSet,
-        ),
-      ),
-    )
-    .mapErr((cause) =>
-      toRichError(cause, {
-        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
-        details: {
-          action: "PersistTokenSet",
-          reason: "Failed to persist token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-    );
-}
-
-export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
-  return resolveTokenStoreEnv()
-    .asyncAndThen((env) => {
+  return resolveTokenStoreEnv().asyncAndThen((env) =>
+    serialize(tokenSet).asyncAndThen((serializedTokenSet) => {
       const tokenStoreFilePath = resolveTokenStoreFilePath(env);
 
       switch (env.tokenStoreBackend) {
         case "file": {
-          return readFileTokenSet(tokenStoreFilePath);
+          return persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
         }
 
         case "keychain": {
-          return readKeychainTokenSet("ReadTokenSet", env.tokenStoreBackend);
+          return writeKeychainTokenSet(
+            "PersistTokenSet",
+            env.tokenStoreBackend,
+            serializedTokenSet,
+          ).andThen(() =>
+            removeTokenStoreFile(tokenStoreFilePath).orElse(() =>
+              ok(undefined),
+            ),
+          );
         }
 
         case "auto": {
-          return readTokenSetFromAutoBackend(env, tokenStoreFilePath);
+          return writeKeychainTokenSet(
+            "PersistTokenSet",
+            env.tokenStoreBackend,
+            serializedTokenSet,
+          )
+            .andThen(() =>
+              removeTokenStoreFile(tokenStoreFilePath).orElse(() =>
+                ok(undefined),
+              ),
+            )
+            .orElse((error) => {
+              if (!env.allowFileFallback) {
+                return err(error);
+              }
+
+              return ok(undefined)
+                .andTee(() => {
+                  warnFileFallbackOnce(tokenStoreFilePath);
+                })
+                .asyncAndThen(() =>
+                  persistTokenToFile(serializedTokenSet, tokenStoreFilePath),
+                );
+            });
         }
       }
-    })
-    .mapErr((cause) =>
-      toRichError(cause, {
-        code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
-        details: {
-          action: "ReadTokenSet",
-          reason: "Failed to read local token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-    );
+    }),
+  );
+}
+
+export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
+  return resolveTokenStoreEnv().asyncAndThen((env) => {
+    const tokenStoreFilePath = resolveTokenStoreFilePath(env);
+
+    switch (env.tokenStoreBackend) {
+      case "file": {
+        return readFileTokenSet(tokenStoreFilePath);
+      }
+
+      case "keychain": {
+        return readKeychainTokenSet("ReadTokenSet", env.tokenStoreBackend);
+      }
+
+      case "auto": {
+        return readTokenSetFromAutoBackend(env, tokenStoreFilePath);
+      }
+    }
+  });
 }
 
 function buildKeychainUnavailableReason(backend: TokenStoreBackend): string {
@@ -290,52 +288,6 @@ function parseStoredTokenSet(raw: string): null | OidcTokenSet {
     scope: parsed.data.scope,
     token_type: parsed.data.token_type,
   });
-}
-
-function persistTokenSetToBackend(
-  env: TokenStoreEnv,
-  tokenStoreFilePath: string,
-  serializedTokenSet: string,
-): ResultAsync<void, RichError> {
-  switch (env.tokenStoreBackend) {
-    case "file": {
-      return persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
-    }
-
-    case "keychain": {
-      return writeKeychainTokenSet(
-        "PersistTokenSet",
-        env.tokenStoreBackend,
-        serializedTokenSet,
-      ).andThen(() =>
-        removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok(undefined)),
-      );
-    }
-
-    case "auto": {
-      return writeKeychainTokenSet(
-        "PersistTokenSet",
-        env.tokenStoreBackend,
-        serializedTokenSet,
-      )
-        .andThen(() =>
-          removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok(undefined)),
-        )
-        .orElse((error) => {
-          if (!env.allowFileFallback) {
-            return err(error);
-          }
-
-          return ok(undefined)
-            .andTee(() => {
-              warnFileFallbackOnce(tokenStoreFilePath);
-            })
-            .asyncAndThen(() =>
-              persistTokenToFile(serializedTokenSet, tokenStoreFilePath),
-            );
-        });
-    }
-  }
 }
 
 function persistTokenToFile(
