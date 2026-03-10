@@ -38,9 +38,9 @@ describe("commands/tx", () => {
     h.listTransactionsMock.mockReset();
     h.questionMock.mockReset();
     h.closeMock.mockReset();
-    h.createTransactionMock.mockReturnValue(okAsync(undefined));
-    h.updateTransactionMock.mockReturnValue(okAsync(undefined));
-    h.deleteTransactionMock.mockReturnValue(okAsync(undefined));
+    h.createTransactionMock.mockReturnValue(okAsync());
+    h.updateTransactionMock.mockReturnValue(okAsync());
+    h.deleteTransactionMock.mockReturnValue(okAsync());
     h.listTransactionsMock.mockReturnValue(okAsync([]));
     vi.spyOn(console, "log").mockImplementation(() => {});
     vi.spyOn(console, "table").mockImplementation(() => {});
@@ -112,7 +112,7 @@ describe("commands/tx", () => {
   });
 
   it("runTxUpdate maps partial args and prints completion message", async () => {
-    h.updateTransactionMock.mockReturnValueOnce(okAsync(undefined));
+    h.updateTransactionMock.mockReturnValueOnce(okAsync());
 
     const result = await runTxUpdate({
       id: "tx-2",
@@ -131,7 +131,7 @@ describe("commands/tx", () => {
   });
 
   it("runTxUpdate keeps zero-like values instead of dropping them", async () => {
-    h.updateTransactionMock.mockReturnValueOnce(okAsync(undefined));
+    h.updateTransactionMock.mockReturnValueOnce(okAsync());
 
     const result = await runTxUpdate({
       id: "tx-zero",
@@ -160,7 +160,7 @@ describe("commands/tx", () => {
   });
 
   it("runTxDelete skips prompt when confirmed=true", async () => {
-    h.deleteTransactionMock.mockReturnValueOnce(okAsync(undefined));
+    h.deleteTransactionMock.mockReturnValueOnce(okAsync());
 
     const result = await runTxDelete("tx-3", true);
 
@@ -194,7 +194,7 @@ describe("commands/tx", () => {
 
   it("runTxDelete proceeds when user confirms", async () => {
     h.questionMock.mockResolvedValueOnce("yes");
-    h.deleteTransactionMock.mockReturnValueOnce(okAsync(undefined));
+    h.deleteTransactionMock.mockReturnValueOnce(okAsync());
 
     const result = await runTxDelete("tx-5", false);
 

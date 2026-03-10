@@ -8,7 +8,7 @@ export function loadRuntimeEnvFile(
   path?: string,
 ): ResultAsync<void, RichError> {
   if (!path) {
-    return okAsync(undefined);
+    return okAsync();
   }
 
   const loaded = dotenvConfig({
@@ -32,5 +32,5 @@ export function loadRuntimeEnvFile(
     );
   }
 
-  return okAsync(undefined);
+  return okAsync();
 }

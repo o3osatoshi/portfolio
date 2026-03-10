@@ -260,7 +260,7 @@ export function loginByPkce(
         disposeCallbackListener?.();
 
         return closeServerResult(server)
-          .orElse(() => ok(undefined))
+          .orElse(() => ok())
           .andThen(() => err(cause));
       });
   });

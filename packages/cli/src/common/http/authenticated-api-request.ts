@@ -68,7 +68,7 @@ export function requestAuthenticatedApi(
 
           if (response.status === 401) {
             return clearTokenSet()
-              .orElse(() => ok(undefined))
+              .orElse(() => ok())
               .andThen(() =>
                 err(
                   newRichError({
@@ -158,13 +158,13 @@ function ensureAccessToken(
     }
 
     return refreshTokens(env.oidcConfig, tokenSet.refresh_token)
-      .orElse((refreshError) =>
+      .orElse((cause) =>
         clearTokenSet()
-          .orElse(() => ok(undefined))
+          .orElse(() => ok())
           .andThen(() =>
             err(
               newRichError({
-                cause: refreshError,
+                cause,
                 code: cliErrorCodes.CLI_API_UNAUTHORIZED,
                 details: {
                   action: "RefreshCliAccessToken",

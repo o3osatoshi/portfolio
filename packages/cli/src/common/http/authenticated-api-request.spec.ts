@@ -51,8 +51,8 @@ describe("common/http/authenticated-api-request", () => {
         token_type: "Bearer",
       }),
     );
-    h.persistTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.clearTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.persistTokenSetMock.mockReset().mockReturnValue(okAsync());
+    h.clearTokenSetMock.mockReset().mockReturnValue(okAsync());
     h.refreshTokensMock.mockReset();
   });
 

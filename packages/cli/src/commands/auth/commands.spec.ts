@@ -55,10 +55,10 @@ describe("commands/auth", () => {
     h.revokeRefreshTokenMock.mockReset();
     h.clearTokenSetMock.mockReset();
     h.fetchAccessTokenPrincipalMock.mockReset();
-    h.persistTokenSetMock.mockReturnValue(okAsync(undefined));
-    h.clearTokenSetMock.mockReturnValue(okAsync(undefined));
+    h.persistTokenSetMock.mockReturnValue(okAsync());
+    h.clearTokenSetMock.mockReturnValue(okAsync());
     h.readTokenSetMock.mockReturnValue(okAsync(null));
-    h.revokeRefreshTokenMock.mockReturnValue(okAsync(undefined));
+    h.revokeRefreshTokenMock.mockReturnValue(okAsync());
     vi.spyOn(console, "log").mockImplementation(() => {});
   });
 

@@ -103,7 +103,7 @@ export function unsafeRevokeRefreshToken(
     cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
   ).andThen((discovery) => {
     if (!discovery.revocation_endpoint) {
-      return okAsync(undefined);
+      return okAsync();
     }
 
     const body = new URLSearchParams({

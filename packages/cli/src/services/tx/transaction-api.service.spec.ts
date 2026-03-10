@@ -84,7 +84,7 @@ describe("services/tx/transaction-api.service", () => {
   });
 
   it("encodes transaction id for update and delete", async () => {
-    h.requestAuthenticatedApiMock.mockReturnValue(okAsync(undefined));
+    h.requestAuthenticatedApiMock.mockReturnValue(okAsync());
 
     const { deleteTransaction, updateTransaction } = await import(
       "./transaction-api.service"

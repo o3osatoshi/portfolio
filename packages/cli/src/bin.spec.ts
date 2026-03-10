@@ -70,19 +70,19 @@ async function runBin(args: string[]): Promise<void> {
 
 describe("bin", () => {
   beforeEach(() => {
-    h.loadRuntimeEnvFileMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.loadRuntimeEnvFileMock.mockReset().mockReturnValue(okAsync());
     h.resolveEnvFilePathFromEnvMock
       .mockReset()
       .mockImplementation(() =>
         ok({ envFilePath: process.env["O3O_ENV_FILE"]?.trim() || undefined }),
       );
-    h.runAuthLoginMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runAuthLogoutMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runAuthWhoamiMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runTxCreateMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runTxDeleteMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runTxListMock.mockReset().mockReturnValue(okAsync(undefined));
-    h.runTxUpdateMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.runAuthLoginMock.mockReset().mockReturnValue(okAsync());
+    h.runAuthLogoutMock.mockReset().mockReturnValue(okAsync());
+    h.runAuthWhoamiMock.mockReset().mockReturnValue(okAsync());
+    h.runTxCreateMock.mockReset().mockReturnValue(okAsync());
+    h.runTxDeleteMock.mockReset().mockReturnValue(okAsync());
+    h.runTxListMock.mockReset().mockReturnValue(okAsync());
+    h.runTxUpdateMock.mockReset().mockReturnValue(okAsync());
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "log").mockImplementation(() => {});
 

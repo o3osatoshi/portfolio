@@ -72,7 +72,7 @@ export function main(
 
   if (argv.length === 0) {
     program.outputHelp();
-    return okAsync(undefined);
+    return okAsync();
   }
 
   return ResultAsync.fromPromise(

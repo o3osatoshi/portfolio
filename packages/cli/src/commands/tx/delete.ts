@@ -95,7 +95,7 @@ export function runTxDelete(
   ).andThen((answer) => {
     if (!["y", "yes"].includes(answer.trim().toLowerCase())) {
       printSuccessMessage("tx.delete", "Canceled.", outputMode);
-      return ok(undefined);
+      return ok();
     }
 
     return deleteTransaction(transactionId)

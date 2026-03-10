@@ -66,13 +66,13 @@ export function persistTokenSetToFile(
     )
     .andThen(() => {
       if (process.platform === "win32") {
-        return okAsync(undefined);
+        return okAsync();
       }
       return ResultAsync.fromPromise(
         chmod(tokenStoreFilePath, 0o600),
         newPersistTokenSetToFileError,
       )
-        .orElse(() => okAsync(undefined))
+        .orElse(() => okAsync())
         .map(() => undefined);
     });
 }

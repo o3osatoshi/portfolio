@@ -136,7 +136,7 @@ function migrateFileTokenToKeychain(
     persistTokenSetToKeychain("MigrateTokenStore", "auto", serializedTokenSet)
       .andThen(() =>
         removeTokenSetFile(tokenStoreFilePath)
-          .orElse(() => ok(undefined))
+          .orElse(() => ok())
           .map(() => tokenSet),
       )
       .orElse((error) => {
@@ -178,7 +178,7 @@ function readAutoTokenSet(
 
         if (selected.source === "keychain") {
           return removeTokenSetFile(tokenStoreFilePath)
-            .orElse(() => ok(undefined))
+            .orElse(() => ok())
             .map(() => selected.token);
         }
 
