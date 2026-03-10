@@ -5,10 +5,10 @@ import { cliErrorCodes } from "../error-catalog";
 
 const h = vi.hoisted(() => ({
   clearTokenSetMock: vi.fn(),
+  persistTokenSetMock: vi.fn(),
   readTokenSetMock: vi.fn(),
   refreshTokensMock: vi.fn(),
   resolveRuntimeEnvMock: vi.fn(),
-  writeTokenSetMock: vi.fn(),
 }));
 
 vi.mock("../runtime-env", () => ({
@@ -21,8 +21,8 @@ vi.mock("../../services/auth/oidc.service", () => ({
 
 vi.mock("../../services/auth/token-store.service", () => ({
   clearTokenSet: h.clearTokenSetMock,
+  persistTokenSet: h.persistTokenSetMock,
   readTokenSet: h.readTokenSetMock,
-  writeTokenSet: h.writeTokenSetMock,
 }));
 
 describe("common/http/authenticated-api-request", () => {
@@ -51,7 +51,7 @@ describe("common/http/authenticated-api-request", () => {
         token_type: "Bearer",
       }),
     );
-    h.writeTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
+    h.persistTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
     h.clearTokenSetMock.mockReset().mockReturnValue(okAsync(undefined));
     h.refreshTokensMock.mockReset();
   });
@@ -255,7 +255,7 @@ describe("common/http/authenticated-api-request", () => {
       },
       "refresh-token",
     );
-    expect(h.writeTokenSetMock).toHaveBeenCalledWith(
+    expect(h.persistTokenSetMock).toHaveBeenCalledWith(
       expect.objectContaining({
         access_token: "new-access-token",
         refresh_token: "refresh-token",
@@ -335,7 +335,7 @@ describe("common/http/authenticated-api-request", () => {
       "Session expired. Run `o3o auth login` again.",
     );
     expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
-    expect(h.writeTokenSetMock).not.toHaveBeenCalled();
+    expect(h.persistTokenSetMock).not.toHaveBeenCalled();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

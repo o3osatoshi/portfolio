@@ -8,7 +8,7 @@ import {
   oidcLogin,
   type OidcLoginMode,
 } from "../../services/auth/oidc.service";
-import { writeTokenSet } from "../../services/auth/token-store.service";
+import { persistTokenSet } from "../../services/auth/token-store.service";
 
 export function runAuthLogin(
   mode: OidcLoginMode,
@@ -21,7 +21,7 @@ export function runAuthLogin(
 
   return resolveRuntimeEnv()
     .asyncAndThen((env) => oidcLogin(env.oidcConfig, mode, { onInfo }))
-    .andThen((token) => writeTokenSet(token))
+    .andThen((token) => persistTokenSet(token))
     .andTee(() => {
       printSuccessMessage("auth.login", "Login successful.", outputMode);
     })

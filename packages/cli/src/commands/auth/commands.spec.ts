@@ -5,10 +5,10 @@ const h = vi.hoisted(() => ({
   oidcLoginMock: vi.fn(),
   clearTokenSetMock: vi.fn(),
   fetchAccessTokenPrincipalMock: vi.fn(),
+  persistTokenSetMock: vi.fn(),
   readTokenSetMock: vi.fn(),
   resolveRuntimeEnvMock: vi.fn(),
   revokeRefreshTokenMock: vi.fn(),
-  writeTokenSetMock: vi.fn(),
 }));
 
 vi.mock("../../services/auth/principal-api.service", () => ({
@@ -26,8 +26,8 @@ vi.mock("../../services/auth/oidc.service", () => ({
 
 vi.mock("../../services/auth/token-store.service", () => ({
   clearTokenSet: h.clearTokenSetMock,
+  persistTokenSet: h.persistTokenSetMock,
   readTokenSet: h.readTokenSetMock,
-  writeTokenSet: h.writeTokenSetMock,
 }));
 
 import { runAuthLogin } from "./login";
@@ -50,12 +50,12 @@ describe("commands/auth", () => {
       }),
     );
     h.oidcLoginMock.mockReset();
-    h.writeTokenSetMock.mockReset();
+    h.persistTokenSetMock.mockReset();
     h.readTokenSetMock.mockReset();
     h.revokeRefreshTokenMock.mockReset();
     h.clearTokenSetMock.mockReset();
     h.fetchAccessTokenPrincipalMock.mockReset();
-    h.writeTokenSetMock.mockReturnValue(okAsync(undefined));
+    h.persistTokenSetMock.mockReturnValue(okAsync(undefined));
     h.clearTokenSetMock.mockReturnValue(okAsync(undefined));
     h.readTokenSetMock.mockReturnValue(okAsync(null));
     h.revokeRefreshTokenMock.mockReturnValue(okAsync(undefined));
@@ -87,7 +87,7 @@ describe("commands/auth", () => {
         onInfo: expect.any(Function),
       },
     );
-    expect(h.writeTokenSetMock).toHaveBeenCalledWith(token);
+    expect(h.persistTokenSetMock).toHaveBeenCalledWith(token);
     expect(console.log).toHaveBeenCalledWith("Login successful.");
   });
 

@@ -16,8 +16,8 @@ import {
 import { refreshTokens } from "../../services/auth/oidc.service";
 import {
   clearTokenSet,
+  persistTokenSet,
   readTokenSet,
-  writeTokenSet,
 } from "../../services/auth/token-store.service";
 import type { ApiErrorResponse } from "../contracts/api-error.schema";
 import { apiErrorResponseSchema } from "../contracts/api-error.schema";
@@ -184,7 +184,7 @@ function ensureAccessToken(
           refresh_token: newTokenSet.refresh_token ?? tokenSet.refresh_token,
         });
 
-        return writeTokenSet(mergedTokenSet).map(() => mergedTokenSet);
+        return persistTokenSet(mergedTokenSet).map(() => mergedTokenSet);
       });
   });
 }

@@ -76,6 +76,80 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
   );
 }
 
+export function persistTokenSet(
+  tokenSet: OidcTokenSet,
+): ResultAsync<void, RichError> {
+  const env = resolveTokenStoreEnv();
+  if (env.isErr()) {
+    return errAsync(env.error);
+  }
+  const { allowFileFallback, tokenStoreBackend } = env.value;
+  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
+
+  const result = serialize(tokenSet);
+  if (result.isErr()) {
+    return errAsync(result.error);
+  }
+  const serializedTokenSet = result.value;
+
+  return ResultAsync.fromPromise(
+    (async () => {
+      switch (tokenStoreBackend) {
+        case "file": {
+          await persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
+          return;
+        }
+
+        case "keychain": {
+          const keychainWrite = await writeKeychainTokenSet(serializedTokenSet);
+          if (!keychainWrite.ok) {
+            throw newBackendUnavailableError(
+              "PersistTokenSet",
+              keychainWrite.cause,
+              tokenStoreBackend,
+            );
+          }
+          await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
+          return;
+        }
+
+        case "auto": {
+          const keychainWrite = await writeKeychainTokenSet(serializedTokenSet);
+          if (keychainWrite.ok) {
+            await rm(tokenStoreFilePath, { force: true }).catch(
+              () => undefined,
+            );
+            return;
+          }
+
+          if (!allowFileFallback) {
+            throw newBackendUnavailableError(
+              "PersistTokenSet",
+              keychainWrite.cause,
+              tokenStoreBackend,
+            );
+          }
+
+          warnFileFallbackOnce(tokenStoreFilePath);
+          await persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
+          return;
+        }
+      }
+    })(),
+    (cause) =>
+      toRichError(cause, {
+        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+        details: {
+          action: "PersistTokenSet",
+          reason: "Failed to persist token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
+}
+
 export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
   const env = resolveTokenStoreEnv();
   if (env.isErr()) {
@@ -158,89 +232,6 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         details: {
           action: "ReadTokenSet",
           reason: "Failed to read local token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-  );
-}
-
-export function writeTokenSet(
-  tokenSet: OidcTokenSet,
-): ResultAsync<void, RichError> {
-  const env = resolveTokenStoreEnv();
-  if (env.isErr()) {
-    return errAsync(env.error);
-  }
-  const { allowFileFallback, tokenStoreBackend } = env.value;
-  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
-
-  const serializedTokenSet = serialize(tokenSet);
-  if (serializedTokenSet.isErr()) {
-    return errAsync(serializedTokenSet.error);
-  }
-
-  return ResultAsync.fromPromise(
-    (async () => {
-      switch (tokenStoreBackend) {
-        case "file": {
-          await persistTokenToFile(
-            serializedTokenSet.value,
-            tokenStoreFilePath,
-          );
-          return;
-        }
-
-        case "keychain": {
-          const keychainWrite = await writeKeychainTokenSet(
-            serializedTokenSet.value,
-          );
-          if (!keychainWrite.ok) {
-            throw newBackendUnavailableError(
-              "WriteTokenSet",
-              keychainWrite.cause,
-              tokenStoreBackend,
-            );
-          }
-          await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
-          return;
-        }
-
-        case "auto": {
-          const keychainWrite = await writeKeychainTokenSet(
-            serializedTokenSet.value,
-          );
-          if (keychainWrite.ok) {
-            await rm(tokenStoreFilePath, { force: true }).catch(
-              () => undefined,
-            );
-            return;
-          }
-
-          if (!allowFileFallback) {
-            throw newBackendUnavailableError(
-              "WriteTokenSet",
-              keychainWrite.cause,
-              tokenStoreBackend,
-            );
-          }
-
-          warnFileFallbackOnce(tokenStoreFilePath);
-          await persistTokenToFile(
-            serializedTokenSet.value,
-            tokenStoreFilePath,
-          );
-          return;
-        }
-      }
-    })(),
-    (cause) =>
-      toRichError(cause, {
-        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
-        details: {
-          action: "WriteTokenSet",
-          reason: "Failed to persist token state.",
         },
         isOperational: true,
         kind: "Internal",

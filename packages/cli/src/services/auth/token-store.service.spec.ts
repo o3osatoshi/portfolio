@@ -105,7 +105,7 @@ describe("services/auth/token-store.service", () => {
   });
 
   it("stores token in keychain and avoids file fallback when keychain is available", async () => {
-    const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
+    const { clearTokenSet, persistTokenSet, readTokenSet } = await import(
       "./token-store.service"
     );
 
@@ -117,7 +117,7 @@ describe("services/auth/token-store.service", () => {
       token_type: "Bearer",
     };
 
-    const writeResult = await writeTokenSet(token);
+    const writeResult = await persistTokenSet(token);
     expect(writeResult.isOk()).toBe(true);
     expect(h.keychainStore.get(keychainTokenKey)).toBe(JSON.stringify(token));
     expect(existsSync(tokenPath())).toBe(false);
@@ -136,11 +136,11 @@ describe("services/auth/token-store.service", () => {
 
   it("returns backend-unavailable error when keychain is unavailable and file fallback is not opted-in", async () => {
     h.keychainMode = "unavailable";
-    const { readTokenSet, writeTokenSet } = await import(
+    const { persistTokenSet, readTokenSet } = await import(
       "./token-store.service"
     );
 
-    const writeResult = await writeTokenSet({
+    const writeResult = await persistTokenSet({
       access_token: "access-token",
       expires_at: 1735689600,
       refresh_token: "refresh-token",
@@ -175,7 +175,7 @@ describe("services/auth/token-store.service", () => {
     h.keychainMode = "unavailable";
     process.env["O3O_TOKEN_STORE_BACKEND"] = "file";
 
-    const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
+    const { clearTokenSet, persistTokenSet, readTokenSet } = await import(
       "./token-store.service"
     );
 
@@ -187,7 +187,7 @@ describe("services/auth/token-store.service", () => {
       token_type: "Bearer",
     };
 
-    const writeResult = await writeTokenSet(token);
+    const writeResult = await persistTokenSet(token);
     expect(writeResult.isOk()).toBe(true);
     expect(existsSync(tokenPath())).toBe(true);
     expect(h.keychainStore.size).toBe(0);
@@ -209,7 +209,7 @@ describe("services/auth/token-store.service", () => {
     process.env["O3O_TOKEN_STORE_BACKEND"] = "file";
     process.env["XDG_CONFIG_HOME"] = xdgConfigHome;
 
-    const { readTokenSet, writeTokenSet } = await import(
+    const { persistTokenSet, readTokenSet } = await import(
       "./token-store.service"
     );
     const token = {
@@ -220,7 +220,7 @@ describe("services/auth/token-store.service", () => {
       token_type: "Bearer",
     };
 
-    const writeResult = await writeTokenSet(token);
+    const writeResult = await persistTokenSet(token);
     expect(writeResult.isOk()).toBe(true);
     expect(existsSync(join(xdgConfigHome, "o3o", "auth.json"))).toBe(true);
     expect(existsSync(join(h.homeDir, ".config", "o3o", "auth.json"))).toBe(
@@ -237,11 +237,11 @@ describe("services/auth/token-store.service", () => {
     h.keychainMode = "unavailable";
     process.env["O3O_TOKEN_STORE_BACKEND"] = "keychain";
 
-    const { readTokenSet, writeTokenSet } = await import(
+    const { persistTokenSet, readTokenSet } = await import(
       "./token-store.service"
     );
 
-    const writeResult = await writeTokenSet({
+    const writeResult = await persistTokenSet({
       access_token: "access-token",
       expires_at: 1735689600,
       refresh_token: "refresh-token",
@@ -270,7 +270,7 @@ describe("services/auth/token-store.service", () => {
 
   it("returns config error when O3O_TOKEN_STORE_BACKEND is invalid", async () => {
     process.env["O3O_TOKEN_STORE_BACKEND"] = "invalid-backend";
-    const { writeTokenSet } = await import("./token-store.service");
+    const { persistTokenSet } = await import("./token-store.service");
 
     const token = {
       access_token: "access-token",
@@ -280,7 +280,7 @@ describe("services/auth/token-store.service", () => {
       token_type: "Bearer",
     };
 
-    const writeResult = await writeTokenSet(token);
+    const writeResult = await persistTokenSet(token);
     expect(writeResult.isErr()).toBe(true);
     if (writeResult.isOk()) throw new Error("Expected err result");
     expect(writeResult.error.code).toBe(cliErrorCodes.CLI_CONFIG_INVALID);
@@ -289,7 +289,7 @@ describe("services/auth/token-store.service", () => {
 
   it("recovers from transient keychain entry load failure", async () => {
     h.keychainConstructFailuresRemaining = 1;
-    const { writeTokenSet } = await import("./token-store.service");
+    const { persistTokenSet } = await import("./token-store.service");
 
     const token = {
       access_token: "access-token",
@@ -299,10 +299,10 @@ describe("services/auth/token-store.service", () => {
       token_type: "Bearer",
     };
 
-    const firstWriteResult = await writeTokenSet(token);
+    const firstWriteResult = await persistTokenSet(token);
     expect(firstWriteResult.isErr()).toBe(true);
 
-    const secondWriteResult = await writeTokenSet(token);
+    const secondWriteResult = await persistTokenSet(token);
     expect(secondWriteResult.isOk()).toBe(true);
     expect(h.keychainStore.get(keychainTokenKey)).toBe(JSON.stringify(token));
   });
@@ -310,7 +310,7 @@ describe("services/auth/token-store.service", () => {
   it("falls back to file storage when keychain is unavailable and opt-in is enabled", async () => {
     h.keychainMode = "unavailable";
     process.env["O3O_ALLOW_FILE_TOKEN_STORE"] = "1";
-    const { clearTokenSet, readTokenSet, writeTokenSet } = await import(
+    const { clearTokenSet, persistTokenSet, readTokenSet } = await import(
       "./token-store.service"
     );
 
@@ -322,7 +322,7 @@ describe("services/auth/token-store.service", () => {
       token_type: "Bearer",
     };
 
-    const writeResult = await writeTokenSet(token);
+    const writeResult = await persistTokenSet(token);
     expect(writeResult.isOk()).toBe(true);
     expect(existsSync(tokenPath())).toBe(true);
     expect(statSync(tokenPath()).mode & 0o777).toBe(0o600);
