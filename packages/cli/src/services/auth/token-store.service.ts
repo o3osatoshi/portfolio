@@ -3,9 +3,10 @@ import { homedir } from "node:os";
 import { dirname } from "node:path";
 import { join } from "node:path";
 
-import { errAsync, ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 import {
+  deserialize,
   newRichError,
   omitUndefined,
   type RichError,
@@ -24,7 +25,6 @@ const keychainServiceName = "o3o-cli";
 const keychainAccountName = "default";
 const fileFallbackEnvName = "O3O_ALLOW_FILE_TOKEN_STORE";
 let didWarnFileFallback = false;
-let keychainEntryPromise: Promise<KeychainEntry> | undefined;
 
 type KeychainEntry = {
   deletePassword(): MaybePromise<boolean | undefined>;
@@ -32,37 +32,41 @@ type KeychainEntry = {
   setPassword(value: string): MaybePromise<void>;
 };
 
-type KeychainReadResult =
-  | { available: false; cause: unknown }
-  | { available: true; token: null | OidcTokenSet };
-type KeychainWriteResult = { cause: unknown; ok: false } | { ok: true };
 type MaybePromise<T> = Promise<T> | T;
 type TokenStoreBackend = TokenStoreEnv["tokenStoreBackend"];
 
 export function clearTokenSet(): ResultAsync<void, RichError> {
-  const env = resolveTokenStoreEnv();
-  if (env.isErr()) {
-    return errAsync(env.error);
-  }
-  const { tokenStoreBackend: backend } = env.value;
-  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
+  return resolveTokenStoreEnv()
+    .asyncAndThen((env) => {
+      const tokenStoreFilePath = resolveTokenStoreFilePath(env);
 
-  return ResultAsync.fromPromise(
-    (async () => {
-      if (backend === "file") {
-        await rm(tokenStoreFilePath, { force: true });
-        return;
+      switch (env.tokenStoreBackend) {
+        case "file": {
+          return removeTokenStoreFile(tokenStoreFilePath);
+        }
+
+        case "keychain": {
+          return deleteKeychainToken({
+            action: "ClearTokenSet",
+            backend: env.tokenStoreBackend,
+            strict: true,
+          });
+        }
+
+        case "auto": {
+          return deleteKeychainToken({
+            action: "ClearTokenSet",
+            backend: env.tokenStoreBackend,
+            strict: false,
+          }).andThen(() =>
+            removeTokenStoreFile(tokenStoreFilePath).orElse(() =>
+              ok(undefined),
+            ),
+          );
+        }
       }
-
-      if (backend === "keychain") {
-        await deleteKeychainToken({ strict: true });
-        return;
-      }
-
-      await deleteKeychainToken({ strict: false });
-      await rm(tokenStoreFilePath, { force: true });
-    })(),
-    (cause) =>
+    })
+    .mapErr((cause) =>
       toRichError(cause, {
         code: cliErrorCodes.CLI_TOKEN_STORE_CLEAR_FAILED,
         details: {
@@ -73,70 +77,23 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
         kind: "Internal",
         layer: "Presentation",
       }),
-  );
+    );
 }
 
 export function persistTokenSet(
   tokenSet: OidcTokenSet,
 ): ResultAsync<void, RichError> {
-  const env = resolveTokenStoreEnv();
-  if (env.isErr()) {
-    return errAsync(env.error);
-  }
-  const { allowFileFallback, tokenStoreBackend } = env.value;
-  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
-
-  const result = serialize(tokenSet);
-  if (result.isErr()) {
-    return errAsync(result.error);
-  }
-  const serializedTokenSet = result.value;
-
-  return ResultAsync.fromPromise(
-    (async () => {
-      switch (tokenStoreBackend) {
-        case "file": {
-          await persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
-          return;
-        }
-
-        case "keychain": {
-          const keychainWrite = await writeKeychainTokenSet(serializedTokenSet);
-          if (!keychainWrite.ok) {
-            throw newBackendUnavailableError(
-              "PersistTokenSet",
-              keychainWrite.cause,
-              tokenStoreBackend,
-            );
-          }
-          await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
-          return;
-        }
-
-        case "auto": {
-          const keychainWrite = await writeKeychainTokenSet(serializedTokenSet);
-          if (keychainWrite.ok) {
-            await rm(tokenStoreFilePath, { force: true }).catch(
-              () => undefined,
-            );
-            return;
-          }
-
-          if (!allowFileFallback) {
-            throw newBackendUnavailableError(
-              "PersistTokenSet",
-              keychainWrite.cause,
-              tokenStoreBackend,
-            );
-          }
-
-          warnFileFallbackOnce(tokenStoreFilePath);
-          await persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
-          return;
-        }
-      }
-    })(),
-    (cause) =>
+  return resolveTokenStoreEnv()
+    .asyncAndThen((env) =>
+      serialize(tokenSet).asyncAndThen((serializedTokenSet) =>
+        persistTokenSetToBackend(
+          env,
+          resolveTokenStoreFilePath(env),
+          serializedTokenSet,
+        ),
+      ),
+    )
+    .mapErr((cause) =>
       toRichError(cause, {
         code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
         details: {
@@ -147,86 +104,29 @@ export function persistTokenSet(
         kind: "Internal",
         layer: "Presentation",
       }),
-  );
+    );
 }
 
 export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
-  const env = resolveTokenStoreEnv();
-  if (env.isErr()) {
-    return errAsync(env.error);
-  }
-  const { allowFileFallback, tokenStoreBackend: backend } = env.value;
-  const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
+  return resolveTokenStoreEnv()
+    .asyncAndThen((env) => {
+      const tokenStoreFilePath = resolveTokenStoreFilePath(env);
 
-  return ResultAsync.fromPromise(
-    (async () => {
-      if (backend === "file") {
-        return await readFileTokenSet(tokenStoreFilePath);
-      }
-
-      const keychainResult = await readKeychainTokenSet();
-      if (backend === "keychain") {
-        if (!keychainResult.available) {
-          throw newBackendUnavailableError(
-            "ReadTokenSet",
-            keychainResult.cause,
-            backend,
-          );
+      switch (env.tokenStoreBackend) {
+        case "file": {
+          return readFileTokenSet(tokenStoreFilePath);
         }
-        return keychainResult.token;
-      }
 
-      const fileToken = await readFileTokenSet(tokenStoreFilePath);
-      if (!keychainResult.available) {
-        if (!allowFileFallback) {
-          throw newBackendUnavailableError(
-            "ReadTokenSet",
-            keychainResult.cause,
-            backend,
-          );
+        case "keychain": {
+          return readKeychainTokenSet("ReadTokenSet", env.tokenStoreBackend);
         }
-        if (!fileToken) return null;
-        warnFileFallbackOnce(tokenStoreFilePath);
-        return fileToken;
-      }
 
-      const selected = selectTokenSource(keychainResult.token, fileToken);
-      if (!selected) return null;
-
-      if (selected.source === "keychain") {
-        await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
-        return selected.token;
+        case "auto": {
+          return readTokenSetFromAutoBackend(env, tokenStoreFilePath);
+        }
       }
-
-      const serialized = serialize(selected.token);
-      if (serialized.isErr()) {
-        throw serialized.error;
-      }
-      const syncResult = await writeKeychainTokenSet(serialized.value);
-      if (syncResult.ok) {
-        await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
-        return selected.token;
-      }
-
-      if (!allowFileFallback) {
-        throw newRichError({
-          cause: syncResult.cause,
-          code: cliErrorCodes.CLI_TOKEN_STORE_MIGRATION_FAILED,
-          details: {
-            action: "MigrateTokenStore",
-            reason:
-              "Failed to migrate file-based token state to secure token storage.",
-          },
-          isOperational: true,
-          kind: "Internal",
-          layer: "Presentation",
-        });
-      }
-
-      warnFileFallbackOnce(tokenStoreFilePath);
-      return selected.token;
-    })(),
-    (cause) =>
+    })
+    .mapErr((cause) =>
       toRichError(cause, {
         code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
         details: {
@@ -237,7 +137,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         kind: "Internal",
         layer: "Presentation",
       }),
-  );
+    );
 }
 
 function buildKeychainUnavailableReason(backend: TokenStoreBackend): string {
@@ -248,35 +148,47 @@ function buildKeychainUnavailableReason(backend: TokenStoreBackend): string {
   return "Secure token storage (OS keychain) is unavailable. Set O3O_ALLOW_FILE_TOKEN_STORE=1 only if you accept file-based token storage, or set O3O_TOKEN_STORE_BACKEND=file to force file storage.";
 }
 
-async function deleteKeychainToken(options: {
+function deleteKeychainToken(options: {
+  action: string;
+  backend: TokenStoreBackend;
   strict: boolean;
-}): Promise<void> {
-  try {
-    const keychainEntry = await getKeychainEntry();
-    await keychainEntry.deletePassword();
-  } catch (cause) {
-    if (isKeychainNotFoundError(cause)) {
-      return;
-    }
-    if (options.strict) {
-      throw cause;
-    }
-    // best effort in auto mode
-  }
+}): ResultAsync<void, RichError> {
+  return getKeychainEntry(options.action, options.backend)
+    .andThen((keychainEntry) =>
+      ResultAsync.fromPromise(
+        Promise.resolve(keychainEntry.deletePassword()),
+        (cause) => cause,
+      ).orElse((cause) => {
+        if (isKeychainNotFoundError(cause)) {
+          return ok(undefined);
+        }
+
+        return err(
+          newBackendUnavailableError(options.action, cause, options.backend),
+        );
+      }),
+    )
+    .map(() => undefined)
+    .orElse((error) => {
+      if (!options.strict) {
+        return ok(undefined);
+      }
+
+      return err(error);
+    });
 }
 
 function getFreshnessScore(token: OidcTokenSet): number {
   return typeof token.expires_at === "number" ? token.expires_at : 0;
 }
 
-function getKeychainEntry(): Promise<KeychainEntry> {
-  if (!keychainEntryPromise) {
-    keychainEntryPromise = loadKeychainEntry().catch((error) => {
-      keychainEntryPromise = undefined;
-      throw error;
-    });
-  }
-  return keychainEntryPromise;
+function getKeychainEntry(
+  action: string,
+  backend: TokenStoreBackend,
+): ResultAsync<KeychainEntry, RichError> {
+  return ResultAsync.fromPromise(loadKeychainEntry(), (cause) =>
+    newBackendUnavailableError(action, cause, backend),
+  );
 }
 
 function isErrnoException(value: unknown): value is NodeJS.ErrnoException {
@@ -305,6 +217,43 @@ async function loadKeychainEntry(): Promise<KeychainEntry> {
   return new Entry(keychainServiceName, keychainAccountName);
 }
 
+function migrateFileTokenToKeychain(
+  tokenSet: OidcTokenSet,
+  tokenStoreFilePath: string,
+  allowFileFallback: boolean,
+): ResultAsync<OidcTokenSet, RichError> {
+  return serialize(tokenSet).asyncAndThen((serializedTokenSet) =>
+    writeKeychainTokenSet("MigrateTokenStore", "auto", serializedTokenSet)
+      .andThen(() =>
+        removeTokenStoreFile(tokenStoreFilePath)
+          .orElse(() => ok(undefined))
+          .map(() => tokenSet),
+      )
+      .orElse((error) => {
+        if (allowFileFallback) {
+          return ok(tokenSet).andTee(() => {
+            warnFileFallbackOnce(tokenStoreFilePath);
+          });
+        }
+
+        return err(
+          newRichError({
+            cause: error,
+            code: cliErrorCodes.CLI_TOKEN_STORE_MIGRATION_FAILED,
+            details: {
+              action: "MigrateTokenStore",
+              reason:
+                "Failed to migrate file-based token state to secure token storage.",
+            },
+            isOperational: true,
+            kind: "Internal",
+            layer: "Presentation",
+          }),
+        );
+      }),
+  );
+}
+
 function newBackendUnavailableError(
   action: string,
   cause: unknown,
@@ -324,84 +273,217 @@ function newBackendUnavailableError(
 }
 
 function parseStoredTokenSet(raw: string): null | OidcTokenSet {
-  try {
-    const parsed = oidcTokenSetSchema.safeParse(JSON.parse(raw));
-    if (!parsed.success) {
-      return null;
-    }
-
-    return omitUndefined({
-      access_token: parsed.data.access_token,
-      expires_at: parsed.data.expires_at,
-      refresh_token: parsed.data.refresh_token,
-      scope: parsed.data.scope,
-      token_type: parsed.data.token_type,
-    });
-  } catch {
+  const deserialized = deserialize(raw);
+  if (deserialized.isErr()) {
     return null;
   }
+
+  const parsed = oidcTokenSetSchema.safeParse(deserialized.value);
+  if (!parsed.success) {
+    return null;
+  }
+
+  return omitUndefined({
+    access_token: parsed.data.access_token,
+    expires_at: parsed.data.expires_at,
+    refresh_token: parsed.data.refresh_token,
+    scope: parsed.data.scope,
+    token_type: parsed.data.token_type,
+  });
 }
 
-async function persistTokenToFile(
+function persistTokenSetToBackend(
+  env: TokenStoreEnv,
+  tokenStoreFilePath: string,
+  serializedTokenSet: string,
+): ResultAsync<void, RichError> {
+  switch (env.tokenStoreBackend) {
+    case "file": {
+      return persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
+    }
+
+    case "keychain": {
+      return writeKeychainTokenSet(
+        "PersistTokenSet",
+        env.tokenStoreBackend,
+        serializedTokenSet,
+      ).andThen(() =>
+        removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok(undefined)),
+      );
+    }
+
+    case "auto": {
+      return writeKeychainTokenSet(
+        "PersistTokenSet",
+        env.tokenStoreBackend,
+        serializedTokenSet,
+      )
+        .andThen(() =>
+          removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok(undefined)),
+        )
+        .orElse((error) => {
+          if (!env.allowFileFallback) {
+            return err(error);
+          }
+
+          return ok(undefined)
+            .andTee(() => {
+              warnFileFallbackOnce(tokenStoreFilePath);
+            })
+            .asyncAndThen(() =>
+              persistTokenToFile(serializedTokenSet, tokenStoreFilePath),
+            );
+        });
+    }
+  }
+}
+
+function persistTokenToFile(
   serialized: string,
   tokenStoreFilePath: string,
-): Promise<void> {
-  await mkdir(dirname(tokenStoreFilePath), { recursive: true });
-  await writeFile(tokenStoreFilePath, `${serialized}\n`, {
-    encoding: "utf8",
-    mode: 0o600,
-  });
+): ResultAsync<void, RichError> {
+  return ResultAsync.fromPromise(
+    (async () => {
+      await mkdir(dirname(tokenStoreFilePath), { recursive: true });
+      await writeFile(tokenStoreFilePath, `${serialized}\n`, {
+        encoding: "utf8",
+        mode: 0o600,
+      });
 
-  if (process.platform !== "win32") {
-    try {
-      await chmod(tokenStoreFilePath, 0o600);
-    } catch {
-      // best effort
-    }
-  }
+      if (process.platform !== "win32") {
+        try {
+          await chmod(tokenStoreFilePath, 0o600);
+        } catch {
+          // best effort
+        }
+      }
+    })(),
+    (cause) =>
+      newRichError({
+        cause,
+        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+        details: {
+          action: "PersistTokenSetToFile",
+          reason: "Failed to persist file-based token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
 }
 
-async function readFileTokenSet(
+function readFileTokenSet(
   tokenStoreFilePath: string,
-): Promise<null | OidcTokenSet> {
-  try {
-    const raw = await readFile(tokenStoreFilePath, "utf8");
-    return parseStoredTokenSet(raw);
-  } catch (cause) {
-    if (isErrnoException(cause) && cause.code === "ENOENT") {
-      return null;
-    }
-    throw newRichError({
-      cause,
-      code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
-      details: {
-        action: "ReadTokenSetFromFile",
-        reason: "Failed to read file-based token state.",
-      },
-      isOperational: true,
-      kind: "Internal",
-      layer: "Presentation",
-    });
-  }
+): ResultAsync<null | OidcTokenSet, RichError> {
+  return ResultAsync.fromPromise(
+    readFile(tokenStoreFilePath, "utf8"),
+    (cause) => cause,
+  )
+    .orElse((cause) => {
+      if (isErrnoException(cause) && cause.code === "ENOENT") {
+        return ok(null);
+      }
+
+      return err(
+        newRichError({
+          cause,
+          code: cliErrorCodes.CLI_TOKEN_STORE_READ_FAILED,
+          details: {
+            action: "ReadTokenSetFromFile",
+            reason: "Failed to read file-based token state.",
+          },
+          isOperational: true,
+          kind: "Internal",
+          layer: "Presentation",
+        }),
+      );
+    })
+    .map((raw) => (typeof raw === "string" ? parseStoredTokenSet(raw) : null));
 }
 
-async function readKeychainTokenSet(): Promise<KeychainReadResult> {
-  try {
-    const keychainEntry = await getKeychainEntry();
-    const raw = await keychainEntry.getPassword();
-    if (!raw) {
-      return { available: true, token: null };
-    }
-    return {
-      available: true,
-      token: parseStoredTokenSet(raw),
-    };
-  } catch (cause) {
-    if (isKeychainNotFoundError(cause)) {
-      return { available: true, token: null };
-    }
-    return { available: false, cause };
-  }
+function readKeychainTokenSet(
+  action: string,
+  backend: TokenStoreBackend,
+): ResultAsync<null | OidcTokenSet, RichError> {
+  return getKeychainEntry(action, backend).andThen((keychainEntry) =>
+    ResultAsync.fromPromise(
+      Promise.resolve(keychainEntry.getPassword()),
+      (cause) => cause,
+    )
+      .orElse((cause) => {
+        if (isKeychainNotFoundError(cause)) {
+          return ok(null);
+        }
+
+        return err(newBackendUnavailableError(action, cause, backend));
+      })
+      .map((raw) =>
+        typeof raw === "string" && raw.length > 0
+          ? parseStoredTokenSet(raw)
+          : null,
+      ),
+  );
+}
+
+function readTokenSetFromAutoBackend(
+  env: TokenStoreEnv,
+  tokenStoreFilePath: string,
+): ResultAsync<null | OidcTokenSet, RichError> {
+  return readFileTokenSet(tokenStoreFilePath).andThen((fileToken) =>
+    readKeychainTokenSet("ReadTokenSet", env.tokenStoreBackend)
+      .andThen((keychainToken) => {
+        const selected = selectTokenSource(keychainToken, fileToken);
+        if (!selected) {
+          return ok(null);
+        }
+
+        if (selected.source === "keychain") {
+          return removeTokenStoreFile(tokenStoreFilePath)
+            .orElse(() => ok(undefined))
+            .map(() => selected.token);
+        }
+
+        return migrateFileTokenToKeychain(
+          selected.token,
+          tokenStoreFilePath,
+          env.allowFileFallback,
+        );
+      })
+      .orElse((error) => {
+        if (!env.allowFileFallback) {
+          return err(error);
+        }
+
+        if (!fileToken) {
+          return ok(null);
+        }
+
+        return ok(fileToken).andTee(() => {
+          warnFileFallbackOnce(tokenStoreFilePath);
+        });
+      }),
+  );
+}
+
+function removeTokenStoreFile(
+  tokenStoreFilePath: string,
+): ResultAsync<void, RichError> {
+  return ResultAsync.fromPromise(
+    rm(tokenStoreFilePath, { force: true }),
+    (cause) =>
+      newRichError({
+        cause,
+        code: cliErrorCodes.CLI_TOKEN_STORE_CLEAR_FAILED,
+        details: {
+          action: "RemoveTokenStoreFile",
+          reason: "Failed to remove file-based token state.",
+        },
+        isOperational: true,
+        kind: "Internal",
+        layer: "Presentation",
+      }),
+  );
 }
 
 function resolveTokenStoreFilePath(env: TokenStoreEnv): string {
@@ -447,16 +529,15 @@ function warnFileFallbackOnce(tokenStoreFilePath: string): void {
   );
 }
 
-async function writeKeychainTokenSet(
+function writeKeychainTokenSet(
+  action: string,
+  backend: TokenStoreBackend,
   serialized: string,
-): Promise<KeychainWriteResult> {
-  return (async () => {
-    try {
-      const keychainEntry = await getKeychainEntry();
-      await keychainEntry.setPassword(serialized);
-      return { ok: true };
-    } catch (cause) {
-      return { cause, ok: false };
-    }
-  })();
+): ResultAsync<void, RichError> {
+  return getKeychainEntry(action, backend).andThen((keychainEntry) =>
+    ResultAsync.fromPromise(
+      Promise.resolve(keychainEntry.setPassword(serialized)),
+      (cause) => newBackendUnavailableError(action, cause, backend),
+    ),
+  );
 }
