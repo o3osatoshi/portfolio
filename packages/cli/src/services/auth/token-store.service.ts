@@ -71,9 +71,7 @@ export function persistTokenSet(
             env.tokenStoreBackend,
             serializedTokenSet,
           ).andThen(() =>
-            removeTokenStoreFile(tokenStoreFilePath).orElse(() =>
-              ok(undefined),
-            ),
+            removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok()),
           );
         }
 
@@ -84,16 +82,14 @@ export function persistTokenSet(
             serializedTokenSet,
           )
             .andThen(() =>
-              removeTokenStoreFile(tokenStoreFilePath).orElse(() =>
-                ok(undefined),
-              ),
+              removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok()),
             )
             .orElse((error) => {
               if (!env.allowFileFallback) {
                 return err(error);
               }
 
-              return ok(undefined)
+              return ok()
                 .andTee(() => {
                   warnFileFallbackOnce(tokenStoreFilePath);
                 })
