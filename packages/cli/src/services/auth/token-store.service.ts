@@ -19,7 +19,6 @@ import {
   type TokenStoreEnv,
 } from "../../common/runtime-env";
 import { type OidcTokenSet, oidcTokenSetSchema } from "../../common/types";
-import { makeCliSchemaParser } from "../../common/zod-validation";
 
 const keychainServiceName = "o3o-cli";
 const keychainAccountName = "default";
@@ -174,37 +173,27 @@ export function writeTokenSet(
   if (env.isErr()) {
     return errAsync(env.error);
   }
-  const { allowFileFallback, tokenStoreBackend: backend } = env.value;
+  const { allowFileFallback, tokenStoreBackend } = env.value;
   const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
 
-  const parsed = makeCliSchemaParser(oidcTokenSetSchema, {
-    action: "WriteTokenSet",
-    code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
-    context: "token payload",
-    fallbackHint: "Run `o3o auth login` to refresh local credentials.",
-  })(tokenSet);
-  if (parsed.isErr()) {
-    return errAsync(parsed.error);
-  }
-
-  const serialized = encode(parsed.value);
+  const serialized = encode(tokenSet);
   if (serialized.isErr()) {
     return errAsync(serialized.error);
   }
   return ResultAsync.fromPromise(
     (async () => {
-      if (backend === "file") {
+      if (tokenStoreBackend === "file") {
         await persistTokenToFile(serialized.value, tokenStoreFilePath);
         return;
       }
 
       const keychainWrite = await writeKeychainTokenSet(serialized.value);
-      if (backend === "keychain") {
+      if (tokenStoreBackend === "keychain") {
         if (!keychainWrite.ok) {
           throw newBackendUnavailableError(
             "WriteTokenSet",
             keychainWrite.cause,
-            backend,
+            tokenStoreBackend,
           );
         }
         await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
@@ -220,7 +209,7 @@ export function writeTokenSet(
         throw newBackendUnavailableError(
           "WriteTokenSet",
           keychainWrite.cause,
-          backend,
+          tokenStoreBackend,
         );
       }
 
