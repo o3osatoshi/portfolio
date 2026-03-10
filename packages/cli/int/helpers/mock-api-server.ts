@@ -5,7 +5,7 @@ import {
   type ServerResponse,
 } from "node:http";
 
-import { encode } from "@o3osatoshi/toolkit";
+import { serialize } from "@o3osatoshi/toolkit";
 
 import type { MockOidcPrincipal } from "./mock-oidc-server";
 
@@ -304,7 +304,7 @@ export class MockApiServer {
     status: number,
     payload: unknown,
   ): void {
-    const serialized = encode(payload);
+    const serialized = serialize(payload);
     const body = serialized.isOk()
       ? serialized.value
       : '{"code":"CLI_API_REQUEST_FAILED","message":"serialization_failed"}';

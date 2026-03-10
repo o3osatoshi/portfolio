@@ -106,7 +106,7 @@ export type SerializeOptions = {
  * @remarks
  * Uses {@link tryDeserializeRichError} internally. When strict deserialization
  * fails, this returns a structured `Serialization` RichError describing the
- * decode failure.
+ * deserialization failure.
  *
  * @public
  */

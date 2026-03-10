@@ -3,9 +3,9 @@ import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 import {
-  encode,
   httpStatusToKind,
   makeSchemaParser,
+  serialize,
 } from "@o3osatoshi/toolkit";
 
 import { createSmartFetch, type CreateSmartFetchOptions } from "../http";
@@ -114,7 +114,7 @@ export function createSlackClient(
         action: "SlackPostMessage",
         layer: "External",
       })(message).asyncAndThen((validated) =>
-        encode(validated)
+        serialize(validated)
           .mapErr((cause) =>
             newIntegrationError({
               cause,

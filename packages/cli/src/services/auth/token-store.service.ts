@@ -6,10 +6,10 @@ import { join } from "node:path";
 import { errAsync, ResultAsync } from "neverthrow";
 
 import {
-  encode,
   newRichError,
   omitUndefined,
   type RichError,
+  serialize,
   toRichError,
 } from "@o3osatoshi/toolkit";
 
@@ -124,7 +124,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
         return selected.token;
       }
 
-      const serialized = encode(selected.token);
+      const serialized = serialize(selected.token);
       if (serialized.isErr()) {
         throw serialized.error;
       }
@@ -176,7 +176,7 @@ export function writeTokenSet(
   const { allowFileFallback, tokenStoreBackend } = env.value;
   const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
 
-  const serializedTokenSet = encode(tokenSet);
+  const serializedTokenSet = serialize(tokenSet);
   if (serializedTokenSet.isErr()) {
     return errAsync(serializedTokenSet.error);
   }

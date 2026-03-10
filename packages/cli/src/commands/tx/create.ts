@@ -1,7 +1,7 @@
 import { errAsync, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
-import { encode, omitUndefined, type RichError } from "@o3osatoshi/toolkit";
+import { omitUndefined, type RichError, serialize } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { type OutputMode, printSuccessData } from "../../common/output";
@@ -61,7 +61,7 @@ export function runTxCreate(
   )
     .andTee((created) => {
       printSuccessData("tx.create", created, outputMode, (data) => {
-        const serialized = encode(data, { space: 2 });
+        const serialized = serialize(data, { space: 2 });
         if (serialized.isErr()) {
           console.log(String(data));
           return;

@@ -1,5 +1,5 @@
 import type { Kind } from "../error";
-import { encode } from "../json-codec";
+import { serialize } from "../json-codec";
 import { truncate } from "../truncate";
 
 /**
@@ -120,7 +120,7 @@ export function formatPayloadPreview(payload: unknown): string {
   if (payload === null) return "null";
   if (payload === undefined) return "";
   if (typeof payload === "string") return payload;
-  const serialized = encode(payload);
+  const serialized = serialize(payload);
   if (serialized.isOk()) {
     return serialized.value;
   }

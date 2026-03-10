@@ -127,7 +127,7 @@ const result = userParser({ age: 20, name: "alice" });
 | `Unprocessable` | 422 | Semantically invalid request. |
 | `RateLimit` | 429 | Throttling/quota exceeded. |
 | `Internal` | 500 | Unexpected internal failure. |
-| `Serialization` | 500 | Encode/decode failure. |
+| `Serialization` | 500 | Serialize/deserialize failure. |
 | `BadGateway` | 502 | Upstream responded invalidly. |
 | `Unavailable` | 503 | Dependency/service temporarily unavailable. |
 | `Timeout` | 504 | Upstream/local operation timed out. |

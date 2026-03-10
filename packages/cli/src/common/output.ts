@@ -1,4 +1,4 @@
-import { encode, omitUndefined, type RichError } from "@o3osatoshi/toolkit";
+import { omitUndefined, type RichError, serialize } from "@o3osatoshi/toolkit";
 
 import {
   type FailurePayload,
@@ -55,7 +55,7 @@ export function printFailure(
         },
         ok: false,
       };
-      const serialized = encode(payload);
+      const serialized = serialize(payload);
       if (serialized.isErr()) {
         console.error(toFailureMessage(serialized.error));
         return;
@@ -116,7 +116,7 @@ function printSuccessJson(
         ok: true,
         value: result.value,
       };
-      const serialized = encode(payload);
+      const serialized = serialize(payload);
       if (serialized.isErr()) {
         console.error(toFailureMessage(serialized.error));
         return;

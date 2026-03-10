@@ -1,4 +1,4 @@
-import { encode } from "../json-codec";
+import { serialize } from "../json-codec";
 
 /**
  * Coerces an unknown value into a best-effort error message.
@@ -17,7 +17,7 @@ export function coerceErrorMessage(cause: unknown): string | undefined {
   if (cause === undefined) return undefined;
 
   if (typeof cause === "object") {
-    const serialized = encode(cause);
+    const serialized = serialize(cause);
     if (serialized.isOk()) {
       return serialized.value;
     }

@@ -75,7 +75,7 @@ export type CreateRateLimitGuardOptions<T> = {
 export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
 
 // @public
-export function decode(value: string, options?: JsonDecodeOptions): Result<JsonContainer, RichError>;
+export function deserialize(value: string, options?: JsonDeserializeOptions): Result<JsonContainer, RichError>;
 
 // @public
 export function deserializeResponseBody(response: Response): Promise<unknown>;
@@ -105,9 +105,6 @@ export type DeserializeRichErrorOptions = {
     meta?: JsonObject | undefined;
     source?: string | undefined;
 };
-
-// @public
-export function encode(value: unknown, options?: JsonEncodeOptions): Result<string, RichError>;
 
 // @public
 export type Env = "development" | "local" | "production" | "staging";
@@ -259,14 +256,8 @@ export const jsonArraySchema: z.ZodType<JsonArray>;
 export type JsonContainer = JsonArray | JsonObject;
 
 // @public
-export type JsonDecodeOptions = {
+export type JsonDeserializeOptions = {
     reviver?: Parameters<typeof JSON.parse>[1];
-};
-
-// @public
-export type JsonEncodeOptions = {
-    replacer?: Parameters<typeof JSON.stringify>[1];
-    space?: Parameters<typeof JSON.stringify>[2];
 };
 
 // @public
@@ -282,6 +273,12 @@ export type JsonPrimitive = boolean | null | number | string;
 
 // @public
 export const jsonPrimitiveSchema: z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>;
+
+// @public
+export type JsonSerializeOptions = {
+    replacer?: Parameters<typeof JSON.stringify>[1];
+    space?: Parameters<typeof JSON.stringify>[2];
+};
 
 // @public
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
@@ -495,6 +492,9 @@ export const richErrorI18nSchema: z.ZodObject<{
     key: z.ZodString;
     params: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
 }, z.core.$strip>;
+
+// @public
+export function serialize(value: unknown, options?: JsonSerializeOptions): Result<string, RichError>;
 
 // @public
 export type SerializedCause = Exclude<SerializedError["cause"], undefined>;

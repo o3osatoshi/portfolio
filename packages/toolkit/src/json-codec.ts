@@ -4,14 +4,14 @@ import { newRichError, type RichError } from "./error";
 import type { JsonContainer, JsonValue } from "./types";
 
 /**
- * Options for {@link decode}.
+ * Options for {@link deserialize}.
  *
  * @remarks
  * Passed through to `JSON.parse`.
  *
  * @public
  */
-export type JsonDecodeOptions = {
+export type JsonDeserializeOptions = {
   /**
    * Optional reviver invoked for each parsed property during `JSON.parse`.
    */
@@ -19,14 +19,14 @@ export type JsonDecodeOptions = {
 };
 
 /**
- * Options for {@link encode}.
+ * Options for {@link serialize}.
  *
  * @remarks
  * Passed through to `JSON.stringify`.
  *
  * @public
  */
-export type JsonEncodeOptions = {
+export type JsonSerializeOptions = {
   /**
    * Optional replacer used to filter or transform values during serialization.
    */
@@ -53,17 +53,17 @@ export type JsonEncodeOptions = {
  * @returns A neverthrow result containing a {@link JsonContainer} on success, or a structured error on failure.
  * @example
  * ```ts
- * const result = decode('{"count":"1"}', {
+ * const result = deserialize('{"count":"1"}', {
  *   reviver: (key, value) => (key === "count" ? Number(value) : value),
  * });
  * ```
  * @public
  */
-export function decode(
+export function deserialize(
   value: string,
-  options: JsonDecodeOptions = {},
+  options: JsonDeserializeOptions = {},
 ): Result<JsonContainer, RichError> {
-  return _decode(value, options).andThen((v) => {
+  return _deserialize(value, options).andThen((v) => {
     if (isJsonContainer(v)) {
       return ok(v);
     }
@@ -72,7 +72,7 @@ export function decode(
         cause: v,
         code: "JSON_CODEC_CONTAINER_EXPECTED",
         details: {
-          action: "DecodeJsonContainer",
+          action: "DeserializeJsonContainer",
           hint: "Ensure the JSON string encodes an object (`{}`) or array (`[]`).",
           reason: "Expected top-level JSON object or array",
         },
@@ -99,13 +99,13 @@ export function decode(
  * @returns A neverthrow result containing the JSON string on success, or a structured error on failure.
  * @example
  * ```ts
- * const result = encode({ count: 1 }, { space: 2 });
+ * const result = serialize({ count: 1 }, { space: 2 });
  * ```
  * @public
  */
-export function encode(
+export function serialize(
   value: unknown,
-  options: JsonEncodeOptions = {},
+  options: JsonSerializeOptions = {},
 ): Result<string, RichError> {
   try {
     const encoded = JSON.stringify(value, options.replacer, options.space);
@@ -114,9 +114,9 @@ export function encode(
         newRichError({
           code: "JSON_CODEC_ENCODE_FAILED",
           details: {
-            action: "EncodeJson",
+            action: "SerializeJson",
             hint: "Ensure the value is JSON-serializable.",
-            reason: "Failed to encode value as JSON",
+            reason: "Failed to serialize value as JSON",
           },
           isOperational: false,
           kind: "Serialization",
@@ -131,9 +131,9 @@ export function encode(
         cause,
         code: "JSON_CODEC_ENCODE_FAILED",
         details: {
-          action: "EncodeJson",
+          action: "SerializeJson",
           hint: "Ensure the value is JSON-serializable.",
-          reason: "Failed to encode value as JSON",
+          reason: "Failed to serialize value as JSON",
         },
         isOperational: false,
         kind: "Serialization",
@@ -143,9 +143,9 @@ export function encode(
   }
 }
 
-function _decode(
+function _deserialize(
   value: string,
-  options: JsonDecodeOptions,
+  options: JsonDeserializeOptions,
 ): Result<JsonValue, RichError> {
   try {
     return ok(JSON.parse(value, options.reviver));
@@ -155,9 +155,9 @@ function _decode(
         cause,
         code: "JSON_CODEC_DECODE_FAILED",
         details: {
-          action: "DecodeJson",
+          action: "DeserializeJson",
           hint: "Ensure the input string is valid JSON.",
-          reason: "Failed to decode value from JSON",
+          reason: "Failed to deserialize value from JSON",
         },
         isOperational: false,
         kind: "Serialization",

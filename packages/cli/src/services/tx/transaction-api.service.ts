@@ -1,6 +1,10 @@
 import type { ResultAsync } from "neverthrow";
 
-import { encode, makeSchemaParser, type RichError } from "@o3osatoshi/toolkit";
+import {
+  makeSchemaParser,
+  type RichError,
+  serialize,
+} from "@o3osatoshi/toolkit";
 
 import {
   requestAuthenticatedApi,
@@ -15,7 +19,7 @@ import {
 export function createTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<TransactionResponse, RichError> {
-  return encode(payload).asyncAndThen((serializedPayload) =>
+  return serialize(payload).asyncAndThen((serializedPayload) =>
     requestAuthenticatedApiWithParser(
       "/api/cli/v1/transactions",
       {
@@ -62,7 +66,7 @@ export function updateTransaction(
   id: string,
   payload: Record<string, unknown>,
 ): ResultAsync<void, RichError> {
-  return encode(payload).asyncAndThen((serializedPayload) =>
+  return serialize(payload).asyncAndThen((serializedPayload) =>
     requestAuthenticatedApi(
       `/api/cli/v1/transactions/${encodeURIComponent(id)}`,
       {

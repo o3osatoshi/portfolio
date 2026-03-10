@@ -1,6 +1,6 @@
 import { errAsync, type ResultAsync } from "neverthrow";
 
-import { decode, type RichError, sleep } from "@o3osatoshi/toolkit";
+import { deserialize, type RichError, sleep } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http";
@@ -142,7 +142,7 @@ export function pollDeviceAuth(
           const resJson =
             trimmedText.length === 0
               ? null
-              : decode(trimmedText).match(
+              : deserialize(trimmedText).match(
                   (decodedText) => decodedText,
                   () => null,
                 );
