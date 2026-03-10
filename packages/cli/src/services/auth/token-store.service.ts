@@ -176,45 +176,64 @@ export function writeTokenSet(
   const { allowFileFallback, tokenStoreBackend } = env.value;
   const tokenStoreFilePath = resolveTokenStoreFilePath(env.value);
 
-  const serialized = encode(tokenSet);
-  if (serialized.isErr()) {
-    return errAsync(serialized.error);
+  const serializedTokenSet = encode(tokenSet);
+  if (serializedTokenSet.isErr()) {
+    return errAsync(serializedTokenSet.error);
   }
+
   return ResultAsync.fromPromise(
     (async () => {
-      if (tokenStoreBackend === "file") {
-        await persistTokenToFile(serialized.value, tokenStoreFilePath);
-        return;
-      }
-
-      const keychainWrite = await writeKeychainTokenSet(serialized.value);
-      if (tokenStoreBackend === "keychain") {
-        if (!keychainWrite.ok) {
-          throw newBackendUnavailableError(
-            "WriteTokenSet",
-            keychainWrite.cause,
-            tokenStoreBackend,
+      switch (tokenStoreBackend) {
+        case "file": {
+          await persistTokenToFile(
+            serializedTokenSet.value,
+            tokenStoreFilePath,
           );
+          return;
         }
-        await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
-        return;
-      }
 
-      if (keychainWrite.ok) {
-        await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
-        return;
-      }
+        case "keychain": {
+          const keychainWrite = await writeKeychainTokenSet(
+            serializedTokenSet.value,
+          );
+          if (!keychainWrite.ok) {
+            throw newBackendUnavailableError(
+              "WriteTokenSet",
+              keychainWrite.cause,
+              tokenStoreBackend,
+            );
+          }
+          await rm(tokenStoreFilePath, { force: true }).catch(() => undefined);
+          return;
+        }
 
-      if (!allowFileFallback) {
-        throw newBackendUnavailableError(
-          "WriteTokenSet",
-          keychainWrite.cause,
-          tokenStoreBackend,
-        );
-      }
+        case "auto": {
+          const keychainWrite = await writeKeychainTokenSet(
+            serializedTokenSet.value,
+          );
+          if (keychainWrite.ok) {
+            await rm(tokenStoreFilePath, { force: true }).catch(
+              () => undefined,
+            );
+            return;
+          }
 
-      warnFileFallbackOnce(tokenStoreFilePath);
-      await persistTokenToFile(serialized.value, tokenStoreFilePath);
+          if (!allowFileFallback) {
+            throw newBackendUnavailableError(
+              "WriteTokenSet",
+              keychainWrite.cause,
+              tokenStoreBackend,
+            );
+          }
+
+          warnFileFallbackOnce(tokenStoreFilePath);
+          await persistTokenToFile(
+            serializedTokenSet.value,
+            tokenStoreFilePath,
+          );
+          return;
+        }
+      }
     })(),
     (cause) =>
       toRichError(cause, {
