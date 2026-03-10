@@ -48,14 +48,14 @@ export function deleteKeychainToken(options: {
     });
 }
 
-export function persistTokenToFile(
-  serialized: string,
+export function persistTokenSetToFile(
+  serializedTokenSet: string,
   tokenStoreFilePath: string,
 ): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
     (async () => {
       await mkdir(dirname(tokenStoreFilePath), { recursive: true });
-      await writeFile(tokenStoreFilePath, `${serialized}\n`, {
+      await writeFile(tokenStoreFilePath, `${serializedTokenSet}\n`, {
         encoding: "utf8",
         mode: 0o600,
       });
@@ -80,6 +80,19 @@ export function persistTokenToFile(
         kind: "Internal",
         layer: "Presentation",
       }),
+  );
+}
+
+export function persistTokenSetToKeychain(
+  action: string,
+  backend: TokenStoreBackend,
+  serializedTokenSet: string,
+): ResultAsync<void, RichError> {
+  return getKeychainEntry(action, backend).andThen((keychainEntry) =>
+    ResultAsync.fromPromise(
+      Promise.resolve(keychainEntry.setPassword(serializedTokenSet)),
+      (cause) => newBackendUnavailableError(action, cause, backend),
+    ),
   );
 }
 
@@ -153,19 +166,6 @@ export function removeTokenStoreFile(
         kind: "Internal",
         layer: "Presentation",
       }),
-  );
-}
-
-export function writeKeychainTokenSet(
-  action: string,
-  backend: TokenStoreBackend,
-  serialized: string,
-): ResultAsync<void, RichError> {
-  return getKeychainEntry(action, backend).andThen((keychainEntry) =>
-    ResultAsync.fromPromise(
-      Promise.resolve(keychainEntry.setPassword(serialized)),
-      (cause) => newBackendUnavailableError(action, cause, backend),
-    ),
   );
 }
 

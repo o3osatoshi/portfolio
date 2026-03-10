@@ -10,11 +10,11 @@ import {
 import type { OidcTokenSet } from "../../common/types";
 import {
   deleteKeychainToken,
-  persistTokenToFile,
+  persistTokenSetToFile,
+  persistTokenSetToKeychain,
   readFileTokenSet,
   readKeychainTokenSet,
   removeTokenStoreFile,
-  writeKeychainTokenSet,
 } from "./token-store-backend";
 import {
   fileFallbackEnvName,
@@ -62,11 +62,11 @@ export function persistTokenSet(
 
       switch (env.tokenStoreBackend) {
         case "file": {
-          return persistTokenToFile(serializedTokenSet, tokenStoreFilePath);
+          return persistTokenSetToFile(serializedTokenSet, tokenStoreFilePath);
         }
 
         case "keychain": {
-          return writeKeychainTokenSet(
+          return persistTokenSetToKeychain(
             "PersistTokenSet",
             env.tokenStoreBackend,
             serializedTokenSet,
@@ -78,7 +78,7 @@ export function persistTokenSet(
         }
 
         case "auto": {
-          return writeKeychainTokenSet(
+          return persistTokenSetToKeychain(
             "PersistTokenSet",
             env.tokenStoreBackend,
             serializedTokenSet,
@@ -98,7 +98,7 @@ export function persistTokenSet(
                   warnFileFallbackOnce(tokenStoreFilePath);
                 })
                 .asyncAndThen(() =>
-                  persistTokenToFile(serializedTokenSet, tokenStoreFilePath),
+                  persistTokenSetToFile(serializedTokenSet, tokenStoreFilePath),
                 );
             });
         }
@@ -137,7 +137,7 @@ function migrateFileTokenToKeychain(
   allowFileFallback: boolean,
 ): ResultAsync<OidcTokenSet, RichError> {
   return serialize(tokenSet).asyncAndThen((serializedTokenSet) =>
-    writeKeychainTokenSet("MigrateTokenStore", "auto", serializedTokenSet)
+    persistTokenSetToKeychain("MigrateTokenStore", "auto", serializedTokenSet)
       .andThen(() =>
         removeTokenStoreFile(tokenStoreFilePath)
           .orElse(() => ok(undefined))
