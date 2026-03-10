@@ -35,6 +35,10 @@ export function isErrnoException(
   );
 }
 
+export function isFileNotFoundError(cause: unknown): boolean {
+  return isErrnoException(cause) && cause.code === "ENOENT";
+}
+
 export function isKeychainNotFoundError(cause: unknown): boolean {
   if (!(cause instanceof Error)) {
     return false;
@@ -66,23 +70,27 @@ export function newBackendUnavailableError(
   });
 }
 
-export function parseStoredTokenSet(raw: string): null | OidcTokenSet {
-  const deserialized = deserialize(raw);
-  if (deserialized.isErr()) {
+export function parseTokenSet(tokenSet: string): null | OidcTokenSet {
+  if (tokenSet.trim().length === 0) {
     return null;
   }
 
-  const parsed = oidcTokenSetSchema.safeParse(deserialized.value);
-  if (!parsed.success) {
+  const deserializedTokenSet = deserialize(tokenSet);
+  if (deserializedTokenSet.isErr()) {
+    return null;
+  }
+
+  const result = oidcTokenSetSchema.safeParse(deserializedTokenSet.value);
+  if (!result.success) {
     return null;
   }
 
   return omitUndefined({
-    access_token: parsed.data.access_token,
-    expires_at: parsed.data.expires_at,
-    refresh_token: parsed.data.refresh_token,
-    scope: parsed.data.scope,
-    token_type: parsed.data.token_type,
+    access_token: result.data.access_token,
+    expires_at: result.data.expires_at,
+    refresh_token: result.data.refresh_token,
+    scope: result.data.scope,
+    token_type: result.data.token_type,
   });
 }
 

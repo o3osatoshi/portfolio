@@ -117,7 +117,7 @@ export function readTokenSet(): ResultAsync<null | OidcTokenSet, RichError> {
       }
 
       case "auto": {
-        return readTokenSetFromAutoBackend(env, tokenStoreFilePath);
+        return readAutoTokenSet(env, tokenStoreFilePath);
       }
     }
   });
@@ -164,7 +164,7 @@ function migrateFileTokenToKeychain(
   );
 }
 
-function readTokenSetFromAutoBackend(
+function readAutoTokenSet(
   env: TokenStoreEnv,
   tokenStoreFilePath: string,
 ): ResultAsync<null | OidcTokenSet, RichError> {

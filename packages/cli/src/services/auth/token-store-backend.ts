@@ -6,12 +6,13 @@ import { err, ok, ResultAsync } from "neverthrow";
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
+import type { OidcTokenSet } from "../../common/types";
 import {
-  isErrnoException,
+  isFileNotFoundError,
   isKeychainNotFoundError,
   type KeychainEntry,
   newBackendUnavailableError,
-  parseStoredTokenSet,
+  parseTokenSet,
   type TokenStoreBackend,
 } from "./token-store-support";
 
@@ -98,13 +99,13 @@ export function persistTokenSetToKeychain(
 
 export function readFileTokenSet(
   tokenStoreFilePath: string,
-): ResultAsync<import("../../common/types").OidcTokenSet | null, RichError> {
+): ResultAsync<null | OidcTokenSet, RichError> {
   return ResultAsync.fromPromise(
     readFile(tokenStoreFilePath, "utf8"),
     (cause) => cause,
   )
     .orElse((cause) => {
-      if (isErrnoException(cause) && cause.code === "ENOENT") {
+      if (isFileNotFoundError(cause)) {
         return ok(null);
       }
 
@@ -122,13 +123,13 @@ export function readFileTokenSet(
         }),
       );
     })
-    .map((raw) => (typeof raw === "string" ? parseStoredTokenSet(raw) : null));
+    .map((raw) => (typeof raw === "string" ? parseTokenSet(raw) : null));
 }
 
 export function readKeychainTokenSet(
   action: string,
   backend: TokenStoreBackend,
-): ResultAsync<import("../../common/types").OidcTokenSet | null, RichError> {
+): ResultAsync<null | OidcTokenSet, RichError> {
   return getKeychainEntry(action, backend).andThen((keychainEntry) =>
     ResultAsync.fromPromise(
       Promise.resolve(keychainEntry.getPassword()),
@@ -141,11 +142,7 @@ export function readKeychainTokenSet(
 
         return err(newBackendUnavailableError(action, cause, backend));
       })
-      .map((raw) =>
-        typeof raw === "string" && raw.length > 0
-          ? parseStoredTokenSet(raw)
-          : null,
-      ),
+      .map((raw) => (typeof raw === "string" ? parseTokenSet(raw) : null)),
   );
 }
 
