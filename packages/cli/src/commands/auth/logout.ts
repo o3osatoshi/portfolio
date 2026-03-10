@@ -14,20 +14,17 @@ export function runAuthLogout(
   outputMode: OutputMode = "text",
 ): ResultAsync<void, RichError> {
   return readTokenSet()
-    .orElse(() => ok(null))
-    .andThen((token) => {
-      const refreshToken = token?.refresh_token;
+    .orElse(() => ok())
+    .andThen((tokenSet) => {
+      const refreshToken = tokenSet?.refresh_token;
       if (!refreshToken) {
-        return ok(undefined);
+        return ok();
       }
-
       return resolveRuntimeEnv()
         .asyncAndThen((env) =>
-          revokeRefreshToken(env.oidcConfig, refreshToken).orElse(() =>
-            ok(undefined),
-          ),
+          revokeRefreshToken(env.oidcConfig, refreshToken).orElse(() => ok()),
         )
-        .orElse(() => ok(undefined));
+        .orElse(() => ok());
     })
     .andThen(() => clearTokenSet())
     .andTee(() => {
