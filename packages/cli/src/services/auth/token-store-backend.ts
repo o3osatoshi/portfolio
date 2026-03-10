@@ -1,7 +1,7 @@
 import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
-import { err, ok, ResultAsync } from "neverthrow";
+import { err, ok, okAsync, ResultAsync } from "neverthrow";
 
 import { newRichError, type RichError } from "@o3osatoshi/toolkit";
 
@@ -19,7 +19,7 @@ import {
 const keychainServiceName = "o3o-cli";
 const keychainAccountName = "default";
 
-export function deleteKeychainToken(options: {
+export function deleteKeychainTokenSet(options: {
   action: string;
   backend: TokenStoreBackend;
   strict: boolean;
@@ -31,9 +31,8 @@ export function deleteKeychainToken(options: {
         (cause) => cause,
       ).orElse((cause) => {
         if (isKeychainNotFoundError(cause)) {
-          return ok(undefined);
+          return ok();
         }
-
         return err(
           newBackendUnavailableError(options.action, cause, options.backend),
         );
@@ -42,9 +41,8 @@ export function deleteKeychainToken(options: {
     .map(() => undefined)
     .orElse((error) => {
       if (!options.strict) {
-        return ok(undefined);
+        return ok();
       }
-
       return err(error);
     });
 }
@@ -54,34 +52,29 @@ export function persistTokenSetToFile(
   tokenStoreFilePath: string,
 ): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
-    (async () => {
-      await mkdir(dirname(tokenStoreFilePath), { recursive: true });
-      await writeFile(tokenStoreFilePath, `${serializedTokenSet}\n`, {
-        encoding: "utf8",
-        mode: 0o600,
-      });
-
-      if (process.platform !== "win32") {
-        try {
-          await chmod(tokenStoreFilePath, 0o600);
-        } catch {
-          // best effort
-        }
+    mkdir(dirname(tokenStoreFilePath), { recursive: true }),
+    newPersistTokenSetToFileError,
+  )
+    .andThen(() =>
+      ResultAsync.fromPromise(
+        writeFile(tokenStoreFilePath, `${serializedTokenSet}\n`, {
+          encoding: "utf8",
+          mode: 0o600,
+        }),
+        newPersistTokenSetToFileError,
+      ),
+    )
+    .andThen(() => {
+      if (process.platform === "win32") {
+        return okAsync(undefined);
       }
-    })(),
-    (cause) =>
-      newRichError({
-        cause,
-        code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
-        details: {
-          action: "PersistTokenSetToFile",
-          reason: "Failed to persist file-based token state.",
-        },
-        isOperational: true,
-        kind: "Internal",
-        layer: "Presentation",
-      }),
-  );
+      return ResultAsync.fromPromise(
+        chmod(tokenStoreFilePath, 0o600),
+        newPersistTokenSetToFileError,
+      )
+        .orElse(() => okAsync(undefined))
+        .map(() => undefined);
+    });
 }
 
 export function persistTokenSetToKeychain(
@@ -108,7 +101,6 @@ export function readFileTokenSet(
       if (isFileNotFoundError(cause)) {
         return ok(null);
       }
-
       return err(
         newRichError({
           cause,
@@ -139,14 +131,13 @@ export function readKeychainTokenSet(
         if (isKeychainNotFoundError(cause)) {
           return ok(null);
         }
-
         return err(newBackendUnavailableError(action, cause, backend));
       })
       .map((raw) => (typeof raw === "string" ? parseTokenSet(raw) : null)),
   );
 }
 
-export function removeTokenStoreFile(
+export function removeTokenSetFile(
   tokenStoreFilePath: string,
 ): ResultAsync<void, RichError> {
   return ResultAsync.fromPromise(
@@ -178,4 +169,18 @@ function getKeychainEntry(
 async function loadKeychainEntry(): Promise<KeychainEntry> {
   const { Entry } = await import("@napi-rs/keyring");
   return new Entry(keychainServiceName, keychainAccountName);
+}
+
+function newPersistTokenSetToFileError(cause: unknown): RichError {
+  return newRichError({
+    cause,
+    code: cliErrorCodes.CLI_TOKEN_STORE_WRITE_FAILED,
+    details: {
+      action: "PersistTokenSetToFile",
+      reason: "Failed to persist file-based token state.",
+    },
+    isOperational: true,
+    kind: "Internal",
+    layer: "Presentation",
+  });
 }

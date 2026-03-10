@@ -9,12 +9,12 @@ import {
 } from "../../common/runtime-env";
 import type { OidcTokenSet } from "../../common/types";
 import {
-  deleteKeychainToken,
+  deleteKeychainTokenSet,
   persistTokenSetToFile,
   persistTokenSetToKeychain,
   readFileTokenSet,
   readKeychainTokenSet,
-  removeTokenStoreFile,
+  removeTokenSetFile,
 } from "./token-store-backend";
 import {
   fileFallbackEnvName,
@@ -29,11 +29,11 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
 
     switch (env.tokenStoreBackend) {
       case "file": {
-        return removeTokenStoreFile(tokenStoreFilePath);
+        return removeTokenSetFile(tokenStoreFilePath);
       }
 
       case "keychain": {
-        return deleteKeychainToken({
+        return deleteKeychainTokenSet({
           action: "ClearTokenSet",
           backend: env.tokenStoreBackend,
           strict: true,
@@ -41,12 +41,12 @@ export function clearTokenSet(): ResultAsync<void, RichError> {
       }
 
       case "auto": {
-        return deleteKeychainToken({
+        return deleteKeychainTokenSet({
           action: "ClearTokenSet",
           backend: env.tokenStoreBackend,
           strict: false,
         }).andThen(() =>
-          removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok(undefined)),
+          removeTokenSetFile(tokenStoreFilePath).orElse(() => ok()),
         );
       }
     }
@@ -71,7 +71,7 @@ export function persistTokenSet(
             env.tokenStoreBackend,
             serializedTokenSet,
           ).andThen(() =>
-            removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok()),
+            removeTokenSetFile(tokenStoreFilePath).orElse(() => ok()),
           );
         }
 
@@ -82,7 +82,7 @@ export function persistTokenSet(
             serializedTokenSet,
           )
             .andThen(() =>
-              removeTokenStoreFile(tokenStoreFilePath).orElse(() => ok()),
+              removeTokenSetFile(tokenStoreFilePath).orElse(() => ok()),
             )
             .orElse((error) => {
               if (!env.allowFileFallback) {
@@ -135,7 +135,7 @@ function migrateFileTokenToKeychain(
   return serialize(tokenSet).asyncAndThen((serializedTokenSet) =>
     persistTokenSetToKeychain("MigrateTokenStore", "auto", serializedTokenSet)
       .andThen(() =>
-        removeTokenStoreFile(tokenStoreFilePath)
+        removeTokenSetFile(tokenStoreFilePath)
           .orElse(() => ok(undefined))
           .map(() => tokenSet),
       )
@@ -177,7 +177,7 @@ function readAutoTokenSet(
         }
 
         if (selected.source === "keychain") {
-          return removeTokenStoreFile(tokenStoreFilePath)
+          return removeTokenSetFile(tokenStoreFilePath)
             .orElse(() => ok(undefined))
             .map(() => selected.token);
         }
