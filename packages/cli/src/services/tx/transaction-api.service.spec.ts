@@ -2,25 +2,27 @@ import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
+  requestAuthedJsonMock: vi.fn(),
   requestAuthenticatedApiMock: vi.fn(),
 }));
 
 vi.mock("../../common/http/authenticated-api-request", () => ({
-  requestAuthenticatedApi: h.requestAuthenticatedApiMock,
-  requestAuthenticatedApiWithParser: (
+  requestAuthedJson: (
     path: string,
     init: RequestInit,
     parser: (input: unknown) => ReturnType<typeof okAsync> | unknown,
-  ) => h.requestAuthenticatedApiMock(path, init).andThen(parser),
+  ) => h.requestAuthedJsonMock(path, init).andThen(parser),
+  requestAuthenticatedApi: h.requestAuthenticatedApiMock,
 }));
 
 describe("services/tx/transaction-api.service", () => {
   beforeEach(() => {
+    h.requestAuthedJsonMock.mockReset();
     h.requestAuthenticatedApiMock.mockReset();
   });
 
   it("creates transaction and returns parsed response", async () => {
-    h.requestAuthenticatedApiMock.mockReturnValueOnce(
+    h.requestAuthedJsonMock.mockReturnValueOnce(
       okAsync({
         id: "tx-1",
         amount: "1",
@@ -54,7 +56,7 @@ describe("services/tx/transaction-api.service", () => {
   });
 
   it("preserves optional transaction fields when listing transactions", async () => {
-    h.requestAuthenticatedApiMock.mockReturnValueOnce(
+    h.requestAuthedJsonMock.mockReturnValueOnce(
       okAsync([
         {
           id: "tx-1",
@@ -116,7 +118,7 @@ describe("services/tx/transaction-api.service", () => {
   });
 
   it("returns validation error when transaction payload is invalid", async () => {
-    h.requestAuthenticatedApiMock.mockReturnValueOnce(okAsync({ id: "tx-1" }));
+    h.requestAuthedJsonMock.mockReturnValueOnce(okAsync({ id: "tx-1" }));
 
     const { createTransaction } = await import("./transaction-api.service");
     const result = await createTransaction({

@@ -2,7 +2,7 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { requestParsedJson } from "../../common/http/http";
+import { requestJson } from "../../common/http/http";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
   type OidcDiscoveryResponse,
@@ -14,16 +14,10 @@ export function requestOidcDiscovery(
   errorCode: string,
 ): ResultAsync<OidcDiscoveryResponse, RichError> {
   const normalizedIssuer = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  return requestParsedJson(
+  return requestJson(
     `${normalizedIssuer}/.well-known/openid-configuration`,
     undefined,
     {
-      parser: makeCliSchemaParser(oidcDiscoveryResponseSchema, {
-        action: "DecodeOidcDiscoveryResponse",
-        code: errorCode,
-        context: "OIDC discovery response",
-        fallbackHint: "Verify OIDC issuer configuration and retry.",
-      }),
       read: {
         action: "ReadOidcDiscoveryResponseBody",
         code: errorCode,
@@ -37,5 +31,11 @@ export function requestOidcDiscovery(
         reason: "Failed to fetch OIDC discovery document.",
       },
     },
+    makeCliSchemaParser(oidcDiscoveryResponseSchema, {
+      action: "DecodeOidcDiscoveryResponse",
+      code: errorCode,
+      context: "OIDC discovery response",
+      fallbackHint: "Verify OIDC issuer configuration and retry.",
+    }),
   );
 }

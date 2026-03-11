@@ -2,25 +2,25 @@ import { okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
-  requestAuthenticatedApiMock: vi.fn(),
+  requestAuthedJsonMock: vi.fn(),
 }));
 
 vi.mock("../../common/http/authenticated-api-request", () => ({
-  requestAuthenticatedApi: h.requestAuthenticatedApiMock,
-  requestAuthenticatedApiWithParser: (
+  requestAuthedJson: (
     path: string,
     init: RequestInit,
     parser: (input: unknown) => ReturnType<typeof okAsync> | unknown,
-  ) => h.requestAuthenticatedApiMock(path, init).andThen(parser),
+  ) => h.requestAuthedJsonMock(path, init).andThen(parser),
+  requestAuthenticatedApi: vi.fn(),
 }));
 
 describe("services/auth/principal-api.service", () => {
   beforeEach(() => {
-    h.requestAuthenticatedApiMock.mockReset();
+    h.requestAuthedJsonMock.mockReset();
   });
 
   it("fetches and decodes principal response", async () => {
-    h.requestAuthenticatedApiMock.mockReturnValueOnce(
+    h.requestAuthedJsonMock.mockReturnValueOnce(
       okAsync({
         issuer: "https://example.auth0.com",
         scopes: ["transactions:read", "transactions:write"],
@@ -42,16 +42,13 @@ describe("services/auth/principal-api.service", () => {
       subject: "auth0|123",
       userId: "user-1",
     });
-    expect(h.requestAuthenticatedApiMock).toHaveBeenCalledWith(
-      "/api/cli/v1/me",
-      {
-        method: "GET",
-      },
-    );
+    expect(h.requestAuthedJsonMock).toHaveBeenCalledWith("/api/cli/v1/me", {
+      method: "GET",
+    });
   });
 
   it("returns validation error when principal response shape is invalid", async () => {
-    h.requestAuthenticatedApiMock.mockReturnValueOnce(
+    h.requestAuthedJsonMock.mockReturnValueOnce(
       okAsync({
         issuer: "https://example.auth0.com",
       }),

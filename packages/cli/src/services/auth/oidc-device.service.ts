@@ -4,7 +4,7 @@ import { deserialize, type RichError, sleep } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http";
-import { readHttpText, requestParsedJson } from "../../common/http/http";
+import { readHttpText, requestJson } from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -40,7 +40,7 @@ export function loginByDevice(
       "openid profile email offline_access transactions:read transactions:write",
   });
 
-  return requestParsedJson(
+  return requestJson(
     discovery.device_authorization_endpoint,
     {
       body,
@@ -50,12 +50,6 @@ export function loginByDevice(
       method: "POST",
     },
     {
-      parser: makeCliSchemaParser(oidcDeviceAuthorizationResponseSchema, {
-        action: "DecodeOidcDeviceCodeResponse",
-        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-        context: "OIDC device authorization response",
-        fallbackHint: "Retry `o3o auth login --mode device`.",
-      }),
       read: {
         action: "ReadOidcDeviceAuthorizationResponseBody",
         code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
@@ -69,6 +63,12 @@ export function loginByDevice(
         reason: "Device authorization failed.",
       },
     },
+    makeCliSchemaParser(oidcDeviceAuthorizationResponseSchema, {
+      action: "DecodeOidcDeviceCodeResponse",
+      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+      context: "OIDC device authorization response",
+      fallbackHint: "Retry `o3o auth login --mode device`.",
+    }),
   ).andThen((deviceAuth) => {
     if (deviceAuth.verification_uri_complete) {
       options?.onInfo?.(

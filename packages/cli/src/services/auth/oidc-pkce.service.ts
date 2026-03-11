@@ -12,7 +12,7 @@ import { err, ok, ResultAsync } from "neverthrow";
 import { isRichError, type RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import { requestParsedJson } from "../../common/http/http";
+import { requestJson } from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -223,7 +223,7 @@ export function loginByPkce(
             redirect_uri: redirectUri,
           });
 
-          return requestParsedJson(
+          return requestJson(
             discovery.token_endpoint,
             {
               body,
@@ -233,12 +233,6 @@ export function loginByPkce(
               method: "POST",
             },
             {
-              parser: makeCliSchemaParser(oidcTokenResponseSchema, {
-                action: "DecodeOidcTokenResponseFromPkceFlow",
-                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-                context: "OIDC token response",
-                fallbackHint: "Retry `o3o auth login --mode pkce`.",
-              }),
               read: {
                 action: "ReadOidcTokenResponseBody",
                 code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
@@ -252,6 +246,12 @@ export function loginByPkce(
                 reason: "Token exchange failed.",
               },
             },
+            makeCliSchemaParser(oidcTokenResponseSchema, {
+              action: "DecodeOidcTokenResponseFromPkceFlow",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              context: "OIDC token response",
+              fallbackHint: "Retry `o3o auth login --mode pkce`.",
+            }),
           ).map(toTokenSetWithExpiry);
         });
       })

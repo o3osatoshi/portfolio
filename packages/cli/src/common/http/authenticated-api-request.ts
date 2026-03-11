@@ -30,6 +30,25 @@ import { decodeHttpJson, readHttpText, requestHttp } from "./http";
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
 
+export function requestAuthedJson(
+  path: string,
+  init: RequestInit,
+): ResultAsync<unknown, RichError>;
+
+export function requestAuthedJson<T>(
+  path: string,
+  init: RequestInit,
+  parser: (input: unknown) => Result<T, RichError>,
+): ResultAsync<T, RichError>;
+export function requestAuthedJson<T>(
+  path: string,
+  init: RequestInit,
+  parser?: (input: unknown) => Result<T, RichError>,
+): ResultAsync<T | unknown, RichError> {
+  return requestAuthenticatedApi(path, init).andThen((json) =>
+    parser ? parser(json) : ok(json),
+  );
+}
 export function requestAuthenticatedApi(
   path: string,
   init: RequestInit,
@@ -106,14 +125,6 @@ export function requestAuthenticatedApi(
       });
     }),
   );
-}
-
-export function requestAuthenticatedApiWithParser<T>(
-  path: string,
-  init: RequestInit,
-  parser: (input: unknown) => Result<T, RichError>,
-): ResultAsync<T, RichError> {
-  return requestAuthenticatedApi(path, init).andThen(parser);
 }
 
 function ensureAccessToken(

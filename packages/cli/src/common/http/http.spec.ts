@@ -10,7 +10,7 @@ import {
   readHttpText,
   readParsedJson,
   requestHttp,
-  requestParsedJson,
+  requestJson,
 } from "./http";
 
 describe("common/http/http", () => {
@@ -163,17 +163,16 @@ describe("common/http/http", () => {
     expect(result.isErr()).toBe(true);
   });
 
-  it("returns transport error when parsed request fetch fails", async () => {
+  it("returns transport error when JSON request fetch fails", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
     );
 
-    const result = await requestParsedJson(
+    const result = await requestJson(
       "https://example.com/data",
       { method: "GET" },
       {
-        parser: (input) => ok(input),
         read: {
           action: "ReadCliApiResponseBody",
           code: "CLI_API_REQUEST_FAILED",
@@ -187,6 +186,7 @@ describe("common/http/http", () => {
           reason: "Failed to reach the API endpoint.",
         },
       },
+      (input) => ok(input),
     );
 
     expect(result.isErr()).toBe(true);
@@ -194,7 +194,7 @@ describe("common/http/http", () => {
     expect(result.error.details?.action).toBe("RequestCliApi");
   });
 
-  it("returns status error when parsed request response is non-2xx", async () => {
+  it("returns status error when JSON request response is non-2xx", async () => {
     vi.stubGlobal(
       "fetch",
       vi
@@ -202,11 +202,10 @@ describe("common/http/http", () => {
         .mockResolvedValue(new Response("Forbidden", { status: 403 })),
     );
 
-    const result = await requestParsedJson(
+    const result = await requestJson(
       "https://example.com/data",
       { method: "GET" },
       {
-        parser: (input) => ok(input),
         read: {
           action: "ReadCliApiResponseBody",
           code: "CLI_API_REQUEST_FAILED",
@@ -220,6 +219,7 @@ describe("common/http/http", () => {
           reason: "Failed to reach the API endpoint.",
         },
       },
+      (input) => ok(input),
     );
 
     expect(result.isErr()).toBe(true);
@@ -229,7 +229,7 @@ describe("common/http/http", () => {
     );
   });
 
-  it("returns read error when parsed request body cannot be read", async () => {
+  it("returns read error when JSON request body cannot be read", async () => {
     const response = {
       json: () => Promise.reject(new Error("body failed")),
       ok: true,
@@ -237,11 +237,10 @@ describe("common/http/http", () => {
 
     vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(response));
 
-    const result = await requestParsedJson(
+    const result = await requestJson(
       "https://example.com/data",
       { method: "GET" },
       {
-        parser: (input) => ok(input),
         read: {
           action: "ReadCliApiResponseBody",
           code: "CLI_API_REQUEST_FAILED",
@@ -255,6 +254,7 @@ describe("common/http/http", () => {
           reason: "Failed to reach the API endpoint.",
         },
       },
+      (input) => ok(input),
     );
 
     expect(result.isErr()).toBe(true);

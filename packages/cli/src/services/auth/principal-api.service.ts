@@ -2,7 +2,7 @@ import type { ResultAsync } from "neverthrow";
 
 import { makeSchemaParser, type RichError } from "@o3osatoshi/toolkit";
 
-import { requestAuthenticatedApiWithParser } from "../../common/http/authenticated-api-request";
+import { requestAuthedJson } from "../../common/http/authenticated-api-request";
 import {
   type AccessTokenPrincipal,
   accessTokenPrincipalSchema,
@@ -12,7 +12,7 @@ export function fetchAccessTokenPrincipal(): ResultAsync<
   AccessTokenPrincipal,
   RichError
 > {
-  return requestAuthenticatedApiWithParser(
+  return requestAuthedJson(
     "/api/cli/v1/me",
     {
       method: "GET",

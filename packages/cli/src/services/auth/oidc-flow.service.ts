@@ -4,10 +4,7 @@ import type { RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http";
-import {
-  expectOkHttpResponse,
-  requestParsedJson,
-} from "../../common/http/http";
+import { expectOkHttpResponse, requestJson } from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import { oidcTokenResponseSchema } from "./contracts/oidc.schema";
@@ -30,18 +27,18 @@ export function unsafeOidcLogin(
   return requestOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-  ).andThen((discovery) => {
+  ).andThen((oidcDiscovery) => {
     switch (mode) {
       case "device":
-        return loginByDevice(config, discovery, options);
+        return loginByDevice(config, oidcDiscovery, options);
       case "pkce":
-        return loginByPkce(config, discovery);
+        return loginByPkce(config, oidcDiscovery);
       case "auto":
-        return loginByPkce(config, discovery).orElse((error) => {
+        return loginByPkce(config, oidcDiscovery).orElse((error) => {
           if (!shouldFallbackToDeviceFlow(error)) {
             return errAsync(error);
           }
-          return loginByDevice(config, discovery, options);
+          return loginByDevice(config, oidcDiscovery, options);
         });
     }
   });
@@ -54,15 +51,15 @@ export function unsafeRefreshTokens(
   return requestOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-  ).andThen((discovery) => {
+  ).andThen((oidcDiscovery) => {
     const body = new URLSearchParams({
       client_id: config.clientId,
       grant_type: "refresh_token",
       refresh_token: refreshToken,
     });
 
-    return requestParsedJson(
-      discovery.token_endpoint,
+    return requestJson(
+      oidcDiscovery.token_endpoint,
       {
         body,
         headers: {
@@ -71,12 +68,6 @@ export function unsafeRefreshTokens(
         method: "POST",
       },
       {
-        parser: makeCliSchemaParser(oidcTokenResponseSchema, {
-          action: "DecodeOidcTokenResponseFromRefreshFlow",
-          code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-          context: "OIDC token response",
-          fallbackHint: "Run `o3o auth login` and retry.",
-        }),
         read: {
           action: "ReadOidcTokenResponseBody",
           code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
@@ -90,6 +81,12 @@ export function unsafeRefreshTokens(
           reason: "Refresh token request failed.",
         },
       },
+      makeCliSchemaParser(oidcTokenResponseSchema, {
+        action: "DecodeOidcTokenResponseFromRefreshFlow",
+        code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+        context: "OIDC token response",
+        fallbackHint: "Run `o3o auth login` and retry.",
+      }),
     ).map(toTokenSetWithExpiry);
   });
 }
@@ -101,8 +98,8 @@ export function unsafeRevokeRefreshToken(
   return requestOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
-  ).andThen((discovery) => {
-    if (!discovery.revocation_endpoint) {
+  ).andThen((oidcDiscovery) => {
+    if (!oidcDiscovery.revocation_endpoint) {
       return okAsync();
     }
 
@@ -113,7 +110,7 @@ export function unsafeRevokeRefreshToken(
     });
 
     return requestHttp(
-      discovery.revocation_endpoint,
+      oidcDiscovery.revocation_endpoint,
       {
         body,
         headers: {

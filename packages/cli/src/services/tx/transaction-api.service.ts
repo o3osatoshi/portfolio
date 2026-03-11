@@ -7,8 +7,8 @@ import {
 } from "@o3osatoshi/toolkit";
 
 import {
+  requestAuthedJson,
   requestAuthenticatedApi,
-  requestAuthenticatedApiWithParser,
 } from "../../common/http/authenticated-api-request";
 import {
   transactionListSchema,
@@ -20,7 +20,7 @@ export function createTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<TransactionResponse, RichError> {
   return serialize(payload).asyncAndThen((serializedPayload) =>
-    requestAuthenticatedApiWithParser(
+    requestAuthedJson(
       "/api/cli/v1/transactions",
       {
         body: serializedPayload,
@@ -50,7 +50,7 @@ export function listTransactions(): ResultAsync<
   TransactionResponse[],
   RichError
 > {
-  return requestAuthenticatedApiWithParser(
+  return requestAuthedJson(
     "/api/cli/v1/transactions",
     {
       method: "GET",
