@@ -3,7 +3,6 @@ import type { ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { requestJson } from "../../common/http/http";
-import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
   type OidcDiscoveryResponse,
   oidcDiscoveryResponseSchema,
@@ -14,28 +13,28 @@ export function requestOidcDiscovery(
   errorCode: string,
 ): ResultAsync<OidcDiscoveryResponse, RichError> {
   const normalizedIssuer = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  return requestJson(
-    `${normalizedIssuer}/.well-known/openid-configuration`,
-    undefined,
-    {
-      read: {
-        action: "ReadOidcDiscoveryResponseBody",
+  return requestJson({
+    decode: {
+      context: {
+        action: "DecodeOidcDiscoveryResponse",
         code: errorCode,
-        kind: "BadGateway",
-        reason: "Failed to read OIDC discovery response body.",
+        context: "OIDC discovery response",
+        fallbackHint: "Verify OIDC issuer configuration and retry.",
       },
-      request: {
-        action: "FetchOidcDiscoveryDocument",
-        code: errorCode,
-        kind: "BadGateway",
-        reason: "Failed to fetch OIDC discovery document.",
-      },
+      schema: oidcDiscoveryResponseSchema,
     },
-    makeCliSchemaParser(oidcDiscoveryResponseSchema, {
-      action: "DecodeOidcDiscoveryResponse",
+    read: {
+      action: "ReadOidcDiscoveryResponseBody",
       code: errorCode,
-      context: "OIDC discovery response",
-      fallbackHint: "Verify OIDC issuer configuration and retry.",
-    }),
-  );
+      kind: "BadGateway",
+      reason: "Failed to read OIDC discovery response body.",
+    },
+    request: {
+      action: "FetchOidcDiscoveryDocument",
+      code: errorCode,
+      kind: "BadGateway",
+      reason: "Failed to fetch OIDC discovery document.",
+    },
+    url: `${normalizedIssuer}/.well-known/openid-configuration`,
+  });
 }

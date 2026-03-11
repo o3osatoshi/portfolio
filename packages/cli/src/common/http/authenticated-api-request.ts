@@ -1,13 +1,8 @@
-import {
-  err,
-  errAsync,
-  ok,
-  okAsync,
-  type Result,
-  type ResultAsync,
-} from "neverthrow";
+import { err, errAsync, ok, okAsync, type ResultAsync } from "neverthrow";
+import type { z } from "zod";
 
 import {
+  makeSchemaParser,
   newRichError,
   omitUndefined,
   type RichError,
@@ -30,24 +25,54 @@ import { decodeHttpJson, readHttpText, requestHttp } from "./http";
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
 
-export function requestAuthedJson(
-  path: string,
-  init: RequestInit,
-): ResultAsync<unknown, RichError>;
+type RequestAuthedJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
+  context: RequestAuthedJsonDecodeContext;
+  schema: T;
+};
 
-export function requestAuthedJson<T>(
-  path: string,
-  init: RequestInit,
-  parser: (input: unknown) => Result<T, RichError>,
-): ResultAsync<T, RichError>;
-export function requestAuthedJson<T>(
-  path: string,
-  init: RequestInit,
-  parser?: (input: unknown) => Result<T, RichError>,
-): ResultAsync<T | unknown, RichError> {
-  return requestAuthenticatedApi(path, init).andThen((json) =>
-    parser ? parser(json) : ok(json),
-  );
+type RequestAuthedJsonDecodeContext = {
+  action: string;
+  layer?: RichError["layer"] | undefined;
+};
+
+type RequestAuthedJsonInputBase = {
+  body?: RequestInit["body"];
+  headers?: RequestInit["headers"];
+  method?: string;
+  path: string;
+};
+
+export function requestAuthedJson<T extends z.ZodType>(
+  request: {
+    decode: RequestAuthedJsonDecode<T>;
+  } & RequestAuthedJsonInputBase,
+): ResultAsync<z.infer<T>, RichError>;
+export function requestAuthedJson(
+  request: RequestAuthedJsonInputBase,
+): ResultAsync<unknown, RichError>;
+export function requestAuthedJson<T extends z.ZodType>(
+  request: {
+    decode?: RequestAuthedJsonDecode<T> | undefined;
+  } & RequestAuthedJsonInputBase,
+): ResultAsync<unknown | z.infer<T>, RichError> {
+  const init: RequestInit = omitUndefined({
+    body: request.body,
+    headers: request.headers,
+    method: request.method,
+  });
+
+  return requestAuthenticatedApi(request.path, init).andThen((json) => {
+    if (!request.decode) {
+      return ok(json);
+    }
+
+    return makeSchemaParser(request.decode.schema, {
+      action: request.decode.context.action,
+      ...(request.decode.context.layer !== undefined
+        ? { layer: request.decode.context.layer }
+        : {}),
+    })(json);
+  });
 }
 export function requestAuthenticatedApi(
   path: string,

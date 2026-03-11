@@ -223,36 +223,35 @@ export function loginByPkce(
             redirect_uri: redirectUri,
           });
 
-          return requestJson(
-            discovery.token_endpoint,
-            {
-              body,
-              headers: {
-                "content-type": "application/x-www-form-urlencoded",
-              },
-              method: "POST",
-            },
-            {
-              read: {
-                action: "ReadOidcTokenResponseBody",
+          return requestJson({
+            body,
+            decode: {
+              context: {
+                action: "DecodeOidcTokenResponseFromPkceFlow",
                 code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-                kind: "BadGateway",
-                reason: "Failed to read OIDC token response body.",
+                context: "OIDC token response",
+                fallbackHint: "Retry `o3o auth login --mode pkce`.",
               },
-              request: {
-                action: "ExchangePkceAuthorizationCode",
-                code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-                kind: "BadGateway",
-                reason: "Token exchange failed.",
-              },
+              schema: oidcTokenResponseSchema,
             },
-            makeCliSchemaParser(oidcTokenResponseSchema, {
-              action: "DecodeOidcTokenResponseFromPkceFlow",
+            headers: {
+              "content-type": "application/x-www-form-urlencoded",
+            },
+            method: "POST",
+            read: {
+              action: "ReadOidcTokenResponseBody",
               code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-              context: "OIDC token response",
-              fallbackHint: "Retry `o3o auth login --mode pkce`.",
-            }),
-          ).map(toTokenSetWithExpiry);
+              kind: "BadGateway",
+              reason: "Failed to read OIDC token response body.",
+            },
+            request: {
+              action: "ExchangePkceAuthorizationCode",
+              code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+              kind: "BadGateway",
+              reason: "Token exchange failed.",
+            },
+            url: discovery.token_endpoint,
+          }).map(toTokenSetWithExpiry);
         });
       })
       .orElse((cause) => {

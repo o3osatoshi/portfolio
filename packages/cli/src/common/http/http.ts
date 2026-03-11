@@ -1,6 +1,13 @@
 import { err, ok, Result, ResultAsync } from "neverthrow";
+import type { z } from "zod";
 
-import { newRichError, type RichError } from "@o3osatoshi/toolkit";
+import {
+  newRichError,
+  omitUndefined,
+  type RichError,
+} from "@o3osatoshi/toolkit";
+
+import { makeCliSchemaParser } from "../zod-validation";
 
 export type HttpErrorOptions = {
   action: string;
@@ -10,7 +17,26 @@ export type HttpErrorOptions = {
   reason: string;
 };
 
-export type JsonParser<T> = (input: unknown) => Result<T, RichError>;
+type RequestJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
+  context: RequestJsonDecodeContext;
+  schema: T;
+};
+
+type RequestJsonDecodeContext = {
+  action: string;
+  code: string;
+  context: string;
+  fallbackHint?: string | undefined;
+};
+
+type RequestJsonInputBase = {
+  body?: RequestInit["body"];
+  headers?: RequestInit["headers"];
+  method?: string;
+  read: HttpErrorOptions;
+  request: HttpErrorOptions;
+  url: string;
+};
 
 export function decodeHttpJson(
   text: string,
@@ -76,7 +102,7 @@ export function readHttpText(
 export function readParsedJson<T>(
   response: Response,
   options: HttpErrorOptions,
-  parser: JsonParser<T>,
+  parser: (input: unknown) => Result<T, RichError>,
 ): ResultAsync<T, RichError> {
   return readHttpJson(response, options).andThen(parser);
 }
@@ -91,37 +117,37 @@ export function requestHttp(
   );
 }
 
+export function requestJson<T extends z.ZodType>(
+  request: {
+    decode: RequestJsonDecode<T>;
+  } & RequestJsonInputBase,
+): ResultAsync<z.infer<T>, RichError>;
 export function requestJson(
-  url: string,
-  init: RequestInit | undefined,
-  options: {
-    read: HttpErrorOptions;
-    request: HttpErrorOptions;
-  },
+  request: RequestJsonInputBase,
 ): ResultAsync<unknown, RichError>;
-export function requestJson<T>(
-  url: string,
-  init: RequestInit | undefined,
-  options: {
-    read: HttpErrorOptions;
-    request: HttpErrorOptions;
-  },
-  parser: JsonParser<T>,
-): ResultAsync<T, RichError>;
-export function requestJson<T>(
-  url: string,
-  init: RequestInit | undefined,
-  options: {
-    read: HttpErrorOptions;
-    request: HttpErrorOptions;
-  },
-  parser?: JsonParser<T>,
-): ResultAsync<T | unknown, RichError> {
-  return requestHttp(url, init, options.request)
-    .andThen((response) => expectOkHttpResponse(response, options.request))
-    .andThen((response) =>
-      parser
-        ? readParsedJson(response, options.read, parser)
-        : readHttpJson(response, options.read),
-    );
+export function requestJson<T extends z.ZodType>(
+  request: {
+    decode?: RequestJsonDecode<T> | undefined;
+  } & RequestJsonInputBase,
+): ResultAsync<unknown | z.infer<T>, RichError> {
+  const init: RequestInit = omitUndefined({
+    body: request.body,
+    headers: request.headers,
+    method: request.method,
+  });
+
+  return requestHttp(request.url, init, request.request)
+    .andThen((response) => expectOkHttpResponse(response, request.request))
+    .andThen((response) => {
+      if (!request.decode) {
+        return readHttpJson(response, request.read);
+      }
+
+      const parser = makeCliSchemaParser(
+        request.decode.schema,
+        request.decode.context,
+      );
+
+      return readParsedJson(response, request.read, parser);
+    });
 }

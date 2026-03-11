@@ -1,16 +1,48 @@
-import { okAsync } from "neverthrow";
+import { err, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { newRichError } from "@o3osatoshi/toolkit";
+
+import { accessTokenPrincipalSchema } from "./contracts/principal.schema";
 
 const h = vi.hoisted(() => ({
   requestAuthedJsonMock: vi.fn(),
 }));
 
 vi.mock("../../common/http/authenticated-api-request", () => ({
-  requestAuthedJson: (
-    path: string,
-    init: RequestInit,
-    parser: (input: unknown) => ReturnType<typeof okAsync> | unknown,
-  ) => h.requestAuthedJsonMock(path, init).andThen(parser),
+  requestAuthedJson: (request: {
+    decode?: {
+      context: { action: string; layer?: string };
+      schema: {
+        safeParse: (input: unknown) => { data?: unknown; success: boolean };
+      };
+    };
+    method?: string;
+    path: string;
+  }) =>
+    h.requestAuthedJsonMock(request).andThen((json: unknown) => {
+      if (!request.decode) {
+        return ok(json);
+      }
+
+      const result = request.decode.schema.safeParse(json);
+      if (result.success) {
+        return ok(result.data);
+      }
+
+      return err(
+        newRichError({
+          code: "CLI_COMMAND_INVALID_ARGUMENT",
+          details: {
+            action: request.decode.context.action,
+            reason: "Schema parsing failed.",
+          },
+          isOperational: true,
+          kind: "Validation",
+          layer: "Presentation",
+        }),
+      );
+    }),
   requestAuthenticatedApi: vi.fn(),
 }));
 
@@ -42,8 +74,16 @@ describe("services/auth/principal-api.service", () => {
       subject: "auth0|123",
       userId: "user-1",
     });
-    expect(h.requestAuthedJsonMock).toHaveBeenCalledWith("/api/cli/v1/me", {
+    expect(h.requestAuthedJsonMock).toHaveBeenCalledWith({
+      decode: {
+        context: {
+          action: "DecodeAccessTokenPrincipalResponse",
+          layer: "Presentation",
+        },
+        schema: accessTokenPrincipalSchema,
+      },
       method: "GET",
+      path: "/api/cli/v1/me",
     });
   });
 

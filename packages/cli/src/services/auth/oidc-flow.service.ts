@@ -6,7 +6,6 @@ import { cliErrorCodes } from "../../common/error-catalog";
 import { requestHttp } from "../../common/http/http";
 import { expectOkHttpResponse, requestJson } from "../../common/http/http";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
-import { makeCliSchemaParser } from "../../common/zod-validation";
 import { oidcTokenResponseSchema } from "./contracts/oidc.schema";
 import { loginByDevice } from "./oidc-device.service";
 import { requestOidcDiscovery } from "./oidc-http";
@@ -58,36 +57,35 @@ export function unsafeRefreshTokens(
       refresh_token: refreshToken,
     });
 
-    return requestJson(
-      oidcDiscovery.token_endpoint,
-      {
-        body,
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-        },
-        method: "POST",
-      },
-      {
-        read: {
-          action: "ReadOidcTokenResponseBody",
+    return requestJson({
+      body,
+      decode: {
+        context: {
+          action: "DecodeOidcTokenResponseFromRefreshFlow",
           code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-          kind: "BadGateway",
-          reason: "Failed to read OIDC token response body.",
+          context: "OIDC token response",
+          fallbackHint: "Run `o3o auth login` and retry.",
         },
-        request: {
-          action: "RefreshOidcTokens",
-          code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-          kind: "BadGateway",
-          reason: "Refresh token request failed.",
-        },
+        schema: oidcTokenResponseSchema,
       },
-      makeCliSchemaParser(oidcTokenResponseSchema, {
-        action: "DecodeOidcTokenResponseFromRefreshFlow",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+      read: {
+        action: "ReadOidcTokenResponseBody",
         code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
-        context: "OIDC token response",
-        fallbackHint: "Run `o3o auth login` and retry.",
-      }),
-    ).map(toTokenSetWithExpiry);
+        kind: "BadGateway",
+        reason: "Failed to read OIDC token response body.",
+      },
+      request: {
+        action: "RefreshOidcTokens",
+        code: cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
+        kind: "BadGateway",
+        reason: "Refresh token request failed.",
+      },
+      url: oidcDiscovery.token_endpoint,
+    }).map(toTokenSetWithExpiry);
   });
 }
 

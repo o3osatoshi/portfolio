@@ -40,36 +40,35 @@ export function loginByDevice(
       "openid profile email offline_access transactions:read transactions:write",
   });
 
-  return requestJson(
-    discovery.device_authorization_endpoint,
-    {
-      body,
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-      },
-      method: "POST",
-    },
-    {
-      read: {
-        action: "ReadOidcDeviceAuthorizationResponseBody",
+  return requestJson({
+    body,
+    decode: {
+      context: {
+        action: "DecodeOidcDeviceCodeResponse",
         code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-        kind: "BadGateway",
-        reason: "Failed to read OIDC device authorization response body.",
+        context: "OIDC device authorization response",
+        fallbackHint: "Retry `o3o auth login --mode device`.",
       },
-      request: {
-        action: "RequestOidcDeviceAuthorization",
-        code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-        kind: "BadGateway",
-        reason: "Device authorization failed.",
-      },
+      schema: oidcDeviceAuthorizationResponseSchema,
     },
-    makeCliSchemaParser(oidcDeviceAuthorizationResponseSchema, {
-      action: "DecodeOidcDeviceCodeResponse",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+    read: {
+      action: "ReadOidcDeviceAuthorizationResponseBody",
       code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
-      context: "OIDC device authorization response",
-      fallbackHint: "Retry `o3o auth login --mode device`.",
-    }),
-  ).andThen((deviceAuth) => {
+      kind: "BadGateway",
+      reason: "Failed to read OIDC device authorization response body.",
+    },
+    request: {
+      action: "RequestOidcDeviceAuthorization",
+      code: cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
+      kind: "BadGateway",
+      reason: "Device authorization failed.",
+    },
+    url: discovery.device_authorization_endpoint,
+  }).andThen((deviceAuth) => {
     if (deviceAuth.verification_uri_complete) {
       options?.onInfo?.(
         `Open this URL to continue login:\n${deviceAuth.verification_uri_complete ?? deviceAuth.verification_uri}`,

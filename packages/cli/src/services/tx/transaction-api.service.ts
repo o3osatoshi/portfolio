@@ -1,10 +1,6 @@
 import type { ResultAsync } from "neverthrow";
 
-import {
-  makeSchemaParser,
-  type RichError,
-  serialize,
-} from "@o3osatoshi/toolkit";
+import { type RichError, serialize } from "@o3osatoshi/toolkit";
 
 import {
   requestAuthedJson,
@@ -20,20 +16,21 @@ export function createTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<TransactionResponse, RichError> {
   return serialize(payload).asyncAndThen((serializedPayload) =>
-    requestAuthedJson(
-      "/api/cli/v1/transactions",
-      {
-        body: serializedPayload,
-        headers: {
-          "content-type": "application/json",
+    requestAuthedJson({
+      body: serializedPayload,
+      decode: {
+        context: {
+          action: "DecodeCreateTransactionResponse",
+          layer: "Presentation",
         },
-        method: "POST",
+        schema: transactionSchema,
       },
-      makeSchemaParser(transactionSchema, {
-        action: "DecodeCreateTransactionResponse",
-        layer: "Presentation",
-      }),
-    ),
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "POST",
+      path: "/api/cli/v1/transactions",
+    }),
   );
 }
 
@@ -50,16 +47,17 @@ export function listTransactions(): ResultAsync<
   TransactionResponse[],
   RichError
 > {
-  return requestAuthedJson(
-    "/api/cli/v1/transactions",
-    {
-      method: "GET",
+  return requestAuthedJson({
+    decode: {
+      context: {
+        action: "DecodeListTransactionsResponse",
+        layer: "Presentation",
+      },
+      schema: transactionListSchema,
     },
-    makeSchemaParser(transactionListSchema, {
-      action: "DecodeListTransactionsResponse",
-      layer: "Presentation",
-    }),
-  );
+    method: "GET",
+    path: "/api/cli/v1/transactions",
+  });
 }
 
 export function updateTransaction(

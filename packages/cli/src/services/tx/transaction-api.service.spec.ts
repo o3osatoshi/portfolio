@@ -1,5 +1,12 @@
-import { okAsync } from "neverthrow";
+import { err, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { newRichError } from "@o3osatoshi/toolkit";
+
+import {
+  transactionListSchema,
+  transactionSchema,
+} from "./contracts/transaction.schema";
 
 const h = vi.hoisted(() => ({
   requestAuthedJsonMock: vi.fn(),
@@ -7,11 +14,41 @@ const h = vi.hoisted(() => ({
 }));
 
 vi.mock("../../common/http/authenticated-api-request", () => ({
-  requestAuthedJson: (
-    path: string,
-    init: RequestInit,
-    parser: (input: unknown) => ReturnType<typeof okAsync> | unknown,
-  ) => h.requestAuthedJsonMock(path, init).andThen(parser),
+  requestAuthedJson: (request: {
+    body?: string;
+    decode?: {
+      context: { action: string; layer?: string };
+      schema: {
+        safeParse: (input: unknown) => { data?: unknown; success: boolean };
+      };
+    };
+    headers?: RequestInit["headers"];
+    method?: string;
+    path: string;
+  }) =>
+    h.requestAuthedJsonMock(request).andThen((json: unknown) => {
+      if (!request.decode) {
+        return ok(json);
+      }
+
+      const result = request.decode.schema.safeParse(json);
+      if (result.success) {
+        return ok(result.data);
+      }
+
+      return err(
+        newRichError({
+          code: "CLI_COMMAND_INVALID_ARGUMENT",
+          details: {
+            action: request.decode.context.action,
+            reason: "Schema parsing failed.",
+          },
+          isOperational: true,
+          kind: "Validation",
+          layer: "Presentation",
+        }),
+      );
+    }),
   requestAuthenticatedApi: h.requestAuthenticatedApiMock,
 }));
 
@@ -53,6 +90,27 @@ describe("services/tx/transaction-api.service", () => {
     expect(result.value.fee).toBe("0.25");
     expect(result.value.feeCurrency).toBe("USD");
     expect(result.value.profitLoss).toBe("-10");
+    expect(h.requestAuthedJsonMock).toHaveBeenCalledWith({
+      body: JSON.stringify({
+        amount: "1",
+        currency: "USD",
+        datetime: "2026-01-01T00:00:00.000Z",
+        price: "100",
+        type: "BUY",
+      }),
+      decode: {
+        context: {
+          action: "DecodeCreateTransactionResponse",
+          layer: "Presentation",
+        },
+        schema: transactionSchema,
+      },
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "POST",
+      path: "/api/cli/v1/transactions",
+    });
   });
 
   it("preserves optional transaction fields when listing transactions", async () => {
@@ -83,6 +141,17 @@ describe("services/tx/transaction-api.service", () => {
     expect(result.value[0]?.fee).toBe("0.1");
     expect(result.value[0]?.feeCurrency).toBe("USD");
     expect(result.value[0]?.profitLoss).toBe("1.5");
+    expect(h.requestAuthedJsonMock).toHaveBeenCalledWith({
+      decode: {
+        context: {
+          action: "DecodeListTransactionsResponse",
+          layer: "Presentation",
+        },
+        schema: transactionListSchema,
+      },
+      method: "GET",
+      path: "/api/cli/v1/transactions",
+    });
   });
 
   it("encodes transaction id for update and delete", async () => {

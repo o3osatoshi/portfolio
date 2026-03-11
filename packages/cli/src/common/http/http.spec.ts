@@ -1,5 +1,6 @@
 import { err, ok } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
@@ -169,25 +170,30 @@ describe("common/http/http", () => {
       vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
     );
 
-    const result = await requestJson(
-      "https://example.com/data",
-      { method: "GET" },
-      {
-        read: {
-          action: "ReadCliApiResponseBody",
+    const result = await requestJson({
+      decode: {
+        context: {
+          action: "DecodeCliPayload",
           code: "CLI_API_REQUEST_FAILED",
-          kind: "BadGateway",
-          reason: "Failed to read API response body.",
+          context: "CLI payload",
         },
-        request: {
-          action: "RequestCliApi",
-          code: "CLI_API_REQUEST_FAILED",
-          kind: "BadGateway",
-          reason: "Failed to reach the API endpoint.",
-        },
+        schema: z.unknown(),
       },
-      (input) => ok(input),
-    );
+      method: "GET",
+      read: {
+        action: "ReadCliApiResponseBody",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to read API response body.",
+      },
+      request: {
+        action: "RequestCliApi",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to reach the API endpoint.",
+      },
+      url: "https://example.com/data",
+    });
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
@@ -202,25 +208,30 @@ describe("common/http/http", () => {
         .mockResolvedValue(new Response("Forbidden", { status: 403 })),
     );
 
-    const result = await requestJson(
-      "https://example.com/data",
-      { method: "GET" },
-      {
-        read: {
-          action: "ReadCliApiResponseBody",
+    const result = await requestJson({
+      decode: {
+        context: {
+          action: "DecodeCliPayload",
           code: "CLI_API_REQUEST_FAILED",
-          kind: "BadGateway",
-          reason: "Failed to read API response body.",
+          context: "CLI payload",
         },
-        request: {
-          action: "RequestCliApi",
-          code: "CLI_API_REQUEST_FAILED",
-          kind: "BadGateway",
-          reason: "Failed to reach the API endpoint.",
-        },
+        schema: z.unknown(),
       },
-      (input) => ok(input),
-    );
+      method: "GET",
+      read: {
+        action: "ReadCliApiResponseBody",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to read API response body.",
+      },
+      request: {
+        action: "RequestCliApi",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to reach the API endpoint.",
+      },
+      url: "https://example.com/data",
+    });
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
@@ -237,25 +248,30 @@ describe("common/http/http", () => {
 
     vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(response));
 
-    const result = await requestJson(
-      "https://example.com/data",
-      { method: "GET" },
-      {
-        read: {
-          action: "ReadCliApiResponseBody",
+    const result = await requestJson({
+      decode: {
+        context: {
+          action: "DecodeCliPayload",
           code: "CLI_API_REQUEST_FAILED",
-          kind: "BadGateway",
-          reason: "Failed to read API response body.",
+          context: "CLI payload",
         },
-        request: {
-          action: "RequestCliApi",
-          code: "CLI_API_REQUEST_FAILED",
-          kind: "BadGateway",
-          reason: "Failed to reach the API endpoint.",
-        },
+        schema: z.unknown(),
       },
-      (input) => ok(input),
-    );
+      method: "GET",
+      read: {
+        action: "ReadCliApiResponseBody",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to read API response body.",
+      },
+      request: {
+        action: "RequestCliApi",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to reach the API endpoint.",
+      },
+      url: "https://example.com/data",
+    });
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
