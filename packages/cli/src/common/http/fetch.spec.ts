@@ -5,21 +5,21 @@ import { z } from "zod";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import {
+  buildFetchInit,
   buildHttpErrorFromResponse,
-  buildRequestInit,
   decodeHttpJson,
   decodeJsonResult,
   deserializeErrorBody,
   expectOkHttpResponse,
+  fetchHttp,
+  fetchJson,
   readHttpJson,
   readHttpText,
   readParsedJson,
-  requestHttp,
-  requestJson,
-  runJsonRequest,
-} from "./http";
+  runJsonFetch,
+} from "./fetch";
 
-describe("common/http/http", () => {
+describe("common/http/fetch", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -30,7 +30,7 @@ describe("common/http/http", () => {
       vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
     );
 
-    const result = await requestHttp(
+    const result = await fetchHttp(
       "https://example.com/data",
       { method: "GET" },
       {
@@ -55,7 +55,7 @@ describe("common/http/http", () => {
     const result = expectOkHttpResponse(
       new Response("Forbidden", { status: 403 }),
       {
-        action: "RequestCliApi",
+        action: "FetchCliApi",
         code: "CLI_API_REQUEST_FAILED",
         kind: "Forbidden",
         reason: "API request failed.",
@@ -143,7 +143,7 @@ describe("common/http/http", () => {
         details: { reason: "Missing scope." },
       }),
       {
-        action: "RequestCliApi",
+        action: "FetchCliApi",
         code: "CLI_API_REQUEST_FAILED",
         kind: "Forbidden",
         reason: "API request failed.",
@@ -236,7 +236,7 @@ describe("common/http/http", () => {
   });
 
   it("builds RequestInit without undefined fields", () => {
-    const init = buildRequestInit({
+    const init = buildFetchInit({
       headers: { "content-type": "application/json" },
       method: "POST",
     });
@@ -275,7 +275,7 @@ describe("common/http/http", () => {
     const execute = vi.fn(() => okAsync({ ok: true }));
     const decoder = vi.fn(() => ok({ decoded: true }));
 
-    const result = await runJsonRequest(
+    const result = await runJsonFetch(
       execute,
       {
         body: JSON.stringify({ ok: true }),
@@ -303,7 +303,7 @@ describe("common/http/http", () => {
       vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
     );
 
-    const result = await requestJson({
+    const result = await fetchJson({
       decode: {
         context: {
           action: "DecodeCliPayload",
@@ -320,7 +320,7 @@ describe("common/http/http", () => {
         reason: "Failed to read API response body.",
       },
       request: {
-        action: "RequestCliApi",
+        action: "FetchCliApi",
         code: "CLI_API_REQUEST_FAILED",
         kind: "BadGateway",
         reason: "Failed to reach the API endpoint.",
@@ -330,7 +330,7 @@ describe("common/http/http", () => {
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.details?.action).toBe("RequestCliApi");
+    expect(result.error.details?.action).toBe("FetchCliApi");
   });
 
   it("returns status error when JSON request response is non-2xx", async () => {
@@ -350,7 +350,7 @@ describe("common/http/http", () => {
       ),
     );
 
-    const result = await requestJson({
+    const result = await fetchJson({
       decode: {
         context: {
           action: "DecodeCliPayload",
@@ -367,7 +367,7 @@ describe("common/http/http", () => {
         reason: "Failed to read API response body.",
       },
       request: {
-        action: "RequestCliApi",
+        action: "FetchCliApi",
         code: "CLI_API_REQUEST_FAILED",
         kind: "BadGateway",
         reason: "Failed to reach the API endpoint.",
@@ -388,7 +388,7 @@ describe("common/http/http", () => {
 
     vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(response));
 
-    const result = await requestJson({
+    const result = await fetchJson({
       decode: {
         context: {
           action: "DecodeCliPayload",
@@ -405,7 +405,7 @@ describe("common/http/http", () => {
         reason: "Failed to read API response body.",
       },
       request: {
-        action: "RequestCliApi",
+        action: "FetchCliApi",
         code: "CLI_API_REQUEST_FAILED",
         kind: "BadGateway",
         reason: "Failed to reach the API endpoint.",

@@ -13,8 +13,8 @@ const h = vi.hoisted(() => ({
   requestAuthenticatedApiMock: vi.fn(),
 }));
 
-vi.mock("../../common/http/authenticated-api-request", () => ({
-  requestAuthedJson: (request: {
+vi.mock("../../common/http/authenticated-api-fetch", () => ({
+  fetchAuthedJson: (request: {
     body?: string;
     decode?: {
       context: { action: string; layer?: string };
@@ -49,7 +49,7 @@ vi.mock("../../common/http/authenticated-api-request", () => ({
         }),
       );
     }),
-  requestAuthenticatedApi: h.requestAuthenticatedApiMock,
+  fetchAuthenticatedApi: h.requestAuthenticatedApiMock,
 }));
 
 describe("services/tx/transaction-api.service", () => {

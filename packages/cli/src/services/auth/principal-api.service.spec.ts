@@ -9,8 +9,8 @@ const h = vi.hoisted(() => ({
   requestAuthedJsonMock: vi.fn(),
 }));
 
-vi.mock("../../common/http/authenticated-api-request", () => ({
-  requestAuthedJson: (request: {
+vi.mock("../../common/http/authenticated-api-fetch", () => ({
+  fetchAuthedJson: (request: {
     decode?: {
       context: { action: string; layer?: string };
       schema: {
@@ -43,7 +43,7 @@ vi.mock("../../common/http/authenticated-api-request", () => ({
         }),
       );
     }),
-  requestAuthenticatedApi: vi.fn(),
+  fetchAuthenticatedApi: vi.fn(),
 }));
 
 describe("services/auth/principal-api.service", () => {

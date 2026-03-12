@@ -12,6 +12,18 @@ import {
 
 import { makeCliSchemaParser } from "../zod-validation";
 
+export type FetchJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
+  context: FetchJsonDecodeContext;
+  schema: T;
+};
+
+export type FetchJsonDecodeContext = {
+  action: string;
+  code: string;
+  context: string;
+  fallbackHint?: string | undefined;
+};
+
 export type HttpErrorOptions = {
   action: string;
   code: string;
@@ -20,31 +32,27 @@ export type HttpErrorOptions = {
   reason: string;
 };
 
-export type RequestJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
-  context: RequestJsonDecodeContext;
-  schema: T;
-};
+type FetchJsonInputBase = {
+  read: HttpErrorOptions;
+  request: HttpErrorOptions;
+  url: string;
+} & JsonFetchInputBase;
 
-export type RequestJsonDecodeContext = {
-  action: string;
-  code: string;
-  context: string;
-  fallbackHint?: string | undefined;
-};
-
-type JsonRequestInputBase = {
+type JsonFetchInputBase = {
   body?: RequestInit["body"];
   headers?: RequestInit["headers"];
   method?: string;
 };
 
-type RequestJsonInputBase = {
-  read: HttpErrorOptions;
-  request: HttpErrorOptions;
-  url: string;
-} & JsonRequestInputBase;
-
 const HTTP_ERROR_TEXT_LIMIT = 500;
+
+export function buildFetchInit(request: JsonFetchInputBase): RequestInit {
+  return omitUndefined({
+    body: request.body,
+    headers: request.headers,
+    method: request.method,
+  });
+}
 
 export function buildHttpErrorFromResponse(
   response: Response,
@@ -66,14 +74,6 @@ export function buildHttpErrorFromResponse(
     kind: options.kind ?? resolveHttpStatusKind(response.status),
     layer: options.layer ?? "Presentation",
     meta: buildHttpErrorMeta(response, body, responseErrorCode),
-  });
-}
-
-export function buildRequestInit(request: JsonRequestInputBase): RequestInit {
-  return omitUndefined({
-    body: request.body,
-    headers: request.headers,
-    method: request.method,
   });
 }
 
@@ -128,6 +128,47 @@ export function expectOkHttpResponse(
   return ok(response);
 }
 
+export function fetchHttp(
+  url: string,
+  init: RequestInit | undefined,
+  options: HttpErrorOptions,
+): ResultAsync<Response, RichError> {
+  return ResultAsync.fromPromise(fetch(url, init), (cause) =>
+    newHttpError(options, cause),
+  );
+}
+
+export function fetchJson<T extends z.ZodType>(
+  request: {
+    decode: FetchJsonDecode<T>;
+  } & FetchJsonInputBase,
+): ResultAsync<z.infer<T>, RichError>;
+
+export function fetchJson(
+  request: FetchJsonInputBase,
+): ResultAsync<unknown, RichError>;
+
+export function fetchJson<T extends z.ZodType>(
+  request: {
+    decode?: FetchJsonDecode<T> | undefined;
+  } & FetchJsonInputBase,
+): ResultAsync<unknown | z.infer<T>, RichError> {
+  return runJsonFetch(
+    (init) =>
+      fetchHttp(request.url, init, request.request).andThen((response) => {
+        if (!response.ok) {
+          return readHttpText(response, request.read).andThen((text) =>
+            err(buildHttpErrorFromResponse(response, text, request.request)),
+          );
+        }
+
+        return readHttpJson(response, request.read);
+      }),
+    request,
+    (json, decode) => makeCliSchemaParser(decode.schema, decode.context)(json),
+  );
+}
+
 export function newHttpError(
   options: HttpErrorOptions,
   cause?: unknown,
@@ -171,47 +212,6 @@ export function readParsedJson<T>(
   return readHttpJson(response, options).andThen(parser);
 }
 
-export function requestHttp(
-  url: string,
-  init: RequestInit | undefined,
-  options: HttpErrorOptions,
-): ResultAsync<Response, RichError> {
-  return ResultAsync.fromPromise(fetch(url, init), (cause) =>
-    newHttpError(options, cause),
-  );
-}
-
-export function requestJson<T extends z.ZodType>(
-  request: {
-    decode: RequestJsonDecode<T>;
-  } & RequestJsonInputBase,
-): ResultAsync<z.infer<T>, RichError>;
-
-export function requestJson(
-  request: RequestJsonInputBase,
-): ResultAsync<unknown, RichError>;
-
-export function requestJson<T extends z.ZodType>(
-  request: {
-    decode?: RequestJsonDecode<T> | undefined;
-  } & RequestJsonInputBase,
-): ResultAsync<unknown | z.infer<T>, RichError> {
-  return runJsonRequest(
-    (init) =>
-      requestHttp(request.url, init, request.request).andThen((response) => {
-        if (!response.ok) {
-          return readHttpText(response, request.read).andThen((text) =>
-            err(buildHttpErrorFromResponse(response, text, request.request)),
-          );
-        }
-
-        return readHttpJson(response, request.read);
-      }),
-    request,
-    (json, decode) => makeCliSchemaParser(decode.schema, decode.context)(json),
-  );
-}
-
 export function resolveHttpStatusKind(
   status: number,
 ):
@@ -233,14 +233,14 @@ export function resolveHttpStatusKind(
   return "BadGateway";
 }
 
-export function runJsonRequest<TDecode, TResult>(
+export function runJsonFetch<TDecode, TResult>(
   execute: (init: RequestInit) => ResultAsync<unknown, RichError>,
   request: {
     decode?: TDecode | undefined;
-  } & JsonRequestInputBase,
+  } & JsonFetchInputBase,
   runDecode: (json: unknown, decode: TDecode) => Result<TResult, RichError>,
 ): ResultAsync<TResult | unknown, RichError> {
-  return execute(buildRequestInit(request)).andThen((json) =>
+  return execute(buildFetchInit(request)).andThen((json) =>
     decodeJsonResult(json, request.decode, runDecode),
   );
 }

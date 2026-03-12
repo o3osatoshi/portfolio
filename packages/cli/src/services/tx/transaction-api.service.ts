@@ -3,9 +3,9 @@ import type { ResultAsync } from "neverthrow";
 import { type RichError, serialize } from "@o3osatoshi/toolkit";
 
 import {
-  requestAuthedJson,
-  requestAuthenticatedApi,
-} from "../../common/http/authenticated-api-request";
+  fetchAuthedJson,
+  fetchAuthenticatedApi,
+} from "../../common/http/authenticated-api-fetch";
 import {
   transactionListSchema,
   type TransactionResponse,
@@ -16,7 +16,7 @@ export function createTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<TransactionResponse, RichError> {
   return serialize(payload).asyncAndThen((serializedPayload) =>
-    requestAuthedJson({
+    fetchAuthedJson({
       body: serializedPayload,
       decode: {
         context: {
@@ -35,7 +35,7 @@ export function createTransaction(
 }
 
 export function deleteTransaction(id: string): ResultAsync<void, RichError> {
-  return requestAuthenticatedApi(
+  return fetchAuthenticatedApi(
     `/api/cli/v1/transactions/${encodeURIComponent(id)}`,
     {
       method: "DELETE",
@@ -47,7 +47,7 @@ export function listTransactions(): ResultAsync<
   TransactionResponse[],
   RichError
 > {
-  return requestAuthedJson({
+  return fetchAuthedJson({
     decode: {
       context: {
         action: "DecodeListTransactionsResponse",
@@ -65,7 +65,7 @@ export function updateTransaction(
   payload: Record<string, unknown>,
 ): ResultAsync<void, RichError> {
   return serialize(payload).asyncAndThen((serializedPayload) =>
-    requestAuthenticatedApi(
+    fetchAuthenticatedApi(
       `/api/cli/v1/transactions/${encodeURIComponent(id)}`,
       {
         body: serializedPayload,

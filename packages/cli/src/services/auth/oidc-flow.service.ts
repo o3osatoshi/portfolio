@@ -3,12 +3,12 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import type { RichError } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import { requestHttp } from "../../common/http/http";
-import { expectOkHttpResponse, requestJson } from "../../common/http/http";
+import { fetchHttp } from "../../common/http/fetch";
+import { expectOkHttpResponse, fetchJson } from "../../common/http/fetch";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { oidcTokenResponseSchema } from "./contracts/oidc.schema";
 import { loginByDevice } from "./oidc-device.service";
-import { requestOidcDiscovery } from "./oidc-http";
+import { fetchOidcDiscovery } from "./oidc-http";
 import { loginByPkce, shouldFallbackToDeviceFlow } from "./oidc-pkce.service";
 import { toTokenSetWithExpiry } from "./oidc-token-set";
 
@@ -23,7 +23,7 @@ export function unsafeOidcLogin(
   mode: OidcLoginMode,
   options?: OidcLoginOptions,
 ): ResultAsync<OidcTokenSet, RichError> {
-  return requestOidcDiscovery(
+  return fetchOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_LOGIN_FAILED,
   ).andThen((oidcDiscovery) => {
@@ -47,7 +47,7 @@ export function unsafeRefreshTokens(
   config: OidcConfig,
   refreshToken: string,
 ): ResultAsync<OidcTokenSet, RichError> {
-  return requestOidcDiscovery(
+  return fetchOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REFRESH_FAILED,
   ).andThen((oidcDiscovery) => {
@@ -57,7 +57,7 @@ export function unsafeRefreshTokens(
       refresh_token: refreshToken,
     });
 
-    return requestJson({
+    return fetchJson({
       body,
       decode: {
         context: {
@@ -93,7 +93,7 @@ export function unsafeRevokeRefreshToken(
   config: OidcConfig,
   refreshToken: string,
 ): ResultAsync<void, RichError> {
-  return requestOidcDiscovery(
+  return fetchOidcDiscovery(
     config.issuer,
     cliErrorCodes.CLI_AUTH_REVOKE_FAILED,
   ).andThen((oidcDiscovery) => {
@@ -107,7 +107,7 @@ export function unsafeRevokeRefreshToken(
       token_type_hint: "refresh_token",
     });
 
-    return requestHttp(
+    return fetchHttp(
       oidcDiscovery.revocation_endpoint,
       {
         body,

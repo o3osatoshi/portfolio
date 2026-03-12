@@ -23,47 +23,47 @@ import { resolveApiRequestUrl } from "./api-url";
 import {
   buildHttpErrorFromResponse,
   decodeHttpJson,
+  fetchHttp,
   readHttpText,
-  requestHttp,
   resolveHttpStatusKind,
-  runJsonRequest,
-} from "./http";
+  runJsonFetch,
+} from "./fetch";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
 
-type RequestAuthedJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
-  context: RequestAuthedJsonDecodeContext;
+type FetchAuthedJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
+  context: FetchAuthedJsonDecodeContext;
   schema: T;
 };
 
-type RequestAuthedJsonDecodeContext = {
+type FetchAuthedJsonDecodeContext = {
   action: string;
   layer?: RichError["layer"] | undefined;
 };
 
-type RequestAuthedJsonInputBase = {
+type FetchAuthedJsonInputBase = {
   body?: RequestInit["body"];
   headers?: RequestInit["headers"];
   method?: string;
   path: string;
 };
 
-export function requestAuthedJson<T extends z.ZodType>(
+export function fetchAuthedJson<T extends z.ZodType>(
   request: {
-    decode: RequestAuthedJsonDecode<T>;
-  } & RequestAuthedJsonInputBase,
+    decode: FetchAuthedJsonDecode<T>;
+  } & FetchAuthedJsonInputBase,
 ): ResultAsync<z.infer<T>, RichError>;
-export function requestAuthedJson(
-  request: RequestAuthedJsonInputBase,
+export function fetchAuthedJson(
+  request: FetchAuthedJsonInputBase,
 ): ResultAsync<unknown, RichError>;
-export function requestAuthedJson<T extends z.ZodType>(
+export function fetchAuthedJson<T extends z.ZodType>(
   request: {
-    decode?: RequestAuthedJsonDecode<T> | undefined;
-  } & RequestAuthedJsonInputBase,
+    decode?: FetchAuthedJsonDecode<T> | undefined;
+  } & FetchAuthedJsonInputBase,
 ): ResultAsync<unknown | z.infer<T>, RichError> {
-  return runJsonRequest(
-    (init) => requestAuthenticatedApi(request.path, init),
+  return runJsonFetch(
+    (init) => fetchAuthenticatedApi(request.path, init),
     request,
     (json, decode) =>
       makeSchemaParser(decode.schema, {
@@ -74,7 +74,7 @@ export function requestAuthedJson<T extends z.ZodType>(
       })(json),
   );
 }
-export function requestAuthenticatedApi(
+export function fetchAuthenticatedApi(
   path: string,
   init: RequestInit,
 ): ResultAsync<unknown, RichError> {
@@ -84,14 +84,14 @@ export function requestAuthenticatedApi(
       const headers = new Headers(init.headers);
       headers.set("authorization", `Bearer ${token.access_token}`);
 
-      return requestHttp(
+      return fetchHttp(
         url,
         {
           ...init,
           headers,
         },
         {
-          action: "RequestCliApi",
+          action: "FetchCliApi",
           code: cliErrorCodes.CLI_API_REQUEST_FAILED,
           kind: "BadGateway",
           reason: "Failed to reach the API endpoint.",
@@ -132,7 +132,7 @@ export function requestAuthenticatedApi(
 
           return err(
             buildHttpErrorFromResponse(response, text, {
-              action: "RequestCliApi",
+              action: "FetchCliApi",
               code: parsed?.code ?? cliErrorCodes.CLI_API_REQUEST_FAILED,
               kind: resolveHttpStatusKind(response.status),
               layer: "Presentation",

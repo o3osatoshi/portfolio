@@ -25,7 +25,7 @@ vi.mock("../../services/auth/token-store.service", () => ({
   readTokenSet: h.readTokenSetMock,
 }));
 
-describe("common/http/authenticated-api-request", () => {
+describe("common/http/authenticated-api-fetch", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
 
@@ -78,10 +78,8 @@ describe("common/http/authenticated-api-request", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -115,10 +113,8 @@ describe("common/http/authenticated-api-request", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -137,10 +133,8 @@ describe("common/http/authenticated-api-request", () => {
       .mockResolvedValue(new Response("", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi(
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi(
       "/api/cli/v1/transactions/tx-1",
       {
         body: JSON.stringify({ amount: "10" }),
@@ -162,10 +156,8 @@ describe("common/http/authenticated-api-request", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -195,10 +187,8 @@ describe("common/http/authenticated-api-request", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -238,10 +228,8 @@ describe("common/http/authenticated-api-request", () => {
       ),
     );
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -272,10 +260,8 @@ describe("common/http/authenticated-api-request", () => {
     );
     vi.stubGlobal("fetch", vi.fn<typeof fetch>());
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -291,10 +277,8 @@ describe("common/http/authenticated-api-request", () => {
     h.readTokenSetMock.mockReturnValueOnce(okAsync(null));
     vi.stubGlobal("fetch", vi.fn<typeof fetch>());
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 
@@ -321,10 +305,8 @@ describe("common/http/authenticated-api-request", () => {
     const fetchMock = vi.fn<typeof fetch>();
     vi.stubGlobal("fetch", fetchMock);
 
-    const { requestAuthenticatedApi } = await import(
-      "./authenticated-api-request"
-    );
-    const result = await requestAuthenticatedApi("/api/cli/v1/me", {
+    const { fetchAuthenticatedApi } = await import("./authenticated-api-fetch");
+    const result = await fetchAuthenticatedApi("/api/cli/v1/me", {
       method: "GET",
     });
 

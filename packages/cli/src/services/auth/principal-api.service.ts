@@ -2,7 +2,7 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { requestAuthedJson } from "../../common/http/authenticated-api-request";
+import { fetchAuthedJson } from "../../common/http/authenticated-api-fetch";
 import {
   type AccessTokenPrincipal,
   accessTokenPrincipalSchema,
@@ -12,7 +12,7 @@ export function fetchAccessTokenPrincipal(): ResultAsync<
   AccessTokenPrincipal,
   RichError
 > {
-  return requestAuthedJson({
+  return fetchAuthedJson({
     decode: {
       context: {
         action: "DecodeAccessTokenPrincipalResponse",

@@ -2,18 +2,18 @@ import type { ResultAsync } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 
-import { requestJson } from "../../common/http/http";
+import { fetchJson } from "../../common/http/fetch";
 import {
   type OidcDiscoveryResponse,
   oidcDiscoveryResponseSchema,
 } from "./contracts/oidc.schema";
 
-export function requestOidcDiscovery(
+export function fetchOidcDiscovery(
   issuer: string,
   errorCode: string,
 ): ResultAsync<OidcDiscoveryResponse, RichError> {
   const normalizedIssuer = issuer.endsWith("/") ? issuer.slice(0, -1) : issuer;
-  return requestJson({
+  return fetchJson({
     decode: {
       context: {
         action: "DecodeOidcDiscoveryResponse",

@@ -3,8 +3,8 @@ import { errAsync, type ResultAsync } from "neverthrow";
 import { deserialize, type RichError, sleep } from "@o3osatoshi/toolkit";
 
 import { cliErrorCodes } from "../../common/error-catalog";
-import { requestHttp } from "../../common/http/http";
-import { readHttpText, requestJson } from "../../common/http/http";
+import { fetchHttp } from "../../common/http/fetch";
+import { fetchJson, readHttpText } from "../../common/http/fetch";
 import type { OidcConfig, OidcTokenSet } from "../../common/types";
 import { makeCliSchemaParser } from "../../common/zod-validation";
 import {
@@ -40,7 +40,7 @@ export function loginByDevice(
       "openid profile email offline_access transactions:read transactions:write",
   });
 
-  return requestJson({
+  return fetchJson({
     body,
     decode: {
       context: {
@@ -114,7 +114,7 @@ export function pollDeviceAuth(
       grant_type: "urn:ietf:params:oauth:grant-type:device_code",
     });
 
-    return requestHttp(
+    return fetchHttp(
       discovery.token_endpoint,
       {
         body,
