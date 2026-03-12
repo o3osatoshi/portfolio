@@ -25,6 +25,12 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends Serializ
 export function buildErrorSummary(details: RichErrorDetails | undefined): string | undefined;
 
 // @public
+export function buildHttpErrorFromPayload(response: HttpStatusLike, payload: unknown, options: HttpErrorOptions): RichError;
+
+// @public
+export function buildHttpErrorFromResponse(response: HttpStatusLike, bodyText: string, options: HttpErrorOptions): RichError;
+
+// @public
 export function buildHttpResponse<T = unknown>(data: T, response: Response, options?: BuildHttpResponseOptions): HttpResponse<T>;
 
 // @public
@@ -73,6 +79,9 @@ export type CreateRateLimitGuardOptions<T> = {
 
 // @public
 export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
+
+// @public
+export function decodeJsonText(text: string, options: HttpErrorOptions): Result<unknown, RichError>;
 
 // @public
 export function deserialize(value: string, options?: JsonDeserializeOptions): Result<JsonContainer, RichError>;
@@ -154,6 +163,29 @@ export type FetchRequest = {
 };
 
 // @public
+export function fetchResponse(request: FetchResponseRequest, options?: FetchResponseOptions): ResultAsync<Response, RichError>;
+
+// @public
+export type FetchResponseOptions = {
+    error?: {
+        action?: string | undefined;
+        code?: string | undefined;
+        kind?: Kind | undefined;
+        layer?: RichError["layer"] | undefined;
+        reason?: string | undefined;
+    };
+    fetch?: typeof fetch | undefined;
+};
+
+// @public
+export type FetchResponseRequest = {
+    body?: RequestInit["body"];
+    headers?: RequestInit["headers"];
+    signal?: AbortSignal;
+    timeoutMs?: number;
+} & HttpRequest;
+
+// @public
 export function formatFetchTarget(input: {
     request?: FetchRequest | undefined;
 }): string | undefined;
@@ -171,6 +203,15 @@ export type FormatHttpStatusReasonOptions = {
 
 // @public
 export function formatPayloadPreview(payload: unknown): string;
+
+// @public
+export type HttpErrorOptions = {
+    action: string;
+    code: string;
+    kind?: Kind | undefined;
+    layer?: RichError["layer"] | undefined;
+    reason: string;
+};
 
 // @public
 export type HttpRequest = {
@@ -432,6 +473,12 @@ export type RateLimitRule<T> = {
 export type RateLimitStore = {
     consume(input: RateLimitConsumeInput): ResultAsync<RateLimitDecision, RichError>;
 };
+
+// @public
+export function readResponseJson(response: Response, options: HttpErrorOptions): ResultAsync<unknown, RichError>;
+
+// @public
+export function readResponseText(response: Response, options: HttpErrorOptions): ResultAsync<string, RichError>;
 
 // @public
 export function resolveAbortSignal(options?: ResolveAbortSignalOptions): ResolvedAbortSignal;
