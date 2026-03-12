@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 import {
+  buildHttpErrorFromPayload,
   httpStatusToKind,
   makeSchemaParser,
   serialize,
@@ -147,17 +148,31 @@ export function createSlackClient(
           )
           .andThen((res) => {
             if (!res.response.ok) {
+              const httpError = buildHttpErrorFromPayload(
+                res.response,
+                res.data,
+                {
+                  action: "SlackPostMessage",
+                  code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
+                  kind:
+                    slackErrorToKind(res.data.error) ??
+                    httpStatusToKind(res.response.status),
+                  layer: "External",
+                  reason: "Slack API request failed.",
+                },
+              );
+
               return err(
                 newIntegrationError({
                   code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
                   details: {
                     action: "SlackPostMessage",
-                    reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
+                    reason:
+                      httpError.details?.reason ?? "Slack API request failed.",
                   },
                   isOperational: true,
-                  kind:
-                    slackErrorToKind(res.data.error) ??
-                    httpStatusToKind(res.response.status),
+                  kind: httpError.kind as IntegrationKind,
+                  meta: httpError.meta,
                 }),
               );
             }
