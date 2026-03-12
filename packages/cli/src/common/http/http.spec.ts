@@ -1,17 +1,20 @@
-import { err, ok } from "neverthrow";
+import { err, ok, okAsync } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import {
+  buildRequestInit,
   decodeHttpJson,
+  decodeJsonResult,
   expectOkHttpResponse,
   readHttpJson,
   readHttpText,
   readParsedJson,
   requestHttp,
   requestJson,
+  runJsonRequest,
 } from "./http";
 
 describe("common/http/http", () => {
@@ -162,6 +165,68 @@ describe("common/http/http", () => {
     );
 
     expect(result.isErr()).toBe(true);
+  });
+
+  it("builds RequestInit without undefined fields", () => {
+    const init = buildRequestInit({
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+
+    expect(init).toEqual({
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+  });
+
+  it("returns undecoded JSON when decode config is absent", () => {
+    const decoder = vi.fn(() => ok({ ok: true }));
+
+    const result = decodeJsonResult({ ok: true }, undefined, decoder);
+
+    expect(result.isOk()).toBe(true);
+    if (result.isErr()) throw new Error("Expected ok result");
+    expect(result.value).toEqual({ ok: true });
+    expect(decoder).not.toHaveBeenCalled();
+  });
+
+  it("decodes JSON when decode config is present", () => {
+    const decoder = vi.fn(() => ok({ ok: true }));
+    const decode = { schema: z.unknown() };
+
+    const result = decodeJsonResult({ ok: true }, decode, decoder);
+
+    expect(result.isOk()).toBe(true);
+    if (result.isErr()) throw new Error("Expected ok result");
+    expect(result.value).toEqual({ ok: true });
+    expect(decoder).toHaveBeenCalledWith({ ok: true }, decode);
+  });
+
+  it("runs shared JSON request flow with decode", async () => {
+    const decode = { schema: z.unknown() };
+    const execute = vi.fn(() => okAsync({ ok: true }));
+    const decoder = vi.fn(() => ok({ decoded: true }));
+
+    const result = await runJsonRequest(
+      execute,
+      {
+        body: JSON.stringify({ ok: true }),
+        decode,
+        headers: { "content-type": "application/json" },
+        method: "POST",
+      },
+      decoder,
+    );
+
+    expect(result.isOk()).toBe(true);
+    if (result.isErr()) throw new Error("Expected ok result");
+    expect(result.value).toEqual({ decoded: true });
+    expect(execute).toHaveBeenCalledWith({
+      body: JSON.stringify({ ok: true }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    expect(decoder).toHaveBeenCalledWith({ ok: true }, decode);
   });
 
   it("returns transport error when JSON request fetch fails", async () => {

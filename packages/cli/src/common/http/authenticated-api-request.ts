@@ -20,7 +20,12 @@ import { cliErrorCodes } from "../error-catalog";
 import { resolveRuntimeEnv } from "../runtime-env";
 import type { OidcTokenSet, RuntimeEnv } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
-import { decodeHttpJson, readHttpText, requestHttp } from "./http";
+import {
+  decodeHttpJson,
+  readHttpText,
+  requestHttp,
+  runJsonRequest,
+} from "./http";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
@@ -55,24 +60,17 @@ export function requestAuthedJson<T extends z.ZodType>(
     decode?: RequestAuthedJsonDecode<T> | undefined;
   } & RequestAuthedJsonInputBase,
 ): ResultAsync<unknown | z.infer<T>, RichError> {
-  const init: RequestInit = omitUndefined({
-    body: request.body,
-    headers: request.headers,
-    method: request.method,
-  });
-
-  return requestAuthenticatedApi(request.path, init).andThen((json) => {
-    if (!request.decode) {
-      return ok(json);
-    }
-
-    return makeSchemaParser(request.decode.schema, {
-      action: request.decode.context.action,
-      ...(request.decode.context.layer !== undefined
-        ? { layer: request.decode.context.layer }
-        : {}),
-    })(json);
-  });
+  return runJsonRequest(
+    (init) => requestAuthenticatedApi(request.path, init),
+    request,
+    (json, decode) =>
+      makeSchemaParser(decode.schema, {
+        action: decode.context.action,
+        ...(decode.context.layer !== undefined
+          ? { layer: decode.context.layer }
+          : {}),
+      })(json),
+  );
 }
 export function requestAuthenticatedApi(
   path: string,

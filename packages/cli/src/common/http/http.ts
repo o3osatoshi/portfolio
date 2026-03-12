@@ -17,26 +17,37 @@ export type HttpErrorOptions = {
   reason: string;
 };
 
-type RequestJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
+export type RequestJsonDecode<T extends z.ZodType = z.ZodType<unknown>> = {
   context: RequestJsonDecodeContext;
   schema: T;
 };
 
-type RequestJsonDecodeContext = {
+export type RequestJsonDecodeContext = {
   action: string;
   code: string;
   context: string;
   fallbackHint?: string | undefined;
 };
 
-type RequestJsonInputBase = {
+type JsonRequestInputBase = {
   body?: RequestInit["body"];
   headers?: RequestInit["headers"];
   method?: string;
+};
+
+type RequestJsonInputBase = {
   read: HttpErrorOptions;
   request: HttpErrorOptions;
   url: string;
-};
+} & JsonRequestInputBase;
+
+export function buildRequestInit(request: JsonRequestInputBase): RequestInit {
+  return omitUndefined({
+    body: request.body,
+    headers: request.headers,
+    method: request.method,
+  });
+}
 
 export function decodeHttpJson(
   text: string,
@@ -46,6 +57,18 @@ export function decodeHttpJson(
     (value: string) => JSON.parse(value) as unknown,
     (cause) => newHttpError(options, cause),
   )(text);
+}
+
+export function decodeJsonResult<TDecode, TResult>(
+  json: unknown,
+  decode: TDecode | undefined,
+  runDecode: (json: unknown, decode: TDecode) => Result<TResult, RichError>,
+): Result<TResult | unknown, RichError> {
+  if (!decode) {
+    return ok(json);
+  }
+
+  return runDecode(json, decode);
 }
 
 export function expectOkHttpResponse(
@@ -122,6 +145,7 @@ export function requestJson<T extends z.ZodType>(
     decode: RequestJsonDecode<T>;
   } & RequestJsonInputBase,
 ): ResultAsync<z.infer<T>, RichError>;
+
 export function requestJson(
   request: RequestJsonInputBase,
 ): ResultAsync<unknown, RichError>;
@@ -130,24 +154,23 @@ export function requestJson<T extends z.ZodType>(
     decode?: RequestJsonDecode<T> | undefined;
   } & RequestJsonInputBase,
 ): ResultAsync<unknown | z.infer<T>, RichError> {
-  const init: RequestInit = omitUndefined({
-    body: request.body,
-    headers: request.headers,
-    method: request.method,
-  });
-
-  return requestHttp(request.url, init, request.request)
-    .andThen((response) => expectOkHttpResponse(response, request.request))
-    .andThen((response) => {
-      if (!request.decode) {
-        return readHttpJson(response, request.read);
-      }
-
-      const parser = makeCliSchemaParser(
-        request.decode.schema,
-        request.decode.context,
-      );
-
-      return readParsedJson(response, request.read, parser);
-    });
+  return runJsonRequest(
+    (init) =>
+      requestHttp(request.url, init, request.request)
+        .andThen((response) => expectOkHttpResponse(response, request.request))
+        .andThen((response) => readHttpJson(response, request.read)),
+    request,
+    (json, decode) => makeCliSchemaParser(decode.schema, decode.context)(json),
+  );
+}
+export function runJsonRequest<TDecode, TResult>(
+  execute: (init: RequestInit) => ResultAsync<unknown, RichError>,
+  request: {
+    decode?: TDecode | undefined;
+  } & JsonRequestInputBase,
+  runDecode: (json: unknown, decode: TDecode) => Result<TResult, RichError>,
+): ResultAsync<TResult | unknown, RichError> {
+  return execute(buildRequestInit(request)).andThen((json) =>
+    decodeJsonResult(json, request.decode, runDecode),
+  );
 }
