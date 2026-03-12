@@ -267,7 +267,7 @@ describe("services/auth/oidc login", () => {
     expect(result.error.code).toBe(cliErrorCodes.CLI_AUTH_LOGIN_FAILED);
     expect(result.error.details?.action).toBe("AuthenticateWithOidc");
     expect(result.error.details?.reason).toMatch(
-      /Device authorization failed\. \(400\)/,
+      /Device authorization failed\. HTTP 400/,
     );
   });
 

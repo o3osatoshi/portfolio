@@ -2,9 +2,14 @@ import { err, errAsync, ok, okAsync, type ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
 import {
+  buildHttpErrorFromResponse,
+  decodeJsonText,
+  fetchResponse,
+  httpStatusToKind,
   makeSchemaParser,
   newRichError,
   omitUndefined,
+  readResponseText,
   type RichError,
 } from "@o3osatoshi/toolkit";
 
@@ -20,14 +25,7 @@ import { cliErrorCodes } from "../error-catalog";
 import { resolveRuntimeEnv } from "../runtime-env";
 import type { OidcTokenSet, RuntimeEnv } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
-import {
-  buildHttpErrorFromResponse,
-  decodeHttpJson,
-  fetchHttp,
-  readHttpText,
-  resolveHttpStatusKind,
-  runJsonFetch,
-} from "./fetch";
+import { runJsonFetch } from "./fetch";
 
 // Refresh slightly before exp to avoid clock-skew races between CLI and API.
 const ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 60;
@@ -84,27 +82,32 @@ export function fetchAuthenticatedApi(
       const headers = new Headers(init.headers);
       headers.set("authorization", `Bearer ${token.access_token}`);
 
-      return fetchHttp(
-        url,
-        {
-          ...init,
+      return fetchResponse(
+        omitUndefined({
+          body: init.body,
           headers,
-        },
+          method: init.method,
+          url,
+        }),
         {
-          action: "FetchCliApi",
-          code: cliErrorCodes.CLI_API_REQUEST_FAILED,
-          kind: "BadGateway",
-          reason: "Failed to reach the API endpoint.",
+          error: {
+            action: "FetchCliApi",
+            code: cliErrorCodes.CLI_API_REQUEST_FAILED,
+            kind: "BadGateway",
+            layer: "Presentation",
+            reason: "Failed to reach the API endpoint.",
+          },
         },
       ).andThen((response) => {
         if (response.ok) {
           return parseSuccessResponseBody(response, init.method);
         }
 
-        return readHttpText(response, {
+        return readResponseText(response, {
           action: "ReadCliApiErrorResponseBody",
           code: cliErrorCodes.CLI_API_REQUEST_FAILED,
           kind: "BadGateway",
+          layer: "Presentation",
           reason: "Failed to read API error response body.",
         }).andThen((text) => {
           const parsed = parseApiError(text);
@@ -134,7 +137,7 @@ export function fetchAuthenticatedApi(
             buildHttpErrorFromResponse(response, text, {
               action: "FetchCliApi",
               code: parsed?.code ?? cliErrorCodes.CLI_API_REQUEST_FAILED,
-              kind: resolveHttpStatusKind(response.status),
+              kind: httpStatusToKind(response.status),
               layer: "Presentation",
               reason: reason ?? "API request failed.",
             }),
@@ -240,10 +243,11 @@ function parseSuccessResponseBody(
     return okAsync(undefined);
   }
 
-  return readHttpText(response, {
+  return readResponseText(response, {
     action: "ReadCliApiResponseBody",
     code: cliErrorCodes.CLI_API_REQUEST_FAILED,
     kind: "BadGateway",
+    layer: "Presentation",
     reason: "Failed to read API response body.",
   }).andThen((text) => {
     const trimmed = text.trim();
@@ -251,10 +255,11 @@ function parseSuccessResponseBody(
       return okAsync(undefined);
     }
 
-    return decodeHttpJson(trimmed, {
+    return decodeJsonText(trimmed, {
       action: "DecodeCliApiResponseBody",
       code: cliErrorCodes.CLI_API_REQUEST_FAILED,
       kind: "BadGateway",
+      layer: "Presentation",
       reason: "API response was not valid JSON.",
     });
   });
