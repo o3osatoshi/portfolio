@@ -2,7 +2,12 @@ import { err, ok, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import type { RichError } from "@o3osatoshi/toolkit";
-import { httpStatusToKind, parseWith } from "@o3osatoshi/toolkit";
+import {
+  buildHttpErrorFromPayload,
+  httpStatusToKind,
+  makeSchemaParser,
+  serialize,
+} from "@o3osatoshi/toolkit";
 
 import { createSmartFetch, type CreateSmartFetchOptions } from "../http";
 import {
@@ -84,11 +89,6 @@ const slackMessageSchema: z.ZodType<SlackMessage> = z
     }
   });
 
-const parseSlackMessage = parseWith(slackMessageSchema, {
-  action: "SlackPostMessage",
-  layer: "External",
-});
-
 /**
  * Create a Slack client backed by the shared smart-fetch utilities.
  *
@@ -111,57 +111,90 @@ export function createSlackClient(
 
   return {
     postMessage: (message) =>
-      parseSlackMessage(message).asyncAndThen((validated) =>
-        sFetch<typeof slackPostMessageResponseSchema>({
-          body: JSON.stringify(validated),
-          decode: {
-            context: {
-              action: "SlackPostMessageResponse",
-              layer: "External",
-            },
-            schema: slackPostMessageResponseSchema,
-          },
-          headers: {
-            Authorization: `Bearer ${config.token}`,
-            "Content-Type": "application/json; charset=utf-8",
-          },
-          method: "POST",
-          url: `${baseUrl}/chat.postMessage`,
-        }).andThen((res) => {
-          if (!res.response.ok) {
-            return err(
-              newIntegrationError({
-                code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
-                details: {
-                  action: "SlackPostMessage",
-                  reason: `Slack API responded with ${res.response.status}: ${res.data.error ?? "unknown error"}`,
+      makeSchemaParser(slackMessageSchema, {
+        action: "SlackPostMessage",
+        layer: "External",
+      })(message).asyncAndThen((validated) =>
+        serialize(validated)
+          .mapErr((cause) =>
+            newIntegrationError({
+              cause,
+              code: integrationErrorCodes.SLACK_API_LOGICAL_ERROR,
+              details: {
+                action: "SlackPostMessage",
+                reason: "Failed to serialize Slack request payload.",
+              },
+              isOperational: false,
+              kind: "Serialization",
+            }),
+          )
+          .asyncAndThen((serializedPayload) =>
+            sFetch<typeof slackPostMessageResponseSchema>({
+              body: serializedPayload,
+              decode: {
+                context: {
+                  action: "SlackPostMessageResponse",
+                  layer: "External",
                 },
-                isOperational: true,
-                kind:
-                  slackErrorToKind(res.data.error) ??
-                  httpStatusToKind(res.response.status),
-              }),
-            );
-          }
-
-          if (!res.data.ok) {
-            return err(
-              newIntegrationError({
-                code: integrationErrorCodes.SLACK_API_LOGICAL_ERROR,
-                details: {
+                schema: slackPostMessageResponseSchema,
+              },
+              headers: {
+                Authorization: `Bearer ${config.token}`,
+                "Content-Type": "application/json; charset=utf-8",
+              },
+              method: "POST",
+              url: `${baseUrl}/chat.postMessage`,
+            }),
+          )
+          .andThen((res) => {
+            if (!res.response.ok) {
+              const httpError = buildHttpErrorFromPayload(
+                res.response,
+                res.data,
+                {
                   action: "SlackPostMessage",
-                  reason: res.data.error ?? "Slack API returned ok=false",
+                  code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
+                  kind:
+                    slackErrorToKind(res.data.error) ??
+                    httpStatusToKind(res.response.status),
+                  layer: "External",
+                  reason: "Slack API request failed.",
                 },
-                isOperational: true,
-                kind:
-                  slackErrorToKind(res.data.error) ??
-                  httpStatusToKind(res.response.status),
-              }),
-            );
-          }
+              );
 
-          return ok(res.data);
-        }),
+              return err(
+                newIntegrationError({
+                  code: integrationErrorCodes.SLACK_API_HTTP_ERROR,
+                  details: {
+                    action: "SlackPostMessage",
+                    reason:
+                      httpError.details?.reason ?? "Slack API request failed.",
+                  },
+                  isOperational: true,
+                  kind: httpError.kind as IntegrationKind,
+                  meta: httpError.meta,
+                }),
+              );
+            }
+
+            if (!res.data.ok) {
+              return err(
+                newIntegrationError({
+                  code: integrationErrorCodes.SLACK_API_LOGICAL_ERROR,
+                  details: {
+                    action: "SlackPostMessage",
+                    reason: res.data.error ?? "Slack API returned ok=false",
+                  },
+                  isOperational: true,
+                  kind:
+                    slackErrorToKind(res.data.error) ??
+                    httpStatusToKind(res.response.status),
+                }),
+              );
+            }
+
+            return ok(res.data);
+          }),
       ),
   };
 }

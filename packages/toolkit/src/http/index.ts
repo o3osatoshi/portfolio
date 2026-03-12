@@ -1,4 +1,5 @@
 export * from "./fetch-error";
+export * from "./fetch-response";
 export * from "./http-error-response";
 export * from "./http-utils";
 export * from "./response-builder";

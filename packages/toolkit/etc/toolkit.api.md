@@ -25,6 +25,12 @@ export type ActionState<T extends ActionData = UnknownRecord, E extends Serializ
 export function buildErrorSummary(details: RichErrorDetails | undefined): string | undefined;
 
 // @public
+export function buildHttpErrorFromPayload(response: HttpStatusLike, payload: unknown, options: HttpErrorOptions): RichError;
+
+// @public
+export function buildHttpErrorFromResponse(response: HttpStatusLike, bodyText: string, options: HttpErrorOptions): RichError;
+
+// @public
 export function buildHttpResponse<T = unknown>(data: T, response: Response, options?: BuildHttpResponseOptions): HttpResponse<T>;
 
 // @public
@@ -75,7 +81,10 @@ export type CreateRateLimitGuardOptions<T> = {
 export function createUrlRedactor(options: UrlRedactorOptions): (url: string) => string;
 
 // @public
-export function decode(value: string): Result<JsonContainer, RichError>;
+export function decodeJsonText(text: string, options: HttpErrorOptions): Result<unknown, RichError>;
+
+// @public
+export function deserialize(value: string, options?: JsonDeserializeOptions): Result<JsonContainer, RichError>;
 
 // @public
 export function deserializeResponseBody(response: Response): Promise<unknown>;
@@ -105,9 +114,6 @@ export type DeserializeRichErrorOptions = {
     meta?: JsonObject | undefined;
     source?: string | undefined;
 };
-
-// @public
-export function encode(value: unknown): Result<string, RichError>;
 
 // @public
 export type Env = "development" | "local" | "production" | "staging";
@@ -148,10 +154,36 @@ export function extractErrorMessage(cause: unknown): string | undefined;
 export function extractErrorName(cause: unknown): string | undefined;
 
 // @public
+export function extractValidationIssues(error: RichError): ValidationIssue[];
+
+// @public
 export type FetchRequest = {
     method?: string;
     url?: string;
 };
+
+// @public
+export function fetchResponse(request: FetchResponseRequest, options?: FetchResponseOptions): ResultAsync<Response, RichError>;
+
+// @public
+export type FetchResponseOptions = {
+    error?: {
+        action?: string | undefined;
+        code?: string | undefined;
+        kind?: Kind | undefined;
+        layer?: RichError["layer"] | undefined;
+        reason?: string | undefined;
+    };
+    fetch?: typeof fetch | undefined;
+};
+
+// @public
+export type FetchResponseRequest = {
+    body?: RequestInit["body"];
+    headers?: RequestInit["headers"];
+    signal?: AbortSignal;
+    timeoutMs?: number;
+} & HttpRequest;
 
 // @public
 export function formatFetchTarget(input: {
@@ -171,6 +203,15 @@ export type FormatHttpStatusReasonOptions = {
 
 // @public
 export function formatPayloadPreview(payload: unknown): string;
+
+// @public
+export type HttpErrorOptions = {
+    action: string;
+    code: string;
+    kind?: Kind | undefined;
+    layer?: RichError["layer"] | undefined;
+    reason: string;
+};
 
 // @public
 export type HttpRequest = {
@@ -226,6 +267,15 @@ export function isDeserializableBody(res: Response): boolean;
 export function isDeserializableResponse(response: Response): boolean;
 
 // @public
+export function isObjectLike(value: unknown): value is object;
+
+// @public
+export function isPlainObject(value: unknown): value is Record<string, unknown>;
+
+// @public
+export function isRecord(value: unknown): value is Record<string, unknown>;
+
+// @public
 export function isRichError(error: unknown): error is RichError;
 
 // @public
@@ -247,6 +297,11 @@ export const jsonArraySchema: z.ZodType<JsonArray>;
 export type JsonContainer = JsonArray | JsonObject;
 
 // @public
+export type JsonDeserializeOptions = {
+    reviver?: Parameters<typeof JSON.parse>[1];
+};
+
+// @public
 export type JsonObject = {
     [key: string]: JsonValue;
 };
@@ -261,6 +316,12 @@ export type JsonPrimitive = boolean | null | number | string;
 export const jsonPrimitiveSchema: z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>;
 
 // @public
+export type JsonSerializeOptions = {
+    replacer?: Parameters<typeof JSON.stringify>[1];
+    space?: Parameters<typeof JSON.stringify>[2];
+};
+
+// @public
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
 // @public
@@ -271,6 +332,7 @@ export type Kind = z.infer<typeof kindSchema>;
 
 // @public
 export const kindSchema: z.ZodEnum<{
+    Serialization: "Serialization";
     BadGateway: "BadGateway";
     BadRequest: "BadRequest";
     Canceled: "Canceled";
@@ -280,7 +342,6 @@ export const kindSchema: z.ZodEnum<{
     MethodNotAllowed: "MethodNotAllowed";
     NotFound: "NotFound";
     RateLimit: "RateLimit";
-    Serialization: "Serialization";
     Timeout: "Timeout";
     Unauthorized: "Unauthorized";
     Unavailable: "Unavailable";
@@ -293,15 +354,24 @@ export type Layer = z.infer<typeof layerSchema>;
 
 // @public
 export const layerSchema: z.ZodEnum<{
+    Infrastructure: "Infrastructure";
     Application: "Application";
     Auth: "Auth";
     Domain: "Domain";
     External: "External";
-    Infrastructure: "Infrastructure";
     Interface: "Interface";
     Persistence: "Persistence";
     Presentation: "Presentation";
 }>;
+
+// @public
+export function makeSchemaParser<T extends z.ZodType>(schema: T, ctx: {
+    action: string;
+    code?: string | undefined;
+    includeValidationIssues?: boolean | undefined;
+    layer?: Layer;
+    mapError?: ((error: RichError) => RichError) | undefined;
+}): (input: unknown) => Result<z.infer<T>, RichError>;
 
 // @public
 export type NewFetchError = {
@@ -334,8 +404,8 @@ export function newRichError(params: NewRichError): RichError;
 export type NewZodError = {
     cause?: undefined | unknown;
     details?: RichErrorDetails | undefined;
+    includeValidationIssues?: boolean | undefined;
     isOperational?: boolean | undefined;
-    issues?: undefined | ZodIssue[];
     layer?: Layer | undefined;
 } & Omit<NewRichError, "details" | "isOperational" | "kind" | "layer">;
 
@@ -349,10 +419,14 @@ export function normalizeBaseUrl(baseUrl: string): string;
 export function ok<T extends ActionData>(data: T): ActionState<T, never>;
 
 // @public
-export function parseWith<T extends z.ZodType>(schema: T, ctx: {
-    action: string;
-    layer?: Layer;
-}): (input: unknown) => Result<z.infer<T>, RichError>;
+export function omitUndefined<T extends object>(input: T): OmitUndefinedDeep<T>;
+
+// @public
+export type OmitUndefinedDeep<T> = T extends ((...args: never[]) => unknown) | bigint | boolean | Date | Error | Map<unknown, unknown> | null | number | Promise<unknown> | ReadonlyMap<unknown, unknown> | ReadonlySet<unknown> | RegExp | Set<unknown> | string | symbol | WeakMap<object, unknown> | WeakSet<object> ? Exclude<T, undefined> : T extends readonly unknown[] ? T : T extends Record<string, unknown> ? {
+    [K in keyof T as undefined extends T[K] ? K : never]?: OmitUndefinedDeep<Exclude<T[K], undefined>>;
+} & {
+    [K in keyof T as undefined extends T[K] ? never : K]: OmitUndefinedDeep<T[K]>;
+} : Exclude<T, undefined>;
 
 // @public
 export type RateLimitBypassContext<T> = {
@@ -399,6 +473,12 @@ export type RateLimitRule<T> = {
 export type RateLimitStore = {
     consume(input: RateLimitConsumeInput): ResultAsync<RateLimitDecision, RichError>;
 };
+
+// @public
+export function readResponseJson(response: Response, options: HttpErrorOptions): ResultAsync<unknown, RichError>;
+
+// @public
+export function readResponseText(response: Response, options: HttpErrorOptions): ResultAsync<string, RichError>;
 
 // @public
 export function resolveAbortSignal(options?: ResolveAbortSignalOptions): ResolvedAbortSignal;
@@ -459,6 +539,9 @@ export const richErrorI18nSchema: z.ZodObject<{
     key: z.ZodString;
     params: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
 }, z.core.$strip>;
+
+// @public
+export function serialize(value: unknown, options?: JsonSerializeOptions): Result<string, RichError>;
 
 // @public
 export type SerializedCause = Exclude<SerializedError["cause"], undefined>;
@@ -522,6 +605,9 @@ export function toHttpErrorResponse(error: unknown, status?: ErrorStatusCode, op
 export function toRichError(error: unknown, fallback?: Partial<NewRichError>): RichError;
 
 // @public
+export function toValidationIssues(source: undefined | unknown | ZodIssue[], options?: ValidationIssueFormat): ValidationIssue[];
+
+// @public
 export function trimTrailingSlash(value: string): string;
 
 // @public
@@ -540,6 +626,18 @@ export function unwrapResultAsync<T, E extends RichError = RichError>(result: Re
 export type UrlRedactorOptions = {
     placeholder?: string;
     secrets: Array<string | undefined>;
+};
+
+// @public
+export type ValidationIssue = {
+    code: string;
+    message: string;
+    path: string;
+};
+
+// @public
+export type ValidationIssueFormat = {
+    rootPath?: string | undefined;
 };
 
 // @public

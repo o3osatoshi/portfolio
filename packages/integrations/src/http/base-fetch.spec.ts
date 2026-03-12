@@ -88,7 +88,9 @@ describe("integrations/http createSmartFetch", () => {
     expect(result.error.name).toBe("ExternalBadGatewayError");
     expect(isRichError(result.error)).toBe(true);
     if (isRichError(result.error)) {
-      expect(result.error.details?.action).toBe("DeserializeResponseBody");
+      expect(result.error.details?.action).toBe(
+        "DeserializeExternalApiResponseBody",
+      );
     }
   });
 

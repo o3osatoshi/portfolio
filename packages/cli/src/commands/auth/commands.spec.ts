@@ -1,0 +1,251 @@
+import { err, errAsync, ok, okAsync } from "neverthrow";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const h = vi.hoisted(() => ({
+  oidcLoginMock: vi.fn(),
+  clearTokenSetMock: vi.fn(),
+  fetchAccessTokenPrincipalMock: vi.fn(),
+  persistTokenSetMock: vi.fn(),
+  readTokenSetMock: vi.fn(),
+  resolveRuntimeEnvMock: vi.fn(),
+  revokeRefreshTokenMock: vi.fn(),
+}));
+
+vi.mock("../../services/auth/principal-api.service", () => ({
+  fetchAccessTokenPrincipal: h.fetchAccessTokenPrincipalMock,
+}));
+
+vi.mock("../../common/runtime-env", () => ({
+  resolveRuntimeEnv: h.resolveRuntimeEnvMock,
+}));
+
+vi.mock("../../services/auth/oidc.service", () => ({
+  oidcLogin: h.oidcLoginMock,
+  revokeRefreshToken: h.revokeRefreshTokenMock,
+}));
+
+vi.mock("../../services/auth/token-store.service", () => ({
+  clearTokenSet: h.clearTokenSetMock,
+  persistTokenSet: h.persistTokenSetMock,
+  readTokenSet: h.readTokenSetMock,
+}));
+
+import { runAuthLogin } from "./login";
+import { runAuthLogout } from "./logout";
+import { runAuthWhoami } from "./whoami";
+
+describe("commands/auth", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    h.resolveRuntimeEnvMock.mockReset();
+    h.resolveRuntimeEnvMock.mockReturnValue(
+      ok({
+        oidcConfig: {
+          audience: "https://api.o3o.app",
+          clientId: "cli-client-id",
+          issuer: "https://example.auth0.com",
+          redirectPort: 38080,
+        },
+        apiBaseUrl: "http://localhost:3000",
+      }),
+    );
+    h.oidcLoginMock.mockReset();
+    h.persistTokenSetMock.mockReset();
+    h.readTokenSetMock.mockReset();
+    h.revokeRefreshTokenMock.mockReset();
+    h.clearTokenSetMock.mockReset();
+    h.fetchAccessTokenPrincipalMock.mockReset();
+    h.persistTokenSetMock.mockReturnValue(okAsync());
+    h.clearTokenSetMock.mockReturnValue(okAsync());
+    h.readTokenSetMock.mockReturnValue(okAsync(null));
+    h.revokeRefreshTokenMock.mockReturnValue(okAsync());
+    vi.spyOn(console, "log").mockImplementation(() => {});
+  });
+
+  it("runAuthLogin stores token and prints success", async () => {
+    const token = {
+      access_token: "access-token",
+      expires_at: 1_735_689_600,
+      refresh_token: "refresh-token",
+      scope: "openid profile",
+      token_type: "Bearer",
+    };
+    h.oidcLoginMock.mockReturnValueOnce(okAsync(token));
+
+    const result = await runAuthLogin("auto");
+
+    expect(result.isOk()).toBe(true);
+    expect(h.oidcLoginMock).toHaveBeenCalledWith(
+      {
+        audience: "https://api.o3o.app",
+        clientId: "cli-client-id",
+        issuer: "https://example.auth0.com",
+        redirectPort: 38080,
+      },
+      "auto",
+      {
+        onInfo: expect.any(Function),
+      },
+    );
+    expect(h.persistTokenSetMock).toHaveBeenCalledWith(token);
+    expect(console.log).toHaveBeenCalledWith("Login successful.");
+  });
+
+  it("runAuthLogout revokes refresh token when available", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+        refresh_token: "refresh-token",
+      }),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).toHaveBeenCalledWith(
+      {
+        audience: "https://api.o3o.app",
+        clientId: "cli-client-id",
+        issuer: "https://example.auth0.com",
+        redirectPort: 38080,
+      },
+      "refresh-token",
+    );
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout skips revoke when refresh token is absent", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+      }),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).not.toHaveBeenCalled();
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout still clears local tokens when revoke fails", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+        refresh_token: "refresh-token",
+      }),
+    );
+    h.revokeRefreshTokenMock.mockReturnValueOnce(
+      errAsync(new Error("boom") as never),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).toHaveBeenCalledTimes(1);
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout still clears local tokens when runtime config is invalid", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      okAsync({
+        access_token: "access-token",
+        refresh_token: "refresh-token",
+      }),
+    );
+    h.resolveRuntimeEnvMock.mockReturnValueOnce(
+      err(new Error("boom") as never),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).not.toHaveBeenCalled();
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout still clears local tokens when readTokenSet fails", async () => {
+    h.readTokenSetMock.mockReturnValueOnce(
+      errAsync(new Error("boom") as never),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isOk()).toBe(true);
+    expect(h.revokeRefreshTokenMock).not.toHaveBeenCalled();
+    expect(h.clearTokenSetMock).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthLogout returns error when clearTokenSet fails", async () => {
+    h.clearTokenSetMock.mockReturnValueOnce(
+      errAsync(new Error("clear failed") as never),
+    );
+
+    const result = await runAuthLogout();
+
+    expect(result.isErr()).toBe(true);
+    expect(console.log).not.toHaveBeenCalledWith("Logged out.");
+  });
+
+  it("runAuthWhoami prints formatted JSON", async () => {
+    h.fetchAccessTokenPrincipalMock.mockReturnValueOnce(
+      okAsync({
+        issuer: "https://example.auth0.com",
+        scopes: ["transactions:read"],
+        subject: "auth0|123",
+        userId: "user-1",
+      }),
+    );
+
+    const result = await runAuthWhoami();
+
+    expect(result.isOk()).toBe(true);
+    expect(console.log).toHaveBeenCalledWith(
+      JSON.stringify(
+        {
+          issuer: "https://example.auth0.com",
+          scopes: ["transactions:read"],
+          subject: "auth0|123",
+          userId: "user-1",
+        },
+        null,
+        2,
+      ),
+    );
+  });
+
+  it("runAuthWhoami prints machine-readable envelope in json output mode", async () => {
+    h.fetchAccessTokenPrincipalMock.mockReturnValueOnce(
+      okAsync({
+        issuer: "https://example.auth0.com",
+        scopes: ["transactions:read"],
+        subject: "auth0|123",
+        userId: "user-1",
+      }),
+    );
+
+    const result = await runAuthWhoami("json");
+
+    expect(result.isOk()).toBe(true);
+    expect(console.log).toHaveBeenCalledWith(
+      JSON.stringify({
+        command: "auth.whoami",
+        meta: {
+          version: 1,
+        },
+        ok: true,
+        value: {
+          issuer: "https://example.auth0.com",
+          scopes: ["transactions:read"],
+          subject: "auth0|123",
+          userId: "user-1",
+        },
+      }),
+    );
+  });
+});

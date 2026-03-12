@@ -6,7 +6,7 @@ import {
 } from "@repo/application";
 import type { TransactionResponse } from "@repo/application";
 import { createPrismaClient, PrismaTransactionRepository } from "@repo/prisma";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 import { cacheLife, cacheTag } from "next/cache";
 
 import { env } from "@/env/server";
@@ -52,9 +52,7 @@ export function getTransactions(): ResultAsync<Transactions, RichError> {
       ),
     )
     .andThen((result) =>
-      result.ok
-        ? okAsync(result.data)
-        : errAsync(deserializeRichError(result.error)),
+      result.ok ? ok(result.data) : err(deserializeRichError(result.error)),
     );
 }
 

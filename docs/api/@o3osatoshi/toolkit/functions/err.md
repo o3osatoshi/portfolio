@@ -1,38 +1,33 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / err
+[@o3osatoshi/toolkit](../README.md) / err
 
 # Function: err()
 
-> **err**\<`E`\>(`error`): [`ActionState`](../type-aliases/ActionState.md)
+> **err**(`error`): [`ActionState`](../type-aliases/ActionState.md)\<`never`, [`SerializedRichError`](../type-aliases/SerializedRichError.md)\>
 
-Defined in: [next/action-state.ts:55](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/next/action-state.ts#L55)
+Defined in: [packages/toolkit/src/next/action-state.ts:50](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/next/action-state.ts#L50)
 
-Build a failure [ActionState](../type-aliases/ActionState.md) with a user-facing error message.
-
-## Type Parameters
-
-### E
-
-`E` *extends* `Error`
+Build a failure [ActionState](../type-aliases/ActionState.md).
 
 ## Parameters
 
 ### error
 
-A string, Error, or pre-shaped [ActionError](../type-aliases/ActionError.md).
+[`RichError`](../classes/RichError.md)
 
-`string` | [`ActionError`](../type-aliases/ActionError.md) | `E`
+Structured error that should already be handled as [RichError](../classes/RichError.md).
 
 ## Returns
 
-[`ActionState`](../type-aliases/ActionState.md)
+[`ActionState`](../type-aliases/ActionState.md)\<`never`, [`SerializedRichError`](../type-aliases/SerializedRichError.md)\>
 
-An [ActionState](../type-aliases/ActionState.md) with `ok: false` and a friendly message derived from the error.
+An [ActionState](../type-aliases/ActionState.md) with `ok: false` and serialized RichError metadata.
 
 ## Remarks
 
-- Strings and pre-shaped [ActionError](../type-aliases/ActionError.md) values are passed through.
-- Native `Error` instances are converted via [userMessageFromError](userMessageFromError.md) and wrapped as [ActionError](../type-aliases/ActionError.md) to keep messages user-friendly and serializable.
+- Errors are always serialized via [serializeRichError](serializeRichError.md).
+- Cause chains are omitted from action payloads to avoid leaking internal details.
+- Stack traces are omitted for server action payload safety.

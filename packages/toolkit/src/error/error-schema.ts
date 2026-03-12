@@ -15,7 +15,7 @@ import { jsonObjectSchema } from "../types";
  * - `"MethodNotAllowed"` → HTTP verb not supported for the resource (405).
  * - `"NotFound"` → entity or route missing (404).
  * - `"RateLimit"` → throttling or quota exceeded (429).
- * - `"Serialization"` → encode/decode failures (500).
+ * - `"Serialization"` → serialize/deserialize failures (500).
  * - `"Timeout"` → upstream or local job timed out (504).
  * - `"Unauthorized"` → authentication missing or invalid (401).
  * - `"Unavailable"` → dependency or subsystem temporarily down (503).

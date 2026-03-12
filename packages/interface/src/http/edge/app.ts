@@ -11,7 +11,7 @@ import type { CacheStore } from "@repo/domain";
 import { type Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import {
   requestIdMiddleware,
@@ -127,7 +127,7 @@ function buildEdgePrivateRoutes() {
     .get("/me", (c) => {
       const authUser = c.get("authUser");
       return respond<User>(c)(
-        parseWith<typeof userSchema>(userSchema, {
+        makeSchemaParser<typeof userSchema>(userSchema, {
           action: "ParseSessionUser",
         })(authUser?.session.user ?? {}),
       );

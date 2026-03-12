@@ -72,7 +72,7 @@ describe("integrations/slack createSlackNotifier", () => {
         newIntegrationError({
           code: integrationErrorCodes.SLACK_NOTIFY_FAILED,
           details: {
-            action: "SlackNotifierSpec",
+            action: "NotifySlack",
             reason: "slack down",
           },
           isOperational: true,

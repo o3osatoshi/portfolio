@@ -9,11 +9,11 @@ import {
 } from "../../application-error-catalog";
 import { CreateTransactionUseCase } from "./create-transaction";
 
-const testError = (reason: string) =>
+const testError = (action: string, reason: string) =>
   newApplicationError({
     code: applicationErrorCodes.INTERNAL,
     details: {
-      action: "CreateTransactionUseCaseSpec",
+      action,
       reason,
     },
     i18n: { key: applicationErrorI18nKeys.INTERNAL },
@@ -25,11 +25,12 @@ function makeRepo(
   overrides: Partial<TransactionRepository> = {},
 ): TransactionRepository {
   const base: TransactionRepository = {
-    create: () => errAsync(testError("not implemented")),
-    delete: () => errAsync(testError("not used")),
-    findById: () => errAsync(testError("not used")),
-    findByUserId: () => errAsync(testError("not used")),
-    update: () => errAsync(testError("not used")),
+    create: () => errAsync(testError("CreateTransaction", "not implemented")),
+    delete: () => errAsync(testError("DeleteTransaction", "not used")),
+    findById: () => errAsync(testError("FindTransactionById", "not used")),
+    findByUserId: () =>
+      errAsync(testError("FindTransactionsByUserId", "not used")),
+    update: () => errAsync(testError("UpdateTransaction", "not used")),
   };
   return { ...base, ...overrides } as TransactionRepository;
 }

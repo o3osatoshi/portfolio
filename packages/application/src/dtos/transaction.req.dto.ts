@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import { ensureApplicationErrorI18n } from "../error-i18n";
 
@@ -109,7 +109,7 @@ export type UpdateTransactionRequest = z.infer<
  * Parse and validate an unknown payload into {@link CreateTransactionRequest}.
  */
 export const parseCreateTransactionRequest = (input: unknown) =>
-  parseWith(createTransactionRequestSchema, {
+  makeSchemaParser(createTransactionRequestSchema, {
     action: "ParseCreateTransactionRequest",
   })(input).mapErr((error) => ensureApplicationErrorI18n(error));
 
@@ -117,7 +117,7 @@ export const parseCreateTransactionRequest = (input: unknown) =>
  * Parse and validate an unknown payload into {@link UpdateTransactionRequest}.
  */
 export const parseUpdateTransactionRequest = (input: unknown) =>
-  parseWith(updateTransactionRequestSchema, {
+  makeSchemaParser(updateTransactionRequestSchema, {
     action: "ParseUpdateTransactionRequest",
   })(input).mapErr((error) => ensureApplicationErrorI18n(error));
 
@@ -125,7 +125,7 @@ export const parseUpdateTransactionRequest = (input: unknown) =>
  * Parse and validate an unknown payload into {@link GetTransactionsRequest}.
  */
 export const parseGetTransactionsRequest = (input: unknown) =>
-  parseWith(getTransactionsRequestSchema, {
+  makeSchemaParser(getTransactionsRequestSchema, {
     action: "ParseGetTransactionsRequest",
   })(input).mapErr((error) => ensureApplicationErrorI18n(error));
 
@@ -133,6 +133,6 @@ export const parseGetTransactionsRequest = (input: unknown) =>
  * Parse and validate an unknown payload into {@link DeleteTransactionRequest}.
  */
 export const parseDeleteTransactionRequest = (input: unknown) =>
-  parseWith(deleteTransactionRequestSchema, {
+  makeSchemaParser(deleteTransactionRequestSchema, {
     action: "ParseDeleteTransactionRequest",
   })(input).mapErr((error) => ensureApplicationErrorI18n(error));

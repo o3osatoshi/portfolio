@@ -1,16 +1,13 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / SerializedCause
+[@o3osatoshi/toolkit](../README.md) / SerializedCause
 
 # Type Alias: SerializedCause
 
-> **SerializedCause** = [`SerializedError`](../interfaces/SerializedError.md) \| `string`
+> **SerializedCause** = `Exclude`\<[`SerializedError`](SerializedError.md)\[`"cause"`\], `undefined`\>
 
-Defined in: [error/error-serializer.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-serializer.ts#L13)
+Defined in: [packages/toolkit/src/error/error-schema.ts:194](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-schema.ts#L194)
 
-Union used to represent an error's `cause` in serialized form.
-
-- A primitive `string` is preserved as-is.
-- A nested [SerializedError](../interfaces/SerializedError.md) captures structured error details recursively.
+Serialized cause type inferred from [serializedErrorSchema](../variables/serializedErrorSchema.md).

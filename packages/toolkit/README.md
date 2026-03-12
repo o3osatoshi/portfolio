@@ -18,7 +18,7 @@ import {
   err,
   newRichError,
   ok,
-  parseWith,
+  makeSchemaParser,
   serializeRichError,
   toRichError,
 } from "@o3osatoshi/toolkit";
@@ -55,11 +55,11 @@ throw newRichError({
 import { toRichError } from "@o3osatoshi/toolkit";
 
 try {
-  await doSomething();
+  await runTask();
 } catch (cause) {
   const error = toRichError(cause, {
-    code: "APP_DO_SOMETHING_FAILED",
-    details: { action: "DoSomething" },
+    code: "APP_RUN_TASK_FAILED",
+    details: { action: "RunTask" },
     layer: "Application",
   });
 
@@ -93,7 +93,7 @@ const restored = deserializeRichError(payload);
 ### Zod integration
 
 ```ts
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 import { z } from "zod";
 
 const userSchema = z.object({
@@ -101,12 +101,12 @@ const userSchema = z.object({
   name: z.string(),
 });
 
-const parseUser = parseWith(userSchema, {
+const userParser = makeSchemaParser(userSchema, {
   action: "ParseUser",
   layer: "Presentation",
 });
 
-const result = parseUser({ age: 20, name: "alice" });
+const result = userParser({ age: 20, name: "alice" });
 // Result<{ age: number; name: string }, RichError>
 ```
 
@@ -127,7 +127,7 @@ const result = parseUser({ age: 20, name: "alice" });
 | `Unprocessable` | 422 | Semantically invalid request. |
 | `RateLimit` | 429 | Throttling/quota exceeded. |
 | `Internal` | 500 | Unexpected internal failure. |
-| `Serialization` | 500 | Encode/decode failure. |
+| `Serialization` | 500 | Serialize/deserialize failure. |
 | `BadGateway` | 502 | Upstream responded invalidly. |
 | `Unavailable` | 503 | Dependency/service temporarily unavailable. |
 | `Timeout` | 504 | Upstream/local operation timed out. |
@@ -171,7 +171,7 @@ export async function createItem(
 - `createEnv(schema, options?)`
 - `createLazyEnv(schema, options?)`
 - `newZodError(options)`
-- `parseWith(schema, context)`
+- `makeSchemaParser(schema, context)`
 - `ok(data)` / `err(error)` / `ActionState`
 - `unwrapResultAsync(result)`
 

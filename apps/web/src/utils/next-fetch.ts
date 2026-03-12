@@ -6,6 +6,7 @@ import {
   deserializeResponseBody,
   type HttpResponse,
   newFetchError,
+  omitUndefined,
   type RichError,
 } from "@o3osatoshi/toolkit";
 
@@ -59,23 +60,23 @@ export function nextFetch(
   const _tags =
     request.tags === undefined ? [queryPath] : [...request.tags, queryPath];
 
-  return ResultAsync.fromPromise(
-    fetch(url, {
-      ...(request.cache !== undefined ? { cache: request.cache } : {}),
-      ...(request.headers !== undefined ? { headers: request.headers } : {}),
-      next: {
-        ...(request.revalidate !== undefined
-          ? { revalidate: request.revalidate }
-          : {}),
-        tags: _tags,
-      },
+  const nextOptions: NonNullable<RequestInit["next"]> = omitUndefined({
+    revalidate: request.revalidate,
+    tags: _tags,
+  });
+
+  const fetchInit: RequestInit = omitUndefined({
+    cache: request.cache,
+    headers: request.headers,
+    next: nextOptions,
+  });
+
+  return ResultAsync.fromPromise(fetch(url, fetchInit), (cause) =>
+    newFetchError({
+      cause,
+      details: { action: "FetchExternalApi" },
+      request: { method: "GET", url: url.href },
     }),
-    (cause) =>
-      newFetchError({
-        cause,
-        details: { action: "FetchExternalApi" },
-        request: { method: "GET", url: url.href },
-      }),
   ).andThen((response) =>
     ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
       newFetchError({

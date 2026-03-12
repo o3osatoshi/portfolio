@@ -4,10 +4,11 @@ import type { RichError } from "@o3osatoshi/toolkit";
 import {
   buildHttpResponse,
   deserializeResponseBody,
+  fetchResponse,
   type HttpRequest,
   type HttpResponse,
   newFetchError,
-  resolveAbortSignal,
+  omitUndefined,
 } from "@o3osatoshi/toolkit";
 
 /**
@@ -83,7 +84,7 @@ function deserializeBody(
   return ResultAsync.fromPromise(deserializeResponseBody(response), (cause) =>
     newFetchError({
       cause,
-      details: { action: "DeserializeResponseBody" },
+      details: { action: "DeserializeExternalApiResponseBody" },
       kind: "BadGateway",
       request,
     }),
@@ -94,26 +95,22 @@ function performFetch(
   fetcher: typeof fetch,
   request: BaseFetchRequest,
 ): ResultAsync<Response, RichError> {
-  const { cleanup, signal } = resolveAbortSignal({
-    signal: request.signal,
-    timeoutMs: request.timeoutMs,
-  });
-
-  const init: RequestInit = {
-    ...(request.method !== undefined ? { method: request.method } : {}),
-    ...(request.headers !== undefined ? { headers: request.headers } : {}),
-    ...(request.body !== undefined ? { body: request.body } : {}),
-    ...(signal !== undefined ? { signal } : {}),
-  };
-
-  return ResultAsync.fromPromise(fetcher(request.url, init), (cause) =>
-    newFetchError({
-      cause,
-      details: { action: "FetchExternalApi" },
-      request: { method: request.method ?? "GET", url: request.url },
-    }),
-  ).map((response) => {
-    cleanup();
-    return response;
-  });
+  return fetchResponse(
+    {
+      ...omitUndefined({
+        body: request.body,
+        headers: request.headers,
+        method: request.method,
+        signal: request.signal,
+        timeoutMs: request.timeoutMs,
+      }),
+      url: request.url,
+    },
+    {
+      error: {
+        action: "FetchExternalApi",
+      },
+      fetch: fetcher,
+    },
+  );
 }

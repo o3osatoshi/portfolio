@@ -173,7 +173,7 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(isRichError(result.error)).toBe(true);
     if (isRichError(result.error)) {
       expect(result.error.details?.reason ?? "").toContain(
-        "ExchangeRate API responded with 404",
+        "ExchangeRate API responded with HTTP 404",
       );
     }
   });
@@ -197,7 +197,9 @@ describe("integrations/exchange-rate-api ExchangeRateApi", () => {
     expect(result.error.name).toBe("ExternalBadGatewayError");
     expect(isRichError(result.error)).toBe(true);
     if (isRichError(result.error)) {
-      expect(result.error.details?.action).toBe("DeserializeResponseBody");
+      expect(result.error.details?.action).toBe(
+        "DeserializeExternalApiResponseBody",
+      );
     }
   });
 

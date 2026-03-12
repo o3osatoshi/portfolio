@@ -68,6 +68,17 @@ describe("error-serializer", () => {
     }
   });
 
+  it("uses <root> for root-level deserialization issues", () => {
+    const result = tryDeserializeRichError("invalid");
+
+    expect(result.isErr()).toBe(true);
+    if (!result.isErr()) return;
+
+    expect(result.error.issues.some((issue) => issue.path === "<root>")).toBe(
+      true,
+    );
+  });
+
   it("handles string cause in serialized rich payload", () => {
     const e = newRichError({
       cause: "inner",

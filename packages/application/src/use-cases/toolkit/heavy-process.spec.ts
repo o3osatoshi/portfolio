@@ -56,7 +56,7 @@ describe("application/use-cases: HeavyProcessUseCase", () => {
     const sleepError = newApplicationError({
       code: applicationErrorCodes.INTERNAL,
       details: {
-        action: "HeavyProcessUseCaseSpec",
+        action: "Sleep",
         reason: "sleep interrupted",
       },
       i18n: { key: applicationErrorI18nKeys.INTERNAL },
