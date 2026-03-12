@@ -8,6 +8,7 @@ They are also the canonical place to record newly agreed shared engineering rule
 ## Available guides
 
 - [RichError Conventions](./rich-error.md)
+- [HTTP Conventions](./http.md)
 - [neverthrow Conventions](./neverthrow.md)
 
 ## Scope
