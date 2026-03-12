@@ -2,9 +2,12 @@ import { err, ok, Result, ResultAsync } from "neverthrow";
 import type { z } from "zod";
 
 import {
+  type JsonObject,
+  type JsonValue,
   newRichError,
   omitUndefined,
   type RichError,
+  truncate,
 } from "@o3osatoshi/toolkit";
 
 import { makeCliSchemaParser } from "../zod-validation";
@@ -41,6 +44,31 @@ type RequestJsonInputBase = {
   url: string;
 } & JsonRequestInputBase;
 
+const HTTP_ERROR_TEXT_LIMIT = 500;
+
+export function buildHttpErrorFromResponse(
+  response: Response,
+  bodyText: string,
+  options: HttpErrorOptions,
+): RichError {
+  const body = deserializeErrorBody(bodyText);
+  const responseErrorCode = extractResponseErrorCode(body);
+
+  return newRichError({
+    code: responseErrorCode ?? options.code,
+    details: {
+      action: options.action,
+      reason:
+        extractResponseErrorReason(body) ??
+        formatHttpErrorReason(response, options.reason),
+    },
+    isOperational: true,
+    kind: options.kind ?? resolveHttpStatusKind(response.status),
+    layer: options.layer ?? "Presentation",
+    meta: buildHttpErrorMeta(response, body, responseErrorCode),
+  });
+}
+
 export function buildRequestInit(request: JsonRequestInputBase): RequestInit {
   return omitUndefined({
     body: request.body,
@@ -69,6 +97,19 @@ export function decodeJsonResult<TDecode, TResult>(
   }
 
   return runDecode(json, decode);
+}
+
+export function deserializeErrorBody(text: string): JsonValue | null | string {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(trimmed) as JsonValue;
+  } catch {
+    return trimmed;
+  }
 }
 
 export function expectOkHttpResponse(
@@ -149,6 +190,7 @@ export function requestJson<T extends z.ZodType>(
 export function requestJson(
   request: RequestJsonInputBase,
 ): ResultAsync<unknown, RichError>;
+
 export function requestJson<T extends z.ZodType>(
   request: {
     decode?: RequestJsonDecode<T> | undefined;
@@ -156,13 +198,41 @@ export function requestJson<T extends z.ZodType>(
 ): ResultAsync<unknown | z.infer<T>, RichError> {
   return runJsonRequest(
     (init) =>
-      requestHttp(request.url, init, request.request)
-        .andThen((response) => expectOkHttpResponse(response, request.request))
-        .andThen((response) => readHttpJson(response, request.read)),
+      requestHttp(request.url, init, request.request).andThen((response) => {
+        if (!response.ok) {
+          return readHttpText(response, request.read).andThen((text) =>
+            err(buildHttpErrorFromResponse(response, text, request.request)),
+          );
+        }
+
+        return readHttpJson(response, request.read);
+      }),
     request,
     (json, decode) => makeCliSchemaParser(decode.schema, decode.context)(json),
   );
 }
+
+export function resolveHttpStatusKind(
+  status: number,
+):
+  | "BadGateway"
+  | "BadRequest"
+  | "Conflict"
+  | "Forbidden"
+  | "NotFound"
+  | "RateLimit"
+  | "Unauthorized"
+  | "Unprocessable" {
+  if (status === 400) return "BadRequest";
+  if (status === 401) return "Unauthorized";
+  if (status === 403) return "Forbidden";
+  if (status === 404) return "NotFound";
+  if (status === 409) return "Conflict";
+  if (status === 422) return "Unprocessable";
+  if (status === 429) return "RateLimit";
+  return "BadGateway";
+}
+
 export function runJsonRequest<TDecode, TResult>(
   execute: (init: RequestInit) => ResultAsync<unknown, RichError>,
   request: {
@@ -173,4 +243,95 @@ export function runJsonRequest<TDecode, TResult>(
   return execute(buildRequestInit(request)).andThen((json) =>
     decodeJsonResult(json, request.decode, runDecode),
   );
+}
+
+function buildHttpErrorMeta(
+  response: Response,
+  body: JsonValue | null | string,
+  responseErrorCode: string | undefined,
+): JsonObject {
+  const meta: JsonObject = {
+    responseStatus: response.status,
+  };
+
+  if (response.statusText) {
+    meta["responseStatusText"] = response.statusText;
+  }
+
+  if (responseErrorCode) {
+    meta["responseErrorCode"] = responseErrorCode;
+  }
+
+  if (body && typeof body === "object") {
+    meta["responseBody"] = body;
+  } else if (typeof body === "string") {
+    meta["responseBodyText"] = truncate(body, HTTP_ERROR_TEXT_LIMIT);
+  }
+
+  return meta;
+}
+
+function extractResponseErrorCode(
+  body: JsonValue | null | string,
+): string | undefined {
+  if (!isJsonObject(body)) {
+    return undefined;
+  }
+
+  const code = body["code"];
+  return typeof code === "string" && code.length > 0 ? code : undefined;
+}
+
+function extractResponseErrorReason(
+  body: JsonValue | null | string,
+): string | undefined {
+  if (typeof body === "string") {
+    return truncate(body, HTTP_ERROR_TEXT_LIMIT);
+  }
+
+  if (!isJsonObject(body)) {
+    return undefined;
+  }
+
+  return (
+    readNestedString(body, ["details", "reason"]) ??
+    readNestedString(body, ["reason"]) ??
+    readNestedString(body, ["message"]) ??
+    readNestedString(body, ["error_description"]) ??
+    readNestedString(body, ["error"])
+  );
+}
+
+function formatHttpErrorReason(
+  response: Response,
+  fallbackReason: string,
+): string {
+  if (response.statusText) {
+    return `${fallbackReason} (${response.status}): ${response.statusText}`;
+  }
+
+  return `${fallbackReason} (${response.status}).`;
+}
+
+function isJsonObject(value: JsonValue | null | string): value is JsonObject {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readNestedString(
+  source: JsonObject,
+  path: string[],
+): string | undefined {
+  let current: JsonValue | undefined = source;
+
+  for (const key of path) {
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      return undefined;
+    }
+
+    current = current[key];
+  }
+
+  return typeof current === "string" && current.length > 0
+    ? current
+    : undefined;
 }

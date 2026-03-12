@@ -5,9 +5,11 @@ import { z } from "zod";
 import { newRichError } from "@o3osatoshi/toolkit";
 
 import {
+  buildHttpErrorFromResponse,
   buildRequestInit,
   decodeHttpJson,
   decodeJsonResult,
+  deserializeErrorBody,
   expectOkHttpResponse,
   readHttpJson,
   readHttpText,
@@ -110,6 +112,72 @@ describe("common/http/http", () => {
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
     expect(result.error.details?.action).toBe("DecodeCliApiResponseBody");
+  });
+
+  it("deserializes JSON error body when possible", () => {
+    expect(
+      deserializeErrorBody(
+        JSON.stringify({
+          code: "CLI_SCOPE_FORBIDDEN",
+          details: { reason: "Missing scope." },
+        }),
+      ),
+    ).toEqual({
+      code: "CLI_SCOPE_FORBIDDEN",
+      details: { reason: "Missing scope." },
+    });
+  });
+
+  it("returns raw text when error body is not JSON", () => {
+    expect(deserializeErrorBody("forbidden")).toBe("forbidden");
+  });
+
+  it("builds HTTP error from structured error response", () => {
+    const error = buildHttpErrorFromResponse(
+      new Response("{}", {
+        status: 403,
+        statusText: "Forbidden",
+      }),
+      JSON.stringify({
+        code: "CLI_SCOPE_FORBIDDEN",
+        details: { reason: "Missing scope." },
+      }),
+      {
+        action: "RequestCliApi",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "Forbidden",
+        reason: "API request failed.",
+      },
+    );
+
+    expect(error.code).toBe("CLI_SCOPE_FORBIDDEN");
+    expect(error.details?.reason).toBe("Missing scope.");
+    expect(error.meta).toEqual({
+      responseBody: {
+        code: "CLI_SCOPE_FORBIDDEN",
+        details: { reason: "Missing scope." },
+      },
+      responseErrorCode: "CLI_SCOPE_FORBIDDEN",
+      responseStatus: 403,
+      responseStatusText: "Forbidden",
+    });
+  });
+
+  it("truncates plain text error body in reason and meta", () => {
+    const body = "x".repeat(600);
+    const error = buildHttpErrorFromResponse(
+      new Response("{}", { status: 502, statusText: "Bad Gateway" }),
+      body,
+      {
+        action: "FetchExternalApi",
+        code: "CLI_API_REQUEST_FAILED",
+        kind: "BadGateway",
+        reason: "Failed to reach the API endpoint.",
+      },
+    );
+
+    expect(error.details?.reason).toBe(`${"x".repeat(500)}…`);
+    expect(error.meta?.["responseBodyText"]).toBe(`${"x".repeat(500)}…`);
   });
 
   it("returns parsed value when JSON and parser both succeed", async () => {
@@ -268,9 +336,18 @@ describe("common/http/http", () => {
   it("returns status error when JSON request response is non-2xx", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn<typeof fetch>()
-        .mockResolvedValue(new Response("Forbidden", { status: 403 })),
+      vi.fn<typeof fetch>().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            error_description: "Invalid audience.",
+          }),
+          {
+            headers: { "content-type": "application/json" },
+            status: 403,
+            statusText: "Forbidden",
+          },
+        ),
+      ),
     );
 
     const result = await requestJson({
@@ -300,9 +377,7 @@ describe("common/http/http", () => {
 
     expect(result.isErr()).toBe(true);
     if (result.isOk()) throw new Error("Expected err result");
-    expect(result.error.details?.reason).toBe(
-      "Failed to reach the API endpoint. (403)",
-    );
+    expect(result.error.details?.reason).toBe("Invalid audience.");
   });
 
   it("returns read error when JSON request body cannot be read", async () => {

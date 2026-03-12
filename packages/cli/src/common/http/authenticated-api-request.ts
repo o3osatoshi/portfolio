@@ -21,9 +21,11 @@ import { resolveRuntimeEnv } from "../runtime-env";
 import type { OidcTokenSet, RuntimeEnv } from "../types";
 import { resolveApiRequestUrl } from "./api-url";
 import {
+  buildHttpErrorFromResponse,
   decodeHttpJson,
   readHttpText,
   requestHttp,
+  resolveHttpStatusKind,
   runJsonRequest,
 } from "./http";
 
@@ -128,20 +130,13 @@ export function requestAuthenticatedApi(
               );
           }
 
-          const fallback = response.statusText
-            ? `API request failed (${response.status}): ${response.statusText}`
-            : `API request failed (${response.status}).`;
-
-          return errAsync(
-            newRichError({
+          return err(
+            buildHttpErrorFromResponse(response, text, {
+              action: "RequestCliApi",
               code: parsed?.code ?? cliErrorCodes.CLI_API_REQUEST_FAILED,
-              details: {
-                action: "RequestCliApi",
-                reason: reason ?? fallback,
-              },
-              isOperational: true,
-              kind: mapHttpKind(response.status),
+              kind: resolveHttpStatusKind(response.status),
               layer: "Presentation",
+              reason: reason ?? "API request failed.",
             }),
           );
         });
@@ -221,27 +216,6 @@ function ensureAccessToken(
         return persistTokenSet(mergedTokenSet).map(() => mergedTokenSet);
       });
   });
-}
-
-function mapHttpKind(
-  status: number,
-):
-  | "BadGateway"
-  | "BadRequest"
-  | "Conflict"
-  | "Forbidden"
-  | "NotFound"
-  | "RateLimit"
-  | "Unauthorized"
-  | "Unprocessable" {
-  if (status === 400) return "BadRequest";
-  if (status === 401) return "Unauthorized";
-  if (status === 403) return "Forbidden";
-  if (status === 404) return "NotFound";
-  if (status === 409) return "Conflict";
-  if (status === 422) return "Unprocessable";
-  if (status === 429) return "RateLimit";
-  return "BadGateway";
 }
 
 function nowSeconds() {
