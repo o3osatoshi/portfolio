@@ -1,6 +1,6 @@
 # Changesets
 
-This repository uses `@changesets/cli` to version the publishable packages in the monorepo. At the moment only `@o3osatoshi/ui` and `@o3osatoshi/toolkit` are released to npm; apps and other workspaces are ignored via `.changeset/config.json`.
+This repository uses `@changesets/cli` to version the publishable packages in the monorepo. At the moment `@o3osatoshi/config`, `@o3osatoshi/logging`, `@o3osatoshi/toolkit`, and `@o3osatoshi/ui` are released to npm; apps, the CLI, and other internal workspaces are ignored via `.changeset/config.json`.
 
 ## Recommended workflow (Codex + CI)
 
@@ -41,5 +41,5 @@ In exceptional cases where you want to run the release locally instead of via CI
   "@o3osatoshi/toolkit": patch
   ---
   ```
-  - Quote package names and list only packages that publish; private workspaces and ignored entries (`@repo/application`, `@repo/domain`, `@repo/prisma`, `@repo/eth`, `@repo/functions`, `@repo/storybook`, `@repo/web`) are skipped automatically.
+  - Quote package names and list only packages that publish; private workspaces and ignored entries (`@o3osatoshi/cli`, `@repo/application`, `@repo/domain`, `@repo/prisma`, `@repo/eth`, `@repo/functions`, `@repo/storybook`, `@repo/web`) are skipped automatically.
 - Let `pnpm release:version` delete processed files; do not remove them manually.
