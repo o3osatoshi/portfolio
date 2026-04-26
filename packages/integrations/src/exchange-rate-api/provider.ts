@@ -5,9 +5,8 @@ import { err } from "neverthrow";
 
 import type { RichError } from "@o3osatoshi/toolkit";
 import {
+  buildHttpErrorFromPayload,
   createUrlRedactor,
-  formatHttpStatusReason,
-  httpStatusToKind,
   normalizeBaseUrl,
 } from "@o3osatoshi/toolkit";
 
@@ -17,7 +16,10 @@ import {
   type SmartFetch,
   type SmartFetchResponse,
 } from "../http";
-import { newIntegrationError } from "../integration-error";
+import {
+  type IntegrationKind,
+  newIntegrationError,
+} from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
 import { type ExchangeRateApiPair, exchangeRateApiPairSchema } from "./schema";
 
@@ -149,20 +151,25 @@ function toFxQuote(
   query: FxQuoteQuery,
 ): Result<FxQuote, RichError> {
   if (!res.response.ok) {
+    const httpError = buildHttpErrorFromPayload(res.response, res.data, {
+      action: "FetchExchangeRateApi",
+      code: integrationErrorCodes.EXCHANGE_RATE_API_HTTP_ERROR,
+      layer: "External",
+      reason: "ExchangeRate API responded with",
+    });
+
     return err(
       newIntegrationError({
         cause: res.data,
         code: integrationErrorCodes.EXCHANGE_RATE_API_HTTP_ERROR,
         details: {
           action: "FetchExchangeRateApi",
-          reason: formatHttpStatusReason({
-            payload: res.data,
-            response: res.response,
-            serviceName: "ExchangeRate API",
-          }),
+          reason:
+            httpError.details?.reason ?? "ExchangeRate API responded with",
         },
         isOperational: true,
-        kind: httpStatusToKind(res.response.status),
+        kind: httpError.kind as IntegrationKind,
+        meta: httpError.meta,
       }),
     );
   }

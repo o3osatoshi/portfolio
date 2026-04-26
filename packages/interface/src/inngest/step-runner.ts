@@ -38,7 +38,7 @@ export function createInngestStepRunner(step: InngestStepRunner): StepRunner {
       (error) =>
         toRichError(error, {
           details: {
-            action: "InngestStepRunner",
+            action: "RunInngestStep",
             reason: "step.run rejected with an unexpected error value",
           },
           kind: "Internal",

@@ -1,19 +1,19 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / isSerializedError
+[@o3osatoshi/toolkit](../README.md) / isSerializedError
 
 # Function: isSerializedError()
 
 > **isSerializedError**(`v`): `v is SerializedError`
 
-Defined in: [error/error-serializer.ts:117](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-serializer.ts#L117)
+Defined in: [packages/toolkit/src/error/error-serializer.ts:152](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-serializer.ts#L152)
 
-Lightweight structural guard for [SerializedError](../interfaces/SerializedError.md).
+Lightweight structural guard for [SerializedError](../type-aliases/SerializedError.md).
 
 - Checks only for minimal shape (`name` and `message`).
-- For strict validation and nested `cause` guarantees, prefer [deserializeError](deserializeError.md).
+- For strict RichError validation, prefer [tryDeserializeRichError](tryDeserializeRichError.md).
 
 ## Parameters
 

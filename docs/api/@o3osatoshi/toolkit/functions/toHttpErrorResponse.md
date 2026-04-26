@@ -1,28 +1,28 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / toHttpErrorResponse
+[@o3osatoshi/toolkit](../README.md) / toHttpErrorResponse
 
 # Function: toHttpErrorResponse()
 
 > **toHttpErrorResponse**(`error`, `status?`, `options?`): [`ErrorHttpResponse`](../type-aliases/ErrorHttpResponse.md)
 
-Defined in: [http/http-error-response.ts:130](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/http/http-error-response.ts#L130)
+Defined in: [packages/toolkit/src/http/http-error-response.ts:123](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/http/http-error-response.ts#L123)
 
-Convert an `Error` into an HTTP response shape.
+Convert an unknown error-like value into an HTTP response shape.
 
-- `body` is a stable, JSON‑safe structure created by [serializeError](serializeError.md).
-- `status` is inferred from `error.name` (see Kind → Status mapping), unless
-  a specific status override is provided.
+- `body` is a stable, JSON‑safe structure created by [serializeRichError](serializeRichError.md).
+- `status` is inferred from normalized `RichError.kind` (see Kind → Status
+  mapping), unless a specific status override is provided.
 
 ## Parameters
 
 ### error
 
-`Error`
+`unknown`
 
-Error instance to convert.
+Unknown value to convert into a structured error response.
 
 ### status?
 
@@ -34,13 +34,13 @@ Optional HTTP status override. If provided, it takes precedence.
 
 [`SerializeOptions`](../type-aliases/SerializeOptions.md)
 
-Serialization options (depth, includeStack, maxLen).
+Serialization options (depth, includeStack).
 
 ## Returns
 
 [`ErrorHttpResponse`](../type-aliases/ErrorHttpResponse.md)
 
-A pair of `body` and `status` suitable for HTTP responses.
+A pair of `body` and `statusCode` suitable for HTTP responses.
 
 ## Examples
 
@@ -50,8 +50,8 @@ export async function GET() {
   try {
     // ...
   } catch (err) {
-    const { body, status } = toHttpErrorResponse(err as Error);
-    return Response.json(body, { status });
+    const { body, statusCode } = toHttpErrorResponse(err);
+    return Response.json(body, { status: statusCode });
   }
 }
 ```
@@ -59,7 +59,7 @@ export async function GET() {
 // Express middleware
 ```ts
 app.use((err, _req, res, _next) => {
-  const { body, status } = toHttpErrorResponse(err);
-  res.status(status).json(body);
+  const { body, statusCode } = toHttpErrorResponse(err);
+  res.status(statusCode).json(body);
 });
 ```

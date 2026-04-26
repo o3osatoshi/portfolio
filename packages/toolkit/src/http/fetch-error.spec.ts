@@ -47,12 +47,12 @@ describe("toolkit newFetchError helper", () => {
 
   it("handles missing cause and request metadata gracefully", () => {
     const err = newFetchError({
-      details: { action: "DoSomething" },
+      details: { action: "RunTask" },
     });
 
     expect(err.name).toBe("ExternalInternalError");
     expect(err.message).toContain(
-      "DoSomething failed: encountered an unexpected error",
+      "RunTask failed: encountered an unexpected error",
     );
   });
 

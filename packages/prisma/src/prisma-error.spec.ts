@@ -248,10 +248,12 @@ describe("prisma newPrismaError override", () => {
   it("falls back to PersistenceInternalError for non-Prisma causes", () => {
     const err = newPrismaError({
       cause: new Error("boom"),
-      details: { action: "HandleMisc", hint: "Check logs" },
+      details: { action: "ExecuteDatabaseOperation", hint: "Check logs" },
     });
     expect(err.name).toBe("PersistenceInternalError");
-    expect(err.message).toContain("HandleMisc failed: Unexpected error");
+    expect(err.message).toContain(
+      "ExecuteDatabaseOperation failed: Unexpected error",
+    );
     expect(isRichError(err)).toBe(true);
     if (isRichError(err)) {
       expect(err.details?.hint).toBe("Check logs");

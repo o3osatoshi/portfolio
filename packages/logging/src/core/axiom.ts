@@ -75,7 +75,7 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
           onError(
             toRichError(error, {
               details: {
-                action: "AxiomIngest",
+                action: "IngestAxiomEvents",
                 reason: "axiom ingest failed with an unexpected error value",
               },
               kind: "Internal",
@@ -88,7 +88,7 @@ export function createAxiomTransport(options: AxiomClientOptions): Transport {
       onError(
         toRichError(error, {
           details: {
-            action: "AxiomIngest",
+            action: "IngestAxiomEvents",
             reason: "axiom ingest failed with an unexpected error value",
           },
           kind: "Internal",

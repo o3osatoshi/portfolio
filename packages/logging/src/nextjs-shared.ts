@@ -6,6 +6,8 @@ import {
   type LogLevel,
 } from "@axiomhq/logging";
 
+import { isRecord } from "@o3osatoshi/toolkit";
+
 import type { Attributes, Logger } from "./types";
 
 /**
@@ -70,8 +72,7 @@ export function forwardLogEvent(logger: Logger, event: AxiomLogEvent): void {
   const record = event as Record<string, unknown>;
   const message = event.message ?? "nextjs_log";
   const fieldsValue = record["fields"];
-  const fields =
-    fieldsValue && typeof fieldsValue === "object" ? fieldsValue : {};
+  const fields = isRecord(fieldsValue) ? fieldsValue : {};
   const level = event.level ?? "info";
   const app = record["@app"];
   const source = record["source"];
@@ -88,10 +89,8 @@ export function forwardLogEvent(logger: Logger, event: AxiomLogEvent): void {
   }
 
   const eventFields = (record as Record<string | symbol, unknown>)[EVENT];
-  if (eventFields && typeof eventFields === "object") {
-    for (const [key, value] of Object.entries(
-      eventFields as Record<string, unknown>,
-    )) {
+  if (isRecord(eventFields)) {
+    for (const [key, value] of Object.entries(eventFields)) {
       attributes[key] = value as Attributes[string];
     }
   }

@@ -1,14 +1,14 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / composeErrorName
+[@o3osatoshi/toolkit](../README.md) / composeErrorName
 
 # Function: composeErrorName()
 
 > **composeErrorName**(`layer`, `kind`): `string`
 
-Defined in: [error/error-format.ts:106](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error-format.ts#L106)
+Defined in: [packages/toolkit/src/error/error.ts:119](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error.ts#L119)
 
 Build an error `name` string such as `DomainValidationError`.
 
@@ -16,11 +16,11 @@ Build an error `name` string such as `DomainValidationError`.
 
 ### layer
 
-[`Layer`](../type-aliases/Layer.md)
+`"Infrastructure"` | `"Application"` | `"Auth"` | `"Domain"` | `"External"` | `"Interface"` | `"Persistence"` | `"Presentation"`
 
 ### kind
 
-[`Kind`](../type-aliases/Kind.md)
+`"Serialization"` | `"BadGateway"` | `"BadRequest"` | `"Canceled"` | `"Conflict"` | `"Forbidden"` | `"Internal"` | `"MethodNotAllowed"` | `"NotFound"` | `"RateLimit"` | `"Timeout"` | `"Unauthorized"` | `"Unavailable"` | `"Unprocessable"` | `"Validation"`
 
 ## Returns
 

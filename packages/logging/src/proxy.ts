@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 
-import { toRichError } from "@o3osatoshi/toolkit";
+import { serialize, toRichError } from "@o3osatoshi/toolkit";
 
 import { type LogEvent, logEventSchema, type Transport } from "./types";
 
@@ -147,7 +147,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       onError(
         toRichError(error, {
           details: {
-            action: "LoggingProxyParseRequest",
+            action: "ParseLoggingProxyRequest",
             reason:
               "proxy payload parsing failed with an unexpected error value",
           },
@@ -193,7 +193,7 @@ export function createProxyHandler(options: ProxyHandlerOptions) {
       onError(
         toRichError(error, {
           details: {
-            action: "LoggingProxyEmit",
+            action: "EmitLoggingProxyEvents",
             reason: "proxy emission failed with an unexpected error value",
           },
           kind: "Internal",
@@ -263,8 +263,13 @@ export function createProxyTransport(
   };
 
   const sendBatch = async (eventSets: EventSet[]) => {
+    const serialized = serialize({ eventSets } satisfies ProxyPayload);
+    if (serialized.isErr()) {
+      throw serialized.error;
+    }
+
     const init: RequestInit = {
-      body: JSON.stringify({ eventSets } satisfies ProxyPayload),
+      body: serialized.value,
       headers: {
         "content-type": "application/json",
         ...(options.headers ?? {}),
@@ -300,7 +305,7 @@ export function createProxyTransport(
         onError(
           toRichError(error, {
             details: {
-              action: "LoggingProxyTransportFlush",
+              action: "FlushLoggingProxyTransport",
               reason:
                 "proxy transport flush failed with an unexpected error value",
             },
@@ -323,10 +328,16 @@ export function createProxyTransport(
 }
 
 function json(data: Record<string, unknown>, status: number): Response {
-  return new Response(JSON.stringify(data), {
+  const serialized = serialize(data);
+  const body = serialized.isOk()
+    ? serialized.value
+    : '{"status":"error","message":"serialization_failed"}';
+  const responseStatus = serialized.isOk() ? status : 500;
+
+  return new Response(body, {
     headers: {
       "content-type": "application/json",
     },
-    status,
+    status: responseStatus,
   });
 }

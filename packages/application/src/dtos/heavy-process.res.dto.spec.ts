@@ -1,16 +1,19 @@
 import { describe, expect, it } from "vitest";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import {
   heavyProcessCachedResponseSchema,
   heavyProcessResponseSchema,
 } from "./heavy-process.res.dto";
 
-const parseHeavyProcessResponse = parseWith(heavyProcessResponseSchema, {
-  action: "ParseHeavyProcessResponse",
-});
-const parseHeavyProcessCachedResponse = parseWith(
+const heavyProcessResponseParser = makeSchemaParser(
+  heavyProcessResponseSchema,
+  {
+    action: "ParseHeavyProcessResponse",
+  },
+);
+const heavyProcessCachedResponseParser = makeSchemaParser(
   heavyProcessCachedResponseSchema,
   {
     action: "ParseHeavyProcessCachedResponse",
@@ -21,7 +24,7 @@ describe("application/dtos: heavy-process.res.dto schemas", () => {
   it("parses a valid heavy process response", () => {
     const timestamp = new Date("2024-01-02T03:04:05Z");
 
-    const result = parseHeavyProcessResponse({ timestamp });
+    const result = heavyProcessResponseParser({ timestamp });
 
     expect(result.isOk()).toBe(true);
     if (result.isOk()) {
@@ -33,7 +36,7 @@ describe("application/dtos: heavy-process.res.dto schemas", () => {
   });
 
   it("fails to parse when timestamp is not a Date", () => {
-    const result = parseHeavyProcessResponse({
+    const result = heavyProcessResponseParser({
       timestamp: "2024-01-02T03:04:05Z",
     });
 
@@ -43,7 +46,7 @@ describe("application/dtos: heavy-process.res.dto schemas", () => {
   it("parses a cached heavy process response with cached=true", () => {
     const timestamp = new Date("2025-01-01T00:00:00Z");
 
-    const result = parseHeavyProcessCachedResponse({
+    const result = heavyProcessCachedResponseParser({
       cached: true,
       timestamp,
     });
@@ -58,7 +61,7 @@ describe("application/dtos: heavy-process.res.dto schemas", () => {
   it("parses a cached heavy process response with cached=false", () => {
     const timestamp = new Date("2025-12-31T23:59:59Z");
 
-    const result = parseHeavyProcessCachedResponse({
+    const result = heavyProcessCachedResponseParser({
       cached: false,
       timestamp,
     });
@@ -73,7 +76,7 @@ describe("application/dtos: heavy-process.res.dto schemas", () => {
   it("fails to parse cached response when cached flag is missing", () => {
     const timestamp = new Date();
 
-    const result = parseHeavyProcessCachedResponse({
+    const result = heavyProcessCachedResponseParser({
       timestamp,
       // cached is intentionally omitted
     });

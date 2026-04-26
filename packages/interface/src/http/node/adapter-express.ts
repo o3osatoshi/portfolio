@@ -4,6 +4,8 @@ import type {
 } from "express";
 import type { Env, Hono, Schema } from "hono";
 
+import { serialize } from "@o3osatoshi/toolkit";
+
 /**
  * Express-compatible adapter for a Hono app.
  *
@@ -63,7 +65,13 @@ export function createExpressRequestHandler<
                 ? Buffer.from(body)
                 : body instanceof ArrayBuffer
                   ? Buffer.from(new Uint8Array(body))
-                  : Buffer.from(JSON.stringify(body || {})),
+                  : (() => {
+                      const serialized = serialize(body || {});
+                      if (serialized.isErr()) {
+                        throw serialized.error;
+                      }
+                      return Buffer.from(serialized.value);
+                    })(),
           headers,
           method: req.method,
         });

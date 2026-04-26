@@ -1,14 +1,14 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / CreateEnvOptions
+[@o3osatoshi/toolkit](../README.md) / CreateEnvOptions
 
 # Type Alias: CreateEnvOptions
 
 > **CreateEnvOptions** = `object`
 
-Defined in: [env.ts:8](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/env.ts#L8)
+Defined in: [packages/toolkit/src/env.ts:10](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/env.ts#L10)
 
 Options for [createEnv](../functions/createEnv.md).
 
@@ -18,7 +18,7 @@ Options for [createEnv](../functions/createEnv.md).
 
 > `optional` **name**: `string`
 
-Defined in: [env.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/env.ts#L13)
+Defined in: [packages/toolkit/src/env.ts:15](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/env.ts#L15)
 
 Optional label used in error messages for clarity, e.g. "web" →
 `Invalid web env: ...`. If omitted, messages use just `env`.
@@ -29,7 +29,7 @@ Optional label used in error messages for clarity, e.g. "web" →
 
 > `optional` **source**: `Record`\<`string`, `string` \| `undefined`\>
 
-Defined in: [env.ts:18](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/env.ts#L18)
+Defined in: [packages/toolkit/src/env.ts:20](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/env.ts#L20)
 
 Optional source object to read from. Defaults to `process.env`.
 Useful for testing or SSR environments where a custom map is preferred.

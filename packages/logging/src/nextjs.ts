@@ -27,6 +27,8 @@ import {
   transformRouteHandlerSuccessResult,
 } from "@axiomhq/nextjs";
 
+import { isRecord } from "@o3osatoshi/toolkit";
+
 import { createBridgeTransport, type LoggerOptions } from "./nextjs-shared";
 import type { Attributes, Logger } from "./types";
 
@@ -153,10 +155,8 @@ export function logMiddlewareRequest(
     ...(report as Attributes),
   };
 
-  if (eventFields && typeof eventFields === "object") {
-    for (const [key, value] of Object.entries(
-      eventFields as Record<string, unknown>,
-    )) {
+  if (isRecord(eventFields)) {
+    for (const [key, value] of Object.entries(eventFields)) {
       merged[key] = value as Attributes[string];
     }
   }

@@ -88,7 +88,7 @@ describe("utils/web-error newWebError kinds", () => {
     },
   ])("uses $kind kind", ({ code, expectedName, i18nKey, kind }) => {
     const err = newWebError({
-      action: "HandleError",
+      action: "ProcessWebRequest",
       code,
       i18n: { key: i18nKey },
       isOperational: kind !== "Internal",

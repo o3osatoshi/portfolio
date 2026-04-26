@@ -1,5 +1,5 @@
 import type { CacheStore } from "@repo/domain";
-import { okAsync, Result } from "neverthrow";
+import { ok, Result } from "neverthrow";
 import type { z } from "zod";
 
 import type {
@@ -79,11 +79,11 @@ export function withCache(
 
     return store
       .get(cacheKey)
-      .orElse(() => okAsync(null))
+      .orElse(() => ok(null))
       .andThen((rawData) => {
         const data = safeDeserialize<z.infer<S>>(deserialize, rawData);
         if (data !== null) {
-          return okAsync({
+          return ok({
             cache: { hit: true, key: cacheKey },
             data,
             response: {
@@ -98,14 +98,14 @@ export function withCache(
 
         return next(request).andThen((res) => {
           if (!shouldCache(res)) {
-            return okAsync({ ...res, cache: { hit: false, key: cacheKey } });
+            return ok({ ...res, cache: { hit: false, key: cacheKey } });
           }
 
           return store
             .set(cacheKey, serialize(res.data), {
               ttlMs: request.cache?.ttlMs ?? options.ttlMs,
             })
-            .orElse(() => okAsync(null))
+            .orElse(() => ok(null))
             .map(() => ({ ...res, cache: { hit: false, key: cacheKey } }));
         });
       });

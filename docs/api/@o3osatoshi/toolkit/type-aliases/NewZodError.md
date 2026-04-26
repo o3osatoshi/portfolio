@@ -1,75 +1,47 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / NewZodError
+[@o3osatoshi/toolkit](../README.md) / NewZodError
 
 # Type Alias: NewZodError
 
-> **NewZodError** = `object`
+> **NewZodError** = `object` & `Omit`\<[`NewRichError`](NewRichError.md), `"details"` \| `"isOperational"` \| `"kind"` \| `"layer"`\>
 
-Defined in: [zod/zod-error.ts:11](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L11)
+Defined in: [packages/toolkit/src/zod/zod-error.ts:19](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/zod/zod-error.ts#L19)
 
 Options accepted by [newZodError](../functions/newZodError.md) when normalizing validation issues.
-Designed to mirror [NewError](NewError.md) while providing Zod-specific hooks.
+Designed to mirror [NewRichError](NewRichError.md) while providing Zod-specific hooks.
 
-## Properties
-
-### action?
-
-> `optional` **action**: `string`
-
-Defined in: [zod/zod-error.ts:13](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L13)
-
-Logical operation being validated when the failure occurred.
-
-***
+## Type Declaration
 
 ### cause?
 
 > `optional` **cause**: `unknown`
 
-Defined in: [zod/zod-error.ts:18](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L18)
-
 Original throwable (ideally a `ZodError`) used to derive issues.
-Defaults to `undefined` when a raw issue list is supplied via the `issues` option.
 
-***
+### details?
 
-### hint?
+> `optional` **details**: [`RichErrorDetails`](RichErrorDetails.md)
 
-> `optional` **hint**: `string`
+Optional diagnostic context that will be merged with inferred details.
 
-Defined in: [zod/zod-error.ts:20](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L20)
+### includeValidationIssues?
 
-Suggested remediation; falls back to an inferred hint when omitted.
+> `optional` **includeValidationIssues**: `boolean`
 
-***
+Whether to attach normalized validation issues in `meta.validationIssues`.
+Disabled by default to preserve payload compactness for non-debug flows.
 
-### impact?
+### isOperational?
 
-> `optional` **impact**: `string`
+> `optional` **isOperational**: `boolean`
 
-Defined in: [zod/zod-error.ts:22](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L22)
-
-Description of the effect of the validation failure.
-
-***
-
-### issues?
-
-> `optional` **issues**: `ZodIssue`[]
-
-Defined in: [zod/zod-error.ts:24](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L24)
-
-Explicit Zod issues list; inferred from the `cause` when absent.
-
-***
+Optional operationality override (defaults to Validation semantics).
 
 ### layer?
 
 > `optional` **layer**: [`Layer`](Layer.md)
-
-Defined in: [zod/zod-error.ts:26](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/zod/zod-error.ts#L26)
 
 Architectural layer responsible for validation (default `"Application"`).

@@ -2,6 +2,7 @@ import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import { z } from "zod";
 
 import {
+  buildHttpErrorFromPayload,
   httpStatusToKind,
   type RichError,
   trimTrailingSlash,
@@ -13,7 +14,10 @@ import {
   type SmartFetchRequestCacheOptions,
   type SmartFetchRequestRetryOptions,
 } from "../http";
-import { newIntegrationError } from "../integration-error";
+import {
+  type IntegrationKind,
+  newIntegrationError,
+} from "../integration-error";
 import { integrationErrorCodes } from "../integration-error-catalog";
 
 /**
@@ -131,15 +135,32 @@ export function createOidcUserInfoFetcher(options: OidcUserInfoFetcherOptions) {
           }
 
           return errAsync(
-            newIntegrationError({
-              code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
-              details: {
-                action: fetchAction,
-                reason: `Failed to fetch /userinfo endpoint (HTTP ${status}).`,
-              },
-              isOperational: true,
-              kind: httpStatusToKind(status),
-            }),
+            (() => {
+              const httpError = buildHttpErrorFromPayload(
+                res.response,
+                res.data,
+                {
+                  action: fetchAction,
+                  code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+                  kind: httpStatusToKind(status),
+                  layer: "External",
+                  reason: "Failed to fetch /userinfo endpoint.",
+                },
+              );
+
+              return newIntegrationError({
+                code: integrationErrorCodes.OIDC_USERINFO_FETCH_FAILED,
+                details: {
+                  action: fetchAction,
+                  reason:
+                    httpError.details?.reason ??
+                    "Failed to fetch /userinfo endpoint.",
+                },
+                isOperational: true,
+                kind: httpError.kind as IntegrationKind,
+                meta: httpError.meta,
+              });
+            })(),
           );
         }
 
@@ -173,7 +194,7 @@ function mapFetchError(
   requestAction: string,
   decodeAction: string,
 ): RichError {
-  if (cause.details?.action === "DeserializeResponseBody") {
+  if (cause.details?.action === "DeserializeExternalApiResponseBody") {
     return newIntegrationError({
       cause,
       code: integrationErrorCodes.OIDC_USERINFO_PARSE_FAILED,

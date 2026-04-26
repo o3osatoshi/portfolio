@@ -1,13 +1,13 @@
-[**Documentation**](../../../README.md)
+[**@o3osatoshi/toolkit**](../README.md)
 
 ***
 
-[Documentation](../../../README.md) / [@o3osatoshi/toolkit](../README.md) / Layer
+[@o3osatoshi/toolkit](../README.md) / Layer
 
 # Type Alias: Layer
 
-> **Layer** = `"Application"` \| `"Auth"` \| `"DB"` \| `"Domain"` \| `"External"` \| `"Infra"` \| `"UI"`
+> **Layer** = `z.infer`\<*typeof* [`layerSchema`](../variables/layerSchema.md)\>
 
-Defined in: [error/error.ts:54](https://github.com/o3osatoshi/experiment/blob/adcc987030aec20cfdc84de280ce496a9770d9f1/packages/toolkit/src/error/error.ts#L54)
+Defined in: [packages/toolkit/src/error/error-schema.ts:73](https://github.com/o3osatoshi/portfolio/blob/81b48315442851c7695fbbb46738673e2699634a/packages/toolkit/src/error/error-schema.ts#L73)
 
-Architectural layer where the error originated.
+Architectural layer.

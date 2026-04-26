@@ -1,4 +1,5 @@
 import {
+  isRecord,
   type NewRichError,
   newRichError,
   type RichError,
@@ -405,11 +406,10 @@ function isValidationError(
  * Avoids using `any` and works with Prisma's loosely-typed `meta` payloads.
  */
 function metaString(meta: unknown, key: string): string | undefined {
-  if (meta && typeof meta === "object") {
-    const value = (meta as Record<string, unknown>)[key];
-    return typeof value === "string" ? value : undefined;
-  }
-  return undefined;
+  if (!isRecord(meta)) return undefined;
+
+  const value = meta[key];
+  return typeof value === "string" ? value : undefined;
 }
 
 function resolvePrismaErrorClass(cause: unknown): string {

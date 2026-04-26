@@ -141,7 +141,7 @@ export function createRateLimitGuard<T>(
   const failureMode = options.failureMode ?? "fail-closed";
 
   return (input) => {
-    let chain: ResultAsync<void, RichError> = okAsync(undefined);
+    let chain: ResultAsync<void, RichError> = okAsync();
 
     for (const rule of options.rules) {
       chain = chain.andThen(() =>
@@ -189,7 +189,7 @@ function evaluateRule<T>(
       })
       .andThen((decision) => {
         if (decision.allowed) {
-          return okAsync(undefined);
+          return okAsync();
         }
 
         const error =

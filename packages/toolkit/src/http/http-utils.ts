@@ -1,4 +1,5 @@
 import type { Kind } from "../error";
+import { serialize } from "../json-codec";
 import { truncate } from "../truncate";
 
 /**
@@ -119,11 +120,11 @@ export function formatPayloadPreview(payload: unknown): string {
   if (payload === null) return "null";
   if (payload === undefined) return "";
   if (typeof payload === "string") return payload;
-  try {
-    return JSON.stringify(payload);
-  } catch {
-    return String(payload);
+  const serialized = serialize(payload);
+  if (serialized.isOk()) {
+    return serialized.value;
   }
+  return String(payload);
 }
 
 /**

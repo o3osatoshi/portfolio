@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { parseWith } from "@o3osatoshi/toolkit";
+import { makeSchemaParser } from "@o3osatoshi/toolkit";
 
 import { ensureApplicationErrorI18n } from "../error-i18n";
 
@@ -26,6 +26,6 @@ export type GetFxQuoteRequest = z.infer<typeof getFxQuoteRequestSchema>;
  * Parse and validate an unknown payload into {@link GetFxQuoteRequest}.
  */
 export const parseGetFxQuoteRequest = (input: unknown) =>
-  parseWith(getFxQuoteRequestSchema, {
+  makeSchemaParser(getFxQuoteRequestSchema, {
     action: "ParseGetFxQuoteRequest",
   })(input).mapErr((error) => ensureApplicationErrorI18n(error));
