@@ -19,7 +19,8 @@
     "@repo/interface",
     "@repo/prisma",
     "@repo/storybook",
-    "@repo/web"
+    "@repo/web",
+    "@o3osatoshi/cli"
   ],
   "linked": [],
   "updateInternalDependencies": "patch"
