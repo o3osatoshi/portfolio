@@ -1,5 +1,11 @@
 # @o3osatoshi/config
 
+## 1.2.1
+
+### Patch Changes
+
+- [#94](https://github.com/o3osatoshi/portfolio/pull/94) [`3b29d88`](https://github.com/o3osatoshi/portfolio/commit/3b29d8840a8c776e5e6f02a81446f0aa816f6e0d) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Ignore coverage report output in shared ESLint config.
+
 ## 1.2.0
 
 ### Minor Changes
