@@ -62,13 +62,19 @@ jobs:
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
 
+      - name: Typecheck packages
+        run: pnpm turbo run typecheck --filter=@o3osatoshi/*
+
+      - name: Test packages
+        run: pnpm turbo run test --filter=@o3osatoshi/*
+
       - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"
-            registry=https://registry.npmjs.org/
-            @o3osatoshi:registry=https://registry.npmjs.org/
-            always-auth=true
-            //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+          registry=https://registry.npmjs.org/
+          @o3osatoshi:registry=https://registry.npmjs.org/
+          always-auth=true
+          //registry.npmjs.org/:_authToken=${NPM_TOKEN}
           EOF
 
       - name: Create release PR or publish to npm
@@ -78,3 +84,5 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_IGNORE_SCRIPTS: "true"
+          npm_config_ignore_scripts: "true"
