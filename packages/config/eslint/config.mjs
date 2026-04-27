@@ -11,6 +11,8 @@ export default [
       "**/.next/**",
       "**/.turbo/**",
       "**/.idea/**",
+      "**/.reports/**",
+      "**/coverage/**",
       "**/storybook-static/**",
       "**/temp/*.api.json",
     ],
