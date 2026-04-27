@@ -1,5 +1,13 @@
 # @o3osatoshi/config
 
+## 1.2.0
+
+### Minor Changes
+
+- [#90](https://github.com/o3osatoshi/portfolio/pull/90) [`ba6e5ae`](https://github.com/o3osatoshi/portfolio/commit/ba6e5ae46a4700e8e9bb396dbc0b0ff680e3a01d) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Add Vite `resolve` forwarding to the shared Vitest presets, so consumers can pass aliases and related resolve settings through `baseTestPreset`, `browserTestPreset`, and `storybookTestPreset`.
+
+  Add ESLint guardrails against unsafe production type assertions, ignore temporary API Extractor JSON files, validate package metadata used by tsup external inference with Zod, and make the shared tsup bundle presets resolve synchronously.
+
 ## 1.1.1
 
 ### Patch Changes

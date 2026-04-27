@@ -1,5 +1,13 @@
 # @o3osatoshi/ui
 
+## 0.1.0
+
+### Minor Changes
+
+- [#90](https://github.com/o3osatoshi/portfolio/pull/90) [`ba6e5ae`](https://github.com/o3osatoshi/portfolio/commit/ba6e5ae46a4700e8e9bb396dbc0b0ff680e3a01d) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Export `alertVariants` for downstream styling reuse.
+
+  Refresh generated API reports after component parameter normalization and keep the UI package build configuration aligned with the shared tsup preset updates.
+
 ## 0.0.6
 
 ### Patch Changes

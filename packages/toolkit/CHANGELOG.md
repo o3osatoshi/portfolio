@@ -1,5 +1,15 @@
 # @o3osatoshi/toolkit
 
+## 1.2.0
+
+### Minor Changes
+
+- [#90](https://github.com/o3osatoshi/portfolio/pull/90) [`ba6e5ae`](https://github.com/o3osatoshi/portfolio/commit/ba6e5ae46a4700e8e9bb396dbc0b0ff680e3a01d) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Reorganize the public error, HTTP, JSON, and validation helpers around `RichError`.
+
+  Add fetch response helpers, HTTP response builders/deserializers, URL redaction, rate-limit guards, object guards, typed `omitUndefined`, `trimTrailingSlash`, and abort signal resolution utilities.
+
+  Consumers should migrate from `newError` to `newRichError`, from `parseWith`/`parseAsyncWith` to `makeSchemaParser`, from `encode`/`decode` to `serialize`/`deserialize`, and from `deserializeError` to `deserializeRichError`.
+
 ## 1.1.0
 
 ### Minor Changes
