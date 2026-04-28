@@ -84,6 +84,58 @@ export function functionsBundlePreset(opts: Options = {}) {
 }
 
 /**
+ * Creates a tsup configuration preset for distributable Node.js command-line tools.
+ *
+ * @remarks
+ * This preset is intended for packages that expose one or more executable
+ * `bin` entrypoints, optionally alongside a small programmatic API.
+ *
+ * The defaults optimize for predictable CLI distribution:
+ *
+ * - Emits ESM for modern Node.js runtimes.
+ * - Targets Node 22 by default, matching the package baseline.
+ * - Bundles dependencies into the output by default so release artifacts are
+ *   portable and do not depend on a sibling `node_modules` tree.
+ * - Disables code splitting so each executable entrypoint is a self-contained
+ *   file.
+ * - Disables source maps by default because CLI artifacts are often distributed
+ *   outside the source repository. Consumers can opt in with
+ *   `{ sourcemap: true }` for internal tooling or debuggable releases.
+ * - Emits declaration files by default so packages that also export a
+ *   programmatic API remain typed.
+ *
+ * Place a shebang such as `#!/usr/bin/env node` in the executable source file
+ * itself. tsup/esbuild preserves that shebang in the generated JavaScript
+ * without applying it to non-executable entries such as `src/index.ts`.
+ *
+ * By default, the preset builds `src/bin.ts` and also includes `src/index.ts`
+ * when that file exists. Pass `entry` to use different executable names or
+ * additional entrypoints.
+ *
+ * @param opts - Additional tsup options to override the preset defaults.
+ * @returns Resolved configuration object that can be passed directly to the tsup CLI.
+ * @public
+ */
+export function nodeCliBundlePreset(opts: Options = {}) {
+  return defineConfig({
+    treeshake: true,
+    ...opts,
+    bundle: opts.bundle ?? true,
+    clean: opts.clean ?? true,
+    dts: opts.dts ?? true,
+    entry: opts.entry ?? defaultNodeCliEntry(),
+    external: opts.external ?? [],
+    format: opts.format ?? ["esm"],
+    minify: opts.minify ?? false,
+    platform: opts.platform ?? "node",
+    skipNodeModulesBundle: opts.skipNodeModulesBundle ?? false,
+    sourcemap: opts.sourcemap ?? false,
+    splitting: opts.splitting ?? false,
+    target: opts.target ?? "node22",
+  });
+}
+
+/**
  * Creates a tsup configuration preset for public libraries that need dual ESM/CJS outputs.
  *
  * @remarks
@@ -152,6 +204,18 @@ function autoExternals(pkgDir = process.cwd()): string[] {
     console.warn(`Failed to read package.json from ${pkgDir}:`, error);
     return [];
   }
+}
+
+function defaultNodeCliEntry(): Record<string, string> {
+  const entry: Record<string, string> = {
+    bin: "src/bin.ts",
+  };
+
+  if (fs.existsSync(path.join(process.cwd(), "src/index.ts"))) {
+    entry["index"] = "src/index.ts";
+  }
+
+  return entry;
 }
 
 /**

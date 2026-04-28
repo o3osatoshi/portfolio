@@ -2,7 +2,7 @@
 
 Shared configuration for my TypeScript projects.
 
-- tsup presets (browser/public-dual/functions)
+- tsup presets (browser/public-dual/functions/node-cli)
 - TypeScript tsconfig bases (base/node/browser/next/functions/storybook)
 - Biome shared configs (base, react, next)
 - ESLint flat config (perfectionist import/order rules)
@@ -35,30 +35,35 @@ Notes
 Import presets from `@o3osatoshi/config/tsup` and export a config in `tsup.config.mjs`.
 
 ```ts
-import { browserBundlePreset, publicDualBundlePreset, functionsBundlePreset } from "@o3osatoshi/config/tsup";
+import { browserBundlePreset, publicDualBundlePreset, functionsBundlePreset, nodeCliBundlePreset } from "@o3osatoshi/config/tsup";
 
-// Browser/React library (ESM, externals React/Next). DTS optional via { dts: true }.
-export default browserBundlePreset({ entry: { index: "src/index.tsx" }, dts: true });
+// Browser/React library (ESM, externals React/Next). DTS enabled by default.
+export default browserBundlePreset({ entry: { index: "src/index.tsx" } });
 
 // Public library (ESM + CJS, with DTS).
 //    Default sourcemap: enabled in production/CI, disabled in dev.
 // export default publicDualBundlePreset({ entry: { index: "src/index.ts" } });
 
-// Firebase Functions (ESM, Node target). Adjust target per runtime.
+// Firebase Functions (CJS, Node target). Adjust target per runtime.
 // export default functionsBundlePreset({ entry: { index: "src/index.ts" } });
+
+// Node CLI (single-file executable bundles, no sourcemaps by default).
+// export default nodeCliBundlePreset({ target: "node24" });
 ```
 
 Notes
-- Externals are automatically derived from dependencies/peerDependencies of the nearest package.json. In addition, common UI libs are always externalized: `react`, `react-dom`, `next`.
+- `browserBundlePreset`, `publicDualBundlePreset`, and `functionsBundlePreset` automatically derive externals from dependencies/peerDependencies of the nearest package.json. In addition, common UI libs are always externalized: `react`, `react-dom`, `next`.
 - The browser bundle preset explicitly marks React/Next as externals for UI packages.
 - Each preset accepts standard `tsup` `Options` and sets sensible defaults.
 - `publicDualBundlePreset` enables `sourcemap` by default in production/CI; pass `{ sourcemap: false }` to disable.
+- `nodeCliBundlePreset` bundles dependencies by default for portable CLI artifacts; pass `external` when a dependency must remain external.
 - You can pass through `env`, `banner`, `external`, `outDir`, and `onSuccess` as needed.
 
 Defaults (high-level)
-- `browserBundlePreset`: ESM, platform `browser`, React/Next external, `dts` off by default.
+- `browserBundlePreset`: ESM, platform `browser`, React/Next external, `dts` on by default.
 - `publicDualBundlePreset`: ESM + CJS, DTS on, `sourcemap` on in CI/prd, off in dev.
-- `functionsBundlePreset`: ESM, platform `node`, `target: node22`, sourcemap enabled.
+- `functionsBundlePreset`: CJS, platform `node`, `target: node22`, sourcemap enabled.
+- `nodeCliBundlePreset`: ESM, platform `node`, `target: node22`, DTS on, dependency bundling on, sourcemap disabled.
 
 ## tsconfig bases
 Pick a base that fits your project (TS 5+, `moduleResolution: "Bundler"`).
