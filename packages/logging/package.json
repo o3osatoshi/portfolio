@@ -1,6 +1,6 @@
 {
   "name": "@o3osatoshi/logging",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "description": "Axiom-first logging helpers for Node, Edge, and browser runtimes.",
   "keywords": [

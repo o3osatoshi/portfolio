@@ -1,5 +1,11 @@
 # @o3osatoshi/config
 
+## 1.3.0
+
+### Minor Changes
+
+- [#96](https://github.com/o3osatoshi/portfolio/pull/96) [`5808883`](https://github.com/o3osatoshi/portfolio/commit/5808883be92e7e248b47845486a8de30e529b633) Thanks [@o3osatoshi](https://github.com/o3osatoshi)! - Add `nodeCliBundlePreset` for distributable Node.js CLI packages.
+
 ## 1.2.1
 
 ### Patch Changes

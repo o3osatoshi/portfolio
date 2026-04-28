@@ -1,5 +1,13 @@
 # @o3osatoshi/logging
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`5808883`](https://github.com/o3osatoshi/portfolio/commit/5808883be92e7e248b47845486a8de30e529b633)]:
+  - @o3osatoshi/config@1.3.0
+  - @o3osatoshi/toolkit@1.2.0
+
 ## 0.2.1
 
 ### Patch Changes
