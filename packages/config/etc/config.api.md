@@ -22,6 +22,9 @@ export function browserTestPreset(opts?: Options): ViteUserConfig;
 export function functionsBundlePreset(opts?: Options_2): Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>);
 
 // @public
+export function nodeCliBundlePreset(opts?: Options_2): Options_2 | Options_2[] | ((overrideOptions: Options_2) => Options_2 | Options_2[] | Promise<Options_2 | Options_2[]>);
+
+// @public
 export type Options = {
     plugins?: ViteUserConfig["plugins"];
     resolve?: ViteUserConfig["resolve"];
